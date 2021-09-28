@@ -239,7 +239,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -278,7 +278,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $forum, $request )
@@ -311,7 +311,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -321,7 +321,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		if ( true === $retval && empty( $forum->ID ) ) {
 			$retval = new WP_Error(
@@ -385,7 +385,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the forum.
 	 */
 	public function update_item( $request ) {
-		$forum = get_post( $request['id'] );
+		$forum = bbp_get_forum( $request['id'] );
 
 		$user_id = bbp_get_user_id( 0, true, true );
 
@@ -435,60 +435,51 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to subscribe/unsubscribe the forum.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to subscribe/unsubscribe the forum.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$forum  = bbp_get_forum( $request->get_param( 'id' ) );
 
-		if ( true === $retval && ! bbp_is_subscriptions_active() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Subscription was disabled.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			if ( ! bbp_is_subscriptions_active() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Subscription was disabled.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
+				empty( $forum->ID ) ||
+				! isset( $forum->post_type ) ||
+				'forum' !== $forum->post_type
+			) {
+				$retval = new WP_Error(
+					'bp_rest_forum_invalid_id',
+					__( 'Invalid forum ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 
-		$forum = get_post( $request['id'] );
+			$user_id = bbp_get_user_id( 0, true, true );
 
-		if ( empty( $forum->ID ) ) {
-			$retval = new WP_Error(
-				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ( ! isset( $forum->post_type ) || 'forum' !== $forum->post_type ) ) {
-			$retval = new WP_Error(
-				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		$user_id = bbp_get_user_id( 0, true, true );
-
-		if ( true === $retval && ! current_user_can( 'edit_user', $user_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'You don\'t have the permission to update favorites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( true === $retval && ! current_user_can( 'edit_user', $user_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'You don\'t have the permission to update favorites.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -1072,6 +1063,18 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			),
 		);
 
+		if (
+			function_exists( 'bbp_is_forum_group_forum' )
+			&& bbp_is_forum_group_forum( $post->ID )
+			&& function_exists( 'groups_get_group' )
+		) {
+			$group          = $this->bp_rest_get_group( $post->ID );
+			$links['group'] = array(
+				'href'       => rest_url( sprintf( '/%s/%s/', $this->namespace, 'groups' ) . $group->id ),
+				'embeddable' => true,
+			);
+		}
+
 		/**
 		 * Filter links prepared for the REST response.
 		 *
@@ -1098,7 +1101,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$last_id = get_post_meta( $forum_id, '_bbp_last_active_id', true );
 		if ( ! empty( $last_id ) ) {
-			$post = get_post( $last_id );
+			$post = bbp_get_forum( $last_id );
 
 			return ( ! empty( $post ) && ! empty( $post->post_author ) ) ? $post->post_author : 0;
 		}

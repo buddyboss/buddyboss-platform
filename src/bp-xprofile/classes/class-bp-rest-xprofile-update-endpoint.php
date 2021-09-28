@@ -27,14 +27,24 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	protected $group_fields_endpoint;
 
 	/**
+	 * XProfile Data Class.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @var BP_REST_XProfile_Data_Endpoint
+	 */
+	protected $xprofile_data_endpoint;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace             = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base             = buddypress()->profile->id . '/update';
-		$this->group_fields_endpoint = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$this->namespace              = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->rest_base              = buddypress()->profile->id . '/update';
+		$this->group_fields_endpoint  = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$this->xprofile_data_endpoint = new BP_REST_XProfile_Data_Endpoint();
 	}
 
 	/**
@@ -91,9 +101,12 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 		$user_id = bp_loggedin_user_id();
 
-		$fields = $request->get_param( 'fields' );
+		$fields    = $request->get_param( 'fields' );
+		$field_ids = array();
 
-		$errors = array();
+		$errors     = array();
+		$old_values = array();
+		$new_values = array();
 
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $k => $field_post ) {
@@ -107,10 +120,17 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					continue;
 				}
 
+				$field_ids[] = $field_id;
+
 				$field = xprofile_get_field( $field_id );
 
+				$old_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, $user_id ),
+					'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
+				);
+
 				if ( isset( $field_post['value'] ) ) {
-					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
+					if ( 'checkbox' === $field->type || 'multiselectbox' === $field->type ) {
 						if ( is_serialized( $value ) ) {
 							$value = maybe_unserialize( $value );
 						}
@@ -119,7 +139,17 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 						if ( ! is_array( $value ) ) {
 							$value = (array) $value;
+							$value = array_filter( $value );
 						}
+					}
+
+					// Format social network value.
+					if ( 'socialnetworks' === $field->type ) {
+						if ( is_serialized( $value ) ) {
+							$value = maybe_unserialize( $value );
+						}
+
+						$value = $this->xprofile_data_endpoint->bb_rest_format_social_network_value( $value );
 					}
 
 					$validation = $this->validate_update( $field_id, $user_id, $value );
@@ -134,7 +164,26 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				if ( ! empty( $visibility_level ) ) {
 					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 				}
+
+				$new_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, $user_id ),
+					'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
+				);
 			}
+
+			/**
+			 * Fires after all XProfile fields have been saved for the current profile.
+			 *
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.6.0 Added $old_values and $new_values parameters.
+			 *
+			 * @param int   $user_id    ID for the user whose profile is being saved.
+			 * @param array $field_ids  Array of field IDs that were edited.
+			 * @param bool  $errors     Whether or not any errors occurred.
+			 * @param array $old_values Array of original values before update.
+			 * @param array $new_values Array of newly saved values after update.
+			 */
+			do_action( 'xprofile_updated_profile', $user_id, $field_ids, $errors, $old_values, $new_values );
 		}
 
 		$args = array(
@@ -209,28 +258,27 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval  = true;
+			$user_id = bp_loggedin_user_id();
 
-		$user_id = bp_loggedin_user_id();
-
-		if ( empty( $user_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_login_required',
-				__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $user_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_login_required',
+					__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -443,8 +491,8 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 			if ( bp_current_user_can( 'administrator' ) ) {
 				if ( 'none' === $selected_member_type_wp_roles[0] ) {
-					bp_set_member_type( bp_displayed_user_id(), '' );
-					bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+					bp_set_member_type( $user_id, '' );
+					bp_set_member_type( $user_id, $member_type_name );
 				} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
 					$errors                  = true;
 					$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
@@ -453,8 +501,8 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				}
 			} elseif ( bp_current_user_can( 'editor' ) ) {
 				if ( 'none' === $selected_member_type_wp_roles[0] ) {
-					bp_set_member_type( bp_displayed_user_id(), '' );
-					bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+					bp_set_member_type( $user_id, '' );
+					bp_set_member_type( $user_id, $member_type_name );
 				} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ), true ) ) {
 					$errors                  = true;
 					$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
@@ -462,11 +510,11 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					$validations['message']  = $bp_error_message_string;
 				}
 			} else {
-				bp_set_member_type( bp_displayed_user_id(), '' );
-				bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+				bp_set_member_type( $user_id, '' );
+				bp_set_member_type( $user_id, $member_type_name );
 
 				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-					$bp_current_user = new WP_User( bp_displayed_user_id() );
+					$bp_current_user = new WP_User( $user_id );
 
 					foreach ( $bp_current_user->roles as $role ) {
 						// Remove role.
@@ -487,11 +535,11 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		if (
 			isset( $value )
 			&& function_exists( 'xprofile_validate_field' )
-			&& xprofile_validate_field( $field_id, $value, bp_displayed_user_id() )
+			&& xprofile_validate_field( $field_id, $value, $user_id )
 		) {
 			$errors                  = true;
 			$validations['field_id'] = $field_id;
-			$validations['message']  = xprofile_validate_field( $field_id, $value, bp_displayed_user_id() );
+			$validations['message']  = xprofile_validate_field( $field_id, $value, $user_id );
 		}
 
 		if ( ! empty( $errors ) && $validations ) {

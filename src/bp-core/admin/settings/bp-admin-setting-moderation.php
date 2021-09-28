@@ -81,9 +81,10 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
 
 			// Add the section.
-			$this->add_section( $section_id, $section_title, $section_callback );
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
 
 			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
@@ -95,6 +96,7 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
 				}
 			}
+			
 		}
 
 		/**

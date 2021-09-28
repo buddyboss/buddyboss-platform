@@ -261,6 +261,11 @@ function bp_core_activation_notice() {
 				$component_id = 'document';
 			}
 		}
+		if ( 'videos' === $component_id ) {
+			if ( bp_is_active( 'media' ) && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+				$component_id = 'video';
+			}
+		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
 				'id'   => $component_id,
@@ -1614,9 +1619,9 @@ function bp_core_admin_user_manage_spammers() {
 	if ( ! empty( $updated ) && in_array( $updated, array( 'marked-suspend', 'marked-unsuspend' ) ) ) {
 
 		if ( 'marked-suspend' === $updated ) {
-			$notice = __( 'User suspended.', 'buddyboss' );
+			$notice = __( 'Member suspended.', 'buddyboss' );
 		} else {
-			$notice = __( 'User unsuspended.', 'buddyboss' );
+			$notice = __( 'Member unsuspended.', 'buddyboss' );
 		}
 
 		bp_core_add_admin_notice( $notice );
@@ -1882,7 +1887,7 @@ function bp_member_type_permissions_metabox( $post ) {
 								)
 							);
 							?>
-                        /> <?php _e( '(None)', 'buddyboss' ); ?>
+                        /> <?php _e( '(None - hide group type option)', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -1919,9 +1924,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).click( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 						} else {
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', false );
@@ -1931,9 +1936,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( "#bp-member-type-permissions .inside .group-type-checkboxes" ).each( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 							return false;
 						} else {
@@ -1966,7 +1971,7 @@ function bp_member_type_permissions_metabox( $post ) {
                 <tbody>
                 <tr>
                     <td colspan="2">
-						<?php _e( 'Selected group types will automatically approve all membership requests from users of this profile type:', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -2593,7 +2598,7 @@ function bp_core_admin_create_background_page() {
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
 		if ( 'new_forums_page' === $_POST['page'] ) {
 			$slug = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );
 		}
 	}
@@ -3045,7 +3050,7 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 	if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 		$slug = get_page_uri( $post_id );
 		if ( '' !== $slug ) {
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			bp_update_option( 'rewrite_rules', '' );
 		}
 	}

@@ -23,10 +23,12 @@ function bp_moderation_get_settings_sections() {
 		'bp_moderation_settings_blocking'  => array(
 			'page'  => 'moderation',
 			'title' => __( 'Blocking', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_moderation_block_setting_tutorial',
 		),
 		'bp_moderation_settings_reporting' => array(
 			'page'  => 'moderation',
 			'title' => __( 'Reporting', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_moderation_report_setting_tutorial',
 		),
 	);
 
@@ -99,7 +101,7 @@ function bp_moderation_get_settings_fields() {
 		),
 
 		'bpm_reporting_categories'  => array(
-			'title'             => __( 'Reporting Category', 'buddyboss' ),
+			'title'             => __( 'Reporting Categories', 'buddyboss' ),
 			'callback'          => 'bpm_reporting_settings_callback_categories',
 			'sanitize_callback' => '',
 			'args'              => array(),
@@ -319,7 +321,7 @@ function bpm_reporting_settings_callback_email_notification() {
 	<label for="bpm_reporting_email_notification">
 		<input name="bpm_reporting_email_notification" id="bpm_reporting_email_notification" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_reporting_email_notification_enable( false ) ); ?> />
-		<?php esc_html_e( 'Notify administrators when content has automatically hidden.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Notify administrators when content has been automatically hidden.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }

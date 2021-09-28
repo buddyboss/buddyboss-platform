@@ -59,6 +59,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
@@ -101,7 +109,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity Comment', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss' );
 
 		return $content_types;
 	}
@@ -225,5 +233,50 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+
+		$comment = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $comment->id ) ) {
+			return $button_text;
+		}
+
+		$button_text = esc_html__( 'Report Comment', 'buddyboss' );
+
+		return $button_text;
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id      Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		$comment = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $comment->id ) ) {
+			return $content_type;
+		}
+
+		$content_type = esc_html__( 'Comment', 'buddyboss' );
+
+		return $content_type;
 	}
 }

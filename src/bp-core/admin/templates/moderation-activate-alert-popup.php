@@ -16,8 +16,7 @@ defined( 'ABSPATH' ) || exit;
 <div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
-			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="left"
-					data-bp-tooltip="Close pop-up">
+			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e('Close pop-up', 'buddyboss' ); ?>">
 				<?php
 				esc_html_e( 'Close', 'buddyboss' );
 				?>
@@ -47,7 +46,7 @@ defined( 'ABSPATH' ) || exit;
         </div>
         <div class="bp-not-spam-action-msg" style="display: none;">
 	        <?php
-	        printf( __( 'To unsuspend members who were creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
+	        printf( __( 'To unsuspend members who are not creating spam anymore in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
 	        ?>
         </div>
     </div>
