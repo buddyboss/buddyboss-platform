@@ -1937,7 +1937,7 @@ window.bp = window.bp || {};
 
 			getURL: function ( prefix, urlText ) {
 				var urlString   = '';
-					urlText 	= urlText.replace(/&nbsp;/g, '');
+					urlText     = urlText.replace(/&nbsp;/g, '');
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
 
