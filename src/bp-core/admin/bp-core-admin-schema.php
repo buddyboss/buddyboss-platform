@@ -87,9 +87,7 @@ function bp_core_install( $active_components = false ) {
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
-		if ( (bool) get_option( 'bp_media_symlink_support', false ) ) {
-			bb_core_enable_default_symlink_support();
-		}
+		bb_core_enable_default_symlink_support();
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {

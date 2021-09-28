@@ -5715,7 +5715,8 @@ function bb_core_enable_default_symlink_support() {
 		return;
 	}
 
-	if ( (bool) get_option( 'bp_media_symlink_support', false ) ) {
+	//Bail if symlink is enabled or symlink is disabled intentionally
+	if ( (bool) get_option( 'bp_media_symlink_support', false ) || get_option( 'bp_media_symlink_support', false ) === '0' ) {
 		return;
 	}
 
