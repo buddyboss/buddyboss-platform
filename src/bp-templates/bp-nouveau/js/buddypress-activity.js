@@ -1059,6 +1059,11 @@ window.bp = window.bp || {};
 					);
 				}
 			}
+			
+			if ( target.hasClass( 'activity-state-no-comments' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
+			}
 
 			// Removing the form.
 			if ( target.hasClass( 'ac-reply-cancel' ) ) {
