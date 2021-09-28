@@ -448,7 +448,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		}
 
 		/**
-		 * Add a link to Forums about page to the admin bar
+		 * Add a link to about popup for BuddyBoss in the admin bar.
 		 *
 		 * @since bbPress (r5136)
 		 *
