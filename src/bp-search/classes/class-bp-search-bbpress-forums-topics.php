@@ -227,7 +227,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				WHERE FIND_IN_SET( post_parent, @pvv )
 				AND   LENGTH( @pvv := CONCAT(@pv, ',', ID ) )";
 
-			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id, $forum_id ) );
+			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id ) );
 
 			return $child_forum_ids;
 		}
