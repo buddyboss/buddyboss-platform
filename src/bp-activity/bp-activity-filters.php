@@ -2965,6 +2965,27 @@ function bp_activity_edit_update_video( $video_ids ) {
 }
 
 /**
+ * Function will remove like and comment button for the media/document activity.
+ *
+ * @param array $buttons     Array of buttons.
+ * @param int   $activity_id Activity ID.
+ *
+ * @return mixed
+ * 
+ * @since BuddyBoss 1.7.8
+ */
+function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
+	$buttons['activity_favorite']            = '';
+	$buttons['activity_conversation']        = '';
+	$buttons['activity_report']              = '';
+	$buttons['activity_comment_reply']       = '';
+	$buttons['activity_edit']                = '';
+	$buttons['activity_delete']              = '';
+	$buttons['activity_state_comment_class'] = 'activity-state-no-comments';
+	return $buttons;
+}
+
+/**
  * Action to delete link preview attachment.
  *
  * @param array $activities Array of activities.
@@ -2982,24 +3003,4 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 			}
 		}
 	}
-}
-
-/**
- * Function will remove like and comment button for the media/document activity.
- *
- * @param array $buttons     Array of buttons.
- * @param int   $activity_id Activity ID.
- *
- * @return mixed
- * 
- * @since BuddyBoss 1.7.8
- */
-function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
-	$buttons['activity_favorite']      = '';
-	$buttons['activity_conversation']  = '';
-	$buttons['activity_report']        = '';
-	$buttons['activity_comment_reply'] = '';
-	$buttons['activity_edit']          = '';
-	$buttons['activity_delete']        = '';
-	return $buttons;
 }
