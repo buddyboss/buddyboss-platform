@@ -750,7 +750,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( function_exists( 'bp_get_attachment_video_id' ) && ! empty( bp_get_attachment_video_id( (int) $attachment_id ) ) ) {
+				} elseif ( function_exists( 'bp_get_attachment_video_id' ) && ! empty( bp_get_attachment_video_id( (int) $attachment_id ) ) && empty( $request['album_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_video_upload_id',
 						sprintf(
