@@ -190,7 +190,7 @@ add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_in
  * @return string
  */
 function bp_blogs_filter_meta_column_name( $retval ) {
-	if ( 'bp_blog_id' === $retval ) {
+	if ( 'bb_blog_id' === $retval ) {
 		$retval = 'blog_id';
 	}
 	return $retval;
