@@ -51,15 +51,14 @@ class BB_Woocommerce_Helpers {
 	}
 
 	/**
-	 * Function to set the true if woocommerce registration is enable otherwise return default value.
-	 * 
+	 * Function to set the true if custom registration is enable otherwise return default value.
+	 *
 	 * @since BuddyBoss 1.7.9
 	 *
-	 * @param bool   $validate      default false.
-	 * @param int    $page_id 		current page id.
+	 * @param bool $validate default false.
+	 * @param int  $page_id current page id.
 	 *
-	 * @return bool true if woocommerce registration is enable.
-	 *
+	 * @return bool|mixed
 	 */
 	public function bb_check_woocommerce_enable_myaccount_registration( $validate, $page_id ) {
 
@@ -67,8 +66,8 @@ class BB_Woocommerce_Helpers {
 			if (
 				'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
 				|| (
-					'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
-					&& $page_id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+					'yes' === get_option( 'woocommerce_enable_myaccount_registration' )
+					&& ( get_option( 'woocommerce_myaccount_page_id' ) !== $page_id )
 				)
 			) {
 				return true;

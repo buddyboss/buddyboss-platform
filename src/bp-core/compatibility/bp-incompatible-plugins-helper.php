@@ -167,32 +167,6 @@ function bp_helper_plugins_loaded_callback() {
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
 /**
- * Function to set the false to use the default media symlink instead use the offload media URL of media.
- *
- * @param bool   $can           default true.
- * @param int    $id            media/document/video id.
- * @param int    $attachment_id attachment id.
- * @param string $size          preview size.
- *
- * @return bool true if the offload media used.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
-	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['bucket'] ) && isset( $remove_local_files_setting['copy-to-s3'] ) && '1' === $remove_local_files_setting['copy-to-s3'] ) {
-			$can = false;
-		}
-	}
-	return $can;
-}
-add_filter( 'bb_media_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_document_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_video_do_symlink', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-add_filter( 'bb_video_create_thumb_symlinks', 'bb_offload_do_symlink', PHP_INT_MAX, 4 );
-
-/**
  * Helper functions for the offload media compatibility.
  */
 function bb_wp_offload_media_compatibility_helper() {

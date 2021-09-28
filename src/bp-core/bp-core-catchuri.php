@@ -1158,14 +1158,14 @@ function bp_private_network_template_redirect() {
 		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
 
 		/**
-		 * Filter to check woocommerce registration is enable or not.
-		 * 
+		 * Filter to check custom registration is enable or not.
+		 *
 		 * @since BuddyBoss 1.7.9
 		 *
-		 * @param bool   $validated 	True if message is not valid, false otherwise.
-		 * @param string $id 			Current page ID.
+		 * @param bool $validated If custom registration is enable then true otherwise false.
+		 * @param string $id Current page ID.
 		 *
-		 * @return bool true if woocommerce registration is enable.
+		 * @return bool|mixed
 		 */
 		$is_enable_custom_registration = apply_filters( 'bb_is_enable_custom_registration', false, $id );
 
