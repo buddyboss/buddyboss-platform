@@ -1366,7 +1366,6 @@ function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = fa
 	}
 
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	add_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 
 	$retval = false;
 	foreach ( $keys as $key ) {
@@ -1374,7 +1373,6 @@ function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = fa
 	}
 
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
-	remove_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 
 	return $retval;
 }
@@ -1397,9 +1395,7 @@ function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = fa
  */
 function bp_blogs_get_blogmeta( $blog_id, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	add_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 	$retval = get_metadata( 'bb_blog', $blog_id, $meta_key, $single );
-	remove_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
@@ -1422,9 +1418,7 @@ function bp_blogs_get_blogmeta( $blog_id, $meta_key = '', $single = true ) {
  */
 function bp_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	add_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 	$retval = update_metadata( 'bb_blog', $blog_id, $meta_key, $meta_value, $prev_value );
-	remove_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
@@ -1445,9 +1439,7 @@ function bp_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value
  */
 function bp_blogs_add_blogmeta( $blog_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	add_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 	$retval = add_metadata( 'bb_blog', $blog_id, $meta_key, $meta_value, $unique );
-	remove_filter( 'sanitize_key', 'bp_blogs_filter_meta_column_name' );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
