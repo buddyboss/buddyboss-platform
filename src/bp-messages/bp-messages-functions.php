@@ -936,15 +936,10 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$message = '';
 	}
 
-	// Send an email to each recipient.
+	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
-			continue;
-		}
 
-		// User data and links.
-		$ud = get_userdata( $recipient->user_id );
-		if ( empty( $ud ) ) {
+		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
 			continue;
 		}
 
@@ -958,7 +953,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 		bp_send_email(
 			'group-message-email',
-			$ud,
+			$recipient->user_id,
 			array(
 				'tokens' => array(
 					'message_id'  => $id,

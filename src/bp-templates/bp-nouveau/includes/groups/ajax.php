@@ -1128,15 +1128,15 @@ function bp_nouveau_ajax_groups_send_message() {
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $message_users ) {
 
-        // Fetch all the group members.
-		$members = BP_Groups_Member::get_group_member_ids( (int) $group );
-
-		// Exclude logged-in user ids from the members list.
-		if ( in_array( bp_loggedin_user_id(), $members ) ) {
-			$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
-		}
-
 		if ( 'private' === $message_type ) {
+
+			// Fetch all the group members.
+			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
+
+			// Exclude logged-in user ids from the members list.
+			if ( in_array( bp_loggedin_user_id(), $members ) ) {
+				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+			}
 
 			// Check Membership Access.
 			foreach ( $members as $k => $member ) {
@@ -1201,11 +1201,11 @@ function bp_nouveau_ajax_groups_send_message() {
 			wp_send_json_error( $response );
 		}
 
-	}
+		if ( empty( $members ) ) {
+			$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
 
-	if ( empty( $members ) ) {
-		$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
-		wp_send_json_error( $response );
 	}
 
 	if ( empty( $group ) ) {
@@ -1219,6 +1219,14 @@ function bp_nouveau_ajax_groups_send_message() {
 		// "All Group Members" selected.
 		if ( 'all' === $message_users ) {
 
+			// Fetch all the group members.
+			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
+
+			// Exclude logged-in user ids from the members list.
+			if ( in_array( bp_loggedin_user_id(), $members ) ) {
+				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+			}
+
 			// Comma separated members list to find in meta query.
 			$message_users_ids = implode( ',', $members );
 
@@ -1230,41 +1238,41 @@ function bp_nouveau_ajax_groups_send_message() {
 			$group_thread_id              = '';
 			$_POST['message_thread_type'] = '';
 
-			if ( '' !== $group_thread ) {
-				if ( messages_is_valid_thread( $group_thread ) ) {
-					$first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
+			if ( '' !== $group_thread && messages_is_valid_thread( $group_thread ) ) {
 
-					if ( ! empty( $first_thread_message ) ) {
-						$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
-						$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
-						$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+                $first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-						if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
-							$_POST['message_thread_type'] = 'new';
-						}
-					}
+                if ( ! empty( $first_thread_message ) ) {
+                    $users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+                    $type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+                    $group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
-					if ( empty( $_POST['message_thread_type'] ) ) {
-						$total_threads = BP_Messages_Thread::get(
-							array(
-								'include_threads' => array( $group_thread ),
-								'per_page'        => 1,
-								'count_total'     => true,
-								'is_deleted'      => 1,
-							)
-						);
+                    if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+                        $_POST['message_thread_type'] = 'new';
+                    }
+                }
 
-						$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
+                if ( empty( $_POST['message_thread_type'] ) ) {
+                    $total_threads = BP_Messages_Thread::get(
+                        array(
+                            'include_threads' => array( $group_thread ),
+                            'per_page'        => 1,
+                            'count_total'     => true,
+                            'is_deleted'      => 1,
+                        )
+                    );
 
-						if ( $is_deleted ) {
-							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-							$_POST['message_thread_type'] = 'new';
-						}
-					}
-				} else {
-					$_POST['message_thread_type'] = 'new';
-				}
-			}
+                    $is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
+
+                    if ( $is_deleted ) {
+                        // This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+                        $_POST['message_thread_type'] = 'new';
+                    }
+                }
+
+			} else {
+				$_POST['message_thread_type'] = 'new';
+            }
 
 			if ( '' !== $group_thread && ! $is_deleted && isset( $_POST['message_thread_type'] ) && empty( $_POST['message_thread_type'] ) ) {
 				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
@@ -1346,7 +1354,8 @@ function bp_nouveau_ajax_groups_send_message() {
 			 * Create Message based on the `message_thread_type` and `group_thread_id`.
 			 */
 			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
-				$send = bp_groups_messages_new_message(
+
+                $send = bp_groups_messages_new_message(
 					array(
 						'recipients'    => $members,
 						'subject'       => wp_trim_words( $content, messages_get_default_subject_length() ),
@@ -1361,8 +1370,10 @@ function bp_nouveau_ajax_groups_send_message() {
 				}
 
 				bp_groups_messages_validate_message( $send );
+
 			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $group_thread_id ) ) {
-				groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
+
+                groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
 
 				$new_reply = bp_groups_messages_new_message(
 					array(
