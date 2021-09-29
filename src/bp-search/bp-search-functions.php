@@ -292,16 +292,16 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 								case 'current':
 									$class = 'active';
 									if ( $use_bootstrap ) {
-										$link_html = "<span>$e[0] <span class='sr-only'>(current)</span></span>";
+										$link_html = "<span>" . esc_html( $e[0] ) . " <span class='sr-only'>(current)</span></span>";
 									} else {
-										$link_html = "<span class='page-numbers current'>$e[0]</span>";
+										$link_html = "<span class='page-numbers current'>" . esc_html( $e[0] ) . "</span>";
 									}
 									break;
 								default:
 									if ( $use_bootstrap ) {
-										$link_html = "<span>$e[0]</span>";
+										$link_html = "<span>" . esc_html( $e[0] ) . "</span>";
 									} else {
-										$link_html = "<span class='page-numbers'>$e[0]</span>";
+										$link_html = "<span class='page-numbers'>" . esc_html( $e[0] ) . "</span>";
 									}
 									break;
 							}
