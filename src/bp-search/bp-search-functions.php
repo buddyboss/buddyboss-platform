@@ -287,7 +287,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 									if ( isset( $hashlink ) && $hashlink != '' ) {
 										$base_link .= "#$hashlink";
 									}
-									$link_html = "<a href='$base_link' title='$e[0]' class='page-numbers' data-pagenumber='$e[1]'>$e[0]</a>";
+									$link_html = "<a href='" . esc_url( $base_link ) . "' title='" . esc_attr( $e[0] ) . "' class='page-numbers' data-pagenumber='" . esc_attr( $e[1] ) . "'>" . esc_html( $e[0] ) . "</a>";
 									break;
 								case 'current':
 									$class = 'active';
@@ -308,6 +308,14 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 
 							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
 							echo $link_html;
+							/*echo wp_kses( $link_html, array(
+								'a' => array(
+									'href'            => array(),
+									'title'           => array(),
+									'class'           => array(),
+									'data-pagenumber' => array()
+								)
+							) );*/
 						}
 						?>
 						<?php if ( $use_bootstrap ) : ?>
