@@ -851,15 +851,10 @@ function messages_notification_new_message( $raw_args = array() ) {
 		$message = '';
 	}
 
-	// Send an email to each recipient.
+	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
-			continue;
-		}
 
-		// User data and links.
-		$ud = get_userdata( $recipient->user_id );
-		if ( empty( $ud ) ) {
+		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
 			continue;
 		}
 
@@ -870,7 +865,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 		bp_send_email(
 			'messages-unread',
-			$ud,
+			$recipient->user_id,
 			array(
 				'tokens' => array(
 					'message_id'  => $id,
@@ -936,6 +931,9 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$message = '';
 	}
 
+	$group      = bp_messages_get_meta( $id, 'group_id', true );
+	$group_name = bp_get_group_name( groups_get_group( $group ) );
+
 	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
 
@@ -947,9 +945,6 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			'user_id'           => $recipient->user_id,
 			'notification_type' => 'group-message-email',
 		);
-
-		$group      = bp_messages_get_meta( $id, 'group_id', true );
-		$group_name = bp_get_group_name( groups_get_group( $group ) );
 
 		bp_send_email(
 			'group-message-email',
