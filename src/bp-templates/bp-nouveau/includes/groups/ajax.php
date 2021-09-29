@@ -1175,10 +1175,8 @@ function bp_nouveau_ajax_groups_send_message() {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
 
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-                    $not_friends[] = bp_core_get_user_displayname( $member );
-                }
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
+				$not_friends[] = bp_core_get_user_displayname( $member );
 			}
 
 		}
@@ -1484,7 +1482,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 
-						// Else recipients not matched.
+					// Else recipients not matched.
 					} else {
 						$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 						$existing_thread  = 0;
@@ -1551,7 +1549,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$_POST['message_thread_type'] = 'new';
 						}
 					}
-					// Else no thread found.
+				// Else no thread found.
 				} else {
 					$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 					$existing_thread  = 0;
@@ -1618,7 +1616,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 				}
 
-				// Else no previous thread found.
+			// Else no previous thread found.
 			} else {
 				$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 				$existing_thread  = 0;
