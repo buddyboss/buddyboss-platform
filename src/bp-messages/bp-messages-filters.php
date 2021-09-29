@@ -223,7 +223,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
  *
  * @since BuddyBoss 1.2.9
  *
- * @param $message
+ * @param object $message Message object.
  */
 function bp_media_messages_save_group_data( &$message ) {
 
@@ -797,9 +797,9 @@ function bp_messages_admin_repair_unread_messages_count() {
 
 /**
  * Exclude current user and admin user when we open blocked member list.
- * 
+ *
  * @since BuddyBoss 1.7.6
- * 
+ *
  * @return string Exclude admin users from message block list.
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
@@ -811,9 +811,9 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 
 /**
  * Add nonce for the moderation when click on block member button.
- * 
+ *
  * @param $params Get params.
- * 
+ *
  * @return $params Return params.
  */
 add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );

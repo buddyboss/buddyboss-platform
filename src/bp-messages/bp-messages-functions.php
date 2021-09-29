@@ -391,19 +391,12 @@ function messages_new_message( $args = '' ) {
 /**
  * Create New Group Message.
  *
- * @param array|string $args         {
- *                                   Array of arguments.
+ * @param array|string $args         { Array of arguments.
  *
- * @type int           $sender_id    Optional. ID of the user who is sending the
- *                                 message. Default: ID of the logged-in user.
- * @type int           $thread_id    Optional. ID of the parent thread. Leave blank to
- *                                 create a new thread for the message.
- * @type array         $recipients   IDs or usernames of message recipients. If this
- *                                 is an existing thread, it is unnecessary to pass a $recipients
- *                                 argument - existing thread recipients will be assumed.
- * @type string        $subject      Optional. Subject line for the message. For
- *                                 existing threads, the existing subject will be used. For new
- *                                 threads, 'No Subject' will be used if no $subject is provided.
+ * @type int           $sender_id    Optional. ID of the user who is sending the message. Default: ID of the logged-in user.
+ * @type int           $thread_id    Optional. ID of the parent thread. Leave blank to create a new thread for the message.
+ * @type array         $recipients   IDs or usernames of message recipients. If this is an existing thread, it is unnecessary to pass a $recipients argument - existing thread recipients will be assumed.
+ * @type string        $subject      Optional. Subject line for the message. For existing threads, the existing subject will be used. For new threads, 'No Subject' will be used if no $subject is provided.
  * @type string        $content      Content of the message. Cannot be empty.
  * @type string        $date_sent    Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
  * @type bool          $is_hidden    Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
@@ -414,6 +407,7 @@ function messages_new_message( $args = '' ) {
  * @return int|bool|WP_Error ID of the message thread on success, false on failure.
  */
 function bp_groups_messages_new_message( $args = '' ) {
+
 	$send = '';
 	remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 	add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -905,6 +899,7 @@ add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
  * @param array $raw_args
  */
 function group_messages_notification_new_message( $raw_args = array() ) {
+
 	if ( is_object( $raw_args ) ) {
 		$args = (array) $raw_args;
 	} else {
@@ -1218,16 +1213,20 @@ function bb_messages_recipients_per_page() {
 /**
  * Send bulk group message to the members.
  *
- * @param array   $post_data       Post data.
- * @param array   $members         Array of Member ids.
- * @param integer $current_user_id Currently logged-in user id.
- * @param string  $content         Message content text.
+ * @param array  $post_data       Post data.
+ * @param array  $members         Array of Member ids.
+ * @param int    $current_user_id Currently logged-in user id.
+ * @param string $content         Message content text.
+ *
+ * @since BuddyBoss 1.7.9
  *
  * @return bool|int|void|WP_Error
  */
 function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '' ) {
+
 	// setup post data into $_POST.
-	$_POST = $post_data;
+	$_POST        = $post_data;
+	$message_args = array();
 
 	if ( empty( $members ) ) {
 		return;
@@ -1290,16 +1289,16 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			}
 
 			if ( $existing_thread > 0 ) {
-				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 				$_POST['message_thread_type'] = 'reply';
 
 				$member_thread_id = $existing_thread;
 			} else {
-				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 				$_POST['message_thread_type'] = 'new';
 			}
 		} else {
-			// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 			$_POST['message_thread_type'] = 'new';
 		}
 
