@@ -308,14 +308,6 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 
 							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
 							echo $link_html;
-							/*echo wp_kses( $link_html, array(
-								'a' => array(
-									'href'            => array(),
-									'title'           => array(),
-									'class'           => array(),
-									'data-pagenumber' => array()
-								)
-							) );*/
 						}
 						?>
 						<?php if ( $use_bootstrap ) : ?>
