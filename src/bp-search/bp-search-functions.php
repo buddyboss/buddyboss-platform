@@ -287,7 +287,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 									if ( isset( $hashlink ) && $hashlink != '' ) {
 										$base_link .= "#$hashlink";
 									}
-									$link_html = "<a href='$base_link' title='$e[0]' class='page-numbers' data-pagenumber='$e[1]'>$e[0]</a>";
+									$link_html = "<a href='" . esc_url( $base_link ) . "' title='$e[0]' class='page-numbers' data-pagenumber='$e[1]'>$e[0]</a>";
 									break;
 								case 'current':
 									$class = 'active';
