@@ -704,11 +704,23 @@ function bp_nouveau_ajax_post_update() {
 				$is_private = 'public' !== $status;
 			}
 		} else {
-			wp_send_json_error(
-				array(
-					'message' => ( ! $item_id ) ? __( 'There was a problem posting your update. Please set the group details properly.', 'buddyboss' ): __( 'There was a problem posting your update. Group component is disabled, it should be enabled.', 'buddyboss' ),
-				)
-			);
+
+			if ( bp_is_active( 'groups' ) ) {
+				if ( ! $item_id ){
+					wp_send_json_error(
+						array(
+							'message' => __( 'There was a problem posting your update. Please set the group details properly.', 'buddyboss' ),
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => __( 'There was a problem posting your update. Group component is disabled, it should be enabled.', 'buddyboss' ),
+					)
+				);
+			}
+			
 		}
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
