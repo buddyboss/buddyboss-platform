@@ -199,7 +199,6 @@ class BP_Messages_Thread {
 		foreach ( (array) $this->messages as $key => $message ) {
 			$this->sender_ids[ $message->sender_id ] = $message->sender_id;
 		}
-
 		$args['per_page'] = bb_messages_recipients_per_page();
 		// Fetch the recipients.
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
@@ -1805,6 +1804,16 @@ class BP_Messages_Thread {
 			)
 		);
 
+		if ( isset( $r['exclude_current_user'] ) && true === (bool) $r['exclude_current_user'] ) {
+			// Exclude admins users list in the message.
+			$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+			if ( ! empty( $r['exclude_admin_user'] ) ) {
+				$r['exclude_admin_user'] = array_merge( $r['exclude_admin_user'], array( $user_id ) );
+			} else {
+				$r['exclude_admin_user'] = array( $user_id );
+			}
+			$r['exclude_admin_user'] = array_unique( $r['exclude_admin_user'] );
+		}
 		$results    = self::get( $r );
 		$recipients = array();
 
@@ -1815,7 +1824,6 @@ class BP_Messages_Thread {
 		}
 
 		if ( isset( $results['total'] ) ) {
-			// Fetch the recipients count.
 			$this->total_recipients_count = $results['total'];
 		}
 
