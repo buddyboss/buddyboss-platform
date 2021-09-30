@@ -78,7 +78,7 @@ add_filter( 'bb_ajax_activity_update_privacy', 'bb_document_update_video_symlink
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
-add_action( 'template_include', 'bb_setup_template_for_document_preview' );
+add_action( 'template_include', 'bb_setup_template_for_document_preview', PHP_INT_MAX );
 
 add_filter( 'bb_get_messages_message_validated_content', 'bb_check_is_get_message_content_validate_with_document', 4, 3 );
 
@@ -945,9 +945,20 @@ function bp_document_check_download_folder_protection() {
 			array(
 					'base'    => $upload_dir['basedir'] . '/bb_documents',
 					'file'    => '.htaccess',
-					'content' => 'deny from all
+					'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
 
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
