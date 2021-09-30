@@ -735,6 +735,8 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
  * Function will check content empty or not for the media, document and gif.
  * If content will empty then return true and allow empty content in DB for the media, document and gif.
  *
+ * @since BuddyBoss X.X.X
+ *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
@@ -755,9 +757,11 @@ function bb_check_is_message_content_empty( $validated_content, $content, $post 
  * Function will check content empty or not for the media, document and gif.
  * If content will empty then return true and allow empty content in DB for the media, document and gif.
  *
+ * @since BuddyBoss X.X.X
+ *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.
- * @param array|object $id                Message ID.
+ * @param array|object $message_id        Message ID.
  *
  * @return bool
  */
@@ -773,19 +777,18 @@ function bb_check_is_get_message_content_empty( $validated_content, $content = '
  * Function will check content empty or not for the GIF.
  * If content will empty then return true and allow empty content in DB for the GIF.
  *
+ * @since BuddyBoss X.X.X
+ *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.
- * @param array|object $id                Message ID.
+ * @param array|object $message_id        Message ID.
  *
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_gif( $validated_content, $content = '', $message_id ) {
-	if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+	if ( $validated_content && bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
 		$gif_data = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-		if ( empty( $content ) && ! empty( $gif_data ) ) {
-			return true;
-		}
+		return ! empty( $gif_data );
 	}
 
 	return $validated_content;

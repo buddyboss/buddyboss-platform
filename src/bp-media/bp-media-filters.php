@@ -2696,19 +2696,18 @@ function bb_setup_template_for_media_preview( $template ) {
  * Function will check content empty or not for the media.
  * If content will empty then return true and allow empty content in DB for the media.
  *
+ * @since BuddyBoss X.X.X
+ *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.
- * @param array|object $id                Message ID.
+ * @param array|object $message_id        Message ID.
  *
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_media( $validated_content, $content = '', $message_id ) {
-	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	if ( $validated_content && bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
-
-		if ( empty( $content ) && ! empty( $media_ids ) ) {
-			return true;
-		}
+		return ! empty( $media_ids );
 	}
 
 	return $validated_content;

@@ -1806,19 +1806,18 @@ function bb_setup_template_for_video_preview( $template ) {
  * Function will check content empty or not for the video.
  * If content will empty then return true and allow empty content in DB for the video.
  *
+ * @since BuddyBoss X.X.X
+ *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.
- * @param array|object $id                Message ID.
+ * @param array|object $message_id        Message ID.
  *
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_video( $validated_content, $content = '', $message_id ) {
-	if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+	if ( $validated_content && bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
 		$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
-
-		if ( empty( $content ) && ! empty( $video_ids ) ) {
-			return true;
-		}
+		return ! empty( $video_ids );
 	}
 
 	return $validated_content;

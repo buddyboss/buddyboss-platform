@@ -1955,19 +1955,18 @@ function bb_setup_template_for_document_preview( $template ) {
  * Function will check content empty or not for the document.
  * If content will empty then return true and allow empty content in DB for the document.
  *
+ * @since BuddyBoss X.X.X
+ *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.
- * @param array|object $id                Message ID.
+ * @param array|object $message_id        Message ID.
  *
  * @return bool
  */
 function bb_check_is_get_message_content_validate_with_document( $validated_content, $content = '', $message_id ) {
-	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+	if ( $validated_content && bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
-
-		if ( empty( $content ) && ! empty( $document_ids ) ) {
-			return true;
-		}
+		return ! empty( $document_ids );
 	}
 
 	return $validated_content;

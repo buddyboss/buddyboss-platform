@@ -90,7 +90,6 @@ function messages_new_message( $args = '' ) {
 		if ( 'wp_error' === $r['error_type'] ) {
 			$error_code = 'messages_empty_content';
 			$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
-			
 			return new WP_Error( $error_code, $feedback );
 		} else {
 			return false;
