@@ -974,7 +974,7 @@ function bbp_repair_forum_visibility() {
 	// Reset the $post global
 	wp_reset_postdata();
 
-	$hidden_forums  = new WP_Query(
+	$hidden_forums = new WP_Query(
 		array(
 			'suppress_filters' => true,
 			'nopaging'         => true,
@@ -1731,7 +1731,13 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 			)
 		);
 
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
+		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar(
+			'',
+			array(
+				'object' => 'group',
+				'type'   => $type,
+			)
+		) : '';
 
 		if ( $group_avatar_url != $group_default_avatar ) {
 			return $group_avatar_url;
@@ -1764,7 +1770,13 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 			)
 		);
 
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
+		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar(
+			'',
+			array(
+				'object' => 'group',
+				'type'   => $type,
+			)
+		) : '';
 
 		if ( $group_avatar_url != $group_default_avatar ) {
 			return bp_core_fetch_avatar(
@@ -1873,7 +1885,7 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 			// check the user is the member of group or not while rendering the shortcode with group.
 			if ( bp_is_active( 'groups' ) ) {
 				foreach ( $forum_ids as $k => $forum_id ) {
-					$group_id  = bbp_forum_recursive_group_id( $forum_id );
+					$group_id = bbp_forum_recursive_group_id( $forum_id );
 					if ( ! empty( $group_id ) ) {
 						$is_member = groups_is_user_member( bbp_get_current_user_id(), $group_id );
 						if ( ! empty( $is_member ) ) {
@@ -2562,4 +2574,29 @@ function bbp_get_forums_per_page( $default = 15 ) {
 
 	// Filter and return
 	return (int) apply_filters( 'bbp_get_forums_per_page', $retval, $default );
+}
+
+/**
+ * Redirect non-loggedin user to login page while viewing private forum
+ *
+ * @param object $posts array of post objects.
+ * @param object $wp_query WP_Query inatsnace.
+ */
+function bbp_redirect_private_forum( $posts, &$wp_query ) {
+	// remove filter now, so that on subsequent post querying we don't get involved!
+	remove_filter( 'the_posts', 'bbp_redirect_private_forum', 5, 2 );
+
+	$forum_slug = get_query_var( 'forum' );
+
+	// no forum with no results.
+	if ( ! ( empty( $posts ) ) ) {
+		return $posts;
+	}
+
+	// otherwise assume that if the request was for a forum, and no forum was found, it was private.
+	if ( ! is_user_logged_in() && ( '' !== $forum_slug ) ) {
+		wp_safe_redirect( wp_login_url( $_SERVER['REQUEST_URI'] ), 301 );
+		exit;
+	}
+
 }
