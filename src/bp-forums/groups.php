@@ -262,7 +262,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $caps;
 			}
 
-			if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
+            if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
 				return array( 'participate' );
 			}
 
