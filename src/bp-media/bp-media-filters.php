@@ -86,8 +86,6 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
 add_filter( 'query_vars', 'bb_setup_query_media_preview' );
 add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
 
-add_filter( 'bb_get_messages_message_validated_content', 'bb_check_is_get_message_content_validate_with_media', 2, 3 );
-
 /**
  * Add Media items for search
  */
@@ -2690,25 +2688,4 @@ function bb_setup_template_for_media_preview( $template ) {
 	do_action( 'bb_setup_template_for_media_preview' );
 
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
-}
-
-/**
- * Function will check content empty or not for the media.
- * If content will empty then return true and allow empty content in DB for the media.
- *
- * @since BuddyBoss X.X.X
- *
- * @param bool         $validated_content Boolean from filter.
- * @param string       $content           Message content.
- * @param array|object $message_id        Message ID.
- *
- * @return bool
- */
-function bb_check_is_get_message_content_validate_with_media( $validated_content, $content = '', $message_id ) {
-	if ( $validated_content && bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-		$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
-		return ! empty( $media_ids );
-	}
-
-	return $validated_content;
 }
