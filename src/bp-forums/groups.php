@@ -256,18 +256,18 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * @return array
 		 */
-		public function bbp_map_assign_topic_tags_caps( $caps, $cap, $user_id, $args ) {
+        public function bbp_map_assign_topic_tags_caps( $caps, $cap, $user_id, $args ) {
 
-            if ( 'assign_topic_tags' !== $cap ) {
-                return $caps;
-            }
+	        if ( 'assign_topic_tags' !== $cap ) {
+		        return $caps;
+	        }
 
-            if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
-                return array( 'participate' );
-            }
+	        if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
+		        return array( 'participate' );
+	        }
 
-			return $caps;
-		}
+	        return $caps;
+        }
 
 		/**
 		 * Remove the topic meta cap map, so it doesn't interfere with sidebars.
