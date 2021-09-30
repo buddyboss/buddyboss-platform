@@ -350,7 +350,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 													if ( 'spam' == $this->view ) {
 														echo 'current';}
 													?>
-			"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( $this->spam_count ) ); ?></a></li>
+			"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( $this->spam_count ) ); ?></a></li>
 
 			<?php
 
@@ -779,7 +779,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 			// If the activity has comments, display a link to the activity's permalink, with its comment count in a speech bubble.
 			if ( $comment_count ) {
-				printf( '<a href="%1$s" class="post-com-count post-com-count-approved"><span class="comment-count comment-count-approved">%2$s</span></a>', esc_url( $root_activity_url ), number_format_i18n( $comment_count ) );
+				printf( '<a href="%1$s" class="post-com-count post-com-count-approved"><span class="comment-count comment-count-approved">%2$s</span></a>', esc_url( $root_activity_url ), bp_core_number_format( $comment_count ) );
 			}
 
 			// For non-root activities, display a link to the replied-to activity's author's profile.
