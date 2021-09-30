@@ -337,7 +337,7 @@ function messages_new_message( $args = '' ) {
 		);
 
 		foreach ( (array) $message->recipients as $i => $recipient ) {
-			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) ) {
+			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) && !bp_user_can( $message->sender_id, 'manage_options' ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					if ( $new_reply && 1 === count( $message->recipients ) ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
