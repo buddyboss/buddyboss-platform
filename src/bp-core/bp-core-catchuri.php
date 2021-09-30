@@ -1525,7 +1525,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 			$page_title       = ( $privacy ) ? get_the_title( $privacy ) : '';
 			$get_privacy      = get_post( $privacy );
 			$get_content      = apply_filters( 'bp_privacy_policy_content', wp_kses_post( apply_filters( 'the_content', $get_privacy->post_content ) ), $get_privacy->post_content );
-			$link             .= ' and ';
+			$link             .= ' ' . __( 'and', 'buddyboss' ) . ' ';
 			$link             .= sprintf(
 				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
 				'#privacy-modal',
