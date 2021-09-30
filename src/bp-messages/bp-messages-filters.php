@@ -698,7 +698,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',

@@ -1154,7 +1154,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
 		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
 
-		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
