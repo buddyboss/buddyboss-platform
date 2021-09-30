@@ -259,12 +259,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		public function bbp_map_assign_topic_tags_caps( $caps, $cap, $user_id, $args ) {
 
             if ( 'assign_topic_tags' !== $cap ) {
-				return $caps;
-			}
+                return $caps;
+            }
 
             if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
-				return array( 'participate' );
-			}
+                return array( 'participate' );
+            }
 
 			return $caps;
 		}
