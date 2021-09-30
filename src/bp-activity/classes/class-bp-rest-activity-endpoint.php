@@ -1829,7 +1829,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['full'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
@@ -1837,7 +1837,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['thumb'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
@@ -2156,12 +2156,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function bp_rest_activitiy_edit_data( $activity ) {
+		global $activities_template;
+		$activity_temp = $activities_template->activity;
+
 		if ( empty( $activity->id ) ) {
 			return array();
 		}
 
 		if ( ! function_exists( 'bp_activity_get_edit_data' ) ) {
 			return array();
+		}
+
+		$parent_activity = empty( $activity->item_id ) ? false : new BP_Activity_Activity( $activity->item_id );
+
+		// For getting group comment activity_data.
+		if ( 'activity_comment' === $activity->type && ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
+			$activities_template->activity = $parent_activity;
+			$edit_activity_data            = bp_activity_get_edit_data( $activity->item_id );
+		} else {
+			$edit_activity_data = bp_activity_get_edit_data( $activity->id );
 		}
 
 		$edit_activity_data = bp_activity_get_edit_data( $activity->id );
@@ -2177,19 +2190,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( isset( $edit_activity_data['group_media'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
-			$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( isset( $edit_activity_data['group_media'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) && ! empty( $parent_activity ) ) {
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
 				$edit_activity_data['group_media'] = bp_is_group_media_support_enabled() && ( ! function_exists( 'bb_media_user_can_upload' ) || bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
 			}
 		}
 
-		if ( isset( $edit_activity_data['group_document'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
-			$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( isset( $edit_activity_data['group_document'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) && ! empty( $parent_activity ) ) {
 			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
 				$edit_activity_data['group_document'] = bp_is_group_document_support_enabled() && ( ! function_exists( 'bb_document_user_can_upload' ) || bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
 			}
 		}
+
+		$activities_template->activity = $activity_temp;
 
 		return (array) $edit_activity_data;
 	}
