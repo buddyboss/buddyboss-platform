@@ -57,7 +57,7 @@ jQuery( document ).ready(
 				jQuery( element ).on( 'select2:select', function ( e ) {
 					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
 					var tagsArrayData = jQuery.map( select_options, function ( option ) {
-						return option.value;
+						return option.text;
 					} );
 					var tags = tagsArrayData.join( ',' );
 					jQuery( 'body #bbp_topic_tags' ).val( tags );
@@ -72,7 +72,7 @@ jQuery( document ).ready(
 					jQuery( 'body #bbp_topic_tags_dropdown option[value="' + data.id + '"]' ).remove();
 					var select_options = jQuery( 'body #bbp_topic_tags_dropdown option' );
 					var tagsArrayData = jQuery.map( select_options, function ( option ) {
-						return option.value;
+						return option.text;
 					} );
 					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
 						return value !== data.id;
