@@ -137,14 +137,7 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 	}
 
 	$members_buttons = bp_nouveau_get_members_buttons( $args );
-
-	$order = bp_nouveau_get_user_profile_actions();
-
-	uksort( $members_buttons, function ( $key1, $key2 ) use ( $order ) {
-		return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
-	} );
-
-	$output = join( ' ', $members_buttons );
+	$output          = join( ' ', array_slice( $members_buttons, 0, 3 ) );
 
 	/**
 	 * On the member's header we need to reset the group button's global
@@ -173,6 +166,58 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 			'classes' => false,
 		);
 	}
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Output the action buttons for the displayed user profile
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
+	$bp_nouveau = bp_nouveau();
+
+	if ( bp_is_user() ) {
+		$args['type'] = 'profile';
+	} else {
+		$args['type'] = 'header'; // we have no real need for this 'type' on header actions.
+	}
+
+	$members_buttons = bp_nouveau_get_members_buttons( $args );
+	$output          = join( ' ', array_slice( $members_buttons, 3 ) );
+
+	/**
+	 * On the member's header we need to reset the group button's global
+	 * once displayed as the friends component will use the member's loop
+	 */
+	if ( ! empty( $bp_nouveau->members->member_buttons ) ) {
+		unset( $bp_nouveau->members->member_buttons );
+	}
+
+	ob_start();
+	/**
+	 * Fires in the member header actions section.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 */
+	do_action( 'bp_member_header_bubble_actions' );
+	$output .= ob_get_clean();
+
+	if ( ! $output ) {
+		return;
+	}
+
+	if ( ! $args ) {
+		$args = array(
+			'container_id' => 'item-bubble-buttons',
+			'classes'      => false,
+		);
+	}
+
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -657,6 +702,12 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		 */
 		do_action_ref_array( 'bp_nouveau_return_members_buttons', array( &$return, $user_id, $type ) );
 
+		$order = bp_nouveau_get_user_profile_actions();
+
+		uksort( $return, function ( $key1, $key2 ) use ( $order ) {
+			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+		} );
+
 		return $return;
 	}
 
@@ -784,6 +835,8 @@ function bp_nouveau_member_template_part() {
 			$template = 'media';
 		} elseif ( bp_is_user_document() ) {
 			$template = 'document';
+		} elseif ( bp_is_user_video() ) {
+			$template = 'video';
 		}
 
 		bp_nouveau_member_get_template_part( $template );

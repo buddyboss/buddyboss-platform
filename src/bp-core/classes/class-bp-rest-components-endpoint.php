@@ -170,22 +170,22 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you do not have access to list components.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you do not have access to list components.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && bp_current_user_can( 'manage_options' ) ) {
+			$retval = true;
 		}
 
 		/**
 		 * Filter the components `get_items` permissions check.
 		 *
-		 * @param bool|WP_Error $retval Returned value.
+		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
 		 * @since 0.1.0

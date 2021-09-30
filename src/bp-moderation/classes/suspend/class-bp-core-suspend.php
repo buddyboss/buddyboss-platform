@@ -63,6 +63,10 @@ class BP_Core_Suspend {
 			new BP_Suspend_Media();
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			new BP_Suspend_Video();
+		}
+
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}
@@ -375,13 +379,13 @@ class BP_Core_Suspend {
 	 *
 	 * @return bool
 	 */
-	public static function check_hidden_content( $item_id, $item_type ) {
+	public static function check_hidden_content( $item_id, $item_type, $force = false ) {
 		global $wpdb;
 		$bp        = buddypress();
 		$cache_key = 'bb_check_hidden_content_' . $item_type . '_' . $item_id;
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		if ( false === $result ) {
+		if ( false === $result || true === $force ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}
@@ -420,16 +424,17 @@ class BP_Core_Suspend {
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
+	 * @param bool   $force     bypass caching or not.
 	 *
 	 * @return bool
 	 */
-	public static function check_suspended_content( $item_id, $item_type ) {
+	public static function check_suspended_content( $item_id, $item_type, $force = false ) {
 		global $wpdb;
 		$bp        = buddypress();
 		$cache_key = 'bb_check_suspended_content_' . $item_type . '_' . $item_id;
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		if ( false === $result ) {
+		if ( false === $result || true === $force ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}

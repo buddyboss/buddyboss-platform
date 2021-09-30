@@ -1484,6 +1484,11 @@ add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_pr
  */
 function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
 
+	// Bail if not login page.
+	if ( ! did_action( 'login_init' ) ) {
+		return $link;
+	}
+
 	if ( ! is_user_logged_in() ) {
 		$privacy_policy_url = get_privacy_policy_url();
 		$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
@@ -1517,7 +1522,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 			);
 			$page_title  = ( $privacy ) ? get_the_title( $privacy ) : '';
 			$get_privacy = get_post( $privacy );
-			$link        .= ' and ';
+			$link        .= ' ' . __( 'and', 'buddyboss' ) . ' ';
 			$link        .= sprintf(
 				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
 				'#privacy-modal',
