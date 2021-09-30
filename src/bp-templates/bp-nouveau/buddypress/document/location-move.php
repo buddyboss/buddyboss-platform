@@ -6,10 +6,10 @@
  * @package BuddyBoss\Core
  */
 
-$ul  = '';
+$ul = '';
 if ( bp_is_group_document() || bp_is_group_folders() ) {
-	$group_id         = bp_get_current_group_id();
-	$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+	$group_id = bp_get_current_group_id();
+	$ul       = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
 } elseif ( bp_is_user_document() || bp_is_user_folders() ) {
 	$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 } elseif ( bp_is_document_directory() ) {
@@ -19,7 +19,7 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 ?>
 <div class="bb-dropdown-wrap">
 	<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-		<span class="no-folder-exists" style="display: none;"><?php esc_html_e( 'You have not created any folders yet to move this document into.', 'buddyboss' ); ?></span>
+		<span class="no-folder-exists" style="display: none;"><?php esc_html_e( 'No folders found. Please create and select folder.', 'buddyboss' ); ?></span>
 
 		<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
 		<div class="location-folder-list-wrap">
@@ -41,6 +41,6 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 			<ul class="location-folder-list"></ul>
 		</div>
 		<input type="hidden" class="bb-folder-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-folder-selected-id" value="0" readonly/>
+		<input type="hidden" class="bb-folder-selected-id" value="<?php echo bp_get_document_folder_id() ? esc_attr( bp_get_document_folder_id() ) : esc_attr( '0' ); ?>" data-value="<?php echo bp_get_document_folder_id() ? esc_attr( bp_get_document_folder_id() ) : esc_attr( '0' ); ?>" readonly/>
 	</div>
 </div>

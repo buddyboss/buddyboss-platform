@@ -119,6 +119,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 						),
 					),
+					'moderation' => array(
+						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					)
 				) );
 		}
 
@@ -265,9 +269,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
+			if( !empty( $tutorial_callback ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ][ 'tutorial_callback' ] = $tutorial_callback;
+			}
 
 			return $this;
 		}
@@ -412,7 +420,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'<select name="%s" id="%s" autocomplete="off" %s>',
 				$args['input_name'],
 				$args['input_id'],
-				$args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
+				isset( $args['input_run_js'] ) && $args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
 			);
 
 			foreach ( $args['input_options'] ?: array() as $key => $value ) {
@@ -465,8 +473,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
+				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
-					echo "<h2>{$section['title']}</h2>\n";
+					echo "<h2 class=". $has_tutorial_btn .">{$section['title']}";
+					if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
+						?> <div class="bbapp-tutorial-btn"> <?php
+						call_user_func( $section['tutorial_callback'], $section );
+						?> </div> <?php
+					}
+					echo "</h2>\n";
 				}
 
 				if ( $section['callback'] ) {

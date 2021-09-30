@@ -20,7 +20,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 				</div>
 			</div>
 			<?php
-		} elseif ( ! bp_is_group() ) {
+		} elseif ( ! bp_is_group() && bb_user_can_create_document() ) {
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">
