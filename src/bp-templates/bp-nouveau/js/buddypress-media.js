@@ -4386,7 +4386,10 @@ window.bp = window.bp || {};
 			if ( content_tab === 'bp-dropzone-content' ) {
 				current_popup.find( '.bb-field-steps-1' ).show();
 				current_popup.find( '#bb-media-privacy' ).show();
-				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder' ).hide();
+				current_popup.find( '.bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, #bb-media-privacy' ).hide();
+			}
+			if( content_tab === 'bp-existing-media-content' ) {
+				current_popup.find( '.bb-field-uploader-actions' ).hide();
 			}
 			jQuery( window ).scroll();
 		},
@@ -4396,6 +4399,9 @@ window.bp = window.bp || {};
 
 			this.openUploader( event );
 			$( '#bp-media-create-album' ).show();
+			if( $( 'body' ).hasClass( 'directory' ) ) {
+				$( '#bp-media-uploader' ).hide();
+			}
 		},
 
 		openCreateFolderModal: function ( event ) {
@@ -6192,11 +6198,7 @@ window.bp = window.bp || {};
 			self.showMedia();
 			self.navigationCommands();
 
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum ) {
-				self.getActivity();
-			} else {
-				self.getMediasDescription();
-			}
+			self.getMediasDescription();
 
 			$( '.bb-media-model-wrapper.document' ).hide();
 			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
@@ -6219,6 +6221,12 @@ window.bp = window.bp || {};
 			if ( self.activity_ajax != false ) {
 				self.activity_ajax.abort();
 			}
+			
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
+			if ( on_page_activity_comments.length ) {
+				self.current_media.parent_activity_comments = true;
+				on_page_activity_comments.html( '' );
+			}
 
 			self.activity_ajax = $.ajax(
 				{
@@ -6235,6 +6243,13 @@ window.bp = window.bp || {};
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 							$( window ).scroll();
+							setTimeout(
+								function () { // Waiting to load dummy image
+									bp.Nouveau.reportPopUp();
+									bp.Nouveau.reportedPopup();
+								},
+								10
+							);
 						} else {
 							$( '.bb-media-info-section.media' ).hide();
 						}
@@ -6261,12 +6276,8 @@ window.bp = window.bp || {};
 			self.setCurrentDocument( id );
 			self.showDocument();
 			self.navigationDocumentCommands();
-
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum ) {
-				self.getDocumentsActivity();
-			} else {
-				self.getDocumentsDescription();
-			}
+			
+			self.getDocumentsDescription();
 
 			//Stop audio if it is playing before opening theater
 			if ( $.inArray( self.current_document.extension, BP_Nouveau.document.mp3_preview_extension.split( ',' ) ) !== -1 ) {
@@ -6319,7 +6330,7 @@ window.bp = window.bp || {};
 					html = activity_meta.html();
 					classes = activity_meta.attr( 'class' );
 					activity_meta.remove();
-					activity_meta = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-meta' );
+					activity_meta = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] > .activity-meta' );
 					if ( activity_meta.length ) {
 						activity_meta.html( html );
 						activity_meta.attr( 'class', classes );
@@ -6360,7 +6371,7 @@ window.bp = window.bp || {};
 					html = activity_meta.html();
 					classes = activity_meta.attr( 'class' );
 					activity_meta.remove();
-					activity_meta = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-meta' );
+					activity_meta = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] > .activity-meta' );
 					if ( activity_meta.length ) {
 						activity_meta.html( html );
 						activity_meta.attr( 'class', classes );
@@ -6600,7 +6611,12 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-				document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				if ( 'mov' === self.current_document.extension || 'm4v' === self.current_document.extension ) {
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/mp4" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				} else {
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<video playsinline id="video-'+self.current_document.id+'" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-loader animate-spin"></i></span>' );
+				}
+
 				//fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();
 				$( window ).scroll();
 
@@ -6658,11 +6674,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
-					self.getActivity();
-				} else {
-					self.getMediasDescription();
-				}
+				self.getMediasDescription();
 			} else {
 				self.nextLink.hide();
 			}
@@ -6677,11 +6689,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
-				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && !self.current_media.is_forum && activity_id != self.current_media.activity_id ) {
-					self.getActivity();
-				} else {
-					self.getMediasDescription();
-				}
+				self.getMediasDescription();
 			} else {
 				self.previousLink.hide();
 			}
@@ -6697,11 +6705,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_document.activity_id;
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
-				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id ) {
-					self.getDocumentsActivity();
-				} else {
-					self.getDocumentsDescription();
-				}
+				self.getDocumentsDescription();
 			} else {
 				self.nextDocumentLink.hide();
 			}
@@ -6716,11 +6720,7 @@ window.bp = window.bp || {};
 				activity_id = self.current_document.activity_id;
 				self.current_document = self.documents[ self.current_document_index ];
 				self.showDocument();
-				if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && !self.current_document.is_forum && activity_id != self.current_document.activity_id ) {
-					self.getDocumentsActivity();
-				} else {
-					self.getDocumentsDescription();
-				}
+				self.getDocumentsDescription();
 			} else {
 				self.previousDocumentLink.hide();
 			}
@@ -6801,8 +6801,9 @@ window.bp = window.bp || {};
 								setTimeout(
 									function () { // Waiting to load dummy image
 										bp.Nouveau.reportPopUp();
+										bp.Nouveau.reportedPopup();
 									},
-									1000
+									10
 								);
 							}
 						}
@@ -6854,8 +6855,9 @@ window.bp = window.bp || {};
 								setTimeout(
 									function () { // Waiting to load dummy image
 										bp.Nouveau.reportPopUp();
+										bp.Nouveau.reportedPopup();
 									},
-									1000
+									10
 								);
 							}
 						}
@@ -6874,6 +6876,12 @@ window.bp = window.bp || {};
 			if ( self.activity_ajax != false ) {
 				self.activity_ajax.abort();
 			}
+			
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
+			if ( on_page_activity_comments.length ) {
+				self.current_document.parent_activity_comments = true;
+				on_page_activity_comments.html( '' );
+			}
 
 			self.activity_ajax = $.ajax(
 				{
@@ -6890,6 +6898,13 @@ window.bp = window.bp || {};
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 							$( window ).scroll();
+							setTimeout(
+								function () { // Waiting to load dummy image
+									bp.Nouveau.reportPopUp();
+									bp.Nouveau.reportedPopup();
+								},
+								10
+							);
 						} else {
 							$( '.bb-media-info-section.document' ).hide();
 						}

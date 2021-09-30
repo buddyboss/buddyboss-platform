@@ -1253,27 +1253,25 @@ function albums_check_album_access( $album_id ) {
  */
 function bp_media_delete_orphaned_attachments() {
 
-	$orphaned_attachment_args = array(
-		'post_type'      => 'attachment',
-		'post_status'    => 'inherit',
-		'fields'         => 'ids',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'     => 'bp_media_saved',
-				'value'   => '0',
-				'compare' => '=',
-			),
-		),
-	);
 
-	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+	global $wpdb;
 
-	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach ( $orphaned_attachment_query->posts as $a_id ) {
+	/**
+	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
+	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
+	 * all the media from Media Library.
+     *
+     * @since BuddyBoss 1.7.6
+	 */
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_media_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$data  = $wpdb->get_col( $query );
+
+	if ( ! empty( $data ) ) {
+		foreach ( $data as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
+
 }
 
 /**
@@ -3010,6 +3008,9 @@ function bp_media_is_activity_comment_photo( $photo ) {
 		$activity = new BP_Activity_Activity( $photo_activity_id );
 
 		if ( $activity ) {
+			if ( 'activity_comment' === $activity->type ) {
+				$is_comment_photo = true;
+			}
 			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if ( $load_parent_activity ) {
@@ -3413,7 +3414,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 			} else {
 				$media_id       = 'forbidden_' . $media_id;
 				$attachment_id  = 'forbidden_' . $attachment_id;
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . $size;
+				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
             }
 		}
 	}
@@ -3425,10 +3426,11 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 	 * @param int    $media_id       Media ID.
 	 * @param int    $attachment_id  Attachment ID.
 	 * @param string $size           Preview size.
+     * @param bool   $do_symlink     display symlink or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size );
+	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id, $attachment_id, $size, $do_symlink );
 }
 
 /**
@@ -3781,63 +3783,67 @@ function bb_media_user_can_access( $id, $type ) {
 			break;
 
 		case 'forums':
-			$args = array(
-				'user_id'         => $current_user_id,
-				'forum_id'        => $forum_id,
-				'check_ancestors' => false,
-			);
+			if ( bp_is_active( 'forums' ) ) {
+				$args = array(
+					'user_id'         => $current_user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => false,
+				);
 
-			$has_access = bbp_user_can_view_forum( $args );
-			if ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access ) {
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_delete = true;
+				$has_access = bbp_user_can_view_forum( $args );
+				if ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access ) {
+					if ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_delete = true;
+					}
+					$can_view     = true;
+					$can_download = true;
 				}
-				$can_view     = true;
-				$can_download = true;
 			}
 			break;
 
 		case 'message':
-			$has_access = messages_check_thread_access( $thread_id, $current_user_id );
-			if ( ! is_user_logged_in() ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( ! $thread_id ) {
-				$can_view     = false;
-				$can_download = false;
-				$can_add      = false;
-				$can_delete   = false;
-				$can_edit     = false;
-				$can_move     = false;
-			} elseif ( $media_user_id === $current_user_id ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_add      = true;
-				$can_delete   = true;
-				$can_edit     = true;
-				$can_move     = true;
-			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_view     = true;
-				$can_download = true;
-				$can_delete   = true;
-			} elseif ( $has_access > 0 ) {
-				$can_view     = true;
-				$can_download = true;
+			if ( bp_is_active( 'messages' ) ) {
+				$has_access = messages_check_thread_access( $thread_id, $current_user_id );
+				if ( ! is_user_logged_in() ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( ! $thread_id ) {
+					$can_view     = false;
+					$can_download = false;
+					$can_add      = false;
+					$can_delete   = false;
+					$can_edit     = false;
+					$can_move     = false;
+				} elseif ( $media_user_id === $current_user_id ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_add      = true;
+					$can_delete   = true;
+					$can_edit     = true;
+					$can_move     = true;
+				} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_view     = true;
+					$can_download = true;
+					$can_delete   = true;
+				} elseif ( $has_access > 0 ) {
+					$can_view     = true;
+					$can_download = true;
+				}
 			}
 			break;
 	}

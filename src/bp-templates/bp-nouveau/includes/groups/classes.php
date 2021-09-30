@@ -266,7 +266,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Send Invites', 'buddyboss' ),
 				'slug'        => 'invite',
 				'parent_slug' => $this->group->slug,
-				'position'    => 70,
+				'position'    => 30,
 			),
 			'manage'  => array(
 				'name'        => __( 'Manage', 'buddyboss' ),
@@ -281,26 +281,33 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Photos', 'buddyboss' ),
 				'slug'        => 'photos',
 				'parent_slug' => $this->group->slug,
-				'position'    => 80,
+				'position'    => 21,
 			);
+
+			if ( bp_is_group_video_support_enabled() ) {
+				// Checked if order already set before, New menu(video) will be added at last
+				$video_menu_position = 22;
+				$orders              = get_option( 'bp_nouveau_appearance' );
+				if ( isset( $orders['group_nav_order'] ) && ! empty( $orders['group_nav_order'] ) && ! in_array( 'vide', $orders['group_nav_order'] ) ) {
+					$video_menu_position = 1001;
+				}
+				$nav_items['videos'] = array(
+					'name'        => __( 'Videos', 'buddyboss' ),
+					'slug'        => 'videos',
+					'parent_slug' => $this->group->slug,
+					'position'    => $video_menu_position,
+				);
+			}
 
 			if ( bp_is_group_albums_support_enabled() ) {
 				$nav_items['albums'] = array(
 					'name'        => __( 'Albums', 'buddyboss' ),
 					'slug'        => 'albums',
 					'parent_slug' => $this->group->slug,
-					'position'    => 85,
+					'position'    => 23,
 				);
 			}
 
-			if ( bp_is_group_video_support_enabled () ) {
-				$nav_items['videos'] = array(
-					'name'        => __( 'Videos', 'buddyboss' ),
-					'slug'        => 'videos',
-					'parent_slug' => $this->group->slug,
-					'position'    => 90,
-				);
-			}
 		}
 
 		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
@@ -319,7 +326,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Subgroups', 'buddyboss' ),
 				'slug'        => 'subgroups',
 				'parent_slug' => $this->group->slug,
-				'position'    => 30,
+				'position'    => 28,
 			);
 		}
 
@@ -361,23 +368,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Send Messages', 'buddyboss' ),
 				'slug'        => 'messages',
 				'parent_slug' => $this->group->slug,
-				'position'    => 20,
-			);
-		}
-
-		if ( bp_is_active( 'media' ) ) {
-			$nav_items['photos'] = array(
-				'name'        => __( 'Photos', 'buddyboss' ),
-				'slug'        => 'photos',
-				'parent_slug' => $this->group->slug,
-				'position'    => 20,
-			);
-
-			$nav_items['albums'] = array(
-				'name'        => __( 'Albums', 'buddyboss' ),
-				'slug'        => 'albums',
-				'parent_slug' => $this->group->slug,
-				'position'    => 20,
+				'position'    => 25,
 			);
 		}
 
@@ -386,7 +377,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Documents', 'buddyboss' ),
 				'slug'        => 'documents',
 				'parent_slug' => $this->group->slug,
-				'position'    => 21,
+				'position'    => 24,
 			);
 		}
 

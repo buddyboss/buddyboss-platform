@@ -293,7 +293,7 @@ function bp_core_register_common_scripts() {
 			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
 			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
 			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
+			'dictFileTooBig'               => __( "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.", 'buddyboss' ),
 			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
 			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
 			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),

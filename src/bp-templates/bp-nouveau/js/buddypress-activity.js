@@ -72,6 +72,7 @@ window.bp = window.bp || {};
 				this.dropzone_options = {
 					url                 : BP_Nouveau.ajaxurl,
 					timeout             : 3 * 60 * 60 * 1000,
+					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
 					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
 					acceptedFiles       : 'image/*',
 					autoProcessQueue    : true,
@@ -79,7 +80,7 @@ window.bp = window.bp || {};
 					uploadMultiple      : false,
 					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded
 				};
 
 				// if defined, add custom dropzone options.
@@ -134,6 +135,9 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+
+			//Activity More Option Dropdown
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 
 			// Activity autoload.
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
@@ -1055,6 +1059,11 @@ window.bp = window.bp || {};
 					);
 				}
 			}
+			
+			if ( target.hasClass( 'activity-state-no-comments' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
+			}
 
 			// Removing the form.
 			if ( target.hasClass( 'ac-reply-cancel' ) ) {
@@ -1174,7 +1183,7 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-
+									
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									$( form ).find( '.ac-input' ).first().html( '' );
 
@@ -2166,6 +2175,23 @@ window.bp = window.bp || {};
 				}
 			);
 		},
+
+		toggleActivityOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+			}
+		},
+
 	};
 
 	// Launch BP Nouveau Activity.

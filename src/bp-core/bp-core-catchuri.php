@@ -1484,6 +1484,11 @@ add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_pr
  */
 function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
 
+	// Bail if not login page.
+	if ( ! did_action( 'login_init' ) ) {
+		return $link;
+	}
+
 	if ( ! is_user_logged_in() ) {
 		$privacy_policy_url = get_privacy_policy_url();
 		$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );

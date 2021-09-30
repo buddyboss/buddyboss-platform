@@ -1798,27 +1798,24 @@ function albums_check_video_album_access( $album_id ) {
  */
 function bp_video_delete_orphaned_attachments() {
 
-	$orphaned_attachment_args = array(
-		'post_type'      => 'attachment',
-		'post_status'    => 'inherit',
-		'fields'         => 'ids',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'     => 'bp_video_saved',
-				'value'   => '0',
-				'compare' => '=',
-			),
-		),
-	);
+	global $wpdb;
 
-	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+	/**
+	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
+	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
+	 * all the media from Media Library.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 */
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_video_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$data  = $wpdb->get_col( $query );
 
-	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach ( $orphaned_attachment_query->posts as $a_id ) {
+	if ( ! empty( $data ) ) {
+		foreach ( $data as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
+
 }
 
 /**
@@ -3351,7 +3348,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 		} else {
 			$video_id       = 'forbidden_' . $video_id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id ) . '&size=' . $size;
+			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
 		}
 
 		if ( empty( $attachment_url ) ) {
@@ -3368,10 +3365,11 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 	 * @param int    $video_id       video id
 	 * @param string $size           size
 	 * @param int    $attachment_id  attachment id
+	 * @param bool   $do_symlink     symlink used or not
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bb_video_get_thumb_url', $attachment_url, $video_id, $size, $attachment_id );
+	return apply_filters( 'bb_video_get_thumb_url', $attachment_url, $video_id, $size, $attachment_id, $do_symlink );
 }
 
 /**
@@ -3798,19 +3796,12 @@ function bb_video_get_symlink( $video, $generate = true ) {
 
 	if ( $do_symlink ) {
 
-		if ( ! bb_enable_symlinks() ) {
+		if ( ! bb_enable_symlinks() || bb_check_ios_device() ) {
 			$video_id        = 'forbidden_' . $video->id;
 			$attachment_id   = 'forbidden_' . $video->attachment_id;
 			$output_file_src = get_attached_file( $video->attachment_id );
 			if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id );
-			}
-		} elseif ( bb_check_ios_device() ) {
-				$video_id        = 'forbidden_' . $video->id;
-				$attachment_id   = 'forbidden_' . $video->attachment_id;
-				$output_file_src = get_attached_file( $video->attachment_id );
-			if ( ! empty( $attachment_id ) && ! empty( $video_id ) && file_exists( $output_file_src ) ) {
-				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id );
+				$attachment_url = home_url( '/' ) . 'bb-video-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id );
 			}
 		} else {
 			// Get videos previews symlink directory path.
@@ -3864,10 +3855,11 @@ function bb_video_get_symlink( $video, $generate = true ) {
 	 * @param string $attachment_url Attachment URL.
 	 * @param int    $video_id       Video id.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $do_symlink     Symlink used or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id );
+	return apply_filters( 'bb_video_get_symlink', $attachment_url, $video_id, $attachment_id, $do_symlink );
 }
 
 /**
@@ -4284,7 +4276,7 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 		if ( ! bb_enable_symlinks() ) {
 			$video_id       = 'forbidden_' . $video->id;
 			$attachment_id  = 'forbidden_' . $attachment_id;
-			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/video/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $video_id ) . '&size=' . $size;
+			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
 
 		} else {
 
