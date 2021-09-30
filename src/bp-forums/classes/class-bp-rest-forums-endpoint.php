@@ -1065,9 +1065,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if (
 			function_exists( 'bbp_is_forum_group_forum' )
-			&& function_exists( 'bb_get_child_forum_group_ids' )
+			&& bbp_is_forum_group_forum( $post->ID )
 			&& function_exists( 'groups_get_group' )
-			&& ! empty( bb_get_child_forum_group_ids( $post->ID ) )
 		) {
 			$group          = $this->bp_rest_get_group( $post->ID );
 			$links['group'] = array(
@@ -1326,14 +1325,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			return '';
 		}
 
-		if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
-			$group_ids = bb_get_child_forum_group_ids( $forum_id );
-		} else {
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
-		}
-
-		if ( ! empty( $group_ids ) ) {
-			$group              = groups_get_group( current( $group_ids ) );
+		if ( bbp_get_forum_group_ids( $forum_id ) ) {
+			$group              = groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) );
 			$group->avatar_urls = array();
 			if ( ! bp_disable_group_avatar_uploads() ) {
 				$group->avatar_urls = array(

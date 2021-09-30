@@ -784,19 +784,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		if ( function_exists( 'bp_document_activity_update_document_privacy' ) ) {
+		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
 			// Update privacy for the documents which are uploaded in root of the documents.
-			bp_document_activity_update_document_privacy( $activity );
+			bp_document_update_activity_privacy( $activity->id, $activity->privacy );
 		}
 
-		if ( function_exists( 'bp_media_activity_update_media_privacy' ) ) {
+		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
 			// Update privacy for the media which are uploaded in the activity.
-			bp_media_activity_update_media_privacy( $activity );
-		}
-
-		if ( function_exists( 'bp_video_activity_update_video_privacy' ) ) {
-			// Update privacy for the videos which are uploaded in root of the documents.
-			bp_video_activity_update_video_privacy( $activity );
+			bp_media_update_activity_privacy( $activity->id, $activity->privacy );
 		}
 
 		bp_activity_update_meta( $activity_id, '_is_edited', bp_core_current_time() );
@@ -1257,13 +1252,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Add feature image as separate object which added last in the content.
 		if ( ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
 			$data['feature_media'] = wp_get_attachment_image_url( get_post_thumbnail_id( $blog_id ), 'full' );
-		}
-
-		// remove comment options from media/document/video activity.
-		if ( ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) ) {
-			$data['can_comment']  = false;
-			$data['can_edit']     = false;
-			$data['can_favorite'] = false;
 		}
 
 		// Get item schema.
@@ -1841,7 +1829,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['full'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
@@ -1849,7 +1837,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['thumb'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);

@@ -8851,8 +8851,8 @@ define({ "api": [
   },
   {
     "type": "PATCH",
-    "url": "/wp-json/buddyboss/v1/signup/activate/:activation_key",
-    "title": "Activate a signup",
+    "url": "/wp-json/buddyboss/v1/signup/activate/:id",
+    "title": "Delete signup",
     "name": "ActivateBBSignups",
     "group": "Signups",
     "description": "<p>Activate a signup.</p>",
@@ -8864,8 +8864,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "activation_key",
-            "description": "<p>Identifier for the signup.</p>"
+            "field": "id",
+            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
           }
         ]
       }
