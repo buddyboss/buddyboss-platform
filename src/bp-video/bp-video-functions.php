@@ -2232,7 +2232,7 @@ function bp_video_download_url_file() {
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'album' !== $video_type ) {
-			$video_privacy    = bb_media_user_can_access( $video_file, 'video' ); // phpcs:ignore WordPress.Security.NonceVerification
+			$video_privacy    = bb_media_user_can_access( $video_file, 'video', $attachment_id ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
 		}
 		if ( $can_download_btn ) {
