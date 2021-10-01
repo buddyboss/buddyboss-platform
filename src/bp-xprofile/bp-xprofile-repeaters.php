@@ -913,6 +913,10 @@ add_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filt
  * @param object $f Passed by reference
  */
 function bp_profile_repeaters_search_change_filter( $f ) {
+	if ( ! isset( $f->id ) ) {
+		return $f;
+	}
+
 	$field_id = (int) $f->id;
 
 	global $wpdb;
