@@ -2579,10 +2579,12 @@ function bbp_get_forums_per_page( $default = 15 ) {
 /**
  * Redirect non-loggedin user to login page while viewing private forum
  *
+ * @since Buddyboss x.x.x
+ *
  * @param object $posts array of post objects.
  * @param object $wp_query WP_Query inatsnace.
  */
-function bbp_redirect_private_forum( $posts, &$wp_query ) {
+function bb_redirect_private_forum( $posts, &$wp_query ) {
 	// remove filter now, so that on subsequent post querying we don't get involved!
 	remove_filter( 'the_posts', 'bbp_redirect_private_forum', 5, 2 );
 
