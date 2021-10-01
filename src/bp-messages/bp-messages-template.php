@@ -645,8 +645,8 @@ function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
 	return sprintf(
 		/* translators: 1: total number, 2: accessibility text: number of unread messages */
 		'<span class="thread-count">(%1$s)</span> <span class="bp-screen-reader-text">%2$s</span>',
-		number_format_i18n( $total ),
-		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), number_format_i18n( $unread ) )
+		bp_core_number_format( $total ),
+		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), bp_core_number_format( $unread ) )
 	);
 }
 
@@ -1728,7 +1728,7 @@ function bp_get_the_thread_subject() {
  */
 function bp_get_the_thread_recipients() {
 	if ( 5 <= bp_get_thread_recipients_count() ) {
-		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), number_format_i18n( bp_get_thread_recipients_count() ) );
+		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), bp_core_number_format( bp_get_thread_recipients_count() ) );
 	} else {
 		$recipients = bp_get_thread_recipients_list();
 	}

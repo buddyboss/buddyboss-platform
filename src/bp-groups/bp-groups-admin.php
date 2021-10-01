@@ -1092,7 +1092,7 @@ function bp_groups_admin_index() {
 		$deleted = ! empty( $_REQUEST['deleted'] ) ? (int) $_REQUEST['deleted'] : 0;
 
 		if ( $deleted > 0 ) {
-			$messages[] = sprintf( _n( '%s group has been permanently deleted.', '%s groups have been permanently deleted.', $deleted, 'buddyboss' ), number_format_i18n( $deleted ) );
+			$messages[] = sprintf( _n( '%s group has been permanently deleted.', '%s groups have been permanently deleted.', $deleted, 'buddyboss' ), bp_core_number_format( $deleted ) );
 		}
 	}
 
