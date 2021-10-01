@@ -325,12 +325,6 @@ endif;
 												if ( ! empty( $group->fields ) ) :
 													if ( bp_xprofile_base_group_id() === $group->id ) {
 														$signup_fields = bp_nouveau_get_signup_fields( 'account_details' );
-														if ( $signup_fields['signup_email_confirm'] ) {
-															unset( $signup_fields['signup_email_confirm'] );
-														}
-														if ( $signup_fields['signup_password_confirm'] ) {
-															unset( $signup_fields['signup_password_confirm'] );
-														}
 
 														// Convert signup fields array to object.
 														$signup_fields_object = array_map( function ( $input_array ) {
