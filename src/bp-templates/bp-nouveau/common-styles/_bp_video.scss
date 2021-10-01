@@ -72,11 +72,6 @@
 	}
 
 	.video-js > video {
-		object-fit: cover;
-	}
-
-	.video-js.vjs-playing:not(.vjs-waiting) > video,
-	.video-js.vjs-paused:not(.vjs-waiting) > video {
 		object-fit: contain;
 	}
 
