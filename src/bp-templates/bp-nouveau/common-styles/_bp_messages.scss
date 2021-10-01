@@ -42,6 +42,7 @@
 
 		#view_more_members {
 			font-size: 13px;
+			display: inline-block;
 		}
 	}
 
@@ -1137,6 +1138,24 @@ body .bp-messages-user-threads {
 	.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
 		left: 10px;
 	}
+}
+
+.mass-user-block-list #moderated_user_list:not(.is_not_empty) {
+	text-align: center;
+
+	&:before {
+		content: "\E838";
+		font: normal normal normal 20px/1 "bb-icons";/* stylelint-disable-line */
+		speak: none;
+		display: inline-block !important;
+		text-decoration: inherit;
+		text-transform: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-animation: spin 2s infinite linear;
+		animation: spin 2s infinite linear;
+	}
+
 }
 
 .bb-report-type-pagination .page-data {
