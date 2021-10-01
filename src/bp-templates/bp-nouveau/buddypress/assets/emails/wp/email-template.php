@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 defined( 'ABSPATH' ) || exit;
 
 $settings = bp_email_get_appearance_settings();
-$width = wp_is_mobile() ? '100%' : '600px';
+$width = wp_is_mobile() ? '100%%' : '600px';
 
 ?><!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -262,12 +262,12 @@ $width = wp_is_mobile() ? '100%' : '600px';
 	</style>
 </head>
 
-<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
-	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+<body class="email_bg" width="100%%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
+	<table cellpadding="0" cellspacing="0" border="0" height="100%%" width="100%%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
 		<tbody>
 			<tr>
 				<td valign="top">
-					<center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
+					<center style="width: 100%%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
 
 						<div style="max-width: 600px; margin: auto; padding: 10px;" class="email-container">
 							<!--[if mso]>
@@ -277,7 +277,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<![endif]-->
 
 							<!-- Email Header : BEGIN -->
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%%" style="max-width: 600px;">
 								<tbody>
 									<tr>
 										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>;" class="center-in-mobile site_title_text_color site_title_text_size">
@@ -324,7 +324,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 												echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
 														'item_id' => $email_user->ID,
 														'html'    => false
-													) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+													) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%%; margin-left: 12px; vertical-align: middle;" />';
 											}
 
 											/**
@@ -364,7 +364,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<br>
 							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" style="max-width: 600px; border-radius: 5px; width: <?php echo $width; ?>">
 								<tr>
-									<td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
+									<td style="padding: 20px 40px; width: 100%%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
 										<?php
 										/**
 										 * Fires before the display of the email template footer.
