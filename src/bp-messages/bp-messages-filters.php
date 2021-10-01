@@ -730,15 +730,9 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 /**
  * Add nonce for the moderation when click on block member button.
  *
-<<<<<<< HEAD
- * @param $params Get params.
- *
- * @return $params Return params.
-=======
  * @param  array $params Get params.
  *
  * @return array $params Return params.
->>>>>>> fix/2875
  */
 function bp_core_get_js_strings_callback(  $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );

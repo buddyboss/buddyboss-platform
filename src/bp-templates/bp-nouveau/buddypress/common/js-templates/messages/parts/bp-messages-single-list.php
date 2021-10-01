@@ -65,7 +65,7 @@
 
 			<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 				<div class="message-metadata bp-suspended-meta">
-                    <strong>{{{data.sender_name}}}</strong>
+					<strong>{{{data.sender_name}}}</strong>
 				</div>
 				<div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
 			<# } else { #>
