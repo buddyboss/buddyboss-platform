@@ -273,8 +273,11 @@ function bp_nouveau_activity_state() {
 			</span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
-		<?php if ( bp_activity_can_comment() ) : ?>
-			<a href="#" class="activity-state-comments">
+		<?php if ( bp_activity_can_comment() ) :
+			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
+			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
+			?>
+			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
