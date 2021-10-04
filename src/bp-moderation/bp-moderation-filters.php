@@ -383,7 +383,7 @@ function bp_moderation_content_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type, 'hide' == $sub_action );
+	$user_can = bp_moderation_can_report( $item_id, $item_type, ( 'hide' === $sub_action ) ) || current_user_can( 'administrator' );
 	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -640,7 +640,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 
 	if ( ! empty( $moderated_activities ) ) {
 		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
-		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
