@@ -229,7 +229,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 		
 		$where                  = array();
-		$sql                    = $wpdb->prepare( "SELECT {$this->alias}.item_id FROM {$bp->table_prefix}bp_suspend {$this->alias} WHERE {$this->alias}.item_type = %s
+		$sql                    = $wpdb->prepare( "SELECT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s
 								  AND ( {$this->alias}.hide_sitewide != 1 OR {$this->alias}.hide_parent != 1 OR {$this->alias}.user_suspended != 1 )", 'user' ); // phpcs:ignore
 		$where['suspend_where'] = "( r.user_id NOT IN( " . $sql . " ) )";
 
