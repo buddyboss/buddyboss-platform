@@ -101,9 +101,10 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		// show the users the logged-in user is following.
 		if ( bp_has_members(
 			array(
-				'include'         => $following,
-				'per_page'        => $instance['max_users'],
-				'populate_extras' => false,
+				'include'             => $following,
+				'per_page'            => $instance['max_users'],
+				'populate_extras'     => false,
+				'member_type__not_in' => false
 			)
 		) ) {
 			do_action( 'bp_before_following_widget' );
