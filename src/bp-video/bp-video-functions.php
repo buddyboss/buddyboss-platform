@@ -251,6 +251,8 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
+    do_action( 'bp_video_before_upload_handler' );
+
 	// Add upload filters.
 	bb_video_add_upload_filters();
 
@@ -275,6 +277,8 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 
 	// Remove upload filters.
 	bb_video_remove_upload_filters();
+
+	do_action( 'bp_video_after_upload_handler' );
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {

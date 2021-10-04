@@ -65,6 +65,32 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bb_video_get_thumb_url', array( $this, 'bp_video_offload_get_thumb_preview_url' ), PHP_INT_MAX, 5 );
 		add_filter( 'bb_video_get_symlink', array( $this, 'bp_video_offload_get_video_url' ), PHP_INT_MAX, 4 );
 
+		// For a research thing s to prevent offload video upload
+//		add_action( 'bp_video_before_upload_handler', array( $this, 'bb_video_remove_offload' ), PHP_INT_MAX );
+//		add_action( 'bp_video_after_upload_handler', array( $this, 'bb_video_remove_offload_filter' ), PHP_INT_MAX );
+
+	}
+
+	public function bb_video_remove_offload() {
+		add_filter(  'as3cf_pre_upload_attachment', array( $this, 'bb_as3cf_pre_upload_attachment' ), 10, 3 );
+	}
+
+	public function bb_video_remove_offload_filter() {
+		remove_filter(  'as3cf_pre_upload_attachment', array( $this, 'bb_as3cf_pre_upload_attachment' ), 10, 3 );
+	}
+
+	/**
+	 * Abort offload to S3?
+	 *
+	 * @param bool    $abort
+	 * @param integer $post_id Attachment ID
+	 * @param array   $metadata Attachment's metdata
+	 *
+	 * @return bool
+	 */
+	public function bb_as3cf_pre_upload_attachment( $abort, $post_id, $metadata ) {
+
+		return true;
 	}
 
 	/**
