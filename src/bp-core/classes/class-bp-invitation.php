@@ -147,7 +147,7 @@ class BP_Invitation {
 		'content',
 		'date_modified',
 		'invite_sent',
-		'accepted'
+		'accepted',
 	);
 
 	/** Public Methods ****************************************************/

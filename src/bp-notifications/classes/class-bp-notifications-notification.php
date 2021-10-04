@@ -95,7 +95,7 @@ class BP_Notifications_Notification {
 		'component_name',
 		'component_action',
 		'date_notified',
-		'is_new'
+		'is_new',
 	);
 
 	/** Public Methods ********************************************************/
