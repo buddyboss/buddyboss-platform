@@ -217,6 +217,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return mixed
 	 */
 	public function exclude_moderated_recipients( $where_conditions, $args ) {
+		global $wpdb;
+		$bp = buddypress();
 		if (
 			! isset( $args['exclude_moderated_members'] ) ||
 			(
@@ -226,26 +228,25 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where          = array();
-		$hidden_members = bp_moderation_get_hidden_user_ids();
-		if ( ! empty( $hidden_members ) ) {
-			$where['suspend_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
-		}
-
+		$where                  = array();
+		$sql                    = $wpdb->prepare( "SELECT {$this->alias}.item_id FROM {$bp->table_prefix}bp_suspend {$this->alias} WHERE {$this->alias}.item_type = %s
+								  AND ( {$this->alias}.hide_sitewide != 1 OR {$this->alias}.hide_parent != 1 OR {$this->alias}.user_suspended != 1 )", 'user' ); // phpcs:ignore
+		$where['suspend_where'] = "( r.user_id NOT IN( " . $sql . " ) )";
+		
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.7.8
-		 *
 		 * @param array $where Query to hide suspended user's member.
 		 * @param array $class current class object.
+		 *
+		 * @since BuddyBoss 1.7.8
+		 *
 		 */
 		$where = apply_filters( 'bp_suspend_member_recipient_get_where_conditions', $where, $this );
-
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
-
+		
 		return $where_conditions;
 	}
 
