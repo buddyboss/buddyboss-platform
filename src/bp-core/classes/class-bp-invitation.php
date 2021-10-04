@@ -132,6 +132,24 @@ class BP_Invitation {
 	 */
 	public $accepted;
 
+	/**
+	 * Columns in the invitations table.
+	 */
+	public static $columns = array(
+		'id',
+		'user_id',
+		'inviter_id',
+		'invitee_email',
+		'class',
+		'item_id',
+		'secondary_item_id',
+		'type',
+		'content',
+		'date_modified',
+		'invite_sent',
+		'accepted'
+	);
+
 	/** Public Methods ****************************************************/
 
 	/**
@@ -485,12 +503,9 @@ class BP_Invitation {
 		// Order by
 		if ( ! empty( $args['order_by'] ) ) {
 			// Added security patch for SQL Injections vulnerability
-			global $wpdb;
 			$order_by_clean = array();
-			$table          = BP_Invitation_Manager::get_table_name();
-			$columns        = $wpdb->get_col( "DESC {$table}", 0 );
 			foreach ( (array) $args['order_by'] as $key => $value ) {
-				if ( in_array( $value, $columns, true ) ) {
+				if ( in_array( $value, self::$columns, true ) ) {
 					$order_by_clean[] = $value;
 				}
 			}
