@@ -326,7 +326,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 								// translators: Count.
 								wp_kses_post( __( '%1$s <span class="count">(%2$s)</span>', 'buddyboss' ) ),
 								esc_html( $moderation_view['name'] ),
-								esc_html( number_format_i18n( $record_count ) )
+								esc_html( bp_core_number_format( $record_count ) )
 							);
 							?>
 						</a>
@@ -362,7 +362,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 								// translators: Count.
 								wp_kses_post( __( '%1$s <span class="count">(%2$s)</span>', 'buddyboss' ) ),
 								esc_html( $moderation_view['name'] ),
-								esc_html( number_format_i18n( $record_count ) )
+								esc_html( bp_core_number_format( $record_count ) )
 							);
 							?>
 						</a>
@@ -617,7 +617,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_reported( $item = array() ) {
 		/* translators: accessibility text */
-		printf( esc_html( _n( '%s time', '%s times', $item['count'], 'buddyboss' ) ), esc_html( number_format_i18n( $item['count'] ) ) );
+		printf( esc_html( _n( '%s time', '%s times', $item['count'], 'buddyboss' ) ), esc_html( bp_core_number_format( $item['count'] ) ) );
 	}
 
 	/**
@@ -629,7 +629,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_blocked( $item = array() ) {
 		/* translators: accessibility text */
-		printf( esc_html( _n( '%s time', '%s times', $item['count'], 'buddyboss' ) ), esc_html( number_format_i18n( $item['count'] ) ) );
+		printf( esc_html( _n( '%s time', '%s times', $item['count'], 'buddyboss' ) ), esc_html( bp_core_number_format( $item['count'] ) ) );
 	}
 
 	/**
