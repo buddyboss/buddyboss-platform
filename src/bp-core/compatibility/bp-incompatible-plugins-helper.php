@@ -160,7 +160,7 @@ function bp_helper_plugins_loaded_callback() {
 		/**
 		 * Function to deregister some scripts and styles from bp component pages
 		 * 
-		 * @since 1.7.6
+		 * @since 1.8.0
 		 *
 		 * @return void
 		 */
@@ -179,7 +179,7 @@ function bp_helper_plugins_loaded_callback() {
 		/**
 		 * Deregister and dequeue select2 script from all component pages.
 		 * 
-		 * @since 1.7.6
+		 * @since 1.8.0
 		 *
 		 * @return void
 		 */
@@ -191,7 +191,7 @@ function bp_helper_plugins_loaded_callback() {
 		/**
 		 * Deregister and dequeue styles from all component pages.
 		 * 
-		 * @since 1.7.6
+		 * @since 1.8.0
 		 *
 		 * @return void
 		 */
