@@ -1160,7 +1160,39 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) ) );
+		$sql['select'] = "SELECT u.user_id as user_id FROM {$bp->groups->table_name_members} u";
+
+		/**
+		 * Filters the Join SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param string $sql         From SQL statement.
+		 * @param string $column_name Column name.
+		 */
+		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'user_id' );
+
+		$sql['where'] = array(
+			$wpdb->prepare( 'u.group_id = %d', $group_id ),
+			'u.is_confirmed = 1',
+			'u.is_banned = 0',
+		);
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param string $sql         From SQL statement.
+		 * @param string $column_name Column name.
+		 */
+		$sql['where'] = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'user_id' );
+
+		// Concatenate where statement.
+		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
+
+		// Get the specific user ids.
+		return array_map( 'intval', $wpdb->get_col( "{$sql['select']} {$sql['where']}" ) );
 	}
 
 	/**
