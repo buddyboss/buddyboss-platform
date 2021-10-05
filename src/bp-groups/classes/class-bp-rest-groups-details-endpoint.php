@@ -619,6 +619,8 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			$admins = groups_get_group_admins( $group->id );
 			$mods   = groups_get_group_mods( $group->id );
 			$count  = count( $admins ) + count( $mods );
+		} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
+			$count = bp_video_get_total_group_video_count( $group->id );
 		}
 
 		if ( ! isset( $count ) ) {
