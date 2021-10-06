@@ -155,7 +155,11 @@ function bp_attachments_get_max_upload_file_size( $type = '' ) {
 	$fileupload_maxk = bp_core_get_root_option( 'fileupload_maxk' );
 
 	if ( '' === $fileupload_maxk ) {
-		$fileupload_maxk = 5120000; // 5mb;
+		if ( function_exists( 'bp_media_file_upload_max_size' ) ) {
+			$fileupload_maxk = bp_media_file_upload_max_size() * 1024 * 1024;
+		} else {
+			$fileupload_maxk = (int) wp_max_upload_size();
+		}
 	} else {
 		$fileupload_maxk = $fileupload_maxk * 1024;
 	}
