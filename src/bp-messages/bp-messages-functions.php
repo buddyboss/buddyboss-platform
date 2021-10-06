@@ -1218,7 +1218,7 @@ function bb_messages_recipients_per_page() {
  * @param int    $current_user_id Currently logged-in user id.
  * @param string $content         Message content text.
  *
- * @since BuddyBoss 1.7.9
+ * @since BuddyBoss 1.8.0
  *
  * @return bool|int|void|WP_Error
  */
