@@ -186,6 +186,8 @@ function bp_helper_plugins_loaded_callback() {
 		function bp_deregister_geodirectory_script_select2() {
 			wp_dequeue_script( 'select2' );
 			wp_deregister_script( 'select2' );
+			wp_dequeue_script( 'bootstrap-js-bundle' );
+			wp_deregister_script( 'bootstrap-js-bundle' );
 		}
 
 		/**
