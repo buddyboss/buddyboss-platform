@@ -16,6 +16,8 @@ function xprofile_screen_edit_profile() {
 
 	global $wpdb;
 
+	$bp = buddypress();
+
 	if ( ! bp_is_my_profile() && ! bp_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
@@ -45,6 +47,18 @@ function xprofile_screen_edit_profile() {
 			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
 				xprofile_delete_field_data( $deleted_field_id, bp_displayed_user_id() );
+			}
+
+			if ( isset( $_POST['repeater_set_sequence'] ) && ! empty( $_POST['repeater_set_sequence'] ) ) {
+
+				$field_set_sequence = wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) );
+
+				$field_group_id = 0;
+
+				if ( isset( $deleted_field_ids[0] ) ) {
+					$field_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $deleted_field_ids[0] ) );
+				}
+				bp_set_profile_field_set_count( $field_group_id, bp_displayed_user_id(), count( $field_set_sequence ) );
 			}
 		}
 
