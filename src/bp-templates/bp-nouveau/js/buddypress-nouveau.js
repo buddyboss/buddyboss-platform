@@ -1800,7 +1800,6 @@ window.bp = window.bp || {};
 				true
 			).done(
 				function ( response ) {
-					console.log( response );
 					if ( false === response.success ) {
 						item_inner.prepend( response.data.feedback );
 						target.removeClass( 'pending loading' );
@@ -1935,34 +1934,6 @@ window.bp = window.bp || {};
 					}
 				}
 			);
-		},
-		
-		/**
-		 * Update group invitation count as well as update group count in main nav.
-		 */
-		invitationCount: function( self, action ) {
-			var groupNavArray = ['[data-bp-user-scope="invites"]', '#groups-personal-li'];
-			$.each( groupNavArray, function ( i, val ) {
-				if ( $( self.objectNavParent + ' ' + val ).length ) {
-					var invitation_count = Number( $( self.objectNavParent + ' ' + val + ' span' ).html() ) || 0;
-					
-					if ( '#groups-personal-li' === val ) {
-						if ( -1 !== $.inArray( action, [ 'accept_invite' ] ) ) {
-							invitation_count += 1;
-						}
-					} else {
-						if ( -1 !== $.inArray( action, ['accept_invite', 'reject_invite'] ) ) {
-							invitation_count -= 1;
-						}
-					}
-					
-					if ( invitation_count <= 0 ) {
-						$( self.objectNavParent + ' ' + val + ' span' ).remove();
-					} else {
-						$( self.objectNavParent + ' ' + val + ' span' ).html( invitation_count );
-					}
-				}
-			} );
 		},
 
 		/**
@@ -2742,7 +2713,35 @@ window.bp = window.bp || {};
 					return false;
 				}
 			}
-		}
+		},
+		
+		/**
+		 * Update group invitation count as well as update group count in main nav.
+		 */
+		invitationCount: function( self, action ) {
+			var groupNavArray = ['[data-bp-user-scope="invites"]', '#groups-personal-li'];
+			$.each( groupNavArray, function ( i, val ) {
+				if ( $( self.objectNavParent + ' ' + val ).length ) {
+					var invitation_count = Number( $( self.objectNavParent + ' ' + val + ' span' ).html() ) || 0;
+					
+					if ( '#groups-personal-li' === val ) {
+						if ( -1 !== $.inArray( action, [ 'accept_invite' ] ) ) {
+							invitation_count += 1;
+						}
+					} else {
+						if ( -1 !== $.inArray( action, ['accept_invite', 'reject_invite'] ) ) {
+							invitation_count -= 1;
+						}
+					}
+					
+					if ( invitation_count <= 0 ) {
+						$( self.objectNavParent + ' ' + val + ' span' ).remove();
+					} else {
+						$( self.objectNavParent + ' ' + val + ' span' ).html( invitation_count );
+					}
+				}
+			} );
+		},
 	};
 
 	// Launch BP Nouveau.
