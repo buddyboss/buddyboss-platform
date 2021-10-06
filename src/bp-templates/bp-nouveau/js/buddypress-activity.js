@@ -72,6 +72,7 @@ window.bp = window.bp || {};
 				this.dropzone_options = {
 					url                 : BP_Nouveau.ajaxurl,
 					timeout             : 3 * 60 * 60 * 1000,
+					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
 					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
 					acceptedFiles       : 'image/*',
 					autoProcessQueue    : true,
@@ -79,7 +80,7 @@ window.bp = window.bp || {};
 					uploadMultiple      : false,
 					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded
 				};
 
 				// if defined, add custom dropzone options.
@@ -1057,6 +1058,11 @@ window.bp = window.bp || {};
 						}
 					);
 				}
+			}
+			
+			if ( target.hasClass( 'activity-state-no-comments' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
 			}
 
 			// Removing the form.
