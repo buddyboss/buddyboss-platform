@@ -1287,6 +1287,8 @@ function bp_nouveau_nav_has_count() {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'requests' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_friend_get_total_requests_count( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'invites' === $nav_item->slug ) {
+		$count = 0 !== (int) groups_get_invite_count_for_user( bp_loggedin_user_id() );
 	}
 
 	/**
@@ -1354,6 +1356,8 @@ function bp_nouveau_get_nav_count() {
 		}
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'requests' === $nav_item->slug ) {
 		$count = (int) bp_friend_get_total_requests_count( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'invites' === $nav_item->slug ) {
+		$count = (int) groups_get_invite_count_for_user( bp_loggedin_user_id() );
 	}
 
 	/**
