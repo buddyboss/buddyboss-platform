@@ -1862,6 +1862,42 @@ window.bp = window.bp || {};
 								}
 							}
 						}
+						
+						// User sub nav update request friends counts.
+						if ( $( '#requests-personal-li' ).length ) {
+							var request_friend_with_count    = $( '#requests-personal-li a span' );
+							var request_friend_without_count = $( '#requests-personal-li a' );
+							
+							// Check friend count set.
+							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.request_friend_count ) {
+								// Check friend count > 0 then show the count span.
+								if ( response.data.request_friend_count > 0 ) {
+									if ( ( request_friend_with_count ).length ) {
+										// Update count span.
+										$( request_friend_with_count ).html( response.data.request_friend_count );
+									} else {
+										// If no friend then add count span.
+										$( request_friend_without_count ).append( '<span class="count">' + response.data.request_friend_count + '</span>' );
+									}
+								} else {
+									// If no friend then hide count span.
+									$( request_friend_with_count ).hide();
+								}
+							} else if ( undefined !== response.data.request_friend_count ) {
+								if ( response.data.request_friend_count > 0 ) {
+									if ( ( request_friend_with_count ).length ) {
+										// Update count span.
+										$( request_friend_with_count ).html( response.data.request_friend_count );
+									} else {
+										// If no friend then add count span.
+										$( request_friend_without_count ).append( '<span class="count">' + response.data.request_friend_count + '</span>' );
+									}
+								} else {
+									// If no friend then hide count span.
+									$( request_friend_with_count ).hide();
+								}
+							}
+						}
 
 						// User's groups invitations screen & User's friend screens.
 						if ( undefined !== response.data.is_user && response.data.is_user ) {

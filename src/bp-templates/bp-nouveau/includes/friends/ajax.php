@@ -125,13 +125,14 @@ function bp_nouveau_ajax_addremove_friend() {
 		} else {
 			wp_send_json_success(
 				array(
-					'feedback' => sprintf(
+					'feedback'             => sprintf(
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection accepted.', 'buddyboss' )
 					),
-					'type'         => 'success',
-					'is_user'      => true,
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'type'                 => 'success',
+					'is_user'              => true,
+					'friend_count'         => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'request_friend_count' => bp_friend_get_total_requests_count( bp_loggedin_user_id() ),
 				)
 			);
 		}
@@ -150,13 +151,14 @@ function bp_nouveau_ajax_addremove_friend() {
 		} else {
 			wp_send_json_success(
 				array(
-					'feedback' => sprintf(
+					'feedback'             => sprintf(
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection rejected.', 'buddyboss' )
 					),
-					'type'         => 'success',
-					'is_user'      => true,
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'type'                 => 'success',
+					'is_user'              => true,
+					'friend_count'         => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'request_friend_count' => bp_friend_get_total_requests_count( bp_loggedin_user_id() ),
 				)
 			);
 		}
@@ -180,13 +182,14 @@ function bp_nouveau_ajax_addremove_friend() {
 				) ), 'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ) );
 			} else {
 				$response = array(
-					'feedback' => sprintf(
+					'feedback'             => sprintf(
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection removed.', 'buddyboss' )
 					),
-					'type'         => 'success',
-					'is_user'      => $is_user,
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'type'                 => 'success',
+					'is_user'              => $is_user,
+					'friend_count'         => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'request_friend_count' => bp_friend_get_total_requests_count( bp_loggedin_user_id() ),
 				);
 			}
 
