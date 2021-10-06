@@ -76,7 +76,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 *
 	 * @return bool Whether to bypass check for the media directory.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.8.0
 	 */
 	public function bb_media_check_default_access_access( $bypass ) {
 
@@ -97,7 +97,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 *
 	 * @return array|mixed
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss 1.8.0
 	 */
 	public function bb_media_directory_callback_check_access( $directory, $sample_ids ) {
 
