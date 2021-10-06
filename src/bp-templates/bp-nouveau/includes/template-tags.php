@@ -1270,7 +1270,8 @@ function bp_nouveau_nav_has_count() {
 	$bp_nouveau = bp_nouveau();
 	$nav_item   = $bp_nouveau->current_nav_item;
 	$count      = false;
-
+//	error_log( $bp_nouveau->displayed_nav );
+//	error_log( $nav_item->slug );
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
@@ -1289,6 +1290,8 @@ function bp_nouveau_nav_has_count() {
 		$count = 0 !== (int) bp_friend_get_total_requests_count( bp_loggedin_user_id() );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'invites' === $nav_item->slug ) {
 		$count = 0 !== (int) groups_get_invite_count_for_user( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'albums' === $nav_item->slug ) {
+		$count = 0 !== (int) bp_media_get_total_user_album_count();
 	}
 
 	/**
@@ -1358,6 +1361,8 @@ function bp_nouveau_get_nav_count() {
 		$count = (int) bp_friend_get_total_requests_count( bp_loggedin_user_id() );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'invites' === $nav_item->slug ) {
 		$count = (int) groups_get_invite_count_for_user( bp_loggedin_user_id() );
+	}  elseif ( 'personal' === $bp_nouveau->displayed_nav && 'albums' === $nav_item->slug ) {
+		$count = (int) bp_media_get_total_user_album_count();
 	}
 
 	/**

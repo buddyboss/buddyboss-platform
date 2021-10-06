@@ -642,12 +642,18 @@ class BP_Media_Album {
 	 *
 	 * @param int $group_id
 	 *
+	 * @param int $user_id
+	 *
 	 * @return array|bool|int
 	 */
-	public static function total_group_album_count( $group_id = 0 ) {
+	public static function total_group_album_count( $group_id = 0, $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+		$sql = "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}";
+		if ( 0 !== (int) $user_id ) {
+			$sql .= " AND user_id=" . bp_loggedin_user_id() . "";
+		}
+		$total_count = (int) $wpdb->get_var( $sql );
 
 		return $total_count;
 	}
