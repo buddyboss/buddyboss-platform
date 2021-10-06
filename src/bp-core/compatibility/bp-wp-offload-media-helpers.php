@@ -79,14 +79,13 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @since BuddyBoss 1.8.0
 	 */
 	public function bb_media_check_default_access_access( $bypass ) {
-
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+
 		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
 			$bypass = true;
 		}
 
 		return $bypass;
-
 	}
 
 	/**
@@ -100,7 +99,6 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @since BuddyBoss 1.8.0
 	 */
 	public function bb_media_directory_callback_check_access( $directory, $sample_ids ) {
-
 		$uploads = wp_upload_dir();
 		if ( ! empty( $directory ) && class_exists( 'AS3CF_Utils' ) ) {
 			foreach ( $sample_ids as $id => $v ) {
@@ -112,8 +110,8 @@ class BB_AS3CF_Plugin_Compatibility {
 				}
 			}
 		}
-		return $directory;
 
+		return $directory;
 	}
 
 	/**
