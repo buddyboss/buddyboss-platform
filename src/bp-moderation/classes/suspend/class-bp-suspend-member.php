@@ -53,7 +53,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-		
+
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -289,7 +289,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
+		if ( $this->background_disabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
@@ -343,7 +343,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
+		if ( $this->background_disabled || ( ! empty( $args ) && ! $force_bg_process ) ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$bp_background_updater->push_to_queue(

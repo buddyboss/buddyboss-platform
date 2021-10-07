@@ -267,7 +267,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled || ! empty( $args ) ) {
 			$this->hide_related_content( $document_id, $hide_sitewide, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
@@ -321,7 +321,7 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled || ! empty( $args ) ) {
 			$this->unhide_related_content( $document_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$bp_background_updater->push_to_queue(
