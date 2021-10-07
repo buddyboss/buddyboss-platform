@@ -263,8 +263,17 @@ class BP_Document_Component extends BP_Component {
 			}
 
 			// Add 'Documents' to the main navigation.
+			$count = bp_document_get_total_document_count();
+			$class = ( 0 === $count ) ? 'no-count' : 'count';
+			$main_nav_name = $nav_name;
+			$main_nav_name .= sprintf(
+				' <span class="%s">%s</span>',
+				esc_attr( $class ),
+				bp_core_number_format( $count )
+			);
+			
 			$main_nav = array(
-				'name'                => $nav_name,
+				'name'                => $main_nav_name,
 				'slug'                => $slug,
 				'position'            => 90,
 				'screen_function'     => 'document_screen',
