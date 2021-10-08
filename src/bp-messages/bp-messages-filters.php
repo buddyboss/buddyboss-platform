@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 add_filter( 'bp_get_message_notice_subject', 'wp_filter_kses', 1 );
-add_filter( 'bp_get_message_notice_text', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_message_notice_text', 'bp_messages_filter_kses', 1 );
 add_filter( 'bp_get_message_thread_subject', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_message_thread_excerpt', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_messages_subject_value', 'wp_filter_kses', 1 );
@@ -129,8 +129,9 @@ add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_enforce_curr
  * @return string         The filtered message content.
  */
 function bp_messages_filter_kses( $content ) {
-	$messages_allowedtags      = bp_get_allowedtags();
-	$messages_allowedtags['p'] = array();
+	$messages_allowedtags                  = bp_get_allowedtags();
+	$messages_allowedtags['p']             = array();
+	$messages_allowedtags['span']['style'] = array();
 
 	/**
 	 * Filters the allowed HTML tags for BuddyBoss Messages content.

@@ -1202,17 +1202,28 @@ body.post-type-reply #edit-slug-box {
 }
 
 .bp-new-notice-panel input,
-.bp-new-notice-panel textarea {
+.bp-new-notice-panel .wp-editor-wrap {
 	clear: none;
 	margin-bottom: 1em;
 	width: 75%;
 }
 
-.bp-new-notice-panel input[type="text"]:after,
-.bp-new-notice-panel textarea:after {
+.bp-new-notice-panel .wp-editor-wrap {
+  float: left;
+}
+
+.bp-new-notice-panel input[type="text"]:after {
 	clear: both;
 	content: " ";
 	display: table;
+}
+
+.bp-new-notice-panel .wp-editor-wrap.wp-core-ui .quicktags-toolbar input.button {
+  width: auto;
+}
+
+.bp-new-notice-panel .wp-editor-wrap.wp-core-ui .quicktags-toolbar input#qt_bp_notice_content_learndash_shortcodes {
+  display: none;
 }
 
 .bp-new-notice-panel .button-primary {

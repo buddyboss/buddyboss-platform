@@ -209,7 +209,23 @@ class BP_Messages_Notices_Admin {
 						<input type="text" class="bp-panel-input" id="bp_notice_subject" name="bp_notice[subject]"/>
 
 						<label for="bp_notice_content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></label>
-						<textarea class="bp-panel-textarea" id="bp_notice_content" name="bp_notice[content]"></textarea>
+						<!-- <textarea class="bp-panel-textarea" id="bp_notice_content" name="bp_notice[content]"></textarea> -->
+						<?php
+							wp_editor(
+								'',
+								'bp_notice_content',
+								array(
+									'textarea_name' => 'bp_notice[content]',
+									'media_buttons' => false,
+									'teeny'         => true,
+									'textarea_rows' => 5,
+									'quicktags'     => array( 'buttons' => 'strong,em,underline,link,close' ),
+									'tinymce'       => array(
+										'toolbar1' => 'bold,italic,underline,separator,link,unlink,undo,redo',
+									),
+								)
+							);
+						?>
 					</div>
 
 					<input type="submit" value="<?php esc_attr_e( 'Publish Notice', 'buddyboss' ); ?>" name="bp_notice[send]" class="button button-primary save alignleft">
