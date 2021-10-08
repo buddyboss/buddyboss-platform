@@ -917,7 +917,7 @@ endif;
 				<?php if ( $field->can_delete ) : ?>
 
 					<div class="delete-button">
-						<a class="confirm submit-delete deletion" href="<?php echo esc_url( $field_delete_url ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+						<a class="confirm submit-delete deletion bb-delete-profile-field" href="<?php echo esc_url( $field_delete_url ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
 					</div>
 
 				<?php endif; ?>
