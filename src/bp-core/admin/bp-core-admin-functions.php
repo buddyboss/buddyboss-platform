@@ -3104,11 +3104,20 @@ function bp_block_category( $categories = array(), $post = null ) {
 	);
 }
 
-if ( version_compare( $GLOBALS['wp_version'], '5.8.0', '<' ) ) {
-	add_filter( 'block_categories', 'bp_block_category', 30, 2 );
-} else {
-	add_filter( 'block_categories_all', 'bp_block_category', 30, 2 );
+/**
+ * Select the `block_categories` filter according to WP version.
+ *
+ * @since BuddyBoss X.X.X
+ */
+function bb_block_init_category_filter() {
+	if ( function_exists( 'get_default_block_categories' ) ) {
+		add_filter( 'block_categories_all', 'bp_block_category', 1, 2 );
+	} else {
+		add_filter( 'block_categories', 'bp_block_category', 1, 2 );
+	}
 }
+
+add_action( 'bp_init', 'bb_block_init_category_filter' );
 
 function bp_document_ajax_check_file_mime_type() {
 	$response = array();
