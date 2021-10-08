@@ -752,27 +752,6 @@ class BP_Media {
 			$medias[] = $media;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $medias, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with media items.
-		foreach ( $medias as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$medias[ $a_index ]->user_email    = $a_user->user_email;
-				$medias[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$medias[ $a_index ]->user_login    = $a_user->user_login;
-				$medias[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $medias;
 	}
 

@@ -703,27 +703,6 @@ class BP_Document {
 			$documents[] = $document;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $documents, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with document items.
-		foreach ( $documents as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$documents[ $a_index ]->user_email    = $a_user->user_email;
-				$documents[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$documents[ $a_index ]->user_login    = $a_user->user_login;
-				$documents[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $documents;
 	}
 
@@ -1403,27 +1382,6 @@ class BP_Document {
 			$document->visibility = $visibility;
 
 			$documents[] = $document;
-		}
-
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $documents, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with document items.
-		foreach ( $documents as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$documents[ $a_index ]->user_email    = $a_user->user_email;
-				$documents[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$documents[ $a_index ]->user_login    = $a_user->user_login;
-				$documents[ $a_index ]->display_name  = $a_user->display_name;
-			}
 		}
 
 		return $documents;
