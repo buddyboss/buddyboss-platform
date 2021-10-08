@@ -1938,6 +1938,7 @@ function bp_core_activate_signup( $key ) {
 	} else {
 		$signups = BP_Signup::get(
 			array(
+				'exclude_active' => false,
 				'activation_key' => $key,
 			)
 		);
@@ -3345,6 +3346,12 @@ function bp_member_type_by_type( $type_id ) {
  * @return array Member types
  */
 function bp_get_active_member_types( $args = array() ) {
+
+	if ( ! bp_member_type_enable_disable() ) {
+	    return array();
+	}
+
+	static $cache = array();
 	$bp_active_member_types = array();
 
 	$args = bp_parse_args( $args, array(
@@ -3356,14 +3363,23 @@ function bp_get_active_member_types( $args = array() ) {
 		'fields'         => 'ids'
 	), 'member_types' );
 
-    $bp_active_member_types_query = new \WP_Query( $args );
+	$cache_key = 'bp_get_active_member_types_' . md5( serialize( $args ) );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
+	$bp_active_member_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_member_types_query->have_posts() ) {
 		$bp_active_member_types = $bp_active_member_types_query->posts;
 	}
 	wp_reset_postdata();
 
-	return apply_filters( 'bp_get_active_member_types', $bp_active_member_types );
+	$bp_active_member_types = apply_filters( 'bp_get_active_member_types', $bp_active_member_types );
+	$cache[ $cache_key ]    = $bp_active_member_types;
+
+	return $bp_active_member_types;
 }
 
 /**

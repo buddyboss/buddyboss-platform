@@ -150,6 +150,13 @@ class Settings {
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
+					'cache_bb_video'           => array(
+						'label'          => __( 'Videos', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Videos', 'buddyboss' ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-video&nonce=' . self::$purge_nonce,
+						'type'           => 'checkbox',
+						'value'          => true,
+					),
 				),
 			),
 		);
@@ -213,6 +220,7 @@ class Settings {
 					'bp-friends',
 					'bp-media',
 					'bp-document',
+					'bp-video',
 				);
 				break;
 		}
