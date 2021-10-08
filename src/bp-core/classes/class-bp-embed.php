@@ -319,7 +319,7 @@ class BP_Embed extends WP_Embed {
 			}
 
 			// Find URLs in their own paragraph.
-			$content = call_user_func( array( $this, 'bb_get_content_autoembed_callback' ), $content );
+			$content = $this->bb_get_content_autoembed_callback( $content );
 		}
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
