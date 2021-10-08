@@ -3104,7 +3104,11 @@ function bp_block_category( $categories = array(), $post = null ) {
 	);
 }
 
-add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+if ( version_compare( $GLOBALS['wp_version'], '5.8.0', '<' ) ) {
+	add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+} else {
+	add_filter( 'block_categories_all', 'bp_block_category', 30, 2 );
+}
 
 function bp_document_ajax_check_file_mime_type() {
 	$response = array();
