@@ -1134,7 +1134,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
 
 			// Exclude logged-in user ids from the members list.
-			if ( in_array( bp_loggedin_user_id(), $members ) ) {
+			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
 				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
 			}
 
@@ -1156,10 +1156,11 @@ function bp_nouveau_ajax_groups_send_message() {
 			}
 
 			$members = array_values( $members );
-        }
+		}
 
-	// We get members array from $_POST['users_list'] because user already selected them.
+		// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
+
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 		// Check Membership Access.
@@ -1170,7 +1171,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		foreach ( $members as $member ) {
 
-            $can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
+			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member, bp_loggedin_user_id() );
 			if ( ! $can_send_group_message ) {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
@@ -1178,7 +1179,6 @@ function bp_nouveau_ajax_groups_send_message() {
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
 				$not_friends[] = bp_core_get_user_displayname( $member );
 			}
-
 		}
 
 		if ( ! empty( $not_access_list ) ) {
@@ -1203,7 +1203,6 @@ function bp_nouveau_ajax_groups_send_message() {
 			$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
-
 	}
 
 	if ( empty( $group ) ) {
@@ -1221,7 +1220,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
 
 			// Exclude logged-in user ids from the members list.
-			if ( in_array( bp_loggedin_user_id(), $members ) ) {
+			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
 				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
 			}
 
@@ -1352,7 +1351,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			 */
 			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
 
-                $send = bp_groups_messages_new_message(
+				$send = bp_groups_messages_new_message(
 					array(
 						'recipients'    => $members,
 						'subject'       => wp_trim_words( $content, messages_get_default_subject_length() ),
@@ -1370,7 +1369,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $group_thread_id ) ) {
 
-                groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
+				groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
 
 				$new_reply = bp_groups_messages_new_message(
 					array(
@@ -1386,7 +1385,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				bp_groups_messages_validate_message( $new_reply );
 			}
 
-        // "Individual Members" Selected.
+			// "Individual Members" Selected.
 		} else {
 			$meta = array(
 				array(
@@ -1481,7 +1480,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 
-					// Else recipients not matched.
+						// Else recipients not matched.
 					} else {
 						$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 						$existing_thread  = 0;
@@ -1548,7 +1547,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$_POST['message_thread_type'] = 'new';
 						}
 					}
-				// Else no thread found.
+					// Else no thread found.
 				} else {
 					$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 					$existing_thread  = 0;
@@ -1615,7 +1614,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 				}
 
-			// Else no previous thread found.
+				// Else no previous thread found.
 			} else {
 				$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 				$existing_thread  = 0;
@@ -1715,7 +1714,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			}
 		}
 
-    // Else "Private Reply (BCC)" selected.
+		// Else "Private Reply (BCC)" selected.
 	} else {
 
 		if ( ! empty( $members ) ) {
