@@ -1167,14 +1167,14 @@ add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifi
  *
  * @since BuddyPress 1.9.0
  */
-function bp_groups_screen_group_admin_requests_mark_notifications() {
+function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
 	if ( bp_is_active( 'notifications' ) ) {
-		
-		if( !empty( $group_id ) && isset( $_GET['requested'] ) && !empty( $_GET['requested'] ) ){
+
+		if ( ! empty( $group_id ) && isset( $_GET['requested'] ) && ! empty( $_GET['requested'] ) ) {
 
 			$secondary_item_id = filter_input( INPUT_GET, 'requested', FILTER_VALIDATE_INT );
 
-			// Mark as read group join requests notification
+			// Mark as read group join requests notification.
 			bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'new_membership_request', $secondary_item_id );
 		}
 	}
