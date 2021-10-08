@@ -680,47 +680,46 @@ function bp_nouveau_ajax_post_update() {
 		);
 
 	} elseif ( 'group' === $object ) {
-		if ( $item_id && bp_is_active( 'groups' ) ) {
 
-			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
+		// If group component active
+		if ( bp_is_active( 'groups' ) ) {
 
-			// This function is setting the current group!
-			$activity_id = groups_post_update(
-				array(
-					'id'       => $activity_id,
-					'content'  => $_POST['content'],
-					'group_id' => $item_id,
-				)
-			);
+			if ( $item_id ) {
 
-			if ( empty( $status ) ) {
-				if ( ! empty( $bp->groups->current_group->status ) ) {
-					$status = $bp->groups->current_group->status;
-				} else {
-					$group  = groups_get_group( array( 'group_id' => $group_id ) );
-					$status = $group->status;
-				}
+				$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
 
-				$is_private = 'public' !== $status;
-			}
-		} else {
+				// This function is setting the current group!
+				$activity_id = groups_post_update(
+					array(
+						'id'       => $activity_id,
+						'content'  => $_POST['content'],
+						'group_id' => $item_id,
+					)
+				);
 
-			if ( bp_is_active( 'groups' ) ) {
-				if ( ! $item_id ){
-					wp_send_json_error(
-						array(
-							'message' => __( 'There was a problem posting your update. Please set the group details properly.', 'buddyboss' ),
-						)
-					);
+				if ( empty( $status ) ) {
+					if ( ! empty( $bp->groups->current_group->status ) ) {
+						$status = $bp->groups->current_group->status;
+					} else {
+						$group  = groups_get_group( array( 'group_id' => $group_id ) );
+						$status = $group->status;
+					}
+					$is_private = 'public' !== $status;
 				}
 			} else {
 				wp_send_json_error(
 					array(
-						'message' => __( 'There was a problem posting your update. Group component is disabled, it should be enabled.', 'buddyboss' ),
+						'message' => __( 'There was a problem posting your update. Please set the group details properly.', 'buddyboss' ),
 					)
 				);
 			}
-			
+		}
+		else {
+			wp_send_json_error(
+				array(
+					'message' => __( 'There was a problem posting your update. Group component is disabled, it should be enabled.', 'buddyboss' ),
+				)
+			);
 		}
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
