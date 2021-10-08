@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8.1
 Requires PHP: 5.6.20
-Stable tag: 1.7.7.1
+Stable tag: 1.7.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,40 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.8 =
+* Forums - Fixed forums logic by not allowing multiple Forum to be associated with a single Group
+* Forums - Fixed Forums and it's sub-forums to have the same privacy as Group when associated
+* Forums - Fixed Forums and it's sub-forums to link to Group URL when associated
+* Forums - Fixed forum discussion tag conflict with same term slug
+* Forums - Fixed forum discussion documents not showing on edit
+* Forums - Fixed forum discussion js error with the Korean language
+* Forums - Fixed forum reply with gif media duplicate error on submit
+* Activity - Fixed issue to stop showing Activity comment Photos and Documents anywhere else on the network
+* Activity - Fixed issue to stop further activity on Photos and Documents added in activity comments
+* Activity - Fixed Activity Feed connection tab to not show logged-in member posts
+* Profiles - Fixed profile field line break not working for Paragraph field
+* Media - Fixed Media download security issue
+* Media - Fixed Video thumbnail UI issue
+* Messages - Fixed big multiple members thread load more UI issue
+* Messages - Fixed Block member listing popup to not show blocked members
+* Messages - Fixed single quote issue in display name not showing correctly
+* Messages - Fixed invalid messages count issue on hiding message thread action
+* Network Search - Fixed Forum replies issue not showing in the search results page
+* Network Search - Fixed search dropdown UI issue on the search results page
+* Network Search - Fixed Cross-Site Scripting issue with search query string
+* Coding Standards - Fixed bunch of non-translatable strings
+* Coding Standards - Fixed bunch of notices and warnings
+* Elementor - Fixed [bbp-topic-form] shortcode compatibility issue
+* REST API - Forums and Groups association logic API changes
+* REST API - Activity comment media logic API changes
+* REST API - Forum discussion logic updates API changes
+* REST API - Fixed signup endpoint issue to not return activation code in response
+* REST API - Fixed signup endpoint to activate member using activation key only
+* REST API - Fixed hidden/private group Activity post critical issue on update
+* Compatibility - Fixed 'WishList Member' plugin compatibility issue on exporting personal data
+* Compatibility - Fixed login 'Privacy Policy' popup compatibility issue with custom js script
+* Compatibility - Fixed network search issue with PHP 8.0
 
 = 1.7.7.1 =
 * Activity - Fixed @mention not working critical issue

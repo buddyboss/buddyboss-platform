@@ -7264,6 +7264,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 
 .bp-messages-content .thread-participants #view_more_members {
   font-size: 13px;
+  display: inline-block;
 }
 
 .bp-messages-content time {
@@ -8266,6 +8267,24 @@ body .bp-messages-user-threads {
   }
 }
 
+.mass-user-block-list #moderated_user_list:not(.is_not_empty) {
+  text-align: center;
+}
+
+.mass-user-block-list #moderated_user_list:not(.is_not_empty):before {
+  content: "\E838";
+  font: normal normal normal 20px/1 "bb-icons";
+  /* stylelint-disable-line */
+  speak: none;
+  display: inline-block !important;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
 .bb-report-type-pagination .page-data {
   display: block;
   margin: 20px auto 0;
@@ -8974,6 +8993,10 @@ ul.bbp-stats .bbp-count {
 
 .buddypress-wrap table.profile-fields p:last-child {
   margin-top: 0;
+}
+
+.buddypress-wrap table.profile-fields td.data > p {
+  margin: 0 0 25px;
 }
 
 /**
@@ -19659,15 +19682,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js > video,
 .bb-video-thumb .video-js > video,
 .bb-media-section .video-js > video {
-  object-fit: cover;
-}
-
-.bb-activity-video-elem .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-activity-video-elem .video-js.vjs-paused:not(.vjs-waiting) > video,
-.bb-video-thumb .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-video-thumb .video-js.vjs-paused:not(.vjs-waiting) > video,
-.bb-media-section .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-media-section .video-js.vjs-paused:not(.vjs-waiting) > video {
   object-fit: contain;
 }
 

@@ -978,7 +978,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['full'] = array(
 			/* translators: Full image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
@@ -986,7 +986,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['thumb'] = array(
 			/* translators: Thumb image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
