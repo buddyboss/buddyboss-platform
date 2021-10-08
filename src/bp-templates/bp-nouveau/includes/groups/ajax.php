@@ -1238,39 +1238,38 @@ function bp_nouveau_ajax_groups_send_message() {
 
 			if ( '' !== $group_thread && messages_is_valid_thread( $group_thread ) ) {
 
-                $first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
+				$first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-                if ( ! empty( $first_thread_message ) ) {
-                    $users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
-                    $type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
-                    $group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+				if ( ! empty( $first_thread_message ) ) {
+					$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+					$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+					$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
 
-                    if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
-                        $_POST['message_thread_type'] = 'new';
-                    }
-                }
+					if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+						$_POST['message_thread_type'] = 'new';
+					}
+				}
 
-                if ( empty( $_POST['message_thread_type'] ) ) {
-                    $total_threads = BP_Messages_Thread::get(
-                        array(
-                            'include_threads' => array( $group_thread ),
-                            'per_page'        => 1,
-                            'count_total'     => true,
-                            'is_deleted'      => 1,
-                        )
-                    );
+				if ( empty( $_POST['message_thread_type'] ) ) {
+					$total_threads = BP_Messages_Thread::get(
+						array(
+							'include_threads' => array( $group_thread ),
+							'per_page'        => 1,
+							'count_total'     => true,
+							'is_deleted'      => 1,
+						)
+					);
 
-                    $is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
+					$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
 
-                    if ( $is_deleted ) {
-                        // This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
-                        $_POST['message_thread_type'] = 'new';
-                    }
-                }
-
+					if ( $is_deleted ) {
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						$_POST['message_thread_type'] = 'new';
+					}
+				}
 			} else {
 				$_POST['message_thread_type'] = 'new';
-            }
+			}
 
 			if ( '' !== $group_thread && ! $is_deleted && isset( $_POST['message_thread_type'] ) && empty( $_POST['message_thread_type'] ) ) {
 				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
