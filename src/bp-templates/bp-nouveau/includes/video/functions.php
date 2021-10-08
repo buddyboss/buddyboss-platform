@@ -127,7 +127,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
+		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), bp_core_number_format( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
@@ -202,7 +202,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 		);
 	}
 
-	if ( is_user_logged_in() && bp_is_group_video_support_enabled() ) {
+	if ( is_user_logged_in() && bp_is_group_video_support_enabled() && bp_is_active( 'groups' ) ) {
 		$nav_items['group'] = array(
 			'component' => 'video',
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
@@ -335,17 +335,4 @@ function bp_video_allowed_video_type() {
 	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
 
 	return $extension_lists;
-}
-
-/**
- * Function get video popup buttons.
- *
- * @param array $buttons Buttons array.
- *
- * @return array $buttons Buttons array.
- * @since BuddyBoss 1.7.0
- */
-function bp_video_activity_entry_buttons( $buttons ) {
-	unset( $buttons['activity_report'] );
-	return $buttons;
 }

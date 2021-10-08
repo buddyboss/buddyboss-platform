@@ -818,10 +818,14 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			$wordpress_url = add_query_arg( $query_args, $this->edit_url );
 
 			$bp_active = false;
-			$wp_active = ' nav-tab-active';
+			$wp_active = false;
+
+			if ( 'WordPress' === $active ) {
+				$wp_active = ' nav-tab-active';
+			}
+
 			if ( 'BuddyPress' === $active ) {
 				$bp_active = ' nav-tab-active';
-				$wp_active = false;
 			} ?>
 
 		<h2 id="profile-nav" class="nav-tab-wrapper">
@@ -839,6 +843,18 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			<?php endif; ?>
 
 			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php _e( 'Extended Profile', 'buddyboss' ); ?></a>
+
+			<?php
+			/**
+			 * Add more menu tabs from the user's profile.
+			 *
+			 * @since BuddyBoss 1.7.8
+			 *
+			 * @param object|null $user   User to create profile navigation for.
+			 * @param string      $active Which profile to highlight.
+			 */
+			do_action( 'bb_members_admin_user_profile_nav', $user, $active ); 
+			?>
 		</h2>
 
 			<?php
@@ -1720,7 +1736,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			$url  = add_query_arg( 'page', 'bp-signups', $base_url );
-			$text = sprintf( __( 'Pending %s', 'buddyboss' ), '<span class="count">(' . number_format_i18n( $signups ) . ')</span>' );
+			$text = sprintf( __( 'Pending %s', 'buddyboss' ), '<span class="count">(' . bp_core_number_format( $signups ) . ')</span>' );
 
 			$views['registered'] = sprintf( '<a href="%1$s" class="%2$s">%3$s</a>', esc_url( $url ), $class, $text );
 
@@ -2004,7 +2020,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									absint( $_REQUEST['resent'] ),
 									'buddyboss'
 								),
-								number_format_i18n( absint( $_REQUEST['resent'] ) )
+								bp_core_number_format( absint( $_REQUEST['resent'] ) )
 							);
 						}
 
@@ -2016,7 +2032,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									absint( $_REQUEST['notsent'] ),
 									'buddyboss'
 								),
-								number_format_i18n( absint( $_REQUEST['notsent'] ) )
+								bp_core_number_format( absint( $_REQUEST['notsent'] ) )
 							);
 
 							if ( empty( $_REQUEST['resent'] ) ) {
@@ -2040,7 +2056,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									absint( $_REQUEST['activated'] ),
 									'buddyboss'
 								),
-								number_format_i18n( absint( $_REQUEST['activated'] ) )
+								bp_core_number_format( absint( $_REQUEST['activated'] ) )
 							);
 						}
 
@@ -2052,7 +2068,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									absint( $_REQUEST['notactivated'] ),
 									'buddyboss'
 								),
-								number_format_i18n( absint( $_REQUEST['notactivated'] ) )
+								bp_core_number_format( absint( $_REQUEST['notactivated'] ) )
 							);
 
 							if ( empty( $_REQUEST['activated'] ) ) {
@@ -2076,7 +2092,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									absint( $_REQUEST['deleted'] ),
 									'buddyboss'
 								),
-								number_format_i18n( absint( $_REQUEST['deleted'] ) )
+								bp_core_number_format( absint( $_REQUEST['deleted'] ) )
 							);
 						}
 
@@ -2088,7 +2104,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									absint( $_REQUEST['notdeleted'] ),
 									'buddyboss'
 								),
-								number_format_i18n( absint( $_REQUEST['notdeleted'] ) )
+								bp_core_number_format( absint( $_REQUEST['notdeleted'] ) )
 							);
 
 							if ( empty( $_REQUEST['deleted'] ) ) {
