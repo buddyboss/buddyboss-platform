@@ -1152,11 +1152,10 @@ body.post-type-reply #edit-slug-box {
 }
 
 .bp-new-notice-panel .wp-editor-wrap {
-  float: left;
+  float: right;
 }
 
-.bp-new-notice-panel input[type="text"]:after,
-.bp-new-notice-panel textarea:after {
+.bp-new-notice-panel input[type="text"]:after {
   clear: both;
   content: " ";
   display: table;
