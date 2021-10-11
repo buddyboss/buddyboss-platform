@@ -1805,7 +1805,12 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = false;
+		$cache_key            = 'bp_activity_document_id_' . $activity_id;
+		$activity_document_id = wp_cache_get( $cache_key, 'bp_document' );
+
+		if ( ! empty( $activity_document_id ) ) {
+			return $activity_document_id;
+		}
 
 		// Check activity component enabled or not.
 		if ( bp_is_active( 'activity' ) ) {
@@ -1821,6 +1826,10 @@ class BP_Document {
 					bp_activity_update_meta( $activity_id, 'bp_document_id', $activity_document_id );
 				}
 			}
+		}
+
+		if ( ! empty( $activity_document_id ) ) {
+			wp_cache_set( $cache_key, $activity_document_id, 'bp_document' );
 		}
 
 		return $activity_document_id;
@@ -2026,6 +2035,16 @@ class BP_Document {
 			return false;
 		}
 
-		return (int) $wpdb->get_var( "SELECT DISTINCT d.attachment_id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" );
+		$cache_key              = 'bp_document_attachment_id_' . $activity_id;
+		$document_attachment_id = wp_cache_get( $cache_key, 'bp_document' );
+
+		if ( ! empty( $document_attachment_id ) ) {
+			return $document_attachment_id;
+		}
+
+		$document_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT d.attachment_id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" );
+		wp_cache_set( $cache_key, $document_attachment_id, 'bp_document' );
+
+		return $document_attachment_id;
 	}
 }

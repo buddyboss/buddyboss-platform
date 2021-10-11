@@ -1336,7 +1336,12 @@ class BP_Media {
 			return false;
 		}
 
-		$activity_media_id = false;
+		$cache_key         = 'bp_activity_media_id_' . $activity_id;
+		$activity_media_id = wp_cache_get( $cache_key, 'bp_media' );
+
+		if ( ! empty( $activity_media_id ) ) {
+			return $activity_media_id;
+		}
 
 		// Check activity component enabled or not.
 		if ( bp_is_active( 'activity' ) ) {
@@ -1352,6 +1357,10 @@ class BP_Media {
 					bp_activity_update_meta( $activity_id, 'bp_media_id', $activity_media_id );
 				}
 			}
+		}
+
+		if ( ! empty( $activity_media_id ) ) {
+			wp_cache_set( $cache_key, $activity_media_id, 'bp_media' );
 		}
 
 		return $activity_media_id;
@@ -1372,7 +1381,17 @@ class BP_Media {
 			return false;
 		}
 
-		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+		$cache_key           = 'bp_media_attachment_id_' . $activity_id;
+		$media_attachment_id = wp_cache_get( $cache_key, 'bp_media' );
+
+		if ( ! empty( $media_attachment_id ) ) {
+			return $media_attachment_id;
+		}
+
+		$media_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+		wp_cache_set( $cache_key, $media_attachment_id, 'bp_media' );
+
+		return $media_attachment_id;
 	}
 
 }
