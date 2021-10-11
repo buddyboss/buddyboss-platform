@@ -427,7 +427,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					array(
 						'post_title'   => $group->name,
 						'post_content' => $group->description,
-						'post_status'  => $status,
+						'post_status'  => $status,						
+						'post_parent' => bbp_get_group_forums_root_id(),
 					)
 				);
 
@@ -578,6 +579,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							'post_title'   => bp_get_new_group_name(),
 							'post_content' => bp_get_new_group_description(),
 							'post_status'  => $status,
+							'post_parent' => bbp_get_group_forums_root_id(),
 						)
 					);
 
