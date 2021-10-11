@@ -1917,3 +1917,107 @@ function bb_feed_not_allowed_comment_post_types() {
 	// Exclude BP CPT.
 	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 }
+
+/**
+ * Enable private REST apis.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if private network for site is enabled, otherwise
+ *              false.
+ */
+function bp_enable_private_rest_apis( $default = false ) {
+	global $bp;
+	
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-rest-apis'] ) ) {
+		$val = (bool) $bp->site_options['bp-enable-private-rest-apis'];
+	} else {
+		$val = (bool) bp_get_option( 'bp-enable-private-rest-apis', $default );
+	}
+	
+	/**
+	 * Filters whether private REST apis for site is enabled.
+	 *
+	 * @since BuddyBoss x.x.x
+	 *
+	 * @param bool $value Whether private network for site is enabled.
+	 */
+	return apply_filters( 'bp_enable_private_rest_apis', $val );
+}
+
+/**
+ * Add APIs endpoint which will ignore even if private REST APIs is enabled.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Private REST APIs public content.
+ */
+function bp_enable_private_rest_apis_public_content( $default = '' ) {
+	
+	/**
+	 * Filters Private REST APIs public content.
+	 *
+	 * @since BuddyBoss x.x.x
+	 *
+	 * @param bool $value Private REST APIs public content.
+	 */
+	return apply_filters( 'bp_enable_private_rest_apis_public_content', bp_get_option( 'bp-enable-private-rest-apis-public-content', '' ) );
+}
+
+/**
+ * Enable private RSS feeds.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if private network for site is enabled, otherwise
+ *              false.
+ */
+function bp_enable_private_rss_feeds( $default = false ) {
+	global $bp;
+	
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-rss-feeds'] ) ) {
+		$val = (bool) $bp->site_options['bp-enable-private-rss-feeds'];
+	} else {
+		$val = (bool) bp_get_option( 'bp-enable-private-rss-feeds', $default );
+	}
+	
+	/**
+	 * Filters whether private REST apis for site is enabled.
+	 *
+	 * @since BuddyBoss x.x.x
+	 *
+	 * @param bool $value Whether private network for site is enabled.
+	 */
+	return apply_filters( 'bp_enable_private_rss_feeds', $val );
+}
+
+/**
+ * Add RSS feeds endpoint which will ignore even if private RSS feeds is enabled.
+ *
+ * @since BuddyBoss x.x.x
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Private RSS Feeds public content.
+ */
+function bp_enable_private_rss_feeds_public_content( $default = '' ) {
+	
+	/**
+	 * Filters Private REST APIs public content.
+	 *
+	 * @since BuddyBoss x.x.x
+	 *
+	 * @param bool $value Private REST APIs public content.
+	 */
+	return apply_filters( 'bp_enable_private_rss_feeds_public_content', bp_get_option( 'bp-enable-private-rss-feeds-public-content', '' ) );
+}

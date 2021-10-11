@@ -85,6 +85,18 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		if ( ! $enable_private_network ) {
 			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
 		}
+		
+		// Private REST APIs Settings.
+		$this->add_field( 'bp-enable-private-rest-apis', __( 'Private REST APIs', 'buddyboss' ), 'bp_admin_setting_callback_private_rest_apis', 'intval' );
+		if ( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() && true === bp_enable_private_rest_apis() ) {
+			$this->add_field( 'bp-enable-private-rest-apis-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_rest_apis_public_content' );
+		}
+		
+		// Private RSS Feeds Settings.
+		$this->add_field( 'bp-enable-private-rss-feeds', __( 'Private REST Feeds', 'buddyboss' ), 'bp_admin_setting_callback_private_rss_feeds', 'intval' );
+		if ( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() && true === bp_enable_private_rss_feeds() ) {
+			$this->add_field( 'bp-enable-private-rss-feeds-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_rss_feeds_public_content' );
+		}
 
 		/**
 		 * For Backward compatibility
