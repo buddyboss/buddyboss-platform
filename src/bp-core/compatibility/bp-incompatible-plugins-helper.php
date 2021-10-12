@@ -1009,29 +1009,15 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 
 add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
 
-
-function bbp_fix_invite_anyone_overriding_bbp_invites() {
+/**
+ * Helper functions for the invite anyone compatibility.
+ */
+function bb_invite_anyone_compatibility_helper() {
 
 	// Check if Invite Anyone plugin exists.
 	if ( class_exists( 'BP_Invite_Anyone' ) ) {
-
-		remove_filter( 'groups_create_group_steps', 'invite_anyone_remove_group_creation_invites', 1 );
-		remove_action( 'bp_setup_nav', 'invite_anyone_remove_invite_subnav', 15 );
-
-		$options = invite_anyone_options();
-		$enabled = ! empty( $options['group_invites_enable_create_step'] ) && 'yes' === $options['group_invites_enable_create_step'];
-		if( !$enabled ){
-			return;
-		}
-
-		function bbp_rename_send_envites_steps_for_invite_anyone() {
-			global $bp;
-			$bp->groups->group_creation_steps['group-invites']['name'] = __( 'Buddyboss Invites', 'buddyboss');
-			$bp->groups->group_creation_steps['invite-anyone']['name'] = __( 'Invite Anyone', 'invite-anyone' );
-		}
-		
-		add_filter( 'bp_before_create_group_content_template', 'bbp_rename_send_envites_steps_for_invite_anyone');
+		require buddypress()->compatibility_dir . '/bp-invite-anyone-helpers.php';
 	}
-}
 
-add_action( 'init', 'bbp_fix_invite_anyone_overriding_bbp_invites' );
+}
+add_action( 'init', 'bb_invite_anyone_compatibility_helper' );
