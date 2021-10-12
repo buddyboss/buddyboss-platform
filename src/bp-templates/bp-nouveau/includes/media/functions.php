@@ -146,7 +146,9 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'move_to_id_popup'                   => $move_to_id_popup,
 		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
-		'create_album_title'                 => __( 'Create Album ', 'buddyboss' ),
+		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
+		'dictCancelUploadConfirmation'		 => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
+		
 	);
 
 	if ( bp_is_single_album() ) {

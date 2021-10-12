@@ -77,6 +77,7 @@ window.bp = window.bp || {};
 				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 				previewTemplate: ForumDocumentTemplates,
+				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 			var ForumVideoTemplate = document.getElementsByClassName('forum-post-video-template').length ? document.getElementsByClassName('forum-post-video-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
@@ -95,6 +96,7 @@ window.bp = window.bp || {};
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
 				previewTemplate: ForumVideoTemplate,
+				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
@@ -114,6 +116,7 @@ window.bp = window.bp || {};
 					dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 					previewTemplate: ForumDocumentTemplate,
+					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				};
 			} else {
 				var ForumMediaTemplate = document.getElementsByClassName('forum-post-media-template').length ? document.getElementsByClassName('forum-post-media-template')[0].innerHTML : ''; //Check to avoid error if Node is missing.
@@ -130,6 +133,7 @@ window.bp = window.bp || {};
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 					previewTemplate: ForumMediaTemplate,
+					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				};
 			}
 
