@@ -130,7 +130,7 @@ window.bp = window.bp || {};
 				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size 		 : 2,
 				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
-				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
 			};
 
 		},

@@ -1199,7 +1199,7 @@ window.bp = window.bp || {};
 					dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 					dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
 					previewTemplate : document.getElementsByClassName( 'activity-post-video-template' )[0].innerHTML,
-					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
+					dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', this.dropzone_options );

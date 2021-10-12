@@ -1842,7 +1842,7 @@ window.bp = window.bp || {};
 						dictInvalidFileType  		: BP_Nouveau.video.dictInvalidFileType,
 						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
 						previewTemplate		 		: acCommentVideoTemplate,
-						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
+						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
