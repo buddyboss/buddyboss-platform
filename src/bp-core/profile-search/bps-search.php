@@ -255,7 +255,7 @@ function bp_ps_current_page() {
  */
 function bp_ps_debug() {
 	$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_debug' );
-	return isset( $_REQUEST['bp_ps_debug'] ) ? true : isset( $_COOKIE[ $cookie ] ) ? true : false;
+	return isset( $_REQUEST['bp_ps_debug'] ) ? true : ( isset( $_COOKIE[ $cookie ] ) ? true : false );
 }
 
 // add_action ('bp_before_directory_members_content', 'bp_ps_display_filters');
@@ -326,6 +326,11 @@ function bp_ps_search( $request, $users = null ) {
 	$copied_arr = array();
 
 	foreach ( $fields as $f ) {
+		// Disable search for some individual field.
+		if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
+			continue;
+		}
+		
 		if ( ! isset( $f->filter ) ) {
 			continue;
 		}
@@ -339,7 +344,7 @@ function bp_ps_search( $request, $users = null ) {
 		$found = apply_filters( 'bp_ps_field_search_results', $found, $f );
 
 		$copied_arr = $found;
-		if ( isset( $copied_arr ) && ! empty( $copied_arr ) ) {
+		if ( isset( $copied_arr, $f->id ) && ! empty( $copied_arr ) ) {
 			foreach ( $copied_arr as $key => $user ) {
 				$field_visibility = xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
 				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {

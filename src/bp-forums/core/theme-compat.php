@@ -1002,3 +1002,26 @@ function bbp_force_comment_status( $open, $post_id = 0 ) {
 	// Allow override of the override
 	return apply_filters( 'bbp_force_comment_status', $retval, $open, $post_id, $post_type );
 }
+
+/**
+ * Remove "prev" and "next" relational links from <head> on bbPress pages.
+ *
+ * WordPress automatically generates these relational links to the current
+ * page, but bbPress does not use these links, nor would they work the same.
+ *
+ * In this function, we remove these links when on a bbPress page. This also
+ * prevents additional, unnecessary queries from running.
+ *
+ * @since BuddyBoss 1.4.0
+ * @since 2.6.0 bbPress (r7071)
+ */
+function bbp_remove_adjacent_posts() {
+
+	// Bail if not a bbPress page
+	if ( ! is_bbpress() ) {
+		return;
+	}
+
+	// Remove the WordPress core action for adjacent posts
+	remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10 );
+}

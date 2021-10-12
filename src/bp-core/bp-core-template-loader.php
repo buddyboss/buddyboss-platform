@@ -101,6 +101,15 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
 		return false;
 	}
 
+	/**
+	 * Filter here to update template name.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param string $template_names template name.
+	 */
+	$template_names = apply_filters( 'bp_locate_template_names', $template_names );
+
 	// No file found yet.
 	$located            = false;
 	$template_locations = bp_get_template_stack();
@@ -275,10 +284,15 @@ function bp_get_template_stack() {
 	} else {
 		$filter = &$wp_filter[ $tag ];
 
-		if ( ! isset( $merged_filters[ $tag ] ) ) {
+		if ( ( is_array( $filter ) && ! empty( $filter ) ) && ! isset( $merged_filters[ $tag ] ) ) {
 			ksort( $filter );
 			$merged_filters[ $tag ] = true;
 		}
+	}
+
+	// check filter if not array.
+	if ( ! is_array( $filter ) || empty( $filter ) ) {
+		return (array) apply_filters( 'bp_get_template_stack', array() );
 	}
 
 	// Ensure we're always at the beginning of the filter array.

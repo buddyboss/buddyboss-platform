@@ -44,9 +44,13 @@ class Group {
 		}
 
 		return groups_get_groups(
+		/*
+		 * Added show_hidden For show all the hidden group also in Associated Social Group
+		 */
 			array(
 				'orderby'    => 'name',
 				'order'      => 'asc',
+				'show_hidden'=> true,
 				'meta_query' => array( $meta_query ),
 				'per_page'   => - 1,
 			)

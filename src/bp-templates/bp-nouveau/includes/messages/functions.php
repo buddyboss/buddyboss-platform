@@ -25,7 +25,7 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 
 	return array_merge( $styles, array(
 		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/css/mentions%1$s%2$s.css',
+			'file'         => buddypress()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 		),
@@ -48,7 +48,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 
 	return array_merge( $scripts, array(
 		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
+			'file'         => buddypress()->plugin_url . 'bp-core/js/mentions%s.js',
 			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
 			'version'      => bp_get_version(),
 			'footer'       => true,
@@ -125,7 +125,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'one'  => __( '1 other', 'buddyboss' ),
 			'more' => __( '%d others', 'buddyboss' ),
 		),
-		'rootUrl'                    => wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
+		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
 		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
 	);
 

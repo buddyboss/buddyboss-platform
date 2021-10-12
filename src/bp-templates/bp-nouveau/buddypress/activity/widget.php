@@ -34,8 +34,9 @@
 					</a>
 				</cite>
 
-				<?php bp_activity_action(); ?>
-
+				<div class="bp-activity-info">
+					<?php bp_activity_action(); ?>
+				</div>
 			</div>
 
 		</div>

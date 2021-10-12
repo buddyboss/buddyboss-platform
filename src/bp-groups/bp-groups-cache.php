@@ -214,6 +214,20 @@ function groups_clear_group_administrator_cache_on_member_save( BP_Groups_Member
 add_action( 'groups_member_after_save', 'groups_clear_group_administrator_cache_on_member_save' );
 
 /**
+ * Clear group administrator and moderator cache when a group member is deleted.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 4.0.0
+ *
+ * @param int $user_id  User ID.
+ * @param int $group_id Group ID.
+ */
+function bp_groups_clear_group_administrator_cache_on_member_delete( $user_id, $group_id ) {
+	groups_clear_group_administrator_cache( $group_id );
+}
+add_action( 'bp_groups_member_after_delete', 'bp_groups_clear_group_administrator_cache_on_member_delete', 10, 2 );
+
+/**
  * Clear the group type cache for a group.
  *
  * Called when group is deleted.
@@ -242,6 +256,44 @@ add_action( 'groups_member_before_save', 'bp_groups_clear_user_group_cache_on_me
 add_action( 'groups_member_before_remove', 'bp_groups_clear_user_group_cache_on_membership_save' );
 
 /**
+ * Clear caches on saving a group invitation or request.
+ * The save action is called when inserting a new record or using the save() method
+ * to update an existing record.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param BP_Invitation object $invitation Characteristics of the invitation just saved.
+ */
+function bp_groups_clear_user_group_cache_on_invitation_save( BP_Invitation $invitation ) {
+	if ( sanitize_key( 'BP_Groups_Invitation_Manager' ) !== $invitation->class ) {
+		return;
+	}
+
+	wp_cache_delete( $invitation->id, 'bp_groups_invitations_as_memberships' );
+}
+add_action( 'bp_invitation_after_save', 'bp_groups_clear_user_group_cache_on_invitation_save', 10, 2 );
+
+/**
+ * Clear caches on invitation deletion or update.
+ * This also catches changes like sending an invite or marking one as accepted.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param array $args Associative array of columns/values describing invitations about to be deleted.
+ */
+function bp_groups_clear_user_group_cache_on_invitation_change( $args ) {
+	$args['fields' ] = 'ids';
+	$affected_invitation_ids = groups_get_invites( $args );
+	foreach ( $affected_invitation_ids as $invitation_id ) {
+		wp_cache_delete( $invitation_id, 'bp_groups_invitations_as_memberships' );
+	}
+}
+add_action( 'bp_invitation_before_delete', 'bp_groups_clear_user_group_cache_on_invitation_change' );
+add_action( 'bp_invitation_before_update', 'bp_groups_clear_user_group_cache_on_invitation_change' );
+
+/**
  * Clear group memberships cache on miscellaneous actions not covered by the 'after_save' hook.
  *
  * @since BuddyPress 2.6.0
@@ -256,8 +308,6 @@ function bp_groups_clear_user_group_cache_on_other_events( $user_id, $group_id )
 	wp_cache_delete( $membership->id, 'bp_groups_memberships' );
 }
 add_action( 'bp_groups_member_before_delete', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
-add_action( 'bp_groups_member_before_delete_invite', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
-add_action( 'groups_accept_invite', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
 
 /**
  * Reset cache incrementor for the Groups component.

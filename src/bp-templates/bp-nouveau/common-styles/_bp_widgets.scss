@@ -108,8 +108,11 @@
 			}
 		}
 	}
-}
 
+	.bp-activity-info {
+		flex: 1;
+	}
+}
 
 // Are we in a main site sidebar?
 // while hard to tell width assume that

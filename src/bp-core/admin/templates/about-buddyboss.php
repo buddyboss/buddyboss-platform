@@ -82,6 +82,14 @@ defined( 'ABSPATH' ) || exit;
 			<li>
 				<?php
 				printf(
+					__( '<a href="%s" target="_blank">REST API</a>', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/resources/api/' )
+				);
+				?>
+			</li>
+			<li>
+				<?php
+				printf(
 					__( '<a href="%s" target="_blank">Github</a>', 'buddyboss' ),
 					esc_url( 'https://github.com/buddyboss/buddyboss-platform/wiki' )
 				);
@@ -109,7 +117,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="youtube bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="youtube" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on YouTube', 'buddyboss' ),
 						esc_url( 'https://www.youtube.com/c/BuddybossWP' ),
 						esc_html( 'Follow BuddyBoss on YouTube', 'buddyboss' )
@@ -120,7 +128,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="twitter bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="twitter" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
 						esc_url( 'https://twitter.com/BuddyBossWP' ),
 						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
@@ -131,7 +139,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="facebook bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="facebook" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Facebook', 'buddyboss' ),
 						esc_url( 'https://facebook.com/BuddyBossWP/' ),
 						esc_html( 'Follow BuddyBoss on Facebook', 'buddyboss' )

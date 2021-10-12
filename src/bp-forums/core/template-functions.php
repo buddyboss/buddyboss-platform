@@ -60,6 +60,15 @@ function bbp_get_template_part( $slug, $name = null ) {
  */
 function bbp_locate_template( $template_names, $load = false, $require_once = true ) {
 
+	/**
+	 * Filter here to update template name.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param string $template_names template name.
+	 */
+	$template_names = apply_filters( 'bbp_locate_template_names', $template_names );
+
 	// No file found yet
 	$located            = false;
 	$template_locations = bbp_get_template_stack();
@@ -497,13 +506,14 @@ function bbp_parse_query( $posts_query ) {
 		return;
 	}
 
-	// Get query variables
-	$bbp_view = $posts_query->get( bbp_get_view_rewrite_id() );
-	$bbp_user = $posts_query->get( bbp_get_user_rewrite_id() );
-	$is_edit  = $posts_query->get( bbp_get_edit_rewrite_id() );
+	// Get query variables (default to null if not set).
+	$bbp_view  = $posts_query->get( bbp_get_view_rewrite_id(),   null );
+	$bbp_user  = $posts_query->get( bbp_get_user_rewrite_id(),   null );
+	$is_edit   = $posts_query->get( bbp_get_edit_rewrite_id(),   null );
+	$is_search = $posts_query->get( bbp_get_search_rewrite_id(), null );
 
 	// It is a user page - We'll also check if it is user edit
-	if ( ! empty( $bbp_user ) ) {
+	if ( ! is_null( $bbp_user ) ) {
 
 		/** Find User */
 
@@ -533,7 +543,7 @@ function bbp_parse_query( $posts_query ) {
 		$is_replies = $posts_query->get( bbp_get_user_replies_rewrite_id() );
 
 		// View or edit?
-		if ( ! empty( $is_edit ) ) {
+		if ( ! is_null( $is_edit ) ) {
 
 			// We are editing a profile
 			$posts_query->bbp_is_single_user_edit = true;
@@ -601,7 +611,7 @@ function bbp_parse_query( $posts_query ) {
 		bbpress()->displayed_user = $the_user;
 
 		// View Page
-	} elseif ( ! empty( $bbp_view ) ) {
+	} elseif ( ! is_null( $bbp_view ) ) {
 
 		// Check if the view exists by checking if there are query args are set
 		$view_args = bbp_get_view_query_args( $bbp_view );
@@ -619,7 +629,7 @@ function bbp_parse_query( $posts_query ) {
 		$posts_query->bbp_is_view = true;
 
 		// Search Page
-	} elseif ( isset( $posts_query->query_vars[ bbp_get_search_rewrite_id() ] ) ) {
+	} elseif ( ! is_null( $is_search ) ) {
 
 		// Check if there are search query args set
 		$search_terms = bbp_get_search_terms();
@@ -634,7 +644,7 @@ function bbp_parse_query( $posts_query ) {
 		$posts_query->bbp_is_search = true;
 
 		// Forum/Topic/Reply Edit Page
-	} elseif ( ! empty( $is_edit ) ) {
+	} elseif ( ! is_null( $is_edit ) ) {
 
 		// Get the post type from the main query loop
 		$post_type = $posts_query->get( 'post_type' );

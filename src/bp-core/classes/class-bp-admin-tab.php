@@ -107,19 +107,23 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			wp_localize_script(
-				'bp-admin',
-				'BP_ADMIN',
-				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'tools'    => array(
+			wp_localize_script( 'bp-admin', 'BP_ADMIN', array(
+					'ajax_url'        => admin_url( 'admin-ajax.php' ),
+					'select_document' => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+					'tools'           => array(
 						'default_data' => array(
 							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
 							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
 						),
+						'repair_forums' => array(
+							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+						),
 					),
-				)
-			);
+					'moderation' => array(
+						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					)
+				) );
 		}
 
 		/**
@@ -229,18 +233,35 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		/**
 		 * Output the form html on the setting page (not including tab and page title)
 		 *
-		 * @since BuddyBoss 1.0.0
+		 * @since BuddyBoss 1.4.0
 		 */
 		public function form_html() {
 			settings_fields( $this->tab_name );
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
-			printf(
-				'<p class="submit">
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
+			?>
+			<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
+				<a class="button" href="<?php echo bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 87474,
+						),
+						'admin.php'
+					)
+				); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			</p>
+			<?php
+			} else {
+				printf(
+						'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
-			);
+						esc_attr__( 'Save Settings', 'buddyboss' )
+				);
+			}
 		}
 
 		/**
@@ -248,9 +269,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
+			if( !empty( $tutorial_callback ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ][ 'tutorial_callback' ] = $tutorial_callback;
+			}
 
 			return $this;
 		}
@@ -395,7 +420,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'<select name="%s" id="%s" autocomplete="off" %s>',
 				$args['input_name'],
 				$args['input_id'],
-				$args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
+				isset( $args['input_run_js'] ) && $args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
 			);
 
 			foreach ( $args['input_options'] ?: array() as $key => $value ) {
@@ -447,9 +472,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			}
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-				echo "<div class='bp-admin-card section-{$section['id']}'>";
+				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
+				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
-					echo "<h2>{$section['title']}</h2>\n";
+					echo "<h2 class=". $has_tutorial_btn .">{$section['title']}";
+					if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
+						?> <div class="bbapp-tutorial-btn"> <?php
+						call_user_func( $section['tutorial_callback'], $section );
+						?> </div> <?php
+					}
+					echo "</h2>\n";
 				}
 
 				if ( $section['callback'] ) {

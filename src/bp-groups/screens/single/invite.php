@@ -37,7 +37,7 @@ function groups_screen_group_invite() {
 		}
 
 		// Send the invites.
-		groups_send_invites( bp_loggedin_user_id(), $bp->groups->current_group->id );
+		groups_send_invites( array( 'group_id' => $bp->groups->current_group->id ) );
 		bp_core_add_message( __( 'Group invites sent.', 'buddyboss' ) );
 
 		/**
@@ -64,7 +64,6 @@ function groups_screen_group_invite() {
 		 * @param string $value Path to a group's Send Invites template.
 		 *
 		 * @since BuddyPress 1.0.0
-		 *
 		 */
 		bp_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
 
@@ -82,7 +81,6 @@ function groups_screen_group_invite() {
 		 * @param string $value Path to a group's Send Invites template.
 		 *
 		 * @since BuddyPress 1.0.0
-		 *
 		 */
 		bp_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
 	} else {

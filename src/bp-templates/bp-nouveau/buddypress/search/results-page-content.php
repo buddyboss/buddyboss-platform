@@ -21,7 +21,9 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 		</div>
 
 		<div class="search_results">
+			<?php do_action( 'bp_search_before_result' ); ?>
 			<?php bp_search_results();?>
+			<?php do_action( 'bp_search_after_result' ); ?>
 		</div>
 
 	</div>

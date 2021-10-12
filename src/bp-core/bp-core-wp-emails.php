@@ -876,6 +876,10 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
+		if ( has_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' ) ) {
+			remove_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' );
+		}
+
 		return $message;
 	}
 
@@ -903,6 +907,8 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 *        }
 	 * @param array $user     The original user array.
 	 * @param array $userdata The updated user array.
+	 *
+	 * @return array $pass_change_email Password Change Email data.
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
@@ -923,7 +929,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$pass_change_email = bp_email_core_wp_get_template( $pass_change_email, $user );
+		$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
 
 		return $pass_change_email;
 	}
@@ -953,6 +959,8 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	 *        }
 	 * @param array $user The original user array.
 	 * @param array $userdata The updated user array.
+	 *
+	 * @return array $email_change_email Email change array
 	 */
 	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
 
@@ -973,7 +981,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_change_email = bp_email_core_wp_get_template( $email_change_email, $user );
+		$email_change_email['message'] = bp_email_core_wp_get_template( $email_change_email['message'], $user );
 
 		return $email_change_email;
 	}

@@ -19,4 +19,4 @@ defined( 'ABSPATH' ) || exit;
 function bp_setup_media() {
 	buddypress()->media = new BP_Media_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_media', 6 );
+add_action( 'bp_setup_components', 'bp_setup_media', 5 );

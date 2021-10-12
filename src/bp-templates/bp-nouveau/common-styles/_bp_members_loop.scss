@@ -151,4 +151,9 @@ body:not(.logged-in) {
 	select {
 		width: 100%;
 	}
+
+	.bp-heading-field-wrap {
+		border-radius: 0;
+	}
+
 }

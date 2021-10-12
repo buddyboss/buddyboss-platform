@@ -1,0 +1,30 @@
+// BP User settings screens
+// @version 3.0.0
+
+// 1. Popup style
+
+
+/*__ 1. Popup style __*/
+
+#reported-content,
+#block-member,
+#content-report {
+
+	.bb-model-header {
+		position: relative;
+
+		.mfp-close {
+			top: 50%;
+			transform: translate(0, -50%);
+
+			&:hover {
+				box-shadow: none;
+			}
+
+			.bb-icon {
+				font-size: 24px;
+				pointer-events: none;
+			}
+		}
+	}
+}

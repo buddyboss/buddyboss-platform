@@ -360,4 +360,14 @@ class BP_Invites_Component extends BP_Component {
 		parent::register_post_types();
 	}
 
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array( 'BP_REST_Invites_Endpoint' ) );
+	}
 }

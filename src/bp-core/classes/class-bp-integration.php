@@ -73,7 +73,14 @@ class BP_Integration {
 			$this->activation();
 			add_action( 'bp_include', array( $this, 'includes' ), 8 );
 			add_action( 'bp_late_include', array( $this, 'late_includes' ) );
+
+			// Register BP REST Endpoints.
+			if ( bp_rest_in_buddypress() && bp_rest_api_is_available() ) {
+				add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
+			}
 		}
+
+
 	}
 
 	public function is_activated() {
@@ -137,4 +144,48 @@ class BP_Integration {
 	}
 
 	public function late_includes() {}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 *
+	 * @param array $controllers The list of BP REST controllers to load.
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		if ( is_array( $controllers ) && $controllers ) {
+			// Built-in controllers.
+			$_controllers = $controllers;
+
+			/**
+			 * Use this filter to disable all or some REST API controllers
+			 * for the component.
+			 *
+			 * This is a dynamic hook that is based on the component string ID.
+			 *
+			 * @since BuddyBoss 1.3.5
+			 *
+			 * @param array $controllers The list of BuddyBoss REST API controllers to load.
+			 */
+			$controllers = (array) apply_filters( 'bp_' . $this->id . '_rest_api_controllers', $controllers );
+
+			foreach( $controllers as $controller ) {
+				if ( ! in_array( $controller, $_controllers, true ) || ! class_exists( $controller ) ) {
+					continue;
+				}
+
+				$component_controller = new $controller;
+				$component_controller->register_routes();
+			}
+		}
+
+		/**
+		 * Fires in the rest_api_init method inside BP_Component.
+		 *
+		 * This is a dynamic hook that is based on the component string ID.
+		 *
+		 * @since BuddyBoss 1.3.5
+		 */
+		do_action( 'bp_' . $this->id . '_rest_api_init' );
+	}
 }

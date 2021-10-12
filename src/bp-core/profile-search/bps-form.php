@@ -63,7 +63,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 			continue;
 		}
 
-		$f    = $fields[ $code ];
+		$f    = clone( $fields[ $code ] );
 		$mode = $meta['field_mode'][ $k ];
 		if ( ! bp_ps_Fields::set_display( $f, $mode ) ) {
 			continue;

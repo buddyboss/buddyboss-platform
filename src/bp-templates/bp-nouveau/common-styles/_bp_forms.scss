@@ -451,3 +451,20 @@ ul.bbp-stats {
 		font-size: 30px;
 	}
 }
+
+
+//Customizer Profile Navigation
+#customize-control-group_nav_order .item-title .checkbox-wrap,
+#customize-control-user_nav_order .item-title .checkbox-wrap {
+	display: flex;
+	align-items: center;
+	float: right;
+
+	&.bp-hide {
+		display: none;
+	}
+
+	.visible-checkboxes {
+		margin: 0 5px 0 0;
+	}
+}

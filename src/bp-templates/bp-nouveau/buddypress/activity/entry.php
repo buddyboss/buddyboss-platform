@@ -11,7 +11,9 @@
 
 bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>">
+<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>">
+
+	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
 	<div class="activity-avatar item-avatar">
 
@@ -23,13 +25,19 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 	</div>
 
-	<div class="activity-content">
+	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
 		<div class="activity-header">
 
 			<?php bp_activity_action(); ?>
 
+			<?php bp_nouveau_activity_is_edited(); ?>
+
+			<?php bp_nouveau_activity_privacy(); ?>
+
 		</div>
+
+		<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
 
 		<?php if ( bp_nouveau_activity_has_content() ) : ?>
 
@@ -37,10 +45,11 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 		<?php endif; ?>
 
-		<?php bp_nouveau_activity_state() ?>
+		<?php bp_nouveau_activity_hook( 'after', 'activity_content' ); ?>
+
+		<?php bp_nouveau_activity_state(); ?>
 
 		<?php bp_nouveau_activity_entry_buttons(); ?>
-
 	</div>
 
 	<?php bp_nouveau_activity_hook( 'before', 'entry_comments' ); ?>

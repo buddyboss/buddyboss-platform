@@ -173,6 +173,10 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			width: <?php echo $width; ?>;
 		}
 
+		.recipient_text_color table {
+			display: inline-table;
+		}
+
 		/* MOBILE STYLES */
 		@media screen and (max-width: 768px) {
 			/* ALLOWS FOR FLUID TABLES */
@@ -257,15 +261,15 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		}
 	</style>
 </head>
-	
-<body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="mso-line-height-rule: exactly;">
-	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse; display: block;" class="email_bg">
-		<tbody style="display: block;">
-			<tr style="display: block;">
-				<td valign="top" style="display: flex;">
-					<center style="width: <?php echo $width; ?>; text-align: <?php echo esc_attr( $settings['direction'] ); ?>; margin: 0 auto;">
 
-						<div style="max-width: 600px; margin: auto;" class="email-container">
+<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
+	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+		<tbody>
+			<tr>
+				<td valign="top">
+					<center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
+
+						<div style="max-width: 600px; margin: auto; padding: 10px;" class="email-container">
 							<!--[if mso]>
 							<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
 								<tr>
@@ -273,10 +277,10 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<![endif]-->
 
 							<!-- Email Header : BEGIN -->
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px; display: block;">
-								<tbody style="display: block;">
-									<tr style="display: block;">
-										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>; max-width: 300px; float: left; height: 35px;" class="center-in-mobile site_title_text_color site_title_text_size">
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+								<tbody>
+									<tr>
+										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>;" class="center-in-mobile site_title_text_color site_title_text_size">
 											<?php
 											/**
 											 * Fires before the display of the email template header.
@@ -289,9 +293,9 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 											if ( !empty( $attachment_id ) ) {
-												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
+												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
 												if ( !empty( $image_src ) ) {
-													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>" );
+													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:" . esc_attr( $settings['site_title_logo_size'] ) . "px;' border='0' />" );
 												} else {
 													echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
 												}
@@ -307,7 +311,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											do_action( 'bp_after_email_header' );
 											?>
 										</td>
-										<td style="text-align: right; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>; max-width: 300px; float: right; height: 35px;" class="center-in-mobile recipient_text_color recipient_text_size">
+										<td style="text-align: right; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>;" class="center-in-mobile recipient_text_color recipient_text_size">
 											<?php
 											/**
 											 * Fires before the display of the email recipient.
@@ -360,7 +364,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<br>
 							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" style="max-width: 600px; border-radius: 5px; width: <?php echo $width; ?>">
 								<tr>
-									<td style="padding: 20px 40px; width: <?php echo $width; ?>; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
+									<td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
 										<?php
 										/**
 										 * Fires before the display of the email template footer.

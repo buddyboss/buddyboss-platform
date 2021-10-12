@@ -48,8 +48,6 @@ class Helpers {
 	 */
 	public function getLearndashGroupId( $groupId ) {
 		return bp_ld_sync( 'buddypress' )->sync->generator( $groupId )->getLdGroupId();
-		return bp_learndash_groups_sync_get_associated_ld_group( $groupId )->ID;
-		return groups_get_groupmeta( $groupId, $this->ldGroupMetaKey, true );
 	}
 
 	/**

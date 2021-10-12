@@ -64,6 +64,11 @@ function bp_activity_action_permalink_router() {
 		$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 	}
 
+	// check if edit activity link.
+	if ( 'edit' === bp_action_variable( 1 ) ) {
+		$redirect = untrailingslashit( $redirect ) . '/edit';
+	}
+
 	// If set, add the original query string back onto the redirect URL.
 	if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
 		$query_frags = array();
@@ -115,7 +120,7 @@ function bp_activity_screen_single_activity_permalink() {
 	);
 
 	// 404 if activity does not exist
-	if ( empty( $activity['activities'][0] ) || bp_action_variables() ) {
+	if ( empty( $activity['activities'][0] ) || ( bp_action_variables() && ! bp_is_activity_edit() ) ) {
 		bp_do_404();
 		return;
 
