@@ -48,10 +48,10 @@ function bp_activity_clear_cache_for_activity( $activity ) {
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 	wp_cache_delete( 'bp_activity_media_id_' . $activity->id, 'bp_media' );
 	wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );
-	wp_cache_delete( 'bp_activity_document_id_' . $activity->id, 'bp_media' );
-	wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_media' );
-	wp_cache_delete( 'bp_activity_video_id_' . $activity->id, 'bp_media' );
-	wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_media' );
+	wp_cache_delete( 'bp_activity_document_id_' . $activity->id, 'bp_document' );
+	wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' );
+	wp_cache_delete( 'bp_activity_video_id_' . $activity->id, 'bp_video' );
+	wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );
 }
 add_action( 'bp_activity_after_save', 'bp_activity_clear_cache_for_activity' );
 
@@ -67,10 +67,10 @@ function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 		wp_cache_delete( $deleted_id, 'bp_activity' );
 		wp_cache_delete( 'bp_activity_media_id_' . $deleted_id, 'bp_media' );
 		wp_cache_delete( 'bp_media_attachment_id_' . $deleted_id, 'bp_media' );
-		wp_cache_delete( 'bp_activity_document_id_' . $deleted_id, 'bp_media' );
-		wp_cache_delete( 'bp_document_attachment_id_' . $deleted_id, 'bp_media' );
-		wp_cache_delete( 'bp_activity_video_id_' . $deleted_id, 'bp_media' );
-		wp_cache_delete( 'bp_video_attachment_id_' . $deleted_id, 'bp_media' );
+		wp_cache_delete( 'bp_activity_document_id_' . $deleted_id, 'bp_document' );
+		wp_cache_delete( 'bp_document_attachment_id_' . $deleted_id, 'bp_document' );
+		wp_cache_delete( 'bp_activity_video_id_' . $deleted_id, 'bp_video' );
+		wp_cache_delete( 'bp_video_attachment_id_' . $deleted_id, 'bp_video' );
 	}
 }
 add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_deleted_activity' );
