@@ -3177,6 +3177,11 @@ window.bp = window.bp || {};
 								emojibtn_click: function () {
 									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
 								},
+								search_keypress: function() {
+									var _this = this;
+									var small = _this.search.val().toLowerCase();
+									_this.search.val(small);
+								},
 							}
 						}
 					);
