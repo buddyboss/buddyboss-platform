@@ -1936,12 +1936,17 @@ window.bp = window.bp || {};
 			},
 
 			getURL: function ( prefix, urlText ) {
-				var urlString   = '';
-				var startIndex  = urlText.indexOf( prefix );
-				var responseUrl = '';
+				var urlString         = '';
+				var startIndex        = urlText.indexOf( prefix );
+				var responseUrl       = '';
+				var $urlTextParseHTML = $( $.parseHTML( urlText ) );
 
-				if ( ! _.isUndefined( $( $.parseHTML( urlText ) ).attr( 'href' ) ) ) {
-					urlString = $( urlText ).attr( 'href' );
+				if ( ! _.isUndefined( $urlTextParseHTML.find( 'a' ).attr( 'class' ) ) && 'bp-suggestions-mention' === $urlTextParseHTML.find( 'a' ).attr( 'class' ) ) {
+					return urlString;
+				}
+
+				if ( ! _.isUndefined( $urlTextParseHTML.find( 'a' ).attr( 'href' ) ) ) {
+					urlString = $( $.parseHTML( urlText ) ).find( 'a' ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
 						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' ) {
