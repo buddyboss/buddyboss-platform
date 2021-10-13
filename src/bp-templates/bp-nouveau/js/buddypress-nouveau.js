@@ -67,6 +67,9 @@ window.bp = window.bp || {};
 			// Legal agreement enable/disabled submit button.
 			this.enableSubmitOnLegalAgreement();
 
+			// Remove requested param from the URL for Group Invitation
+			this.removeGroupNotificationParam();
+
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -218,6 +221,49 @@ window.bp = window.bp || {};
 			}
 
 			return params;
+		},
+
+		/**
+		 * [deleteLinkParams description]
+		 *
+		 * @param  {[type]} url   [description]
+		 * @param  {[type]} param [description]
+		 * @return {[type]}       [description]
+		 */
+		deleteLinkParams: function ( url, param ) {
+
+			var qs;
+			if ( url ) {
+				qs = ( -1 !== url.indexOf( '?' ) ) ? '?' + url.split( '?' )[ 1 ] : '';
+			} else {
+				qs = document.location.search;
+			}
+
+			if ( ! qs ) {
+				return url;
+			}
+
+			if( url.indexOf( param ) < 0 ){
+				return url;
+			}
+
+			var returnURL = url.split( '?' )[0],
+				queryParams = qs.split( '&' );
+
+			for ( var i = queryParams.length - 1; i >= 0; i -= 1 ) {
+				
+				var key = queryParams[i].split( '=' )[0];
+
+				if ( param === key ) {
+					queryParams.splice( i, 1 );
+				}
+			}
+
+			if ( queryParams.length ) {
+				returnURL = returnURL + queryParams.join( '&' );
+			}
+
+			return returnURL;
 		},
 
 		/**
@@ -2675,6 +2721,15 @@ window.bp = window.bp || {};
 				fileReader.readAsArrayBuffer( file );
 			}
 
+		},
+
+		removeGroupNotificationParam: function (){
+			var groupInvitationNotificationURL = $( location ).attr( 'href' );
+			
+			if( groupInvitationNotificationURL.indexOf( 'requested' ) > -1 ){
+				var filtered_url = bp.Nouveau.deleteLinkParams( groupInvitationNotificationURL, 'requested' );
+				history.replaceState( {}, '', filtered_url );
+			}
 		},
 
 		/**

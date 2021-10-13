@@ -1040,7 +1040,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		}
 
 		// Check for moderators or if user is a member of the group.
-		return ( bp_current_user_can( 'bp_moderate' ) || groups_is_user_member( bp_loggedin_user_id(), $group->id ) );
+		return ( bp_current_user_can( 'bp_moderate' ) || groups_is_user_member( bp_loggedin_user_id(), $group->id ) || groups_is_user_invited( bp_loggedin_user_id(), $group->id ) );
 	}
 
 	/**
@@ -1389,13 +1389,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 				),
 				'can_join'           => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Check current user can join or request access.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_post'           => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Check current user can post activity or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,

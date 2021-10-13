@@ -375,6 +375,11 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 
 	if ( empty( $potential_friend_id ) ) {
 		$potential_friend_id = bp_get_potential_friend_id( $potential_friend_id );
+
+		if ( 0 === $potential_friend_id && bp_is_groups_component() ) {
+			//Fix for groups only.
+			$potential_friend_id = bp_get_group_member_id();
+		}
 	}
 
 	$is_friend = bp_is_friend( $potential_friend_id );

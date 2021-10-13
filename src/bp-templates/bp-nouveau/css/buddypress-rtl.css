@@ -8995,6 +8995,10 @@ ul.bbp-stats .bbp-count {
   margin-top: 0;
 }
 
+.buddypress-wrap table.profile-fields td.data > p {
+  margin: 0 0 25px;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 8.0 - Classes - Messages, Ajax, Widgets, Buttons
