@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.7.8\n"
+"Project-Id-Version: BuddyBoss Platform 1.7.7.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-09-30 14:52:51+00:00\n"
+"POT-Creation-Date: 2021-09-27 11:18:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20106,7 +20106,7 @@ msgid "That username is not allowed"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1709
-#: bp-xprofile/bp-xprofile-filters.php:789
+#: bp-xprofile/bp-xprofile-filters.php:792
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
@@ -27687,47 +27687,59 @@ msgid ""
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:784
-#: bp-xprofile/bp-xprofile-filters.php:879
-#: bp-xprofile/bp-xprofile-filters.php:992
+#: bp-xprofile/bp-xprofile-filters.php:787
+#: bp-xprofile/bp-xprofile-filters.php:882
+#: bp-xprofile/bp-xprofile-filters.php:995
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:532
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:795
+#: bp-xprofile/bp-xprofile-filters.php:798
 msgid "%1$s must be shorter than %2$d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:800
+#: bp-xprofile/bp-xprofile-filters.php:803
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:809
-#: bp-xprofile/bp-xprofile-filters.php:829
+#: bp-xprofile/bp-xprofile-filters.php:812
+#: bp-xprofile/bp-xprofile-filters.php:832
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:888
-#: bp-xprofile/bp-xprofile-filters.php:898
+#: bp-xprofile/bp-xprofile-filters.php:891
+#: bp-xprofile/bp-xprofile-filters.php:901
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1003
+#: bp-xprofile/bp-xprofile-filters.php:1006
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1079
+#: bp-xprofile/bp-xprofile-filters.php:1082
 msgid "Repair xProfile repeater fieldset."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1157
+#: bp-xprofile/bp-xprofile-filters.php:1160
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1177
+#: bp-xprofile/bp-xprofile-filters.php:1180
 msgid "Field update complete!"
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-filters.php:1197
+msgid "Repair user nicknames."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-filters.php:1247
+msgid "%s user nicknames updated successfully."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-filters.php:1252
+msgid "User nickname update complete!"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-functions.php:1548
