@@ -127,7 +127,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), number_format_i18n( bp_video_allowed_upload_video_per_batch() ) ),
+		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You are allowed to upload only %s videos at a time.', 'buddyboss' ), bp_core_number_format( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
