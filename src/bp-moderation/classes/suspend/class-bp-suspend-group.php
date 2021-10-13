@@ -222,7 +222,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->backgroup_disabled || ! empty( $args ) ) {
 			$args['type'] = self::$type;
 			$this->hide_related_content( $group_id, $hide_sitewide, $args );
 		} else {
@@ -279,7 +279,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->backgroup_disabled || ! empty( $args ) ) {
 			$args['type'] = self::$type;
 			$this->unhide_related_content( $group_id, $hide_sitewide, $force_all, $args );
 		} else {
