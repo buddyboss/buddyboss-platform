@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss 1.7.4
+ * @since BuddyBoss X.X.X
  */
 class BB_GFForms_Plugin_Compatibility {
 
@@ -19,7 +19,7 @@ class BB_GFForms_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss X.X.X
 	 */
 	private static $instance = null;
 
@@ -34,7 +34,7 @@ class BB_GFForms_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss X.X.X
 	 *
 	 * @return Controller|null
 	 */
@@ -60,11 +60,11 @@ class BB_GFForms_Plugin_Compatibility {
 	/**
 	 * Function to fix the gravity form user registration email activation conflict
 	 *
-	 * @since BuddyBoss 1.7.4
+	 * @since BuddyBoss X.X.X
 	 */
 	public function bb_fix_gfforms_gfur_email_activation_conflict() {
 
-		if( class_exists( 'GF_User_Registration' ) && gf_user_registration()->get_plugin_setting( 'custom_registration_page_enable' ) == '1' ) {
+		if ( class_exists( 'GF_User_Registration' ) && 1 === (int) gf_user_registration()->get_plugin_setting( 'custom_registration_page_enable' ) ) {
 			remove_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 999, 5 );
 		}
 		
