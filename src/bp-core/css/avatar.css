@@ -67,6 +67,12 @@ body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent p.warning {
 	margin: 1em 0;
 	padding: 10px 15px;
 }
+
+body.users_page_bp-profile-edit.modal-open #TB_window,
+body.profile_page_bp-profile-edit.modal-open #TB_window{
+    left: 47%;
+    width: 55% !important;
+}
 /* stylelint-enable */
 
 div.bp-avatar-nav {
