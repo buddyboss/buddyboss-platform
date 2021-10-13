@@ -420,18 +420,6 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
 		}
 
-		$related_contents = json_decode( wp_json_encode( $related_contents ), true );
-
-		if ( ! empty( $blocked_user ) && ! empty( $related_contents ) ) {
-			foreach ( $related_contents as $key => $related_content ) {
-				foreach ( (array) $related_content as $k => $item ) {
-					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
-						unset( $related_contents[ $key ][ $k ] );
-					}
-				}
-			}
-		}
-
 		return $related_contents;
 	}
 
