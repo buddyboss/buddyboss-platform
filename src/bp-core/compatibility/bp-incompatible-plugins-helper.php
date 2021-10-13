@@ -134,6 +134,18 @@ function bp_helper_plugins_loaded_callback() {
 
 	}
 
+	/**
+	 * Fix email subject, content and link
+     *
+	 * @since BuddyBoss 1.5.4
+	 */
+	if ( in_array( 'wishlist-member/wpm.php', $bp_plugins ) ) {
+		global $WishListMemberInstance;
+		remove_filter( 'user_request_action_email_content', array( &$WishListMemberInstance, 'privacy_user_request_email' ), 10 );
+		remove_filter( 'user_request_action_email_subject', array( &$WishListMemberInstance, 'privacy_user_request_email_subject' ), 10 );
+		remove_filter( 'wp_privacy_personal_data_email_content', array( &$WishListMemberInstance, 'privacy_personal_data_email' ), 10 );
+	}
+
 	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
 
 		/**
@@ -155,6 +167,14 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
 
+	/**
+	 * Include filters when Woocommerce plugin is activated
+	 *
+	 * Support Woocommerce
+	 */
+	if ( class_exists( 'WooCommerce' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
+	}
 }
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 

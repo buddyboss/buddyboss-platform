@@ -3314,12 +3314,12 @@ function bp_document_size_format( $bytes, $decimals = 0 ) {
 
 	if ( 0 === $bytes ) {
 		/* translators: Memory unit for byte. */
-		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
+		return bp_core_number_format( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
 	}
 
 	foreach ( $quant as $unit => $mag ) {
 		if ( doubleval( $bytes ) >= $mag ) {
-			return number_format_i18n( $bytes / $mag, $decimals ) . ' ' . $unit;
+			return bp_core_number_format( $bytes / $mag, $decimals ) . ' ' . $unit;
 		}
 	}
 
@@ -3371,6 +3371,9 @@ function bp_document_is_activity_comment_document( $document ) {
 		$activity = new BP_Activity_Activity( $document_activity_id );
 
 		if ( $activity ) {
+			if ( 'activity_comment' === $activity->type ) {
+				$is_comment_document = true;
+			}
 			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if ( $load_parent_activity ) {
@@ -4810,3 +4813,62 @@ function bb_document_delete_older_symlinks() {
 	return $list;
 }
 bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );
+
+
+/**
+ * Get list of privacy based on user and group.
+ *
+ * @param int    $user_id  User ID.
+ * @param int    $group_id Group ID.
+ * @param string $scope    Scope query parameter.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.8
+ */
+function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
+	
+	$privacy = array( 'public' );
+	
+	if ( is_user_logged_in() ) {
+		// User filtering.
+		$user_id = (int) ( empty( $user_id ) ? ( bp_displayed_user_id() ? bp_displayed_user_id() : false ) : $user_id );
+		
+		$privacy[] = 'loggedin';
+		
+		if ( bp_is_my_profile() || $user_id === bp_loggedin_user_id() ) {
+			$privacy[] = 'onlyme';
+			
+			if ( bp_is_active( 'friends' ) ) {
+				$privacy[] = 'friends';
+			}
+		}
+		
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
+			
+			// get the login user id.
+			$current_user_id = bp_loggedin_user_id();
+			
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+			
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend ) {
+				$privacy[] = 'friends';
+			}
+		}
+	}
+	
+	if (
+		bp_is_group()
+		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
+		|| ( ! empty( $scope ) && 'groups' === $scope )
+	) {
+		$privacy = array( 'grouponly' );
+	}
+	
+	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}

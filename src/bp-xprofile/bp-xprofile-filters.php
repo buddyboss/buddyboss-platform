@@ -798,7 +798,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
-	// Minimum of 4 characters.
+	// Minimum of 3 characters.
 	if ( strlen( $value ) < 3 ) {
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
@@ -1100,8 +1100,8 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id) 
-    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id) 
+	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
+    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
     WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
 	$added_fields       = $wpdb->get_results( $clone_fields_query );
 
@@ -1157,7 +1157,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
 		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
 
-		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
