@@ -21,7 +21,7 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @var string
 	 */
-	public $backgroup_disabled = false;
+	public $backgroup_diabled = false;
 
 	/**
 	 * Item type
