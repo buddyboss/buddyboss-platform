@@ -177,6 +177,16 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
+			if ( current_user_can( 'read_hidden_topics' ) ) {
+				$post_status = array( 'publish', 'private', 'hidden' );
+			} elseif ( current_user_can( 'read_private_topics' ) ) {
+				$post_status = array( 'publish', 'private' );
+			} else {
+				$post_status = array( 'publish' );
+			}
+
+			$where[] = 'post_status IN ( "' . implode( '", "', $post_status ) . '" )';
+
 			if ( ! empty( $forum_ids ) ) {
 				$forum_id_in = implode( ',', $forum_ids );
 				$where[]     = " pm.meta_value IN ( $forum_id_in ) ";
