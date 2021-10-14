@@ -60,6 +60,7 @@ class BP_Email_Queue {
 			}
 
 			$bb_email_background_updater->save()->schedule_event();
+			$bb_email_background_updater->save()->dispatch();
 		}
 	}
 
