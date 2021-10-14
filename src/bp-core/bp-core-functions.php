@@ -6069,102 +6069,105 @@ function bb_moderation_bg_update_moderation_data() {
  */
 function bb_restricate_rss_feed() {
 	// This will disable default feeds.
-	remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
-	remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
-	remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
-	remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
-	remove_action( 'wp_head', 'feed_links_extra', 3 );
-	remove_action( 'wp_head', 'feed_links', 2 );
-	// This will disable sitewide feeds.
-	remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
-	// This will disable users personal activity feeds.
-	remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
-	// This will disable users friends activity feeds.
-	remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
-	// This will disable users group activity feeds.
-	remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
-	// This will disable users mentions activity feeds.
-	remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
-	// This will disable users favorites activity feeds.
-	remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
-	// This will disable groups feeds.
-	remove_action( 'bp_actions', 'groups_action_group_feed' );
-	// This will disable forums feed.
-	remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
-}
-
-/**
- * Function will restrict REST API.
- *
- * @since BuddyBoss 1.7.7
- */
-function bb_restricate_rest_api() {
-	// This will disable all rest api endpoints.
-	add_filter( 'rest_endpoints', 'bb_remove_all_endpoints' );
-}
-
-/**
- * Function will remove all endpoints.
- *
- * @param array  $endpoints Array of endpoints.
- *
- * @return array $endpoints
- * 
- * @since BuddyBoss 1.7.7
- */
-function bb_remove_all_endpoints( $endpoints ) {
-	if ( empty( $endpoints ) ) {
-		return;
-	}
-
-	$namespaces = rest_get_server()->get_namespaces();
-
-	// You can add exclude endpoint with an array via below filter.
-	$exclude_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(
-		'/',
-		'/buddyboss/v1',
-		'/buddyboss/v1/settings',
-		'/buddyboss/v1/signup/form',
-		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
-		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
-	) );
+//	remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
+//	remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
+//	remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
+//	remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
+//	remove_action( 'wp_head', 'feed_links_extra', 3 );
+//	remove_action( 'wp_head', 'feed_links', 2 );
+//	// This will disable sitewide feeds.
+//	remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
+//	// This will disable users personal activity feeds.
+//	remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
+//	// This will disable users friends activity feeds.
+//	remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
+//	// This will disable users group activity feeds.
+//	remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
+//	// This will disable users mentions activity feeds.
+//	remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
+//	// This will disable users favorites activity feeds.
+//	remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
+//	// This will disable groups feeds.
+//	remove_action( 'bp_actions', 'groups_action_group_feed' );
+//	// This will disable forums feed.
+//	remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
 	
-	// You can add if you want to allow buddyboss-app and appboss API using filter.
-	// Here, we just allow platform API.
-	$bb_endpoints = apply_filters( 'bb_registered_endpoints', array(
-		'buddyboss',
-	) );
-	
-	foreach ( $endpoints as $endpoint => $details ) {
-		$flag = bb_allow_platform_api_endpoint( $bb_endpoints, $endpoint );
-		if ( true === $flag ) {
-			if ( ! in_array( $endpoint, $exclude_endpoints, true ) ) {
-				unset( $endpoints[ $endpoint ] );
+	$exclude_rss_feed = bp_enable_private_rss_feeds_public_content();
+	if ( '' !== $exclude_rss_feed ) {
+		$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+		if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
+			foreach ( $exclude_arr_rss_feeds as $rss_feeds ) {
+//				error_log( ' $rss_feeds ' . $rss_feeds );
+//				add_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
+//				add_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
+//				add_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
+//				add_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
+//				add_action( 'wp_head', 'feed_links_extra', 3 );
+//				add_action( 'wp_head', 'feed_links', 2 );
 			}
 		}
 	}
-
-	return $endpoints;
 }
 
 /**
- * Function will check string exists in endpoint. If yes then based on that return flag true.
+ * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
  *
- * @param $bb_endpoints Which endpoints slug allow. Like - buddyboss, buddyboss-app and appboss.
- * @param $endpoint     All registered endpoint will check with $bb_endpoints.
+ * @since BuddyBoss x.x.x
  *
- * @return bool
- * 
- * @since BuddyBoss 1.7.7
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response $response
  */
-function bb_allow_platform_api_endpoint( $bb_endpoints, $endpoint ) {
-	$flag = false;
-	foreach ( $bb_endpoints as $bb_endpoint ) {
-		if ( strpos( $endpoint, $bb_endpoint ) !== false) {
-			$flag = true;
+function bb_restricate_rest_api( $response, $handler, $request ) {
+	// Get current route.
+	$current_endpoint = $request->get_route();
+	
+	// Add mandatory endpoint here for app which you want to exclude from restriction.
+	// ex: /buddyboss-app/auth/v1/jwt/token
+	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array() );
+	
+	// Allow some endpoints which is mandatory for app.
+	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+		return $response;
+	}
+	
+	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
+		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
+		$error         = new WP_Error( 'rest_user_cannot_view', $error_message, array( 'status' => rest_authorization_required_code() ) );
+		$response      = rest_ensure_response( $error );
+	}
+	
+	return $response;
+}
+
+/**
+ * Function will check current REST APIs endpoint is allow or not.
+ *
+ * @since x.x.x
+ *
+ * @param string $current_endpoint Current endpoint.
+ *
+ * @return bool true Return true if allow endpoint otherwise return false.
+ */
+function bb_is_allowed_endpoint( $current_endpoint ) {
+	$exclude_endpoints = bp_enable_private_rest_apis_public_content();
+	if ( '' !== $exclude_endpoints ) {
+		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
+		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
+			foreach ( $exclude_arr_endpoints as $endpoints ) {
+				if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+					$endpoints = str_replace( 'wp-json', '', $endpoints );
+				}
+				$current_endpoint_allowed = preg_match( '@^' . $endpoints . '$@i', $current_endpoint, $matches );
+				if ( $current_endpoint_allowed ) {
+					return true;
+				}
+			}
 		}
 	}
-	return $flag;
 }
 
 /**	

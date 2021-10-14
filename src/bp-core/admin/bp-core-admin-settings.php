@@ -1645,7 +1645,7 @@ function bp_admin_setting_callback_private_rest_apis_public_content() {
 	?>
 
 	<label for="bp-enable-private-rest-apis-public-content" style="display:block;"><?php _e( 'Enter REST endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bp-enable-private-rest-apis-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_rest_apis_public_content() ); ?></textarea>
+	<textarea rows="10" cols="100" id="bp-enable-private-rest-apis-public-content" name="bp-enable-private-rest-apis-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_rest_apis_public_content() ); ?></textarea>
 	<?php
 }
 
@@ -1683,6 +1683,6 @@ function bp_admin_setting_callback_private_rss_feeds_public_content() {
 	?>
 
 	<label for="bp-enable-private-rss-feeds-public-content" style="display:block;"><?php _e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one endpoint URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bp-enable-private-rss-feeds-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_rss_feeds_public_content() ); ?></textarea>
+	<textarea rows="10" cols="100" id="bp-enable-private-rss-feeds-public-content" name="bp-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_rss_feeds_public_content() ); ?></textarea>
 	<?php
 }

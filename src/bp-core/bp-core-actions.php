@@ -331,25 +331,31 @@ function bb_media_symlink_validate() {
 add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
 
 /**
- * Function will remove BuddyBoss API endpoint.
- * Also, remove feeds url.
+ * Function will remove RSS Feeds.
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss x.x.x
  */
 function bb_removes_endpoints_and_feeds() {
 	if ( is_user_logged_in() ) {
 		return;
 	}
-
-	// IF Platform 'Private Website' settings enabled.
-	// THEN Restrict all RSS and REST APIs. (reason to restrict because the site is private).
-	if ( ! bp_enable_private_network() ) {
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() && true === bp_enable_private_rss_feeds() ) {
 		bb_restricate_rss_feed();
-	}
-
-	// check settings with BuddyBoss APP and Platform both.
-	if ( bp_rest_enable_private_network() ) {
-		bb_restricate_rest_api();
 	}
 }
 add_action( 'init', 'bb_removes_endpoints_and_feeds', 99 );
+
+/**
+ * Function will remove REST APIs endpoint.
+ *
+ * @since BuddyBoss x.x.x
+ */
+function bb_rest_authentication_errors( $response, $handler, $request ) {
+	if ( is_user_logged_in() ) {
+		return $response;
+	}
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() && true === bp_enable_private_rest_apis() ) {
+		return bb_restricate_rest_api( $response, $handler, $request );
+	}
+}
+add_filter( 'rest_request_before_callbacks', 'bb_rest_authentication_errors', 100, 3 );
