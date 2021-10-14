@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8.1
 Requires PHP: 5.6.20
-Stable tag: 1.7.8
+Stable tag: 1.7.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,29 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.7.9 =
+* Profiles - Provided option to hide specific profile type members in search results
+* Profiles - Fixed profile type issue to not hide members in Group manage members screen
+* Groups - Fixed 'Visit Group' button UI issue in the Group invite email
+* Forums - Fixed group organizer permission issue to allow adding a discussion and reply tags
+* Forums - Fixed Forum discussion and reply editor formatting issue
+* Forums - Fixed Forum reply widget wrong date issue
+* Forums - Fixed text formatting issue for Email tokens
+* Activity - Fixed URL preview issue when creating Activity post
+* Activity - Fixed Activity feed comment issue when popup opened in a specific order
+* Activity - Fixed issue with browser performance when @mention used many times in activity post
+* Messages - Fixed Email notification preference settings for Group messages
+* Network Search - Fixed search issue when all Forums deleted
+* Coding Standards - Added Security patch for SQL injections vulnerability
+* Elementor - Provided WordPress Widgets support in Elementor pages
+* WooCommerce - Fixed critical registration conflict on Private network
+* REST API - Provided endpoint to send hidden group details
+* REST API - Fixed mention API endpoint to return a response for empty string
+* REST API - Profile type new option support added in the API
+* REST API - Video thumbnail endpoint improvements in the API
+* REST API - Fixed videos count issue in Group details endpoint
+* Compatibility - Fixed SEOPress media compatibility issue
 
 = 1.7.8 =
 * Forums - Fixed forums logic by not allowing multiple Forum to be associated with a single Group
