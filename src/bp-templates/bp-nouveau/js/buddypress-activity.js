@@ -457,6 +457,12 @@ window.bp = window.bp || {};
 
 									//in case it's a reply from comment, show hidden parent elements for it to show
 									$( item ).parents( "li.comment-item" ).show();
+
+									// Prepend a link to display all.
+									if ( ! i ) {
+										$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
+									}
+									
 									return false;
 								}
 
