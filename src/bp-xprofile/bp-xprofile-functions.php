@@ -2346,3 +2346,52 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 		return false;
 	}
 }
+
+/**
+ * Returns the signup field IDs.
+ *
+ * @since xxxx
+ *
+ * @return int[] The signup field IDs.
+ */
+function bp_xprofile_get_signup_field_ids() {
+	$signup_field_ids = wp_cache_get( 'signup_fields', 'bp_xprofile' );
+
+	if ( ! $signup_field_ids ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		error_log("SELECT object_id FROM {$bp->profile->table_name_meta} WHERE object_type = 'field' AND meta_key = 'signup_position' ORDER BY CONVERT(meta_value, SIGNED) ASC");
+
+		$signup_field_ids = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE object_type = 'field' AND meta_key = 'signup_position' ORDER BY CONVERT(meta_value, SIGNED) ASC" );
+
+		wp_cache_set( 'signup_fields', $signup_field_ids, 'bp_xprofile' );
+	}
+
+	return array_map( 'intval', $signup_field_ids );
+}
+
+/**
+ * Returns xProfile loop's signup arguments.
+ *
+ * @since xxx
+ *
+ * @param array $extra Optional extra arguments.
+ * @return array The xProfile loop's signup arguments.
+ */
+function bp_xprofile_signup_args( $extra = array() ) {
+	$signup_fields = (array) bp_xprofile_get_signup_field_ids();
+	$default_args  = array(
+		'fetch_fields'     => true,
+		'fetch_field_data' => false,
+	);
+
+	// No signup fields? Let's bring back primary group.
+	if ( ! $signup_fields && bp_is_register_page() ) {
+		$default_args['profile_group_id'] = 1;
+	} else {
+		$default_args['signup_fields_only'] = true;
+	}
+
+	return array_merge( $default_args, $extra );
+}
