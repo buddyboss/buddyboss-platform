@@ -6071,7 +6071,8 @@ function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if ( strpos( $actual_link, 'wp-cron.php' ) === false &&
 	     strpos( $actual_link, 'wp-login.php' ) === false &&
-	     strpos( $actual_link, 'admin-ajax.php' ) === false ) {
+	     strpos( $actual_link, 'admin-ajax.php' ) === false &&
+	     strpos( $actual_link, 'wp-json' ) === false ) {
 		$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
 		$exclude_rss_feed    = bp_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
