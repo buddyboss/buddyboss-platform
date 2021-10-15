@@ -1846,7 +1846,7 @@ function bp_group_list_admins( $group = false ) {
 		<ul id="group-admins">
 			<?php foreach ( (array) $group->admins as $admin ) { ?>
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
+					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_core_get_user_displayname( $admin->user_id ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
