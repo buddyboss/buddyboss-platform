@@ -19,13 +19,13 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	 * Constructor.
 	 */
 	function __construct() {
-		// Set up optional widget args
+		// Set up optional widget args.
 		$widget_ops = array(
 			'classname'   => 'widget_bp_follow_follower_widget widget buddypress',
 			'description' => __( 'A list of member avatars that are following the logged-in user.', 'buddyboss' ),
 		);
 
-		// Set up the widget
+		// Set up the widget.
 		parent::__construct(
 			false,
 			__( '(BB) Members Following Me', 'buddyboss' ),
@@ -38,12 +38,12 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 
-		// do not do anything if user isn't logged in
+		// do not do anything if user isn't logged in.
 		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
 			return;
 		}
 
-		$id = bp_displayed_user_id();
+		$id     = bp_displayed_user_id();
 		$filter = $show_more = false;
 
 		if ( ! $id ) {
@@ -74,7 +74,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
-			? __( "My Followers", 'buddyboss' )
+			? __( 'My Followers', 'buddyboss' )
 			: sprintf( __( "%s's Followers", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
@@ -104,7 +104,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 				'include'             => $follower,
 				'per_page'            => $instance['max_users'],
 				'populate_extras'     => false,
-				'member_type__not_in' => false
+				'member_type__not_in' => false,
 			)
 		) ) {
 			do_action( 'bp_before_follower_widget' );
@@ -122,12 +122,17 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 					bp_the_member();
 					?>
 					<div class="item-avatar">
-						<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo bp_core_get_user_displayname( bp_get_member_user_id() ); ?>"><?php bp_member_avatar() ?></a>
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"><?php bp_member_avatar(); ?></a>
 					</div>
 				<?php endwhile; ?>
 			</div>
 			<?php if ( $follower_count_number > $instance['max_users'] && $show_more ) { ?>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+				<div class="more-block">
+					<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
+						<?php esc_html_e( 'More', 'buddyboss' ); ?>
+						<i class="bb-icon-angle-right"></i>
+					</a>
+				</div>
 			<?php } ?>
 
 			<?php echo $args['after_widget']; ?>
@@ -161,7 +166,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		?>
 
 		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss' ); ?></small></p>
+		<p><small><?php esc_html_e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss' ); ?></small></p>
 
 		<?php
 	}
@@ -196,7 +201,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 			|| 'first_last_name' === $format
 		) {
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$display_name  = xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
 			$display_name = bp_core_get_user_displayname( $user_id );
 		}
