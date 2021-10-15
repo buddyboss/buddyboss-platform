@@ -347,7 +347,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 17951 ) {
-			bb_update_to_1_7_9();
+			bb_update_to_1_8_0();
 		}
 	}
 
@@ -1377,13 +1377,13 @@ function bb_update_to_1_7_8() {
 }
 
 /**
- * Function to update data
- * - created new table for bp email queue.
+ * 1.8.0 update routine.
+ * Created new table for bp email queue.
  *
- * @since BuddyBoss 1.7.9
+ * @since BuddyBoss 1.8.0
  */
-function bb_update_to_1_7_9() {
-	if ( function_exists( 'bb_email_queue' )  ) {
+function bb_update_to_1_8_0() {
+	if ( function_exists( 'bb_email_queue' ) ) {
 		// Install email queue table.
 		bb_email_queue()::create_db_table();
 	}
