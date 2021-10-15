@@ -3541,10 +3541,22 @@ function bp_activity_delete_children( $activity_id, $comment_id ) {
  * @return string $link Permalink for the activity item.
  */
 function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
+	global $activities_template;
 	$bp = buddypress();
 
 	if ( empty( $activity_obj ) ) {
-		$activity_obj = new BP_Activity_Activity( $activity_id );
+
+		/**
+		 * Check if activity object is available in global activity template.
+		 * If available then take the activity object from global template.
+		 * Else create a new instance.
+		 */
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $activity_id ) {
+			$activity_obj = $activities_template->activity;
+		} else {
+			$activity_obj = new BP_Activity_Activity( $activity_id );
+		}
+
 	}
 
 	if ( isset( $activity_obj->current_comment ) ) {

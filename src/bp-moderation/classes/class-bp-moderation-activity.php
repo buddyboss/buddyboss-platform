@@ -97,7 +97,19 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return int
 	 */
 	public static function get_content_owner_id( $activity_id ) {
-		$activity = new BP_Activity_Activity( $activity_id );
+
+		global $activities_template;
+
+		/**
+		 * Check if activity object is available in global activity template.
+		 * If available then take the activity object from global template.
+		 * Else create a new instance.
+		 */
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $activity_id ) {
+			$activity = $activities_template->activity;
+		} else {
+			$activity = new BP_Activity_Activity( $activity_id );
+		}
 
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
 	}
@@ -178,7 +190,18 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function update_button_sub_items( $item_id ) {
 
-		$activity = new BP_Activity_Activity( $item_id );
+		global $activities_template;
+
+		/**
+		 * Check if activity object is available in global activity template.
+		 * If available then take the activity object from global template.
+		 * Else create a new instance.
+		 */
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $item_id ) {
+			$activity = $activities_template->activity;
+		} else {
+			$activity = new BP_Activity_Activity( (int) $item_id );
+		}
 
 		if ( empty( $activity->id ) ) {
 			return array();
@@ -328,11 +351,23 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return bool
 	 */
 	public function validate_single_item( $retval, $item_id ) {
+
+		global $activities_template;
+
 		if ( empty( $item_id ) ) {
 			return $retval;
 		}
 
-		$activity = new BP_Activity_Activity( (int) $item_id );
+		/**
+		 * Check if activity object is available in global activity template.
+		 * If available then take the activity object from global template.
+		 * Else create a new instance.
+		 */
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $item_id ) {
+			$activity = $activities_template->activity;
+		} else {
+			$activity = new BP_Activity_Activity( (int) $item_id );
+		}
 
 		if ( empty( $activity ) || empty( $activity->id ) ) {
 			return false;
