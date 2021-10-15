@@ -6068,43 +6068,41 @@ function bb_moderation_bg_update_moderation_data() {
  * @since BuddyBoss 1.7.7
  */
 function bb_restricate_rss_feed() {
-	// This will disable default feeds.
-//	remove_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
-//	remove_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
-//	remove_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
-//	remove_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
-//	remove_action( 'wp_head', 'feed_links_extra', 3 );
-//	remove_action( 'wp_head', 'feed_links', 2 );
-//	// This will disable sitewide feeds.
-//	remove_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
-//	// This will disable users personal activity feeds.
-//	remove_action( 'bp_actions', 'bp_activity_action_personal_feed' );
-//	// This will disable users friends activity feeds.
-//	remove_action( 'bp_actions', 'bp_activity_action_friends_feed' );
-//	// This will disable users group activity feeds.
-//	remove_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
-//	// This will disable users mentions activity feeds.
-//	remove_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
-//	// This will disable users favorites activity feeds.
-//	remove_action( 'bp_actions', 'bp_activity_action_favorites_feed' );
-//	// This will disable groups feeds.
-//	remove_action( 'bp_actions', 'groups_action_group_feed' );
-//	// This will disable forums feed.
-//	remove_filter( 'bbp_request', 'bbp_request_feed_trap' );
-	
-	$exclude_rss_feed = bp_enable_private_rss_feeds_public_content();
-	if ( '' !== $exclude_rss_feed ) {
-		$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
-		if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
-			foreach ( $exclude_arr_rss_feeds as $rss_feeds ) {
-//				error_log( ' $rss_feeds ' . $rss_feeds );
-//				add_action( 'do_feed_rdf', 'do_feed_rdf', 10, 1 );
-//				add_action( 'do_feed_rss', 'do_feed_rss', 10, 1 );
-//				add_action( 'do_feed_rss2', 'do_feed_rss2', 10, 1 );
-//				add_action( 'do_feed_atom', 'do_feed_atom', 10, 1 );
-//				add_action( 'wp_head', 'feed_links_extra', 3 );
-//				add_action( 'wp_head', 'feed_links', 2 );
+	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	if ( strpos( $actual_link, 'wp-cron.php' ) === false &&
+	     strpos( $actual_link, 'wp-login.php' ) === false &&
+	     strpos( $actual_link, 'admin-ajax.php' ) === false ) {
+		$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
+		$exclude_rss_feed    = bp_enable_private_rss_feeds_public_content();
+		if ( '' !== $exclude_rss_feed ) {
+			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
+				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
+					$redirect_url = is_ssl() ? 'https://' : 'http://';
+					$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+					$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+					$defaults     = array(
+						'mode'     => 2,
+						'redirect' => $redirect_url,
+						'root'     => bp_get_root_domain(),
+						'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+					);
+					bp_core_no_access( $defaults );
+					exit();
+				}
 			}
+		} else {
+			$redirect_url = is_ssl() ? 'https://' : 'http://';
+			$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+			$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+			$defaults     = array(
+				'mode'     => 2,
+				'redirect' => $redirect_url,
+				'root'     => bp_get_root_domain(),
+				'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+			);
+			bp_core_no_access( $defaults );
+			exit();
 		}
 	}
 }

@@ -1259,19 +1259,21 @@ function bp_private_network_template_redirect() {
 								}
 							}
 						} else {
-							$redirect_url  = is_ssl() ? 'https://' : 'http://';
-							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-							$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
-
-							$defaults = array(
-								'mode'     => 2,
-								'redirect' => $redirect_url,
-								'root'     => bp_get_root_domain(),
-								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
-							);
-
-							bp_core_no_access( $defaults );
-							exit();
+							if ( strpos( $actual_link, 'feed' ) === false ) {
+								$redirect_url  = is_ssl() ? 'https://' : 'http://';
+								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+								$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+								
+								$defaults = array(
+									'mode'     => 2,
+									'redirect' => $redirect_url,
+									'root'     => bp_get_root_domain(),
+									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+								);
+								
+								bp_core_no_access( $defaults );
+								exit();
+							}
 						}
 						// 404 redirect
 					} elseif ( is_404() ) {

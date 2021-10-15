@@ -335,7 +335,7 @@ add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
  *
  * @since BuddyBoss x.x.x
  */
-function bb_removes_endpoints_and_feeds() {
+function bb_restricate_rss_feed_callback() {
 	if ( is_user_logged_in() ) {
 		return;
 	}
@@ -343,14 +343,21 @@ function bb_removes_endpoints_and_feeds() {
 		bb_restricate_rss_feed();
 	}
 }
-add_action( 'init', 'bb_removes_endpoints_and_feeds', 99 );
+add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
 
 /**
  * Function will remove REST APIs endpoint.
  *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *
  * @since BuddyBoss x.x.x
  */
-function bb_rest_authentication_errors( $response, $handler, $request ) {
+function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_user_logged_in() ) {
 		return $response;
 	}
@@ -358,4 +365,4 @@ function bb_rest_authentication_errors( $response, $handler, $request ) {
 		return bb_restricate_rest_api( $response, $handler, $request );
 	}
 }
-add_filter( 'rest_request_before_callbacks', 'bb_rest_authentication_errors', 100, 3 );
+add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
