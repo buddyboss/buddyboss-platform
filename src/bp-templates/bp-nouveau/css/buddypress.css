@@ -20534,6 +20534,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin: 25px 0 0 0;
 }
 
+.bb-title + #video-stream .bp-feedback {
+  margin: 0;
+}
+
 /*Video Popups*/
 .video-thumbnail-content {
   display: block;
