@@ -6134,11 +6134,17 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	}
 	
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
+		add_filter( 'rest_post_dispatch_cache', 'rest_post_dispatch_cache_callback', 99, 1 );
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'rest_user_cannot_view', $error_message, array( 'status' => rest_authorization_required_code() ) );
 		$response      = rest_ensure_response( $error );
+		//remove_filter( 'rest_post_dispatch_cache', 'rest_post_dispatch_cache_callback', 99, 1 );
 	}
 	
+	return $response;
+}
+
+function rest_post_dispatch_cache( $response ) {
 	return $response;
 }
 

@@ -339,7 +339,7 @@ function bb_restricate_rss_feed_callback() {
 	if ( is_user_logged_in() ) {
 		return;
 	}
-	if ( true === bp_enable_private_rest_apis() ) {
+	if ( true === bp_enable_private_rss_feeds() ) {
 		bb_restricate_rss_feed();
 	}
 }
@@ -370,6 +370,5 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 			return bb_restricate_rest_api( $response, $handler, $request );
 		}
 	}
-	
 }
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
