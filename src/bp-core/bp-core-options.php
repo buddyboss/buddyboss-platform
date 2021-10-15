@@ -1932,10 +1932,10 @@ function bb_feed_not_allowed_comment_post_types() {
 function bp_enable_private_rest_apis( $default = false ) {
 	global $bp;
 	
-	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-rest-apis'] ) ) {
-		$val = (bool) $bp->site_options['bp-enable-private-rest-apis'];
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
+		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
 	} else {
-		$val = (bool) bp_get_option( 'bp-enable-private-rest-apis', $default );
+		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
 	}
 	
 	/**
@@ -1958,7 +1958,7 @@ function bp_enable_private_rest_apis( $default = false ) {
  *
  * @return string Private REST APIs public content.
  */
-function bp_enable_private_rest_apis_public_content( $default = '' ) {
+function bb_enable_private_rest_apis_public_content( $default = '' ) {
 	
 	/**
 	 * Filters Private REST APIs public content.
@@ -1967,7 +1967,7 @@ function bp_enable_private_rest_apis_public_content( $default = '' ) {
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
-	return apply_filters( 'bp_enable_private_rest_apis_public_content', bp_get_option( 'bp-enable-private-rest-apis-public-content', '' ) );
+	return apply_filters( 'bb_enable_private_rest_apis_public_content', bp_get_option( 'bb-enable-private-rest-apis-public-content', '' ) );
 }
 
 /**
@@ -1984,10 +1984,10 @@ function bp_enable_private_rest_apis_public_content( $default = '' ) {
 function bp_enable_private_rss_feeds( $default = false ) {
 	global $bp;
 	
-	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-rss-feeds'] ) ) {
-		$val = (bool) $bp->site_options['bp-enable-private-rss-feeds'];
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
+		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
 	} else {
-		$val = (bool) bp_get_option( 'bp-enable-private-rss-feeds', $default );
+		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
 	}
 	
 	/**
@@ -2010,7 +2010,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
  *
  * @return string Private RSS Feeds public content.
  */
-function bp_enable_private_rss_feeds_public_content( $default = '' ) {
+function bb_enable_private_rss_feeds_public_content( $default = '' ) {
 	
 	/**
 	 * Filters Private REST APIs public content.
@@ -2019,5 +2019,5 @@ function bp_enable_private_rss_feeds_public_content( $default = '' ) {
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
-	return apply_filters( 'bp_enable_private_rss_feeds_public_content', bp_get_option( 'bp-enable-private-rss-feeds-public-content', '' ) );
+	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bp_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
 }

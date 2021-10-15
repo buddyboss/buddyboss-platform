@@ -339,8 +339,14 @@ function bb_restricate_rss_feed_callback() {
 	if ( is_user_logged_in() ) {
 		return;
 	}
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() && true === bp_enable_private_rss_feeds() ) {
-		bb_restricate_rss_feed();
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+		if ( true === bbapp_is_private_app_enabled() && true === bp_enable_private_rest_apis() ) {
+			bb_restricate_rss_feed();
+		}
+	} else {
+		if ( true === bp_enable_private_rest_apis() ) {
+			bb_restricate_rss_feed();
+		}
 	}
 }
 add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
@@ -361,8 +367,15 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_user_logged_in() ) {
 		return $response;
 	}
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() && true === bp_enable_private_rest_apis() ) {
-		return bb_restricate_rest_api( $response, $handler, $request );
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+		if ( true === bbapp_is_private_app_enabled() && true === bp_enable_private_rest_apis() ) {
+			return bb_restricate_rest_api( $response, $handler, $request );
+		}
+	} else {
+		if ( true === bp_enable_private_rest_apis() ) {
+			return bb_restricate_rest_api( $response, $handler, $request );
+		}
 	}
+	
 }
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );

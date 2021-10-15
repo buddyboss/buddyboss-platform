@@ -6074,7 +6074,7 @@ function bb_restricate_rss_feed() {
 	     strpos( $actual_link, 'admin-ajax.php' ) === false &&
 	     strpos( $actual_link, 'wp-json' ) === false ) {
 		$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
-		$exclude_rss_feed    = bp_enable_private_rss_feeds_public_content();
+		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
@@ -6152,7 +6152,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
-	$exclude_endpoints = bp_enable_private_rest_apis_public_content();
+	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
