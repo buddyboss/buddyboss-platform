@@ -1379,7 +1379,7 @@ function bb_update_to_1_7_8() {
  * 1.7.9 update routine.
  * Created new table for bp email queue.
  *
- * @since BuddyBoss 1.7.9
+ * @since BuddyBoss 1.8.0
  */
 function bb_update_to_1_7_9() {
 	if ( function_exists( 'bb_email_queue' ) ) {
