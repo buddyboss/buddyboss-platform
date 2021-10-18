@@ -101,9 +101,10 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		// show the users the logged-in user is follower.
 		if ( bp_has_members(
 			array(
-				'include'         => $follower,
-				'per_page'        => $instance['max_users'],
-				'populate_extras' => false,
+				'include'             => $follower,
+				'per_page'            => $instance['max_users'],
+				'populate_extras'     => false,
+				'member_type__not_in' => false
 			)
 		) ) {
 			do_action( 'bp_before_follower_widget' );
@@ -159,7 +160,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		);
 		?>
 
-		<p><label for="bp-follow-widget-users-max"><?php _e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_users' ); ?>" name="<?php echo $this->get_field_name( 'max_users' ); ?>" type="text" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
+		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
 		<p><small><?php _e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss' ); ?></small></p>
 
 		<?php
