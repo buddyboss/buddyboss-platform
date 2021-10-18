@@ -189,6 +189,9 @@ function bp_restrict_single_attachment() {
  */
 function bb_media_symlink_validate() {
 
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
 
 	$type            = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 	$page            = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );

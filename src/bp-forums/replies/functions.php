@@ -433,7 +433,12 @@ function bbp_new_reply_handler( $action = '' ) {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+		if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+			$terms = explode( ',', $terms );
+		} else {
+			$terms = (array) $terms;
+		}
+		$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id() );
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
@@ -781,8 +786,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Just in time manipulation of reply terms before being edited
 	$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
-	// Insert terms
-	$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+	// update terms
+	if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+		$terms = explode( ',', $terms );
+	} else {
+		$terms = (array) $terms;
+	}
+	$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 	// Term error
 	if ( is_wp_error( $terms ) ) {
