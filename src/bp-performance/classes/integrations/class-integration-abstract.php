@@ -288,11 +288,11 @@ abstract class Integration_Abstract {
 
 							// Output the cache on hook when current user is available by WordPress.
 							if ( $this->generate_deep_cache ) {
-								$this->endpoint_cache_render();
+								$this->endpoint_cache_render( $current_endpoint );
 							} else {
 								// phpcs:ignore
 								/* add_action( 'set_current_user', array( $this, 'endpoint_cache_render' ), 1 ); */
-								add_action( 'init', array( $this, 'endpoint_cache_render' ), 99 );
+								add_action( 'init', array( $this, 'endpoint_cache_render' ), $current_endpoint, 99 );
 							}
 						}
 
@@ -416,7 +416,7 @@ abstract class Integration_Abstract {
 	/**
 	 * This will render the cache on init when cache is prepare.
 	 */
-	public function endpoint_cache_render() {
+	public function endpoint_cache_render( $current_endpoint ) {
 		if ( $this->api_cache_data ) {
 
 			// Security Check.
@@ -445,8 +445,7 @@ abstract class Integration_Abstract {
 					header( $header_key . ':' . $header_value );
 				}
 			}
-
-			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'] );
+			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'], $current_endpoint );
 			echo wp_json_encode( $this->api_cache_data );
 			exit;
 		}
