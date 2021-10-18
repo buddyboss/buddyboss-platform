@@ -288,11 +288,11 @@ abstract class Integration_Abstract {
 
 							// Output the cache on hook when current user is available by WordPress.
 							if ( $this->generate_deep_cache ) {
-								$this->endpoint_cache_render( $current_endpoint );
+								$this->endpoint_cache_render();
 							} else {
 								// phpcs:ignore
 								/* add_action( 'set_current_user', array( $this, 'endpoint_cache_render' ), 1 ); */
-								add_action( 'init', array( $this, 'endpoint_cache_render' ), $current_endpoint, 99 );
+								add_action( 'init', array( $this, 'endpoint_cache_render' ), 99 );
 							}
 						}
 
@@ -416,8 +416,9 @@ abstract class Integration_Abstract {
 	/**
 	 * This will render the cache on init when cache is prepare.
 	 */
-	public function endpoint_cache_render( $current_endpoint ) {
+	public function endpoint_cache_render() {
 		if ( $this->api_cache_data ) {
+			$current_endpoint = $this->get_current_endpoint();
 
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
