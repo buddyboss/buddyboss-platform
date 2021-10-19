@@ -6065,7 +6065,7 @@ function bb_moderation_bg_update_moderation_data() {
 /**
  * Function will restrict RSS feed.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -6111,7 +6111,7 @@ function bb_restricate_rss_feed() {
 /**
  * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.
@@ -6145,7 +6145,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 /**
  * Function will check current REST APIs endpoint is allow or not.
  *
- * @since x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $current_endpoint Current endpoint.
  *

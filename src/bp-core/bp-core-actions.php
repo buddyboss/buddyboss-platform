@@ -333,7 +333,7 @@ add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
 /**
  * Function will remove RSS Feeds.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_restricate_rss_feed_callback() {
 	if ( is_user_logged_in() ) {
@@ -355,7 +355,7 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
  *
  * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_user_logged_in() ) {
