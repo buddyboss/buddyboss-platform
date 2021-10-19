@@ -1814,14 +1814,16 @@ function bp_member_type_permissions_metabox( $post ) {
 				<p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from the members directory, including the "Members" and "Recently Active Members" widgets.', 'buddyboss' ); ?></p>
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-		        <?php $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default. ?>
-                <input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
-		        <?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
-				<p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from network search results.', 'buddyboss' ); ?></p>
-            </td>
-        </tr>
+		<?php if( bp_is_active( 'search' ) ) { ?> <!-- Condition to show only if network search component is enabled -->
+			<tr>
+				<td colspan="2">
+					<?php $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default. ?>
+					<input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
+					<?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
+					<p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from network search results.', 'buddyboss' ); ?></p>
+				</td>
+			</tr>
+		<?php } ?>
         </tbody>
     </table>
 
