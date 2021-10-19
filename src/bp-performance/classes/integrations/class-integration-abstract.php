@@ -445,6 +445,7 @@ abstract class Integration_Abstract {
 					header( $header_key . ':' . $header_value );
 				}
 			}
+
 			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'] );
 			echo wp_json_encode( $this->api_cache_data );
 			exit;
