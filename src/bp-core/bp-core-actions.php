@@ -358,16 +358,19 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_restricate_rest_api_callback( $response, $handler, $request ) {
-	if ( is_user_logged_in() ) {
+	if ( is_wp_error( $response ) ) {
 		return $response;
 	}
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		if ( true === bbapp_is_private_app_enabled() ) {
-			return bb_restricate_rest_api( $response, $handler, $request );
-		}
-	} else {
-		if ( true === bp_enable_private_rest_apis() ) {
-			return bb_restricate_rest_api( $response, $handler, $request );
+	
+	if ( ! is_user_logged_in() ) {
+		if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+			if ( true === bbapp_is_private_app_enabled() ) {
+				return bb_restricate_rest_api( $response, $handler, $request );
+			}
+		} else {
+			if ( true === bp_enable_private_rest_apis() ) {
+				return bb_restricate_rest_api( $response, $handler, $request );
+			}
 		}
 	}
 	return $response;
