@@ -593,7 +593,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		}
 
 		$post_status = get_post_status( $reply_id );
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$topic_id    = bbp_get_reply_topic_id( $reply_id );
 
 		if (
 			'trash' === $post_status

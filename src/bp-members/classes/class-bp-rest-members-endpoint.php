@@ -1352,7 +1352,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
 				continue;
 			}
-			
+
 			if ( ! isset( $f->filter ) ) {
 				continue;
 			}
