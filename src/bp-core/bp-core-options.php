@@ -1921,7 +1921,7 @@ function bb_feed_not_allowed_comment_post_types() {
 /**
  * Enable private REST apis.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1941,7 +1941,7 @@ function bp_enable_private_rest_apis( $default = false ) {
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
-	 * @since BuddyBoss x.x.x
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value Whether private network for site is enabled.
 	 */
@@ -1951,7 +1951,7 @@ function bp_enable_private_rest_apis( $default = false ) {
 /**
  * Add APIs endpoint which will ignore even if private REST APIs is enabled.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -1963,7 +1963,7 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
 	/**
 	 * Filters Private REST APIs public content.
 	 *
-	 * @since BuddyBoss x.x.x
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
@@ -1973,7 +1973,7 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
 /**
  * Enable private RSS feeds.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1993,7 +1993,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
-	 * @since BuddyBoss x.x.x
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value Whether private network for site is enabled.
 	 */
@@ -2003,7 +2003,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
 /**
  * Add RSS feeds endpoint which will ignore even if private RSS feeds is enabled.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2015,7 +2015,7 @@ function bb_enable_private_rss_feeds_public_content( $default = '' ) {
 	/**
 	 * Filters Private REST APIs public content.
 	 *
-	 * @since BuddyBoss x.x.x
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */

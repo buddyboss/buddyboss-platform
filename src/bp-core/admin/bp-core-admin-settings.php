@@ -1596,7 +1596,7 @@ add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10
 /**
  * Allow admin to make the REST APIs private.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_private_rest_apis() {
 	$disable_field    = '';
@@ -1629,7 +1629,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 /**
  * Allow admin to exclude REST APIs endpoint.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_private_rest_apis_public_content() {
 	$disable_field = '';
@@ -1662,7 +1662,7 @@ function bb_admin_setting_callback_private_rest_apis_public_content() {
 /**
  * Allow admin to make the RSS feeds private.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_private_rss_feeds() {
 	?>
@@ -1687,7 +1687,7 @@ function bb_admin_setting_callback_private_rss_feeds() {
 /**
  * Allow admin to exclude RSS feeds endpoint.
  *
- * @since BuddyBoss x.x.x
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	?>
