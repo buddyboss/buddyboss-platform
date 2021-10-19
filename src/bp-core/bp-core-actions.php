@@ -370,5 +370,6 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 			return bb_restricate_rest_api( $response, $handler, $request );
 		}
 	}
+	return $response;
 }
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );

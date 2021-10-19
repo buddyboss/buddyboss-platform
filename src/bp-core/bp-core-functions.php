@@ -6065,7 +6065,7 @@ function bb_moderation_bg_update_moderation_data() {
 /**
  * Function will restrict RSS feed.
  *
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss x.x.x
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
