@@ -77,12 +77,12 @@ function bbp_has_search_results( $args = '' ) {
 		// Lean on the 'perm' query var value of 'readable' to provide statuses
 	} else {
 		/**
-		 * perm not working properly for private forum because current user should be the author of the private
-		 * forum in order to appear in search. That's why commented out this line
+		 * Perm not working properly for private forum because current user should be the author of the private
+		 * forum in order to appear in search. That's why commented out this line.
 		 */
 		//$default['perm'] = 'readable';
 
-		//Adding status manually depending on the users cap.
+		// Adding status manually depending on the users cap.
 		$post_statuses = array(
 			bbp_get_public_status_id(),
 		);
