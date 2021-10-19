@@ -4558,10 +4558,13 @@ function bp_get_xprofile_member_type_field_id() {
  * @return string|null
  */
 function bp_get_xprofile_gender_type_field_id() {
-	global $wpdb;
+	static $get_parent_id_of_gender_types_field = null;
 
-	$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-	$get_parent_id_of_gender_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+	if ( null === $get_parent_id_of_gender_types_field ) {
+		global $wpdb;
+		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$get_parent_id_of_gender_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+	}
 
 	return (int) $get_parent_id_of_gender_types_field;
 }
