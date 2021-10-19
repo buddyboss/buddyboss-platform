@@ -190,6 +190,7 @@ function bp_restrict_single_attachment() {
 function bb_media_symlink_validate() {
 
 	if ( true === bb_check_server_disabled_symlink() ) {
+		bp_update_option( 'bp_media_symlink_support', 0 );
 		return;
 	}
 
