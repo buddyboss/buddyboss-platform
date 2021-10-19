@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.7.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-10-13 13:30:18+00:00\n"
+"POT-Creation-Date: 2021-10-19 11:23:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -678,7 +678,7 @@ msgstr ""
 #: bp-activity/bp-activity-functions.php:1162
 #: bp-activity/bp-activity-functions.php:1173
 #: bp-activity/bp-activity-functions.php:1186
-#: bp-activity/bp-activity-functions.php:1194 bp-core/bp-core-catchuri.php:1528
+#: bp-activity/bp-activity-functions.php:1194 bp-core/bp-core-catchuri.php:1530
 msgid "and"
 msgstr ""
 
@@ -3218,6 +3218,8 @@ msgid "Restrict site access to only logged-in members"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:106
+#: bp-core/admin/bp-core-admin-settings.php:1618
+#: bp-core/admin/bp-core-admin-settings.php:1676
 msgid ""
 "Login and <a href=\"%s\">Registration</a> content will remain publicly "
 "visible."
@@ -3592,6 +3594,33 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1517
 msgid "5 Minutes"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1613
+msgid "Restrict REST APIs access to only logged-in members"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1643
+msgid ""
+"Enter REST endpoints URLs or URI fragments (e.g. "
+"wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
+"one URL or URI per line. "
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1650
+msgid ""
+"BuddyBoss App is enabled. Please go to <a href=\"%s\">settings</a> here to "
+"restrict App and REST APIs access to logged-in members only."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1671
+msgid "Restrict RSS Feeds access to only logged-in members"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1695
+msgid ""
+"Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
+"publicly visible always. Enter one endpoint URL or URI per line. "
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -4073,7 +4102,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:102
+#: bp-core/admin/settings/bp-admin-setting-general.php:114
 msgid "Activity Settings"
 msgstr ""
 
@@ -4186,12 +4215,20 @@ msgstr ""
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:93
+#: bp-core/admin/settings/bp-admin-setting-general.php:90
+msgid "Private REST APIs"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:96
+msgid "Private RSS Feeds"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:105
 #: bp-forums/admin/settings.php:1518
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:99
+#: bp-core/admin/settings/bp-admin-setting-general.php:111
 msgid "Groups Settings"
 msgstr ""
 
@@ -5023,7 +5060,8 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1260
+#: bp-core/bp-core-catchuri.php:1260 bp-core/bp-core-functions.php:6089
+#: bp-core/bp-core-functions.php:6103
 msgid "Please login to access this website."
 msgstr ""
 
@@ -5031,9 +5069,9 @@ msgstr ""
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1276 bp-core/bp-core-catchuri.php:1292
-#: bp-core/bp-core-catchuri.php:1313 bp-core/bp-core-catchuri.php:1330
-#: bp-core/bp-core-catchuri.php:1354 bp-core/bp-core-catchuri.php:1374
+#: bp-core/bp-core-catchuri.php:1277 bp-core/bp-core-catchuri.php:1294
+#: bp-core/bp-core-catchuri.php:1315 bp-core/bp-core-catchuri.php:1332
+#: bp-core/bp-core-catchuri.php:1356 bp-core/bp-core-catchuri.php:1376
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -6510,6 +6548,10 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:4611
 msgid "Member replies to a forum discussion"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:6137
+msgid "Only authenticated users can access the REST API."
 msgstr ""
 
 #: bp-core/bp-core-moderation.php:134
@@ -8056,13 +8098,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -28844,7 +28886,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:96
+#: bp-core/admin/settings/bp-admin-setting-general.php:108
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
@@ -29021,14 +29063,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
