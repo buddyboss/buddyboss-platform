@@ -696,7 +696,7 @@ function bp_update_to_1_5_1() {
  */
 function bp_update_to_1_7_0() {
 	bp_core_install_media();
-	bb_core_enable_default_symlink_support();
+	bp_update_option( 'bp_media_symlink_support', 1 );
 }
 
 /**
