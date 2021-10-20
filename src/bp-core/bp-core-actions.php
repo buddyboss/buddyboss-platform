@@ -361,8 +361,8 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_wp_error( $response ) ) {
 		return $response;
 	}
-	
-	if ( ! is_user_logged_in() ) {
+
+	if ( ! is_user_logged_in() && ! empty( $handler['permission_callback'] ) ) {
 		if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
 			if ( true === bbapp_is_private_app_enabled() ) {
 				return bb_restricate_rest_api( $response, $handler, $request );
