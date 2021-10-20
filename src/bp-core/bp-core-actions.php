@@ -271,6 +271,10 @@ function bb_media_symlink_validate() {
 					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
 						unlink( $attachment_path );
 						bp_update_option( 'bp_media_symlink_support', 0 );
+
+						foreach ( $keys as $k ) {
+							bp_delete_option( $k );
+						}
 					}
 				}
 
@@ -311,6 +315,10 @@ function bb_media_symlink_validate() {
 						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
 							unlink( $attachment_path );
 							bp_update_option( 'bp_media_symlink_support', 0 );
+
+							foreach ( $keys as $k ) {
+								bp_delete_option( $k );
+							}
 						}
 					}
 				}
@@ -331,7 +339,7 @@ function bb_media_symlink_validate() {
 /**
  * Check the symlink type default/relative on symlink option update.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param mixed  $old_value The old option value.
  * @param mixed  $value     The new option value.
