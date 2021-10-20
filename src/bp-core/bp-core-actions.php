@@ -186,16 +186,10 @@ function bp_restrict_single_attachment() {
  * Validate and update symlink option value.
  *
  * @since BuddyBoss 1.7.0
+ *
+ * @param int $updated_value Current value of options.
  */
-function bb_media_symlink_validate() {
-
-	if ( true === bb_check_server_disabled_symlink() ) {
-		bp_update_option( 'bp_media_symlink_support', 0 );
-		return;
-	}
-
-	$output_file_src = '';
-
+function bb_media_symlink_validate( $updated_value ) {
 	$keys = array(
 		'bb_media_symlink_type',
 		'bb_document_symlink_type',
@@ -203,6 +197,16 @@ function bb_media_symlink_validate() {
 		'bb_video_symlink_type',
 		'bb_video_thumb_symlink_type',
 	);
+
+	if ( true === bb_check_server_disabled_symlink() ) {
+		bp_update_option( 'bp_media_symlink_support', 0 );
+		foreach ( $keys as $k ) {
+			bp_delete_option( $k );
+		}
+		return;
+	}
+
+	$output_file_src = '';
 
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
@@ -221,6 +225,10 @@ function bb_media_symlink_validate() {
 
 	foreach ( $keys as $k ) {
 		bp_delete_option( $k );
+	}
+
+	if ( empty( $updated_value ) || 0 === $updated_value ) {
+		return;
 	}
 
 	$attachment_id = bb_core_upload_dummy_attachment();
@@ -346,7 +354,7 @@ function bb_media_symlink_validate() {
  */
 function bb_update_media_symlink_support( $old_value, $value ) {
 	if ( $old_value !== $value ) {
-		bb_media_symlink_validate();
+		bb_media_symlink_validate( $value );
 	}
 }
 
