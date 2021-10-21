@@ -2239,6 +2239,7 @@ window.bp = window.bp || {};
 			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
 				$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).attr( 'src', '' );
 			}
+			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
 			
 			self.resetRemoveActivityCommentsData();
