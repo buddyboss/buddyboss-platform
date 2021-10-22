@@ -7462,6 +7462,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 #message-threads .bp-message-link .thread-avatar img.avatar {
   max-width: 60px;
   width: 100%;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 #message-threads .bp-message-link .thread-multiple-avatar {
@@ -7775,6 +7776,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 #bp-message-thread-list img.avatar {
   float: left;
   margin: 0 10px 0 0;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 #bp-message-thread-list .actions a:before {
