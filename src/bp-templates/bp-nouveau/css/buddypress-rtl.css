@@ -11094,6 +11094,7 @@ button[data-bp-tooltip] {
   display: inline-block;
   height: auto;
   width: 50%;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .buddypress-wrap .grid.bp-list > li .item-meta,
