@@ -367,7 +367,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		/**
 		 * Setup forum cache.
 		 *
-		 * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function setup_cache_groups() {
 			// Global groups.
