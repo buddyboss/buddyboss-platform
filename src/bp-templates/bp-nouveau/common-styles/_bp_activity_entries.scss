@@ -79,6 +79,10 @@
 			}
 		}
 
+		.activity-avatar img.avatar {
+			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+		}
+
 		// close .mini
 
 		&.new_forum_post,
