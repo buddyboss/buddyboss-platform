@@ -564,7 +564,7 @@ class BP_Groups_Member {
 
 		$group_ids = wp_cache_get($user_id,'bp_group_ids_for_user');
 
-		if	(false === $group_ids) {
+		if	( false === $group_ids ) {
 			// If the user is logged in and viewing their own groups, we can show hidden and private groups.
 			if ( $user_id != bp_loggedin_user_id() ) {
 				$group_sql    = $wpdb->prepare( "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0{$pag_sql}", $user_id );
