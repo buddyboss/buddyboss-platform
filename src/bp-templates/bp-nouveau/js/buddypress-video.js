@@ -2233,6 +2233,12 @@ window.bp = window.bp || {};
 		closeTheatre: function ( event ) {
 			event.preventDefault();
 			var self = this;
+			var target = $( event.currentTarget );
+			
+			if ( $( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' )
+			     || $( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'document-theatre' ) ) {
+				return false;
+			}
 			
 			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
 				$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).attr( 'src', '' );
@@ -2240,7 +2246,7 @@ window.bp = window.bp || {};
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
 			
-			self.resetRemoveActivityCommentsData();
+			self.resetRemoveActivityCommentsData( event );
 			
 			self.current_video = false;
 		},
@@ -2254,7 +2260,7 @@ window.bp = window.bp || {};
 				self.activity_ajax.abort();
 			}
 			
-			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments > ul' );
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments ul' );
 			if ( on_page_activity_comments.length ) {
 				self.current_video.parent_activity_comments = true;
 				on_page_activity_comments.html( '' );
@@ -2395,7 +2401,6 @@ window.bp = window.bp || {};
 		next: function ( event ) {
 			event.preventDefault();
 			var self = this, activity_id;
-			self.resetRemoveActivityCommentsData();
 			if ( typeof self.videos[ self.current_index + 1 ] !== 'undefined' ) {
 				self.current_index = self.current_index + 1;
 				activity_id        = self.current_video.activity_id;
@@ -2414,7 +2419,6 @@ window.bp = window.bp || {};
 		previous: function ( event ) {
 			event.preventDefault();
 			var self = this, activity_id;
-			self.resetRemoveActivityCommentsData();
 			if ( typeof self.videos[ self.current_index - 1 ] !== 'undefined' ) {
 				self.current_index = self.current_index - 1;
 				activity_id        = self.current_video.activity_id;
@@ -2430,9 +2434,12 @@ window.bp = window.bp || {};
 			}
 		},
 
-		resetRemoveActivityCommentsData: function () {
+		resetRemoveActivityCommentsData: function ( event ) {
 			var self = this;
-			var currentActivityId  = $( '#hidden_parent_id' ).val();
+			var currentActivityId = self.current_video.activity_id;
+			if ( true === self.current_video.parent_activity_comments ) {
+				currentActivityId  = $( '#hidden_parent_id' ).val();
+			}
 			// Check if any comment exists then load ajax otherwise dont need to load ajax.
 			var checkCommentExists = $( '#activity-stream #activity-' + currentActivityId + ' .activity-comments > ul' ).html();
 			if ( 'undefined' !== typeof checkCommentExists ) {
@@ -2450,10 +2457,13 @@ window.bp = window.bp || {};
 						},
 						success: function ( response ) {
 							if ( response.success ) {
-								$( '#activity-stream #activity-' + currentActivityId + ' .activity-comments' ).html( response.data.activity );
-								if ( $( '#hidden_parent_id' ).length ) {
-									$( '#hidden_parent_id' ).remove();
-								}
+								$( '#activity-stream #activity-' + currentActivityId + ' .activity-comments > ul' ).html( response.data.activity );
+								// For video initialize.
+								jQuery( window ).scroll();
+								// For report popup.
+								bp.Nouveau.reportPopUp();
+								// For reported popup.
+								bp.Nouveau.reportedPopup();
 							}
 						}
 					}
@@ -2462,7 +2472,7 @@ window.bp = window.bp || {};
 			// For Like and comment - When open video module as popup and add like and comment.
 			// When we close video module then we fetch like and count and put into main feed.
 			var activity_meta = false, activity_state = false, activity = false, html = false, classes = false;
-			activity          = $( '.bb-media-model-wrapper [data-bp-activity-id="' + currentActivityId + '"]' );
+			activity          = $( '.bb-media-model-wrapper.video [data-bp-activity-id="' + currentActivityId + '"]' );
 			activity_state = activity.find( '.activity-state' );
 			if ( activity_state.length ) {
 				html    = activity_state.html();
@@ -2486,14 +2496,9 @@ window.bp = window.bp || {};
 				}
 			}
 			activity.remove();
-			// Load post form because when we close video popup then comment form will not work.
-			bp.Nouveau.Activity.postForm;
-			// For video initialize.
-			jQuery( window ).scroll();
-			// For report popup.
-			bp.Nouveau.reportPopUp();
-			// For reported popup.
-			bp.Nouveau.reportedPopup();
+			if ( $( '#hidden_parent_id' ).length ) {
+				$( '#hidden_parent_id' ).remove();
+			}
 		},
 
 		getActivity: function () {
@@ -2513,7 +2518,7 @@ window.bp = window.bp || {};
 				}
 
 				$( '.bb-media-info-section.media' ).show();
-				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments > ul ' );
+				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments ul ' );
 				if ( on_page_activity_comments.length ) {
 					self.current_video.parent_activity_comments = true;
 					on_page_activity_comments.html( '' );
