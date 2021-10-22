@@ -2216,14 +2216,12 @@ window.bp = window.bp || {};
 			self.setCurrentVideo( id );
 			self.showVideo();
 			self.navigationCommands();
-			self.getParentActivityHtml( target );
-
+			
 			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
 				self.getActivity();
 			} else {
 				self.getVideosDescription();
 			}
-
 			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).hide();
 			$( '.bb-media-model-wrapper.video' ).show();
@@ -2245,21 +2243,6 @@ window.bp = window.bp || {};
 			self.resetRemoveActivityCommentsData();
 			
 			self.current_video = false;
-			self.getParentActivityHtml( $( event.currentTarget ) );
-		},
-		
-		getParentActivityHtml: function ( target ) {
-			var parentActivityId         = $( '#hidden_parent_id' ).val();
-			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
-			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdForModel ) ) {
-				var mainParentActivityData = $( '#bb-media-model-container [data-bp-activity-id="' + parentActivityId + '"]' );
-				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
-				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
-				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
-				if ( $( '#hidden_parent_id' ).length ) {
-					$( '#hidden_parent_id' ).remove();
-				}
-			}
 		},
 
 		getVideosDescription: function () {
@@ -2271,7 +2254,7 @@ window.bp = window.bp || {};
 				self.activity_ajax.abort();
 			}
 			
-			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments' );
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments > ul' );
 			if ( on_page_activity_comments.length ) {
 				self.current_video.parent_activity_comments = true;
 				on_page_activity_comments.html( '' );
@@ -2448,45 +2431,69 @@ window.bp = window.bp || {};
 		},
 
 		resetRemoveActivityCommentsData: function () {
-			var self = this, activity_comments = false, activity_meta = false, activity_state = false, activity = false,
-				html = false, classes = false;
-			if ( self.current_video.parent_activity_comments ) {
-				activity          = $( '.bb-media-model-wrapper.video [data-bp-activity-id="' + self.current_video.activity_id + '"]' );
-				activity_comments = activity.find( '.activity-comments' );
-				if ( activity_comments.length ) {
-					html    = activity_comments.html();
-					classes = activity_comments.attr( 'class' );
-					activity_comments.remove();
-					activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments' );
-					if ( activity_comments.length ) {
-						activity_comments.html( html );
-						activity_comments.attr( 'class', classes );
+			var self = this;
+			var currentActivityId  = $( '#hidden_parent_id' ).val();
+			// Check if any comment exists then load ajax otherwise dont need to load ajax.
+			var checkCommentExists = $( '#activity-stream #activity-' + currentActivityId + ' .activity-comments > ul' ).html();
+			if ( 'undefined' !== typeof checkCommentExists ) {
+				self.activity_ajax = $.ajax(
+					{
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: {
+							action: 'video_get_activity',
+							reset_comment: true,
+							id: currentActivityId,
+							group_id: ! _.isUndefined( self.current_video.group_id ) ? self.current_video.group_id : 0,
+							video_id: ! _.isUndefined( self.current_video.id ) ? self.current_video.id : 0,
+							nonce: BP_Nouveau.nonces.video
+						},
+						success: function ( response ) {
+							if ( response.success ) {
+								$( '#activity-stream #activity-' + currentActivityId + ' .activity-comments' ).html( response.data.activity );
+								if ( $( '#hidden_parent_id' ).length ) {
+									$( '#hidden_parent_id' ).remove();
+								}
+							}
+						}
 					}
-				}
-				activity_state = activity.find( '.activity-state' );
-				if ( activity_state.length ) {
-					html    = activity_state.html();
-					classes = activity_state.attr( 'class' );
-					activity_state.remove();
-					activity_state = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-state' );
-					if ( activity_state.length ) {
-						activity_state.html( html );
-						activity_state.attr( 'class', classes );
-					}
-				}
-				activity_meta = activity.find( '.activity-meta' );
-				if ( activity_meta.length ) {
-					html    = activity_meta.html();
-					classes = activity_meta.attr( 'class' );
-					activity_meta.remove();
-					activity_meta = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] > .activity-meta' );
-					if ( activity_meta.length ) {
-						activity_meta.html( html );
-						activity_meta.attr( 'class', classes );
-					}
-				}
-				activity.remove();
+				);
 			}
+			// For Like and comment - When open video module as popup and add like and comment.
+			// When we close video module then we fetch like and count and put into main feed.
+			var activity_meta = false, activity_state = false, activity = false, html = false, classes = false;
+			activity          = $( '.bb-media-model-wrapper [data-bp-activity-id="' + currentActivityId + '"]' );
+			activity_state = activity.find( '.activity-state' );
+			if ( activity_state.length ) {
+				html    = activity_state.html();
+				classes = activity_state.attr( 'class' );
+				activity_state.remove();
+				activity_state = $( '[data-bp-activity-id="' + currentActivityId + '"] .activity-state' );
+				if ( activity_state.length ) {
+					activity_state.html( html );
+					activity_state.attr( 'class', classes );
+				}
+			}
+			activity_meta = activity.find( '.activity-meta' );
+			if ( activity_meta.length ) {
+				html    = activity_meta.html();
+				classes = activity_meta.attr( 'class' );
+				activity_meta.remove();
+				activity_meta = $( '[data-bp-activity-id="' + currentActivityId + '"] > .activity-meta' );
+				if ( activity_meta.length ) {
+					activity_meta.html( html );
+					activity_meta.attr( 'class', classes );
+				}
+			}
+			activity.remove();
+			// Load post form because when we close video popup then comment form will not work.
+			bp.Nouveau.Activity.postForm;
+			// For video initialize.
+			jQuery( window ).scroll();
+			// For report popup.
+			bp.Nouveau.reportPopUp();
+			// For reported popup.
+			bp.Nouveau.reportedPopup();
 		},
 
 		getActivity: function () {
@@ -2506,7 +2513,7 @@ window.bp = window.bp || {};
 				}
 
 				$( '.bb-media-info-section.media' ).show();
-				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments' );
+				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments > ul ' );
 				if ( on_page_activity_comments.length ) {
 					self.current_video.parent_activity_comments = true;
 					on_page_activity_comments.html( '' );
