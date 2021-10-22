@@ -167,6 +167,14 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
 
+	/**
+	 * Include filters when Woocommerce plugin is activated
+	 *
+	 * Support Woocommerce
+	 */
+	if ( class_exists( 'WooCommerce' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
+	}
 }
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
@@ -181,6 +189,36 @@ function bb_wp_offload_media_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
+
+/**
+ * Fix the media, video & document display compatibility issue.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_seo_press_compatibility_helper() {
+
+	if ( (bool) bp_get_option( 'seopress_activated' ) ) {
+		if (
+			(
+				! empty( get_query_var( 'bb-media-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-player' ) ) ||
+				! empty( get_query_var( 'bb-video-thumb-preview' ) ) ||
+				! empty( get_query_var( 'bb-video-preview' ) )
+			)
+			&&
+			(
+				function_exists( 'seopress_redirections_enabled' ) &&
+				'yes' === seopress_redirections_enabled()
+			)
+		) {
+			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
+		}
+	}
+
+}
+
+add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
