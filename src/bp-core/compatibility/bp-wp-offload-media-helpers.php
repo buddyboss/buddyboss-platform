@@ -82,24 +82,21 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 
 		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$server_from_local          = (bool) $remove_local_files_setting['serve-from-s3'];
 
-		if ( $remove_local_files_setting ) {
-			$server_from_local = (bool) $remove_local_files_setting['serve-from-s3'];
+		if ( ! $server_from_local ) {
+			return true;
+		}
 
-			if ( ! $server_from_local ) {
-				return true;
-			}
+		$wp_upload_directory = wp_get_upload_dir();
+		$attachment_url      = wp_get_attachment_url( $attachment_id );
+		$upload_base_url     = $wp_upload_directory['baseurl'];
+
+		// If the URL from the local then use the symlink/rewrite_url based on settings.
+		if ( strpos( $attachment_url, $upload_base_url ) !== false ) {
+			$can = true;
 		} else {
-			$wp_upload_directory = wp_get_upload_dir();
-			$attachment_url      = wp_get_attachment_url( $attachment_id );
-			$upload_base_url     = $wp_upload_directory['baseurl'];
-
-			// If the URL from the local then use the symlink/rewrite_url based on settings.
-			if ( strpos( $attachment_url, $upload_base_url ) !== false ) {
-				$can = true;
-			} else {
-				$can = false;
-			}
+			$can = false;
 		}
 
 		return $can;
