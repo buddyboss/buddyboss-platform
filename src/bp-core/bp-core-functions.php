@@ -6126,7 +6126,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
 	// ex: /buddyboss-app/auth/v1/jwt/token
-	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array() );
+	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(), $response, $handler, $request );
 	
 	// Allow some endpoints which is mandatory for app.
 	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
