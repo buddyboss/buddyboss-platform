@@ -131,6 +131,10 @@ abstract class BP_Suspend_Abstract {
 			$args['action'] = 'hide';
 		}
 
+		if ( empty( $item_id ) ) {
+			return;
+		}
+
 		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$suspended_user = ! empty( $args['user_suspended'] ) ? $args['user_suspended'] : '';
 
@@ -216,6 +220,10 @@ abstract class BP_Suspend_Abstract {
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $item_id ) ) {
+			return;
+		}
 
 		if ( empty( $args['action'] ) ) {
 			$args['action'] = 'unhide';
