@@ -132,7 +132,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
+			$where .= $sql;
 		}
 
 		return $where;

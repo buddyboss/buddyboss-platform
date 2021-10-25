@@ -112,7 +112,11 @@ abstract class BP_Suspend_Abstract {
 	 * @return string|void
 	 */
 	protected function exclude_where_query() {
-		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL )";
+		global $wpdb;
+		$bp = buddypress();
+		
+		return $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->table_prefix}bp_suspend {$this->alias}
+		WHERE {$this->alias}.item_type = %s AND {$this->alias}.user_suspended = 1", $this->item_type ); // phpcs:ignore
 	}
 
 	/**
