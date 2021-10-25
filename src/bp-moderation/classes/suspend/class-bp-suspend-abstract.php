@@ -144,11 +144,18 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 
-					if ( BP_Core_Suspend::check_hidden_content( $content_id, $content_type, true ) || BP_Core_Suspend::check_suspended_content( $content_id, $content_type, true ) ) {
+					if (
+						BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
+						BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+					) {
 						continue;
 					}
 
-					if ( ! empty( $blocked_user ) && empty( $suspended_user ) && BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user ) ) {
+					if (
+						! empty( $blocked_user ) &&
+						empty( $suspended_user ) &&
+						BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
+					) {
 						continue;
 					}
 
@@ -239,7 +246,11 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 
-					if ( ! empty( $blocked_user ) && empty( $action_suspend ) && ! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user ) ) {
+					if (
+						! empty( $blocked_user ) &&
+						empty( $action_suspend ) &&
+						! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
+					) {
 						continue;
 					}
 
@@ -249,8 +260,8 @@ abstract class BP_Suspend_Abstract {
 							|| empty( $hide_parent )
 						) &&
 						! (
-							BP_Core_Suspend::check_hidden_content( $content_id, $content_type, true ) ||
-							BP_Core_Suspend::check_suspended_content( $content_id, $content_type, true )
+							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
+							BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
 						)
 					) {
 						continue;
