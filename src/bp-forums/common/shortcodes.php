@@ -226,7 +226,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			// Sanity check required info.
 			if ( ! empty( $content ) || ( empty( $attr['id'] ) || ! is_numeric( $attr['id'] ) ) ) {
 				return $content;
-			}
+			}	
 
 			// Set passed attribute to $forum_id for clarity.
 			$forum_id = bbpress()->current_forum_id = $attr['id'];
@@ -236,15 +236,23 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				return $content;
 			}
 
+			// Check if there's a parent forum that is associated with private group
+			$has_parent_forum_private_group = false;
+			if ( bp_is_active( 'groups' ) ) {
+				$group_id   = bbp_forum_recursive_group_id( $forum_id );
+				$group 		= groups_get_group( $group_id );
+				$has_parent_forum_private_group = $group && $group->status === bbp_get_private_status_id();
+			}	
+
 			// Start output buffer.
 			$this->start( 'bbp_single_forum' );
 
 			// Check forum caps.
-			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
+			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) && !$has_parent_forum_private_group ) {
 				bbp_get_template_part( 'content', 'single-forum' );
 
 				// Forum is private/hidden and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) || $has_parent_forum_private_group ) {
 				bbp_get_template_part( 'feedback', 'no-access' );
 			}
 
@@ -352,15 +360,23 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				$bbp->topic_query->post                    = get_post( $topic_id );
 			}
 
+			// Check if there's a parent forum that is associated with private group
+			$has_parent_forum_private_group = false;
+			if ( bp_is_active( 'groups' ) ) {
+				$group_id   = bbp_forum_recursive_group_id( $forum_id );
+				$group 		= groups_get_group( $group_id );
+				$has_parent_forum_private_group = $group && $group->status === bbp_get_private_status_id();
+			}	
+
 			// Start output buffer.
 			$this->start( 'bbp_single_topic' );
 
 			// Check forum caps.
-			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
+			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) && !$has_parent_forum_private_group ) {
 				bbp_get_template_part( 'content', 'single-topic' );
 
 				// Forum is private/hidden and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) || $has_parent_forum_private_group ) {
 				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
