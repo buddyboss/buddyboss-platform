@@ -468,7 +468,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			} else {
 				$user_fullname     = bp_core_get_user_displayname( $requesting_user_id );
 				$text              = sprintf( __( '%1$s requests membership for the group: %2$s', 'buddyboss' ), $user_fullname, $group->name );
-				$notification_link = $group_link . 'admin/membership-requests/?n=1&requested=' . $requesting_user_id;
+				$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
 				if ( 'string' == $format ) {
 
@@ -1177,16 +1177,10 @@ add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifi
  *
  * @since BuddyPress 1.9.0
  */
-function bp_groups_screen_group_admin_requests_mark_notifications() {
-	if ( bp_is_active( 'notifications' ) ) {
-		
-		if( !empty( $group_id ) && isset( $_GET['requested'] ) && !empty( $_GET['requested'] ) ){
-
-			$secondary_item_id = filter_input( INPUT_GET, 'requested', FILTER_VALIDATE_INT );
-
-			// Mark as read group join requests notification
-			bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'new_membership_request', $secondary_item_id );
-		}
+function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
+	if ( bp_is_active( 'notifications' ) && ! empty( $group_id ) ) {
+		// Mark as read group join requests notification.
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'new_membership_request' );
 	}
 }
 add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_requests_mark_notifications', 10 );
