@@ -1123,7 +1123,9 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 		}
 	} else {
 		unset( $recepients[ $user_id ] );
-		$avatars_user_ids[] = current( $recepients )->user_id;
+		if ( ! empty( $recepients ) ) {
+			$avatars_user_ids[] = current( $recepients )->user_id;
+		}
 	}
 
 	if ( count( $recepients ) > 2 && count( $avatars_user_ids ) < 2 ) {
@@ -1282,12 +1284,13 @@ function bb_messages_recipients_per_page() {
  * @param array  $members         Array of Member ids.
  * @param int    $current_user_id Currently logged-in user id.
  * @param string $content         Message content text.
+ * @param bool   $is_background   Rendered from background process or not.
  *
  * @since BuddyBoss 1.8.0
  *
  * @return bool|int|void|WP_Error
  */
-function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '' ) {
+function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
 
 	// setup post data into $_POST.
 	$_POST        = $post_data;
@@ -1392,6 +1395,18 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			);
 		}
 
-		return bp_groups_messages_new_message( $message_args );
+		$message = '';
+
+		if ( $is_background ) {
+			add_filter( 'bb_is_email_queue', 'bb_disabled_email_queue' );
+		}
+
+		$message = bp_groups_messages_new_message( $message_args );
+
+		if ( $is_background ) {
+			remove_filter( 'bb_is_email_queue', 'bb_disabled_email_queue' );
+		}
+
+		return $message;
 	}
 }

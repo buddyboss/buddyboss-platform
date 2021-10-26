@@ -1720,22 +1720,22 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		if ( ! empty( $members ) ) {
 			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, 20 );
+				$chunk_members = array_chunk( $members, 10 );
 				if ( ! empty( $chunk_members ) ) {
 					foreach ( $chunk_members as $key => $members ) {
 						$bp_background_updater->push_to_queue(
 							array(
 								'callback' => 'bb_send_group_message_background',
-								'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content ),
+								'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content, true ),
 							)
 						);
 					}
-					$bp_background_updater->save()->schedule_event();
+					$bp_background_updater->save()->dispatch();
 				}
 
 				$message = true;
 			} else {
-				$message = bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $content );
+				$message = bb_send_group_message_background( $_POST, $members, bp_loggedin_user_id(), $content, false );
 			}
 		}
 
