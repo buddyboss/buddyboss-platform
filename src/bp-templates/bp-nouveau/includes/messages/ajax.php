@@ -1828,12 +1828,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$recipients = (array) $thread_template->thread->recipients;
 
-	// Strip the sender from the recipient list, and unset them if they are
-	// not alone. If they are alone, let them talk to themselves.
-	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
-		unset( $recipients[ bp_loggedin_user_id() ] );
-	}
-
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 
@@ -2050,11 +2044,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$check_recipients = (array) $thread_template->thread->recipients;
-	// Strip the sender from the recipient list, and unset them if they are
-	// not alone. If they are alone, let them talk to themselves.
-	if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-		unset( $check_recipients[ bp_loggedin_user_id() ] );
-	}
 
 	// Check moderation if user blocked or not for single user thread.
 	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
