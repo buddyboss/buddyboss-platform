@@ -1516,6 +1516,7 @@ function bbp_get_dropdown( $args = '' ) {
 			'show_none_default_val' => '',
 			'disable_categories'    => true,
 			'disabled'              => '',
+			'disabled_walker'       => true,
 		),
 		'get_dropdown'
 	);
@@ -1561,7 +1562,7 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ) ? bbpress()->options[ $r['disabled'] ] : $r['disabled'], true, false );
 
 		// Setup the tab index attribute
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';
@@ -1617,7 +1618,11 @@ function bbp_get_dropdown( $args = '' ) {
 	// Items found so walk the tree
 	if ( ! empty( $posts ) ) {
 		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
-		unset( $r['walker'] );
+
+		if ( ! empty( $r['disabled_walker'] ) && true === $r['disabled_walker'] ) {
+			unset( $r['walker'] );
+		}
+
 		$retval .= walk_page_dropdown_tree( $posts, 0, $r );
 		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
 	}
@@ -1776,7 +1781,7 @@ function bbp_reply_form_fields() {
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
 		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
-	
+
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			wp_nonce_field( 'bbp-unfiltered-html-reply_' . bbp_get_reply_id(), '_bbp_unfiltered_html_reply', false );}
