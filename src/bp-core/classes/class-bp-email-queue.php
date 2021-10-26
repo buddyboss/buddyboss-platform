@@ -59,7 +59,6 @@ class BP_Email_Queue {
 				$wpdb->update( $table_name, array( 'scheduled' => true ), array( 'id' => $record['id'] ) );
 			}
 
-			$bb_email_background_updater->save()->schedule_event();
 			$bb_email_background_updater->save()->dispatch();
 		}
 	}
