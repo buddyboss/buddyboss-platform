@@ -629,7 +629,7 @@ class BBP_Forums_Widget extends WP_Widget {
 					</span>
 					<?php
 
-					if( $settings['parent_forum'] == 'any' || $settings['parent_forum'] > 0 ) {
+					if( 'any' === $settings['parent_forum'] || $settings['parent_forum'] > 0 ) {
 
 						$r = array(
 							'before'           => '<ul class="bb-sidebar-forums">',
