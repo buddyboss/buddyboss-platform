@@ -92,3 +92,24 @@ div.bbp-converter-updated .mini-step {
 	background-color: #aaa;
 	color: #fff;
 }
+
+._bbp_converter_db_pass_wrap {
+	position: relative;
+	display: inline-block;
+}
+
+._bbp_converter_db_pass_wrap #_bbp_converter_db_pass {
+	padding-right: 25px;
+}
+
+._bbp_converter_db_pass_wrap #_bbp_converter_db_pass[type="text"] + .bbp-db-pass-toggle:before {
+	content: '\e8fc';
+}
+
+._bbp_converter_db_pass_wrap .bbp-db-pass-toggle {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
