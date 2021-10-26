@@ -360,9 +360,16 @@ class BP_Core_Suspend {
 	 */
 	public static function check_suspend_details_exist( $suspend_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp                    = buddypress();
+		$cache_key             = 'bb_check_suspend_details_exist_' . $suspend_id;
+		$suspend_details_exist = wp_cache_get( $cache_key, 'bb' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id=%d limit 1", (int) $suspend_id ) ); // phpcs:ignore
+		if ( false === $suspend_details_exist ) {
+			$suspend_details_exist = $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id=%d limit 1", (int) $suspend_id ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $suspend_details_exist, 'bb' );
+		}
+
+		return $suspend_details_exist;
 	}
 
 	/**
@@ -409,7 +416,13 @@ class BP_Core_Suspend {
 
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s  ) WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
+			$cache_key = 'bb_check_blocked_content_' . $item_id;
+			$result    = wp_cache_get( $cache_key, 'bb' );
+
+			if ( false === $result ) {
+				$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s  ) WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
+				wp_cache_set( $cache_key, $result, 'bb' );
+			}
 
 			return ! empty( $result );
 		}
