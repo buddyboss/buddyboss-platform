@@ -155,7 +155,7 @@ class BP_Moderation_Component extends BP_Component {
 				'bb',
 				'bp_moderation',
 				'bb_moderation',
-				'bp_moderation_reporters'
+				'bp_moderation_reporters',
 			)
 		);
 
