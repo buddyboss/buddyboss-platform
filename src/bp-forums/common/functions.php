@@ -536,9 +536,9 @@ function bbp_get_statistics( $args = '' ) {
 			$topic_count_hidden = $topics['private'] + $topics['spammed'] + $topics['trashed'];
 
 			// Generate the hidden topic count's title attribute
-			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), number_format_i18n( $topics['private'] ) ) : '';
-			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), number_format_i18n( $topics['spammed'] ) ) : '';
-			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), number_format_i18n( $topics['trashed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
 
 			// Compile the hidden topic title
 			$hidden_topic_title = implode( ' | ', array_filter( $topic_titles ) );
@@ -571,9 +571,9 @@ function bbp_get_statistics( $args = '' ) {
 			$reply_count_hidden = $replies['private'] + $replies['spammed'] + $replies['trashed'];
 
 			// Generate the hidden topic count's title attribute
-			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), number_format_i18n( $replies['private'] ) ) : '';
-			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), number_format_i18n( $replies['spammed'] ) ) : '';
-			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), number_format_i18n( $replies['trashed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
 
 			// Compile the hidden replies title
 			$hidden_reply_title = implode( ' | ', array_filter( $reply_titles ) );
@@ -720,6 +720,11 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		),
 		'check_for_duplicate'
 	);
+
+	// If reply/topic content is NULL then skip checking duplicate post
+	if ( empty( $r['post_content'] ) ) {
+		return true;
+	}
 
 	// Check for anonymous post
 	if ( empty( $r['post_author'] ) && ( ! empty( $r['anonymous_data'] ) && ! empty( $r['anonymous_data']['bbp_anonymous_email'] ) ) ) {
@@ -1160,7 +1165,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	$reply_content = strip_tags( bbp_get_reply_content( $reply_id ) );
+	$reply_content = bbp_filter_kses( bbp_get_reply_content( $reply_id ) );
 	$reply_url     = bbp_get_reply_url( $reply_id );
 
 	$forum_title = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
@@ -1291,7 +1296,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
-	$topic_content = strip_tags( bbp_get_topic_content( $topic_id ) );
+	$topic_content = bbp_filter_kses( bbp_get_topic_content( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
 	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
 	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
@@ -1551,8 +1556,9 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 /**
  * Query the DB and get a the child id's of public children
  *
- * @param int    $parent_id Parent id
- * @param string $post_type Post type. Defaults to 'post'
+ * @param int     $parent_id Parent id
+ * @param string  $post_type Post type. Defaults to 'post'
+ * @param boolean $force_cache flag to update cache
  * @uses bbp_get_topic_post_type() To get the topic post type
  * @uses wp_cache_get() To check if there is a cache of the children
  * @uses wpdb::prepare() To prepare the query
@@ -1562,7 +1568,7 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
  *                        parent id and post type
  * @return array The array of children
  */
-function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
+function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post', $force_cache = false ) {
 	global $wpdb;
 
 	// Bail if nothing passed
@@ -1575,7 +1581,7 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 
 	// Check for cache and set if needed
 	$child_ids = wp_cache_get( $cache_id, 'bbpress_posts' );
-	if ( false === $child_ids ) {
+	if ( false === $child_ids || $force_cache ) {
 		$post_status = array( bbp_get_public_status_id() );
 
 		// Add closed status if topic post type

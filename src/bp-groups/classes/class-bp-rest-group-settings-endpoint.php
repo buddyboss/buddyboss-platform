@@ -1095,6 +1095,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 					'value'             => '',
 					'description'       => '',
 					'is_default_option' => empty( $forum_id ),
+					'disabled'          => false,
 				);
 				foreach ( $forums as $forum ) {
 					$title = $forum->post_title;
@@ -1107,6 +1108,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 						'value'             => $forum->ID,
 						'description'       => '',
 						'is_default_option' => $forum_id === $forum->ID,
+						'disabled'          => $this->is_option_disabled( $forum, $forum_id ),
 					);
 				}
 			}
@@ -1329,6 +1331,42 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'error'  => '',
 			'notice' => $notice,
 		);
+	}
+
+	/**
+	 * Disabled dropdown options for forum.
+	 *
+	 * @param object $forum    Forum post data.
+	 * @param int    $forum_id Selected forum id.
+	 *
+	 * @uses bbp_get_forum_group_ids() Get forum group id.
+	 *
+	 * @return bool
+	 */
+	protected function is_option_disabled( $forum, $forum_id ) {
+		if ( ! bp_is_active( 'forums' ) ) {
+			return false;
+		}
+
+		if ( $forum->ID === $forum_id ) {
+			return false;
+		}
+
+		if ( ! empty( $forum->post_parent ) ) {
+			return true;
+		}
+
+		$group_ids = bbp_get_forum_group_ids( $forum->ID );
+
+		if ( ! empty( $group_ids ) ) {
+			return true;
+		}
+
+		if ( bbp_is_forum_category( $forum->ID ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
