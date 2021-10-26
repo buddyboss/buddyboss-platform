@@ -131,6 +131,10 @@ abstract class BP_Suspend_Abstract {
 			$args['action'] = 'hide';
 		}
 
+		if ( empty( $item_id ) ) {
+			return;
+		}
+
 		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$suspended_user = ! empty( $args['user_suspended'] ) ? $args['user_suspended'] : '';
 
@@ -140,11 +144,18 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 
-					if ( BP_Core_Suspend::check_hidden_content( $content_id, $content_type, true ) || BP_Core_Suspend::check_suspended_content( $content_id, $content_type, true ) ) {
+					if (
+						BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
+						BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+					) {
 						continue;
 					}
 
-					if ( ! empty( $blocked_user ) && empty( $suspended_user ) && BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user ) ) {
+					if (
+						! empty( $blocked_user ) &&
+						empty( $suspended_user ) &&
+						BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
+					) {
 						continue;
 					}
 
@@ -217,6 +228,10 @@ abstract class BP_Suspend_Abstract {
 	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
+		if ( empty( $item_id ) ) {
+			return;
+		}
+
 		if ( empty( $args['action'] ) ) {
 			$args['action'] = 'unhide';
 		}
@@ -231,7 +246,11 @@ abstract class BP_Suspend_Abstract {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
 
-					if ( ! empty( $blocked_user ) && empty( $action_suspend ) && ! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user ) ) {
+					if (
+						! empty( $blocked_user ) &&
+						empty( $action_suspend ) &&
+						! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
+					) {
 						continue;
 					}
 
@@ -241,8 +260,8 @@ abstract class BP_Suspend_Abstract {
 							|| empty( $hide_parent )
 						) &&
 						! (
-							BP_Core_Suspend::check_hidden_content( $content_id, $content_type, true ) ||
-							BP_Core_Suspend::check_suspended_content( $content_id, $content_type, true )
+							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
+							BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
 						)
 					) {
 						continue;

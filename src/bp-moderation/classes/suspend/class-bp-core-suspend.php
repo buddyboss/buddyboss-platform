@@ -420,7 +420,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether content is added for moderation or not.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int    $item_id   Item id.
 	 * @param string $item_type Item type.
