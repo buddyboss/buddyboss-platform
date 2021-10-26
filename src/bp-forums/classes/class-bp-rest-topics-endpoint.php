@@ -893,6 +893,19 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
 		if ( ! empty( $request['bbp_media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
 			if ( ! $can_send_gif ) {
@@ -1002,7 +1015,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				'post_status'    => $topic_status,
 				'post_parent'    => $forum_id,
 				'post_type'      => bbp_get_topic_post_type(),
-				'tax_input'      => $terms,
 				'comment_status' => 'closed',
 			)
 		);
@@ -1024,6 +1036,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		// update tags.
+		if ( function_exists( 'bb_add_topic_tags' ) ) {
+			bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id() );
 		}
 
 		/** Trash Check */
@@ -1546,7 +1563,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				'post_parent'  => $forum_id,
 				'post_author'  => $topic_author,
 				'post_type'    => bbp_get_topic_post_type(),
-				'tax_input'    => $terms,
 			)
 		);
 
@@ -1595,6 +1611,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		// update tags.
+		if ( function_exists( 'bb_add_topic_tags' ) ) {
+			bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 		}
 
 		// Update counts, etc...
@@ -1726,7 +1747,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( true === $retval ) {
 			$topic = bbp_get_topic( $request->get_param( 'id' ) );
-			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'delete_topic', $request->get_param( 'id' ) ) ) {
+			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'edit_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to update this topic.', 'buddyboss' ),
