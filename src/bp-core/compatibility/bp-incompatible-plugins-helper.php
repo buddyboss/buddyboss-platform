@@ -159,21 +159,23 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Exclude translatepress lang slug from URL path for only multisite
-		 * Fix for the issue: #2835
+		 * 
+		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $path
-		 * @return string $path
+		 * @param string $url URL with Language code
+		 * 
+		 * @return string $url URL without language code
 		 */
-		function bb_core_multisite_multilang_translatepress_exclude_lang_slug( $path ) {
+		function bb_core_multisite_multilang_translatepress_exclude_lang_slug( $url ) {
 			if( ! is_admin() ) {
 				$tp_settings = get_option( 'trp_settings' );
 				if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
 					foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
-					$path = str_replace( $lang_slug . '/', '', $path );
+					$url = str_replace( $lang_slug . '/', '', $url );
 					}
 				}
 			}
-			return $path;
+			return $url;
 		}
 
 		add_filter( 'bp_uri', 'bb_core_multisite_multilang_translatepress_exclude_lang_slug' );
