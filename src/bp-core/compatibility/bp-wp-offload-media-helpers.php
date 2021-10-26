@@ -64,7 +64,54 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bp_media_get_preview_image_url', array( $this, 'bp_media_offload_get_preview_url' ), PHP_INT_MAX, 5 );
 		add_filter( 'bb_video_get_thumb_url', array( $this, 'bp_video_offload_get_thumb_preview_url' ), PHP_INT_MAX, 5 );
 		add_filter( 'bb_video_get_symlink', array( $this, 'bp_video_offload_get_video_url' ), PHP_INT_MAX, 4 );
+		add_filter( 'bb_media_settings_callback_symlink_direct_access', array( $this, 'bb_media_directory_callback_check_access' ), PHP_INT_MAX, 2 );
+		add_filter( 'bb_media_check_default_access', array( $this, 'bb_media_check_default_access_access' ), PHP_INT_MAX, 1 );
 
+	}
+
+	/**
+	 * If the remove file from server selected then no need to check media permission.
+	 *
+	 * @param bool $bypass Whether to bypass check for the media directory.
+	 *
+	 * @return bool Whether to bypass check for the media directory.
+	 *
+	 * @since BuddyBoss 1.8.0
+	 */
+	public function bb_media_check_default_access_access( $bypass ) {
+		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+
+		if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
+			$bypass = true;
+		}
+
+		return $bypass;
+	}
+
+	/**
+	 * Check Media accessible.
+	 *
+	 * @param array $directory  Directory list.
+	 * @param array $sample_ids Sample uploaded ids.
+	 *
+	 * @return array|mixed
+	 *
+	 * @since BuddyBoss 1.8.0
+	 */
+	public function bb_media_directory_callback_check_access( $directory, $sample_ids ) {
+		$uploads = wp_upload_dir();
+		if ( ! empty( $directory ) && class_exists( 'AS3CF_Utils' ) ) {
+			foreach ( $sample_ids as $id => $v ) {
+				$paths = AS3CF_Utils::get_attachment_file_paths( $v, false, false, false );
+				$file  = str_replace( $uploads['basedir'], $uploads['baseurl'], $paths['original'] );
+				$fetch = wp_remote_get( $file );
+				if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+					$directory[] = $id;
+				}
+			}
+		}
+
+		return $directory;
 	}
 
 	/**
