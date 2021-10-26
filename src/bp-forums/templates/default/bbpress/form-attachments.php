@@ -6,8 +6,10 @@
  * @package BuddyBoss\Theme
  */
 
-$group_id = 0;
-$forum_id = 0;
+$group_id = apply_filters( 'bb_forum_attachment_group_id', 0 );
+$forum_id = apply_filters( 'bb_forum_attachment_forum_id', 0 );
+$topic_id = apply_filters( 'bb_forum_attachment_topic_id', 0 );
+
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }
@@ -70,7 +72,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="dropzone closed" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
