@@ -966,6 +966,8 @@ class phpBB extends BBP_Converter_Base {
 		// Replace '[/size:XXXXXXX]' with ''
 		$phpbb_uid = preg_replace( '/\[\/size:(.*?)\]/', '</span>', $phpbb_uid );
 
+		// Replace '[list]' with '<ul>'
+		$phpbb_uid = preg_replace( '/\[list\]+/', '<ul>', $phpbb_uid );
 		// Replace '[list:XXXXXXX]' with '<ul>'
 		$phpbb_uid = preg_replace( '/\[list:(.*?)\]/', '<ul>', $phpbb_uid );
 		// Replace '[list=a:XXXXXXX]' with '<ol type="a">'
@@ -976,10 +978,30 @@ class phpBB extends BBP_Converter_Base {
 		$phpbb_uid = preg_replace( '/\[\*:(.*?)\]/', '<li>', $phpbb_uid );
 		// Replace '[/*:m:XXXXXXX]' with '</li>'
 		$phpbb_uid = preg_replace( '/\[\/\*:m:(.*?)\]/', '</li>', $phpbb_uid );
+		// Replace '[/list]' with '</ul>'
+		$phpbb_uid = preg_replace( '/\[\/list\]+/', '</ul>', $phpbb_uid );
 		// Replace '[/list:u:XXXXXXX]' with '</ul>'
 		$phpbb_uid = preg_replace( '/\[\/list:u:(.*?)\]/', '</ul>', $phpbb_uid );
 		// Replace '[/list:o:XXXXXXX]' with '</ol>'
 		$phpbb_uid = preg_replace( '/\[\/list:o:(.*?)\]/', '</ol>', $phpbb_uid );
+
+		// Replace '<s>' with ''
+		$phpbb_uid = preg_replace( '/\<s\>+/', '', $phpbb_uid );
+		// Replace '</s>' with ''
+		$phpbb_uid = preg_replace( '/\<\/s\>+/', '', $phpbb_uid );
+		
+		// Replace '<e>' with ''
+		$phpbb_uid = preg_replace( '/\<e\>+/', '', $phpbb_uid );
+		// Replace '</e>' with ''
+		$phpbb_uid = preg_replace( '/\<\/e\>+/', '', $phpbb_uid );
+		
+		// Replace '<LIST>' with ''
+		$phpbb_uid = preg_replace( '/\<LIST\>+/', '', $phpbb_uid );
+		// Replace '</LIST>' with ''
+		$phpbb_uid = preg_replace( '/\<\/LIST\>+/', '', $phpbb_uid );
+		
+		// Replace '[*]' with ''
+		$phpbb_uid = preg_replace( '/\[\*\]+/', '', $phpbb_uid );
 
 		// Now that phpBB's 'magic_url' and 'bbcode_uid' have been stripped put the cleaned HTML back in $field
 		$field = $phpbb_uid;

@@ -11696,6 +11696,10 @@ div.bbp-reply-header {
   max-width: 100%;
 }
 
+#bbpress-forums div.bbp-reply-content div.bbcode_code {
+  overflow-x: auto;
+}
+
 /* =Reply to
 -------------------------------------------------------------- */
 #bbpress-forums div.bbp-reply-to {
