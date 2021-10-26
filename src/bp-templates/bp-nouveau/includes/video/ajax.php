@@ -915,6 +915,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	if ( 'true' === $reset_comment ) {
 		ob_start();
 		bp_activity_comments();
+		bp_nouveau_activity_comment_form();
 		$activity = ob_get_contents();
 		ob_end_clean();
 	}
