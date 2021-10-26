@@ -416,7 +416,7 @@ class BP_Core_Suspend {
 
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
-			$cache_key = 'bb_check_blocked_content_' . $item_id;
+			$cache_key = 'bb_check_blocked_content_' . $item_type . '_' . $item_id;
 			$result    = wp_cache_get( $cache_key, 'bb' );
 
 			if ( false === $result ) {
