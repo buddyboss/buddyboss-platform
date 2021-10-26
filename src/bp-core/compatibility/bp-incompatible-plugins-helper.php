@@ -1024,7 +1024,7 @@ add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
 /**
  * Helper functions for the gravity forms compatibility.
  * 
- * @since X.X.X
+ * @since [BBVERSION]
  */
 function bb_wp_gravity_forms_compatibility_helper() {
 
