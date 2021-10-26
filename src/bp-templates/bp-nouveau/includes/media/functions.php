@@ -135,7 +135,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'                     => __( 'File is too large ({{filesize}} MB). Max file size: {{maxFilesize}} MB.', 'buddyboss' ),
+		'dictFileTooBig'               => __( "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.", 'buddyboss' ),
 		'cover_photo_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
 		'cover_photo_size_error_description' => __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
 		'maxFiles'                           => bp_media_allowed_upload_media_per_batch(),
@@ -144,7 +144,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_media_per_batch() ) ),
+		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 	);
 
