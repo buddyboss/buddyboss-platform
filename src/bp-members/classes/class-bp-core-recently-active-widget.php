@@ -99,7 +99,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 					<?php endwhile; ?>
 	
 				</div>
-				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : 'bp-hide'; ?>">
+				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : esc_attr( 'bp-hide' ); ?>">
 					<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
 						<?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
 					</a>
