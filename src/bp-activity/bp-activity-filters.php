@@ -3004,15 +3004,17 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 /**
  * Add activity description to activity media/document/video
  *
- * @param $media
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $media Media object.
  */
 function bb_activity_update_media_video_document_description( $media ) {
-	
-	if( ! isset( $_POST ) || ! isset( $_POST['action'] ) || isset( $_POST['edit'] ) ) {
+
+	if ( ! isset( $_POST ) || ! isset( $_POST['action'] ) || isset( $_POST['edit'] ) ) {
 		return false;
 	}
 
-	if( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
+	if ( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
 		return false;
 	}
 
@@ -3020,20 +3022,22 @@ function bb_activity_update_media_video_document_description( $media ) {
 		return false;
 	}
 
-	$attachment_id 		= $media->attachment_id;
-	$activity_content 	= filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+	$attachment_id    = $media->attachment_id;
+	$activity_content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
 
 	/**
 	 * Filters the new activity content for current activity item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $activity_content Activity content posted by user.
 	 */
 	$activity_content = apply_filters( 'bb_activity_new_media_content', $activity_content );
 
-	$attachment 		= array(
-		'ID' 			=> $attachment_id,
-		'post_content' 	=> $activity_content
+	$attachment = array(
+		'ID'           => $attachment_id,
+		'post_content' => $activity_content,
 	);
-	
+
 	wp_update_post( $attachment );
 }
