@@ -405,7 +405,7 @@ window.bp = window.bp || {};
 			var postData    = {
 				'page_no': currentPage,
 				'thread_id': threadId,
-				'exclude_current_user': true,
+				'exclude_current_user': 'bp_load_more' === bpAction ? true : false,
 				'exclude_moderated_members': 'bp_load_more' === bpAction ? true : false,
 			};
 			$.ajax( {
