@@ -64,6 +64,12 @@ add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999
 add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
 add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
 
+// Widget display name.
+add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
+add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
+add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
+add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
