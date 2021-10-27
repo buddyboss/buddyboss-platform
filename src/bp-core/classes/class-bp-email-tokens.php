@@ -192,7 +192,7 @@ class BP_Email_Tokens {
 													)
 												);
 												?>
-												<img alt="" src="<?php echo esc_attr( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
+												<img alt="" src="<?php echo esc_url( $group_avatar ); ?>" width="100" height="100" border="0" style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
@@ -329,7 +329,7 @@ class BP_Email_Tokens {
 						);
 						?>
 						<a href="<?php echo bp_get_group_permalink( $group ); ?>" style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
-							<img alt="" src="<?php echo esc_attr( $avatar_url ); ?>" width="100" height="100" style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border:3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" border="0"/>
+							<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="100" height="100" style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border:3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" border="0"/>
 						</a>
 					</td>
 					<td>
@@ -666,7 +666,7 @@ class BP_Email_Tokens {
 			</tr>
 
 			<tr>
-				<td><a href="<?php echo esc_attr( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a></td>
+				<td><a href="<?php echo esc_url( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a></td>
 			</tr>
 		</table>
 		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
@@ -843,7 +843,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -915,8 +915,8 @@ class BP_Email_Tokens {
 													)
 												);
 											?>
-											<a class="avatar-wrap mobile-center" href="<?php echo bp_core_get_user_domain( $member_id ); ?>" style="display: block; border-radius: 3px; width: 140px;">
-												<img alt="" src="<?php echo esc_attr( $avatar_src ); ?>" width="140" height="140" style="margin:0; padding:0; border:none; display:block;" border="0" />
+											<a class="avatar-wrap mobile-center" href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" style="display: block; border-radius: 3px; width: 140px;">
+												<img alt="" src="<?php echo esc_url( $avatar_src ); ?>" width="140" height="140" style="margin:0; padding:0; border:none; display:block;" border="0" />
 											</a>
 										</td>
 										<td width="4%" class="mobile-hide">&nbsp;</td>
@@ -1194,7 +1194,7 @@ class BP_Email_Tokens {
 						<tbody>
 						<tr>
 							<td valign="middle" width="65px" style="vertical-align: middle;">
-								<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_reply_author_id( $formatted_tokens['reply.id'] ) ) ); ?>" target="_blank" rel="nofollow">
+								<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( bbp_get_reply_author_id( $formatted_tokens['reply.id'] ) ) ); ?>" target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar(
 										array(
@@ -1206,7 +1206,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img alt="" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+									<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
@@ -1289,7 +1289,7 @@ class BP_Email_Tokens {
 						<tbody>
 						<tr>
 							<td valign="middle" width="65px" style="vertical-align: middle;">
-								<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ) ) ); ?>" target="_blank" rel="nofollow">
+								<a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ) ) ); ?>" target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar(
 										array(
