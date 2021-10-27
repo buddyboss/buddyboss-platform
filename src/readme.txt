@@ -72,6 +72,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Compatibility - Fixed media access notice in admin to not show when Media offloaded fully using 'WP Offload Media' plugin
 * Compatibility - Fixed 'GeoDirectory' plugin compatibility issue with Messages screen
 * Compatibility - Fixed 'TranslatePress' compatibility UI issue with News Feed
+* Translations - Updated German (formal) language files
 
 = 1.7.9 =
 * Profiles - Provided option to hide specific profile type members in search results
