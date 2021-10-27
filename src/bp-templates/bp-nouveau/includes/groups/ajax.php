@@ -1129,15 +1129,15 @@ function bp_nouveau_ajax_groups_send_message() {
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $message_users ) {
 
+		// Fetch all the group members.
+		$members = BP_Groups_Member::get_group_member_ids( (int) $group );
+
+		// Exclude logged-in user ids from the members list.
+		if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
+			$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+		}
+
 		if ( 'private' === $message_type ) {
-
-			// Fetch all the group members.
-			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
-
-			// Exclude logged-in user ids from the members list.
-			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
-				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
-			}
 
 			// Check Membership Access.
 			foreach ( $members as $k => $member ) {
@@ -1216,14 +1216,6 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		// "All Group Members" selected.
 		if ( 'all' === $message_users ) {
-
-			// Fetch all the group members.
-			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
-
-			// Exclude logged-in user ids from the members list.
-			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
-				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
-			}
 
 			// Comma separated members list to find in meta query.
 			$message_users_ids = implode( ',', $members );
