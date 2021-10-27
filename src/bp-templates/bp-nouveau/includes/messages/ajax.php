@@ -1874,10 +1874,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_message_type        = '';
 	$group_message_thread_type = '';
 	$group_message_fresh       = '';
-	$first_message             = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
+	$first_message             = BP_Messages_Thread::get_first_message( $thread_id );
 	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-	$is_group_message_thread   = bb_messages_is_group_thread( bp_get_the_thread_id() );
+	$is_group_message_thread   = bb_messages_is_group_thread( $thread_id );
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
@@ -2008,7 +2008,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 
-		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
 			unset( $thread->feedback_error );
 		}
@@ -2056,7 +2056,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$thread->thread = array(
-		'id'                              => bp_get_the_thread_id(),
+		'id'                              => $thread_id,
 		'subject'                         => wp_strip_all_tags( bp_get_the_thread_subject() ),
 		'started_date'                    => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
 		'group_id'                        => $group_id,
@@ -2343,7 +2343,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->messages[ $i ]['media'][] = array(
 						'id'            => bp_get_media_id(),
 						'message_id'    => bp_get_the_thread_message_id(),
-						'thread_id'     => bp_get_the_thread_id(),
+						'thread_id'     => $thread_id,
 						'title'         => bp_get_media_title(),
 						'attachment_id' => bp_get_media_attachment_id(),
 						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
@@ -2377,7 +2377,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->messages[ $i ]['video'][] = array(
 						'id'            => bp_get_video_id(),
 						'message_id'    => bp_get_the_thread_message_id(),
-						'thread_id'     => bp_get_the_thread_id(),
+						'thread_id'     => $thread_id,
 						'title'         => bp_get_video_title(),
 						'attachment_id' => bp_get_video_attachment_id(),
 						'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
