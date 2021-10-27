@@ -72,7 +72,7 @@ class BpGroupReports extends BP_Group_Extension {
 	protected function prepareComponentOptions() {
 		$tabName     = apply_filters( 'bp_ld_sync/reports_group_tab_name', __( 'Reports', 'buddyboss' ) );
 		$tabSlug     = apply_filters( 'bp_ld_sync/reports_group_tab_slug', 'reports' );
-		$tabPosition = apply_filters( 'bp_ld_sync/reports_group_tab_position', 15 );
+		$tabPosition = apply_filters( 'bp_ld_sync/reports_group_tab_position', 40 );
 
 		return array(
 			'name'              => $tabName,
@@ -120,7 +120,8 @@ class BpGroupReports extends BP_Group_Extension {
 
 		foreach ( bp_ld_sync( 'settings' )->get( 'reports.access', array() ) as $type ) {
 			$function = "groups_is_user_{$type}";
-			if ( function_exists( $function ) && call_user_func_array( $function, array( bp_loggedin_user_id(), $currentGroup->id ) ) ) {
+			$callback = call_user_func_array( $function, array( bp_loggedin_user_id(), $currentGroup->id ) );
+			if ( function_exists( $function ) && $callback ) {
 				return true;
 			}
 		}

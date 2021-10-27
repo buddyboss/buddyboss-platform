@@ -289,6 +289,7 @@ class BP_XProfile_Group {
 				'include_fields'                 => false,
 				'update_meta_cache'              => true,
 				'repeater_show_main_fields_only' => false,
+				'fetch_social_network_fields'    => false,
 			)
 		);
 
@@ -442,7 +443,7 @@ class BP_XProfile_Group {
 		}
 
 		// If social networks field found then remove from the $field_ids array.
-		if ( $social_networks_key > 0 ) {
+		if ( $social_networks_key > 0 && empty( $r['fetch_social_network_fields'] ) ) {
 			if ( ( $key = array_search( $social_networks_key, $field_ids ) ) !== false ) {
 				unset( $field_ids[ $key ] );
 			}

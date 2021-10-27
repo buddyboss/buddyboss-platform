@@ -163,27 +163,27 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
-		$user   = bp_rest_get_user( $request['id'] );
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you do not have access to list components.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval = true;
+			$user   = bp_rest_get_user( $request['id'] );
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you do not have access to list components.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! $user instanceof WP_User ) {
+				$retval = new WP_Error(
+					'bp_rest_member_invalid_id',
+					__( 'Invalid member ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 		}
 
 		/**
@@ -295,7 +295,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['full'] = array(
 				/* translators: Full image size for the member Avatar */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -303,7 +303,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: Thumb imaze size for the member Avatar */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),

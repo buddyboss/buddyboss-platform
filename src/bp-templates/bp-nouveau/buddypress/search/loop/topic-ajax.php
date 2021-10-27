@@ -20,7 +20,7 @@
 				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
 			</div>
 			<?php
-			$discussion_tags = get_the_terms( $topic_id, bbpress()->topic_tag_tax_id );
+			$discussion_tags = get_the_terms( get_the_ID(), bbpress()->topic_tag_tax_id );
 			$tags_count      = ( is_array( $discussion_tags ) || is_object( $discussion_tags ) ) ? count( $discussion_tags ) : 0;
 			$loop_count = 1;
 			if ( ! empty( $discussion_tags ) ) {

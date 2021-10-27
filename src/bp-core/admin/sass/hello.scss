@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-Loaded in wp-admin for query string `hello=buddyboss` and `hello=appboss`.
+Loaded in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
 
 @since BuddyPress 3.0.0
 
@@ -260,7 +260,7 @@ TABLE OF CONTENTS:
 	}
 }
 
-.bp-hello-appboss .bp-hello-footer {
+.bp-hello-buddyboss-app .bp-hello-footer {
 	border-top: none;
 }
 
@@ -318,7 +318,7 @@ TABLE OF CONTENTS:
 	background-color: rgb(255, 255, 255);
 }
 
-.bp-hello-appboss .bp-hello-content {
+.bp-hello-buddyboss-app .bp-hello-content {
 	padding: 0;
 }
 
@@ -380,7 +380,7 @@ TABLE OF CONTENTS:
 			}
 		}
 
-		&.bp-hello-appboss {
+		&.bp-hello-buddyboss-app {
 			bottom: auto;
 			width: 105vmin;
 			max-width: 900px;
@@ -431,7 +431,7 @@ TABLE OF CONTENTS:
 		padding: 0 23px;
 	}
 
-	.bp-hello-appboss .bp-hello-content {
+	.bp-hello-buddyboss-app .bp-hello-content {
 		height: calc(100% - 120px);
 		padding: 0;
 	}
@@ -456,7 +456,7 @@ TABLE OF CONTENTS:
 		right: calc((100% - 896px) / 2);
 	}
 
-	.bp-hello-appboss .bp-hello-content {
+	.bp-hello-buddyboss-app .bp-hello-content {
 		height: calc(100% - 120px);
 		padding: 0;
 	}

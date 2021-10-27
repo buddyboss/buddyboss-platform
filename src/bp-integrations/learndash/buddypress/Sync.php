@@ -46,6 +46,7 @@ class Sync {
 		add_action( 'bp_ld_sync/buddypress_group_admin_added', array( $this, 'onAdminAdded' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_mod_added', array( $this, 'onModAdded' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_member_added', array( $this, 'onMemberAdded' ), 10, 3 );
+		add_action( 'bp_ld_sync/bb_ld_before_group_member_added', array( $this, 'beforeMemberAdded' ), 10, 1 );
 
 		add_action( 'bp_ld_sync/buddypress_group_admin_removed', array( $this, 'onAdminRemoved' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_mod_removed', array( $this, 'onModRemoved' ), 10, 3 );
@@ -98,6 +99,10 @@ class Sync {
 		if ( ! $this->preCheck() ) {
 			return;
 		}
+
+		// bp to ld sync
+		$ld_group_id = groups_get_groupmeta( $groupId, '_sync_group_id' );
+		$this->generator( $ld_group_id )->updateLearndashGroup( $ld_group_id, $groupId );
 
 		$this->generator( $groupId )->fullSyncToLearndash();
 	}
@@ -176,6 +181,43 @@ class Sync {
 		}
 
 		$generator->syncBpMember( $memberId );
+	}
+
+	/**
+	 * Set the error message when user cam't join the group due to the group membership of ld.
+	 *
+	 * @param $feedback
+	 * @param $group_id
+	 *
+	 * @return mixed
+	 *
+	 * @since BuddyBoss 1.5.0
+	 */
+	public function bp_ld_sync_error_join_change_message( $feedback ) {
+		if ( ! empty( $feedback ) && isset( $feedback['type'] ) && 'error' == $feedback['type'] ) {
+			$feedback['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You are not allowed to access this group. Please purchase membership and try again.', 'buddyboss' ) );
+		}
+		return $feedback;
+	}
+
+	/**
+	 * Sync before when a member is added to the group
+	 *
+	 * @since BuddyBoss 1.5.0
+	 */
+	public function beforeMemberAdded( $groupMemberObject ) {
+		if ( ! $generator = $this->groupUserEditCheck( 'user', $groupMemberObject->group_id ) ) {
+			return false;
+		}
+
+		$groupMemberObject = $generator->syncBeforeBpMember( $groupMemberObject );
+
+		if ( empty( $groupMemberObject->group_id ) ) {
+			add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bp_ld_sync_error_join_change_message' ), 99, 1 );
+		}
+
+		return $groupMemberObject;
+
 	}
 
 	/**

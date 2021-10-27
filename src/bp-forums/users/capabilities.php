@@ -70,7 +70,7 @@ function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
 			$new_role = false;
 
 			// Users role is different than the new role
-		} else {
+		} elseif ( bbp_is_valid_role( $new_role ) ) {
 
 			// Remove the old role
 			if ( ! empty( $role ) ) {
@@ -721,4 +721,43 @@ function bbp_user_has_profile( $user_id = 0 ) {
 
 	// Filter and return
 	return (bool) apply_filters( 'bbp_show_user_profile', $retval, $user_id );
+}
+
+/**
+ * Check if a role ID is valid
+ *
+ * This helper function accepts a role ID as a string, and compares it against
+ * the array of registered dynamic roles.
+ *
+ * Use this function anytime you are manually attempting to set a user role
+ * without using the bbp_set_user_role() function, or if you need to halt
+ * additional processing during role validation.
+ *
+ * @since BBPress 2.6.5
+ *
+ * @param string $role A well-formed (string) role ID to validate
+ *
+ * @return bool True if role is valid. False if role is not valid.
+ */
+function bbp_is_valid_role( $role = '' ) {
+
+	// Default return value
+	$retval = false;
+
+	// Skip if no role to check
+	if ( ! empty( $role ) && is_string( $role ) ) {
+
+		// Get the dynamic role IDs
+		$roles = array_keys( bbp_get_dynamic_roles() );
+
+		// Skip if no known role IDs
+		if ( ! empty( $roles ) ) {
+
+			// Is role in dynamic roles array?
+			$retval = in_array( $role, $roles, true );
+		}
+	}
+
+	// Filter & return
+	return (bool) apply_filters( 'bbp_is_valid_role', $retval, $role );
 }

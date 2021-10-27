@@ -114,7 +114,7 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 
 				if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
 
-					if ( ( $course_pricing['type'] === 'open' && $progress['percentage'] === 0 ) || ( $course_pricing['type'] !== 'open' && $user_course_has_access && $progress['percentage'] === 0 ) ) {
+					if ( ( isset( $course_pricing['type'] ) && $course_pricing['type'] === 'open' && $progress['percentage'] === 0 ) || ( isset( $course_pricing['type'] ) && $course_pricing['type'] !== 'open' && $user_course_has_access && $progress['percentage'] === 0 ) ) {
 
 						echo '<div class="ld-status ld-status-progress ld-primary-background">' . __( 'Start ', 'buddyboss' ) . sprintf( __( '%s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ) . '</div>';
 

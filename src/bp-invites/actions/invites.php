@@ -162,6 +162,18 @@ function bp_member_invite_submit() {
 		update_post_meta( $post_id, '_bp_inviter_name', $inviter_name );
 		update_post_meta( $post_id, '_bp_invitee_status', 0 );
 		update_post_meta( $post_id, '_bp_invitee_member_type', $member_type );
+
+		$user_id = bp_loggedin_user_id();
+
+		/**
+		 * Fires after a member invitation sent to invitee.
+		 *
+		 * @param int $user_id Inviter user id.
+		 * @param int $post_id Invitation id.
+		 *
+		 * @since BuddyBoss 1.4.7
+		 */
+		do_action( 'bp_member_invite_submit', $user_id, $post_id );
 	}
 
 	$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );

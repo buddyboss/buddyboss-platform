@@ -125,7 +125,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'one'  => __( '1 other', 'buddyboss' ),
 			'more' => __( '%d others', 'buddyboss' ),
 		),
-		'rootUrl'                    => wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
+		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
 		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
 	);
 

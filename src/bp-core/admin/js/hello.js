@@ -1,5 +1,5 @@
 /**
- * Loads for Hello BuddyBoss/AppBoss in wp-admin for query string `hello=buddyboss` and `hello=appboss`.
+ * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
  * @since BuddyPress 3.0.0
  */
