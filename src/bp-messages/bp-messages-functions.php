@@ -857,6 +857,12 @@ function messages_notification_new_message( $raw_args = array() ) {
 			continue;
 		}
 
+		// User data and links.
+		$ud = get_userdata( $recipient->user_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
 		$unsubscribe_args = array(
 			'user_id'           => $recipient->user_id,
 			'notification_type' => 'messages-unread',
@@ -865,7 +871,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			$all_recipients[] = array(
 				'email_type' => 'messages-unread',
-				'recipient'  => $recipient->user_id,
+				'recipient'  => $ud,
 				'arguments'  => array(
 					'tokens' => array(
 						'message_id'  => $id,
@@ -881,7 +887,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 		} else {
 			bp_send_email(
 				'messages-unread',
-				$recipient->user_id,
+				$ud,
 				array(
 					'tokens' => array(
 						'message_id'  => $id,
@@ -973,6 +979,12 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			continue;
 		}
 
+		// User data and links.
+		$ud = get_userdata( $recipient->user_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
 		$unsubscribe_args = array(
 			'user_id'           => $recipient->user_id,
 			'notification_type' => 'group-message-email',
@@ -981,7 +993,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 			$all_recipients[] = array(
 				'email_type' => 'group-message-email',
-				'recipient'  => $recipient->user_id,
+				'recipient'  => $ud,
 				'arguments'  => array(
 					'tokens' => array(
 						'message_id'  => $id,
@@ -999,7 +1011,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		} else {
 			bp_send_email(
 				'group-message-email',
-				$recipient->user_id,
+				$ud,
 				array(
 					'tokens' => array(
 						'message_id'  => $id,
@@ -1295,6 +1307,7 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 	// setup post data into $_POST.
 	$_POST        = $post_data;
 	$message_args = array();
+	$message      = '';
 
 	if ( empty( $members ) ) {
 		return;
@@ -1395,8 +1408,6 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			);
 		}
 
-		$message = '';
-
 		if ( $is_background ) {
 			add_filter( 'bb_is_email_queue', 'bb_disabled_email_queue' );
 		}
@@ -1406,7 +1417,7 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 		if ( $is_background ) {
 			remove_filter( 'bb_is_email_queue', 'bb_disabled_email_queue' );
 		}
-
-		return $message;
 	}
+
+	return $message;
 }
