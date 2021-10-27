@@ -989,17 +989,17 @@ class phpBB extends BBP_Converter_Base {
 		$phpbb_uid = preg_replace( '/\<s\>+/', '', $phpbb_uid );
 		// Replace '</s>' with ''
 		$phpbb_uid = preg_replace( '/\<\/s\>+/', '', $phpbb_uid );
-		
+
 		// Replace '<e>' with ''
 		$phpbb_uid = preg_replace( '/\<e\>+/', '', $phpbb_uid );
 		// Replace '</e>' with ''
 		$phpbb_uid = preg_replace( '/\<\/e\>+/', '', $phpbb_uid );
-		
+
 		// Replace '<LIST>' with ''
 		$phpbb_uid = preg_replace( '/\<LIST\>+/', '', $phpbb_uid );
 		// Replace '</LIST>' with ''
 		$phpbb_uid = preg_replace( '/\<\/LIST\>+/', '', $phpbb_uid );
-		
+
 		// Replace '[*]' with ''
 		$phpbb_uid = preg_replace( '/\[\*\]+/', '', $phpbb_uid );
 

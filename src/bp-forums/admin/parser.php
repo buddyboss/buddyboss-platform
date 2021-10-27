@@ -1553,9 +1553,17 @@ $/Dx",
 							$this->smiley_info[ $token ] = $info;
 						}
 						$alt     = htmlspecialchars( $token );
-						$output .= '<img src="' . htmlspecialchars( $this->smiley_url . '/' . $this->smileys[ $token ] )
-						. "\" width=\"{$info[0]}\" height=\"{$info[1]}\""
-						. " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
+						$output .= '<img src="' . htmlspecialchars( $this->smiley_url . '/' . $this->smileys[ $token ] ) . '"';
+
+						if ( isset( $info[0] ) ) {
+							$output .= " width=\"{$info[0]}\"";
+						}
+
+						if ( isset( $info[1] ) ) {
+							$output .= " height=\"{$info[1]}\"";
+						}
+
+						$output .= " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
 					}
 					$is_a_smiley = ! $is_a_smiley;
 				}
@@ -2273,7 +2281,7 @@ $/Dx",
 		array_splice( $this->stack, $start );
 		$this->Internal_ComputeCurrentClass();
 		$this->Internal_CleanupWSByPoppingStack( @$tag_rule['before_tag'], $this->stack );
-		$tag_params['_endtag'] = $end_tag_params['_tag'];
+		$tag_params['_endtag'] = isset( $end_tag_params['_tag'] ) ? $end_tag_params['_tag'] : "";
 		$tag_params['_hasend'] = true;
 		$output                = $this->DoTag(
 			BBCODE_OUTPUT,

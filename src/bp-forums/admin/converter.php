@@ -456,7 +456,7 @@ class BBP_Converter {
 		$this->max = ( $this->start + $this->rows ) - 1;
 
 		// Set platform.
-		$this->platform     = get_option( '_bbp_converter_platform' );
+		$this->platform = get_option( '_bbp_converter_platform' );
 
 		// Total percentage.
 		$this->total_percentage = round( ( $this->step / $this->max_steps ) * 100, 2 );
@@ -1446,181 +1446,173 @@ abstract class BBP_Converter_Base {
 					/** Step 3 */
 
 					// Something to insert into the destination field.
-					if ( count( $insert_post ) > 0 || ( $to_type == 'tags' && count( $insert_postmeta ) > 0 ) ) {
+					switch ( $to_type ) {
 
-						switch ( $to_type ) {
+						/** New user */
 
-							/** New user */
+						case 'user':
+							if ( 0 === count( $insert_post ) ) {
+								break;
+							}
 
-							case 'user':
-								if ( username_exists( $insert_post['user_login'] ) ) {
-									$insert_post['user_login'] = "imported_{$insert_post['user_login']}";
-								}
+							if ( username_exists( $insert_post['user_login'] ) ) {
+								$insert_post['user_login'] = "imported_{$insert_post['user_login']}";
+							}
 
-								if ( email_exists( $insert_post['user_email'] ) ) {
-									$insert_post['user_email'] = "imported_{$insert_post['user_email']}";
-								}
+							if ( email_exists( $insert_post['user_email'] ) ) {
+								$insert_post['user_email'] = "imported_{$insert_post['user_email']}";
+							}
 
-								if ( empty( $insert_post['user_pass'] ) ) {
-									$insert_post['user_pass'] = '';
-								}
+							if ( empty( $insert_post['user_pass'] ) ) {
+								$insert_post['user_pass'] = '';
+							}
 
-								// Internally re-calls _exists() checks above.
-								// Also checks for existing nicename.
-								$post_id = wp_insert_user( $insert_post );
+							// Internally re-calls _exists() checks above.
+							// Also checks for existing nicename.
+							$post_id = wp_insert_user( $insert_post );
 
-								if ( is_numeric( $post_id ) ) {
-									foreach ( $insert_postmeta as $key => $value ) {
-										add_user_meta( $post_id, $key, $value, true );
+							if ( is_numeric( $post_id ) ) {
+								foreach ( $insert_postmeta as $key => $value ) {
+									add_user_meta( $post_id, $key, $value, true );
 
-										if ( '_id' == substr( $key, -3 ) && ( true === $this->sync_table ) ) {
-											$this->wpdb->insert(
-												$this->sync_table_name,
-												array(
-													'value_type' => 'user',
-													'value_id' => $post_id,
-													'meta_key' => $key,
-													'meta_value' => $value,
-												)
-											);
-										}
+									if ( '_id' == substr( $key, -3 ) && ( true === $this->sync_table ) ) {
+										$this->wpdb->insert(
+											$this->sync_table_name,
+											array(
+												'value_type' => 'user',
+												'value_id' => $post_id,
+												'meta_key' => $key,
+												'meta_value' => $value,
+											)
+										);
 									}
 								}
+							}
+							break;
+
+						/** New Topic-Tag */
+
+						case 'tags':
+							if ( 0 === count( $insert_postmeta ) ) {
 								break;
+							}
 
-							/** New Topic-Tag */
+							$post_id = wp_set_object_terms( $insert_postmeta['objectid'], $insert_postmeta['name'], 'topic-tag', true );
+							$term    = get_term_by( 'name', $insert_postmeta['name'], 'topic-tag' );
+							if ( false !== $term ) {
+								wp_update_term(
+									$term->term_id,
+									'topic-tag',
+									array(
+										'description' => $insert_postmeta['description'],
+										'slug'        => $insert_postmeta['slug'],
+									)
+								);
+							}
+							break;
 
-							case 'tags':
-								$post_id = wp_set_object_terms( $insert_postmeta['objectid'], $insert_postmeta['name'], 'topic-tag', true );
-								$term    = get_term_by( 'name', $insert_postmeta['name'], 'topic-tag' );
-								if ( false !== $term ) {
-									wp_update_term(
-										$term->term_id,
-										'topic-tag',
-										array(
-											'description' => $insert_postmeta['description'],
-											'slug'        => $insert_postmeta['slug'],
-										)
-									);
-								}
+						/** Forum Subscriptions */
+
+						case 'forum_subscriptions':
+							if ( 0 === count( $insert_postmeta ) ) {
 								break;
+							}
 
-							/** Forum Subscriptions */
+							$user_id = isset( $insert_postmeta['user_id'] ) ? $insert_postmeta['user_id'] : 0;
+							$item_id = isset( $insert_postmeta['_bbp_forum_subscriptions'] ) ? $insert_postmeta['_bbp_forum_subscriptions'] : 0;
 
-							case 'forum_subscriptions':
-								$user_id = $insert_post['user_id'];
-								$items   = wp_list_pluck( $insert_postmeta, '_bbp_forum_subscriptions' );
-								if ( is_numeric( $user_id ) && ! empty( $items ) ) {
-									foreach ( $items as $value ) {
+							if ( $user_id && $item_id ) {
+								bbp_add_user_subscription( $user_id, $this->callback_forumid( $item_id ) );
+							}
+							break;
 
-										// Maybe string with commas
-										$value = is_string( $value )
-											? explode( ',', $value )
-											: (array) $value;
+						/** Subscriptions */
 
-										// Add user ID to forums subscribed users
-										foreach ( $value as $fav ) {
-											bbp_add_user_subscription( $user_id, $this->callback_forumid( $fav ) );
-										}
+						case 'topic_subscriptions':
+							if ( 0 === count( $insert_postmeta ) ) {
+								break;
+							}
+
+							$user_id = isset( $insert_postmeta['user_id'] ) ? $insert_postmeta['user_id'] : 0;
+							$item_id = isset( $insert_postmeta['_bbp_subscriptions'] ) ? $insert_postmeta['_bbp_subscriptions'] : 0;
+
+							if ( $user_id && $item_id ) {
+								bbp_add_user_subscription( $user_id, $this->callback_topicid( $item_id ) );
+							}
+							break;
+
+						/** Favorites */
+
+						case 'favorites':
+							if ( 0 === count( $insert_postmeta ) ) {
+								break;
+							}
+
+							$user_id = isset( $insert_postmeta['user_id'] ) ? $insert_postmeta['user_id'] : 0;
+							$item_id = isset( $insert_postmeta['_bbp_favorites'] ) ? $insert_postmeta['_bbp_favorites'] : 0;
+
+							if ( $user_id && $item_id ) {
+								bbp_add_user_favorite( $user_id, $this->callback_topicid( $item_id ) );
+							}
+							break;
+
+						/** Forum, Topic, Reply */
+
+						default:
+							if ( 0 === count( $insert_post ) ) {
+								break;
+							}
+
+							$post_id = wp_insert_post( $insert_post, true );
+
+							if ( is_numeric( $post_id ) && count( $insert_postmeta ) > 0 ) {
+								foreach ( $insert_postmeta as $key => $value ) {
+									add_post_meta( $post_id, $key, $value, true );
+
+									/**
+									 * If we are using the sync_table add
+									 * the meta '_id' keys to the table
+									 *
+									 * Forums:  _bbp_old_forum_id         // The old forum ID
+									 *          _bbp_old_forum_parent_id  // The old forum parent ID
+									 *
+									 * Topics:  _bbp_forum_id             // The new forum ID
+									 *          _bbp_old_topic_id         // The old topic ID
+									 *          _bbp_old_closed_status_id // The old topic open/closed status
+									 *          _bbp_old_sticky_status_id // The old topic sticky status
+									 *
+									 * Replies: _bbp_forum_id             // The new forum ID
+									 *          _bbp_topic_id             // The new topic ID
+									 *          _bbp_old_reply_id         // The old reply ID
+									 *          _bbp_old_reply_to_id      // The old reply to ID
+									 */
+									if ( '_id' === substr( $key, -3 ) && ( true === $this->sync_table ) ) {
+										$this->wpdb->insert(
+											$this->sync_table_name,
+											array(
+												'value_type' => 'post',
+												'value_id' => $post_id,
+												'meta_key' => $key,
+												'meta_value' => $value,
+											)
+										);
+									}
+
+									/**
+									 * Replies need to save their old reply_to ID for
+									 * hierarchical replies association. Later we update
+									 * the _bbp_reply_to value with the new bbPress
+									 * value using convert_reply_to_parents()
+									 */
+									if ( ( 'reply' === $to_type ) && ( '_bbp_old_reply_to_id' === $key ) ) {
+										add_post_meta( $post_id, '_bbp_reply_to', $value );
 									}
 								}
-								break;
-
-							/** Subscriptions */
-
-							case 'topic_subscriptions':
-								$user_id = $insert_post['user_id'];
-								$items   = wp_list_pluck( $insert_postmeta, '_bbp_subscriptions' );
-								if ( is_numeric( $user_id ) && ! empty( $items ) ) {
-									foreach ( $items as $value ) {
-
-										// Maybe string with commas
-										$value = is_string( $value )
-											? explode( ',', $value )
-											: (array) $value;
-
-										// Add user ID to topics subscribed users
-										foreach ( $value as $fav ) {
-											bbp_add_user_subscription( $user_id, $this->callback_topicid( $fav ) );
-										}
-									}
-								}
-								break;
-
-							/** Favorites */
-
-							case 'favorites':
-								$user_id = $insert_post['user_id'];
-								$items   = wp_list_pluck( $insert_postmeta, '_bbp_favorites' );
-								if ( is_numeric( $user_id ) && ! empty( $items ) ) {
-									foreach ( $items as $value ) {
-
-										// Maybe string with commas
-										$value = is_string( $value )
-											? explode( ',', $value )
-											: (array) $value;
-
-										// Add user ID to topics favorited users
-										foreach ( $value as $fav ) {
-											bbp_add_user_favorite( $user_id, $this->callback_topicid( $fav ) );
-										}
-									}
-								}
-								break;
-
-							/** Forum, Topic, Reply */
-
-							default:
-								$post_id = wp_insert_post( $insert_post, true );
-
-								if ( is_numeric( $post_id ) ) {
-									foreach ( $insert_postmeta as $key => $value ) {
-										add_post_meta( $post_id, $key, $value, true );
-
-										/**
-										 * If we are using the sync_table add
-										 * the meta '_id' keys to the table
-										 *
-										 * Forums:  _bbp_old_forum_id         // The old forum ID
-										 *          _bbp_old_forum_parent_id  // The old forum parent ID
-										 *
-										 * Topics:  _bbp_forum_id             // The new forum ID
-										 *          _bbp_old_topic_id         // The old topic ID
-										 *          _bbp_old_closed_status_id // The old topic open/closed status
-										 *          _bbp_old_sticky_status_id // The old topic sticky status
-										 *
-										 * Replies: _bbp_forum_id             // The new forum ID
-										 *          _bbp_topic_id             // The new topic ID
-										 *          _bbp_old_reply_id         // The old reply ID
-										 *          _bbp_old_reply_to_id      // The old reply to ID
-										 */
-										if ( '_id' === substr( $key, -3 ) && ( true === $this->sync_table ) ) {
-											$this->wpdb->insert(
-												$this->sync_table_name,
-												array(
-													'value_type' => 'post',
-													'value_id' => $post_id,
-													'meta_key' => $key,
-													'meta_value' => $value,
-												)
-											);
-										}
-
-										/**
-										 * Replies need to save their old reply_to ID for
-										 * hierarchical replies association. Later we update
-										 * the _bbp_reply_to value with the new bbPress
-										 * value using convert_reply_to_parents()
-										 */
-										if ( ( 'reply' === $to_type ) && ( '_bbp_old_reply_to_id' === $key ) ) {
-											add_post_meta( $post_id, '_bbp_reply_to', $value );
-										}
-									}
-								}
-								break;
-						}
-						$has_insert = true;
+							}
+							break;
 					}
+					$has_insert = true;
+
 				}
 			}
 		}
