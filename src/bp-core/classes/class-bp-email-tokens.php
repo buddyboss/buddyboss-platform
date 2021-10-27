@@ -328,7 +328,7 @@ class BP_Email_Tokens {
 							)
 						);
 						?>
-						<a href="<?php echo bp_get_group_permalink( $group ); ?>" style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
+						<a href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
 							<img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="100" height="100" style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border:3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" border="0"/>
 						</a>
 					</td>
@@ -380,7 +380,7 @@ class BP_Email_Tokens {
 											);
 
 											if ( ! empty( $avatar ) ) {
-												$output .= sprintf( "<img src='%s' alt='%s' />", $avatar, bp_core_get_user_displayname( $user_id ) );
+												$output .= sprintf( "<img src='%s' alt='%s' />", esc_url( $avatar ), esc_attr( bp_core_get_user_displayname( $user_id ) ) );
 											}
 										}
 										$output .= '</span>';
