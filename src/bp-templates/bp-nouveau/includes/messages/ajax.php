@@ -1880,7 +1880,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread   = bb_messages_is_group_thread( $thread_id );
 
 	if ( ! $is_group_message_thread ) {
-		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
+		$thread = bb_user_can_send_messages( $thread, $recipients, '' );
 	}
 
 	$is_deleted_group = 0;
@@ -1954,8 +1954,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	if ( ! $group_id ) {
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 
 		if ( $group_id ) {
 			if ( bp_is_active( 'groups' ) ) {
@@ -2031,7 +2030,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
 	$un_access_users = array();
 	if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
+		foreach ( $recipients as $recipient ) {
 			if ( bp_loggedin_user_id() !== $recipient->user_id ) {
 				if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 					$un_access_users[] = false;
@@ -2042,12 +2041,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$can_message = false;
 		}
 	}
-
-	$check_recipients = (array) $thread_template->thread->recipients;
-
+	
 	// Check moderation if user blocked or not for single user thread.
-	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-		$recipient_id = current( array_keys( $check_recipients ) );
+	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $recipients ) && 1 === count( $recipients ) ) {
+		$recipient_id = current( array_keys( $recipients ) );
 		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 			$can_message = false;
 		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
@@ -2074,12 +2071,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
 
-	if ( is_array( $thread_template->thread->recipients ) ) {
+	if ( is_array( $recipients ) ) {
 		// Get the total number of recipients in the current thread.
 		$recipients_count = bb_get_thread_total_recipients_count();
 		$count            = 1;
 		$admins           = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-		foreach ( $thread_template->thread->recipients as $recipient ) {
+		foreach ( $recipients as $recipient ) {
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
