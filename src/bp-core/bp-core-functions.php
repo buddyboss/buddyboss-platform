@@ -5942,13 +5942,25 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 	$document_table = "{$wpdb->prefix}bp_document";
 
 	if ( in_array( $type, array( 'media', 'video' ) ) ) {
-		$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
-		$record    = $wpdb->get_row( $media_sql );
+		$cache_key = 'get_media_record_' . $id;
+		$record    = wp_cache_get( $cache_key, 'bp_activity' );
+
+		if ( false === $record ) {
+			$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
+			$record    = $wpdb->get_row( $media_sql );
+			wp_cache_set( $cache_key, $record, 'bp_activity' );
+		}
 	}
 
 	if ( 'document' === $type ) {
-		$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
-		$record       = $wpdb->get_row( $document_sql );
+		$cache_key = 'get_media_record_' . $id;
+		$record    = wp_cache_get( $cache_key, 'bp_activity' );
+
+		if ( false === $record ) {
+			$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
+			$record       = $wpdb->get_row( $document_sql );
+			wp_cache_set( $cache_key, $record, 'bp_activity' );
+		}
 	}
 
 	return $record;
@@ -5974,8 +5986,14 @@ function bb_moderation_suspend_record_exist( $id ) {
 
 	$suspend_table = "{$wpdb->prefix}bp_suspend";
 
-	$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
-	$record             = $wpdb->get_row( $suspend_record_sql );
+	$cache_key = 'suspend_record_exist_' . $id;
+	$record    = wp_cache_get( $cache_key, 'bp_activity' );
+
+	if ( false === $record ) {
+		$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
+		$record             = $wpdb->get_row( $suspend_record_sql );
+		wp_cache_set( $cache_key, $record, 'bp_activity' );
+	}
 
 	return $record;
 }
