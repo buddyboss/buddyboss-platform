@@ -329,3 +329,51 @@ function bb_media_symlink_validate() {
 	}
 }
 add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
+
+/**
+ * Function will remove RSS Feeds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_restricate_rss_feed_callback() {
+	if ( is_user_logged_in() ) {
+		return;
+	}
+	if ( true === bp_enable_private_rss_feeds() ) {
+		bb_restricate_rss_feed();
+	}
+}
+add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
+
+/**
+ * Function will remove REST APIs endpoint.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ */
+function bb_restricate_rest_api_callback( $response, $handler, $request ) {
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	if (
+		! is_user_logged_in() &&
+		! empty( $handler['permission_callback'] ) &&
+		(
+			( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() ) ||
+			( ! function_exists( 'bbapp_is_private_app_enabled' ) && true === bp_enable_private_rest_apis() )
+		)
+	) {
+		return bb_restricate_rest_api( $response, $handler, $request );
+	}
+
+	return $response;
+}
+
+add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
