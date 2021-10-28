@@ -5719,6 +5719,10 @@ function bb_core_enable_default_symlink_support() {
 		return;
 	}
 
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
+
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
 
