@@ -1600,17 +1600,18 @@ add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10
  */
 function bb_admin_setting_callback_private_rest_apis() {
 	$disable_field    = '';
-	$checked_checkbox = bp_enable_private_rest_apis( false );
+	$checked_checkbox = checked( bp_enable_private_rest_apis(), true, false );
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		$disable_field = "disabled=disabled";
+		$disable_field = disabled( true, true, false );
 		if ( true === bbapp_is_private_app_enabled() ) {
-			$checked_checkbox = true;
+			// Forcefully checked true because app is private.
+			$checked_checkbox = checked( true, true, false );
 		}
 	}
 	?>
 
-	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1" <?php checked( $checked_checkbox ); ?> <?php echo $disable_field; ?>/>
-	<label for="bb-enable-private-rest-apis"><?php _e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
+	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1" <?php echo esc_attr( $checked_checkbox ); ?> <?php echo esc_attr( $disable_field ); ?>/>
+	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 	printf(
 		'<p class="description">%s</p>',
@@ -1633,15 +1634,13 @@ function bb_admin_setting_callback_private_rest_apis() {
  */
 function bb_admin_setting_callback_private_rest_apis_public_content() {
 	$disable_field = '';
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		if ( false === bbapp_is_private_app_enabled() ) {
-			$disable_field = "disabled=disabled";
-		}
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
+		$disable_field = disabled( true, true, false );
 	}
 	?>
 
-	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php _e( 'Enter REST endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php echo $disable_field; ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
+	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php echo esc_attr( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
 	<?php
 	if ( function_exists( 'bbapp_is_private_app_enabled' )  ) {
 		printf(
@@ -1667,8 +1666,8 @@ function bb_admin_setting_callback_private_rest_apis_public_content() {
 function bb_admin_setting_callback_private_rss_feeds() {
 	?>
 
-	<input id="bb-enable-private-rss-feeds" name="bb-enable-private-rss-feeds" type="checkbox" value="1" <?php checked( bp_enable_private_rss_feeds( false ) ); ?>/>
-	<label for="bb-enable-private-rss-feeds"><?php _e( 'Restrict RSS Feeds access to only logged-in members', 'buddyboss' ); ?></label>
+	<input id="bb-enable-private-rss-feeds" name="bb-enable-private-rss-feeds" type="checkbox" value="1" <?php checked( bp_enable_private_rss_feeds() ); ?>/>
+	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS Feeds access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 	printf(
 		'<p class="description">%s</p>',
@@ -1692,7 +1691,7 @@ function bb_admin_setting_callback_private_rss_feeds() {
 function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	?>
 
-	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php _e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one endpoint URL or URI per line. ', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php esc_html_e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one endpoint URL or URI per line. ', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
 	<?php
 }

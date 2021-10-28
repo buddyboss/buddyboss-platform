@@ -363,14 +363,11 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	}
 
 	if ( ! is_user_logged_in() && ! empty( $handler['permission_callback'] ) ) {
-		if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-			if ( true === bbapp_is_private_app_enabled() ) {
-				return bb_restricate_rest_api( $response, $handler, $request );
-			}
-		} else {
-			if ( true === bp_enable_private_rest_apis() ) {
-				return bb_restricate_rest_api( $response, $handler, $request );
-			}
+		if (
+			( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() ) ||
+			( ! function_exists( 'bbapp_is_private_app_enabled' ) && true === bp_enable_private_rest_apis() )
+		) {
+			return bb_restricate_rest_api( $response, $handler, $request );
 		}
 	}
 	return $response;

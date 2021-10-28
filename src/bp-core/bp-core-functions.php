@@ -6067,16 +6067,61 @@ function bb_moderation_bg_update_moderation_data() {
 }
 
 /**
+ * Get all admin users.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return array
+ */
+function bb_get_all_admin_users() {
+	$args = array(
+		'role'    => 'administrator',
+		'orderby' => 'user_nicename',
+		'order'   => 'ASC',
+		'fields'  => 'id',
+	);
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		$users = array_map( 'intval', $users );
+	}
+	return $users;
+}
+
+/**
+ * Check the symlink function was disabled by server or not.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return bool
+ */
+function bb_check_server_disabled_symlink() {
+	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
+
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
+		$disabled = array_map( 'trim', $disabled );
+
+		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
+			bp_update_option( 'bp_media_symlink_support', 0 );
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Function will restrict RSS feed.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-	if ( strpos( $actual_link, 'wp-cron.php' ) === false &&
-	     strpos( $actual_link, 'wp-login.php' ) === false &&
-	     strpos( $actual_link, 'admin-ajax.php' ) === false &&
-	     strpos( $actual_link, 'wp-json' ) === false ) {
+	if (
+		strpos( $actual_link, 'wp-cron.php' ) === false &&
+		strpos( $actual_link, 'wp-login.php' ) === false &&
+		strpos( $actual_link, 'admin-ajax.php' ) === false &&
+		strpos( $actual_link, 'wp-json' ) === false
+	) {
 		$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
 		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
@@ -6127,16 +6172,13 @@ function bb_restricate_rss_feed() {
 function bb_restricate_rest_api( $response, $handler, $request ) {
 	// Get current route.
 	$current_endpoint = $request->get_route();
-
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
 	// ex: /buddyboss-app/auth/v1/jwt/token.
 	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(), $response, $handler, $request );
-
 	// Allow some endpoints which is mandatory for app.
 	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
-
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
@@ -6171,47 +6213,4 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 			}
 		}
 	}
-}
-
-/**
- * Get all admin users.
- *
- * @since BuddyBoss 1.7.6
- *
- * @return array
- */
-function bb_get_all_admin_users() {
-	$args = array(
-		'role'    => 'administrator',
-		'orderby' => 'user_nicename',
-		'order'   => 'ASC',
-		'fields'  => 'id',
-	);
-	$users = get_users( $args );
-	if ( ! empty( $users ) ) {
-		$users = array_map( 'intval', $users );
-	}
-	return $users;
-}
-
-/**
- * Check the symlink function was disabled by server or not.
- *
- * @since BuddyBoss 1.7.6
- *
- * @return bool
- */
-function bb_check_server_disabled_symlink() {
-	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
-
-		$disabled = explode( ',', ini_get( 'disable_functions' ) );
-		$disabled = array_map( 'trim', $disabled );
-
-		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
-			bp_update_option( 'bp_media_symlink_support', 0 );
-			return true;
-		}
-	}
-
-	return false;
 }

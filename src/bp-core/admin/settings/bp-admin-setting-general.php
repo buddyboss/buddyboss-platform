@@ -87,13 +87,13 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		}
 		
 		// Private REST APIs Settings.
-		$this->add_field( 'bb-enable-private-rest-apis', __( 'Private REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis', 'intval' );
+		$this->add_field( 'bb-enable-private-rest-apis', esc_html__( 'Private REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis', 'intval' );
 		if ( true === bp_enable_private_rest_apis() || function_exists( 'bbapp_is_private_app_enabled' ) ) {
 			$this->add_field( 'bb-enable-private-rest-apis-public-content', '', 'bb_admin_setting_callback_private_rest_apis_public_content', 'stripslashes' );
 		}
 		
 		// Private RSS Feeds Settings.
-		$this->add_field( 'bb-enable-private-rss-feeds', __( 'Private RSS Feeds', 'buddyboss' ), 'bb_admin_setting_callback_private_rss_feeds', 'intval' );
+		$this->add_field( 'bb-enable-private-rss-feeds', esc_html__( 'Private RSS Feeds', 'buddyboss' ), 'bb_admin_setting_callback_private_rss_feeds', 'intval' );
 		if ( true === bp_enable_private_rss_feeds() ) {
 			$this->add_field( 'bb-enable-private-rss-feeds-public-content', '', 'bb_admin_setting_callback_private_rss_feeds_public_content', 'stripslashes' );
 		}
