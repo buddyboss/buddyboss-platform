@@ -2955,7 +2955,15 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
 
-	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
+	$cache_key = 'get_folder_document_ids_' . $folder_id;
+	$result    = wp_cache_get( $cache_key, 'bp_document_folder' );
+
+	if ( false === $result ) {
+		$result = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
+		wp_cache_set( $cache_key, $result, 'bp_document_folder' );
+	}
+
+	return $result;
 }
 
 /**
@@ -3032,8 +3040,14 @@ function bp_document_get_folder_attachment_ids( $folder_id ) {
 
 	$table = $bp->document->table_name;
 
-	$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE folder_id = %d", $folder_id );
-	$data                       = $wpdb->get_results( $documents_attachment_query ); // db call ok; no-cache ok;
+	$cache_key = 'get_folder_attachment_ids_' . $folder_id;
+	$data      = wp_cache_get( $cache_key, 'bp_document_folder' );
+
+	if ( false === $data ) {
+		$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE folder_id = %d", $folder_id );
+		$data                       = $wpdb->get_results( $documents_attachment_query ); // db call ok; no-cache ok;
+		wp_cache_set( $cache_key, $data, 'bp_document_folder' );
+	}
 
 	return $data;
 
@@ -3051,8 +3065,16 @@ function bp_document_get_folder_children( $folder_id ) {
 	global $bp, $wpdb;
 	$table = $bp->document->table_name_folder;
 
-	$query = $wpdb->prepare( "SELECT id FROM `{$table}` WHERE FIND_IN_SET(`id`, ( SELECT GROUP_CONCAT(Level SEPARATOR ',') FROM ( SELECT @Ids := ( SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM `{$table}` WHERE FIND_IN_SET(`parent`, @Ids) ) Level FROM `{$table}` JOIN (SELECT @Ids := %d) temp1 ) temp2 ))", $folder_id );
-	return array_map( 'intval', $wpdb->get_col( $query ) );
+	$cache_key = 'get_folder_children_' . $folder_id;
+	$data      = wp_cache_get( $cache_key, 'bp_document_folder' );
+
+	if ( false === $data ) {
+		$query = $wpdb->prepare( "SELECT id FROM `{$table}` WHERE FIND_IN_SET(`id`, ( SELECT GROUP_CONCAT(Level SEPARATOR ',') FROM ( SELECT @Ids := ( SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM `{$table}` WHERE FIND_IN_SET(`parent`, @Ids) ) Level FROM `{$table}` JOIN (SELECT @Ids := %d) temp1 ) temp2 ))", $folder_id );
+		$data  = array_map( 'intval', $wpdb->get_col( $query ) );
+		wp_cache_set( $cache_key, $data, 'bp_document_folder' );
+	}
+
+	return $data;
 }
 
 /**
@@ -4827,31 +4849,31 @@ bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_
  * @since BuddyBoss 1.7.8
  */
 function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
-	
+
 	$privacy = array( 'public' );
-	
+
 	if ( is_user_logged_in() ) {
 		// User filtering.
 		$user_id = (int) ( empty( $user_id ) ? ( bp_displayed_user_id() ? bp_displayed_user_id() : false ) : $user_id );
-		
+
 		$privacy[] = 'loggedin';
-		
+
 		if ( bp_is_my_profile() || $user_id === bp_loggedin_user_id() ) {
 			$privacy[] = 'onlyme';
-			
+
 			if ( bp_is_active( 'friends' ) ) {
 				$privacy[] = 'friends';
 			}
 		}
-		
+
 		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
-			
+
 			// get the login user id.
 			$current_user_id = bp_loggedin_user_id();
-			
+
 			// check if the login user is friends of the display user
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
-			
+
 			/**
 			 * check if the login user is friends of the display user
 			 * OR check if the login user and the display user is the same
@@ -4861,7 +4883,7 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 			}
 		}
 	}
-	
+
 	if (
 		bp_is_group()
 		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
@@ -4869,6 +4891,6 @@ function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	) {
 		$privacy = array( 'grouponly' );
 	}
-	
+
 	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
 }
