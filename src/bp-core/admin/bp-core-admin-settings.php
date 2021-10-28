@@ -1610,9 +1610,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	}
 	?>
 
-	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"
-		<?php echo checked( $checked_checkbox ); ?>
-		<?php echo disabled( $disable_field ); ?>/>
+	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"<?php echo checked( $checked_checkbox ); ?><?php echo disabled( $disable_field ); ?>/>
 	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 	printf(
