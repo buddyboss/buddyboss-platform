@@ -5416,11 +5416,16 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	}
 
 	$can_edit_privacy = true;
+	$link_image_index = 0;
 	$album_id         = 0;
 	$folder_id        = 0;
 	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 	$group_name       = '';
 
+	$link_preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+	if ( ! empty( $link_preview_data['link_image_index'] ) ) {
+		$link_image_index = $link_preview_data['link_image_index'];
+	}
 	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
 	if ( ! empty( $album_activity_id ) ) {
 		$album_id = $album_activity_id;
@@ -5463,6 +5468,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'item_id'          => $activity->item_id,
 			'object'           => $activity->component,
 			'privacy'          => $activity->privacy,
+			'link_image_index' => $link_image_index,
 		)
 	);
 }
