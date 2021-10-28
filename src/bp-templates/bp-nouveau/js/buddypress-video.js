@@ -2246,8 +2246,10 @@ window.bp = window.bp || {};
 			var self = this;
 			var target = $( event.currentTarget );
 			
-			if ( $( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' )
-			     || $( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'document-theatre' ) ) {
+			if (
+				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'media-theatre' ) ||
+				$( target ).closest( '.bb-media-model-wrapper' ).hasClass( 'document-theatre' )
+			) {
 				return false;
 			}
 			
@@ -2445,7 +2447,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		resetRemoveActivityCommentsData: function ( event ) {
+		resetRemoveActivityCommentsData: function () {
 			var self = this;
 			var currentActivityId = $( '#hidden_parent_id' ).val();
 			if ( 'undefined' !== typeof currentActivityId ) {
