@@ -6127,22 +6127,22 @@ function bb_restricate_rss_feed() {
 function bb_restricate_rest_api( $response, $handler, $request ) {
 	// Get current route.
 	$current_endpoint = $request->get_route();
-	
+
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
-	// ex: /buddyboss-app/auth/v1/jwt/token
+	// ex: /buddyboss-app/auth/v1/jwt/token.
 	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(), $response, $handler, $request );
-	
+
 	// Allow some endpoints which is mandatory for app.
 	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
-	
+
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
-		$error         = new WP_Error( 'rest_user_cannot_view', $error_message, array( 'status' => rest_authorization_required_code() ) );
+		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
 		$response      = rest_ensure_response( $error );
 	}
-	
+
 	return $response;
 }
 
