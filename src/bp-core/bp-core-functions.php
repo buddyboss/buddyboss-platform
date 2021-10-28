@@ -6133,7 +6133,7 @@ function bb_restricate_rss_feed() {
 					$current_url_explode[1] = $current_url_explode[1] . '/';
 				}
 				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
-					$defaults     = array(
+					$defaults = array(
 						'mode'     => 2,
 						'redirect' => $actual_link,
 						'root'     => bp_get_root_domain(),
@@ -6144,7 +6144,7 @@ function bb_restricate_rss_feed() {
 				}
 			}
 		} else {
-			$defaults     = array(
+			$defaults = array(
 				'mode'     => 2,
 				'redirect' => $actual_link,
 				'root'     => bp_get_root_domain(),
@@ -6178,6 +6178,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
+
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
