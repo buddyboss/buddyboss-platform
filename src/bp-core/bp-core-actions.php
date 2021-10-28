@@ -348,14 +348,14 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
 /**
  * Function will remove REST APIs endpoint.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.
  * @param array                                            $handler  Route handler used for the request.
  * @param WP_REST_Request                                  $request  Request used to generate the response.
  *
  * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_wp_error( $response ) ) {
@@ -372,6 +372,8 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	) {
 		return bb_restricate_rest_api( $response, $handler, $request );
 	}
+
 	return $response;
 }
+
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
