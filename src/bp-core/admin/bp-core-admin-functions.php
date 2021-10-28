@@ -3190,15 +3190,13 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 
 	if ( bp_is_moderation_member_blocking_enable() ) {
 		$tabs[] = array(
-			'href'  => bp_get_admin_url( add_query_arg( array(
-				'page' => 'bp-moderation',
-			), 'admin.php' ) ),
+			'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'page' => 'bp-moderation', ), 'admin.php' ) ) : bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation', ), 'admin.php' ) ),
 			'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
 
-	$reported_content_link = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) );
+	$reported_content_link = ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) ) : bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) );
 	if ( bp_is_moderation_member_blocking_enable() ) {
 		$reported_content_link = add_query_arg( array( 'tab' => 'reported-content' ), $reported_content_link );
 	}
@@ -3210,10 +3208,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	);
 
 	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array(
-			'taxonomy' => 'bpm_category',
-			'tab'      => 'report-categories'
-		), 'edit-tags.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'taxonomy' => 'bpm_category', 'tab' => 'report-categories' ), 'edit-tags.php' ) ) : bp_get_admin_url( add_query_arg( array( 'taxonomy' => 'bpm_category', 'tab' => 'report-categories' ), 'edit-tags.php' ) ),
 		'name'  => esc_html__( 'Reporting Categories', 'buddyboss' ),
 		'class' => 'bp-report-categories',
 	);

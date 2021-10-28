@@ -78,7 +78,7 @@ function bp_moderation_add_admin_menu() {
 	add_action( "load-$hook", 'bp_moderation_admin_load' );
 }
 
-add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
+add_action( 'admin_menu', 'bp_moderation_add_admin_menu', 100 );
 
 /**
  * Add moderation component to custom menus array.
