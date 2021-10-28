@@ -1266,7 +1266,7 @@ function bp_private_network_template_redirect() {
 								}
 							}
 						} else {
-							$redirect_url = is_ssl() ? 'https://' : 'http://';
+							$redirect_url  = is_ssl() ? 'https://' : 'http://';
 							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
 							$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
