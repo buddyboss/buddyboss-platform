@@ -6133,12 +6133,9 @@ function bb_restricate_rss_feed() {
 					$current_url_explode[1] = $current_url_explode[1] . '/';
 				}
 				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
-					$redirect_url = is_ssl() ? 'https://' : 'http://';
-					$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-					$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 					$defaults     = array(
 						'mode'     => 2,
-						'redirect' => $redirect_url,
+						'redirect' => $actual_link,
 						'root'     => bp_get_root_domain(),
 						'message'  => __( 'Please login to access this website.', 'buddyboss' ),
 					);
@@ -6147,12 +6144,9 @@ function bb_restricate_rss_feed() {
 				}
 			}
 		} else {
-			$redirect_url = is_ssl() ? 'https://' : 'http://';
-			$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-			$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 			$defaults     = array(
 				'mode'     => 2,
-				'redirect' => $redirect_url,
+				'redirect' => $actual_link,
 				'root'     => bp_get_root_domain(),
 				'message'  => __( 'Please login to access this website.', 'buddyboss' ),
 			);

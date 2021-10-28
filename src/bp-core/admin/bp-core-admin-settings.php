@@ -1599,18 +1599,20 @@ add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_private_rest_apis() {
-	$disable_field    = '';
-	$checked_checkbox = checked( bp_enable_private_rest_apis(), true, false );
+	$disable_field    = false;
+	$checked_checkbox = bp_enable_private_rest_apis();
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		$disable_field = disabled( true, true, false );
+		$disable_field = true;
 		if ( true === bbapp_is_private_app_enabled() ) {
 			// Forcefully checked true because app is private.
-			$checked_checkbox = checked( true, true, false );
+			$checked_checkbox = true;
 		}
 	}
 	?>
 
-	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1" <?php echo esc_attr( $checked_checkbox ); ?> <?php echo esc_attr( $disable_field ); ?>/>
+	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"
+		<?php echo checked( $checked_checkbox ); ?>
+		<?php echo disabled( $disable_field ); ?>/>
 	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 	printf(
@@ -1633,14 +1635,14 @@ function bb_admin_setting_callback_private_rest_apis() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_private_rest_apis_public_content() {
-	$disable_field = '';
+	$disable_field = false;
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
-		$disable_field = disabled( true, true, false );
+		$disable_field = true;
 	}
 	?>
 
 	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php echo esc_attr( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
+	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php echo disabled( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
 	<?php
 	if ( function_exists( 'bbapp_is_private_app_enabled' )  ) {
 		printf(
