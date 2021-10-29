@@ -3,7 +3,7 @@
  * Email queue to send emails in background process.
  *
  * @package BuddyBoss\Core
- * @since   BuddyBoss 1.7.9
+ * @since   BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Load Email Queue class
  *
- * @since BuddyBoss 1.7.9
+ * @since BuddyBoss [BBVERSION]
  */
 class BP_Email_Queue {
 
@@ -26,7 +26,7 @@ class BP_Email_Queue {
 	/**
 	 * Return the instance of this class.
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function instance() {
 		if ( is_null( self::$_instance ) ) {
@@ -39,7 +39,7 @@ class BP_Email_Queue {
 	/**
 	 * Background Process.
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_email_background_process() {
 		global $wpdb;
@@ -59,14 +59,14 @@ class BP_Email_Queue {
 				$wpdb->update( $table_name, array( 'scheduled' => true ), array( 'id' => $record['id'] ) );
 			}
 
-			$bb_email_background_updater->save()->schedule_event();
+			$bb_email_background_updater->save()->dispatch();
 		}
 	}
 
 	/**
 	 * Email queue add record
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string                   $email_type  Email type.
 	 * @param string|array|int|WP_User $to          Either an email address, user ID, WP_User object,
@@ -112,7 +112,7 @@ class BP_Email_Queue {
 	/**
 	 * Email queue delete record
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int $id Email record id.
 	 *
@@ -127,7 +127,7 @@ class BP_Email_Queue {
 	/**
 	 * Email queue get record
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int    $limit        Number of records needs to fetch.
 	 * @param string $order_column Column name for order by.
@@ -146,7 +146,7 @@ class BP_Email_Queue {
 	/**
 	 * Email queue get single record
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int $id Email record id.
 	 *
@@ -163,7 +163,7 @@ class BP_Email_Queue {
 	 *
 	 * @param array $get_records Array of data for emails.
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_email_queue_cron_cb( $get_records ) {
 		if ( ! empty( $get_records ) ) {
@@ -189,7 +189,7 @@ class BP_Email_Queue {
 	/**
 	 * Create db table for eamil queue
 	 *
-	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function create_db_table() {
 		global $wpdb;
