@@ -1980,7 +1980,7 @@ window.bp = window.bp || {};
 						return false;
 					}
 
-					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) ) ) {
+					if ( url.includes( window.location.hostname ) && ( url.includes( 'download_document_file' ) || url.includes( 'download_media_file' ) || url.includes( 'download_video_file' ) || url.includes( 'members' ) ) ) {
 						return false;
 					}
 
