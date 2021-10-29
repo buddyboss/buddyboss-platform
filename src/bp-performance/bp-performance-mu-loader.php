@@ -82,7 +82,7 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
  */
 if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
-		$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array() );
+		$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(), $current_endpoint );
 		// Allow some endpoints which is mandatory for app.
 		if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 			return $data;
