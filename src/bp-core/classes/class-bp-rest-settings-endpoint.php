@@ -477,7 +477,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$member_types = bp_get_active_member_types();
 			if ( isset( $member_types ) && ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type_id ) {
-					$option_name                                                    = bp_get_member_type_key( $member_type_id );
+					$option_name = bp_get_member_type_key( $member_type_id );
 					$results[ 'bp-enable-send-invite-member-type-' . $option_name ] = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false );
 				}
 			}

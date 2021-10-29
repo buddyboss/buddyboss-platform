@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8.1
 Requires PHP: 5.6.20
-Stable tag: 1.7.9
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.0 =
+* Profiles - Fixed Cross-Site Scripting vulnerability issue on edit and view profile
+* Groups - Fixed group type roles label 'an' and 'a' prefix issue
+* Groups - Code improvements to stop direct URL access when group tab removed using hooks
+* Forums - Fixed error on forum replies listing screen in the admin when reply moved to draft
+* Forums - Fixed forum search issue with the empty string
+* Media - Fixed symlink error on plugin activation when symlink not supported on the server
+* Media - Fixed Document popup download and edit description not showing issue
+* Messages - Fixed messages members list to not show suspended members
+* LearnDash - Fixed Learndash sub-groups sync issue with Social sub-groups
+* REST API - Fixed Media Privacy and Move option permission issue in the API
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issue to show both local and offloaded media properly
+* Compatibility - Fixed media access notice in admin to not show when Media offloaded fully using 'WP Offload Media' plugin
+* Compatibility - Fixed 'GeoDirectory' plugin compatibility issue with Messages screen
+* Compatibility - Fixed 'TranslatePress' compatibility UI issue with News Feed
+* Translations - Updated German (formal) language files
 
 = 1.7.9 =
 * Profiles - Provided option to hide specific profile type members in search results
