@@ -708,7 +708,7 @@ function bbp_topic_title( $topic_id = 0 ) {
  */
 function bbp_get_topic_title( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
-	$title    = get_the_title( $topic_id );
+	$title    = ( ! empty( $topic_id ) ) ? get_the_title( $topic_id ) : '';
 
 	return apply_filters( 'bbp_get_topic_title', $title, $topic_id );
 }
