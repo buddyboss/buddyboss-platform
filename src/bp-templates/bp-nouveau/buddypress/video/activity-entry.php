@@ -44,7 +44,7 @@ if ( $is_comment_vid ) {
 }
 ?>
 
-<div class="bb-activity-video-elem
+<div class="bb-activity-video-elem 
 <?php
 echo esc_attr( bp_get_video_id() ) . ' ';
 echo $video_template->current_video > 2 ? esc_attr( 'hide ' ) : '';

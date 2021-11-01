@@ -217,6 +217,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return mixed
 	 */
 	public function exclude_moderated_recipients( $where_conditions, $args ) {
+		global $wpdb;
+		$bp = buddypress();
 		if (
 			! isset( $args['exclude_moderated_members'] ) ||
 			(
@@ -225,13 +227,16 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		) {
 			return $where_conditions;
 		}
-
+		
 		$where          = array();
 		$hidden_members = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_members ) ) {
-			$where['suspend_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
+			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-
+		
+		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s
+								  AND ( {$this->alias}.user_suspended = 1 )", 'user' ); // phpcs:ignore
+		$where['suspend_where'] = "( r.user_id NOT IN( " . $sql . " ) )";
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
