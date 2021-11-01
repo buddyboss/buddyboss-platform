@@ -140,7 +140,7 @@ $admins            = array_map( 'intval', get_users(
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( bp_core_number_format( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -172,7 +172,7 @@ $admins            = array_map( 'intval', get_users(
 											<td>
 												<?php
 												/* translators: accessibility text */
-												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												printf( esc_html( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ) ), esc_html( bp_core_number_format( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>

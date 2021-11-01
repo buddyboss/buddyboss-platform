@@ -49,6 +49,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			return;
 		}
 
+		add_filter( 'bp_recipients_recipient_get_where_conditions', array( $this, 'exclude_moderated_recipients' ), 10, 2 );
+
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 		
@@ -196,6 +198,54 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param array $class current class object.
 		 */
 		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
+	}
+
+	/**
+	 * Exclude moderated members from message recipients lists.
+	 *
+	 * @since BuddyBoss 1.7.8
+	 *
+	 * @param array $where_conditions Recipients member where sql.
+	 * @param array $args             Array of arguments of recipients query.
+	 *
+	 * @return mixed
+	 */
+	public function exclude_moderated_recipients( $where_conditions, $args ) {
+		global $wpdb;
+		$bp = buddypress();
+		if (
+			! isset( $args['exclude_moderated_members'] ) ||
+			(
+				false === (bool) $args['exclude_moderated_members']
+			)
+		) {
+			return $where_conditions;
+		}
+		
+		$where          = array();
+		$hidden_members = bp_moderation_get_hidden_user_ids();
+		if ( ! empty( $hidden_members ) ) {
+			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
+		}
+		
+		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s
+								  AND ( {$this->alias}.user_suspended = 1 )", 'user' ); // phpcs:ignore
+		$where['suspend_where'] = "( r.user_id NOT IN( " . $sql . " ) )";
+		/**
+		 * Filters the hidden member Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.8
+		 *
+		 * @param array $where Query to hide suspended user's member.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_member_recipient_get_where_conditions', $where, $this );
 
 		if ( ! empty( array_filter( $where ) ) ) {
 			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
