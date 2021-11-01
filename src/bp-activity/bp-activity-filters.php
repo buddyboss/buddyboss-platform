@@ -173,7 +173,7 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_
  * @param array      $activity_args        Activity comment arguments.
  * @param object     $activity_post_object The post type tracking args object.
  */
-function bb_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ){
+function bb_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ) {
 	// Are mentions disabled?
 	if ( ! bp_activity_do_mentions() ) {
 		return;
