@@ -307,7 +307,7 @@ window.bp = window.bp || {};
 							}
 						);
 
-						if( $( '.header-aside-inner .user-link .avatar' ).length ){
+						if( $( '.header-aside-inner .user-link .avatar' ).length && !$( 'body' ).hasClass( 'group-avatar' ) ) {
 							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
 							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
 						}
