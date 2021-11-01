@@ -1828,33 +1828,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	$recipients = (array) $thread_template->thread->recipients;
 
-	// Strip the sender from the recipient list, and unset them if they are
-	// not alone. If they are alone, let them talk to themselves.
-	if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
-		unset( $recipients[ bp_loggedin_user_id() ] );
-	}
-
-	// Check recipients if connected or not.
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-
-		foreach ( $recipients as $recipient ) {
-			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-				if ( count( $recipients ) > 1 ) {
-					$thread->feedback_error = array(
-						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
-						'type'     => 'info',
-					);
-				} else {
-					$thread->feedback_error = array(
-						'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
-						'type'     => 'info',
-					);
-				}
-				break;
-			}
-		}
-	}
-
 	// Check moderation if user blocked or not for single user thread.
 	if ( bp_is_active( 'moderation' ) && ! empty( $recipients ) && 1 === count( $recipients ) ) {
 		$recipient_id = current( array_keys( $recipients ) );
@@ -1884,10 +1857,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 	$is_group_message_thread   = bb_messages_is_group_thread( bp_get_the_thread_id() );
-
-	if ( ! $is_group_message_thread ) {
-		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
-	}
 
 	$is_deleted_group = 0;
 	if ( ! empty( $group_id ) ) {
@@ -1960,8 +1929,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	if ( ! $group_id ) {
-		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 
 		if ( $group_id ) {
 			if ( bp_is_active( 'groups' ) ) {
@@ -2033,39 +2001,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	);
 
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
-
-	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
-	$un_access_users = array();
-	if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
-			if ( bp_loggedin_user_id() !== $recipient->user_id ) {
-				if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-					$un_access_users[] = false;
-				}
-			}
-		}
-		if ( ! empty( $un_access_users ) ) {
-			$can_message = false;
-		}
-	}
-
-	$check_recipients = (array) $thread_template->thread->recipients;
-	// Strip the sender from the recipient list, and unset them if they are
-	// not alone. If they are alone, let them talk to themselves.
-	if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-		unset( $check_recipients[ bp_loggedin_user_id() ] );
-	}
-
-	// Check moderation if user blocked or not for single user thread.
-	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
-		$recipient_id = current( array_keys( $check_recipients ) );
-		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
-			$can_message = false;
-		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
-			$can_message = false;
-		}
-	}
-
+	
 	$thread->thread = array(
 		'id'                              => bp_get_the_thread_id(),
 		'subject'                         => wp_strip_all_tags( bp_get_the_thread_subject() ),
@@ -2073,7 +2009,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'group_id'                        => $group_id,
 		'group_name'                      => html_entity_decode( ucwords( $group_name ) ),
 		'is_group_thread'                 => $is_group_thread,
-		'can_user_send_message_in_thread' => $can_message,
 		'is_deleted'                      => $is_deleted_group,
 		'group_avatar'                    => $group_avatar,
 		'group_link'                      => $group_link,
@@ -2085,12 +2020,50 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
 
-	if ( is_array( $thread_template->thread->recipients ) ) {
+	$can_message                     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
+	$un_access_users                 = array();
+	$can_message_with_is_friend_flag = false;
+	$is_friend_flag                  = false;
+	// Check recipients if connected or not.
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+		$is_friend_flag = true;
+		// Can send message.
+		if ( $can_message && ! $is_group_thread ) {
+			$can_message_with_is_friend_flag = true;
+		}
+	}
+	
+	if ( is_array( $recipients ) ) {
 		// Get the total number of recipients in the current thread.
 		$recipients_count = bb_get_thread_total_recipients_count();
 		$count            = 1;
 		$admins           = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-		foreach ( $thread_template->thread->recipients as $recipient ) {
+		foreach ( $recipients as $recipient ) {
+			// Check recipients if connected or not.
+			if ( true === $is_friend_flag ) {
+				if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+					if ( count( $recipients ) > 1 ) {
+						$thread->feedback_error = array(
+							'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
+							'type'     => 'info',
+						);
+					} else {
+						$thread->feedback_error = array(
+							'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
+							'type'     => 'info',
+						);
+					}
+				}
+			}
+			// Can send message.
+			if ( true === $can_message_with_is_friend_flag ) {
+				if ( bp_loggedin_user_id() !== $recipient->user_id ) {
+					if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+						$un_access_users[] = false;
+					}
+				}
+			}
+			// Recipient List.
 			if ( empty( $recipient->is_deleted ) ) {
 				$thread->thread['recipients']['members'][ $count ] = array(
 					'avatar'     => esc_url(
@@ -2124,6 +2097,25 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$thread->thread['recipients']['current_count'] = count( $thread->thread['recipients']['members'] );
 		$thread->thread['recipients']['per_page']      = bb_messages_recipients_per_page();
 		$thread->thread['recipients']['total_pages']   = ceil( (int) $recipients_count / (int) bb_messages_recipients_per_page() );
+		if ( ! empty( $un_access_users ) ) {
+			$can_message = false;
+		}
+	}
+	
+	// Check moderation if user blocked or not for single user thread.
+	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $recipients ) && 1 === count( $recipients ) ) {
+		$recipient_id = current( array_keys( $recipients ) );
+		if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
+			$can_message = false;
+		} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
+			$can_message = false;
+		}
+	}
+	
+	$thread->thread['can_user_send_message_in_thread'] = $can_message;
+
+	if ( ! $is_group_message_thread ) {
+		$thread = bb_user_can_send_messages( $thread, $recipients, '' );
 	}
 
 	$thread->messages = array();
@@ -2131,18 +2123,19 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	while ( bp_thread_messages() ) :
 		bp_thread_the_message();
-
-		$group_id                  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_id', true );
-		$group_message_users       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_users', true );
-		$group_message_type        = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_type', true );
-		$group_message_thread_type = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_thread_type', true );
-		$group_message_fresh       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_fresh', true );
-		$message_from              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'message_from', true );
-		$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
-		$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
-		$message_banned            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_ban', true );
-		$message_unbanned          = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
-		$message_deleted           = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
+		$bp_thread_message_id        = bp_get_the_thread_message_id();
+		$bp_thread_message_sender_id = bp_get_the_thread_message_sender_id();
+		$group_id                    = bp_messages_get_meta( $bp_thread_message_id, 'group_id', true );
+		$group_message_users         = bp_messages_get_meta( $bp_thread_message_id, 'group_message_users', true );
+		$group_message_type          = bp_messages_get_meta( $bp_thread_message_id, 'group_message_type', true );
+		$group_message_thread_type   = bp_messages_get_meta( $bp_thread_message_id, 'group_message_thread_type', true );
+		$group_message_fresh         = bp_messages_get_meta( $bp_thread_message_id, 'group_message_fresh', true );
+		$message_from                = bp_messages_get_meta( $bp_thread_message_id, 'message_from', true );
+		$message_left                = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_left', true );
+		$message_joined              = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_joined', true );
+		$message_banned              = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_ban', true );
+		$message_unbanned            = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_un_ban', true );
+		$message_deleted             = bp_messages_get_meta( $bp_thread_message_id, 'bp_messages_deleted', true );
 
 		if ( $group_id && $message_from && 'group' === $message_from ) {
 
@@ -2238,16 +2231,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'group_message_fresh'       => $group_message_fresh,
 				'message_from'              => $message_from,
 				'group_text'                => $group_text,
-				'id'                        => bp_get_the_thread_message_id(),
+				'id'                        => $bp_thread_message_id,
 				'content'                   => $content,
-				'sender_id'                 => bp_get_the_thread_message_sender_id(),
+				'sender_id'                 => $bp_thread_message_sender_id,
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
-				'sender_is_you'             => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+				'sender_is_you'             => $bp_thread_message_sender_id === bp_loggedin_user_id(),
 				'sender_avatar'             => esc_url(
 					bp_core_fetch_avatar(
 						array(
-							'item_id' => bp_get_the_thread_message_sender_id(),
+							'item_id' => $bp_thread_message_sender_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
 							'width'   => 32,
@@ -2262,11 +2255,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		} else {
 
-			$message_left     = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
-			$message_joined   = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
-			$message_banned   = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_ban', true );
-			$message_unbanned = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
-			$message_deleted  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
+			$message_left     = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_left', true );
+			$message_joined   = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_joined', true );
+			$message_banned   = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_ban', true );
+			$message_unbanned = bp_messages_get_meta( $bp_thread_message_id, 'group_message_group_un_ban', true );
+			$message_deleted  = bp_messages_get_meta( $bp_thread_message_id, 'bp_messages_deleted', true );
 
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
@@ -2285,17 +2278,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 
 			$thread->messages[ $i ] = array(
-				'id'            => bp_get_the_thread_message_id(),
+				'id'            => $bp_thread_message_id,
 				'content'       => $content,
-				'sender_id'     => bp_get_the_thread_message_sender_id(),
+				'sender_id'     => $bp_thread_message_sender_id,
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-				'is_deleted'    => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
+				'is_deleted'    => empty( get_userdata( $bp_thread_message_sender_id ) ) ? 1 : 0,
 				'sender_link'   => bp_get_the_thread_message_sender_link(),
-				'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+				'sender_is_you' => $bp_thread_message_sender_id === bp_loggedin_user_id(),
 				'sender_avatar' => esc_url(
 					bp_core_fetch_avatar(
 						array(
-							'item_id' => bp_get_the_thread_message_sender_id(),
+							'item_id' => $bp_thread_message_sender_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
 							'width'   => 32,
@@ -2310,12 +2303,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if ( bp_is_active( 'moderation' ) ) {
-			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
-			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
+			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( $bp_thread_message_sender_id );
+			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( $bp_thread_message_sender_id );
 
-			if ( bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() ) ) {
+			if ( bp_moderation_is_user_suspended( $bp_thread_message_sender_id ) ) {
 				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
-			} elseif ( bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() ) ) {
+			} elseif ( bp_moderation_is_user_blocked( $bp_thread_message_sender_id ) ) {
 				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
 			}
 		}
@@ -2323,20 +2316,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link(
 				array(
-					'message_id' => bp_get_the_thread_message_id(),
+					'message_id' => $bp_thread_message_id,
 					'url_only'   => true,
 				)
 			);
 
 			$thread->messages[ $i ]['star_link']  = $star_link;
 			$thread->messages[ $i ]['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
-			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . bp_get_the_thread_message_id() );
+			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . $bp_thread_message_id );
 		}
 
 		$is_group_thread = bb_messages_is_group_thread( $thread_id );
 
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_media_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_media_support_enabled() ) ) ) {
-			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
+			$media_ids = bp_messages_get_meta( $bp_thread_message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) && bp_has_media(
 				array(
@@ -2353,8 +2346,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					$thread->messages[ $i ]['media'][] = array(
 						'id'            => bp_get_media_id(),
-						'message_id'    => bp_get_the_thread_message_id(),
-						'thread_id'     => bp_get_the_thread_id(),
+						'message_id'    => $bp_thread_message_id,
+						'thread_id'     => $thread_id,
 						'title'         => bp_get_media_title(),
 						'attachment_id' => bp_get_media_attachment_id(),
 						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
@@ -2367,7 +2360,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
-			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+			$video_ids = bp_messages_get_meta( $bp_thread_message_id, 'bp_video_ids', true );
 
 			if (
 				! empty( $video_ids ) &&
@@ -2387,8 +2380,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					$thread->messages[ $i ]['video'][] = array(
 						'id'            => bp_get_video_id(),
-						'message_id'    => bp_get_the_thread_message_id(),
-						'thread_id'     => bp_get_the_thread_id(),
+						'message_id'    => $bp_thread_message_id,
+						'thread_id'     => $thread_id,
 						'title'         => bp_get_video_title(),
 						'attachment_id' => bp_get_video_attachment_id(),
 						'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
@@ -2401,7 +2394,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_document_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_document_support_enabled() ) ) ) {
-			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
+			$document_ids = bp_messages_get_meta( $bp_thread_message_id, 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) && bp_has_document(
 				array(
@@ -2533,7 +2526,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_groups_gif_support_enabled() ) ) ) {
-			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
+			$gif_data = bp_messages_get_meta( $bp_thread_message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
 				$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
