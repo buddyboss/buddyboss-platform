@@ -394,7 +394,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		}
 
 		$auto_generated_thumbnails['custom_image'] = $attachment_id;
-		update_post_meta( $video->attachment_id, 'video_preview_thumbnails', $auto_generated_thumbnails);
+		update_post_meta( $video->attachment_id, 'video_preview_thumbnails', $auto_generated_thumbnails );
 		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $attachment_id );
 
 		$response = $this->get_video_poster( $id, $request );
