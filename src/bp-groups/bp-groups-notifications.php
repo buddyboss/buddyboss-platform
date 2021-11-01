@@ -254,10 +254,10 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
 	// What type of promotion is this?
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$promoted_to = __( 'organizer', 'buddyboss' );
+		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
 		$type        = 'member_promoted_to_admin';
 	} else {
-		$promoted_to = __( 'moderator', 'buddyboss' );
+		$promoted_to = get_group_role_label( $group_id, 'moderator_singular_label_name' );
 		$type        = 'member_promoted_to_mod';
 	}
 
