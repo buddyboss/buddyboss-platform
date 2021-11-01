@@ -160,7 +160,7 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
-//Action notification for mentions in single page blog comments
+// Action notification for mentions in single page blog comments
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
 
 /**
