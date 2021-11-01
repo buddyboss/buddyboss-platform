@@ -76,28 +76,9 @@ function bbp_has_search_results( $args = '' ) {
 
 		// Lean on the 'perm' query var value of 'readable' to provide statuses
 	} else {
-		/**
-		 * Perm not working properly for private forum because current user should be the author of the private
-		 * forum in order to appear in search. That's why commented out this line.
-		 */
-		//$default['perm'] = 'readable';
 
-		// Adding status manually depending on the users cap.
-		$post_statuses = array(
-			bbp_get_public_status_id(),
-		);
-
-		// Add support for private status
-		if ( current_user_can( 'read_private_topics' ) ) {
-			$post_statuses[] = bbp_get_private_status_id();
-		}
-
-		if ( current_user_can( 'read_hidden_forums' ) ) {
-			$post_statuses[] = bbp_get_hidden_status_id();
-		}
-
-		// Join post statuses together
-		$default['post_status'] = implode( ',', $post_statuses );
+		$default['perm'] = 'readable';
+		
 	}
 
 	/** Setup */

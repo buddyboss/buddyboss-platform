@@ -2017,19 +2017,6 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 
 		// Add our meta query to existing
 		$meta_query[] = $forum_ids;
-
-		/**
-		 * Append - OR "_bbp_forum_id" meta key not exists in meta query.
-		 * So that forums can also be appear in search result.
-		 */
-		if ( ! empty( $forum_ids['key'] ) && '_bbp_forum_id' === $forum_ids['key'] ) {
-			$meta_query['relation'] = 'OR';
-			$meta_query[] = array(
-				'key' 		=> '_bbp_forum_id',
-				'value'		=> '',
-				'compare'	=> 'NOT EXISTS'
-			);
-		}
 		
 		// Set the meta_query var
 		$posts_query->set( 'meta_query', $meta_query );
