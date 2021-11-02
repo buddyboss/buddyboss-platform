@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Media Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Media.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Media extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Media constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -58,18 +58,25 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
+
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 1 );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+			add_action( 'bb_moderation_' . BP_Suspend_Activity_Comment::$type . '_before_delete_suspend', array( $this, 'update_suspend_data_on_activity_delete' ) );
+		}
 	}
 
 	/**
 	 * Get Blocked member's media ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_media_ids( $member_id ) {
+	public static function get_member_media_ids( $member_id, $action = '' ) {
 		$media_ids = array();
 
 		$medias = bp_media_get(
@@ -85,15 +92,23 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			$media_ids = $medias['medias'];
 		}
 
+		if ( 'hide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $media_id, self::$type, true ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
 		return $media_ids;
 	}
 
 	/**
 	 * Get Blocked group's media ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $group_id group id.
+	 * @param int    $group_id group id.
 	 *
 	 * @return array
 	 */
@@ -119,26 +134,43 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Get Media ids of blocked item [ Forums/topics/replies/activity etc ] from meta
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id  item id.
 	 * @param string $function Function Name to get meta.
+	 * @param string $action   Action name to perform.
 	 *
 	 * @return array Media IDs
 	 */
-	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta' ) {
+	public static function get_media_ids_meta( $item_id, $function = 'get_post_meta', $action = '' ) {
 		$media_ids = array();
 
 		if ( function_exists( $function ) ) {
 			if ( ! empty( $item_id ) ) {
 				$post_media = $function( $item_id, 'bp_media_ids', true );
 
-				if ( empty( $post_media ) ){
+				if ( empty( $post_media ) ) {
 					$post_media = BP_Media::get_activity_media_id( $item_id );
 				}
 
-				if ( ! empty( $post_media )  ){
-					$media_ids  = wp_parse_id_list( $post_media );
+				if ( ! empty( $post_media ) ) {
+					$media_ids = wp_parse_id_list( $post_media );
+				}
+			}
+		}
+
+		if ( 'hide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( BP_Core_Suspend::check_hidden_content( $media_id, self::$type, true ) ) {
+					unset( $media_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $k => $media_id ) {
+				if ( self::is_content_reported_hidden( $media_id, self::$type ) ) {
+					unset( $media_ids[ $k ] );
 				}
 			}
 		}
@@ -149,7 +181,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Prepare media Join SQL query to filter blocked Media
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Media Join sql.
 	 * @param array  $args     Query arguments.
@@ -167,7 +199,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden Media Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -180,7 +212,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Prepare media Where SQL query to filter blocked Media
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Media Where sql.
 	 * @param array $args             Query arguments.
@@ -198,7 +230,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden media Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's media.
 		 * @param array $class current class object.
@@ -215,7 +247,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of media
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $media_id      media id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -256,7 +288,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of media
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $media_id      media id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -310,7 +342,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Get Media's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $media_id Media id.
 	 * @param array $args     parent args.
@@ -318,13 +350,104 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $media_id, $args = array() ) {
-		return array();
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$related_contents = array();
+		$media            = new BP_Media( $media_id );
+
+		if (
+			bp_is_active( 'activity' ) &&
+			! empty( $media ) &&
+			! empty( $media->activity_id )
+		) {
+
+			/**
+			 * Remove pre-validate check.
+			 *
+			 * @since BuddyBoss 1.7.5
+			 */
+			do_action( 'bb_moderation_before_get_related_' . BP_Suspend_Activity::$type );
+
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_activity_comment_ids( $media->activity_id );
+
+			$activity = new BP_Activity_Activity( $media->activity_id );
+
+			if ( ! empty( $activity ) && ! empty( $activity->type ) ) {
+				if ( 'activity_comment' === $activity->type ) {
+					$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $activity->id;
+				} else {
+					$related_contents[ BP_Suspend_Activity::$type ][] = $activity->id;
+				}
+			}
+
+			if ( 'hide' === $action && ! empty( $media->attachment_id ) ) {
+				$attachment_id = $media->attachment_id;
+
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity  = new BP_Activity_Activity( $parent_activity_id );
+					$parent_media_ids = self::get_media_ids_meta( $parent_activity_id, 'bp_activity_get_meta', $action );
+
+					if (
+						empty( $parent_media_ids ) &&
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type ) &&
+						empty( wp_strip_all_tags( $parent_activity->content ) )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			if ( 'unhide' === $action && ! empty( $media->attachment_id ) ) {
+				$attachment_id      = $media->attachment_id;
+				$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+					if (
+						! empty( $parent_activity ) &&
+						! empty( $parent_activity->type )
+					) {
+						if ( 'activity_comment' === $parent_activity->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $parent_activity->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $parent_activity->id;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Added pre-validate check.
+			 *
+			 * @since BuddyBoss 1.7.5
+			 */
+			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
+		}
+
+		$related_contents = json_decode( wp_json_encode( $related_contents ), true );
+
+		if ( ! empty( $blocked_user ) && ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
+						unset( $related_contents[ $key ][ $k ] );
+					}
+				}
+			}
+		}
+
+		return $related_contents;
 	}
 
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Media $media Current instance of media item being saved. Passed by reference.
 	 */
@@ -344,7 +467,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			$suspended_record = BP_Core_Suspend::get_recode( $media->user_id, BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( empty( $suspended_record ) ) {
+		if ( empty( $suspended_record ) || bp_moderation_is_content_hidden( $media->id, self::$type ) ) {
 			return;
 		}
 
@@ -354,7 +477,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete the group.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $medias Array of media.
 	 */
@@ -366,6 +489,56 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 		foreach ( $medias as $media ) {
 			BP_Core_Suspend::delete_suspend( $media->id, $this->item_type );
+		}
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && did_action( 'bp_media_after_delete' ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
+	}
+
+	/**
+	 * Function to update suspend record on activity delete.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param object $activity_data activity data.
+	 */
+	public function update_suspend_data_on_activity_delete( $activity_data ) {
+		$secondary_item_id = ! empty( $activity_data->secondary_item_id ) ? $activity_data->secondary_item_id : 0;
+
+		if ( empty( $secondary_item_id ) ) {
+			return;
+		}
+
+		$medias = bp_activity_get_meta( $secondary_item_id, 'bp_media_ids', true );
+		$medias = ! empty( $medias ) ? explode( ',', $medias ) : array();
+
+		if ( ! empty( $medias ) && 1 === count( $medias ) ) {
+			foreach ( $medias as $media ) {
+				if ( bp_moderation_is_content_hidden( $media, $this->item_type ) && bp_is_active( 'activity' ) ) {
+					BP_Core_Suspend::add_suspend(
+						array(
+							'item_id'     => $secondary_item_id,
+							'item_type'   => BP_Suspend_Activity::$type,
+							'hide_parent' => 1,
+						)
+					);
+				}
+			}
 		}
 	}
 }

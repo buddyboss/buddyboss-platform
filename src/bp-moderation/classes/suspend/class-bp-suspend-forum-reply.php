@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Forum Reply Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Forum Reply.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
@@ -26,9 +26,13 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Forum_Reply constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
+
+		if ( ! bp_is_active( 'forums' ) ) {
+			return;
+		}
 
 		$this->item_type = self::$type;
 
@@ -41,7 +45,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		add_action( "save_post_{$reply_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
 		// Delete moderation data when actual reply deleted.
-		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
+		add_action( 'delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -60,18 +64,23 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		// Blocked template.
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		}
 	}
 
 	/**
 	 * Get Blocked member's reply ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_reply_ids( $member_id ) {
+	public static function get_member_reply_ids( $member_id, $action = '' ) {
 		$reply_ids = array();
 
 		$reply_query = new WP_Query(
@@ -92,13 +101,21 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			$reply_ids = $reply_query->posts;
 		}
 
+		if ( 'hide' === $action && ! empty( $reply_ids ) ) {
+			foreach ( $reply_ids as $k => $reply_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
+					unset( $reply_ids[ $k ] );
+				}
+			}
+		}
+
 		return $reply_ids;
 	}
 
 	/**
 	 * Get forum topic/reply's child replies ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $parent_id topic/reply id.
 	 *
@@ -131,7 +148,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Prepare forum reply Join SQL query to filter blocked Forum Reply
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Forum Reply Join sql.
 	 * @param object $wp_query WP_Query object.
@@ -149,7 +166,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			/**
 			 * Filters the hidden Forum Reply Where SQL statement.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array $join_sql Join sql query
 			 * @param array $class    current class object.
@@ -165,7 +182,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 				/**
 				 * Filters the hidden Forum Reply Where SQL statement.
 				 *
-				 * @since BuddyBoss 2.0.0
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param array $join_sql Join sql query
 				 * @param array $class    current class object.
@@ -180,7 +197,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Prepare forum reply Where SQL query to filter blocked Forum Reply
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array       $where_conditions Forum Reply Where sql.
 	 * @param object|null $wp_query         WP_Query object.
@@ -205,7 +222,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden forum reply Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's forum reply.
 		 * @param array $class current class object.
@@ -226,7 +243,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of forum reply
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $reply_id      forum reply id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -267,7 +284,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of reply
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $reply_id      reply id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -321,7 +338,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Update blocked comment template
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $template_names Template name.
 	 *
@@ -337,7 +354,12 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$reply_id = bbp_get_reply_id();
 
-		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( $reply_id, self::$type, true ) ) {
+			return 'loop-blocked-single-reply.php';
+		}
+
+		$author_id = BP_Moderation_Forum_Replies::get_content_owner_id( $reply_id );
+		if ( bp_moderation_is_user_suspended( $author_id ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
@@ -347,7 +369,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $reply_id reply id.
 	 * @param array $args     parent args.
@@ -356,6 +378,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $reply_id, $args = array() ) {
 		$related_contents = array();
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 
 		// related activity comment only hide if parent activity hide or comment's/parent activity's author blocked or suspended.
 		if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
@@ -368,11 +392,15 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $reply_id );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $reply_id );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $reply_id, 'get_post_meta', $action );
+		}
+
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $reply_id, 'get_post_meta', $action );
 		}
 
 		return $related_contents;
@@ -381,7 +409,7 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
@@ -412,17 +440,40 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete a reply.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
+	 * @param int $post_id Post ID.
 	 */
-	public function sync_moderation_data_on_delete( $post_id, $post ) {
+	public function sync_moderation_data_on_delete( $post_id ) {
 
-		if ( empty( $post_id ) || bbp_get_reply_post_type() !== $post->post_type ) {
+		if ( empty( $post_id ) ) {
+			return;
+		}
+
+		$post = get_post( $post_id );
+
+		if ( ! isset( $post->post_type ) || bbp_get_reply_post_type() !== $post->post_type ) {
 			return;
 		}
 
 		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && ( did_action( 'bbp_delete_reply' ) || did_action( 'bbp_trash_reply' ) ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
 	}
 }

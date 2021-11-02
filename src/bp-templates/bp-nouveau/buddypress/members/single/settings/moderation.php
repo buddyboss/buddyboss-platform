@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Users Moderation
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  * @package BuddyBoss
  * @version 2.0.0
  */

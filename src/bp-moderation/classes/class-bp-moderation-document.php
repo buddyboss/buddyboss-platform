@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Document Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Document.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Document extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Document constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -54,29 +54,47 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		// Update report button.
-		add_filter( "bp_moderation_{$this->item_type}_button_sub_items", array( $this, 'update_button_sub_items' ) );
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Prepare report button for documents when activity moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
+
+		// Prepare report button for documents when activity comment moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity_Comment::$moderation_type ) ) {
+			add_filter( 'bp_activity_comment_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
 	}
 
 	/**
 	 * Get permalink.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $document_id document id.
 	 *
 	 * @return string|void
 	 */
 	public static function get_permalink( $document_id ) {
-		return '';
+		$document = new BP_Document( $document_id );
+		return bp_document_download_link( $document->attachment_id, $document_id );
 	}
 
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $document_id Document id.
 	 *
@@ -91,14 +109,14 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Document', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Documents', 'buddyboss' );
 
 		return $content_types;
 	}
@@ -106,7 +124,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Remove hidden/blocked user's documents
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where   documents Where sql.
 	 * @param object $suspend suspend object.
@@ -125,34 +143,30 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify button sub item
+	 * Function to modify the button args
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.7.7
 	 *
-	 * @param int $item_id Item id.
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
 	 *
 	 * @return array
 	 */
-	public function update_button_sub_items( $item_id ) {
+	public function update_button_args( $args, $item_id ) {
 		$document = new BP_Document( $item_id );
 
-		if ( empty( $document->id ) ) {
+		// Remove report button if forum is group forums.
+		if ( ! empty( $document->id ) && ! empty( $document->privacy ) && in_array( $document->privacy, array( 'comment', 'forums' ), true ) ) {
 			return array();
 		}
 
-		$sub_items = array();
-		if ( bp_is_active( 'activity' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) && ! empty( $document->activity_id ) ) {
-			$sub_items['id']   = $document->activity_id;
-			$sub_items['type'] = BP_Moderation_Activity::$moderation_type;
-		}
-
-		return $sub_items;
+		return $args;
 	}
 
 	/**
 	 * Filter to check the document is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.
@@ -173,4 +187,72 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		return $retval;
 	}
 
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+		return esc_html__( 'Report Document', 'buddyboss' );
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		return esc_html__( 'Document', 'buddyboss' );
+	}
+
+	/**
+	 * Function to update activity report button arguments.
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $report_button Activity report button
+	 * @param array $args          Arguments
+	 *
+	 * @return array|string
+	 */
+	public function update_report_button_args( $report_button, $args ) {
+
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+
+		if ( empty( $activity->id ) ) {
+			return $report_button;
+		}
+
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && ! in_array( $activity->type, array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create'
+			) ) ) {
+			$explode_documents = explode( ',', $document_ids );
+			if ( ! empty( $document_id ) ) {
+				$args['button_attr']['data-bp-content-id']   = $document_id;
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			if ( 1 === count( $explode_documents ) && ! empty( current( $explode_documents ) ) ) {
+				$args['button_attr']['data-bp-content-id']   = current( $explode_documents );
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			$report_button = bp_moderation_get_report_button( $args, false );
+		}
+
+		return $report_button;
+	}
 }

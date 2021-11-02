@@ -3,7 +3,7 @@
  * Moderation Settings
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the Moderation settings sections.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  * @return array
  */
 function bp_moderation_get_settings_sections() {
@@ -23,10 +23,12 @@ function bp_moderation_get_settings_sections() {
 		'bp_moderation_settings_blocking'  => array(
 			'page'  => 'moderation',
 			'title' => __( 'Blocking', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_moderation_block_setting_tutorial',
 		),
 		'bp_moderation_settings_reporting' => array(
 			'page'  => 'moderation',
 			'title' => __( 'Reporting', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_moderation_report_setting_tutorial',
 		),
 	);
 
@@ -36,7 +38,7 @@ function bp_moderation_get_settings_sections() {
 /**
  * Get all of the settings fields.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  * @return array
  */
 function bp_moderation_get_settings_fields() {
@@ -99,7 +101,7 @@ function bp_moderation_get_settings_fields() {
 		),
 
 		'bpm_reporting_categories'  => array(
-			'title'             => __( 'Reporting Category', 'buddyboss' ),
+			'title'             => __( 'Reporting Categories', 'buddyboss' ),
 			'callback'          => 'bpm_reporting_settings_callback_categories',
 			'sanitize_callback' => '',
 			'args'              => array(),
@@ -112,7 +114,7 @@ function bp_moderation_get_settings_fields() {
 /**
  * Get settings fields by section.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $section_id Section id.
  *
@@ -134,7 +136,7 @@ function bp_moderation_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Return Moderation settings API option
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $option  Option name.
  * @param string $default Default value.
@@ -161,7 +163,7 @@ function bp_moderation_get_setting( $option, $default = '' ) {
 /**
  * Output Moderation settings API option
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $option  Option name.
  * @param string $default Default value.
@@ -173,7 +175,7 @@ function bp_moderation_setting( $option, $default = '' ) {
 /**
  * Moderation blocking Member blocking setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -191,7 +193,7 @@ function bpm_blocking_settings_callback_member_blocking() {
 /**
  * Moderation blocking auto suspend setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -215,7 +217,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 /**
  * Moderation blocking auto suspend threshold setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -228,7 +230,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
 /**
  * Moderation blocking auto suspend setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -237,7 +239,7 @@ function bpm_blocking_settings_callback_email_notification() {
 	<label for="bpm_blocking_email_notification">
 		<input name="bpm_blocking_email_notification" id="bpm_blocking_email_notification" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_blocking_email_notification_enable( false ) ); ?> />
-		<?php esc_html_e( 'Notify administrators when members have been auto-suspended.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Notify administrators when members have been automatically suspended.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -249,7 +251,7 @@ function bpm_blocking_settings_callback_email_notification() {
 /**
  * Moderation blocking Member blocking setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -293,7 +295,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 /**
  * Moderation reporting auto suspend threshold setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $content_type content type.
  *
@@ -310,7 +312,7 @@ function bpm_reporting_settings_callback_auto_hide_threshold( $content_type = ''
 /**
  * Moderation reporting auto suspend setting field
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @uses  checked() To display the checked attribute
  */
@@ -319,7 +321,7 @@ function bpm_reporting_settings_callback_email_notification() {
 	<label for="bpm_reporting_email_notification">
 		<input name="bpm_reporting_email_notification" id="bpm_reporting_email_notification" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_reporting_email_notification_enable( false ) ); ?> />
-		<?php esc_html_e( 'Notify administrators when content has been auto-hidden.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Notify administrators when content has been automatically hidden.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -327,13 +329,13 @@ function bpm_reporting_settings_callback_email_notification() {
 /**
  * Moderation reporting reproting categories
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bpm_reporting_settings_callback_categories() {
 	printf(
 		'<label>%s</label>',
 		sprintf(
-			__( '<a href="%s">Manage</a> reporting from categories form members allowed to select from frontend.', 'buddyboss' ),
+			__( '<a href="%s">Manage</a> the categories members see when reporting content in the frontend.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
 					array(

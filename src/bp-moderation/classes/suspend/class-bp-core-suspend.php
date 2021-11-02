@@ -5,7 +5,7 @@
  * This class calls all other classes associated with Suspend functionality.
  *
  * @package BuddyBoss\Suspend
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ class BP_Core_Suspend {
 	/**
 	 * BP_Core_Suspend constructor.
 	 *
-	 * @since   BuddyBoss 2.0.0
+	 * @since   BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		$this->load_on_bp_dependency();
@@ -32,7 +32,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to load all the dependencies of Suspend classes.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function load_on_bp_dependency() {
 		new BP_Suspend_Member();
@@ -63,6 +63,10 @@ class BP_Core_Suspend {
 			new BP_Suspend_Media();
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			new BP_Suspend_Video();
+		}
+
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}
@@ -73,7 +77,7 @@ class BP_Core_Suspend {
 	 *
 	 * @param array $args suspend arguments.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool|int
 	 */
@@ -92,10 +96,20 @@ class BP_Core_Suspend {
 		}
 
 		$members = false;
-		if ( ! empty( $args['blocked_user'] ) ) {
+
+		if ( isset( $args['blocked_user'] ) ) {
 			$members = $args['blocked_user'];
 			unset( $args['blocked_user'] );
 		}
+
+		/**
+		 * Hook fire before item suspended
+		 *
+		 * @since BuddyBoss 1.6.2
+		 *
+		 * @param array $args Item data.
+		 */
+		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
@@ -103,8 +117,6 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
-			unset( $args['item_id'] );
-			unset( $args['item_type'] );
 
 			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
@@ -123,13 +135,22 @@ class BP_Core_Suspend {
 			}
 		}
 
+		/**
+		 * Hook fire when item suspended
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param int $item_id item id.
+		 */
+		do_action( "bp_suspend_{$args['item_type']}_suspended", $args['item_id'] );
+
 		return ! empty( $recode ) ? $recode->id : $wpdb->insert_id;
 	}
 
 	/**
 	 * Function to get suspend entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -148,7 +169,7 @@ class BP_Core_Suspend {
 	/**
 	 * Get Suspend details entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $suspend_id suspend id.
 	 *
@@ -169,7 +190,7 @@ class BP_Core_Suspend {
 	 *
 	 * @param array $args suspend arguments.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool|int
 	 */
@@ -193,7 +214,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to get suspend entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $suspend_id Suspend id.
 	 * @param int $user_id    User id.
@@ -212,7 +233,7 @@ class BP_Core_Suspend {
 	/**
 	 * Remove Suspend user/content entry.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args suspend arguments.
 	 *
@@ -236,6 +257,15 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		/**
+		 * Hook fire before item unsuspended
+		 *
+		 * @since BuddyBoss 1.6.2
+		 *
+		 * @param array $args item id.
+		 */
+		do_action( 'bb_suspend_before_remove_suspend', $args );
+
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
 
@@ -243,8 +273,6 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
-			unset( $args['item_id'] );
-			unset( $args['item_type'] );
 
 			if ( ! empty( $member ) && empty( $action_suspend ) ) {
 				self::remove_suspend_details(
@@ -255,7 +283,21 @@ class BP_Core_Suspend {
 				);
 			}
 
-			return $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
+			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
+
+			// Remove suspend record if item is not hidden.
+			self::maybe_delete( $where['item_id'], $where['item_type'] );
+
+			/**
+			 * Hook fire when item unsuspended
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 * @param int $item_id item id.
+			 */
+			do_action( "bp_suspend_{$args['item_type']}_unsuspended", $args['item_id'] );
+
+			return $flag;
 		}
 
 		return 1;
@@ -264,7 +306,7 @@ class BP_Core_Suspend {
 	/**
 	 * Remove Suspend details entry
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where arguments.
 	 *
@@ -280,24 +322,73 @@ class BP_Core_Suspend {
 	}
 
 	/**
-	 * Conditional function
-	 */
-
-	/**
-	 * Function to check whether content is hide or not.
+	 * Function to delete suspend recode if entry is empty.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
 	 *
 	 * @return bool
 	 */
-	public static function check_hidden_content( $item_id, $item_type ) {
+	public static function maybe_delete( $item_id, $item_type ) {
+		$recode = self::get_recode( $item_id, $item_type );
+
+		if ( ! empty( $recode ) ) {
+			$hide_sitewide  = (int) $recode->hide_sitewide;
+			$hide_parent    = (int) $recode->hide_parent;
+			$user_suspended = (int) $recode->user_suspended;
+			$reported       = (int) $recode->reported;
+
+			if ( empty( $hide_sitewide ) && empty( $hide_parent ) && empty( $user_suspended ) && empty( $reported ) ) {
+				$exist = self::check_suspend_details_exist( $recode->id );
+				if ( empty( $exist ) ) {
+					self::delete_suspend( $item_id, $item_type );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Check whether suspend details exist or not.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param int $suspend_id suspend id.
+	 *
+	 * @return bool
+	 */
+	public static function check_suspend_details_exist( $suspend_id ) {
 		global $wpdb;
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+		return $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id=%d limit 1", (int) $suspend_id ) ); // phpcs:ignore
+	}
+
+	/**
+	 * Conditional function
+	 */
+
+	/**
+	 * Function to check whether content is hide or not.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
+	 *
+	 * @return bool
+	 */
+	public static function check_hidden_content( $item_id, $item_type, $force = false ) {
+		global $wpdb;
+		$bp        = buddypress();
+		$cache_key = 'bb_check_hidden_content_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
+
+		if ( false === $result || true === $force ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}
@@ -305,7 +396,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether content is related to blocked member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -329,18 +420,24 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether content is hide as suspend user's content or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
+	 * @param bool   $force     bypass caching or not.
 	 *
 	 * @return bool
 	 */
-	public static function check_suspended_content( $item_id, $item_type ) {
+	public static function check_suspended_content( $item_id, $item_type, $force = false ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_suspended_content_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
+		if ( false === $result || true === $force ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}
@@ -348,7 +445,7 @@ class BP_Core_Suspend {
 	/**
 	 * Function to check whether user is suspend or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -356,9 +453,14 @@ class BP_Core_Suspend {
 	 */
 	public static function check_user_suspend( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_user_suspend_user_' . $user_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}
@@ -366,7 +468,7 @@ class BP_Core_Suspend {
 	/**
 	 * Delete Suspend user/content entry.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
@@ -399,7 +501,7 @@ class BP_Core_Suspend {
 			/**
 			 * Hook to fire after the suspend record delete.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param object $recode Suspended record object.
 			 */

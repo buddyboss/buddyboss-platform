@@ -9,7 +9,7 @@
 ?>
 <div class="bb-dropdown-wrap">
 	<div class="location-album-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-		<span class="no-album-exists" style="display: none;"><?php esc_html_e( 'You have not created any album yet to move this photo into.', 'buddyboss' ); ?></span>
+		<span class="no-album-exists" style="display: none;"><?php esc_html_e( 'No albums found. Please create and select album.', 'buddyboss' ); ?></span>
 
 		<input type="hidden" class="bb-album-destination" value="<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>" readonly/>
 		<div class="location-album-list-wrap">
@@ -17,7 +17,7 @@
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
-						<span data-id="0"><?php esc_html_e( 'Album', 'buddyboss' ); ?></span>
+						<span data-id="0"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></span>
 					</div>
 				</div>
 			</div>

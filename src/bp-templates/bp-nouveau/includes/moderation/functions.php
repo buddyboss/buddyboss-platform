@@ -3,7 +3,7 @@
 /**
  * Moderation functions
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Scripts for the Moderation component
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $scripts The array of scripts to register
  *
@@ -35,7 +35,7 @@ function bp_nouveau_moderation_register_scripts( $scripts = array() ) {
 /**
  * Enqueue the moderation scripts
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_nouveau_moderation_enqueue_scripts() {
 
@@ -45,7 +45,7 @@ function bp_nouveau_moderation_enqueue_scripts() {
 /**
  * Localize the strings needed for the moderation UI
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $params Associative array containing the JS Strings needed by scripts
  *

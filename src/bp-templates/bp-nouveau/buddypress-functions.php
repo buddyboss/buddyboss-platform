@@ -294,7 +294,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
 			$slug    = get_page_uri( $forum_page_id );
 			if ( '' !== $slug ) {
-				bp_update_option( '_bbp_root_slug', $slug );
+				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 				bp_update_option( 'rewrite_rules', '' );
 			}
 		}
@@ -775,6 +775,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
 		} elseif ( bp_is_document_directory() ) {
 			$nav_items = bp_nouveau_get_document_directory_nav_items();
+		} elseif ( bp_is_video_directory() ) {
+			$nav_items = bp_nouveau_get_video_directory_nav_items();
 		}
 
 		if ( empty( $nav_items ) ) {

@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Members Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Members.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Members extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Members constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -64,6 +64,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
+		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
@@ -72,7 +73,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $member_id member id.
 	 *
@@ -85,7 +86,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $member_id Group id.
 	 *
@@ -98,7 +99,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -113,7 +114,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Update where query remove blocked users
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where   blocked users Where sql.
 	 * @param object $suspend suspend object.
@@ -134,7 +135,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify the button class
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array  $button      Button args.
 	 * @param string $is_reported Item reported.
@@ -154,7 +155,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * If the displayed user is marked as a blocked, Show 404.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
@@ -169,7 +170,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Restrict User domain of blocked member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $domain  User domain link.
 	 * @param int    $user_id User id.
@@ -177,7 +178,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( empty( $username_visible ) && bp_moderation_is_user_blocked( $user_id ) ) {
 			return '';
 		}
 
@@ -187,7 +190,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Restrict User meta of blocked member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $value   User meta.
 	 * @param int    $user_id User id.
@@ -205,7 +208,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Restrict User meta name of blocked member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $value   User meta.
 	 * @param int    $user_id User id.
@@ -219,8 +222,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
-			return esc_html__( 'Blocked User', 'buddyboss' );
+		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
+			return esc_html__( 'Blocked Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -229,7 +232,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Remove Profile photo for block member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param  string $retval      The URL of the avatar.
 	 * @param  mixed  $id_or_email The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
@@ -263,7 +266,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			return buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 		}
 
 		return $retval;
@@ -272,7 +275,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get dummy URL from DB for Group and User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $avatar_url URL for a locally uploaded avatar.
 	 * @param array  $params     Array of parameters for the request.
@@ -287,7 +290,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}
@@ -298,7 +301,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the member is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.

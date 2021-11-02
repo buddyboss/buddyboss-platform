@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Forum Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Forum.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
@@ -26,9 +26,13 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Forum constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
+
+		if ( ! bp_is_active( 'forums' ) ) {
+			return;
+		}
 
 		$this->item_type = self::$type;
 
@@ -41,7 +45,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_action( "save_post_{$forum_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
 		// Delete moderation data when actual forum deleted.
-		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
+		add_action( 'delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10 );
 
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
@@ -59,18 +63,23 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_filter( 'bp_forums_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bbp_get_forum', array( $this, 'restrict_single_item' ), 10, 2 );
+
+		if ( bp_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		}
 	}
 
 	/**
 	 * Get Blocked member's forum ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id Member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_forum_ids( $member_id ) {
+	public static function get_member_forum_ids( $member_id, $action = '' ) {
 		$forum_ids = array();
 
 		$forum_query = new WP_Query(
@@ -91,13 +100,29 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			$forum_ids = $forum_query->posts;
 		}
 
+		if ( 'hide' === $action && ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $k => $form_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $form_id, self::$type, true ) ) {
+					unset( $forum_ids[ $k ] );
+				}
+			}
+		}
+
+		if ( 'unhide' === $action && ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $k => $form_id ) {
+				if ( self::is_content_reported_hidden( $form_id, self::$type ) ) {
+					unset( $forum_ids[ $k ] );
+				}
+			}
+		}
+
 		return $forum_ids;
 	}
 
 	/**
 	 * Prepare forum Join SQL query to filter blocked Forum
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Forum Join sql.
 	 * @param object $wp_query WP_Query object.
@@ -115,7 +140,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			/**
 			 * Filters the hidden forum Where SQL statement.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array $join_sql Join sql query
 			 * @param array $class    current class object.
@@ -131,7 +156,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 				/**
 				 * Filters the hidden forum Where SQL statement.
 				 *
-				 * @since BuddyBoss 2.0.0
+				 * @since BuddyBoss 1.5.6
 				 *
 				 * @param array $join_sql Join sql query
 				 * @param array $class    current class object.
@@ -146,7 +171,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Prepare forum Where SQL query to filter blocked Forum
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array       $where_conditions Forum Where sql.
 	 * @param object|null $wp_query         WP_Query object.
@@ -170,7 +195,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden forum Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's forum.
 		 * @param array $class current class object.
@@ -191,7 +216,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Restrict Single item
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param object $post   Current forum object.
 	 * @param string $output Optional. OBJECT, ARRAY_A, or ARRAY_N. Default = OBJECT.
@@ -200,9 +225,15 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $post, $output ) {
 
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $post;
+		}
+
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type, true ) ) {
 			return null;
 		}
 
@@ -212,7 +243,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of forum
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $forum_id      forum id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -265,7 +296,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of forum
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $forum_id forum id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -325,7 +356,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $forum_id forum id.
 	 * @param array $args     parent args.
@@ -334,6 +365,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $forum_id, $args = array() ) {
 		$related_contents = array();
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id );
@@ -349,7 +382,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
@@ -380,17 +413,40 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete a forum.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
+	 * @param int $post_id Post ID.
 	 */
-	public function sync_moderation_data_on_delete( $post_id, $post ) {
+	public function sync_moderation_data_on_delete( $post_id ) {
 
-		if ( empty( $post_id ) || bbp_get_forum_post_type() !== $post->post_type ) {
+		if ( empty( $post_id ) ) {
+			return;
+		}
+
+		$post = get_post( $post_id );
+
+		if ( ! isset( $post->post_type ) || bbp_get_forum_post_type() !== $post->post_type ) {
 			return;
 		}
 
 		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+	}
+
+	/**
+	 * Function to un-restrict activity data while deleting the activity.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param boolean $restrict restrict single item or not.
+	 *
+	 * @return false
+	 */
+	public function unbind_restrict_single_item( $restrict ) {
+
+		if ( empty( $restrict ) && ( did_action( 'bbp_delete_forum' ) || did_action( 'bbp_trash_forum' ) ) ) {
+			$restrict = true;
+		}
+
+		return $restrict;
 	}
 }

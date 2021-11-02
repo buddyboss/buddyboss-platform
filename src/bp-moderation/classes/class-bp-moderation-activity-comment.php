@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Activity Comment Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Activity Comment.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Activity_Comment constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -59,12 +59,20 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $activity_id activity id.
 	 *
@@ -79,7 +87,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $activity_id Activity id.
 	 *
@@ -94,14 +102,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity Comment', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss' );
 
 		return $content_types;
 	}
@@ -109,7 +117,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Update where query Remove hidden/blocked user's Activities
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where   Activity Where sql.
 	 * @param object $suspend suspend object.
@@ -130,7 +138,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Update blocked comment template
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $template_names Template name.
 	 *
@@ -155,7 +163,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify button sub item
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $comment_id Comment id.
 	 *
@@ -188,7 +196,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the activity is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.
@@ -212,7 +220,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Check content is hidden or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -220,10 +228,55 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$author_id = self::get_content_owner_id( $item_id );
 
-		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
+		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
 		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+
+		$comment = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $comment->id ) ) {
+			return $button_text;
+		}
+
+		$button_text = esc_html__( 'Report Comment', 'buddyboss' );
+
+		return $button_text;
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id      Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		$comment = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $comment->id ) ) {
+			return $content_type;
+		}
+
+		$content_type = esc_html__( 'Comment', 'buddyboss' );
+
+		return $content_type;
 	}
 }

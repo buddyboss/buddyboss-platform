@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Activity Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Activity.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Activity constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -56,18 +56,22 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 	}
 
 	/**
 	 * Get Blocked member's activity ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id member id.
+	 * @param int    $member_id member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_ids( $member_id ) {
+	public static function get_member_activity_ids( $member_id, $action = '' ) {
 		$activities_ids = array();
 
 		$activities = BP_Activity_Activity::get(
@@ -86,13 +90,21 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$activities_ids = $activities['activities'];
 		}
 
+		if ( 'hide' === $action && ! empty( $activities_ids ) ) {
+			foreach ( $activities_ids as $k => $activity_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $activity_id, self::$type, true ) ) {
+					unset( $activities_ids[ $k ] );
+				}
+			}
+		}
+
 		return $activities_ids;
 	}
 
 	/**
 	 * Get Blocked group's activity ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -124,7 +136,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Get forum activities ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $post_id post id.
 	 *
@@ -175,7 +187,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Prepare activity Join SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Activity Join sql.
 	 * @param array  $args     Query arguments.
@@ -193,7 +205,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden activity Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -206,7 +218,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Prepare activity Where SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $where_conditions Activity Where sql.
 	 * @param array $args             Query arguments.
@@ -224,7 +236,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden activity Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's activity.
 		 * @param array $class current class object.
@@ -241,7 +253,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Restrict Single item.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $activity Current activity object.
@@ -250,7 +262,17 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
+		if ( apply_filters( 'bb_moderation_restrict_single_item_' . self::$type, false, $activity ) ) {
+			return $restrict;
+		}
+
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $restrict;
+		}
+
+		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type, true ) ) {
 			return false;
 		}
 
@@ -260,7 +282,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $activity_id   activity id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -301,7 +323,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $activity_id   activity id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -355,7 +377,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $activity_id activity id.
 	 * @param array $args        parent args.
@@ -363,26 +385,59 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $activity_id, $args = array() ) {
+		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
 		);
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $activity_id, 'bp_activity_get_meta' );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta' );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
-		return $related_contents;
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
+		}
+
+		$related_content_hide = array();
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				$related_content = (array) $related_content;
+				foreach ( $related_content as $item ) {
+					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key, true ) ) && 'unhide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					}
+				}
+			}
+		}
+
+		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
+		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
+			foreach ( $related_content_hide as $key => $related_content ) {
+				foreach ( (array) $related_content as $k => $item ) {
+					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
+						unset( $related_content_hide[ $key ][ $k ] );
+					}
+				}
+			}
+		}
+
+		return $related_content_hide;
 	}
 
 	/**
 	 * Update the suspend table to add new entries.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param BP_Activity_Activity $activity Current instance of activity item being saved. Passed by reference.
 	 */
@@ -411,7 +466,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$suspended_record = BP_Core_Suspend::get_recode( $activity->user_id, BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( empty( $suspended_record ) ) {
+		if ( empty( $suspended_record ) || bp_moderation_is_content_hidden( $activity->id, self::$type ) ) {
 			return;
 		}
 
@@ -421,7 +476,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Update the suspend table to delete an activity.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $activities Array of activities.
 	 */
@@ -438,8 +493,36 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 					continue;
 				}
 
+				/**
+				 * Fires before activity suspend record delete.
+				 *
+				 * @since BuddyBoss 1.7.5
+				 *
+				 * @param object $activity_data activity data.
+				 */
+
+				do_action( 'bb_moderation_' . $this->item_type . '_before_delete_suspend', $activity );
+
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
 			}
 		}
+	}
+
+	/**
+	 * Remove Pre-validate check.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 */
+	public function remove_pre_validate_check() {
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10 );
+	}
+
+	/**
+	 * Add Pre-validate check.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 */
+	public function add_pre_validate_check() {
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 	}
 }

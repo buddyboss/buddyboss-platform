@@ -4,7 +4,7 @@
  *
  * Functions for the Moderation component.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Function to get the moderation content types.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @return mixed|void
  */
@@ -25,7 +25,7 @@ function bp_moderation_content_types() {
 	/**
 	 * Filter to update content types
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $types Content types
 	 */
@@ -35,7 +35,7 @@ function bp_moderation_content_types() {
 /**
  * Function to get specific moderation content type.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $key content type key.
  *
@@ -48,7 +48,7 @@ function bp_moderation_get_content_type( $key ) {
 	/**
 	 * Filter to update Content type
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $item_type Item item.
 	 */
@@ -61,7 +61,7 @@ function bp_moderation_get_content_type( $key ) {
  * The bp_moderation_get() function shares all arguments with
  * BP_Moderation::get().
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array|string $args See BP_Moderation::get() for description.
  *
@@ -145,7 +145,7 @@ function bp_moderation_get( $args = '' ) {
 	/**
 	 * Filters the requested moderation item(s).
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array         $r          Arguments used for the moderation query.
 	 *
@@ -163,7 +163,7 @@ function bp_moderation_get( $args = '' ) {
 /**
  * Retrieve sitewide hidden items ids of particular item type.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @return array $moderation See BP_Moderation::get() for description.
  */
@@ -197,7 +197,7 @@ function bp_moderation_get_hidden_user_ids() {
 /**
  * Function to get Report button
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args button args.
  * @param bool  $html Should return button html or not.
@@ -216,7 +216,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	/**
 	 * Filter to update report link args
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array  $button  Button args.
 	 * @param string $item_id item id.
@@ -239,8 +239,8 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} else {
-		$button_text          = __( 'Report', 'buddyboss' );
-		$reported_button_text = __( 'Reported', 'buddyboss' );
+		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
+		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
 	}
 
 	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
@@ -269,18 +269,22 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
 
 	if ( $is_reported ) {
-		$button['link_text']            = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class'] = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
-		unset( $button['button_attr']['href'] );
+		$button['link_text']                    = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
+		$button['button_attr']['class']         = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
+		$button['button_attr']['item_id']       = $item_id;
+		$button['button_attr']['item_type']     = $item_type;
+		$button['button_attr']['href']          = '#reported-content';
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
 
+	$button['button_attr']['reported_type'] = bp_moderation_get_report_type( $item_type, $item_id );
+
 	/**
 	 * Filter to update report link args
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array  $button      Button args.
 	 * @param string $is_reported Item reported.
@@ -289,16 +293,16 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		if ( $is_reported ) {
-			$button = sprintf( '<a id="%s" class="%s" >%s</a>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), wp_kses_post( $button['link_text'] ) );
+			$button = sprintf( '<a href="%s"  id="%s" class="%s" reported_type="%s" >%s</a>', $button['button_attr']['href'], esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), $button['button_attr']['reported_type'], wp_kses_post( $button['link_text'] ) );
 		} else {
-			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), wp_kses_post( $button['link_text'] ) );
+			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" reported_type="%s" >%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), $button['button_attr']['reported_type'], wp_kses_post( $button['link_text'] ) );
 		}
 	}
 
 	/**
 	 * Filter to update report link
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param mixed $button Button args or HTML.
 	 * @param array $args   button args.
@@ -310,7 +314,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 /**
  * Function to Check content Reported by current usr or not.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $item_id   Item id.
  * @param string $item_type Item type.
@@ -331,7 +335,7 @@ function bp_moderation_report_exist( $item_id, $item_type ) {
 /**
  * Check whether a user has been marked as a blocked by current user.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $user_id The ID for the user.
  *
@@ -348,7 +352,7 @@ function bp_moderation_is_user_blocked( $user_id ) {
 /**
  * Check user is suspended or not.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $user_id user id.
  *
@@ -361,7 +365,7 @@ function bp_moderation_is_user_suspended( $user_id ) {
 /**
  * Function to get sub items.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $item_id   Item id.
  * @param string $item_type Item type.
@@ -374,7 +378,7 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
 	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
 	 * Like For Forum create activity, When reporting Activity it'll report actual forum
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array  $button      Button args.
 	 * @param string $is_reported Item reported.
@@ -398,7 +402,7 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
  * @param string $item_type       Item Type.
  * @param string $bypass_validate Should validate items or not.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @return bool
  */
@@ -411,7 +415,7 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	/**
 	 * Filter to check the current permission.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $boolean Check its true/false.
 	 * @param string $item_id item id.
@@ -434,7 +438,7 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	/**
 	 * Filter to check the item_id is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $boolean Check item is valid or not.
 	 * @param string $item_id item id.
@@ -468,7 +472,7 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
  * @param string $item_type       Item Type.
  * @param string $bypass_validate Should validate items or not.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @return bool
  */
@@ -481,7 +485,7 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	/**
 	 * Filter to check the current permission.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $boolean Check its true/false.
 	 * @param string $item_id item id.
@@ -504,7 +508,7 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	/**
 	 * Filter to check the item_id is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $boolean Check item is valid or not.
 	 * @param string $item_id item id.
@@ -547,7 +551,7 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
  * @param int    $item_id   Item ID.
  * @param string $item_type Item Type.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @return bool
  */
@@ -573,7 +577,7 @@ function bp_moderation_is_content_hidden( $item_id, $item_type ) {
 /**
  * Function to Report content.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Report args.
  *
@@ -596,7 +600,7 @@ function bp_moderation_add( $args = array() ) {
 /**
  * Function to hide content.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Report args.
  *
@@ -619,7 +623,7 @@ function bp_moderation_hide( $args = array() ) {
 /**
  * Function to unhide content.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Report args.
  *
@@ -642,7 +646,7 @@ function bp_moderation_unhide( $args = array() ) {
 /**
  * Function to unhide content.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args Report args.
  *
@@ -667,7 +671,7 @@ function bp_moderation_delete( $args = array() ) {
 /**
  * Get metadata for a given moderation item.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $moderation_id ID of the moderation item whose metadata is being requested.
  * @param string $meta_key      Optional. If present, only the metadata matching
@@ -687,7 +691,7 @@ function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = t
 	/**
 	 * Filters the metadata for a specified moderation item.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param mixed  $retval        The meta values for the moderation item.
 	 * @param int    $moderation_id ID of the moderation item.
@@ -700,7 +704,7 @@ function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = t
 /**
  * Add a piece of moderation metadata.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $moderation_id ID of the moderation item.
  * @param string $meta_key      Metadata key.
@@ -722,7 +726,7 @@ function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique
 /**
  * Update a piece of moderation meta.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $moderation_id ID of the moderation item whose metadata is being updated.
  * @param string $meta_key      Key of the metadata being updated.
@@ -745,7 +749,7 @@ function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $pre
 /**
  * Delete a meta entry from the DB for an moderation item.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
  * @param string $meta_key      Optional. The key of the metadata being deleted. If
@@ -790,7 +794,7 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 /**
  * Checks if Moderation Member blocking feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -804,7 +808,7 @@ function bp_is_moderation_member_blocking_enable( $default = 0 ) {
 /**
  * Checks if Moderation Member auto suspend feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -818,7 +822,7 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
 /**
  * Checks if Moderation Member auto suspend feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -833,7 +837,7 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
 /**
  * Checks if Moderation Member auto suspend email notification feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -847,7 +851,7 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
 /**
  * Checks if Moderation content reporting feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $default      bool Optional.Default value true.
  * @param string $content_type content type.
@@ -884,7 +888,7 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 /**
  * Checks if Moderation content auto hide feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $default bool Optional.Default value true.
  * @param string $content_type content type.
@@ -912,7 +916,7 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
 /**
  * Get threshold velue for content reporting.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $default bool Optional.Default value true.
  * @param string $content_type content type.
@@ -937,7 +941,7 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
 /**
  * Checks if Moderation content auto hide email notification feature is enabled.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -953,7 +957,7 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 /**
  * Function get content owner id.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $moderation_item_id   content id.
  * @param string $moderation_item_type content type.
@@ -975,7 +979,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 /**
  * Function to get the content based on type.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param int    $moderation_item_id   moderation id to get the content.
  * @param string $moderation_item_type item type.
@@ -997,7 +1001,7 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
 /**
  * Function to send member suspension email
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $email  user email address.
  * @param array  $tokens user details.
@@ -1011,10 +1015,10 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
 		$email,
 		array(
 			'tokens' => array(
-				'user.name'         => $tokens['user_name'],
-				'user.timesblocked' => $tokens['times_blocked'],
-				'user.link'         => $tokens['member_link'],
-				'user.reportlink'   => $tokens['report_link'],
+				'user.name'    => $tokens['user_name'],
+				'timesblocked' => $tokens['times_blocked'],
+				'user.link'    => $tokens['member_link'],
+				'reportlink'   => $tokens['report_link'],
 			),
 		)
 	);
@@ -1023,7 +1027,7 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
 /**
  * Function to send email when content is auto hidden
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $email  user email.
  * @param array  $tokens email tokens.
@@ -1036,12 +1040,11 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 		$email,
 		array(
 			'tokens' => array(
-				'content.excerpt'       => $tokens['content_excerpt'],
-				'content.type'          => $tokens['content_type'],
-				'content.owner'         => $tokens['content_owner'],
-				'content.timesreported' => $tokens['content_timesreported'],
-				'content.link'          => $tokens['content_link'],
-				'content.reportlink'    => $tokens['content_reportlink'],
+				'content.type'    => $tokens['content_type'],
+				'content.owner'   => $tokens['content_owner'],
+				'timesreported'   => $tokens['content_timesreported'],
+				'content.link'    => $tokens['content_link'],
+				'reportlink'      => $tokens['content_reportlink'],
 			),
 		)
 	);
@@ -1050,7 +1053,7 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 /**
  * Function to get the moderation item count based on status.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $args arguments array.
  *
@@ -1062,19 +1065,87 @@ function bp_moderation_item_count( $args = array() ) {
 		'count_total' => true,
 	);
 
-	if ( 'content' === $args['type'] ) {
-		$moderation_request_args['exclude_types'] = array( BP_Moderation_Members::$moderation_type );
-	} else {
-		$moderation_request_args['in_types'] = array( BP_Moderation_Members::$moderation_type );
-	}
-
-	if ( 'unsuspended' === $args['status'] || 'active' === $args['status'] ) {
-		$moderation_request_args['hidden'] = 0;
-	} elseif ( 'suspended' === $args['status'] || 'hidden' === $args['status'] ) {
-		$moderation_request_args['hidden'] = 1;
-	}
+	$moderation_request_args = wp_parse_args( $args, $moderation_request_args );
 
 	$result = BP_Moderation::get( $moderation_request_args );
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
+}
+
+/**
+ * Function to get content report type.
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return mixed|void
+ */
+function bp_moderation_get_report_type( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	/**
+	 * Filters the reported content type
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Content type.
+	 * @param int    $item_id      Item id.
+	 */
+	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get report button text.
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return false|mixed|void
+ */
+function bp_moderation_get_report_button_text( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	/**
+	 * Filters the report button text for different components
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 */
+	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss' ), $item_id );
+}
+
+/**
+ * Function to get reported button text.
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param string $item_type Item type.
+ * @param int    $item_id   Item id.
+ *
+ * @return false|mixed|void
+ */
+function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
+	if ( ! $item_type || ! $item_id ) {
+		return false;
+	}
+
+	/**
+	 * Filters the reported button text for different components
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 */
+	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
 }

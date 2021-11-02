@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation component admin screen.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -22,7 +22,7 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
 /**
  * Function to hook the admin screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $hook page name.
  */
@@ -41,8 +41,8 @@ function bp_moderation_admin_scripts( $hook ) {
 			'Bp_Moderation',
 			array(
 				'strings' => array(
-					'confirm_msg'            => esc_js( __( 'Are you sure? It will hide selected content for everybody in the network', 'buddyboss' ) ),
-					'unhide_confirm_msg'     => esc_js( __( 'Are you sure? It will unhide selected content for everybody in the network', 'buddyboss' ) ),
+					'confirm_msg'            => esc_js( __( 'Please confirm you want to hide this content. It will be hidden from all members in your network.', 'buddyboss' ) ),
+					'unhide_confirm_msg'     => esc_js( __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
 					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
@@ -60,7 +60,7 @@ add_action( 'admin_enqueue_scripts', 'bp_moderation_admin_scripts' );
 /**
  * Register the Moderation component admin screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_add_admin_menu() {
 
@@ -87,7 +87,7 @@ add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
  * which all appear together in the middle of the Dashboard menu. This function
  * adds the Moderation page to the array of these menu items.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param array $custom_menus The list of top-level BP menu items.
  *
@@ -105,7 +105,7 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
 /**
  * Set up the Moderation admin page.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin_load() {
 	global $bp_moderation_list_table;
@@ -146,7 +146,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Fires at top of Moderation admin page.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $doaction Current $_GET action being performed in admin screen.
 		 */
@@ -213,7 +213,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Filters list of IDs being hide/unhide.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $moderation_ids Activity IDs to spam/un-spam/delete.
 		 */
@@ -278,7 +278,7 @@ function bp_moderation_admin_load() {
 		 *
 		 * Passes an moderation array counts how many were hide, unhide, and IDs that were errors.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array  $value          Array holding hide, unhide, error IDs.
 		 * @param string $redirect_to    URL to redirect to.
@@ -314,7 +314,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Filters redirect URL after moderation hide/unhide.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $redirect_to URL to redirect to.
 		 */
@@ -325,7 +325,7 @@ function bp_moderation_admin_load() {
 	/**
 	 * Fires at top of Moderation admin page.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $doaction Current $_GET action being performed in admin screen.
 	 */
@@ -366,7 +366,7 @@ function bp_moderation_admin_load() {
 /**
  * Select the appropriate Moderation admin screen, and output it.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin() {
 	// Added navigation tab on top.
@@ -407,7 +407,7 @@ function bp_moderation_admin() {
  *
  * This screen contains a list of all BuddyBoss Moderation requests.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @global BP_Moderation_List_Table $bp_moderation_list_table Moderation screen list table.
  * @global string                   $plugin_page              Currently viewed plugin page.
@@ -426,22 +426,22 @@ function bp_moderation_admin_index() {
 
 		if ( $hidden > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
+			$messages[] = __( 'Content hidden successfully.', 'buddyboss' );
 		}
 
 		if ( $unhide > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+			$messages[] = __( 'Content unhidden successfully.', 'buddyboss' );
 		}
 
 		if ( $suspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
+			$messages[] = _n( 'Member suspended successfully', 'Members suspended successfully', $suspended, 'buddyboss' );
 		}
 
 		if ( $unsuspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
+			$messages[] = _n( 'Member unsuspended successfully.', 'Members unsuspended successfully.', $unsuspended, 'buddyboss' );
 		}
 	}
 
@@ -452,7 +452,7 @@ function bp_moderation_admin_index() {
 	$bp_moderation_list_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h1>
+		<h1 class="wp-heading-inline">
 			<?php
 			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
@@ -461,6 +461,7 @@ function bp_moderation_admin_index() {
 			}
 			?>
 		</h1>
+		<hr class="wp-header-end">
 		<?php if ( ! empty( $messages ) ) : ?>
 			<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>"> <?php //phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 				<p><?php echo wp_kses_post( implode( "<br/>\n", $messages ) ); ?></p>
@@ -482,7 +483,7 @@ function bp_moderation_admin_index() {
 /**
  * Handle save/update of screen options for the Moderation component admin screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  *
  * @param string $value     Will always be false unless another plugin filters it first.
  * @param string $option    Screen option name.
@@ -508,7 +509,7 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 /**
  * Display the single moderation edit screen.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin_view() {
 
@@ -523,22 +524,22 @@ function bp_moderation_admin_view() {
 
 		if ( $hidden > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
+			$messages[] = __( 'Content hidden successfully.', 'buddyboss' );
 		}
 
 		if ( $unhide > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+			$messages[] = __( 'Content unhidden successfully.', 'buddyboss' );
 		}
 
 		if ( $suspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
+			$messages[] = _n( 'Member suspended successfully', 'Members suspended successfully', $suspended, 'buddyboss' );
 		}
 
 		if ( $unsuspended > 0 ) {
 			// translators:  number of items.
-			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
+			$messages[] = _n( 'Member unsuspended successfully', 'Members suspended successfully', $unsuspended, 'buddyboss' );
 		}
 	}
 
@@ -549,7 +550,7 @@ function bp_moderation_admin_view() {
 	/**
 	 * Fires before moderation edit form is displays so plugins can modify the activity.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $value Array holding single activity object that was passed by reference.
 	 */
@@ -561,7 +562,7 @@ function bp_moderation_admin_view() {
 /**
  * Add Navigation tab on top of the page BuddyBoss > Moderation > Reporting Categories
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_moderation_admin_category_listing_add_tab() {
 	global $pagenow, $current_screen;

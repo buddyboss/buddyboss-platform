@@ -15,7 +15,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 	$orderby  = filter_input( INPUT_POST, 'orderby', FILTER_SANITIZE_STRING );
 	$sort     = filter_input( INPUT_POST, 'sort', FILTER_SANITIZE_STRING );
 	$scope    = filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING );
-	$extras   = filter_input( INPUT_POST, 'extras', FILTER_REQUIRE_ARRAY );
+	$extras   = filter_input( INPUT_POST, 'extras', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $get_page ) || 1 === (int) $get_page ) :
 		$active_title_class   = '';

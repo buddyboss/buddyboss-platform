@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend items abstract Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend items.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 abstract class BP_Suspend_Abstract {
 
@@ -59,7 +59,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Check whether bypass argument pass for admin user or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -91,7 +91,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Prepare Join sql for exclude Suspended items
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $item_id_field Items ID field name with alias of table.
 	 *
@@ -107,7 +107,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Prepare Where sql for exclude Suspended items
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return string|void
 	 */
@@ -118,22 +118,40 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Hide related content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $item_id       item id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
 	 * @param array    $args          parent args.
 	 */
 	public function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
-		$related_contents = $this->get_related_contents( $item_id );
-		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $args['action'] ) ) {
+			$args['action'] = 'hide';
+		}
+
+		$related_contents = $this->get_related_contents( $item_id, $args );
+
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
+
+					/**
+					 * Fire before hide item
+					 *
+					 * @since BuddyBoss 1.6.2
+					 *
+					 * @param string $content_type content type
+					 * @param int    $content_id   item id
+					 * @param array  $args         unhide item arguments
+					 */
+					do_action( 'bb_suspend_hide_before', $content_type, $content_id, $args );
+
 					/**
 					 * Add related content of reported item into hidden list
 					 *
-					 * @since BuddyBoss 2.0.0
+					 * @since BuddyBoss 1.5.6
 					 *
 					 * @param int $content_id    item id
 					 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -147,7 +165,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Get item related content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $item_id item id.
 	 * @param array $args    parent args.
@@ -159,7 +177,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Hide related content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $item_id       item id.
 	 * @param int   $hide_sitewide item hidden sitewide or user specific.
@@ -178,7 +196,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $item_id       item id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -186,15 +204,33 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
+		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
+		if ( empty( $args['action'] ) ) {
+			$args['action'] = 'unhide';
+		}
+
 		$related_contents = $this->get_related_contents( $item_id, $args );
-		$args             = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
+
 		foreach ( $related_contents as $content_type => $content_ids ) {
 			if ( ! empty( $content_ids ) ) {
 				foreach ( $content_ids as $content_id ) {
+
+					/**
+					 * Fire before unhide item
+					 *
+					 * @since BuddyBoss 1.6.2
+					 *
+					 * @param string $content_type content type
+					 * @param int    $content_id   item id
+					 * @param array  $args         unhide item arguments
+					 */
+					do_action( 'bb_suspend_unhide_before', $content_type, $content_id, $args );
+
 					/**
 					 * Remove related content of reported item from hidden list.
 					 *
-					 * @since BuddyBoss 2.0.0
+					 * @since BuddyBoss 1.5.6
 					 *
 					 * @param int $content_id    item id
 					 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -208,7 +244,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Handle new suspend entry.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param object $suspended_record Suspended Item Record.
 	 * @param int    $item_id          New item ID.
@@ -270,7 +306,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Return whitelisted keys from array arguments.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -282,6 +318,24 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		return array_intersect_key( $args, array_flip( self::$white_list_keys ) );
+	}
+
+	/**
+	 * Return whitelisted keys from array arguments.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 *
+	 * @param int    $item_id   Item ID.
+	 * @param string $item_type Item type.
+	 *
+	 * @return bool
+	 */
+	public static function is_content_reported_hidden( $item_id, $item_type ) {
+		global $wpdb, $bp;
+
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
+
+		return ! empty( $result );
 	}
 
 }

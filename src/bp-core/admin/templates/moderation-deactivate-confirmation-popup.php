@@ -4,7 +4,7 @@
  *
  * This file contains information about BuddyBoss.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss
  */
 
@@ -47,7 +47,7 @@ style="display: none;">
 		</button>
 		<button class="component-deactivate button">
 			<?php
-			esc_html_e( 'I understand deactivate', 'buddyboss' );
+			esc_html_e( 'Yes I understand, Deactivate', 'buddyboss' );
 			?>
 		</button>
 	</div>

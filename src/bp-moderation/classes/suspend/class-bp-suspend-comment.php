@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Suspend Comment Class
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Suspend
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Comment.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Comment constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		$this->item_type = self::$type;
@@ -62,13 +62,14 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Blocked member's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id Member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_comment_ids( $member_id ) {
+	public static function get_member_comment_ids( $member_id, $action = '' ) {
 
 		$comment_ids = get_comments(
 			array(
@@ -79,13 +80,21 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			)
 		);
 
+		if ( 'hide' === $action && ! empty( $comment_ids ) ) {
+			foreach ( $comment_ids as $k => $comment_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type, true ) ) {
+					unset( $comment_ids[ $k ] );
+				}
+			}
+		}
+
 		return $comment_ids;
 	}
 
 	/**
 	 * Hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $comment_id    comment id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -126,7 +135,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of activity
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $comment_id    comment id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -180,7 +189,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment text for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string          $comment_text Text of the current comment.
 	 * @param WP_Comment|null $comment      The comment object. Null if not found.
@@ -192,8 +201,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $comment_text;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
-			$comment_text = esc_html__( 'Content from suspended user.', 'buddyboss' );
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
+			$comment_text = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' );
 		}
 
 		return $comment_text;
@@ -202,7 +211,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment author link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $return     The HTML-formatted comment author link.
 	 *                           Empty for an invalid URL.
@@ -213,8 +222,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			$return = esc_html__( 'Blocked User', 'buddyboss' );
+		if ( $this->check_is_hidden( $comment_id) ) {
+			$return = esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $return;
@@ -223,7 +232,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment author for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $author     The comment author's username.
 	 * @param int    $comment_id The comment ID.
@@ -232,8 +241,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
-			$author = esc_html__( 'Blocked User', 'buddyboss' );
+		if ( $this->check_is_hidden( $comment_id ) ) {
+			$author = esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $author;
@@ -242,7 +251,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string     $link    The comment permalink with '#comment-$id' appended.
 	 * @param WP_Comment $comment The current comment object.
@@ -255,7 +264,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $link;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
@@ -265,7 +274,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment date for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string|int $date    Formatted date string or Unix timestamp.
 	 * @param string     $format  The format of the date.
@@ -279,7 +288,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $date;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$date = '';
 		}
 
@@ -289,7 +298,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment time for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string|int $date      The comment time, formatted as a date string or Unix timestamp.
 	 * @param string     $format    Date format.
@@ -305,7 +314,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $date;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$date = '';
 		}
 
@@ -315,7 +324,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment reply link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string     $link    The HTML markup for the comment reply link.
 	 * @param array      $args    An array of arguments overriding the defaults.
@@ -329,7 +338,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			return $link;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment->comment_ID, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment->comment_ID ) ) {
 			$link = '';
 		}
 
@@ -339,7 +348,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Update comment edit link for blocked comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $link       Anchor tag for the edit link.
 	 * @param int    $comment_id Comment ID.
@@ -348,7 +357,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_edit_comment_link( $link, $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
+		if ( $this->check_is_hidden( $comment_id ) ) {
 			$link = '';
 		}
 
@@ -358,7 +367,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $comment_id Comment ID.
 	 * @param array $args       parent args.
@@ -380,7 +389,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Fires immediately after a comment is inserted into the database.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int        $comment_id       The comment ID.
 	 * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
@@ -397,22 +406,26 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Comment::$moderation_type;
 
 		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
-
+		if ( is_object( $commentdata ) ) {
+			$commentdata_user_id = $commentdata->user_id;
+		} else {
+			$commentdata_user_id = $commentdata['user_id'];
+		}
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $commentdata->user_id, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BP_Core_Suspend::get_recode( $commentdata_user_id, BP_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
 			return;
 		}
 
-		self::handle_new_suspend_entry( $suspended_record, $comment_id, $commentdata->user_id );
+		self::handle_new_suspend_entry( $suspended_record, $comment_id, $commentdata_user_id );
 	}
 
 	/**
 	 * Update the suspend table to delete the post comment.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $comment_id The comment ID.
 	 */
@@ -423,5 +436,26 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		BP_Core_Suspend::delete_suspend( $comment_id, $this->item_type );
+	}
+
+	/**
+	 * Check comment author is suspended or not
+	 *
+	 * @param int $comment_id comment id.
+	 *
+	 * @return bool
+	 */
+	private function check_is_hidden( $comment_id ) {
+
+		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type, true ) ) {
+			return true;
+		}
+
+		$author_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
+		if ( bp_moderation_is_user_suspended( $author_id ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation items abstract Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation items.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 abstract class BP_Moderation_Abstract {
 
@@ -40,7 +40,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Check whether bypass argument pass for admin user or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -72,14 +72,14 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Get class from content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $type Content type.
 	 *
 	 * @return string
 	 */
 	public static function get_class( $type = '' ) {
-		$class = self::class;
+		$class = new stdClass();
 		if ( ! empty( $type ) && ! empty( self::$moderation ) && isset( self::$moderation[ $type ] ) ) {
 			if ( class_exists( self::$moderation[ $type ] ) ) {
 				$class = self::$moderation[ $type ];
@@ -92,7 +92,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int|array $item_id Content item id.
 	 */
@@ -101,7 +101,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $item_id Content item id.
 	 *
@@ -112,7 +112,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args Content data.
 	 *
@@ -150,7 +150,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Hide Moderated content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args Content data.
 	 *
@@ -167,7 +167,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Unhide Moderated content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args Content data.
 	 *
@@ -184,7 +184,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Delete Moderated report
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args Content data.
 	 *
@@ -201,7 +201,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Retrieve sitewide hidden items ids of particular item type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $type         Moderation items type.
 	 * @param bool   $user_include Include item which report by current user even if it's not hidden.
@@ -217,24 +217,15 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return string|void
 	 */
 	protected function exclude_where_query() {
 		$where = '';
 
-		if (
-			(
-				BP_Moderation_Members::$moderation_type === $this->item_type &&
-				bp_is_moderation_member_blocking_enable( 0 )
-			)
-			|| bp_is_moderation_content_reporting_enable( 0, $this->item_type )
-		) {
-			$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) 
-		    AND 
-		    ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
-		}
+		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
+		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 
 		$blocked_query = $this->blocked_user_query();
 		if ( ! empty( $blocked_query ) ) {
@@ -250,7 +241,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Blocked User filter query
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return false|string
 	 */
@@ -271,7 +262,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Reporting Setting enabled for current content.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -282,7 +273,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Member blocking content enabled
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -293,7 +284,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Check content is hidden or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */

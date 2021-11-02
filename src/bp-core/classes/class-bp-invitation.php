@@ -132,6 +132,24 @@ class BP_Invitation {
 	 */
 	public $accepted;
 
+	/**
+	 * Columns in the invitations table.
+	 */
+	public static $columns = array(
+		'id',
+		'user_id',
+		'inviter_id',
+		'invitee_email',
+		'class',
+		'item_id',
+		'secondary_item_id',
+		'type',
+		'content',
+		'date_modified',
+		'invite_sent',
+		'accepted',
+	);
+
 	/** Public Methods ****************************************************/
 
 	/**
@@ -450,7 +468,7 @@ class BP_Invitation {
 		/**
 		 * Filters the Where SQL statement for group invitation .
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
@@ -484,8 +502,17 @@ class BP_Invitation {
 
 		// Order by
 		if ( ! empty( $args['order_by'] ) ) {
-			$order_by               = implode( ', ', (array) $args['order_by'] );
-			$conditions['order_by'] = "{$order_by}";
+			// Added security patch for SQL Injections vulnerability
+			$order_by_clean = array();
+			foreach ( (array) $args['order_by'] as $key => $value ) {
+				if ( in_array( $value, self::$columns, true ) ) {
+					$order_by_clean[] = $value;
+				}
+			}
+			if ( ! empty( $order_by_clean ) ) {
+				$order_by               = implode( ', ', $order_by_clean );
+				$conditions['order_by'] = "{$order_by}";
+			}
 		}
 
 		// Sort order direction
@@ -785,7 +812,7 @@ class BP_Invitation {
 		/**
 		 * Filters the join SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r        Array of parsed arguments for the get method.
 		 * @param array $from_sql form  SQL statement.
@@ -858,7 +885,7 @@ class BP_Invitation {
 		/**
 		 * Filters the join SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r        Array of parsed arguments for the get method.
 		 * @param array $from_sql form  SQL statement.

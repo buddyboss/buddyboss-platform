@@ -63,7 +63,7 @@ function bbp_locate_template( $template_names, $load = false, $require_once = tr
 	/**
 	 * Filter here to update template name.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $template_names template name.
 	 */

@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Activity Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Activity.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Activity constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -50,6 +50,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
+
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -60,12 +63,19 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $activity_id activity id.
 	 *
@@ -80,7 +90,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $activity_id Activity id.
 	 *
@@ -95,7 +105,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -110,7 +120,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Update where query Remove hidden/blocked user's Activities
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where   Activity Where sql.
 	 * @param object $suspend Suspend object.
@@ -131,7 +141,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Validate the activity is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $activity Current activity object.
@@ -139,6 +149,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return false
 	 */
 	public function restrict_single_item( $restrict, $activity ) {
+
+		if ( apply_filters( 'bb_moderation_restrict_single_item_' . self::$moderation_type, false, $activity ) ) {
+			return $restrict;
+		}
+
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $restrict;
+		}
 
 		if ( 'activity_comment' !== $activity->type && $this->is_content_hidden( (int) $activity->id ) ) {
 			return false;
@@ -150,7 +170,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify button sub item
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $item_id Item id.
 	 *
@@ -175,9 +195,11 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		$sub_items = array();
+		$updated   = false;
 		switch ( $activity->type ) {
 			case 'bbp_forum_create':
 				$forum_id = $activity->item_id;
+				$updated  = true;
 				if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
 					$sub_items['id']   = current( bbp_get_forum_group_ids( $forum_id ) );
 					$sub_items['type'] = BP_Moderation_Groups::$moderation_type;
@@ -187,13 +209,109 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				}
 				break;
 			case 'bbp_topic_create':
-				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-				$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				$updated = true;
+				if ( bp_is_active( 'forums' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Topics::$moderation_type ) ) {
+					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+					$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
 				break;
 			case 'bbp_reply_create':
-				$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-				$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				$updated = true;
+				if ( bp_is_active( 'forums' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Replies::$moderation_type ) ) {
+					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+					$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
 				break;
+		}
+
+		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
+			if ( bp_is_active( 'media' ) && ! empty( $media_id ) ) {
+				if ( ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				} else {
+					$sub_items['id']   = $media_id;
+					$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+				}
+			} elseif ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+				$explode_medias = explode( ',', $media_ids );
+				if ( 1 === count( $explode_medias ) && ! empty( current( $explode_medias ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+					$sub_items['id']   = current( $explode_medias );
+					$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+				} elseif ( 1 < count( $explode_medias ) ) {
+					$sub_items['id']   = $activity->id;
+					$sub_items['type'] = self::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
+		} elseif ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
+			if ( bp_is_active( 'document' ) && ! empty( $document_id ) ) {
+				if ( ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				} else {
+					$sub_items['id']   = $document_id;
+					$sub_items['type'] = BP_Moderation_Document::$moderation_type;
+				}
+			} elseif ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
+				$explode_documents = explode( ',', $document_ids );
+				if ( 1 === count( $explode_documents ) && ! empty( current( $explode_documents ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+					$sub_items['id']   = current( $explode_documents );
+					$sub_items['type'] = BP_Moderation_Document::$moderation_type;
+				} elseif ( 1 < count( $explode_documents ) ) {
+					$sub_items['id']   = $activity->id;
+					$sub_items['type'] = self::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
+		} elseif ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
+			if ( bp_is_active( 'video' ) && ! empty( $video_id ) ) {
+				if ( ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				} else {
+					$sub_items['id']   = $video_id;
+					$sub_items['type'] = BP_Moderation_Video::$moderation_type;
+				}
+			} elseif ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
+				$explode_videos = explode( ',', $video_ids );
+				if ( 1 === count( $explode_videos ) && ! empty( current( $explode_videos ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+					$sub_items['id']   = current( $explode_videos );
+					$sub_items['type'] = BP_Moderation_Video::$moderation_type;
+				} elseif ( 1 < count( $explode_videos ) ) {
+					$sub_items['id']   = $activity->id;
+					$sub_items['type'] = self::$moderation_type;
+				} else {
+					$sub_items['id']   = false;
+					$sub_items['type'] = false;
+				}
+			} else {
+				$sub_items['id']   = false;
+				$sub_items['type'] = false;
+			}
 		}
 
 		return $sub_items;
@@ -202,7 +320,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the activity is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.
@@ -221,5 +339,201 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Remove Pre-validate check.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 */
+	public function remove_pre_validate_check() {
+		remove_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10 );
+	}
+
+	/**
+	 * Add Pre-validate check.
+	 *
+	 * @since BuddyBoss 1.7.5
+	 */
+	public function add_pre_validate_check() {
+		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $button_text;
+		}
+
+		$updated = false;
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$button_text = esc_html__( 'Report Forum', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_topic_create':
+				$button_text = esc_html__( 'Report Discussion', 'buddyboss' );
+				$updated     = true;
+				break;
+			case 'bbp_reply_create':
+				$button_text = esc_html__( 'Report Reply', 'buddyboss' );
+				$updated     = true;
+				break;
+			default:
+				$button_text = esc_html__( 'Report Post', 'buddyboss' );
+		}
+
+		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
+			if ( ! empty( $media_id ) ) {
+				$button_text = esc_html__( 'Report Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Photo', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
+			if ( ! empty( $document_id ) ) {
+				$button_text = esc_html__( 'Report Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Document', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
+			if ( ! empty( $video_id ) ) {
+				$button_text = esc_html__( 'Report Video', 'buddyboss' );
+			}
+			if ( ! empty( $video_ids ) ) {
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$button_text = esc_html__( 'Report Post', 'buddyboss' );
+				} else {
+					$button_text = esc_html__( 'Report Video', 'buddyboss' );
+				}
+			}
+		}
+
+		return $button_text;
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string|void
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+
+		$activity = new BP_Activity_Activity( $item_id );
+
+		if ( empty( $activity->id ) ) {
+			return $content_type;
+		}
+
+		$updated = false;
+
+		switch ( $activity->type ) {
+			case 'bbp_forum_create':
+				$content_type = esc_html__( 'Forum', 'buddyboss' );
+				$updated      = true;
+				break;
+			case 'bbp_topic_create':
+				$content_type = esc_html__( 'Discussion', 'buddyboss' );
+				$updated      = true;
+				break;
+			case 'bbp_reply_create':
+				$content_type = esc_html__( 'Reply', 'buddyboss' );
+				$updated      = true;
+				break;
+			default:
+				$content_type = esc_html__( 'Post', 'buddyboss' );
+		}
+
+		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+
+		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
+			if ( ! empty( $media_id ) ) {
+				$content_type = esc_html__( 'Photo', 'buddyboss' );
+			}
+			if ( ! empty( $media_ids ) ) {
+				$exploded_media = explode( ',', $media_ids );
+				if ( 1 < count( $exploded_media ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Photo', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
+			if ( ! empty( $document_id ) ) {
+				$content_type = esc_html__( 'Document', 'buddyboss' );
+			}
+			if ( ! empty( $document_ids ) ) {
+				$exploded_document = explode( ',', $document_ids );
+				if ( 1 < count( $exploded_document ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Document', 'buddyboss' );
+				}
+			}
+		}
+
+		if ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
+			if ( ! empty( $video_id ) ) {
+				$content_type = esc_html__( 'Video', 'buddyboss' );
+			}
+			if ( ! empty( $video_ids ) ) {
+				$exploded_video = explode( ',', $video_ids );
+				if ( 1 < count( $exploded_video ) ) {
+					$content_type = esc_html__( 'Post', 'buddyboss' );
+				} else {
+					$content_type = esc_html__( 'Video', 'buddyboss' );
+				}
+			}
+		}
+
+		return $content_type;
 	}
 }

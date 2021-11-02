@@ -56,10 +56,12 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 		/**
 		 * Prepare SQL query for media search.
 		 *
-		 * @param string $search_term Search terms.
+		 * @param string $search_term         Search terms.
 		 * @param false  $only_totalrow_count Total row count.
 		 *
 		 * @return mixed|void
+		 *
+		 * @since BuddyBoss 1.4.0
 		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
@@ -120,7 +122,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the media Search query.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -139,10 +141,10 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 					)
 					AND
 					(
-							( m.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( m.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND m.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
-							( is_user_logged_in() ? " OR ( m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( m.type='photo' AND m.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( m.type='photo' AND m.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND m.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( m.type='photo' AND m.user_id IN ( '" . implode( "','", $friends ) . "' ) AND m.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( is_user_logged_in() ? " OR ( m.type='photo' AND m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
@@ -151,7 +153,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the media Search query.
 			 *
-			 * @since BuddyBoss 2.0.0
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.

@@ -1,8 +1,8 @@
 <?php
 /**
- * Content report form
+ * Content report form.
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss
  */
 
@@ -13,8 +13,10 @@
 		<div class="modal-wrapper">
 			<div class="modal-container">
 				<header class="bb-model-header">
-					<h4><?php esc_html_e( 'Report Content', 'buddyboss' ); ?></h4>
-					<button title="Close (Esc)" type="button" class="mfp-close"></button>
+					<h4><?php esc_html_e( 'Report', 'buddyboss' ); ?> <span class="bp-reported-type"></span></h4>
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
+						<span class="bb-icon bb-icon-close"></span>
+					</button>
 				</header>
 				<?php
 				$reports_terms = get_terms(
@@ -58,7 +60,7 @@
 						</div>
 						<footer class="bb-model-footer">
 							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
-							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Send Report', 'buddyboss' ); ?></button>
+							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Report', 'buddyboss' ); ?></button>
 							<input type="hidden" name="content_id" class="bp-content-id"/>
 							<input type="hidden" name="content_type" class="bp-content-type"/>
 							<input type="hidden" name="_wpnonce" class="bp-nonce"/>

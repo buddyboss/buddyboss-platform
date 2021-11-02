@@ -3,7 +3,7 @@
  * BuddyBoss Suspend Member Classes
  *
  * @package BuddyBoss\Suspend
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss Suspend Member.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Suspend_Member extends BP_Suspend_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Member constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
@@ -49,9 +49,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			return;
 		}
 
+		add_filter( 'bp_recipients_recipient_get_where_conditions', array( $this, 'exclude_moderated_recipients' ), 10, 2 );
+
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-
+		
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -68,12 +70,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'bp_core_get_user_displayname', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
+		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 	}
 
 	/**
 	 * Suspend User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -90,7 +93,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Add related content of reported item into hidden list
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -109,7 +112,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Un-suspend User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -126,7 +129,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Remove related content of reported item from hidden list.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param int $item_id       item id
 		 * @param int $hide_sitewide item hidden sitewide or user specific
@@ -147,7 +150,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare member Join SQL query to filter blocked Member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $join_sql Member Join sql.
 	 * @param string $uid_name User ID field name.
@@ -161,7 +164,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $join_sql Join sql query
 		 * @param array $class    current class object.
@@ -174,14 +177,14 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Prepare member Where SQL query to filter blocked Member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array $where_conditions Member Where sql.
-	 * @param array $args             Query arguments.
+	 * @param array  $where_conditions Member Where sql.
+	 * @param string $column_name      Column name.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
+	public function update_where_sql( $where_conditions, $column_name ) {
 
 		$where                  = array();
 		$where['suspend_where'] = $this->exclude_where_query();
@@ -189,7 +192,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $where Query to hide suspended user's member.
 		 * @param array $class current class object.
@@ -204,9 +207,57 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	}
 
 	/**
+	 * Exclude moderated members from message recipients lists.
+	 *
+	 * @since BuddyBoss 1.7.8
+	 *
+	 * @param array $where_conditions Recipients member where sql.
+	 * @param array $args             Array of arguments of recipients query.
+	 *
+	 * @return mixed
+	 */
+	public function exclude_moderated_recipients( $where_conditions, $args ) {
+		global $wpdb;
+		$bp = buddypress();
+		if (
+			! isset( $args['exclude_moderated_members'] ) ||
+			(
+				false === (bool) $args['exclude_moderated_members']
+			)
+		) {
+			return $where_conditions;
+		}
+		
+		$where          = array();
+		$hidden_members = bp_moderation_get_hidden_user_ids();
+		if ( ! empty( $hidden_members ) ) {
+			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
+		}
+		
+		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s
+								  AND ( {$this->alias}.user_suspended = 1 )", 'user' ); // phpcs:ignore
+		$where['suspend_where'] = "( r.user_id NOT IN( " . $sql . " ) )";
+		/**
+		 * Filters the hidden member Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.7.8
+		 *
+		 * @param array $where Query to hide suspended user's member.
+		 * @param array $class current class object.
+		 */
+		$where = apply_filters( 'bp_suspend_member_recipient_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
+	}
+
+	/**
 	 * Hide related content of member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $member_id     member id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -259,7 +310,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Un-hide related content of member
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int      $member_id     member id.
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
@@ -316,7 +367,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * When a user logs in, check if they have been marked as a Suspended. If yes
 	 * then simply redirect them to the home page and stop them from logging in.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param WP_User|WP_Error $user Either the WP_User object or the WP_Error
 	 *                               object, as passed to the 'authenticate' filter.
@@ -358,7 +409,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 *
 	 * This is important as the $bp->loggedin_user object is setup at priority 4.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function bp_stop_live_suspended() {
 		// If we're on the login page, stop now to prevent redirect loop.
@@ -407,7 +458,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Show a custom error message when a logged-in user is marked as a suspended.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function bp_live_suspended_login_error() {
 		global $error;
@@ -421,7 +472,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * If the displayed user is marked as a suspended, Show 404.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
@@ -436,7 +487,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Hide related content
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $member_id     member id.
 	 * @param int   $hide_sitewide item hidden sitewide or user specific.
@@ -464,7 +515,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Get Activity's comment ids
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int   $member_id member id.
 	 * @param array $args      parent args.
@@ -472,42 +523,60 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $member_id, $args = array() ) {
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$related_contents = array();
 
-		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id );
+		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action );
 
 		/*if ( bp_is_active( 'groups' ) ) {
 			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
 		}*/
 
 		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id );
-			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_member_topic_ids( $member_id );
-			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_member_reply_ids( $member_id );
+			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action );
+			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_member_topic_ids( $member_id, $action );
+			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_member_reply_ids( $member_id, $action );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ]         = BP_Suspend_Activity::get_member_activity_ids( $member_id );
-			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_member_activity_comment_ids( $member_id );
+			$related_contents[ BP_Suspend_Activity::$type ]         = BP_Suspend_Activity::get_member_activity_ids( $member_id, $action );
+			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_member_activity_comment_ids( $member_id, $action );
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_member_folder_ids( $member_id );
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_member_document_ids( $member_id );
+			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_member_folder_ids( $member_id, $action );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_member_document_ids( $member_id, $action );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_member_album_ids( $member_id );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id );
+			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_member_album_ids( $member_id, $action );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id, $action );
 		}
 
-		return $related_contents;
+		if ( bp_is_active( 'video' ) ) {
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_member_video_ids( $member_id, $action );
+		}
+
+		$related_content_hide = array();
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $key => $related_content ) {
+				foreach ( (array) $related_content as $item ) {
+					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
+						$related_content_hide[ $key ][] = $item;
+					} else {
+						$related_content_hide[ $key ][] = $item;
+					}
+				}
+			}
+		}
+
+		return $related_content_hide;
 	}
 
 	/**
 	 * Delete moderation data when actual user is deleted
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id of the user that is being deleted.
 	 */
@@ -523,7 +592,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Migrate existing spammer as suspended user
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function migrate_spam_users() {
 		global $wpdb;
@@ -543,7 +612,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Restrict User domain of suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $domain  User domain link.
 	 * @param int    $user_id User id.
@@ -551,7 +620,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
-		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( empty( $username_visible ) && bp_moderation_is_user_suspended( $user_id ) ) {
 			return '';
 		}
 
@@ -561,7 +633,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Restrict User meta of suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $value   User meta.
 	 * @param int    $user_id User id.
@@ -579,7 +651,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Restrict User meta name of suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $value   User meta.
 	 * @param int    $user_id User id.
@@ -594,7 +666,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			return esc_html__( 'Blocked User', 'buddyboss' );
+			return esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -603,7 +675,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Remove Profile photo for suspend member.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $retval       The URL of the avatar.
 	 * @param mixed  $id_or_email  The Gravatar to retrieve. Accepts a user_id, gravatar md5 hash,
@@ -638,7 +710,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user->ID ) ) {
-			return buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 		}
 
 		return $retval;
@@ -647,7 +719,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Get dummy URL from DB for Group and User
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $avatar_url URL for a locally uploaded avatar.
 	 * @param array  $params     Array of parameters for the request.
@@ -662,7 +734,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_suspended( $item_id ) ) {
-					$avatar_url = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}

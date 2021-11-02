@@ -200,7 +200,7 @@ class BP_Activity_Activity {
 		/**
 		 * Pre validate the activity before fetch.
 		 *
-		 * @since BuddyBoss 2.0.0
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param boolean $validate Whether to check the activity is valid or not.
 		 * @param object  $row      Activity object.
@@ -591,6 +591,18 @@ class BP_Activity_Activity {
 		if ( ! empty( $excluded_types ) ) {
 			$not_in                             = "'" . implode( "', '", esc_sql( $excluded_types ) ) . "'";
 			$where_conditions['excluded_types'] = "a.type NOT IN ({$not_in})";
+		}
+
+		// Remove forums activity while component is disabled.
+		if ( ! function_exists( 'bbpress' ) || ! bp_is_active( 'forums' ) ) {
+			$not_in_type                                = "'" . implode( "', '", esc_sql( array( 'bbp_topic_create', 'bbp_reply_create' ) ) ) . "'";
+			$where_conditions['exclude_forum_activity'] = "a.type NOT IN ({$not_in_type})";
+		}
+
+		// Remove groups activity while component is disabled.
+		if ( ! bp_is_active( 'groups' ) ) {
+			$not_in_type                                 = "'" . implode( "', '", esc_sql( array( 'groups' ) ) ) . "'";
+			$where_conditions['exclude_groups_activity'] = "a.component NOT IN ({$not_in_type})";
 		}
 
 		/**
@@ -1616,7 +1628,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 2.0.0
+                 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $from Activity Comment from query
 				 *
@@ -1626,7 +1638,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL Where query for legacy activity comment.
 				 *
-                 * @since BuddyBoss 2.0.0
+                 * @since BuddyBoss 1.5.6
 				 *
 				 * @param string $where Activity Comment from query
 				 *

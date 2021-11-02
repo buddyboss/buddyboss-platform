@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Moderation Groups Classes
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Moderation
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Groups.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 		parent::$moderation[ self::$moderation_type ] = self::class;
@@ -58,12 +58,19 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 	}
 
 	/**
 	 * Get permalink
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
 	 *
@@ -80,7 +87,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner ids.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param integer $group_id Group id.
 	 *
@@ -95,14 +102,14 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Group', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Groups', 'buddyboss' );
 
 		return $content_types;
 	}
@@ -110,7 +117,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Update where query remove hidden/blocked user's groups
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $where groups Where sql.
 	 * @param object $suspend suspend object.
@@ -131,7 +138,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Validate the group is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param boolean $restrict Check the item is valid or not.
 	 * @param object  $group    Current group object.
@@ -139,6 +146,12 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return false
 	 */
 	public function restrict_single_item( $restrict, $group ) {
+
+		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
+
+		if ( ! empty( $username_visible ) ) {
+			return $restrict;
+		}
 
 		if ( bp_moderation_is_content_hidden( (int) $group->id, self::$moderation_type ) ) {
 			return false;
@@ -150,7 +163,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Function to restrict private group report button for it's member only.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param array $args    report button arguments.
 	 * @param int   $item_id group id.
@@ -172,7 +185,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Filter to check the group is valid or not.
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $retval  Check item is valid or not.
 	 * @param string $item_id item id.
@@ -191,5 +204,33 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+		return esc_html__( 'Report Group', 'buddyboss' );
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		return esc_html__( 'Group', 'buddyboss' );
 	}
 }

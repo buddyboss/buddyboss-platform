@@ -3,7 +3,7 @@
 /**
  * Replies Loop - Single Reply
  *
- * @since   BuddyBoss 2.0.0
+ * @since   BuddyBoss 1.5.6
  *
  * @package BuddyBoss\Theme
  */
@@ -16,22 +16,37 @@ if ( bp_is_active( 'moderation' ) ) {
 }
 ?>
 
-<div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header">
+<div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header bs-reply-suspended-block">
 
-	<div class="bbp-reply-content">
+	<div <?php bbp_reply_class(); ?>>
+	
+		<div class="bbp-reply-author">
+			<?php
+			bbp_reply_author_link(
+				array(
+					'sep'       => '<br />',
+					'show_role' => true,
+				)
+			);
+			?>
+		</div>
 
-		<?php do_action( 'bbp_theme_before_reply_content' ); ?>
+		<div class="bbp-reply-content">
 
-		<?php if ( $is_user_suspended ) {
-			esc_html_e( 'Content from suspended user.', 'buddyboss' );
-		} else if ( $is_user_blocked ) {
-			esc_html_e( 'Content from blocked user.', 'buddyboss' );
-		} else {
-			esc_html_e( 'Blocked Content.', 'buddyboss' );
-		} ?>
+			<?php do_action( 'bbp_theme_before_reply_content' ); ?>
 
-		<?php do_action( 'bbp_theme_after_reply_content' ); ?>
+			<?php if ( $is_user_suspended ) {
+				esc_html_e( 'This content has been hidden as the member is suspended.', 'buddyboss' );
+			} else if ( $is_user_blocked ) {
+				esc_html_e( 'This content has been hidden as you have blocked this member.', 'buddyboss' );
+			} else {
+				esc_html_e( 'This content has been hidden from site admin.', 'buddyboss' );
+			} ?>
 
-	</div><!-- .bbp-reply-content -->
+			<?php do_action( 'bbp_theme_after_reply_content' ); ?>
+
+		</div><!-- .bbp-reply-content -->
+
+	</div>
 
 </div><!-- #post-<?php bbp_reply_id(); ?> -->

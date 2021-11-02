@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Search Settings class.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss 1.5.6
  */
 class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 	/**
 	 * Moderation setting initialize.
      *
-     * @since BuddyBoss 2.0.0
+     * @since BuddyBoss 1.5.6
 	 */
 	public function initialize() {
 
@@ -32,7 +32,7 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
     /**
      * Function to save moderation settings
      *
-     * @since BuddyBoss 2.0.0
+     * @since BuddyBoss 1.5.6
      */
 	public function settings_save() {
 		$sections = bp_moderation_get_settings_sections();
@@ -54,7 +54,7 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 	/**
 	 * Moderation component is active or not.
      *
-     * @since BuddyBoss 2.0.0
+     * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -65,7 +65,7 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 	/**
 	 * Register setting Fields.
      *
-     * @since BuddyBoss 2.0.0
+     * @since BuddyBoss 1.5.6
 	 */
 	public function register_fields() {
 		$sections = bp_moderation_get_settings_sections();
@@ -81,9 +81,10 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
 
 			// Add the section.
-			$this->add_section( $section_id, $section_title, $section_callback );
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
 
 			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
@@ -95,12 +96,13 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
 				}
 			}
+			
 		}
 
 		/**
 		 * Fires to register Moderation tab settings fields and section.
 		 *
-         * @since BuddyBoss 2.0.0
+         * @since BuddyBoss 1.5.6
 		 *
 		 * @param Object $this BP_Admin_Setting_Moderation.
 		 */
