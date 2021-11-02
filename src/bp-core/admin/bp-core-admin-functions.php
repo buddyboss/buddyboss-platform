@@ -261,6 +261,11 @@ function bp_core_activation_notice() {
 				$component_id = 'document';
 			}
 		}
+		if ( 'videos' === $component_id ) {
+			if ( bp_is_active( 'media' ) && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+				$component_id = 'video';
+			}
+		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
 				'id'   => $component_id,
@@ -1806,6 +1811,15 @@ function bp_member_type_permissions_metabox( $post ) {
 					?>
                 />
 				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+				<p class="description" style="color: #999; margin-top: 6px; margin-bottom: 0px; " >Enabling this option hides all members with this profile type from the members directory, including the "Members" and "Recently Active Members" widgets.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+		        <?php $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default. ?>
+                <input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
+		        <?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
+				<p class="description" style="color: #999; margin-top: 6px; margin-bottom: 0px; " >Enabling this option hides all members with this profile type from network search results.</p>
             </td>
         </tr>
         </tbody>
@@ -1882,7 +1896,7 @@ function bp_member_type_permissions_metabox( $post ) {
 								)
 							);
 							?>
-                        /> <?php _e( '(None)', 'buddyboss' ); ?>
+                        /> <?php _e( '(None - hide group type option)', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -1919,9 +1933,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).click( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 						} else {
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', false );
@@ -1931,9 +1945,9 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery( "#bp-member-type-permissions .inside .group-type-checkboxes" ).each( function () {
 						var checkValues = jQuery( this ).val();
 						if ( 'none' === checkValues && jQuery( this ).is( ':checked' ) ) {
-							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'checked', false );
+							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).prop( 'checked', false );
 							jQuery( '#bp-member-type-permissions .inside .group-type-checkboxes' ).attr( 'disabled', true );
-							jQuery( this ).attr( 'checked', true );
+							jQuery( this ).prop( 'checked', true );
 							jQuery( this ).attr( 'disabled', false );
 							return false;
 						} else {
@@ -1966,7 +1980,7 @@ function bp_member_type_permissions_metabox( $post ) {
                 <tbody>
                 <tr>
                     <td colspan="2">
-						<?php _e( 'Selected group types will automatically approve all membership requests from users of this profile type:', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
                     </td>
                 </tr>
 
@@ -2181,6 +2195,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$enable_filter        = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive
 	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
+	$enable_search_remove = isset( $data['enable_search_remove'] ) ? absint( $data['enable_search_remove'] ) : 0; // default inactive
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active
 
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array
@@ -2205,6 +2220,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_member_type_enable_search_remove', $enable_search_remove );
 	update_post_meta( $post_id, '_bp_member_type_enable_profile_field', $enable_profile_field );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $enable_group_type_create );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
@@ -2593,7 +2609,7 @@ function bp_core_admin_create_background_page() {
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
 		if ( 'new_forums_page' === $_POST['page'] ) {
 			$slug = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );
 		}
 	}
@@ -3045,7 +3061,7 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 	if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 		$slug = get_page_uri( $post_id );
 		if ( '' !== $slug ) {
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			bp_update_option( 'rewrite_rules', '' );
 		}
 	}

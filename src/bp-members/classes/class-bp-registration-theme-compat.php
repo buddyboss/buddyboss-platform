@@ -99,6 +99,7 @@ class BP_Registration_Theme_Compat {
 	public function dummy_post() {
 		// Registration page.
 		if ( bp_is_register_page() ) {
+			$actual_page_id = bp_core_get_directory_page_id( 'register' );
 			$title = __( 'Create an Account', 'buddyboss' );
 
 			if ( 'completed-confirmation' == bp_get_current_signup_step() ) {
@@ -107,6 +108,7 @@ class BP_Registration_Theme_Compat {
 
 			// Activation page.
 		} else {
+			$actual_page_id = bp_core_get_directory_page_id( 'activate' );
 			$title = __( 'Activate Your Account', 'buddyboss' );
 
 			if ( bp_account_was_activated() ) {
@@ -116,7 +118,7 @@ class BP_Registration_Theme_Compat {
 
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $actual_page_id ) ? $actual_page_id : 0,
 				'post_title'     => $title,
 				'post_author'    => 0,
 				'post_date'      => 0,

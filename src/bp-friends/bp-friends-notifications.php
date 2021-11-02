@@ -314,4 +314,4 @@ function friends_screen_notification_settings() {
 	<?php
 }
 
-add_action( 'bp_notification_settings', 'friends_screen_notification_settings' );
+add_action( 'bp_notification_settings', 'friends_screen_notification_settings', 15 );
