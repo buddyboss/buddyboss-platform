@@ -1409,7 +1409,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'user_permissions'      => $this->get_media_current_user_permissions( $media ),
 			'type'                  => $media->type,
 		);
-		
+
 		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
 		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $data['activity_id'] );
@@ -3508,6 +3508,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							$retval['edit_post_privacy'] = $parent_activity_id;
 						} else {
 							$retval['edit_post_privacy'] = $media->activity_id;
+						}
+
+						$activity = new BP_Activity_Activity( (int) $retval['edit_post_privacy'] );
+						if ( ! empty( $activity->id ) && ! empty( $activity->type ) && 'activity_comment' === $activity->type ) {
+							$retval['edit_post_privacy'] = 0;
 						}
 					} else {
 						$retval['edit_privacy'] = 1;
