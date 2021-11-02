@@ -163,7 +163,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					'bp_rest_invalid_group_members_message',
 					sprintf(
 						'%1$s %2$s',
-						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+						( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message: ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message: ', 'buddyboss' ),
 						implode( ', ', $not_friends )
 					),
 					array(
@@ -232,6 +232,19 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
 					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bp_message_document',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -1111,26 +1124,16 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to create a group message.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to create a group message.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && function_exists( 'bp_disable_group_messages' ) && false === bp_disable_group_messages() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a group message.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			$retval = true;
 		}
 
 		/**

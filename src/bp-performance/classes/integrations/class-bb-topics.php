@@ -47,6 +47,7 @@ class BB_Topics extends Integration_Abstract {
 		);
 
 		$this->purge_event( 'bbp-topics', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge

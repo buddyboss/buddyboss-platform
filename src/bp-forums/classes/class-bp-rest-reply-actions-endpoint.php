@@ -191,19 +191,15 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function action_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
 		}
 
@@ -521,19 +517,15 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function move_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval ) {
+		if ( is_user_logged_in() ) {
 			$retval = $this->get_item_permissions_check( $request );
 		}
 
@@ -558,8 +550,9 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 */
 	protected function rest_update_reply_spam( $reply_id, $value ) {
 
-		$status  = true;
-		$is_spam = bbp_is_reply_spam( $reply_id );
+		$status   = true;
+		$is_spam  = bbp_is_reply_spam( $reply_id );
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
 
 		// Subscribed and unsubscribing.
 		if ( true === $is_spam && empty( $value ) ) {
@@ -568,6 +561,11 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			// Not subscribed and subscribing.
 		} elseif ( false === $is_spam && ! empty( $value ) ) {
 			$status = bbp_spam_reply( $reply_id );
+		}
+
+		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+			// Update total parent reply count when any parent trashed.
+			bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		}
 
 		return $status;
@@ -595,6 +593,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		}
 
 		$post_status = get_post_status( $reply_id );
+		$topic_id    = bbp_get_reply_topic_id( $reply_id );
 
 		if (
 			'trash' === $post_status
@@ -606,6 +605,11 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			&& ! empty( $value )
 		) {
 			$status = wp_trash_post( $reply_id );
+		}
+
+		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+			// Update total parent reply count when any parent trashed.
+			bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		}
 
 		return ( ! empty( $status ) && ! is_wp_error( $status ) ? true : $status );

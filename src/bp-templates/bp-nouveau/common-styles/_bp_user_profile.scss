@@ -469,3 +469,22 @@ div.profile_completion_wrap {
 		}
 	}
 }
+
+/* Hide sidebar and header for web view in App */
+
+.in-bbapp {
+
+	#secondary {
+		display: none;
+	}
+
+	#buddypress {
+
+		#item-header,
+		.bp-wrap .main-navs {
+			display: none;
+		}
+
+	}
+
+}
