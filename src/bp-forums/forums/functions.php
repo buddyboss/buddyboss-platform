@@ -1997,6 +1997,20 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 			$post_stati[] = bbp_get_hidden_status_id();
 		}
 
+		/** Draft */
+
+		// Remove 'Draft' if user is not capable.
+		if ( ! is_admin() || ! current_user_can( 'publish_forums' ) ) {
+			$key = array_search( 'draft', $post_stati, true );
+			if ( ! empty( $key ) ) {
+				unset( $post_stati[ $key ] );
+			}
+
+			// ...or add it if they are
+		} elseif ( is_admin() ) {
+			$post_stati[] = 'draft';
+		}
+
 		// Add the statuses
 		$posts_query->set( 'post_status', array_unique( array_filter( $post_stati ) ) );
 	}

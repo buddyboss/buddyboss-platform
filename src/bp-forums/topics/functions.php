@@ -974,6 +974,11 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 	bbp_update_topic_forum_id( $topic_id, $forum_id );
 	bbp_update_topic_topic_id( $topic_id, $topic_id );
 
+	// Forum topic count meta.
+	bbp_update_forum_reply_count( $forum_id );
+	bbp_update_forum_topic_count( $forum_id );
+	bbp_update_forum_topic_count_hidden( $forum_id );
+
 	// Update associated topic values if this is a new topic.
 	if ( empty( $is_edit ) ) {
 
