@@ -52,7 +52,7 @@ class BB_Members extends Integration_Abstract {
 		);
 
 		$this->purge_event( 'bp-members', $purge_events );
-
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 		/**
 		 * Support for single items purge
 		 */

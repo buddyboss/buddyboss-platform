@@ -119,16 +119,16 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_component_required',
+			__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
+			array(
+				'status' => '404',
+			)
+		);
 
-		if ( ! bp_is_active( 'groups' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
-				array(
-					'status' => '404',
-				)
-			);
+		if ( bp_is_active( 'groups' ) ) {
+			$retval = true;
 		}
 
 		/**
@@ -197,6 +197,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_loggedin_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
+		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		remove_action( 'bp_init', 'bp_register_post_types', 2 );
 		remove_action( 'bp_init', 'bp_setup_title', 8 );
@@ -217,6 +218,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action( 'bp_ld_sync/init' ); // We should remove when platform load learndash extention on bp_init.
 		do_action( 'bp_actions' );
 
+		add_action( 'bp_init', 'bb_moderation_load', 1 );
 		add_action( 'bp_init', 'bp_register_taxonomies', 2 );
 		add_action( 'bp_init', 'bp_register_post_types', 2 );
 		add_action( 'bp_init', 'bp_setup_title', 8 );
@@ -333,7 +335,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$retval['tabs'] = $navigation;
+		$retval['tabs'] = apply_filters( 'bp_rest_group_tabs', $navigation );
 
 		// Fixes for the phpunit.
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
@@ -569,7 +571,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		switch ( $slug ) {
 			case 'all':
 				$args = array( 'type' => $type );
-				if ( bp_current_user_can( 'bp_moderate' ) ) {
+				if ( is_user_logged_in() ) {
 					$args['show_hidden'] = true;
 				}
 				$groups = groups_get_groups( $args );
@@ -617,6 +619,8 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			$admins = groups_get_group_admins( $group->id );
 			$mods   = groups_get_group_mods( $group->id );
 			$count  = count( $admins ) + count( $mods );
+		} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
+			$count = bp_video_get_total_group_video_count( $group->id );
 		}
 
 		if ( ! isset( $count ) ) {

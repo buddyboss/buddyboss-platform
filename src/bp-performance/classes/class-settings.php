@@ -150,6 +150,13 @@ class Settings {
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
+					'cache_bb_video'           => array(
+						'label'          => __( 'Videos', 'buddyboss' ),
+						'label_checkbox' => __( 'Cache Videos', 'buddyboss' ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-video&nonce=' . self::$purge_nonce,
+						'type'           => 'checkbox',
+						'value'          => true,
+					),
 				),
 			),
 		);
@@ -211,6 +218,9 @@ class Settings {
 					'bp-activity',
 					'bp-messages',
 					'bp-friends',
+					'bp-media',
+					'bp-document',
+					'bp-video',
 				);
 				break;
 		}
@@ -257,7 +267,7 @@ class Settings {
 				foreach ( $components as $component ) {
 					Cache::instance()->purge_by_component( $component );
 				}
-
+				Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
 				$purge_url = self::get_performance_purge_url();
 				wp_safe_redirect( $purge_url . '&cache_purge=1' );
 				exit();

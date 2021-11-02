@@ -69,6 +69,8 @@ function bp_core_set_uri_globals() {
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
+	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
+		$path = esc_url( $_REQUEST['_wp_http_referer'] );
 	} else {
 		$path = esc_url( $_SERVER['REQUEST_URI'] );
 	}
@@ -393,6 +395,13 @@ function bp_core_set_uri_globals() {
 	}
 
 	$bp->current_action = $current_action;
+
+	/**
+	 * Extend support for the $bp setup based on uri.
+	 *
+	 * @since BuddyBoss 1.5.9
+	 */
+	do_action( 'bp_core_set_uri_globals', $bp, $bp_uri );
 
 	// Slice the rest of the $bp_uri array and reset offset.
 	$bp_uri     = array_slice( $bp_uri, $uri_offset + 2 );
@@ -1148,6 +1157,18 @@ function bp_private_network_template_redirect() {
 		$id                  = ( ! empty( $id ) ) ? $id : 0;
 		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
 
+		/**
+		 * Filter to check custom registration is enable or not.
+		 *
+		 * @since BuddyBoss 1.7.9
+		 *
+		 * @param bool $validated If custom registration is enable then true otherwise false.
+		 * @param string $id Current page ID.
+		 *
+		 * @return bool|mixed
+		 */
+		$is_enable_custom_registration = apply_filters( 'bb_is_enable_custom_registration', false, $id );
+
 		if ( ! $enable_private_network ) {
 
 			if ( apply_filters( 'bp_private_network_pre_check', false ) ) {
@@ -1230,13 +1251,7 @@ function bp_private_network_template_redirect() {
 							$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
-								if (
-									'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
-									|| (
-										'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
-										&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
-									)
-								) {
+								if ( $is_enable_custom_registration ) {
 
 									$redirect_url  = is_ssl() ? 'https://' : 'http://';
 									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1289,13 +1304,7 @@ function bp_private_network_template_redirect() {
 
 						$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						if ( $actual_link !== wc_lostpassword_url() ) {
-							if (
-								'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
-								|| (
-									'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
-									&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
-								)
-							) {
+							if ( $is_enable_custom_registration ) {
 
 								$redirect_url  = is_ssl() ? 'https://' : 'http://';
 								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1336,7 +1345,7 @@ function bp_private_network_template_redirect() {
 					$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
-						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+						if ( $is_enable_custom_registration ) {
 
 							$redirect_url  = is_ssl() ? 'https://' : 'http://';
 							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1479,21 +1488,78 @@ add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_pr
  */
 function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
 
+	// Bail if not login page.
+	if ( ! did_action( 'login_init' ) ) {
+		return $link;
+	}
+
 	if ( ! is_user_logged_in() ) {
+		$privacy_policy_url = get_privacy_policy_url();
+		$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
+		$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
 
-		$enable_private_network = bp_enable_private_network();
-
-		if ( ! $enable_private_network ) {
-
-			$privacy_policy_url = get_privacy_policy_url();
-			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
-			$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
-
-			if ( $privacy_policy_url && $page_title ) {
-				$get_privacy_policy = get_post( $policy_page_id );
-				$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
-			}
+		if ( $privacy_policy_url && $page_title ) {
+			$get_privacy_policy = get_post( $policy_page_id );
+			$get_content        = apply_filters( 'bp_privacy_policy_content', wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), $get_privacy_policy->post_content );
+			$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), $get_content, esc_html( 'Close (Esc)' ), esc_html( '×' ) );
 		}
+	}
+
+	$page_ids = bp_core_get_directory_page_ids();
+	$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+	$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+
+	if (
+		( ! empty( $terms ) && 'publish' === get_post_status( $terms ) ) ||
+		( ! empty( $privacy ) && 'publish' === get_post_status( $privacy ) )
+	) {
+		if ( ! empty( $terms ) && ! empty( $privacy ) ) {
+			$page_title       = ! empty( $terms ) ? get_the_title( $terms ) : '';
+			$get_terms        = get_post( $terms );
+			$get_term_content = apply_filters( 'bp_term_of_service_content', wp_kses_post( apply_filters( 'the_content', $get_terms->post_content ) ), $get_terms->post_content );
+			$link             = sprintf(
+				'<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+				'#terms-modal',
+				$page_title,
+				$page_title,
+				$get_term_content,
+				esc_html( 'Close (Esc)' ),
+				esc_html( '×' )
+			);
+			$page_title       = ( $privacy ) ? get_the_title( $privacy ) : '';
+			$get_privacy      = get_post( $privacy );
+			$get_content      = apply_filters( 'bp_privacy_policy_content', wp_kses_post( apply_filters( 'the_content', $get_privacy->post_content ) ), $get_privacy->post_content );
+			$link             .= ' ' . __( 'and', 'buddyboss' ) . ' ';
+			$link             .= sprintf(
+				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+				'#privacy-modal',
+				$page_title,
+				$page_title,
+				$get_content,
+				esc_html( 'Close (Esc)' ),
+				esc_html( '×' )
+			);
+		} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
+			$page_title  = ! empty( $privacy ) ? get_the_title( $privacy ) : '';
+			$get_privacy = get_post( $privacy );
+			$get_content = apply_filters( 'bp_privacy_policy_content', wp_kses_post( apply_filters( 'the_content', $get_privacy->post_content ) ), $get_privacy->post_content );
+			$link        = sprintf(
+				'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
+				'#privacy-modal',
+				$page_title,
+				$page_title,
+				$get_content,
+				esc_html( 'Close (Esc)' ),
+				esc_html( '×' )
+			);
+		} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
+			$page_title       = ! empty( $terms ) ? get_the_title( $terms ) : '';
+			$get_terms        = get_post( $terms );
+			$get_term_content = apply_filters( 'bp_term_of_service_content', wp_kses_post( apply_filters( 'the_content', $get_terms->post_content ) ), $get_terms->post_content );
+			$link             = sprintf( '<a class="terms-link popup-modal-login popup-terms" href="%s">%s</a><div id="terms-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#terms-modal', $page_title, $page_title, $get_term_content, esc_html( 'Close (Esc)' ), esc_html( '×' ) );
+		}
+
+		$privacy_policy_url = '';
 	}
 
 	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );

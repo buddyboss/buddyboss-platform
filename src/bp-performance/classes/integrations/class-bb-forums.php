@@ -60,6 +60,7 @@ class BB_Forums extends Integration_Abstract {
 		);
 
 		$this->purge_event( 'bbp-forums', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge

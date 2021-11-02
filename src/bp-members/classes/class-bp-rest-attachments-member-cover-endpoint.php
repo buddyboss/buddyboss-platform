@@ -202,7 +202,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 * @api            {POST} /wp-json/buddyboss/v1/members/:user_id/cover Create Member Cover
 	 * @apiName        CreateBBMemberCover
 	 * @apiGroup       Members
-	 * @apiDescription Create member cover
+	 * @apiDescription Create member cover. This endpoint requires request to be sent in "multipart/form-data" format.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} user_id A unique numeric ID for the User.
