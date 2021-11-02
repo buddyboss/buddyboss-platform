@@ -133,55 +133,71 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 
-		'giphy'               => array(
+		'giphy'                         => array(
 			'file'         => "{$url}vendor/giphy{$min}.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),
-
-		'emojione'            => array(
+		'emojione'                      => array(
 			'file'         => "{$url}emojione-edited.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),
-		'emojionearea'        => array(
+		'emojionearea'                  => array(
 			'file'         => "{$url}emojionearea-edited.js",
 			'dependencies' => array( 'emojione' ),
 			'footer'       => true,
 		),
-		'bp-exif'             => array( 'file' => "{$url}vendor/exif.js" ),
-
-		'bp-media-dropzone'   => array(
+		'bp-exif'                       => array( 'file' => "{$url}vendor/exif.js" ),
+		'bp-media-dropzone'             => array(
 			'file'         => "{$url}vendor/dropzone{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-		'bp-medium-editor'    => array(
+		'bp-medium-editor'              => array(
 			'file'         => "{$url}vendor/medium-editor{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-		'bp-select2'          => array(
+		'bp-select2'                    => array(
 			'file'         => "{$url}vendor/select2.min.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-
-		'isInViewport'        => array(
+		'isInViewport'                  => array(
 			'file'         => "{$url}vendor/isInViewport{$min}.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),
-
-		'jquery-datetimepicker' => array(
-				'file'         => "{$url}vendor/jquery.datetimepicker.full{$min}.js",
-				'dependencies' => array( 'jquery' ),
-				'footer'       => true,
+		'jquery-datetimepicker'         => array(
+			'file'         => "{$url}vendor/jquery.datetimepicker.full{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
+		),
+		'bp-media-videojs'              => array(
+			'file'         => "{$url}vendor/video{$min}.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-seek-buttons' => array(
+			'file'         => "{$url}vendor/videojs-seek-buttons.min.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-flv'          => array(
+			'file'         => "{$url}vendor/flv.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-media-videojs-flash'        => array(
+			'file'         => "{$url}vendor/videojs-flash.js",
+			'dependencies' => array(),
+			'footer'       => false,
 		),
 
 	);
 
-	// Add the "register.js" file if it's a register page and Profile Type field
+	// Add the "register.js" file if it's a register page and Profile Type field.
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		$scripts['bp-register-page'] = array(
 			'file'         => "{$url}register{$min}.js",
@@ -277,7 +293,7 @@ function bp_core_register_common_scripts() {
 			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
 			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
 			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
+			'dictFileTooBig'               => __( "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.", 'buddyboss' ),
 			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
 			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
 			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
@@ -340,12 +356,16 @@ function bp_core_register_common_styles() {
 				'dependencies' => array(),
 			),
 			'bp-select2'              => array(
-				'file'         => "{$url}select2.min.css",
+				'file'         => "{$url}vendor/select2{$min}.css", // select2.min.css was issuing with rtl.
 				'dependencies' => array(),
 			),
-			'jquery-datetimepicker' => array(
-					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
-					'dependencies' => array(),
+			'jquery-datetimepicker'   => array(
+				'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
+				'dependencies' => array(),
+			),
+			'bp-media-videojs-css'    => array(
+				'file'         => "{$url}vendor/video-js{$min}.css",
+				'dependencies' => array(),
 			),
 		)
 	);

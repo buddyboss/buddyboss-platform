@@ -2312,3 +2312,37 @@ function bp_xprofile_reset_cover_image_position( $user_id ) {
 }
 add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
 add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+
+/**
+ * Function will return the users id based on given xprofile field id and field value.
+ *
+ * @param int    $field_id  to check against the filed id.
+ * @param string $field_val to check against the filed value.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool|array
+ */
+function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
+	global $wpdb, $bp;
+
+	$bp_table = $bp->profile->table_name_data;
+
+	$query = $wpdb->prepare(
+		"SELECT U.ID " .
+		"FROM $bp_table B, $wpdb->users U " .
+		"WHERE B.user_id = U.ID " .
+		"AND B.field_id = %d " .
+		"AND B.value = %s"
+		, $field_id
+		, $field_val
+	);
+
+	$get_desired = $wpdb->get_results( $query );
+
+	if( count( $get_desired ) ) {
+		return $get_desired;
+	} else {
+		return false;
+	}
+}

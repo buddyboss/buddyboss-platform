@@ -133,17 +133,26 @@ function bp_rest_version() {
 /**
  * Get user URL.
  *
- * @param int $user_id User ID.
+ * @param int|array $user_ids User IDs.
  *
  * @return string
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_get_user_url( $user_id ) {
+function bp_rest_get_user_url( $user_ids ) {
+	if ( is_array( $user_ids ) ) {
+		return sprintf(
+			'/%s/%s/members?include=%s',
+			bp_rest_namespace(),
+			bp_rest_version(),
+			implode( ',', $user_ids )
+		);
+	}
+
 	return sprintf(
 		'/%s/%s/members/%d',
 		bp_rest_namespace(),
 		bp_rest_version(),
-		$user_id
+		absint( $user_ids )
 	);
 }
 
