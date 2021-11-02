@@ -220,11 +220,11 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 
 		// Name only.
 	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
+		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['name']['old'] ), wp_strip_all_tags( $changed['name']['new'] ) );
 
 		// Description only.
 	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
+		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['description']['old'] ), wp_strip_all_tags( $changed['description']['new'] ) );
 
 	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
@@ -330,7 +330,15 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	}
 
 	// Determine groups of user.
-	$groups = groups_get_user_groups( $user_id );
+	$groups = groups_get_groups(
+		array(
+			'fields'      => 'ids',
+			'per_page'    => - 1,
+			'user_id'     => $user_id,
+			'show_hidden' => true,
+		)
+	);
+
 	if ( empty( $groups['groups'] ) ) {
 		$groups = array( 'groups' => array() );
 	}
@@ -353,7 +361,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'value'  => 0,
 			);
 		}
-	} else if ( ! is_user_logged_in() ) {
+	} elseif ( ! is_user_logged_in() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -440,6 +448,7 @@ add_filter( 'bp_activity_set_groups_scope_args', 'bp_groups_filter_activity_scop
  * @return WP_Error|bool|int See {@link bp_activity_add()}.
  */
 function groups_record_activity( $args = '' ) {
+	global $bp_activity_edit;
 
 	if ( ! bp_is_active( 'activity' ) ) {
 		return false;
@@ -452,6 +461,47 @@ function groups_record_activity( $args = '' ) {
 
 		if ( isset( $group->status ) && 'public' != $group->status ) {
 			$hide_sitewide = true;
+		}
+	}
+
+	// Edit group activity args
+	if ( ! empty( $args['id'] ) ) {
+		$activity = new BP_Activity_Activity( $args['id'] );
+
+		if ( ! empty( $activity->id ) ) {
+			$bp_activity_edit = true;
+
+			if ( ! bp_activity_user_can_edit( $activity ) ) {
+				if ( 'wp_error' === $args['error_type'] ) {
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			$args = array(
+				'id'                => $activity->id,
+				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,
+				'content'           => ! empty( $args['content'] ) ? $args['content'] : '',
+				'component'         => $activity->component,
+				'type'              => $activity->type,
+				'primary_link'      => $activity->primary_link,
+				'user_id'           => $activity->user_id,
+				'item_id'           => ! empty( $args['item_id'] ) ? $args['item_id'] : $activity->item_id,
+				'secondary_item_id' => $activity->secondary_item_id,
+				'recorded_time'     => $activity->date_recorded,
+				'hide_sitewide'     => $activity->hide_sitewide,
+				'is_spam'           => $activity->is_spam,
+				'privacy'           => $activity->privacy,
+				'error_type'        => ! empty( $args['error_type'] ) ? $args['error_type'] : $activity->error_type,
+			);
+
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+
 		}
 	}
 
@@ -615,9 +665,9 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 	 * Commented cause If user not selected "Notify group members of these changes via email" option
 	 * that time activity should show in the activity area and widget area
 	 */
-	//if ( empty( $notify_members ) ) {
-	//	return;
-	//}
+	// if ( empty( $notify_members ) ) {
+	// return;
+	// }
 
 	$group = groups_get_group(
 		array(

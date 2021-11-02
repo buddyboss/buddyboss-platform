@@ -65,10 +65,13 @@ window.bp = window.bp || {};
         $(this).parents('.repeater_group_outer').toggleClass('active');
     });
 
+
     if (window.location.href.indexOf('#bpxpro') > -1) {
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
-      }
+    }
+
+	var deleted_field_ids = [];
 
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
@@ -80,8 +83,6 @@ window.bp = window.bp || {};
 
         var r = confirm( BP_Nouveau.confirm_delete_set );
         if ( r ) {
-            var deleted_field_ids = [];
-
 	        $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function () {
 		        var $field = $( this );
 		        var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
@@ -142,9 +143,16 @@ window.bp = window.bp || {};
     if ( repeater_set_count === 1 ) {
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
+    // Remove attr from button after page successfully load.
+    if ( window.location.href.indexOf('#bpxpro') > 0 ) {
+        document.addEventListener('DOMContentLoaded', function () {
+            $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
+            $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
+        });
+    }
 
     // Add repeater set button, on edit profile screens
-    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
+    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e) {
         e.preventDefault();
         var $button = $(this);
 
@@ -153,6 +161,8 @@ window.bp = window.bp || {};
         }
 
         $button.addClass('disabled');
+        $button.attr('disabled', 'disabled');
+        $button.css('pointer-events', 'none');
 
         $.ajax({
             'url' : ajaxurl,

@@ -636,13 +636,16 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			$posts = get_posts(
 				array(
-					'post_type'   => bbp_get_topic_post_type(),
-					'post_status' => 'publish',
-					'post_parent' => $_POST['post_parent'],
-					'numberposts' => -1,
-					'orderby'     => 'title',
-					'order'       => 'ASC',
-					'walker'      => '',
+					'post_type'              => bbp_get_topic_post_type(),
+					'post_status'            => 'publish',
+					'post_parent'            => $_POST['post_parent'],
+					'numberposts'            => - 1,
+					'orderby'                => 'title',
+					'order'                  => 'ASC',
+					'walker'                 => '',
+					'suppress_filters'       => false,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 
@@ -670,13 +673,16 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			$posts = get_posts(
 				array(
-					'post_type'   => bbp_get_reply_post_type(),
-					'post_status' => 'publish',
-					'post_parent' => $_POST['post_parent'],
-					'numberposts' => -1,
-					'orderby'     => 'title',
-					'order'       => 'ASC',
-					'walker'      => '',
+					'post_type'              => bbp_get_reply_post_type(),
+					'post_status'            => 'publish',
+					'post_parent'            => $_POST['post_parent'],
+					'numberposts'            => - 1,
+					'orderby'                => 'title',
+					'order'                  => 'ASC',
+					'walker'                 => '',
+					'suppress_filters'       => false,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 

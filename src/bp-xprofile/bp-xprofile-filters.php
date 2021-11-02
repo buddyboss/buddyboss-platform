@@ -96,6 +96,30 @@ add_filter( 'password_change_email', 'bp_xprofile_replace_username_to_display_na
 add_filter( 'email_change_email', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'new_user_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 
+// Profile Completion.
+add_action( 'xprofile_avatar_uploaded', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When profile photo uploaded from profile in Frontend.
+add_action( 'xprofile_cover_image_uploaded', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo uploaded from profile in Frontend.
+add_action( 'bp_core_delete_existing_avatar', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When profile photo deleted from profile in Frontend.
+add_action( 'xprofile_cover_image_deleted', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo deleted from profile in Frontend.
+add_action( 'xprofile_updated_profile', 'bp_core_xprofile_update_profile_completion_user_progress' ); // On Profile updated from frontend.
+add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When fields inside fieldset are dragged and dropped in wp-admin > buddybpss > profile.
+
+// Profile Completion Admin Actions.
+add_action( 'xprofile_fields_saved_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field added/updated in wp-admin > Profile
+add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field deleted in wp-admin > profile.
+add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group deleted in wp-admin.
+add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
+add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
+
+//Display Name setting support
+add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
+
+// Repair repeater field repeated in admin side.
+add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
+
+// Repair user nicknames.
+add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -171,9 +195,15 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
 				'id'    => 1,
 				'class' => 1,
 			),
-			'span' => array( 'style' => 1 ),
-			'p'    => array( 'style' => 1 ),
+			'span' => array(),
+			'p'    => array(),
 		);
+
+		// Allow style attributes on certain elements for capable users
+		if ( bp_current_user_can( 'unfiltered_html' ) ) {
+			$richtext_tags['span'] = array( 'style' => 1 );
+			$richtext_tags['p']    = array( 'style' => 1 );
+		}
 
 		$xprofile_allowedtags = array_merge( $allowedtags, $richtext_tags );
 	}
@@ -768,7 +798,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
-	// Minimum of 4 characters.
+	// Minimum of 3 characters.
 	if ( strlen( $value ) < 3 ) {
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
@@ -997,4 +1027,228 @@ function bp_social_network_search_key( $id, $array ) {
 		}
 	}
 	return null;
+}
+
+/**
+ * Removed Display setting field form profile if is disabled on setting page.
+ *
+ * @param array $args
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_xprofile_exclude_display_name_profile_fields( $args ){
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	$fields_id = array();
+
+	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+		$fields_id[] = bp_xprofile_lastname_field_id();
+	}
+
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+		$fields_id[] = bp_xprofile_lastname_field_id();
+	}
+
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+		$fields_id[] = bp_xprofile_firstname_field_id();
+	}
+
+	if ( ! empty( $fields_id ) ) {
+		if ( empty( $args['exclude_fields'] ) ) {
+			$args['exclude_fields'] = [];
+		}
+		$args['exclude_fields'] = array_merge( wp_parse_id_list( $args['exclude_fields'] ), $fields_id );
+	}
+
+	return $args;
+}
+
+/**
+ * Add xprofile notification repair list item.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_xprofile_repeater_field_repair( $repair_list ) {
+	$repair_list[] = array(
+		'bp-xprofile-repeater-field-repair',
+		__( 'Repair xProfile repeater fieldset.', 'buddyboss' ),
+		'bb_xprofile_repeater_field_repair_callback',
+	);
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will remove duplicate repeater field from database by repair tool.
+ * Also remove remove unnecessary data that may have remained after the migration process.
+ * This function will be called only once.
+ *
+ * @uses bb_xprofile_repeater_field_migration
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_xprofile_repeater_field_repair_callback() {
+	global $wpdb;
+	$bp = buddypress();
+
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
+    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
+    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
+	$added_fields       = $wpdb->get_results( $clone_fields_query );
+
+	if ( $offset == 0 ) {
+		$duplicate_fields = array();
+		$updated_fields   = array();
+	} else {
+		$duplicate_fields = bp_get_option( 'bp_repair_duplicate_fields', array() );
+		$updated_fields   = bp_get_option( 'bp_repair_updated_fields', array() );
+	}
+
+	if ( ! empty( $added_fields ) ) {
+		foreach ( $added_fields as $field ) {
+			$clone_id   = (int) $field->id;
+			$main_field = bb_xprofile_top_most_template_field_id( (int) $clone_id );
+
+			$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$main_field} AND object_type = 'field'", ARRAY_A );
+			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
+				$field_member_types = array();
+				foreach ( $metas as $meta ) {
+					if ( $meta['meta_key'] === 'member_type' ) {
+						$field_member_types[] = $meta;
+						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
+					} else {
+						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
+				}
+				if ( ! empty( $field_member_types ) ) {
+					foreach ( $field_member_types as $meta ) {
+						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
+				}
+			}
+
+			bp_xprofile_update_meta( $clone_id, 'field', '_cloned_from', $main_field );
+
+			$data = array(
+				'group_id'     => $field->group_id,
+				'main_field'   => $main_field,
+				'field_order'  => $field->field_order,
+				'clone_number' => $field->clone_number,
+			);
+
+			if ( ! empty( $updated_fields ) && array_search( $data, $updated_fields, true ) ) {
+				$duplicate_fields[] = $clone_id;
+			} else {
+				$updated_fields[ $clone_id ] = $data;
+			}
+
+			$offset ++;
+		}
+
+		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
+		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
+
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		if ( ! empty( $duplicate_fields ) ) {
+			foreach ( $duplicate_fields as $field_id ) {
+				xprofile_delete_field( $field_id );
+				bp_xprofile_delete_meta( $field_id, 'field' );
+			}
+		}
+
+		bp_delete_option( 'bp_repair_duplicate_fields' );
+		bp_delete_option( 'bp_repair_updated_fields' );
+
+		return array(
+			'status'  => 1,
+			'message' => __( 'Field update complete!', 'buddyboss' ),
+		);
+	}
+}
+
+/**
+ * Add xprofile repair user nicknames.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_xprofile_repair_user_nicknames( $repair_list ) {
+	$repair_list[] = array(
+		'bb-xprofile-repair-user-nicknames',
+		__( 'Repair user nicknames.', 'buddyboss' ),
+		'bb_xprofile_repair_user_nicknames_callback',
+	);
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will update user nicknames.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_xprofile_repair_user_nicknames_callback() {
+	global $wpdb;
+
+	$records_updated = 0;
+	$users_query     = "
+		SELECT
+			users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value
+		FROM
+			`{$wpdb->users}` as users, `{$wpdb->usermeta}` as meta
+		WHERE
+			users.ID = meta.user_ID
+			and meta.meta_key = 'nickname'
+			and users.user_nicename != meta.meta_value";
+	$records         = $wpdb->get_results( $users_query );
+
+	if ( ! empty( $records ) ) {
+		$wpdb->query(
+			"UPDATE
+				`{$wpdb->usermeta}` as meta, `{$wpdb->users}` as users
+			SET
+				meta.meta_value = users.user_nicename
+			WHERE
+				users.ID = meta.user_ID
+				and meta.meta_key = 'nickname'
+				and users.user_nicename != meta.meta_value"
+		);
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE
+					`{$wpdb->users}` as users, `{$wpdb->prefix}bp_xprofile_data` as xprofile
+				SET
+					xprofile.value = users.user_nicename
+				WHERE
+					users.ID = xprofile.user_id
+					and xprofile.field_id = %d
+					and users.user_nicename != xprofile.value",
+				bp_xprofile_nickname_field_id()
+			)
+		);
+		$records_updated = sprintf( __( '%s user nicknames updated successfully.', 'buddyboss' ), number_format_i18n( count( $records ) ) );
+	}
+	return array(
+		'status'  => 1,
+		'records' => $records_updated,
+		'message' => __( 'User nickname update complete!', 'buddyboss' ),
+	);
 }

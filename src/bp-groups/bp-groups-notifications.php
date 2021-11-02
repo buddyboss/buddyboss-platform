@@ -254,10 +254,10 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
 	// What type of promotion is this?
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$promoted_to = __( 'organizer', 'buddyboss' );
+		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
 		$type        = 'member_promoted_to_admin';
 	} else {
-		$promoted_to = __( 'moderator', 'buddyboss' );
+		$promoted_to = get_group_role_label( $group_id, 'moderator_singular_label_name' );
 		$type        = 'member_promoted_to_mod';
 	}
 
@@ -1319,7 +1319,7 @@ function groups_screen_notification_settings() {
 					?>
 					<tr id="groups-notification-settings-request-messages">
 						<td></td>
-						<td><?php _e( 'Group Message', 'buddyboss' ); ?></td>
+						<td><?php _e( 'A group sends you a new message', 'buddyboss' ); ?></td>
 						<td class="yes">
 							<div class="bp-radio-wrap">
 								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />

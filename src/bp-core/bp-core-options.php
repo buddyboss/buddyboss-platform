@@ -702,6 +702,27 @@ function bp_enable_group_hierarchies( $default = false ) {
 }
 
 /**
+ * Are group hide subgroups from the main Groups Directory?
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group hide subgroups from the main Groups Directory, otherwise false.
+ */
+function bp_enable_group_hide_subgroups( $default = false ) {
+
+	/**
+	 * Filters whether or not group hide subgroups from the main Groups Directory
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param bool $value whether or not group hide subgroups from the main Groups Directory.
+	 */
+	return (bool) apply_filters( 'bp_enable_group_hide_subgroups', (bool) bp_get_option( 'bp-enable-group-hide-subgroups', $default ) );
+}
+
+/**
  * Are group restrict invites to members who already in specific parent group?
  *
  * @since BuddyBoss 1.0.0
@@ -807,6 +828,34 @@ function bp_enable_private_network( $default = false ) {
  *              items, otherwise false.
  */
 function bp_disable_blogforum_comments( $default = false ) {
+	global $activities_template;
+
+	// When here is not activity.
+	if ( empty( $activities_template->activity ) ) {
+		return $default;
+	}
+	
+	if ( empty(  $activities_template->activity->component ) ) {
+		return $default;
+	}
+
+	if ( 'blogs' !== $activities_template->activity->component ) {
+		return $default;
+	}
+
+	$post = get_post( $activities_template->activity->secondary_item_id );
+
+	if ( ! isset( $post->post_type ) ) {
+		return $default;
+	}
+
+	// Does not allow comment for WooCommerce product.
+	if ( 'product' === $post->post_type ) {
+		return true;
+	}
+
+	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
+	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
@@ -815,7 +864,31 @@ function bp_disable_blogforum_comments( $default = false ) {
 	 *
 	 * @param bool $value Whether or not blog and forum activity feed comments are disabled.
 	 */
-	return (bool) apply_filters( 'bp_disable_blogforum_comments', (bool) bp_get_option( 'bp-disable-blogforum-comments', $default ) );
+	return (bool) apply_filters( 'bp_disable_blogforum_comments', $disable );
+}
+
+/**
+ * Describe the activity comment is enable or not for custom post type.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ * @param bool $default   Optional. Fallback value if not found in the database.
+ *                        Default: false.
+ * @return bool True if activity comments are enable for blog and forum
+ *              items, otherwise false.
+ */
+function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name = bb_post_type_feed_comment_option_name( $post_type );
+
+	/**
+	 * Filters whether or not custom post type feed comments are enable.
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param bool $value Whether or not custom post type activity feed comments are enable.
+	 */
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
 }
 
 /**
@@ -902,6 +975,92 @@ function bp_is_activity_autoload_active( $default = true ) {
 	 * @param bool $value Whether or not Activity Autoload is enabled.
 	 */
 	return (bool) apply_filters( 'bp_is_activity_autoload_active', (bool) bp_get_option( '_bp_enable_activity_autoload', $default ) );
+}
+
+/**
+ * Check whether Activity edit is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bp_is_activity_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity edit is enabled.
+	 *
+	 * @since BuddyBoss 1.5.0
+	 *
+	 * @param bool $value Whether or not Activity edit is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+}
+
+/**
+ * Check whether relevant feed is enabled.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+
+function bp_is_relevant_feed_enabled( $default = false ){
+
+	/**
+	 * Filters whether or not relevant feed is enabled.
+	 *
+	 * @since BuddyBoss 1.5.5
+	 *
+	 * @param bool $value Whether or not relevant feed is enabled.
+	 */
+
+	return (bool) apply_filters( 'bp_is_relevant_feed_enabled', (bool) bp_get_option( '_bp_enable_relevant_feed', $default ) );
+}
+
+/**
+ * single time slot by time key.
+ *
+ * @param null $time Return single time slot by time key.
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.5.0
+ *
+ */
+function bp_activity_edit_times( $time = null ) {
+
+	$times = apply_filters(
+		'bp_activity_edit_times',
+		array(
+			'thirty_days' => array( 'value' => ( 60 * 60 * 24 * 30 ), 'label' => __( '30 Days', 'buddyboss' ) ),
+			'seven_days'  => array( 'value' => ( 60 * 60 * 24 * 7 ), 'label' => __( '7 Days', 'buddyboss' ) ),
+			'one_day'     => array( 'value' => ( 60 * 60 * 24 ), 'label' => __( '1 Day', 'buddyboss' ) ),
+			'one_hour'    => array( 'value' => ( 60 * 60 ), 'label' => __( '1 Hour', 'buddyboss' ) ),
+			'ten_minutes' => array( 'value' => ( 60 * 10 ), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+		)
+	);
+
+	if ( $time && isset( $times[ $time ] ) ) {
+		return $times[ $time ];
+	}
+
+	return $times;
+}
+
+/**
+ * Get BuddyBoss Activity Time option.
+ *
+ * @param bool $default when option not found, function will return $default value
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_get_activity_edit_time( $default = false ) {
+	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );
 }
 
 /**
@@ -1042,6 +1201,11 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
  */
 function bp_force_friendship_to_message( $default = false ) {
 
+	$value = (bool) bp_get_option( 'bp-force-friendship-to-message', $default );
+	if ( ( ! is_admin() && bp_current_user_can( 'bp_moderate' ) ) || ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && bp_current_user_can( 'bp_moderate' ) ) ) {
+		$value = false;
+	}
+
 	/**
 	 * Filters whether or not friendship is forced to message each other.
 	 *
@@ -1049,7 +1213,7 @@ function bp_force_friendship_to_message( $default = false ) {
 	 *
 	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
-	return (bool) apply_filters( 'bp_force_friendship_to_message', (bool) bp_get_option( 'bp-force-friendship-to-message', $default ) );
+	return (bool) apply_filters( 'bp_force_friendship_to_message', $value );
 }
 
 /**
@@ -1177,7 +1341,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether post type feed enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
 }
 
 /**
@@ -1216,7 +1380,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 
 	/**
-	 * Filters whether or not the feed enable or not.
+	 * Filters whether specified $activity_type should be enabled or no.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -1283,9 +1447,9 @@ function bp_member_type_default_on_registration( $default = '' ) {
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 
 	/**
-	 * Filters whether or not allow member type invitations.
+	 * Filters whether specified $member_type should be allowed to send invites.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value whether or not allow member type invitations.
 	 */
@@ -1306,7 +1470,7 @@ function bp_enable_private_network_public_content( $default = '' ) {
 	/**
 	 * Filters private network's public content.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Private network's public content.
 	 */
@@ -1375,7 +1539,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
 }
 
 /**
@@ -1462,6 +1626,27 @@ function bp_register_confirm_email( $default = false ) {
 }
 
 /**
+ * Display legal agreement field in registrations.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not display legal agreement field in registrations.
+ */
+function bb_register_legal_agreement( $default = false ) {
+
+	/**
+	 * Filters whether or not display legal agreement field in registrations.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 *
+	 * @param bool $value whether or not display legal agreement field in registrations.
+	 */
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
+}
+
+/**
  * Display password confirmation field in registrations.
  *
  * @since BuddyBoss 1.1.6
@@ -1497,7 +1682,7 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
 	/**
 	 * Filters profile layout format.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param bool $value Profile layout format.
 	 */
@@ -1519,7 +1704,7 @@ function bp_group_layout_default_format( $default = 'grid' ) {
 	/**
 	 * Filters group layout format.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param bool $value Group layout format.
 	 */
@@ -1588,4 +1773,147 @@ function bp_disable_group_messages( $default = false ) {
 	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
+}
+
+/**
+ * Default display name format.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: first_name.
+ * @return string display name format.
+ */
+function bp_core_display_name_format( $default = 'first_name' ) {
+
+	/**
+	 * Filters default display name format.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $value Default display name format.
+	 */
+	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
+}
+
+/**
+ * Enable private REST APIs.
+ * - Wrapper function to check settings with BuddyBoss APP and Platform both.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool True if  private REST APIs is enabled, otherwise false.
+ */
+function bp_rest_enable_private_network() {
+
+	$retval = (
+		function_exists( 'bp_enable_private_network' ) &&
+		true !== bp_enable_private_network() &&
+		(
+			! function_exists( 'bbapp_is_private_app_enabled' ) ||
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled() // Check for buddyboss app private network.
+			)
+		)
+	);
+
+	/**
+	 * Filters whether private private REST APIs is enabled.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param bool $value Whether private REST APIs is enabled.
+	 */
+	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}
+
+/**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
+}
+
+/**
+ * Option name for custom post type.
+ * From the activity settings whether any custom post enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bb_post_type_feed_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type;
+}
+
+/**
+ * Option name for custom post type comments.
+ * From the activity settings whether any custom post comments are enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bb_post_type_feed_comment_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type . '-comments';
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return array.
+ */
+function bb_feed_post_types() {
+	// Get all active custom post type.
+	$post_types = get_post_types( array( 'public' => true ) );
+
+	// Exclude BP CPT.
+	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+
+	$bp_excluded_cpt = array();
+
+	foreach ( $post_types as $post_type ) {
+		// Exclude all the custom post type which is already in BuddyPress Activity support.
+		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
+			continue;
+		}
+
+		$bp_excluded_cpt[] = $post_type;
+	}
+
+	return $bp_excluded_cpt;
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return array.
+ */
+function bb_feed_not_allowed_comment_post_types() {
+	// Exclude BP CPT.
+	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 }

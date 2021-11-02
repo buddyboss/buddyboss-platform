@@ -82,56 +82,69 @@ function bp_core_ajax_widget_members() {
 		'user_id'         => 0,
 		'type'            => $type,
 		'per_page'        => $max_members,
-		'max'             => $max_members,
+		'max'             => false,
 		'populate_extras' => true,
 		'search_terms'    => false,
 		'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
 	);
-
+	$result = array();
+	$content = '';
 	// Query for members.
-	if ( bp_has_members( $members_args ) ) : ?>
-		<?php echo '0[[SPLIT]]'; // Return valid result. TODO: remove this. ?>
-		<?php
+	if ( bp_has_members( $members_args ) ) :
+
+		$result['success'] = 1;
+		$result['show_more'] = ( $members_template->total_member_count > $max_members ) ? true : false;
+		ob_start();
 		while ( bp_members() ) :
 			bp_the_member();
 			?>
-			<li class="vcard">
-				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>">
+            <li class="vcard">
+                <div class="item-avatar">
+                    <a href="<?php bp_member_permalink(); ?>">
 						<?php bp_member_avatar(); ?>
 						<?php
 						$current_time = current_time( 'mysql', 1 );
 						$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
 						if ( $diff < 300 ) { // 5 minutes  =  5 * 60
 							?>
-							<span class="member-status online"></span>
+                            <span class="member-status online"></span>
 						<?php } ?>
-					</a>
-				</div>
+                    </a>
+                </div>
 
-				<div class="item">
-					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
-					<div class="item-meta">
-						<?php if ( 'newest' == $settings['member_default'] ) : ?>
-							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
-						<?php elseif ( 'active' == $settings['member_default'] ) : ?>
-							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
-						<?php else : ?>
-							<span class="activity"><?php bp_member_total_friend_count(); ?></span>
-						<?php endif; ?>
-					</div>
-				</div>
-				<div class="member_last_visit"></div>
-			</li>
+                <div class="item">
+                    <div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
+                    <div class="item-meta">
 
-		<?php endwhile; ?>
+	                    <?php if ( isset( $settings['member_default'] ) && 'newest' === $settings['member_default'] ) : ?>
+                            <span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
+	                    <?php elseif ( isset( $settings['member_default'] ) && 'active' === $settings['member_default'] ) : ?>
+                            <span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
+	                    <?php elseif ( bp_is_active( 'friends' ) ) : ?>
+                            <span class="activity"><?php bp_member_total_friend_count(); ?></span>
+	                    <?php endif; ?>
+                    </div>
+                </div>
+                <div class="member_last_visit"></div>
+            </li>
+		<?php endwhile;
+		$content .= ob_get_clean();
+		?>
 
-	<?php else : ?>
-		<?php echo '-1[[SPLIT]]<li>'; ?>
+	<?php else :
+		$result['success'] = 0;
+		$result['show_more'] = false;
+		ob_start();
+		?>
 		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
 		<?php echo '</li>'; ?>
 		<?php
+		$content .= ob_get_clean();
 	endif;
+	$result['data'] = $content;
+	echo wp_json_encode( $result);
+	exit;
 }
 add_action( 'wp_ajax_widget_members', 'bp_core_ajax_widget_members' );
 add_action( 'wp_ajax_nopriv_widget_members', 'bp_core_ajax_widget_members' );
+

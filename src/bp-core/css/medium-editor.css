@@ -280,7 +280,7 @@
 }
 
 .medium-editor-element {
-	word-wrap: break-word;
+	word-break: break-word;
 	min-height: 30px;
 }
 

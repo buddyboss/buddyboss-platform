@@ -112,9 +112,10 @@ class BP_Blogs_Theme_Compat {
 	 */
 	public function directory_dummy_post() {
 
+		$blog_page_id = bp_core_get_directory_page_id( 'blog' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $blog_page_id ) ? $blog_page_id : 0,
 				'post_title'     => __( 'Sites', 'buddyboss' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -186,9 +187,10 @@ class BP_Blogs_Theme_Compat {
 			$title = __( 'Sites', 'buddyboss' );
 		}
 
+		$blog_page_id = bp_core_get_directory_page_id( 'blog' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $blog_page_id ) ? $blog_page_id : 0,
 				'post_title'     => $title,
 				'post_author'    => 0,
 				'post_date'      => 0,
