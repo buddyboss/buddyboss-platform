@@ -192,16 +192,16 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			// Process changes to user suspend
 			add_action( 'bp_members_admin_load', array( $this, 'process_user_suspend_update' ) );
 
-		// Set Cookie to reset the previous layout stored in browser storage.
-		add_action( 'update_option_bp-profile-layout-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
-		add_action( 'update_option_bp-profile-layout-default-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
+			// Set Cookie to reset the previous layout stored in browser storage.
+			add_action( 'update_option_bp-profile-layout-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
+			add_action( 'update_option_bp-profile-layout-default-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
 
-		// Set Cookie to reset the previous layout stored in browser storage.
-		add_action( 'update_option_bp-group-layout-format', array( $this, 'bp_group_layout_update_option' ), 10, 2 );
-		add_action( 'update_option_bp-group-layout-default-format', array( $this, 'bp_group_layout_update_option' ), 10, 2 );
+			// Set Cookie to reset the previous layout stored in browser storage.
+			add_action( 'update_option_bp-group-layout-format', array( $this, 'bp_group_layout_update_option' ), 10, 2 );
+			add_action( 'update_option_bp-group-layout-default-format', array( $this, 'bp_group_layout_update_option' ), 10, 2 );
 
-		/** Signups **********************************************************
-		 */
+			/** Signups **********************************************************
+			 */
 
 			if ( is_admin() ) {
 
@@ -1234,7 +1234,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 								?>
 								<label class="suspend"><input type="radio" name="user_status" id="user_status" value="suspend" <?php checked( $is_suspend, true ); ?>><?php esc_html_e( 'Suspend', 'buddyboss' ); ?></label>
 								<?php
-							} ?>
+							}
+							?>
 						</div>
 
 					<?php endif; ?>
@@ -1494,8 +1495,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 * Process changes from the profile type metabox.
 		 *
 		 * @since BuddyBoss 1.5.6
- 		 *
- 		 * @param string $doaction
+		 *
+		 * @param string $doaction
 		 */
 		public function process_user_suspend_update( $doaction = '' ) {
 
@@ -2625,7 +2626,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 						}
 					} else {
 
-						if ( $user_id === get_current_user_id() ) {
+						if ( get_current_user_id() === $user_id ) {
 
 							// Set the new profile type.
 							if ( $new_type !== $member_type ) {
@@ -2677,21 +2678,21 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						/**
 						 * For add the new profile type roles
-						 **/
-						if ( !$error ) {
+						 */
+						if ( ! $error ) {
 							// Get post id of selected profile type.
 							$post_id = bp_member_type_post_by_type( $new_type );
-							
+
 							// Get selected profile type role.
 							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
-							$member_type_role = sanitize_text_field( $selected_member_type_wp_roles[0] );
-							$member_type_role = isset( $member_type_role ) ? $member_type_role : '';
-							if ( $user_id === get_current_user_id() ) {
+							$member_type_role              = sanitize_text_field( $selected_member_type_wp_roles[0] );
+							$member_type_role              = isset( $member_type_role ) ? $member_type_role : '';
+
+							if ( get_current_user_id() === $user_id ) {
 
 								if ( isset( $member_type_role ) && 'administrator' !== $member_type_role ) {
 
 									if ( empty( $selected_member_type_wp_roles ) ) {
-
 										/*
 										 * If an invalid profile type is passed, someone's doing something
 										 * fishy with the POST request, so we can fail silently.
@@ -2702,7 +2703,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									} else {
 										$bp_error_message_string = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
 										$error_message           = apply_filters( 'bp_invalid_role_selection_extended_profile', $bp_error_message_string );
-										// Define the settings error to display
+										// Define the settings error to display.
 										add_settings_error(
 											'bp-invalid-role-selection-extended-profile',
 											'bp-invalid-role-selection-extended-profile',
@@ -2714,28 +2715,28 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 										return;
 									}
 								} else {
-									
+
 									if ( isset( $member_type_role ) && 'none' !== $member_type_role ) {
 
 										$bp_current_user = new WP_User( get_current_user_id() );
 
-										// Remove role
+										// Remove role.
 										$bp_current_user->remove_role( $bp_current_user->roles[0] );
 
-										// Add role
+										// Add role.
 										$bp_current_user->add_role( $member_type_role );
 									}
 								}
 							} else {
 
 								if ( isset( $member_type_role ) && 'none' !== $member_type_role ) {
-							
-									// Remove the old role
+
+									// Remove the old role.
 									$bp_user = new WP_User( $user_id );
 
-									// Remove role
+									// Remove role.
 									$bp_user->remove_role( $bp_user->roles[0] );
-								
+
 									$bp_user->add_role( $member_type_role );
 								}
 							}
@@ -2883,29 +2884,29 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$value = esc_html( $value );
 			}
 
-		return $value;
-	}
+			return $value;
+		}
 
-	/**
-	 * Set Cookie to reset the previous layout stored in browser storage.
-	 *
-	 * @since BuddyPress 1.2.0
-	 */
-	public function bp_profile_layout_update_option( $old_value, $new_value ) {
-		if ( $old_value !== $new_value ) {
-			setcookie( 'reset_member', '1', time() + (86400 * 30), '/' );
+		/**
+		 * Set Cookie to reset the previous layout stored in browser storage.
+		 *
+		 * @since BuddyPress 1.2.0
+		 */
+		public function bp_profile_layout_update_option( $old_value, $new_value ) {
+			if ( $old_value !== $new_value ) {
+				setcookie( 'reset_member', '1', time() + ( 86400 * 30 ), '/' );
+			}
+		}
+
+		/**
+		 * Set Cookie to reset the previous layout stored in browser storage.
+		 *
+		 * @since BuddyPress 1.2.0
+		 */
+		public function bp_group_layout_update_option( $old_value, $new_value ) {
+			if ( $old_value !== $new_value ) {
+				setcookie( 'reset_group', '1', time() + ( 86400 * 30 ), '/' );
+			}
 		}
 	}
-
-	/**
-	 * Set Cookie to reset the previous layout stored in browser storage.
-	 *
-	 * @since BuddyPress 1.2.0
-	 */
-	public function bp_group_layout_update_option( $old_value, $new_value ) {
-		if ( $old_value !== $new_value ) {
-			setcookie( 'reset_group', '1', time() + (86400 * 30), '/' );
-		}
-	}
-}
 endif; // End class_exists check.
