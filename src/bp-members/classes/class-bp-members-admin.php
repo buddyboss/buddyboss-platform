@@ -853,7 +853,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			 * @param object|null $user   User to create profile navigation for.
 			 * @param string      $active Which profile to highlight.
 			 */
-			do_action( 'bb_members_admin_user_profile_nav', $user, $active ); 
+			do_action( 'bb_members_admin_user_profile_nav', $user, $active );
 			?>
 		</h2>
 
@@ -2736,8 +2736,10 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 										$bp_current_user = new WP_User( get_current_user_id() );
 
-										// Remove role.
-										$bp_current_user->remove_role( $bp_current_user->roles[0] );
+										foreach ( $bp_current_user->roles as $role ) {
+											// Remove role.
+											$bp_current_user->remove_role( $role );
+										}
 
 										// Add role.
 										$bp_current_user->add_role( $member_type_role );
@@ -2750,8 +2752,10 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 									// Remove the old role.
 									$bp_user = new WP_User( $user_id );
 
-									// Remove role.
-									$bp_user->remove_role( $bp_user->roles[0] );
+									foreach ( $bp_user->roles as $role ) {
+										// Remove role.
+										$bp_user->remove_role( $role );
+									}
 
 									$bp_user->add_role( $member_type_role );
 								}
