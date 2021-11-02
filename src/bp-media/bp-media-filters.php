@@ -1522,7 +1522,13 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 
 	$bp = buddypress();
 
-	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) );
+	$cache_key = 'bp_delete_attachment_media_' . $attachment_id;
+	$media     = wp_cache_get( $cache_key, 'bp_media' );
+
+	if ( false === $media ) {
+		$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) );
+		wp_cache_set( $cache_key, $media, 'bp_media' );
+	}
 
 	if ( ! $media ) {
 		return false;
