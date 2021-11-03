@@ -483,6 +483,7 @@ class BP_Members_Component extends BP_Component {
 				'bp_last_activity',
 				'bp_member_type',
 				'bp_member_member_type',
+				'bp_member',
 			)
 		);
 

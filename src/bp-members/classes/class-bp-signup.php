@@ -454,7 +454,13 @@ class BP_Signup {
 			return false;
 		}
 
-		$user_status = $wpdb->get_var( $wpdb->prepare( "SELECT user_status FROM {$wpdb->users} WHERE ID = %d", $user_id ) );
+		$cache_key   = 'bp_check_user_status_' . $user_id;
+		$user_status = wp_cache_get( $cache_key, 'bp_member' );
+
+		if ( false === $user_status ) {
+			$user_status = $wpdb->get_var( $wpdb->prepare( "SELECT user_status FROM {$wpdb->users} WHERE ID = %d", $user_id ) );
+			wp_cache_set( $cache_key, $user_status, 'bp_member' );
+		}
 
 		/**
 		 * Filters the user status of a provided user ID.
