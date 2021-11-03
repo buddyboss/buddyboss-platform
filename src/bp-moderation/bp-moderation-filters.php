@@ -555,6 +555,7 @@ function bb_moderation_clear_suspend_cache( $moderation_data ) {
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_check_blocked_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+	wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 }
 
 add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
@@ -603,6 +604,7 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_check_blocked_content_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_get_recode_' . $content_type . '_' . $content_id, 'bb' );
+	wp_cache_delete( 'bb_is_content_reported_hidden_' . $content_type . '_' . $content_id, 'bb' );
 }
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
