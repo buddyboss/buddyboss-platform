@@ -165,8 +165,10 @@ function bbp_sanitize_slug( $slug = '' ) {
 	$value = ltrim( $value, '/' );
 	$value = rtrim( $value, '/' );
 
+	$slug = remove_accents( apply_filters( 'bbp_sanitize_slug', $value, $slug ) );
+
 	// Filter the result and return
-	return apply_filters( 'bbp_sanitize_slug', $value, $slug );
+	return $slug;
 }
 
 /**
