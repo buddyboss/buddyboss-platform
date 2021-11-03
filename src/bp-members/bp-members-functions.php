@@ -3349,10 +3349,10 @@ function bp_member_type_by_type( $type_id ) {
 function bp_get_active_member_types( $args = array() ) {
 
 	if ( ! bp_member_type_enable_disable() ) {
-	    return array();
+		return array();
 	}
 
-	static $cache = array();
+	static $cache           = array();
 	$bp_active_member_types = array();
 
 	$args = bp_parse_args(
@@ -3360,7 +3360,7 @@ function bp_get_active_member_types( $args = array() ) {
 		array(
 			'posts_per_page' => - 1,
 			'post_type'      => bp_get_member_type_post_type(),
-		'post_status'    => 'publish',
+			'post_status'    => 'publish',
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 			'fields'         => 'ids',
@@ -4770,7 +4770,7 @@ function bp_get_hidden_member_types() {
 				'key'     => '_bp_member_type_enable_search_remove',
 				'value'   => 1,
 				'compare' => '=',
-			)
+			),
 		),
 		'nopaging'       => true,
 	);
