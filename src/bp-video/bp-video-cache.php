@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_video_clear_cache_for_video( $video ) {
 	wp_cache_delete( $video->id, 'bp_video' );
+	wp_cache_delete( 'bp_video_delete_attachment_video_' . $video->attachment_id, 'bp_video' );
 }
 add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
 
@@ -147,6 +148,7 @@ add_action( 'bp_video_before_delete', 'bp_video_clear_video_group_object_cache_o
  */
 function bp_video_clear_cache_for_album( $album ) {
 	wp_cache_delete( $album->id, 'bp_video_album' );
+	wp_cache_delete( 'bp_video_user_video_album_' . $album->user_id, 'bp_video_album' );
 }
 add_action( 'bp_video_album_after_save', 'bp_video_clear_cache_for_album' );
 
@@ -189,9 +191,13 @@ add_action( 'bp_video_album_add', 'bp_video_album_reset_cache_incrementor' );
  */
 function bp_video_clear_album_group_object_cache( $album ) {
 	$group_id = ! empty( $album->group_id ) ? $album->group_id : false;
+	$user_id  = ! empty( $album->user_id ) ? $album->user_id : false;
 
 	if ( $group_id ) {
 		wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
+	}
+	if ( $user_id ) {
+		wp_cache_delete( 'bp_video_user_video_album_' . $user_id, 'bp' );
 	}
 }
 add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 );
@@ -207,9 +213,13 @@ function bp_video_clear_album_group_object_cache_on_delete( $albums ) {
 	if ( ! empty( $albums[0] ) ) {
 		foreach ( (array) $albums[0] as $deleted_album ) {
 			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : false;
+			$user_id  = ! empty( $deleted_album->user_id ) ? $deleted_album->user_id : false;
 
 			if ( $group_id ) {
 				wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
+			}
+			if ( $user_id ) {
+				wp_cache_delete( 'bp_video_user_video_album_' . $user_id, 'bp' );
 			}
 		}
 	}
