@@ -114,9 +114,21 @@ abstract class BP_Suspend_Abstract {
 	protected function exclude_where_query() {
 		global $wpdb;
 		$bp = buddypress();
-		
-		return $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->table_prefix}bp_suspend {$this->alias}
-		WHERE {$this->alias}.item_type = %s AND {$this->alias}.user_suspended = 1", $this->item_type ); // phpcs:ignore
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$select_sql = $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = %s", $this->item_type );
+
+		// Where conditions.
+		$where_conditions = array( 'user_suspended' => 'user_suspended = 1' );
+		$where_conditions = apply_filters( 'bb_exclude_where_query_conditions', $where_conditions );
+		$where_sql        = join( ' OR ', $where_conditions );
+
+		/**
+		 * Filter to extend the where sql for moderation.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		return apply_filters( 'bb_get_exclude_conditions_filter', "{$select_sql} AND ( {$where_sql} )" );
 	}
 
 	/**

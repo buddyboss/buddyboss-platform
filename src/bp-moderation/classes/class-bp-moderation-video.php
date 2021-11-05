@@ -42,11 +42,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 			return;
 		}
 
-		/**
-		 * If moderation setting enabled for this content then it'll filter hidden content.
-		 * And IF moderation setting enabled for member then it'll filter blocked user content.
-		 */
-		add_filter( 'bp_suspend_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		parent::__construct();
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
