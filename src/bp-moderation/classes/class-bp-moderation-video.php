@@ -118,27 +118,6 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Remove hidden/blocked user's videos
-	 *
-	 * @since BuddyBoss 1.7.0
-	 *
-	 * @param string $where   videos Where sql.
-	 * @param object $suspend suspend object.
-	 *
-	 * @return array
-	 */
-	public function update_where_sql( $where, $suspend ) {
-		$this->alias = $suspend->alias;
-
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where .= $sql;
-		}
-
-		return $where;
-	}
-
-	/**
 	 * Function to modify the button args
 	 *
 	 * @since BuddyBoss 1.7.7
