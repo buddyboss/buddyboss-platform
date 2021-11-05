@@ -1314,7 +1314,7 @@ class BP_Video {
 			return $video_attachment_id;
 		}
 
-		$video_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->video->table_name} m WHERE m.activity_id = {$activity_id}" ); // phpcs:ignore
+		$video_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->video->table_name} WHERE activity_id = {$activity_id}" ); // phpcs:ignore
 		wp_cache_set( $cache_key, $video_attachment_id, 'bp_video' );
 
 		return $video_attachment_id;

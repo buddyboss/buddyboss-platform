@@ -1388,7 +1388,7 @@ class BP_Media {
 			return $media_attachment_id;
 		}
 
-		$media_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+		$media_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->media->table_name} WHERE activity_id = {$activity_id}" );
 		wp_cache_set( $cache_key, $media_attachment_id, 'bp_media' );
 
 		return $media_attachment_id;

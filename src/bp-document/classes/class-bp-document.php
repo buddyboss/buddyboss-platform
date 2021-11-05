@@ -2042,7 +2042,7 @@ class BP_Document {
 			return $document_attachment_id;
 		}
 
-		$document_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT d.attachment_id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" );
+		$document_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->document->table_name} WHERE activity_id = {$activity_id}" );
 		wp_cache_set( $cache_key, $document_attachment_id, 'bp_document' );
 
 		return $document_attachment_id;
