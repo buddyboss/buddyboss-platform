@@ -811,6 +811,7 @@ class BP_Document {
 				'sort'                => 'DESC',          // ASC or DESC.
 				'order_by'            => 'date_created',  // Column to order by.
 				'exclude'             => false,           // Array of ids to exclude.
+				'include'             => false,           // Array of ids to include.
 				'in'                  => false,           // Array of ids to limit query by (IN).
 				'search_terms'        => false,           // Terms to search by.
 				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
@@ -912,6 +913,13 @@ class BP_Document {
 			$exclude                              = implode( ',', wp_parse_id_list( $r['exclude'] ) );
 			$where_conditions_document['exclude'] = "d.id NOT IN ({$exclude})";
 			$where_conditions_folder['exclude']   = "f.id NOT IN ({$exclude})";
+		}
+
+		// Include specified items.
+		if ( ! empty( $r['include'] ) ) {
+			$include                              = implode( ',', wp_parse_id_list( $r['include'] ) );
+			$where_conditions_document['include'] = "d.id IN ({$include})";
+			$where_conditions_folder['include']   = "f.id IN ({$include})";
 		}
 
 		// The specific ids to which you want to limit the query.
