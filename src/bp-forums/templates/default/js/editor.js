@@ -29,7 +29,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -130,7 +130,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -231,7 +231,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],

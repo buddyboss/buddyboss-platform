@@ -2101,7 +2101,7 @@ window.bp = window.bp || {};
 										},
 										paste: {
 											forcePlainText: false,
-											cleanPastedHTML: false,
+											cleanPastedHTML: true,
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
@@ -2110,7 +2110,7 @@ window.bp = window.bp || {};
 											],
 											cleanAttrs: [ 'class', 'style', 'dir', 'id' ],
 											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-											unwrapTags: [ 'ul', 'ol', 'li' ]
+											//unwrapTags: [ 'ul', 'ol', 'li' ]
 										},
 										imageDragging: false
 									}
