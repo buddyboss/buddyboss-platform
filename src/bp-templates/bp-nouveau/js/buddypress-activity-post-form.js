@@ -1291,7 +1291,7 @@ window.bp = window.bp || {};
 
 									clearInterval( checkThumbnail );
 								}
-							},200)
+							}, 200 );
 
 							
 						} else {
