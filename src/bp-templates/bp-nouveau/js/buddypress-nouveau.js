@@ -2607,27 +2607,23 @@ window.bp = window.bp || {};
 									var img = document.createElement( 'img' );
 									img.src = image;
 
-									setTimeout( function() {
-										if ( file.previewElement ) {
-											if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
-												$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
-											} else {
-												$( file.previewElement ).find( target ).append( img );
-											}
-	
-											$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
+									if ( file.previewElement ) {
+										if ( $( file.previewElement ).find( target ).find( 'img' ).length ) {
+											$( file.previewElement ).find( target ).find( 'img' ).attr( 'src', image );
 										} else {
-											if ( $( target ).find( 'img' ).length ) {
-												$( target ).find( 'img' ).attr( 'src', image );
-											} else {
-												$( target ).append( img );
-											}
+											$( file.previewElement ).find( target ).append( img );
 										}
-	
-										URL.revokeObjectURL( url );
-									}, 5000 );
-								} else {
-									$( file.previewElement ).closest( '.dz-preview' ).addClass( 'no-thumbnail-found' );
+
+										$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
+									} else {
+										if ( $( target ).find( 'img' ).length ) {
+											$( target ).find( 'img' ).attr( 'src', image );
+										} else {
+											$( target ).append( img );
+										}
+									}
+
+									URL.revokeObjectURL( url );
 								}
 								return success;
 							};
@@ -2643,7 +2639,7 @@ window.bp = window.bp || {};
 							clearInterval( timer );
 						}
 					},
-					100
+					500
 				);
 
 			};
