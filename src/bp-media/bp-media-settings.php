@@ -1899,24 +1899,24 @@ function bp_media_settings_callback_extension_video_support() {
  */
 function bb_media_settings_callback_symlink_support() {
 
-    ?>
-    <input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
-    <label for="bp_media_symlink_support">
-        <?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
-    </label>
+	?>
+	<input name="bp_media_symlink_support" id="bp_media_symlink_support" type="checkbox" value="1" <?php checked( bb_enable_symlinks() ); ?> />
+	<label for="bp_media_symlink_support">
+		<?php esc_html_e( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ); ?>
+	</label>
 
-    <?php
+	<?php
 	$has_error = false;
 	if ( true === bb_check_server_disabled_symlink() ) {
 		bp_update_option( 'bp_media_symlink_support', 0 );
 		$has_error = true;
 		?>
-        <div class="bp-messages-feedback">
-            <div class="bp-feedback warning">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
-            </div>
-        </div>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ); ?></p>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -1931,14 +1931,25 @@ function bb_media_settings_callback_symlink_support() {
 		<?php
 	}
 
+	if ( true === (bool) bp_get_option( 'bb_display_support_error' ) ) {
+		?>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ); ?></p>
+			</div>
+		</div>
+		<?php
+	}
+
 	if ( empty( bb_enable_symlinks() ) ) {
 		?>
-        <div class="bp-messages-feedback">
-            <div class="bp-feedback warning">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
-            </div>
-        </div>
+		<div class="bp-messages-feedback">
+			<div class="bp-feedback warning">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Symbolic links are disabled', 'buddyboss' ); ?></p>
+			</div>
+		</div>
 		<?php
 	} elseif ( ! $has_error && bb_enable_symlinks() ) {
 		?>

@@ -137,27 +137,32 @@ if ( is_admin() ) {
 // Email unsubscribe.
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
-add_action( 'bp_init', function() {
-	$component = bp_get_option( 'bp-active-components' );
+add_action(
+	'bp_init',
+	function() {
+		$component = bp_get_option( 'bp-active-components' );
 
-	// Set the "Document" component active/inactive based on the media components.
-	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-		$component['document'] = '1';
-		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-		unset( $component['document'] );
-		bp_update_option( 'bp-active-components', $component );
-	}
+		// Set the "Document" component active/inactive based on the media components.
+		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
+			$component['document'] = '1';
+			bp_update_option( 'bp-active-components', $component );
+		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
+			unset( $component['document'] );
+			bp_update_option( 'bp-active-components', $component );
+		}
 
-	// Set the "Video" component active/inactive based on the media components.
-	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
-		$component['video'] = '1';
-		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
-		unset( $component['video'] );
-		bp_update_option( 'bp-active-components', $component );
-	}
-}, 10, 2 );
+		// Set the "Video" component active/inactive based on the media components.
+		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
+			$component['video'] = '1';
+			bp_update_option( 'bp-active-components', $component );
+		} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
+			unset( $component['video'] );
+			bp_update_option( 'bp-active-components', $component );
+		}
+	},
+	10,
+	2
+);
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -260,12 +265,17 @@ function bb_media_symlink_validate( $updated_value ) {
 				$status     = false;
 
 				if ( empty( $sym_status ) || 'default' === $sym_status ) {
+
 					symlink( $output_file_src, $attachment_path );
 				}
 
 				if ( empty( $sym_status ) ) {
 					if ( ! empty( $symlink_url ) ) {
+
 						$fetch = wp_remote_get( $symlink_url );
+						if ( is_wp_error( $fetch ) ) {
+							$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => false ) );
+						}
 
 						if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 							$status     = true;
@@ -273,6 +283,9 @@ function bb_media_symlink_validate( $updated_value ) {
 							foreach ( $keys as $k ) {
 								bp_update_option( $k, $sym_status );
 							}
+							bp_delete_option( 'bb_display_support_error' );
+						} else {
+							bp_update_option( 'bb_display_support_error', 1 );
 						}
 					}
 
@@ -283,6 +296,9 @@ function bb_media_symlink_validate( $updated_value ) {
 						foreach ( $keys as $k ) {
 							bp_delete_option( $k );
 						}
+						bp_update_option( 'bb_display_support_error', 1 );
+					} else {
+						bp_delete_option( 'bb_display_support_error' );
 					}
 				}
 
@@ -311,22 +327,30 @@ function bb_media_symlink_validate( $updated_value ) {
 
 						if ( ! empty( $symlink_url ) ) {
 							$fetch = wp_remote_get( $symlink_url );
+							if ( is_wp_error( $fetch ) ) {
+								$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => false ) );
+							}
 							if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 								$status     = true;
 								$sym_status = 'relative';
 								foreach ( $keys as $k ) {
 									bp_update_option( $k, $sym_status );
 								}
+								bp_delete_option( 'bb_display_support_error' );
+							} else {
+								bp_update_option( 'bb_display_support_error', 1 );
 							}
 						}
 
 						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
 							unlink( $attachment_path );
 							bp_update_option( 'bp_media_symlink_support', 0 );
-
+							bp_update_option( 'bb_display_support_error', 1 );
 							foreach ( $keys as $k ) {
 								bp_delete_option( $k );
 							}
+						} else {
+							bp_delete_option( 'bb_display_support_error' );
 						}
 					}
 				}
@@ -349,8 +373,8 @@ function bb_media_symlink_validate( $updated_value ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param mixed  $old_value The old option value.
- * @param mixed  $value     The new option value.
+ * @param mixed $old_value The old option value.
+ * @param mixed $value     The new option value.
  */
 function bb_update_media_symlink_support( $old_value, $value ) {
 	if ( $old_value !== $value ) {
