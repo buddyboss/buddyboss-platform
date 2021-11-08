@@ -2639,7 +2639,7 @@ window.bp = window.bp || {};
 							clearInterval( timer );
 						}
 					},
-					500
+					100
 				);
 
 			};
