@@ -354,7 +354,7 @@ function bp_document_get( $args = '' ) {
 			'search_terms'        => false,        // Pass search terms as a string.
 			'privacy'             => false,        // privacy of document.
 			'exclude'             => false,        // Comma-separated list of activity IDs to exclude.
-			'include'             => false,        // Comma-separated list of activity IDs to include.
+			'in'                  => false,        // Comma-separated list of activity IDs to include.
 			'count_total'         => false,
 			'user_directory'      => true,
 
