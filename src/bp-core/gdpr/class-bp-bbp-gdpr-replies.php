@@ -229,9 +229,11 @@ class BP_Bbp_Gdpr_Replies {
 			foreach ( (array) $replies as $reply ) {
 				$attachments = get_posts(
 					array(
-						'post_type'      => 'attachment',
-						'posts_per_page' => - 1,
-						'post_parent'    => $reply->ID,
+						'post_type'              => 'attachment',
+						'posts_per_page'         => - 1,
+						'post_parent'            => $reply->ID,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
 					)
 				);
 

@@ -692,7 +692,7 @@ function resync_xprofile_wordpress_fields() {
 			$offset++;
 		}
 
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -743,7 +743,7 @@ function resync_wordpress_xprofile_fields() {
 			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
 			$offset++;
 		}
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -788,7 +788,7 @@ function xprofile_update_display_names() {
 			);
 			$offset++;
 		}
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -919,11 +919,13 @@ function bp_admin_reinstall_emails() {
 
 	$emails = get_posts(
 		array(
-			'fields'           => 'ids',
-			'post_status'      => 'publish',
-			'post_type'        => bp_get_email_post_type(),
-			'posts_per_page'   => 200,
-			'suppress_filters' => false,
+			'fields'                 => 'ids',
+			'post_status'            => 'publish',
+			'post_type'              => bp_get_email_post_type(),
+			'posts_per_page'         => 200,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 
@@ -1024,7 +1026,7 @@ function bp_admin_assign_member_type() {
 			}
 			$offset++;
 		}
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1067,7 +1069,7 @@ function bp_admin_repair_nickname_value() {
 			}
 			$offset++;
 		}
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1212,7 +1214,7 @@ function bp_admin_update_activity_favourite() {
 			    $offset ++;
 		    }
 
-			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 			return array(
 				'status'  => 'running',

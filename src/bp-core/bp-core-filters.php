@@ -59,7 +59,18 @@ add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
-// Avatars
+// Removed Document and Media from WordPress media endpoints.
+add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
+add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
+add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
+
+// Widget display name.
+add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
+add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
+add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
+add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
+
+// Avatars.
 /**
  * Disable gravatars fallback for member avatars.
  *
@@ -780,6 +791,27 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			} else {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
+		} else {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
+				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$component = $tab;
+					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'video' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
+						$component = 'xprofile';
+					}
+					if ( bp_is_active( $component ) ) {
+						if ( strpos( $menu_item->url, $tab ) !== false ) {
+							$menu_item->classes   = is_array( $menu_item->classes ) ? $menu_item->classes : array();
+							$menu_item->classes[] = 'current_page_item';
+							$menu_item->classes[] = 'current-menu-item';
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -878,7 +910,9 @@ function bp_filter_metaid_column_name( $q ) {
 	preg_match_all( $quoted_regex, $q, $quoted_matches );
 	$q = preg_replace( $quoted_regex, '__QUOTE__', $q );
 
-	$q = str_replace( 'meta_id', 'id', $q );
+	if ( strpos( $q, 'umeta_id' ) === false ) {
+		$q = str_replace( 'meta_id', 'id', $q );
+	}
 
 	// Put quoted content back into the string.
 	if ( ! empty( $quoted_matches[0] ) ) {
@@ -1391,7 +1425,7 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
  */
 function bp_pages_terms_and_privacy_exclude( $pages ) {
 
-	if ( !empty( $pages ) ) {
+	if ( ! empty( $pages ) ) {
 
 		// Removed terms page as non component page.
 		if ( property_exists( $pages, 'terms' ) ) {
@@ -1419,10 +1453,10 @@ add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
  * @since BuddyBoss 1.5.1
  */
 function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
-	if ( did_action( 'wp_ajax_bp_cover_image_upload' ) && ( 'xprofile' === $component || 'groups' === $component ) ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
 		return array(
-			'width'  => 99999,
-			'height' => 99999,
+			'width'  => 1950,
+			'height' => 450,
 		);
 	}
 
@@ -1437,7 +1471,7 @@ add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_imag
 if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	function buddyboss_platform_plugin_update_notice() {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
-		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
 			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
@@ -1445,3 +1479,146 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	}
 	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
 }
+
+/**
+ * Update attachment rest query argument to hide media/document from media endpoints.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param array $args WP_Query parsed arguments.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_query( $args ) {
+	$meta_query = ( array_key_exists( 'meta_query', $args ) ? $args['meta_query'] : array() );
+
+	// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+	$args['meta_query'] = array(
+		array(
+			'key'     => 'bp_media_upload',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'bp_document_upload',
+			'compare' => 'NOT EXISTS',
+		),
+	);
+
+	if ( ! empty( $meta_query ) ) {
+		$args['meta_query'][] = $meta_query;
+	}
+
+	if ( count( $args['meta_query'] ) > 1 ) {
+		$args['meta_query']['relation'] = 'AND';
+	}
+
+	return $args;
+}
+
+/**
+ * Empty response in single WordPress Media endpoint when fetch media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param WP_REST_Response $response The response object.
+ * @param WP_Post          $post     The original attachment post.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_response( $response, $post ) {
+	$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+	$data          = $response->get_data();
+	if (
+		array_key_exists( 'media_type', $data ) &&
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post->ID )
+		)
+	) {
+		$response = array();
+	}
+
+	return $response;
+}
+
+/**
+ * Restrict users to access media and documents from `/wp-json/oembed/1.0/embed`
+ *
+ * @param int $post_id Current post id.
+ *
+ * @return mixed
+ */
+function bp_rest_restrict_oembed_request_post_id( $post_id ) {
+	$media_meta    = get_post_meta( $post_id, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post_id, 'bp_document_upload', true );
+	if (
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post_id )
+		)
+	) {
+		$post_id = 0;
+	}
+
+	return $post_id;
+}
+
+/**
+ * Add schedule to cron schedules.
+ *
+ * @param array $schedules Array of schedules for cron.
+ *
+ * @return array $schedules Array of schedules from cron.
+ * @since Buddyboss 1.7.0
+ */
+function bp_core_cron_schedules( $schedules = array() ) {
+	$bb_schedules = array(
+		'bb_schedule_1min'  => array(
+			'interval' => MINUTE_IN_SECONDS,
+			'display'  => __( 'Every minute', 'buddyboss' ),
+		),
+		'bb_schedule_5min'  => array(
+			'interval' => 5 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_10min' => array(
+			'interval' => 10 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_30min' => array(
+			'interval' => 30 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
+		),
+	);
+
+	/**
+	 * Filters the cron schedules.
+	 *
+	 * @param array $bb_schedules Schedules.
+	 * @since BuddyBoss 1.7.0
+	 */
+	$bb_schedules = apply_filters( 'bp_core_cron_schedules', $bb_schedules );
+
+	foreach ( $bb_schedules as $k => $bb_schedule ) {
+		if ( ! isset( $schedules[ $k ] ) ) {
+			$schedules[ $k ] = array(
+				'interval' => $bb_schedule['interval'],
+				'display'  => $bb_schedule['display'],
+			);
+		}
+	}
+
+	return $schedules;
+}
+add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
