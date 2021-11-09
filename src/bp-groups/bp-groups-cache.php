@@ -53,6 +53,7 @@ function bp_groups_update_meta_cache( $group_ids = false ) {
  */
 function groups_clear_group_object_cache( $group_id ) {
 	wp_cache_delete( 'bp_total_group_count', 'bp' );
+	wp_cache_delete( 'get_total_group_count', 'bp' );
 }
 add_action( 'groups_group_deleted', 'groups_clear_group_object_cache' );
 add_action( 'groups_settings_updated', 'groups_clear_group_object_cache' );
@@ -69,6 +70,10 @@ add_action( 'groups_create_group_step_complete', 'groups_clear_group_object_cach
  */
 function bp_groups_delete_group_cache( $group_id = 0 ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
+	wp_cache_delete( 'get_slug_group_id_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'has_members_group_id_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'has_membership_requests_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'get_total_member_count_' . $group_id, 'bp_groups' );
 }
 add_action( 'groups_delete_group', 'bp_groups_delete_group_cache' );
 add_action( 'groups_update_group', 'bp_groups_delete_group_cache' );
@@ -85,6 +90,10 @@ add_action( 'groups_settings_updated', 'bp_groups_delete_group_cache' );
  */
 function bp_groups_delete_group_cache_on_metadata_change( $meta_id, $group_id ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
+	wp_cache_delete( 'get_slug_group_id_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'has_members_group_id_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'has_membership_requests_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'get_total_member_count_' . $group_id, 'bp_groups' );
 }
 add_action( 'updated_group_meta', 'bp_groups_delete_group_cache_on_metadata_change', 10, 2 );
 add_action( 'added_group_meta', 'bp_groups_delete_group_cache_on_metadata_change', 10, 2 );
@@ -251,6 +260,7 @@ add_action( 'groups_delete_group', 'groups_clear_group_type_cache' );
 function bp_groups_clear_user_group_cache_on_membership_save( BP_Groups_Member $member ) {
 	wp_cache_delete( $member->user_id, 'bp_groups_memberships_for_user' );
 	wp_cache_delete( $member->id, 'bp_groups_memberships' );
+	wp_cache_delete( $member->user_id, 'bp_group_ids_for_user' );
 }
 add_action( 'groups_member_before_save', 'bp_groups_clear_user_group_cache_on_membership_save' );
 add_action( 'groups_member_before_remove', 'bp_groups_clear_user_group_cache_on_membership_save' );

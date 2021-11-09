@@ -562,21 +562,30 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		// If the user is logged in and viewing their own groups, we can show hidden and private groups.
-		if ( $user_id != bp_loggedin_user_id() ) {
-			$group_sql    = $wpdb->prepare( "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0{$pag_sql}", $user_id );
-			$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
-		} else {
-			$group_sql    = $wpdb->prepare( "SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0{$pag_sql}", $user_id );
-			$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT group_id) FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0", $user_id ) );
+		$group_ids = wp_cache_get( $user_id, 'bp_group_ids_for_user' );
+
+		if ( false === $group_ids ) {
+			// If the user is logged in and viewing their own groups, we can show hidden and private groups.
+			if ( $user_id != bp_loggedin_user_id() ) {
+				$group_sql    = $wpdb->prepare( "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0{$pag_sql}", $user_id );
+				$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
+				$user_id      = 0;
+			} else {
+				$group_sql    = $wpdb->prepare( "SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0{$pag_sql}", $user_id );
+				$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT group_id) FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0", $user_id ) );
+			}
+
+			$groups = $wpdb->get_col( $group_sql );
+
+			$group_ids = array(
+				'groups' => $groups,
+				'total'  => (int) $total_groups,
+			);
+
+			wp_cache_set( $user_id, $group_ids, 'bp_group_ids_for_user' );
 		}
 
-		$groups = $wpdb->get_col( $group_sql );
-
-		return array(
-			'groups' => $groups,
-			'total'  => (int) $total_groups,
-		);
+		return $group_ids;
 	}
 
 	/**

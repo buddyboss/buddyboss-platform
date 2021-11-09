@@ -1273,7 +1273,15 @@ function bp_core_get_all_posts_for_user( $user_id = 0 ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	return apply_filters( 'bp_core_get_all_posts_for_user', $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = 'publish' AND post_type = 'post'", $user_id ) ) );
+	$cache_key = 'bp_get_all_posts_for_user_' . $user_id;
+	$result    = wp_cache_get( $cache_key, 'bp_member' );
+
+	if ( false === $result ) {
+		$result = apply_filters( 'bp_core_get_all_posts_for_user', $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = 'publish' AND post_type = 'post'", $user_id ) ) );
+		wp_cache_set( $cache_key, $result, 'bp_member' );
+	}
+
+	return $result;
 }
 
 /**

@@ -913,7 +913,13 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+		$cache_key = 'bb_get_specific_moderation_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
+
+		if ( false === $result ) {
+			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result ) ? $result : false;
 	}

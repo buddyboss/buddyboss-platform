@@ -944,9 +944,15 @@ class BP_XProfile_Field {
 			return false;
 		}
 
-		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$sql        = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
-		$type       = $wpdb->get_var( $sql );
+		$cache_key = 'bp_xprofile_field_get_type_' . $field_id;
+		$type      = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+		if ( false === $type ) {
+			$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$sql        = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
+			$type       = $wpdb->get_var( $sql );
+			wp_cache_set( $cache_key, $type, 'bp_xprofile' );
+		}
 
 		// Return field type.
 		if ( ! empty( $type ) ) {
@@ -975,8 +981,14 @@ class BP_XProfile_Field {
 			return false;
 		}
 
-		$bp      = buddypress();
-		$ids     = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
+		$cache_key = 'bp_xprofile_delete_for_group_' . $group_id;
+		$ids       = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+		if ( false === $ids ) {
+			$bp  = buddypress();
+			$ids = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
+			wp_cache_set( $cache_key, $ids, 'bp_xprofile' );
+		}
 		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id );
 		$deleted = $wpdb->get_var( $sql );
 

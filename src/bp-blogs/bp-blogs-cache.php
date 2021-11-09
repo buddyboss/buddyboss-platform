@@ -48,6 +48,7 @@ function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
 	}
 
 	wp_cache_delete( 'bp_total_blogs', 'bp' );
+	wp_cache_delete( $blog_id, 'bp_blogs' );
 }
 
 // List actions to clear object caches on.
