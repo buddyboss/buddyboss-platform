@@ -2594,9 +2594,8 @@ window.bp = window.bp || {};
 								canvas.height = video.videoHeight;
 								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
 								var image   = canvas.toDataURL();
-								var success = image.length > 100000;
+								var success = image.length > 1000;
 								if ( success ) {
-									debugger;
 									var img = document.createElement( 'img' );
 									img.src = image;
 
