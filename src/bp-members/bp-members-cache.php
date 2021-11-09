@@ -61,9 +61,12 @@ add_action( 'bp_user_query_populate_extras', 'bp_members_prefetch_member_type' )
  */
 function bp_members_clear_member_type_cache( $user_id ) {
 	wp_cache_delete( $user_id, 'bp_member_member_type' );
+	wp_cache_delete( 'bp_get_all_posts_for_user_' . $user_id, 'bp_member' );
+	wp_cache_delete( 'bp_check_user_status_' . $user_id, 'bp_member' );
 }
 add_action( 'wpmu_delete_user', 'bp_members_clear_member_type_cache' );
 add_action( 'delete_user', 'bp_members_clear_member_type_cache' );
+add_action( 'profile_update', 'bp_members_clear_member_type_cache' );
 
 /**
  * Invalidate activity caches when a user's last_activity value is changed.

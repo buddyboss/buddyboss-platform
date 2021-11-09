@@ -1217,7 +1217,13 @@ class BP_Media {
 		$privacy = bp_media_query_privacy( $user_id );
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+		$cache_key   = 'bp_total_media_count_' . $user_id;
+		$total_count = wp_cache_get( $cache_key, 'bp_media' );
+
+		if ( false === $total_count ) {
+			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+			wp_cache_set( $cache_key, $total_count, 'bp_media' );
+		}
 
 		return $total_count;
 	}
@@ -1234,41 +1240,49 @@ class BP_Media {
 	public static function total_group_media_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$select_sql = 'SELECT COUNT(*)';
+		$cache_key   = 'total_group_media_count_' . $group_id;
+		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
-		$from_sql = " FROM {$bp->media->table_name} m";
+		if ( false === $total_count ) {
+			$select_sql = 'SELECT COUNT(*)';
 
-		// Where conditions.
-		$where_conditions = array();
+			$from_sql = " FROM {$bp->media->table_name} m";
 
-		$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
-		$where_conditions['group_media_count'] = $wpdb->prepare( 'm.type = %s', 'photo' );
-		$where_conditions['group_privacy']     = $wpdb->prepare( 'm.privacy = %s', 'grouponly' );
+			// Where conditions.
+			$where_conditions = array();
 
-		/**
-		 * Filters the MySQL WHERE conditions for the Media items get method.
-		 *
-		 * @since BuddyBoss 1.5.6
-		 *
-		 * @param array $where_conditions Current conditions for MySQL WHERE statement.
-		 * @param array $args             array of arguments.
-		 */
-		$where_conditions = apply_filters( 'bp_media_get_where_count_conditions', $where_conditions, array( 'group_id' => $group_id ) );
+			$where_conditions['group_sql']         = $wpdb->prepare( 'm.group_id = %s', $group_id );
+			$where_conditions['group_media_count'] = $wpdb->prepare( 'm.type = %s', 'photo' );
+			$where_conditions['group_privacy']     = $wpdb->prepare( 'm.privacy = %s', 'grouponly' );
 
-		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+			/**
+			 * Filters the MySQL WHERE conditions for the Media items get method.
+			 *
+			 * @param array $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param array $args array of arguments.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 */
+			$where_conditions = apply_filters( 'bp_media_get_where_count_conditions', $where_conditions, array( 'group_id' => $group_id ) );
 
-		/**
-		 * Filter the MySQL JOIN clause for the main media query.
-		 *
-		 * @since BuddyBoss 1.5.6
-		 *
-		 * @param string $join_sql JOIN clause.
-		 * @param array  $args     array of arguments.
-		 */
-		$from_sql = apply_filters( 'bp_media_get_join_count_sql', $from_sql, array( 'group_id' => $group_id ) );
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 
-		$media_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
-		$total_count   = (int) $wpdb->get_var( $media_ids_sql ); // phpcs:ignore.
+			/**
+			 * Filter the MySQL JOIN clause for the main media query.
+			 *
+			 * @param string $join_sql JOIN clause.
+			 * @param array $args array of arguments.
+			 *
+			 * @since BuddyBoss 1.5.6
+			 *
+			 */
+			$from_sql = apply_filters( 'bp_media_get_join_count_sql', $from_sql, array( 'group_id' => $group_id ) );
+
+			$media_ids_sql = "{$select_sql} {$from_sql} {$where_sql}";
+			$total_count   = (int) $wpdb->get_var( $media_ids_sql ); // phpcs:ignore.
+			wp_cache_set( $cache_key, $total_count, 'bp_media' );
+		}
 
 		return $total_count;
 	}
@@ -1284,10 +1298,16 @@ class BP_Media {
 	public static function total_user_group_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
+		$cache_key   = 'total_user_group_media_count_' . $user_id;
+		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+		if ( false === $total_count ) {
+			$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
+			$privacy = "'" . implode( "', '", $privacy ) . "'";
+
+			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+			wp_cache_set( $cache_key, $total_count, 'bp_media' );
+		}
 
 		return $total_count;
 	}
@@ -1349,7 +1369,13 @@ class BP_Media {
 		}
 
 		if ( empty( $activity_media_id ) ) {
-			$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id} AND m.type = 'photo' " );
+			$cache_key         = 'get_activity_media_id_' . $activity_id;
+			$activity_media_id = wp_cache_get( $cache_key, 'bp_media' );
+
+			if ( false === $activity_media_id ) {
+				$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id} AND m.type = 'photo' " );
+				wp_cache_set( $cache_key, $activity_media_id, 'bp_media' );
+			}
 
 			if ( bp_is_active( 'activity' ) ) {
 				$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
@@ -1381,17 +1407,15 @@ class BP_Media {
 			return false;
 		}
 
-		$cache_key           = 'bp_media_attachment_id_' . $activity_id;
-		$media_attachment_id = wp_cache_get( $cache_key, 'bp_media' );
+		$cache_key = 'get_activity_attachment_id_' . $activity_id;
+		$result    = wp_cache_get( $cache_key, 'bp_media' );
 
-		if ( ! empty( $media_attachment_id ) ) {
-			return $media_attachment_id;
+		if ( false === $result ) {
+			$result = (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+			wp_cache_set( $cache_key, $result, 'bp_media' );
 		}
 
-		$media_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->media->table_name} WHERE activity_id = {$activity_id}" );
-		wp_cache_set( $cache_key, $media_attachment_id, 'bp_media' );
-
-		return $media_attachment_id;
+		return $result;
 	}
 
 }
