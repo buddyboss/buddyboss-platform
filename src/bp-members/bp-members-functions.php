@@ -3413,7 +3413,13 @@ function bp_get_removed_member_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_member_type_query = new WP_Query( $bp_member_type_args );
+	$cache_key            = 'bp_get_removed_member_types';
+	$bp_member_type_query = wp_cache_get( $cache_key, 'bp_member_member_type' );
+
+	if ( false === $bp_member_type_query ) {
+		$bp_member_type_query = new WP_Query( $bp_member_type_args );
+		wp_cache_set( $cache_key, $bp_member_type_query, 'bp_member_member_type' );
+	}
 	if ( $bp_member_type_query->have_posts() ) :
 		while ( $bp_member_type_query->have_posts() ) :
 			$bp_member_type_query->the_post();

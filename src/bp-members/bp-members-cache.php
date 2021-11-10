@@ -79,3 +79,59 @@ function bp_members_reset_activity_cache_incrementor() {
 	return bp_core_reset_incrementor( 'bp_activity_with_last_activity' );
 }
 add_action( 'bp_core_user_updated_last_activity', 'bp_members_reset_activity_cache_incrementor' );
+
+/**
+ * Clear the member_type cache when member type post is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id post ID.
+ */
+function bp_members_clear_member_type_cache_on_update( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	$post = get_post( $post_id );
+
+	if ( bp_get_member_type_post_type() !== $post->post_type ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['_bp-member-type-nonce'] ) ) {
+		return;
+	}
+
+	// verify nonce.
+	if ( ! wp_verify_nonce( $_POST['_bp-member-type-nonce'], 'bp-member-type-edit-member-type' ) ) {
+		return;
+	}
+
+	// clear cache when updated.
+	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
+}
+
+add_action( 'save_post', 'bp_members_clear_member_type_cache_on_update' );
+
+/**
+ * Clear the member_type cache when member type post is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id post ID.
+ */
+function bp_members_clear_member_type_cache_before_delete( $post_id ) {
+	global $wpdb;
+
+	$post = get_post( $post_id );
+
+	// Return if post is not 'bp-member-type' type.
+	if ( bp_get_member_type_post_type() !== $post->post_type ) {
+		return;
+	}
+
+	// clear cache when deleted.
+	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
+}
+
+add_action( 'before_delete_post', 'bp_members_clear_member_type_cache_before_delete' );
