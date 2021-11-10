@@ -5540,9 +5540,9 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 		return;
 	}
 
-	if ( ! bp_is_active( 'media') ) {
-	    return;
-    }
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
 
 	$key           = '';
 	$sym_path      = '';
@@ -5630,8 +5630,8 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 							$upl_dir          = wp_get_upload_dir();
 
 							if ( ! $is_image ) {
-								if ( ! empty( $meta['sizes'][$size] ) ) {
-									$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
+								if ( ! empty( $meta['sizes'][ $size ] ) ) {
+									$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
 								} else {
 									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
 								}
@@ -5691,8 +5691,10 @@ function bb_check_ios_device() {
 	$ipod   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$iphone = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$ipad   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$safari = bb_core_get_browser();
+	$safari = ( isset( $safari['name'] ) ? 'Safari' === $safari['b_name'] : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
-	if ( $ipod || $iphone || $ipad ) {
+	if ( $ipod || $iphone || $ipad || $safari ) {
 		$is_ios = true;
 	}
 
@@ -5750,9 +5752,9 @@ function bb_core_get_browser() {
 	$u_agent  = $_SERVER['HTTP_USER_AGENT'];
 	$bname    = 'Unknown';
 	$platform = 'Unknown';
-	$version  = "";
+	$version  = '';
 
-	//First get the platform?
+	// First get the platform?
 	if ( preg_match( '/linux/i', $u_agent ) ) {
 		$platform = 'linux';
 	} elseif ( preg_match( '/macintosh|mac os x/i', $u_agent ) ) {
@@ -5761,41 +5763,41 @@ function bb_core_get_browser() {
 		$platform = 'windows';
 	}
 
-	// Next get the name of the useragent yes seperately and for good reason
+	// Next get the name of the useragent yes seperately and for good reason.
 	if ( preg_match( '/MSIE/i', $u_agent ) && ! preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Internet Explorer';
-		$ub    = "MSIE";
+		$ub    = 'MSIE';
 	} elseif ( preg_match( '/Firefox/i', $u_agent ) ) {
 		$bname = 'Mozilla Firefox';
-		$ub    = "Firefox";
+		$ub    = 'Firefox';
 	} elseif ( preg_match( '/Chrome/i', $u_agent ) ) {
 		$bname = 'Google Chrome';
-		$ub    = "Chrome";
+		$ub    = 'Chrome';
 	} elseif ( preg_match( '/Safari/i', $u_agent ) ) {
 		$bname = 'Apple Safari';
-		$ub    = "Safari";
+		$ub    = 'Safari';
 	} elseif ( preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Opera';
-		$ub    = "Opera";
+		$ub    = 'Opera';
 	} elseif ( preg_match( '/Netscape/i', $u_agent ) ) {
 		$bname = 'Netscape';
-		$ub    = "Netscape";
+		$ub    = 'Netscape';
 	}
 
-	// finally get the correct version number
+	// finally get the correct version number.
 	$known   = array( 'Version', $ub, 'other' );
 	$pattern = '#(?<browser>' . join( '|', $known ) .
-	           ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+			   ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 	if ( ! preg_match_all( $pattern, $u_agent, $matches ) ) {
-		// we have no matching number just continue
+		// we have no matching number just continue.
 	}
 
-	// see how many we have
+	// see how many we have.
 	$i = count( $matches['browser'] );
 	if ( $i != 1 ) {
-		//we will have two since we are not using 'other' argument yet
-		//see if version is before or after the name
-		if ( strripos( $u_agent, "Version" ) < strripos( $u_agent, $ub ) ) {
+		// we will have two since we are not using 'other' argument yet
+		// see if version is before or after the name.
+		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
 			$version = $matches['version'][0];
 		} else {
 			$version = $matches['version'][1];
@@ -5804,9 +5806,9 @@ function bb_core_get_browser() {
 		$version = $matches['version'][0];
 	}
 
-	// check if we have a number
-	if ( $version == null || $version == "" ) {
-		$version = "?";
+	// check if we have a number.
+	if ( $version == null || $version == '' ) {
+		$version = '?';
 	}
 
 	return array(
@@ -5814,7 +5816,8 @@ function bb_core_get_browser() {
 		'name'      => $bname,
 		'version'   => $version,
 		'platform'  => $platform,
-		'pattern'   => $pattern
+		'pattern'   => $pattern,
+		'b_name'    => $ub,
 	);
 }
 
@@ -5896,15 +5899,23 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 				if ( ! empty( $media_results ) ) {
 					$suspend_record = bb_moderation_suspend_record_exist( $media_results->activity_id );
 					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $suspend_record->item_id,
-							'item_type' => $suspend_record->item_type,
-						), array( 'id' => $moderated_activity->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $suspend_record->item_id,
+								'item_type' => $suspend_record->item_type,
+							),
+							array( 'id' => $moderated_activity->id )
+						);
 
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $moderated_activity->item_id,
-							'item_type' => $moderated_activity->item_type,
-						), array( 'id' => $suspend_record->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $moderated_activity->item_id,
+								'item_type' => $moderated_activity->item_type,
+							),
+							array( 'id' => $suspend_record->id )
+						);
 					}
 				}
 			}
@@ -5914,15 +5925,23 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 				if ( ! empty( $document_results ) ) {
 					$suspend_record = bb_moderation_suspend_record_exist( $document_results->activity_id );
 					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $suspend_record->item_id,
-							'item_type' => $suspend_record->item_type,
-						), array( 'id' => $moderated_activity->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $suspend_record->item_id,
+								'item_type' => $suspend_record->item_type,
+							),
+							array( 'id' => $moderated_activity->id )
+						);
 
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $moderated_activity->item_id,
-							'item_type' => $moderated_activity->item_type,
-						), array( 'id' => $suspend_record->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $moderated_activity->item_id,
+								'item_type' => $moderated_activity->item_type,
+							),
+							array( 'id' => $suspend_record->id )
+						);
 					}
 				}
 			}
@@ -5964,7 +5983,7 @@ function bb_moderation_bg_update_moderation_data() {
  * @return array
  */
 function bb_get_all_admin_users() {
-	$args = array(
+	$args  = array(
 		'role'    => 'administrator',
 		'orderby' => 'user_nicename',
 		'order'   => 'ASC',
