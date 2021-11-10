@@ -79,6 +79,7 @@ add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
 add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 add_action( 'bp_init', 'bp_add_permastructs', 40 );
 add_action( 'bp_init', 'bp_init_background_updater', 50 );
+add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
