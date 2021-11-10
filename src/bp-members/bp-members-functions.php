@@ -142,7 +142,10 @@ function bp_core_get_users( $args = '' ) {
 	} else {
 
 		// Get users like we were asked to do...
-		$users = new BP_User_Query( $r );
+		static $users = null;
+		if ( null === $users ) {
+			$users = new BP_User_Query( $r );
+		}
 
 		// ...but reformat the results to match bp_core_get_users() behavior.
 		$retval = array(

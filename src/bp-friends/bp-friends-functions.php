@@ -812,7 +812,7 @@ function bp_friends_prime_mentions_results() {
 		return;
 	}
 
-	$friends_query = array(
+	$friends_query_args = array(
 		'count_total'     => '',                    // Prevents total count.
 		'populate_extras' => false,
 
@@ -820,8 +820,14 @@ function bp_friends_prime_mentions_results() {
 		'user_id'         => get_current_user_id(),
 	);
 
-	$friends_query = new BP_User_Query( $friends_query );
-	$results       = array();
+	$cache_key     = 'bp_friends_user_query_' . get_current_user_id();
+	$friends_query = wp_cache_get( $cache_key, 'bp_friends' );
+
+	if ( false === $friends_query ) {
+		$friends_query = new BP_User_Query( $friends_query_args );
+		wp_cache_set( $cache_key, $friends_query, 'bp_friends' );
+	}
+	$results = array();
 
 	foreach ( $friends_query->results as $user ) {
 		$result        = new stdClass();

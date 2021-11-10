@@ -875,12 +875,16 @@ class BP_Activity_Activity {
 		}
 
 		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $activities, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
+		static $user_query = null;
+
+		if ( null === $user_query ) {
+			$user_query = new BP_User_Query(
+				array(
+					'user_ids'        => wp_list_pluck( $activities, 'user_id' ),
+					'populate_extras' => false,
+				)
+			);
+		}
 
 		// Associated located user data with activity items.
 		foreach ( $activities as $a_index => $a_item ) {
