@@ -63,15 +63,16 @@ class BP_Activity_Follow {
 	protected function populate() {
 		global $wpdb, $bp;
 
-		$row = wp_cache_get( $this->id, 'bp_activity_follow' );
+		$cache_key = $this->id . '_' . $this->leader_id . '_' . $this->follower_id;
+		$row       = wp_cache_get( $cache_key, 'bp_activity_follow' );
 
 		if ( false === $row ) {
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name_follow} WHERE leader_id = %d AND follower_id = %d", $this->leader_id, $this->follower_id ) );
+			wp_cache_set( $cache_key, $row, 'bp_activity_follow' );
 		}
 
 		if ( ! empty( $row ) ) {
 			$this->id = $row->id;
-			wp_cache_set( $this->id, $row, 'bp_activity_follow' );
 		} else {
 			$this->id = 0;
 		}

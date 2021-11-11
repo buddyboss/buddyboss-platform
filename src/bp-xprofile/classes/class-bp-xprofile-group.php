@@ -313,10 +313,13 @@ class BP_XProfile_Group {
 		$bp = buddypress();
 
 		// Include or exclude empty groups.
-		if ( ! empty( $r['hide_empty_groups'] ) ) {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
-		} else {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+		static $group_ids = null;
+		if ( null === $group_ids ) {
+			if ( ! empty( $r['hide_empty_groups'] ) ) {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+			} else {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			}
 		}
 
 		// Get all group data.
@@ -418,7 +421,11 @@ class BP_XProfile_Group {
 		}
 
 		// Fetch the fields.
-		$field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+		static $field_ids = null;
+
+		if ( null === $field_ids ) {
+			$field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+		}
 
 		foreach ( $groups as $group ) {
 			$group->fields = array();

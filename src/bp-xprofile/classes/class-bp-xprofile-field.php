@@ -1145,11 +1145,15 @@ class BP_XProfile_Field {
 
 		// Any fields with no member_type metadata are available to all profile types.
 		if ( ! in_array( '_none', $member_types ) ) {
-			if ( ! empty( $all_recorded_field_ids ) ) {
-				$all_recorded_field_ids_sql = implode( ',', array_map( 'absint', $all_recorded_field_ids ) );
-				$unrestricted_field_ids     = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE id NOT IN ({$all_recorded_field_ids_sql})" );
-			} else {
-				$unrestricted_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields}" );
+			static $unrestricted_field_ids = null;
+
+			if ( null === $unrestricted_field_ids ) {
+				if ( ! empty( $all_recorded_field_ids ) ) {
+					$all_recorded_field_ids_sql = implode( ',', array_map( 'absint', $all_recorded_field_ids ) );
+					$unrestricted_field_ids     = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE id NOT IN ({$all_recorded_field_ids_sql})" );
+				} else {
+					$unrestricted_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields}" );
+				}
 			}
 
 			// Append the 'null' pseudo-type.

@@ -150,6 +150,7 @@ function bp_activity_follow_delete_object_cache( $follow ) {
 	if ( ! empty( $follow->id ) ) {
 		wp_cache_delete( $follow->id, 'bp_activity_follow' );
 	}
+	wp_cache_delete( $follow->id . '_' . $follow->leader_id . '_' . $follow->follower_id, 'bp_activity_follow' );
 }
 add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
 
