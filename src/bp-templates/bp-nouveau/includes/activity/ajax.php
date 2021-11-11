@@ -519,8 +519,10 @@ function bp_nouveau_ajax_get_activity_objects() {
 				'user_id'      => bp_loggedin_user_id(),
 				'search_terms' => $_POST['search'],
 				'show_hidden'  => true,
-				'per_page'     => 2,
+				'per_page'     => 5,
 				'exclude'      => $exclude_groups,
+				'orderby'	   => 'title',
+				'order'	       => 'ASC'
 			)
 		);
 
