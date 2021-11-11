@@ -660,12 +660,14 @@ function bp_core_get_directory_pages() {
  *
  * @since BuddyPress 1.7.0
  *
- * @param array  $components Components to create pages for.
- * @param string $existing   'delete' if you want to delete existing page mappings
- *                           and replace with new ones. Otherwise existing page mappings
- *                           are kept, and the gaps filled in with new pages. Default: 'keep'.
+ * @param array  $components   Components to create pages for.
+ * @param string $existing     'delete' if you want to delete existing page mappings
+ *                             and replace with new ones. Otherwise existing page mappings
+ *                             are kept, and the gaps filled in with new pages. Default: 'keep'.
+ * @param bool   $map_register Whether or not mapping the registration pages.
+ *                             Default: true
  */
-function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
+function bp_core_add_page_mappings( $components, $existing = 'keep', $map_register = true ) {
 
 	// If no value is passed, there's nothing to do.
 	if ( empty( $components ) ) {
@@ -699,8 +701,8 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 	}
 
 	// Register and Activate are not components, but need pages when
-	// registration is enabled.
-	if ( bp_get_signup_allowed() ) {
+	// registration is enabled and mapping for registration is required.
+	if ( bp_get_signup_allowed() && $map_register ) {
 		foreach ( array( 'register', 'activate' ) as $slug ) {
 			if ( ! isset( $pages[ $slug ] ) ) {
 				$pages_to_create[ $slug ] = $page_titles[ $slug ];
