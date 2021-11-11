@@ -834,18 +834,25 @@ function groups_get_group_members( $args = array() ) {
 			}
 		}
 
-		// Perform the group member query (extends BP_User_Query).
-		$members = new BP_Group_Member_Query(
-			array(
-				'group_id'     => $r['group_id'],
-				'per_page'     => $r['per_page'],
-				'page'         => $r['page'],
-				'group_role'   => $r['group_role'],
-				'exclude'      => $r['exclude'],
-				'search_terms' => $r['search_terms'],
-				'type'         => $r['type'],
-			)
-		);
+		$cache_key = 'bp_groups_get_group_members_' . $r['group_id'];
+		$members   = wp_cache_get( $cache_key, 'bp_group' );
+		if ( empty( $members ) ) {
+			// Perform the group member query (extends BP_User_Query).
+			$members = new BP_Group_Member_Query(
+				array(
+					'group_id'     => $r['group_id'],
+					'per_page'     => $r['per_page'],
+					'page'         => $r['page'],
+					'group_role'   => $r['group_role'],
+					'exclude'      => $r['exclude'],
+					'search_terms' => $r['search_terms'],
+					'type'         => $r['type'],
+				)
+			);
+		}
+		if ( ! empty( $members ) ) {
+			wp_cache_set( $cache_key, $members, 'bp_group' );
+		}
 
 		// Structure the return value as expected by the template functions.
 		$retval = array(
