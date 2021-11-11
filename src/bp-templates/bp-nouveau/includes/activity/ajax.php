@@ -521,7 +521,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 				'show_hidden'  => true,
 				'per_page'     => 5,
 				'exclude'      => $exclude_groups,
-				'orderby'	   => 'title',
+				'orderby'      => 'title',
 				'order'	       => 'ASC'
 			)
 		);
