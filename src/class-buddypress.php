@@ -634,6 +634,7 @@ class BuddyPress {
 			'BP_Akismet'                                   => 'activity',
 			'BP_Admin'                                     => 'core',
 			'BP_Background_Updater'                        => 'core',
+			'BP_Email_Background_Updater'                  => 'core',
 			'BP_Attachment_Avatar'                         => 'core',
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',

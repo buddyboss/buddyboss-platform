@@ -42,11 +42,10 @@ class BP_Email_Queue {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_email_background_process() {
-		global $wpdb;
+		global $wpdb, $bb_email_background_updater;
 		$table_name  = $wpdb->prefix . 'bb_email_queue';
 		$get_records = $this->get_records();
 		if ( ! empty( $get_records ) ) {
-			$bb_email_background_updater = new BP_Background_Updater();
 			$bb_email_background_updater->push_to_queue(
 				array(
 					'callback' => array( $this, 'bb_email_queue_cron_cb' ),
