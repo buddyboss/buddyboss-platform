@@ -427,7 +427,7 @@ jQuery( document ).ready(
 						});
 					}
 					if ( jQuery( '.bbp_editor_reply_content' ).length ) {
-						window.forums_medium_reply_editor = [];
+
 						jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
@@ -475,7 +475,7 @@ jQuery( document ).ready(
 						});
 					}
 					if ( jQuery( '.bbp_editor_topic_content' ).length ) {
-						window.forums_medium_topic_editor = [];
+
 						jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
