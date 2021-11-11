@@ -1742,14 +1742,20 @@ function bp_check_member_type_field_have_options() {
 	$arr = array();
 
 	// Get posts of custom post type selected.
-	$posts = new \WP_Query(
-		array(
-			'posts_per_page' => - 1,
-			'post_type'      => bp_get_member_type_post_type(),
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		)
-	);
+	$cache_key = 'bp_get_all_member_types_posts';
+	$posts     = wp_cache_get( $cache_key, 'bp_member_member_type' );
+
+	if ( false === $posts ) {
+		$posts = new \WP_Query(
+			array(
+				'posts_per_page' => - 1,
+				'post_type'      => bp_get_member_type_post_type(),
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			)
+		);
+		wp_cache_set( $cache_key, $posts, 'bp_member_member_type' );
+	}
 	if ( $posts ) {
 		foreach ( $posts->posts as $post ) {
 			$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );

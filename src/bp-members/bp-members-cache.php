@@ -109,6 +109,7 @@ function bp_members_clear_member_type_cache_on_update( $post_id ) {
 
 	// clear cache when updated.
 	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
+	wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 }
 
 add_action( 'save_post', 'bp_members_clear_member_type_cache_on_update' );
@@ -132,6 +133,7 @@ function bp_members_clear_member_type_cache_before_delete( $post_id ) {
 
 	// clear cache when deleted.
 	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
+	wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 }
 
 add_action( 'before_delete_post', 'bp_members_clear_member_type_cache_before_delete' );

@@ -4564,8 +4564,12 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 function bp_get_xprofile_member_type_field_id() {
 	global $wpdb;
 
-	$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-	$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+	static $get_parent_id_of_member_types_field = null;
+
+	if ( null === $get_parent_id_of_member_types_field ) {
+		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+	}
 
 	return (int) $get_parent_id_of_member_types_field;
 }
