@@ -2189,6 +2189,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.bb-open-video-theatre', this.openTheatre.bind( this ) );
+			$( document ).on( 'click', '.bb-close-media-theatre', this.closeTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-prev-media', this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
 			$( document ).on( 'click', '.bp-add-video-activity-description', this.openVideoActivityDescription.bind( this ) );
@@ -2215,6 +2216,7 @@ window.bp = window.bp || {};
 			self.setCurrentVideo( id );
 			self.showVideo();
 			self.navigationCommands();
+			self.getParentActivityHtml( target );
 
 			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_video && typeof self.current_video.activity_id !== 'undefined' && self.current_video.activity_id != 0 && ! self.current_video.is_forum && self.current_video.privacy !== 'comment' ) {
 				self.getActivity();
@@ -2229,6 +2231,35 @@ window.bp = window.bp || {};
 
 			// document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
+		
+		closeTheatre: function ( event ) {
+			event.preventDefault();
+			var self = this;
+			
+			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
+				$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).attr( 'src', '' );
+			}
+			self.is_open_video = false;
+			
+			self.resetRemoveActivityCommentsData();
+			
+			self.current_video = false;
+			self.getParentActivityHtml( $( event.currentTarget ) );
+		},
+		
+		getParentActivityHtml: function ( target ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).val();
+			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
+			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdForModel ) ) {
+				var mainParentActivityData = $( '#bb-media-model-container [data-bp-activity-id="' + parentActivityId + '"]' );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
+				if ( $( '#hidden_parent_id' ).length ) {
+					$( '#hidden_parent_id' ).remove();
+				}
+			}
+		},
 
 		getVideosDescription: function () {
 			var self = this;
@@ -2237,6 +2268,16 @@ window.bp = window.bp || {};
 
 			if ( self.activity_ajax != false ) {
 				self.activity_ajax.abort();
+			}
+			
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-comments' );
+			if ( on_page_activity_comments.length ) {
+				self.current_video.parent_activity_comments = true;
+				on_page_activity_comments.html( '' );
+			}
+			
+			if ( true === self.current_video.parent_activity_comments ) {
+				$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_video.activity_id + '" id="hidden_parent_id"/>' );
 			}
 
 			self.activity_ajax = $.ajax(
@@ -2437,7 +2478,7 @@ window.bp = window.bp || {};
 					html    = activity_meta.html();
 					classes = activity_meta.attr( 'class' );
 					activity_meta.remove();
-					activity_meta = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] .activity-meta' );
+					activity_meta = $( '[data-bp-activity-id="' + self.current_video.activity_id + '"] > .activity-meta' );
 					if ( activity_meta.length ) {
 						activity_meta.html( html );
 						activity_meta.attr( 'class', classes );
@@ -2470,6 +2511,9 @@ window.bp = window.bp || {};
 					on_page_activity_comments.html( '' );
 				}
 
+				if ( true === self.current_video.parent_activity_comments ) {
+					$( '.bb-media-model-wrapper:last' ).after( '<input type="hidden" value="' + self.current_video.activity_id + '" id="hidden_parent_id"/>' );
+				}
 				self.activity_ajax = $.ajax(
 					{
 						type: 'POST',

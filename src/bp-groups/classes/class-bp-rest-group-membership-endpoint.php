@@ -554,6 +554,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				'status' => rest_authorization_required_code(),
 			)
 		);
+
 		$retval = $error;
 
 		if ( ! is_user_logged_in() ) {
