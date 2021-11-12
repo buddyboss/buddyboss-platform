@@ -219,8 +219,12 @@ class BP_Moderation {
 		/**
 		 * Fetch User Report data
 		 */
-		$bp         = buddypress();
-		$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+		$bp = buddypress();
+		static $report_row = null;
+
+		if ( null === $report_row ) {
+			$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+		}
 		if ( empty( $report_row ) ) {
 			return;
 		}
