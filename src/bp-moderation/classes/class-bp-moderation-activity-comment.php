@@ -190,63 +190,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			}
 		}
 
-		$media_id     = bp_activity_get_meta( $comment->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $comment->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $comment->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $comment->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $comment->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $comment->id, 'bp_video_ids', true );
-
-		if ( ! empty( $media_id ) || ! empty( $media_ids ) ) {
-			if ( bp_is_active( 'media' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
-				$explode_medias = explode( ',', $media_ids );
-				if ( 1 === count( $explode_medias ) && ! empty( $explode_medias[0] ) ) {
-					$media_id = $explode_medias[0];
-				}
-				$sub_items['id']   = $media_id;
-				$sub_items['type'] = BP_Moderation_Media::$moderation_type;
-				if ( 1 < count( $explode_medias ) ) {
-					$sub_items['id']   = $comment->id;
-					$sub_items['type'] = self::$moderation_type;
-				}
-			} else {
-				$sub_items['id']   = false;
-				$sub_items['type'] = false;
-			}
-		} elseif ( ! empty( $document_id ) || ! empty( $document_ids ) ) {
-			if ( bp_is_active( 'document' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
-				$explode_documents = explode( ',', $document_ids );
-				if ( 1 === count( $explode_documents ) && ! empty( $explode_documents[0] ) ) {
-					$document_id = $explode_documents[0];
-				}
-				$sub_items['id']   = $document_id;
-				$sub_items['type'] = BP_Moderation_Document::$moderation_type;
-				if ( 1 < count( $explode_documents ) ) {
-					$sub_items['id']   = $comment->id;
-					$sub_items['type'] = self::$moderation_type;
-				}
-			} else {
-				$sub_items['id']   = false;
-				$sub_items['type'] = false;
-			}
-		} elseif ( ! empty( $video_id ) || ! empty( $video_ids ) ) {
-			if ( bp_is_active( 'video' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
-				$explode_videos = explode( ',', $video_ids );
-				if ( 1 === count( $explode_videos ) && ! empty( $explode_videos[0] ) ) {
-					$video_id = $explode_videos[0];
-				}
-				$sub_items['id']   = $video_id;
-				$sub_items['type'] = BP_Moderation_Video::$moderation_type;
-				if ( 1 < count( $explode_videos ) ) {
-					$sub_items['id']   = $comment->id;
-					$sub_items['type'] = self::$moderation_type;
-				}
-			} else {
-				$sub_items['id']   = false;
-				$sub_items['type'] = false;
-			}
-		}
-
 		return $sub_items;
 	}
 
@@ -310,52 +253,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $button_text;
 		}
 
-		$media_id     = bp_activity_get_meta( $comment->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $comment->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $comment->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $comment->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $comment->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $comment->id, 'bp_video_ids', true );
-
-		if ( ! empty( $media_id ) || ! empty( $media_ids ) ) {
-			if ( ! empty( $media_id ) ) {
-				$button_text = esc_html__( 'Report Photo', 'buddyboss' );
-			}
-			if ( ! empty( $media_ids ) ) {
-				$exploded_media = explode( ',', $media_ids );
-				if ( 1 < count( $exploded_media ) ) {
-					$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-				} else {
-					$button_text = esc_html__( 'Report Photo', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $document_id ) || ! empty( $document_ids ) ) {
-			if ( ! empty( $document_id ) ) {
-				$button_text = esc_html__( 'Report Document', 'buddyboss' );
-			}
-			if ( ! empty( $document_ids ) ) {
-				$exploded_document = explode( ',', $document_ids );
-				if ( 1 < count( $exploded_document ) ) {
-					$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-				} else {
-					$button_text = esc_html__( 'Report Document', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $video_id ) || ! empty( $video_ids ) ) {
-			if ( ! empty( $video_id ) ) {
-				$button_text = esc_html__( 'Report Video', 'buddyboss' );
-			}
-			if ( ! empty( $video_ids ) ) {
-				$exploded_video = explode( ',', $video_ids );
-				if ( 1 < count( $exploded_video ) ) {
-					$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-				} else {
-					$button_text = esc_html__( 'Report Video', 'buddyboss' );
-				}
-			}
-		} else {
-			$button_text = esc_html__( 'Report Comment', 'buddyboss' );
-		}
+		$button_text = esc_html__( 'Report Comment', 'buddyboss' );
 
 		return $button_text;
 	}
@@ -377,52 +275,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $content_type;
 		}
 
-		$media_id     = bp_activity_get_meta( $comment->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $comment->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $comment->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $comment->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $comment->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $comment->id, 'bp_video_ids', true );
-
-		if ( ! empty( $media_id ) || ! empty( $media_ids ) ) {
-			if ( ! empty( $media_id ) ) {
-				$content_type = esc_html__( 'Photo', 'buddyboss' );
-			}
-			if ( ! empty( $media_ids ) ) {
-				$exploded_media = explode( ',', $media_ids );
-				if ( 1 < count( $exploded_media ) ) {
-					$content_type = esc_html__( 'Comment', 'buddyboss' );
-				} else {
-					$content_type = esc_html__( 'Photo', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $document_id ) || ! empty( $document_ids ) ) {
-			if ( ! empty( $document_id ) ) {
-				$content_type = esc_html__( 'Document', 'buddyboss' );
-			}
-			if ( ! empty( $document_ids ) ) {
-				$exploded_document = explode( ',', $document_ids );
-				if ( 1 < count( $exploded_document ) ) {
-					$content_type = esc_html__( 'Comment', 'buddyboss' );
-				} else {
-					$content_type = esc_html__( 'Document', 'buddyboss' );
-				}
-			}
-		} elseif ( ! empty( $video_id ) || ! empty( $video_ids ) ) {
-			if ( ! empty( $video_id ) ) {
-				$content_type = esc_html__( 'Video', 'buddyboss' );
-			}
-			if ( ! empty( $video_ids ) ) {
-				$exploded_video = explode( ',', $video_ids );
-				if ( 1 < count( $exploded_video ) ) {
-					$content_type = esc_html__( 'Comment', 'buddyboss' );
-				} else {
-					$content_type = esc_html__( 'Video', 'buddyboss' );
-				}
-			}
-		} else {
-			$content_type = esc_html__( 'Comment', 'buddyboss' );
-		}
+		$content_type = esc_html__( 'Comment', 'buddyboss' );
 
 		return $content_type;
 	}
