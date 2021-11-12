@@ -4925,8 +4925,19 @@ function bp_core_parse_url( $url ) {
 		return array();
 	}
 
+	if ( ! function_exists( '_wp_oembed_get_object' ) ) {
+		require ABSPATH . WPINC . '/class-oembed.php';
+	}
+
+	$embed_code = '';
+	$oembed_obj = _wp_oembed_get_object();
+	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => false ) );
+
+	if ( $is_oembed ) {
+		$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
+	}
+
 	// Fetch the oembed code for URL.
-	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
 	if ( ! empty( $embed_code ) ) {
 		$parsed_url_data['title']       = ' ';
 		$parsed_url_data['description'] = $embed_code;
