@@ -494,7 +494,6 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-
 		/**
 		 * Filter the group membership request `create_item` permissions check.
 		 *
@@ -705,7 +704,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval        = new WP_Error(
+		$retval = new WP_Error(
 			'bp_rest_authorization_required',
 			__( 'Sorry, you need to be logged in to delete a request.', 'buddyboss' ),
 			array(

@@ -65,7 +65,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb, $bp;
 
-
 			$query_placeholder = array();
 
 			$COLUMNS = ' SELECT ';
@@ -121,9 +120,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					$clause_wp_user_table = "u.id IN ( SELECT ID FROM {$wpdb->users}  WHERE ( ";
 					$clause_wp_user_table .= implode( ' OR ', $conditions_wp_user_table );
-					$clause_wp_user_table .= ' ) ) ';
+
+					// get all excluded member types.
+					$bp_member_type_ids = bp_get_hidden_member_types();
+					$member_type_sql    = $this->get_sql_clause_for_member_types( $bp_member_type_ids, 'NOT IN' );
+
+					if ( ! empty( $member_type_sql ) ) {
+						$clause_wp_user_table .= ' ) AND ' . $member_type_sql . ' ) ';
+					} else {
+						$clause_wp_user_table .= ' ) ) ';
+					}
 
 					$where_fields[] = $clause_wp_user_table;
+
 				}
 			}
 			/* _____________________________ */
@@ -221,16 +230,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							}
 						}
 
-						$member_type__not_in = array();
 						// get all excluded member types.
-						$bp_member_type_ids = bp_get_removed_member_types();
-						if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
-							foreach ( $bp_member_type_ids as $single ) {
-								$member_type__not_in[] = $single['name'];
-							}
-						}
-
-						$member_type_sql = $this->get_sql_clause_for_member_types( $member_type__not_in, 'NOT IN' );
+						$bp_member_type_ids = bp_get_hidden_member_types();
+						$member_type_sql    = $this->get_sql_clause_for_member_types( $bp_member_type_ids, 'NOT IN' );
 
 						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
@@ -322,13 +324,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			// now we have all the posts
 			// lets do a groups loop
-			if ( bp_has_members(
-				array(
-					'search_terms' => '',
-					'include'      => $group_ids,
-					'per_page'     => count( $group_ids ),
-				)
-			) ) {
+			if ( bp_has_members( array(
+				'search_terms'        => '',
+				'include'             => $group_ids,
+				'per_page'            => count( $group_ids ),
+				'member_type__not_in' => bp_get_hidden_member_types()
+			) ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
 
