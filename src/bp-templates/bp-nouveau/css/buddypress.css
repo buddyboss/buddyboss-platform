@@ -2435,7 +2435,6 @@ input.search-query-input {
   position: absolute;
   right: 15px;
   top: 20px;
-  z-index: 11;
 }
 
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action {
@@ -7263,6 +7262,11 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   margin-left: 0;
 }
 
+.bp-messages-content .thread-participants #view_more_members {
+  font-size: 13px;
+  display: inline-block;
+}
+
 .bp-messages-content time {
   color: #737373;
   font-size: 12px;
@@ -8263,6 +8267,48 @@ body .bp-messages-user-threads {
   }
 }
 
+.mass-user-block-list #moderated_user_list:not(.is_not_empty) {
+  text-align: center;
+}
+
+.mass-user-block-list #moderated_user_list:not(.is_not_empty):before {
+  content: "\E838";
+  font: normal normal normal 20px/1 "bb-icons";
+  /* stylelint-disable-line */
+  speak: none;
+  display: inline-block !important;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
+.bb-report-type-pagination .page-data {
+  display: block;
+  margin: 20px auto 0;
+  text-align: center;
+}
+
+.bb-report-type-pagination .page-data #load_more_rl {
+  min-width: 140px;
+}
+
+.bb-report-type-pagination .page-data #load_more_rl.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-left: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
+}
+
 /**
 *------------------------------------------
 * @subsection 5.2.2.6 - Settings
@@ -8947,6 +8993,10 @@ ul.bbp-stats .bbp-count {
 
 .buddypress-wrap table.profile-fields p:last-child {
   margin-top: 0;
+}
+
+.buddypress-wrap table.profile-fields td.data > p {
+  margin: 0 0 25px;
 }
 
 /**
@@ -12255,6 +12305,31 @@ fieldset div.avatar {
   margin: 3px;
 }
 
+.activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap + .gamipress-buddypress-user-details,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .bb-content-inr-wrap + .gamipress-buddypress-user-details,
+.activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap + .gamipress-buddypress-user-details {
+  display: none;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .gamipress-buddypress-user-details,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .gamipress-buddypress-user-details,
+.activity-list li.blogs .activity-content .activity-inner .gamipress-buddypress-user-details {
+  margin-left: 10px;
+  position: relative;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .gamipress-buddypress-user-details .wp-post-image,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .gamipress-buddypress-user-details .wp-post-image,
+.activity-list li.blogs .activity-content .activity-inner .gamipress-buddypress-user-details .wp-post-image {
+  margin: 0;
+}
+
+.activity-list li.bbp_topic_create .activity-content .activity-inner .gamipress-buddypress-user-details span,
+.activity-list li.bbp_reply_create .activity-content .activity-inner .gamipress-buddypress-user-details span,
+.activity-list li.blogs .activity-content .activity-inner .gamipress-buddypress-user-details span {
+  vertical-align: middle;
+}
+
 .activity-list li.bbp_topic_create .activity-content .activity-inner,
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
   padding: 0;
@@ -12337,6 +12412,10 @@ fieldset div.avatar {
   display: block;
   padding: 12px;
   background-color: #fafafa;
+}
+
+.activity-list li.activity .activity-inner .gamipress-buddypress-user-details + .gamipress-buddypress-user-details {
+  display: none;
 }
 
 /* =User Capabilities
@@ -19603,15 +19682,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js > video,
 .bb-video-thumb .video-js > video,
 .bb-media-section .video-js > video {
-  object-fit: cover;
-}
-
-.bb-activity-video-elem .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-activity-video-elem .video-js.vjs-paused:not(.vjs-waiting) > video,
-.bb-video-thumb .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-video-thumb .video-js.vjs-paused:not(.vjs-waiting) > video,
-.bb-media-section .video-js.vjs-playing:not(.vjs-waiting) > video,
-.bb-media-section .video-js.vjs-paused:not(.vjs-waiting) > video {
   object-fit: contain;
 }
 

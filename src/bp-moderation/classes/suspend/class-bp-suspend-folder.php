@@ -61,11 +61,12 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id Member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
 	 *
 	 * @return array
 	 */
-	public static function get_member_folder_ids( $member_id ) {
+	public static function get_member_folder_ids( $member_id, $action = '' ) {
 		$folder_ids = array();
 
 		$folders = BP_Document_Folder::get(
@@ -79,6 +80,14 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		if ( ! empty( $folders['folders'] ) ) {
 			$folder_ids = $folders['folders'];
+		}
+
+		if ( 'hide' === $action && ! empty( $folder_ids ) ) {
+			foreach ( $folder_ids as $k => $folder_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $folder_id, self::$type, true ) ) {
+					unset( $folder_ids[ $k ] );
+				}
+			}
 		}
 
 		return $folder_ids;

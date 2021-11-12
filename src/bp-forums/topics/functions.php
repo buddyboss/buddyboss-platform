@@ -378,7 +378,6 @@ function bbp_new_topic_handler( $action = '' ) {
 			'post_status'    => $topic_status,
 			'post_parent'    => $forum_id,
 			'post_type'      => bbp_get_topic_post_type(),
-			'tax_input'      => $terms,
 			'comment_status' => 'closed',
 		)
 	);
@@ -389,6 +388,9 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags.
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id() );
 
 		/** Trash Check */
 
@@ -744,7 +746,6 @@ function bbp_edit_topic_handler( $action = '' ) {
 			'post_parent'  => $forum_id,
 			'post_author'  => $topic_author,
 			'post_type'    => bbp_get_topic_post_type(),
-			'tax_input'    => $terms,
 		)
 	);
 
@@ -766,6 +767,9 @@ function bbp_edit_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags.
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 		// Update counts, etc..
 		do_action( 'bbp_edit_topic', $topic_id, $forum_id, $anonymous_data, $topic_author, true /* Is edit */ );
@@ -2096,20 +2100,25 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 /**
  * Return an associative array of available topic statuses
  *
- * @since bbPress (r5059)
+ * @since 2.4.0 bbPress (r5059)
+ *
+ * @param int $topic_id   Optional. Topic id.
  *
  * @return array
  */
-function bbp_get_topic_statuses() {
-	return apply_filters(
+function bbp_get_topic_statuses( $topic_id = 0 ) {
+
+	// Filter & return.
+	return (array) apply_filters(
 		'bbp_get_topic_statuses',
 		array(
-			bbp_get_public_status_id()  => __( 'Open', 'buddyboss' ),
-			bbp_get_closed_status_id()  => __( 'Closed', 'buddyboss' ),
-			bbp_get_spam_status_id()    => __( 'Spam', 'buddyboss' ),
-			bbp_get_trash_status_id()   => __( 'Trash', 'buddyboss' ),
-			bbp_get_pending_status_id() => __( 'Pending', 'buddyboss' ),
-		)
+			bbp_get_public_status_id()  => _x( 'Open', 'Open the topic', 'buddyboss' ),
+			bbp_get_closed_status_id()  => _x( 'Closed', 'Close the topic', 'buddyboss' ),
+			bbp_get_spam_status_id()    => _x( 'Spam', 'Spam the topic', 'buddyboss' ),
+			bbp_get_trash_status_id()   => _x( 'Trash', 'Trash the topic', 'buddyboss' ),
+			bbp_get_pending_status_id() => _x( 'Pending', 'Unapprove the topic', 'buddyboss' ),
+		),
+		$topic_id
 	);
 }
 

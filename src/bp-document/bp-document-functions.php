@@ -634,7 +634,6 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
-						'error_type'    => 'wp_error',
 					)
 				);
 
@@ -1214,27 +1213,24 @@ function folders_check_folder_access( $folder_id ) {
  */
 function bp_document_delete_orphaned_attachments() {
 
-	$orphaned_attachment_args = array(
-		'post_type'      => 'attachment',
-		'post_status'    => 'inherit',
-		'fields'         => 'ids',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'     => 'bp_document_saved',
-				'value'   => '0',
-				'compare' => '=',
-			),
-		),
-	);
+	global $wpdb;
 
-	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+	/**
+	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
+	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
+	 * all the media from Media Library.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 */
+	$query = "SELECT p.ID from {$wpdb->posts} as p, {$wpdb->postmeta} as pm WHERE p.ID = pm.post_id AND ( pm.meta_key = 'bp_document_saved' AND pm.meta_value = '0' ) AND p.post_status = 'inherit' AND p.post_type = 'attachment'";
+	$data  = $wpdb->get_col( $query );
 
-	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach ( $orphaned_attachment_query->posts as $a_id ) {
+	if ( ! empty( $data ) ) {
+		foreach ( $data as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
+
 }
 
 /**
@@ -3318,12 +3314,12 @@ function bp_document_size_format( $bytes, $decimals = 0 ) {
 
 	if ( 0 === $bytes ) {
 		/* translators: Memory unit for byte. */
-		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
+		return bp_core_number_format( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
 	}
 
 	foreach ( $quant as $unit => $mag ) {
 		if ( doubleval( $bytes ) >= $mag ) {
-			return number_format_i18n( $bytes / $mag, $decimals ) . ' ' . $unit;
+			return bp_core_number_format( $bytes / $mag, $decimals ) . ' ' . $unit;
 		}
 	}
 
@@ -3375,6 +3371,9 @@ function bp_document_is_activity_comment_document( $document ) {
 		$activity = new BP_Activity_Activity( $document_activity_id );
 
 		if ( $activity ) {
+			if ( 'activity_comment' === $activity->type ) {
+				$is_comment_document = true;
+			}
 			if ( $activity->secondary_item_id ) {
 				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if ( $load_parent_activity ) {
@@ -4307,10 +4306,11 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 	 * @param string $extension      Extension.
 	 * @param string $size           Size.
 	 * @param int    $attachment_id  Attachment id.
+	 * @param bool   $do_symlink     display symlink or not.
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id );
+	return apply_filters( 'bp_document_get_preview_url', $attachment_url, $document_id, $extension, $size, $attachment_id, $do_symlink );
 }
 
 /**
@@ -4518,8 +4518,6 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 							if ( $generate ) {
 								// Generate Document Video Symlink.
-								$ext              = pathinfo( $attached_file, PATHINFO_EXTENSION );
-								$attachment_path .= ( ! empty( $ext ) ) ? '.' . $ext : '';
 								bb_core_symlink_generator( 'document_video', $document, '', array(), $attached_file, $attachment_path );
 							}
 						}
@@ -4815,3 +4813,62 @@ function bb_document_delete_older_symlinks() {
 	return $list;
 }
 bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );
+
+
+/**
+ * Get list of privacy based on user and group.
+ *
+ * @param int    $user_id  User ID.
+ * @param int    $group_id Group ID.
+ * @param string $scope    Scope query parameter.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.7.8
+ */
+function bp_document_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
+	
+	$privacy = array( 'public' );
+	
+	if ( is_user_logged_in() ) {
+		// User filtering.
+		$user_id = (int) ( empty( $user_id ) ? ( bp_displayed_user_id() ? bp_displayed_user_id() : false ) : $user_id );
+		
+		$privacy[] = 'loggedin';
+		
+		if ( bp_is_my_profile() || $user_id === bp_loggedin_user_id() ) {
+			$privacy[] = 'onlyme';
+			
+			if ( bp_is_active( 'friends' ) ) {
+				$privacy[] = 'friends';
+			}
+		}
+		
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
+			
+			// get the login user id.
+			$current_user_id = bp_loggedin_user_id();
+			
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+			
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend ) {
+				$privacy[] = 'friends';
+			}
+		}
+	}
+	
+	if (
+		bp_is_group()
+		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
+		|| ( ! empty( $scope ) && 'groups' === $scope )
+	) {
+		$privacy = array( 'grouponly' );
+	}
+	
+	return apply_filters( 'bp_document_query_privacy', $privacy, $user_id, $group_id, $scope );
+}
