@@ -836,7 +836,7 @@ function groups_get_group_members( $args = array() ) {
 
 		$cache_key = 'bp_groups_get_group_members_' . $r['group_id'];
 		$members   = wp_cache_get( $cache_key, 'bp_group' );
-		if ( empty( $members ) ) {
+		if ( false === $members ) {
 			// Perform the group member query (extends BP_User_Query).
 			$members = new BP_Group_Member_Query(
 				array(
@@ -849,9 +849,7 @@ function groups_get_group_members( $args = array() ) {
 					'type'         => $r['type'],
 				)
 			);
-		}
-		if ( ! empty( $members ) ) {
-			wp_cache_set( $cache_key, $members, 'bp_group' );
+				wp_cache_set( $cache_key, $members, 'bp_group' );
 		}
 
 		// Structure the return value as expected by the template functions.
