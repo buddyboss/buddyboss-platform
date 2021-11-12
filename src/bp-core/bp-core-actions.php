@@ -378,3 +378,17 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 }
 
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
+
+/**
+ * Check and re-start the background process if queue is not empty.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_email_handle_cron_healthcheck() {
+	global $bb_email_background_updater;
+	if ( $bb_email_background_updater->is_updating() ) {
+		$bb_email_background_updater->handle_cron_healthcheck();
+	}
+}
+
+add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
