@@ -190,6 +190,19 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Define default network search visibility property.
+		if ( isset( $schema['network_search_enable_remove'] ) ) {
+			if ( ! empty( $post_id ) ) {
+				$data['network_search_enable_remove'] = (bool) (
+				! empty( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) )
+					? get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true )
+					: 0
+				);
+			} else {
+				$data['network_search_enable_remove'] = false;
+			}
+		}
+
 		// Define default visibility property.
 		if ( isset( $schema['enable_profile_field'] ) ) {
 			if ( ! empty( $post_id ) ) {
@@ -368,6 +381,13 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 			$schema['properties']['enable_remove'] = array(
 				'description' => __( 'Hide all members of this type from Members Directory.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
+			$schema['properties']['network_search_enable_remove'] = array(
+				'description' => __( 'Hide all members of this type from Network Search results.', 'buddyboss' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
