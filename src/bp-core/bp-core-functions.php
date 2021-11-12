@@ -6144,6 +6144,9 @@ function bb_restricate_rss_feed() {
 				}
 			}
 		} else {
+			if ( strpos( $actual_link, '/feed/' ) === false ) {
+				return;
+			}
 			$defaults = array(
 				'mode'     => 2,
 				'redirect' => $actual_link,
