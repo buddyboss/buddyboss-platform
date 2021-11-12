@@ -72,7 +72,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="dropzone closed" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
