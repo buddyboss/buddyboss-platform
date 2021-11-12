@@ -143,6 +143,15 @@ function messages_new_message( $args = '' ) {
 			unset( $message->recipients[ $r['sender_id'] ] );
 		}
 
+		// Filter out the suspended recipients.
+		if ( function_exists( 'bp_moderation_is_user_suspended' ) && count( $message->recipients ) > 0 ) {
+			foreach ( $message->recipients as $key => $recipient ) {
+				if ( bp_moderation_is_user_suspended( $key ) ) {
+					unset( $message->recipients[ $key ] );
+				}
+			}
+		}
+
 		// Set a default reply subject if none was sent.
 		if ( empty( $message->subject ) ) {
 			$re = __( 'Re', 'buddyboss' ) . ': ';
@@ -881,7 +890,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
 			continue;
 		}
 
@@ -1155,4 +1164,15 @@ function bb_messages_is_group_thread( $thread_id ) {
 	}
 
 	return $is_group_message_thread;
+}
+
+/**
+ * Recipients per page list.
+ *
+ * @return int $per_page Return per page for recipients.
+ *
+ * @since BuddyBoss 1.7.6
+ */
+function bb_messages_recipients_per_page() {
+	return apply_filters( 'bb_messages_recipients_per_page', 20 );
 }
