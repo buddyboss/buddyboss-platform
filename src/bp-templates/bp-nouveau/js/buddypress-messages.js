@@ -177,6 +177,9 @@ window.bp = window.bp || {};
 			 */
 			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
 			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
+			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member', this.messageModeratorMemberList );
+			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
+			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
 
 		},
 
@@ -394,17 +397,17 @@ window.bp = window.bp || {};
 			if ( $( '#load_more_rl' ).length ) {
 				$( '#load_more_rl' ).removeClass( 'load_more_rl' );
 			}
-			var $this = $( this );
-			var bpAction = $this.attr( 'data-action' );
-			var threadId = parseInt( $this.attr( 'data-thread-id' ) );
+			var $this       = $( this );
+			var bpAction    = $this.attr( 'data-action' );
+			var threadId    = parseInt( $this.attr( 'data-thread-id' ) );
 			var currentPage = parseInt( $this.attr( 'data-cp' ) );
-			var totalPages = parseInt( $this.attr( 'data-tp' ) );
-			var postData = {
+			var totalPages  = parseInt( $this.attr( 'data-tp' ) );
+			var postData    = {
 				'page_no': currentPage,
 				'thread_id': threadId,
-				'action': bpAction
+				'exclude_current_user': true,
+				'exclude_moderated_members': 'bp_load_more' === bpAction ? true : false,
 			};
-
 			$.ajax( {
 				type: 'POST',
 				url: BP_Nouveau.ajaxurl,
@@ -418,70 +421,46 @@ window.bp = window.bp || {};
 				success: function ( response ) {
 					if ( response.success && response.data && '' !== response.data.content ) {
 						var moderation_type = response.data.recipients.moderation_type;
-						var memberData = response.data.recipients.members;
-						$.each( response.data.recipients.members, function ( index, item ) {
-							if ( '' !== item ) {
-								if ( 'bp_load_more' === bpAction ) {
-									var cloneUserItemWrap = $( '.user-item-wrp:last' ).clone();
-									cloneUserItemWrap.attr( 'id', 'user-' + item.id );
-									cloneUserItemWrap.find( '.user-avatar img' ).attr( 'src', item.avatar );
-									cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
-									cloneUserItemWrap.find( '.user-name' ).html( item.user_name );
-									if ( true === item.is_blocked ) {
-										cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce');
-										cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Blocked' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).removeClass( 'block-member' ).addClass( 'blocked-member disabled' );
-									} else if ( false !== item.can_be_blocked ) {
-										cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'blocked-member disabled' ).addClass( 'block-member' );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
-										cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+						var memberData      = response.data.recipients.members;
+						if ( memberData ) {
+							$.each( memberData, function ( index, item ) {
+								if ( '' !== item ) {
+									if ( 'bp_load_more' === bpAction ) {
+										var cloneUserItemWrap = $( '.user-item-wrp:last' ).clone();
+										cloneUserItemWrap.attr( 'id', 'user-' + item.id );
+										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'src', item.avatar );
+										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
+										cloneUserItemWrap.find( '.user-name' ).html( item.user_name );
+										if ( true === item.is_blocked ) {
+											cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Blocked' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).removeClass( 'block-member' ).addClass( 'blocked-member disabled' );
+										} else if ( false !== item.can_be_blocked ) {
+											cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'blocked-member disabled' ).addClass( 'block-member' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+										}
+										$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
 									}
-									$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
-									
-									// When click on block button then need to open popup
-									if ( $( '.report-content, .block-member' ).length > 0 ) {
-										$( '.report-content, .block-member' ).magnificPopup(
-											{
-												type: 'inline',
-												midClick: true,
-												callbacks: {
-													open: function () {
-														var contentId   = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-id' );
-														var contentType = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-content-type' );
-														var nonce       = cloneUserItemWrap.find( '.user-actions .block-member' ).data( 'bp-nonce' );
-														var reportType  = cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'reported_type' );
-														if ( 'undefined' !== typeof reportType ) {
-															var mf_content = $( '#content-report' );
-															mf_content.find( '.bp-reported-type' ).text( reportType );
-														}
-														if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-															$( document ).find( '.bp-report-form-err' ).empty();
-															this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
-														}
-													}
-												}
-											}
-										);
+									if ( 'bp_view_more' === bpAction ) {
+										var oldSpanTagTextNode = document.createTextNode( ', ' );
+										var cloneParticipantsName = $( '.participants-name:last' ).clone();
+										cloneParticipantsName.find( 'a' ).attr( 'href', item.user_link );
+										cloneParticipantsName.find( 'a' ).html( item.user_name );
+										cloneParticipantsName.find( 'a' ).append( oldSpanTagTextNode );
+										if ( parseInt( index ) !== parseInt( Object.keys( memberData ).length ) || cloneParticipantsName ) {
+											$( '.participants-name:last' ).find( 'a' ).append( oldSpanTagTextNode );
+										}
+										$( '.participants-name:last' ).after( cloneParticipantsName );
 									}
 								}
-								if ( 'bp_view_more' === bpAction ) {
-									var oldSpanTagTextNode = document.createTextNode( ', ' );
-									var cloneParticipantsName = $( '.participants-name:last' ).clone();
-									cloneParticipantsName.find( 'a' ).attr( 'href', item.user_link );
-									cloneParticipantsName.find( 'a' ).html( item.user_name );
-									cloneParticipantsName.find( 'a' ).append( oldSpanTagTextNode );
-									if ( parseInt( index ) !== parseInt( Object.keys( memberData ).length ) || cloneParticipantsName ) {
-										$( '.participants-name:last' ).find( 'a' ).append( oldSpanTagTextNode );
-									}
-									$( '.participants-name:last' ).after( cloneParticipantsName );
-								}
-							}
-						} );
+							} );
+						}
 						if ( totalPages === currentPage ) {
 							if ( 'bp_load_more' === bpAction ) {
 								$( '#load_more_rl' ).hide();
@@ -508,12 +487,77 @@ window.bp = window.bp || {};
 			} );
 			return false;
 		},
-		setFormValues: function ( data ) {
-			var mf_content = $( '.mfp-content' );
-			mf_content.find( '.bp-content-id' ).val( data.contentId );
-			mf_content.find( '.bp-content-type' ).val( data.contentType );
-			mf_content.find( '.bp-nonce' ).val( data.nonce );
+		
+		messageBlockMember: function ( e ) {
+			e.preventDefault();
+			var contentId    = $( this ).data( 'bp-content-id' );
+			var contentType  = $( this ).data( 'bp-content-type' );
+			var nonce        = $( this ).data( 'bp-nonce' );
+			var currentHref  = $( this ).attr( 'href' );
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				var mf_content   = $( currentHref );
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#mass-user-block-list a.block-member' ).length > 0 ) {
+				$( '#mass-user-block-list a.block-member' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
 		},
+		
+		messageModeratorMemberList: function ( e ) {
+			e.preventDefault();
+			var postData = {
+				'page_no': $( this ).attr( 'data-cp' ),
+				'thread_id': $( this ).attr( 'data-thread-id' ),
+				'exclude_current_user': true,
+				'exclude_moderated_members': true,
+			};
+			var currentHref = $( this ).attr( 'href' );
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'messages_moderated_recipient_list',
+						post_data: postData,
+					},
+					beforeSend: function () {
+						if ( $( '.mass-block-member' ).length > 0 ) {
+							$( '.mass-block-member' ).magnificPopup(
+								{
+									items: {
+										src: currentHref,
+										type: 'inline'
+									},
+								}
+							).magnificPopup( 'open' );
+						}
+					},
+					success: function ( response ) {
+						if ( response.success && response.data && '' !== response.data.content ) {
+							if ( $( '#mass-user-block-list #moderated_user_list' ).length > 0 ) {
+								$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content ).addClass( 'is_not_empty' );
+							}
+						}
+					},
+				}
+			);
+		},
+		
+		clearModeratedMessageList: function () {
+			if ( $( '#moderated_user_list' ).length > 0 ) {
+				$( '#moderated_user_list' ).html( '' ).removeClass( 'is_not_empty' );
+			}
+		}
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
@@ -934,7 +978,8 @@ window.bp = window.bp || {};
 		{
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
-				'input #message_content': 'focusEditorOnChange'
+				'input #message_content': 'focusEditorOnChange',
+				'paste': 'handlePaste',
 			},
 
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
@@ -946,6 +991,18 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+			},
+
+			handlePaste: function ( event ) {
+				// Get user's pasted data.
+				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+					data = clipboardData.getData( 'text/plain' );
+
+				// Insert the filtered content.
+				document.execCommand( 'insertHTML', false, data );
+
+				// Prevent the standard paste behavior.
+				event.preventDefault();
 			},
 
 			initialize: function() {
@@ -970,7 +1027,7 @@ window.bp = window.bp || {};
 							},
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: true,
+								cleanPastedHTML: false,
 								cleanReplacements: [
 								[new RegExp( /<div/gi ), '<p'],
 								[new RegExp( /<\/div/gi ), '</p'],
