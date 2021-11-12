@@ -330,3 +330,17 @@ function bb_media_symlink_validate() {
 	}
 }
 add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
+
+/**
+ * Check and re-start the background process if queue is not empty.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_email_handle_cron_healthcheck() {
+	global $bb_email_background_updater;
+	if ( $bb_email_background_updater->is_updating() ) {
+		$bb_email_background_updater->handle_cron_healthcheck();
+	}
+}
+
+add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
