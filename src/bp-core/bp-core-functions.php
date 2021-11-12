@@ -5719,6 +5719,10 @@ function bb_core_enable_default_symlink_support() {
 		return;
 	}
 
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
+
 	$upload_dir = wp_upload_dir();
 	$upload_dir = $upload_dir['basedir'];
 
@@ -6060,4 +6064,47 @@ function bb_moderation_bg_update_moderation_data() {
 	if ( ! empty( $moderated_activities ) ) {
 		bb_moderation_update_suspend_data( $moderated_activities, 0 );
 	}
+}
+
+/**
+ * Get all admin users.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return array
+ */
+function bb_get_all_admin_users() {
+	$args = array(
+		'role'    => 'administrator',
+		'orderby' => 'user_nicename',
+		'order'   => 'ASC',
+		'fields'  => 'id',
+	);
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		$users = array_map( 'intval', $users );
+	}
+	return $users;
+}
+
+/**
+ * Check the symlink function was disabled by server or not.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return bool
+ */
+function bb_check_server_disabled_symlink() {
+	if ( function_exists( 'ini_get' ) && ini_get( 'disable_functions' ) ) {
+
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
+		$disabled = array_map( 'trim', $disabled );
+
+		if ( ! empty( $disabled ) && in_array( 'symlink', $disabled, true ) ) {
+			bp_update_option( 'bp_media_symlink_support', 0 );
+			return true;
+		}
+	}
+
+	return false;
 }

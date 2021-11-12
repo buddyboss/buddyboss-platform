@@ -640,6 +640,8 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 		return;
 	}
 
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+
 	/** Forum Status */
 
 	if ( ! empty( $_POST['bbp_forum_status'] ) && in_array( $_POST['bbp_forum_status'], array( 'open', 'closed' ) ) ) {
@@ -652,7 +654,7 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 
 	/** Forum Type */
 
-	if ( ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
+	if ( empty( $group_ids ) && ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
 		if ( 'category' === $_POST['bbp_forum_type'] && ! bbp_is_forum_category( $forum_id ) ) {
 			bbp_categorize_forum( $forum_id );
 		} elseif ( 'forum' === $_POST['bbp_forum_type'] && bbp_is_forum_category( $forum_id ) ) {
@@ -661,8 +663,7 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 	}
 
 	/** Forum Visibility */
-
-	if ( ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
+	if ( empty( bb_get_child_forum_group_ids( $forum_id ) ) && ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
 
 		// Get forums current visibility
 		$visibility = bbp_get_forum_visibility( $forum_id );
@@ -2036,7 +2037,7 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
  *                        and forum id
  */
 function bbp_forum_query_topic_ids( $forum_id ) {
-	$topic_ids = bbp_get_public_child_ids( $forum_id, bbp_get_topic_post_type() );
+	$topic_ids = bbp_get_public_child_ids( $forum_id, bbp_get_topic_post_type(), true );
 
 	return apply_filters( 'bbp_forum_query_topic_ids', $topic_ids, $forum_id );
 }

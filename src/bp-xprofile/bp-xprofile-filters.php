@@ -117,6 +117,9 @@ add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name
 // Repair repeater field repeated in admin side.
 add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
 
+// Repair user nicknames.
+add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -795,7 +798,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
-	// Minimum of 4 characters.
+	// Minimum of 3 characters.
 	if ( strlen( $value ) < 3 ) {
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
@@ -1097,8 +1100,8 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id) 
-    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id) 
+	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
+    LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
     WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
 	$added_fields       = $wpdb->get_results( $clone_fields_query );
 
@@ -1154,7 +1157,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
 		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
 
-		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1177,4 +1180,75 @@ function bb_xprofile_repeater_field_repair_callback() {
 			'message' => __( 'Field update complete!', 'buddyboss' ),
 		);
 	}
+}
+
+/**
+ * Add xprofile repair user nicknames.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_xprofile_repair_user_nicknames( $repair_list ) {
+	$repair_list[] = array(
+		'bb-xprofile-repair-user-nicknames',
+		__( 'Repair user nicknames.', 'buddyboss' ),
+		'bb_xprofile_repair_user_nicknames_callback',
+	);
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will update user nicknames.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_xprofile_repair_user_nicknames_callback() {
+	global $wpdb;
+
+	$records_updated = 0;
+	$users_query     = "
+		SELECT
+			users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value
+		FROM
+			`{$wpdb->users}` as users, `{$wpdb->usermeta}` as meta
+		WHERE
+			users.ID = meta.user_ID
+			and meta.meta_key = 'nickname'
+			and users.user_nicename != meta.meta_value";
+	$records         = $wpdb->get_results( $users_query );
+
+	if ( ! empty( $records ) ) {
+		$wpdb->query(
+			"UPDATE
+				`{$wpdb->usermeta}` as meta, `{$wpdb->users}` as users
+			SET
+				meta.meta_value = users.user_nicename
+			WHERE
+				users.ID = meta.user_ID
+				and meta.meta_key = 'nickname'
+				and users.user_nicename != meta.meta_value"
+		);
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE
+					`{$wpdb->users}` as users, `{$wpdb->prefix}bp_xprofile_data` as xprofile
+				SET
+					xprofile.value = users.user_nicename
+				WHERE
+					users.ID = xprofile.user_id
+					and xprofile.field_id = %d
+					and users.user_nicename != xprofile.value",
+				bp_xprofile_nickname_field_id()
+			)
+		);
+		$records_updated = sprintf( __( '%s user nicknames updated successfully.', 'buddyboss' ), number_format_i18n( count( $records ) ) );
+	}
+	return array(
+		'status'  => 1,
+		'records' => $records_updated,
+		'message' => __( 'User nickname update complete!', 'buddyboss' ),
+	);
 }
