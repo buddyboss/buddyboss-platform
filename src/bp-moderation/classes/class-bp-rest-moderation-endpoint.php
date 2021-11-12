@@ -1071,18 +1071,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
 	public function bp_rest_activity_can_report( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		if ( is_user_logged_in() && bp_moderation_user_can( $activity_id, $type ) ) {
+		if ( is_user_logged_in() && bp_moderation_user_can( $item_id, $item_type ) ) {
 			return true;
 		}
 
@@ -1097,18 +1105,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
 	public function bp_rest_activity_is_reported( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $activity_id, $type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $item_id, $item_type ) ) {
 			return true;
 		}
 
@@ -1123,18 +1139,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return false|mixed|void
 	 */
 	public function bp_rest_activity_report_button_text( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		return bp_moderation_get_report_button_text( $type, $activity_id );
+		return bp_moderation_get_report_button_text( $item_type, $item_id );
 	}
 
 	/**
@@ -1145,18 +1169,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	 * @return false|mixed|void
 	 */
 	public function bp_rest_activity_report_type( $activity ) {
-		$activity_id = $activity['id'];
+		$item_id   = $activity['id'];
+		$item_type = BP_Suspend_Activity::$type;
 
-		if ( empty( $activity_id ) ) {
+		if ( empty( $item_id ) ) {
 			return false;
 		}
 
-		$type = BP_Suspend_Activity::$type;
 		if ( 'activity_comment' === $activity['type'] ) {
-			$type = BP_Suspend_Activity_Comment::$type;
+			$activity_comment_data = new BP_Moderation_Activity_Comment();
+			$item_data             = $activity_comment_data->update_button_sub_items( $item_id );
+			$item_id               = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type             = ( isset( $item_data['type'] ) ) ? $item_data['type'] : BP_Suspend_Activity_Comment::$type;
+		} else {
+			$activity_data = new BP_Moderation_Activity();
+			$item_data     = $activity_data->update_button_sub_items( $item_id );
+			$item_id       = ( isset( $item_data['id'] ) ) ? $item_data['id'] : $item_id;
+			$item_type     = ( isset( $item_data['type'] ) ) ? $item_data['type'] : $item_type;
 		}
 
-		return bp_moderation_get_report_type( $type, $activity_id );
+		return bp_moderation_get_report_type( $item_type, $item_id );
 	}
 
 	/**
