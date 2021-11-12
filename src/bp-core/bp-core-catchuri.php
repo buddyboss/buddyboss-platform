@@ -1158,7 +1158,7 @@ function bp_private_network_template_redirect() {
 		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
 		$actual_link         = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		// If feed then return.
-		if ( strpos( $actual_link, 'feed' ) !== false ) {
+		if ( strpos( $actual_link, '/feed/' ) !== false ) {
 			return;
 		}
 		/**
