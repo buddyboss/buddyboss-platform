@@ -889,8 +889,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( WP_REST_Server::READABLE === $method ) {
-			$key          = 'get';
-			$args['id']   = array(
+			$key                = 'get';
+			$args['id']         = array(
 				'description' => __( 'A unique numeric ID for the album.', 'buddyboss' ),
 				'type'        => 'integer',
 				'required'    => true,

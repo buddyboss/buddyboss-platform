@@ -134,6 +134,18 @@ function bp_helper_plugins_loaded_callback() {
 
 	}
 
+	/**
+	 * Fix email subject, content and link
+     *
+	 * @since BuddyBoss 1.5.4
+	 */
+	if ( in_array( 'wishlist-member/wpm.php', $bp_plugins ) ) {
+		global $WishListMemberInstance;
+		remove_filter( 'user_request_action_email_content', array( &$WishListMemberInstance, 'privacy_user_request_email' ), 10 );
+		remove_filter( 'user_request_action_email_subject', array( &$WishListMemberInstance, 'privacy_user_request_email_subject' ), 10 );
+		remove_filter( 'wp_privacy_personal_data_email_content', array( &$WishListMemberInstance, 'privacy_personal_data_email' ), 10 );
+	}
+
 	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
 
 		/**
@@ -155,6 +167,62 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
 
+	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
+		
+		/**
+		 * Function to deregister some scripts and styles from bp component pages
+		 * 
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bp_exclude_geodirectory_scripts() {
+			$bp_current_component = bp_current_component();
+			
+			// deregister geodirectory select2 script and styles from all component pages
+			if ( $bp_current_component ) {
+				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
+				add_action( 'wp_print_styles', 'bp_deregister_geodirectory_styles' );
+			}
+		}
+
+		add_action( 'bp_init', 'bp_exclude_geodirectory_scripts' );
+
+		/**
+		 * Deregister and dequeue select2 script from all component pages.
+		 * 
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bp_deregister_geodirectory_script_select2() {
+			wp_dequeue_script( 'select2' );
+			wp_deregister_script( 'select2' );
+			wp_dequeue_script( 'bootstrap-js-bundle' );
+			wp_deregister_script( 'bootstrap-js-bundle' );
+		}
+
+		/**
+		 * Deregister and dequeue styles from all component pages.
+		 * 
+		 * @since 1.8.0
+		 *
+		 * @return void
+		 */
+		function bp_deregister_geodirectory_styles() {
+			wp_dequeue_style( 'ayecode-ui' );
+			wp_deregister_style( 'ayecode-ui' );
+		}
+	}
+
+	/**
+	 * Include filters when Woocommerce plugin is activated
+	 *
+	 * Support Woocommerce
+	 */
+	if ( class_exists( 'WooCommerce' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
+	}
 }
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
@@ -169,6 +237,36 @@ function bb_wp_offload_media_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
+
+/**
+ * Fix the media, video & document display compatibility issue.
+ *
+ * @since BuddyBoss 1.7.9
+ */
+function bb_seo_press_compatibility_helper() {
+
+	if ( (bool) bp_get_option( 'seopress_activated' ) ) {
+		if (
+			(
+				! empty( get_query_var( 'bb-media-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-preview' ) ) ||
+				! empty( get_query_var( 'bb-document-player' ) ) ||
+				! empty( get_query_var( 'bb-video-thumb-preview' ) ) ||
+				! empty( get_query_var( 'bb-video-preview' ) )
+			)
+			&&
+			(
+				function_exists( 'seopress_redirections_enabled' ) &&
+				'yes' === seopress_redirections_enabled()
+			)
+		) {
+			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
+		}
+	}
+
+}
+
+add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
 
 /**
  * Add User meta as first and last name is update by BuddyBoss Platform itself
