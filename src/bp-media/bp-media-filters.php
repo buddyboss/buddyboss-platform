@@ -84,7 +84,7 @@ add_filter( 'bp_get_activity_entry_css_class', 'bp_video_activity_entry_css_clas
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_media_preview' );
 add_filter( 'query_vars', 'bb_setup_query_media_preview' );
-add_action( 'template_include', 'bb_setup_template_for_media_preview' );
+add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
 
 /**
  * Add Media items for search
@@ -309,11 +309,13 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
 		'user_id'  => false,
+		'privacy'  => array(),
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_media_support_enabled() ) {
-			$args['privacy'] = array( 'grouponly' );
+			$args['privacy'][] = 'comment';
+			$args['privacy'][] = 'grouponly';
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$args['album_id'] = 'existing-media';
 			}
@@ -331,6 +333,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		}
 	}
 
+	$args['privacy'][] = 'comment';
+	if ( ! isset( $args['album_id'] ) ) {
+		$args['album_id'] = 'existing-media';
+	}
+
 	$is_forum_activity = false;
 	if (
 			bp_is_active( 'forums' )
@@ -340,6 +347,8 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
+
+	$args['privacy'] = array_unique( $args['privacy'] );
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
@@ -1559,7 +1568,11 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		foreach ( $media_ids as $media_id ) {
 			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
-			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
+			if (
+				! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
+				'comment' !== $media->privacy &&
+				! empty( $media->blog_id )
+			) {
 				$media->privacy = $activity->privacy;
 				$media->save();
 			}
@@ -1759,7 +1772,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1821,7 +1834,7 @@ function bp_media_admin_repair_media() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1859,7 +1872,7 @@ function bp_media_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -2379,7 +2392,7 @@ function bp_media_activity_after_email_content( $activity ) {
 		$media_ids  = explode( ',', $media_ids );
 		$photo_text = sprintf(
 			_n( '%s photo', '%s photos', count( $media_ids ), 'buddyboss' ),
-			number_format_i18n( count( $media_ids ) )
+			bp_core_number_format( count( $media_ids ) )
 		);
 		$content    = sprintf(
 		/* translator: 1. Activity link, 2. Activity photo count */
@@ -2540,8 +2553,20 @@ function bp_media_check_download_album_protection() {
 		array(
 			'base'    => $upload_dir['basedir'] . '/bb_medias',
 			'file'    => '.htaccess',
-			'content' => 'deny from all
+			'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>

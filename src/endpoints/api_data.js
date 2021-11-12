@@ -5852,6 +5852,49 @@ define({ "api": [
     "groupTitle": "Media"
   },
   {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/media/move",
+    "title": "Move Medias",
+    "name": "MoveBBPhotos",
+    "group": "Media",
+    "description": "<p>Move Medias into the albums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "media_ids",
+            "description": "<p>Media specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Media Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
     "type": "PATCH",
     "url": "/wp-json/buddyboss/v1/media/albums/:id",
     "title": "Update Album",
@@ -8808,8 +8851,8 @@ define({ "api": [
   },
   {
     "type": "PATCH",
-    "url": "/wp-json/buddyboss/v1/signup/activate/:id",
-    "title": "Delete signup",
+    "url": "/wp-json/buddyboss/v1/signup/activate/:activation_key",
+    "title": "Activate a signup",
     "name": "ActivateBBSignups",
     "group": "Signups",
     "description": "<p>Activate a signup.</p>",
@@ -8821,8 +8864,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
+            "field": "activation_key",
+            "description": "<p>Identifier for the signup.</p>"
           }
         ]
       }
