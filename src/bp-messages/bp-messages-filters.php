@@ -733,7 +733,7 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
  * Function will check content empty or not for the media, document and gif.
  * If content will empty then return true and allow empty content in DB for the media, document and gif.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool         $validated_content Boolean from filter.
  * @param string       $content           Message content.

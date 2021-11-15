@@ -77,6 +77,8 @@ function messages_new_message( $args = '' ) {
 
 	/**
 	 * Filter to validate message content.
+	 * 
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool   $validated_content True if message is not valid, false otherwise.
 	 * @param string $content           Content of the message.
