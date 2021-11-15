@@ -25,7 +25,7 @@ add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_d
 /**
  * Assign the default member type to user on Admin.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int    $user_id ID of user.
  * @param string $member_type Defult selected member type.
