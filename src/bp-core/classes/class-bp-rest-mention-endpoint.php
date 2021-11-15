@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Variable to store the argument data.
+	 *
+	 * @var array of arguments.
+	 */
+	protected $data_args;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -74,6 +81,13 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $request['only_friends'] ) ) {
 			$args['only_friends'] = absint( $request['only_friends'] );
 		} elseif (
+			bp_is_active( 'friends' )
+			&& isset( $args['term'] )
+			&& empty( $args['term'] )
+			&& empty( trim( $args['term'] ) )
+		) {
+			$args['only_friends'] = isset( $request['only_friends'] ) ? absint( $request['only_friends'] ) : true;
+		} elseif (
 			bp_is_active( 'messages' )
 			&& bp_is_active( 'friends' )
 			&& function_exists( 'bp_force_friendship_to_message' )
@@ -84,9 +98,20 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['group_id'] ) ) {
 			$args['group_id'] = absint( $request['group_id'] );
+			$this->data_args  = $args;
+			add_filter( 'bp_groups_member_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
+		} else {
+			$this->data_args = $args;
+			add_filter( 'bp_members_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
 		}
 
 		$results = bp_core_get_suggestions( $args );
+
+		if ( ! empty( $request['group_id'] ) ) {
+			remove_filter( 'bp_groups_member_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
+		} else {
+			remove_filter( 'bp_members_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
+		}
 
 		if ( is_wp_error( $results ) ) {
 			return new WP_Error(
@@ -295,5 +320,32 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		 * @param array $params Query params.
 		 */
 		return apply_filters( 'bp_rest_mention_collection_params', $params );
+	}
+
+	/**
+	 * Validation status for the member suggestion service query.
+	 *
+	 * @since 1.7.8
+	 *
+	 * @param bool|WP_Error $valid Results of validation check.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function validate_member_suggestions( $valid ) {
+		$args = $this->data_args;
+
+		if (
+			is_wp_error( $valid ) &&
+			$valid->get_error_code() === 'missing_parameter' &&
+			bp_is_active( 'friends' ) &&
+			! empty( $args ) &&
+			isset( $args['term'] ) &&
+			empty( trim( $args['term'] ) ) &&
+			! empty( $args['only_friends'] )
+		) {
+			return true;
+		}
+
+		return $valid;
 	}
 }
