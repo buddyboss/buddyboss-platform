@@ -152,7 +152,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 	 * Widget settings form.
 	 */
 	function form( $instance ) {
-		$instance = wp_parse_args(
+		$instance = bp_parse_args(
 			(array) $instance,
 			array(
 				'max_users' => 16,

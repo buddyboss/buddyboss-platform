@@ -230,7 +230,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			// be the default value of 'root_slug'.
 			$default_root_slug = isset( buddypress()->pages->{$this->id}->slug ) ? buddypress()->pages->{$this->id}->slug : '';
 
-			$r = wp_parse_args(
+			$r = bp_parse_args(
 				$args,
 				array(
 					'slug'                  => $this->id,

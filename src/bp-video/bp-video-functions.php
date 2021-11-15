@@ -1409,7 +1409,7 @@ function bp_get_total_video_count() {
  * @return string
  */
 function bp_video_object_results_video_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'all';
 	$querystring['page']        = 1;

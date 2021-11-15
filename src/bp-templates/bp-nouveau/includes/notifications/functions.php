@@ -84,7 +84,7 @@ function bp_nouveau_notifications_init_filters() {
 function bp_nouveau_notifications_register_filter( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$r = wp_parse_args( $args, array(
+	$r = bp_parse_args( $args, array(
 		'id'       => '',
 		'label'    => '',
 		'position' => 99,
@@ -327,7 +327,7 @@ function bb_current_user_status( $user_id ) {
 }
 
 /**
- * Current user online activity time. 
+ * Current user online activity time.
  *
  * @since BuddyPress 1.7.0
  *

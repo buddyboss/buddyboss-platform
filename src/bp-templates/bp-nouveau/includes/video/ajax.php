@@ -910,7 +910,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99 );
 	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_video_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_video_activity_entry' );
-	
+
 	// This will call only when we close video popup.
 	if ( 'true' === $reset_comment ) {
 		ob_start();
@@ -919,14 +919,14 @@ function bp_nouveau_ajax_video_get_activity() {
 		$activity = ob_get_contents();
 		ob_end_clean();
 	}
-	
+
 	wp_send_json_success(
 		array(
 			'activity'   => $activity,
 			'video_data' => $video_data,
 		)
 	);
-	
+
 }
 
 /**
@@ -1133,7 +1133,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_object_template_results_albums_existing_video_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 

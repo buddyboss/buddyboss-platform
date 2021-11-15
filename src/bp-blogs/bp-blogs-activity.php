@@ -495,7 +495,7 @@ function bp_blogs_record_activity( $args = '' ) {
 		'hide_sitewide'     => false,
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	if ( ! empty( $r['action'] ) ) {
 

@@ -597,7 +597,7 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			$args,
 			array(
 				'id'                => false,

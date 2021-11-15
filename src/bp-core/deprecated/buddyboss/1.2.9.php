@@ -22,7 +22,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, 
 
 	_deprecated_function( __FUNCTION__, '1.2.9' );
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if ( $object !== 'members' ) {
 		return $qs;

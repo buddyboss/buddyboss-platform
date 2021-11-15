@@ -199,7 +199,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	public function manage_hidden_album( $album_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $album_id,

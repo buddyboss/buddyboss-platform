@@ -339,7 +339,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	public function manage_hidden_video( $video_id, $hide_sitewide, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $video_id,
@@ -381,7 +381,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	public function manage_unhidden_video( $video_id, $hide_sitewide, $force_all, $args = array() ) {
 		global $bp_background_updater;
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $video_id,

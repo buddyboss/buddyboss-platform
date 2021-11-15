@@ -681,7 +681,7 @@ function bp_core_no_access( $args = '' ) {
 		'message'  => __( 'Please login to access this website.', 'buddyboss' ),
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	/**
 	 * Filters the arguments used for user redirecting when visiting access controlled areas.

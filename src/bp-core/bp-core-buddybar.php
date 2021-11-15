@@ -51,7 +51,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// Validate nav link data.
 	$nav_item = bp_core_create_nav_link( $r, $component );
@@ -123,7 +123,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we don't have the required info we need, don't create this nav item.
 	if ( empty( $r['name'] ) || empty( $r['slug'] ) ) {
@@ -208,7 +208,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// If we don't have the required info we need, don't register this screen function.
 	if ( empty( $r['slug'] ) ) {

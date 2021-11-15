@@ -1028,7 +1028,7 @@ function bp_profile_field_data( $args = '' ) {
 	 */
 function bp_get_profile_field_data( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'field'   => false, // Field name or ID.
