@@ -145,6 +145,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				// Allow group member to view private/hidden forums
 				add_filter( 'bbp_map_meta_caps', array( $this, 'map_group_forum_meta_caps' ), 10, 4 );
 
+				// Fix issue - Group organizers and moderators can not add topic tags
+				add_filter( 'bbp_map_topic_tag_meta_caps', array( $this, 'bbp_map_assign_topic_tags_caps' ), 10, 4 );
+
 				// Group member permissions to view the topic and reply forms
 				add_filter( 'bbp_current_user_can_access_create_topic_form', array( $this, 'form_permissions' ) );
 				add_filter( 'bbp_current_user_can_access_create_reply_form', array( $this, 'form_permissions' ) );
@@ -248,6 +251,31 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			return apply_filters( 'bbp_map_group_forum_topic_meta_caps', $caps, $cap, $user_id, $args );
+		}
+
+		/**
+		 * Fix issue - Group organizers and moderators can not add topic tags.
+		 *
+		 * @since BuddyBoss 1.7.9
+		 *
+		 * @param array  $caps    List of capabilities.
+		 * @param string $cap     Capability name.
+		 * @param int    $user_id User ID.
+		 * @param array  $args    List of Arguments.
+		 *
+		 * @return array
+		 */
+		public function bbp_map_assign_topic_tags_caps( $caps, $cap, $user_id, $args ) {
+
+			if ( 'assign_topic_tags' !== $cap ) {
+				return $caps;
+			}
+
+			if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
+				return array( 'participate' );
+			}
+
+			return $caps;
 		}
 
 		/**

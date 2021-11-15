@@ -550,6 +550,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	 */
 	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id );
 }
+add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
@@ -4732,4 +4733,37 @@ function bb_get_member_roles( $user_id = 0 ) {
 	}
 
 	return $roles;
+}
+
+/**
+ * Function to get the hidden profile type.
+ *
+ * @since BuddyBoss 1.7.9
+ *
+ * @return array|false
+ */
+function bp_get_hidden_member_types() {
+	$args = array(
+		'posts_per_page' => - 1,
+		'post_type'      => bp_get_member_type_post_type(),
+		'meta_query'     => array(
+			array(
+				'key'     => '_bp_member_type_enable_search_remove',
+				'value'   => 1,
+				'compare' => '=',
+			)
+		),
+		'nopaging'       => true,
+	);
+
+	$hidden_profile_types = new WP_Query( $args );
+
+	/**
+	 * Filters hidden profile types.
+	 *
+	 * @since BuddyBoss 1.7.9
+	 *
+	 * @param array $post_name Hidden profile type names.
+	 */
+	return apply_filters( 'bp_get_hidden_member_types', isset( $hidden_profile_types->posts ) ? wp_list_pluck( $hidden_profile_types->posts, 'post_name' ) : false );
 }
