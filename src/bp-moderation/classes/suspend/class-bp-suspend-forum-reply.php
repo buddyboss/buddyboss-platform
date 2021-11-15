@@ -207,24 +207,24 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		$action_name = current_filter();
 		$reply_slug  = bbp_get_reply_post_type();
 		$post_types  = isset( $wp_query ) ? wp_parse_slug_list( $wp_query->get( 'post_type' ) ) : array();
-		
+
 		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
 			if ( false === $wp_query->get( 'moderation_query' ) || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
 				return $where_conditions;
 			}
 		}
-		
+
 		$where = $this->exclude_where_query();
 		// If we add below filter above then its display error related to table name not define.
 		$where = apply_filters( 'bp_suspend_forum_reply_get_where_conditions', $where, $this );
-		
+
 		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
 			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
 				$where_conditions .= ' AND ' . $wpdb->posts . '.ID NOT IN ( ' . $where . ' )';
 				return $where_conditions;
 			}
 		}
-		
+
 		$where_conditions['suspend_where'] = ' p.id NOT IN ( ' . $where . ' )';
 		return $where_conditions;
 	}
