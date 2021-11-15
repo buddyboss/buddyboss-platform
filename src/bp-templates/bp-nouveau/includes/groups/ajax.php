@@ -1081,6 +1081,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	$media    = filter_input( INPUT_POST, 'media', FILTER_DEFAULT );
 	$document = filter_input( INPUT_POST, 'document', FILTER_DEFAULT );
 	$video    = filter_input( INPUT_POST, 'video', FILTER_DEFAULT );
+	$message  = '';
 
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
 		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
@@ -1221,7 +1222,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			// Comma separated members list to find in meta query.
 			$message_users_ids = implode( ',', $members );
 
-			// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
+			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
 			$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
@@ -1266,12 +1267,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			}
 
 			if ( '' !== $group_thread && ! $is_deleted && isset( $_POST['message_thread_type'] ) && empty( $_POST['message_thread_type'] ) ) {
-				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 				$_POST['message_thread_type'] = 'reply';
 				$group_thread_id              = $group_thread;
 			} else {
 
-				// Backward compatibility when we dont store thread_id in group meta.
+				// Backward compatibility when we don't store thread_id in group meta.
 				$meta = array(
 					array(
 						'key'     => 'group_id',
@@ -1325,18 +1326,18 @@ function bp_nouveau_ajax_groups_send_message() {
 					if ( $thread_id ) {
 						$group_thread_id = $thread_id;
 
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 
 						// Create a new group thread.
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
 
 					// Create a new group thread.
 				} else {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+					// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'new';
 				}
 			}
@@ -1469,7 +1470,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					if ( $is_recipient_match && (int) $thread_id !== $group_thread ) {
 						$individual_thread_id = $thread_id;
 
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 
 						// Else recipients not matched.
@@ -1528,14 +1529,14 @@ function bp_nouveau_ajax_groups_send_message() {
 							if ( $existing_thread > 0 ) {
 								$individual_thread_id = $existing_thread;
 
-								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+								// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 								$_POST['message_thread_type'] = 'reply';
 							} else {
-								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+								// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 								$_POST['message_thread_type'] = 'new';
 							}
 						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
 						}
 					}
@@ -1594,14 +1595,14 @@ function bp_nouveau_ajax_groups_send_message() {
 						if ( $existing_thread > 0 ) {
 							$individual_thread_id = $existing_thread;
 
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
 						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
 						}
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
 				}
@@ -1663,14 +1664,14 @@ function bp_nouveau_ajax_groups_send_message() {
 					if ( $existing_thread > 0 ) {
 						$individual_thread_id = $existing_thread;
 
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
 				} else {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+					// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'new';
 				}
 			}
@@ -1711,6 +1712,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
 		foreach ( $members as $member ) {
+
 			$meta = array(
 				array(
 					'key'     => 'group_message_type',
@@ -1725,8 +1727,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			// Find existing thread which are private.
 			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
 
-				$thread_id = 0;
-
+				$thread_id        = 0;
 				$member_thread_id = 0;
 
 				while ( bp_message_threads() ) {
@@ -1765,7 +1766,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						// If recipients are matched.
 						if ( $is_recipient_match && 'all' !== $message_user ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
 							$member_thread_id             = $thread_id;
 
@@ -1842,17 +1843,17 @@ function bp_nouveau_ajax_groups_send_message() {
 						}
 
 						if ( $existing_thread > 0 ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
 
 							$member_thread_id = $existing_thread;
 
 						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
 						}
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
 				}
@@ -1942,16 +1943,16 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 
 					if ( $existing_thread > 0 ) {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 
 						$member_thread_id = $existing_thread;
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
 				} else {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+					// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'new';
 				}
 
