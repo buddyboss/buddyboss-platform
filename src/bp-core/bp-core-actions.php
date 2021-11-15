@@ -334,7 +334,7 @@ add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
 /**
  * Check and re-start the background process if queue is not empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.1
  */
 function bb_email_handle_cron_healthcheck() {
 	global $bb_email_background_updater;

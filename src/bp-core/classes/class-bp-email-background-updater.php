@@ -2,7 +2,7 @@
 /**
  * Email Background Updater
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.1
  */
 
 defined( 'ABSPATH' ) || exit;

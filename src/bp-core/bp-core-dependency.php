@@ -788,7 +788,7 @@ function bp_get_request() {
 /**
  * Fire the 'bb_init_email_background_updater' action, where BP email updates data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.1
  */
 function bb_init_email_background_updater() {
 	global $bb_email_background_updater;
@@ -801,7 +801,7 @@ function bb_init_email_background_updater() {
 	/**
 	 * Fires inside the 'bb_init_email_background_updater' function, where BP email updates data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.1
 	 */
 	do_action( 'bb_init_email_background_updater' );
 }
