@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-11-12 06:16:05+00:00\n"
+"POT-Creation-Date: 2021-11-15 04:42:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5068,7 +5068,7 @@ msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
 #: bp-core/bp-core-catchuri.php:1261 bp-core/bp-core-functions.php:6159
-#: bp-core/bp-core-functions.php:6170
+#: bp-core/bp-core-functions.php:6173
 msgid "Please login to access this website."
 msgstr ""
 
@@ -6557,7 +6557,7 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6202
+#: bp-core/bp-core-functions.php:6205
 #: bp-performance/bp-performance-mu-loader.php:91
 msgid "Only authenticated users can access the REST API."
 msgstr ""
