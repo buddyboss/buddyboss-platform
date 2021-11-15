@@ -6108,3 +6108,112 @@ function bb_check_server_disabled_symlink() {
 
 	return false;
 }
+
+/**
+ * Function will restrict RSS feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_restricate_rss_feed() {
+	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	if (
+		strpos( $actual_link, 'wp-cron.php' ) === false &&
+		strpos( $actual_link, 'wp-login.php' ) === false &&
+		strpos( $actual_link, 'admin-ajax.php' ) === false &&
+		strpos( $actual_link, 'wp-json' ) === false
+	) {
+		$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
+		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
+		if ( '' !== $exclude_rss_feed ) {
+			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
+				// Check if current url has slash in the last if not then add because we allow to add
+				// feed url like this one - /feed/.
+				if ( substr( $current_url_explode[1], - 1 ) !== '/' ) {
+					$current_url_explode[1] = $current_url_explode[1] . '/';
+				}
+				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
+					$defaults = array(
+						'mode'     => 2,
+						'redirect' => $actual_link,
+						'root'     => bp_get_root_domain(),
+						'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+					);
+					bp_core_no_access( $defaults );
+					exit();
+				}
+			}
+		} else {
+			if ( strpos( $actual_link, '/feed/' ) === false ) {
+				return;
+			}
+			$defaults = array(
+				'mode'     => 2,
+				'redirect' => $actual_link,
+				'root'     => bp_get_root_domain(),
+				'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+			);
+			bp_core_no_access( $defaults );
+			exit();
+		}
+	}
+}
+
+/**
+ * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response $response
+ */
+function bb_restricate_rest_api( $response, $handler, $request ) {
+	// Get current route.
+	$current_endpoint = $request->get_route();
+	// Add mandatory endpoint here for app which you want to exclude from restriction.
+	// ex: /buddyboss-app/auth/v1/jwt/token.
+	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(), $current_endpoint );
+	// Allow some endpoints which is mandatory for app.
+	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+		return $response;
+	}
+
+	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
+		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
+		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
+		$response      = rest_ensure_response( $error );
+	}
+
+	return $response;
+}
+
+/**
+ * Function will check current REST APIs endpoint is allow or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $current_endpoint Current endpoint.
+ *
+ * @return bool true Return true if allow endpoint otherwise return false.
+ */
+function bb_is_allowed_endpoint( $current_endpoint ) {
+	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
+	if ( '' !== $exclude_endpoints ) {
+		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
+		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
+			foreach ( $exclude_arr_endpoints as $endpoints ) {
+				if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+					$endpoints = str_replace( 'wp-json', '', $endpoints );
+				}
+				$current_endpoint_allowed = preg_match( '@^' . $endpoints . '$@i', $current_endpoint, $matches );
+				if ( $current_endpoint_allowed ) {
+					return true;
+				}
+			}
+		}
+	}
+}
