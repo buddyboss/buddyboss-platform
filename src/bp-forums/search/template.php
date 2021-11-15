@@ -90,6 +90,9 @@ function bbp_has_search_results( $args = '' ) {
 	// Call the query
 	if ( ! empty( $r['s'] ) ) {
 		$bbp->search_query = new WP_Query( $r );
+	} else {
+		unset( $r['s'] );
+		$bbp->search_query = new WP_Query( $r );
 	}
 
 	// Add pagination values to query object
