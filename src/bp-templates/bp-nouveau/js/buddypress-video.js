@@ -2259,7 +2259,7 @@ window.bp = window.bp || {};
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
 			
-			self.resetRemoveActivityCommentsData( event );
+			self.resetRemoveActivityCommentsData();
 			
 			self.current_video = false;
 		},

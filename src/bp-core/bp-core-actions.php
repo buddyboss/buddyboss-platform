@@ -382,7 +382,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
 /**
  * Check and re-start the background process if queue is not empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.1
  */
 function bb_email_handle_cron_healthcheck() {
 	global $bb_email_background_updater;
