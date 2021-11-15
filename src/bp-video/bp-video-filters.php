@@ -942,7 +942,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -981,7 +981,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -1487,7 +1487,7 @@ function bp_video_activity_after_email_content( $activity ) {
 		$video_ids  = explode( ',', $video_ids );
 		$video_text = sprintf(
 			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
-			number_format_i18n( count( $video_ids ) )
+			bp_core_number_format( count( $video_ids ) )
 		);
 		$content    = sprintf(
 			/* translator: 1. Activity link, 2. Activity video count */
