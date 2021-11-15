@@ -3951,7 +3951,11 @@ function bp_groups_get_excluded_group_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	static $bp_group_type_query = null;
+
+	if ( null === $bp_group_type_query ) {
+		$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	}
 	if ( $bp_group_type_query->have_posts() ) :
 		while ( $bp_group_type_query->have_posts() ) :
 			$bp_group_type_query->the_post();
