@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-11-15 11:43:44+00:00\n"
+"POT-Creation-Date: 2021-11-16 11:12:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1525,7 +1525,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:875
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:1457
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:221
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:445
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:454
 msgid "You don't have access to send the media."
 msgstr ""
 
@@ -1536,7 +1536,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:888
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:1470
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:234
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:458
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:467
 msgid "You don't have access to send the document."
 msgstr ""
 
@@ -1546,7 +1546,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1456
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:901
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:247
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:471
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:480
 msgid "You don't have access to send the video."
 msgstr ""
 
@@ -1557,7 +1557,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:914
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:1483
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:260
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:484
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:493
 msgid "You don't have access to send the gif."
 msgstr ""
 
@@ -1820,7 +1820,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1436
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:298
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1191
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2144
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2159
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:981
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
 #. translators: Full image size for the member Avatar
@@ -1835,7 +1835,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1444
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:306
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1199
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2151
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2166
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:989
 #. translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in
 #. pixels
@@ -1849,7 +1849,7 @@ msgid "Avatar URL with thumb image size (%1$d x %2$d pixels)."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1859
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2137
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2152
 msgid "Avatar URLs for the author of the activity."
 msgstr ""
 
@@ -2996,7 +2996,7 @@ msgstr ""
 msgid "Forum Import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3196
+#: bp-core/admin/bp-core-admin-functions.php:3214
 #: bp-moderation/bp-moderation-admin.php:384
 #: bp-moderation/bp-moderation-admin.php:460
 #: bp-settings/classes/class-bp-settings-component.php:187
@@ -3005,7 +3005,7 @@ msgstr ""
 msgid "Blocked Members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3208
+#: bp-core/admin/bp-core-admin-functions.php:3226
 #: bp-moderation/bp-moderation-admin.php:382
 #: bp-moderation/bp-moderation-admin.php:458
 #: bp-moderation/screens/single/admin/report-single.php:24
@@ -3013,7 +3013,7 @@ msgstr ""
 msgid "Reported Content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3217
+#: bp-core/admin/bp-core-admin-functions.php:3235
 #: bp-moderation/bp-moderation-admin.php:573
 #: bp-moderation/bp-moderation-settings.php:104
 #: bp-moderation/classes/class-bp-moderation-component.php:180
@@ -17102,7 +17102,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-endpoint.php:440
 #: bp-members/classes/class-bp-rest-members-endpoint.php:508
 #: bp-members/classes/class-bp-rest-members-endpoint.php:520
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:263
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:272
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:181
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:354
 msgid "Invalid member ID."
@@ -17264,8 +17264,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:552
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:727
 #: bp-members/classes/class-bp-rest-members-endpoint.php:427
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:251
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:597
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:260
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:606
 msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
@@ -17795,7 +17795,7 @@ msgid "The URL-friendly slug for the Group."
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1229
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2177
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2192
 msgid "The permalink to the Group on the site."
 msgstr ""
 
@@ -21880,7 +21880,7 @@ msgid "you"
 msgstr ""
 
 #: bp-messages/bp-messages-template.php:2184
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1412
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1421
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2217
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2274
 msgid "This message was deleted."
@@ -21988,8 +21988,8 @@ msgid "Sorry, you have not selected any members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:209
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:433
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:524
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:442
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:533
 msgid "Sorry, Your message cannot be empty."
 msgstr ""
 
@@ -22015,7 +22015,7 @@ msgid "Message thread"
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1209
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1913
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1928
 msgid "Content of the Message to add to the Thread."
 msgstr ""
 
@@ -22024,7 +22024,7 @@ msgid "Group thread users individual or all."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1224
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2305
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2320
 msgid "Limit result to messages created by a specific user."
 msgstr ""
 
@@ -22043,7 +22043,7 @@ msgid "Your message was sent to all members of this group."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:50
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1886
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1901
 msgid "ID of the Messages Thread."
 msgstr ""
 
@@ -22060,92 +22060,92 @@ msgid "Sorry, you are not allowed to perform action on messages."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:178
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:349
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:358
 msgid "Sorry, you are not allowed to see this thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:62
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:71
 msgid "Text for search recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:67
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:76
 msgid "Group id to search members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:86
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:95
 msgid "Sender users ID."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:90
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:99
 msgid "Thread recipient ID."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:144
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:153
 msgid "ID of one of the message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:273
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:282
 msgid "Sorry, you cannot view the messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:363
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:372
 msgid "Sorry, this thread does not exist."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:413
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:422
 msgid "Please, enter recipients user IDs."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:541
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:550
 msgid "There was an error trying to create the message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:606
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:615
 msgid "Sorry, you need to be logged in to create a message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:660
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:669
 msgid "Sorry, term is required parameter."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:729
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:738
 msgid "Sorry, you are not allowed to search recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:816
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:825
 msgid "Sorry, you are not allowed to search thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:865
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:874
 msgid "There was an error trying to update the message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:983
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:992
 msgid "Sorry, this message does not exist."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:993
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1002
 msgid "Sorry, you cannot add the message to your starred box."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:997
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1006
 msgid "Sorry, you cannot remove the message from your starred box."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1052
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1061
 msgid "Sorry, you are not allowed to star/unstar messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1125
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1134
 msgid "There was an error trying to delete the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1228
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1237
 msgid "Sorry, you are not allowed to delete this thread messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1346
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1609
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1355
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1624
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:938
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:987
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1943
@@ -22154,37 +22154,37 @@ msgstr ""
 msgid "Deleted Group"
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1350
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1359
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2194
 #. translators: %s: Group name
 msgid "Sent from group %s to all group members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1356
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1365
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2196
 #. translators: %s: Group name
 msgid "Sent from group %s to the people in this conversation."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1362
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1371
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2198
 #. translators: %s: Group name
 msgid "Sent from group %s individually to all group members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1368
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1377
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2200
 #. translators: %s: Group name
 msgid "Sent from group %s to individual members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1376
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1385
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2204
 #. translators: 1: Group link. 2: Group name.
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to all group members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1383
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1392
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2206
 #. translators: 1: Group link. 2: Group name.
 msgid ""
@@ -22192,221 +22192,221 @@ msgid ""
 "conversation."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1390
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1399
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2208
 #. translators: 1: Group link. 2: Group name.
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> individually to all group members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1397
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1406
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2210
 #. translators: 1: Group link. 2: Group name.
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to individual members."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1408
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1417
 #. translators: %s: Group name
 msgid "Left \"%s\""
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1416
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1425
 #. translators: %s: Group name
 msgid "Removed Ban \"%s\""
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1422
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1431
 #. translators: %s: Group name
 msgid "Ban \"%s\""
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1428
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1437
 #. translators: %s: Group name
 msgid "Joined \"%s\""
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1892
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1907
 msgid "ID of the Messages Thread. Required when replying to an existing Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1897
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1912
 msgid "The user ID of the Message sender."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1908
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1923
 msgid "Subject of the Message initializing the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1920
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1935
 msgid "The list of the recipients user IDs of the Message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1934
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1949
 msgid "Load recipients in a paginated manner."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1941
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1956
 msgid "Current page of the recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1955
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1970
 msgid ""
 "By default the latest message of the thread will be updated. Specify this "
 "message ID to edit another message of the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1967
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1982
 msgid "The user ID to remove from the thread"
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1983
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1998
 msgid "Messages to get before a specific date."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2016
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2031
 msgid "A unique numeric ID for the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2021
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2036
 msgid "The ID of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2027
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2042
 msgid "The ID of latest sender of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2033
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2048
 msgid "Title of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2041
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2056
 msgid "Title of the latest message of the Thread, as it exists in the database."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2047
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2062
 msgid "Title of the latest message of the Thread, transformed for display."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2057
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2072
 msgid "Summary of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2066
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2081
 msgid "Summary for the latest message of the Thread, as it exists in the database."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2071
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2086
 msgid "HTML summary for the latest message of the Thread, transformed for display."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2079
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2094
 msgid "Content of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2088
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2103
 msgid "Content for the latest message of the Thread, as it exists in the database."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2093
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2108
 msgid "HTML content for the latest message of the Thread, transformed for display."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2102
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2117
 msgid "The date the latest message of the Thread, in the site's timezone."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2109
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2124
 msgid "The date the first message of the Thread, in the site's timezone."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2116
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2131
 msgid "Total count of unread messages into the Thread for the requested user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2122
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2137
 msgid "The list of user IDs for all messages in the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2131
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2146
 msgid "Current Logged in user's ID."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2159
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2174
 msgid "Group ID if message sent from group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2165
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2180
 msgid "Whether is a group thread or not."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2171
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2186
 msgid "Group name if thread created from group.  "
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2184
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2199
 msgid "Thread for all group users or selected one."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2189
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2204
 msgid "Thread type its from all or private one."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2194
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2209
 msgid "Message from group or not."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2199
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2214
 msgid "Recipient users count."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2204
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2219
 msgid "Number of recipient loading per page."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2209
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2224
 msgid "Total number of pages for the recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2214
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2229
 msgid "The list of recipient User Objects involved into the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2222
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2237
 msgid "Number of message loading per page."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2228
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2243
 msgid "Total message count into the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2234
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2249
 msgid "Last Message time stamp from response."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2241
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2256
 msgid "List of message objects for the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2250
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2265
 msgid "List of starred message IDs."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2287
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2302
 msgid "Filter the result by box."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2296
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2311
 msgid "Filter the result by thread status."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2420
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2435
 msgid "A unique numeric ID for user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2425
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2440
 msgid "User's nickname as handle."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2430
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2445
 msgid "Display Name for the user."
 msgstr ""
 
