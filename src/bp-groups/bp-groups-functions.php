@@ -810,6 +810,8 @@ function groups_get_group_members( $args = array() ) {
 			'group_role'          => array(),
 			'search_terms'        => false,
 			'type'                => 'last_joined',
+			'xprofile_query'      => false,
+			'populate_extras'     => true,
 		),
 		'groups_get_group_members'
 	);
@@ -837,13 +839,15 @@ function groups_get_group_members( $args = array() ) {
 		// Perform the group member query (extends BP_User_Query).
 		$members = new BP_Group_Member_Query(
 			array(
-				'group_id'     => $r['group_id'],
-				'per_page'     => $r['per_page'],
-				'page'         => $r['page'],
-				'group_role'   => $r['group_role'],
-				'exclude'      => $r['exclude'],
-				'search_terms' => $r['search_terms'],
-				'type'         => $r['type'],
+				'group_id'        => $r['group_id'],
+				'per_page'        => $r['per_page'],
+				'page'            => $r['page'],
+				'group_role'      => $r['group_role'],
+				'exclude'         => $r['exclude'],
+				'search_terms'    => $r['search_terms'],
+				'type'            => $r['type'],
+				'xprofile_query'  => $r['xprofile_query'],
+				'populate_extras' => $r['populate_extras'],
 			)
 		);
 

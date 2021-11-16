@@ -8,12 +8,13 @@
 $args = array(
 	'exclude'             => array( bp_loggedin_user_id() ),
 	'exclude_admins_mods' => false,
+	'xprofile_query'      => false,
+	'populate_extras'     => false,
 );
 
 $group_members = groups_get_group_members( $args );
-
-$total_count = 0;
-$all_text    = esc_html__( 'All Group Members', 'buddyboss' );
+$total_count   = 0;
+$all_text      = esc_html__( 'All Group Members', 'buddyboss' );
 
 if ( ! empty( $group_members ) && isset( $group_members['members'] ) && ! empty( $group_members['members'] ) ) {
 	foreach ( $group_members['members'] as $member ) {
