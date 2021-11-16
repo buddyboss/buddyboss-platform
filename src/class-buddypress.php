@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 17901;
+		$this->db_version = 17951;
 
 		/** Loading */
 
@@ -633,6 +633,8 @@ class BuddyPress {
 		$irregular_map = array(
 			'BP_Akismet'                                   => 'activity',
 			'BP_Admin'                                     => 'core',
+			'BP_Background_Updater'                        => 'core',
+			'BP_Email_Background_Updater'                  => 'core',
 			'BP_Attachment_Avatar'                         => 'core',
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',
@@ -645,6 +647,7 @@ class BuddyPress {
 			'BP_Email_Delivery'                            => 'core',
 			'BP_Email_Recipient'                           => 'core',
 			'BP_Email'                                     => 'core',
+			'BP_Email_Queue'                               => 'core',
 			'BP_Embed'                                     => 'core',
 			'BP_Media_Extractor'                           => 'core',
 			'BP_Members_Suggestions'                       => 'core',

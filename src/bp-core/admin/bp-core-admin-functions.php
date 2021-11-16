@@ -1811,6 +1811,15 @@ function bp_member_type_permissions_metabox( $post ) {
 					?>
                 />
 				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+				<p class="description" style="color: #999; margin-top: 6px; margin-bottom: 0px; " >Enabling this option hides all members with this profile type from the members directory, including the "Members" and "Recently Active Members" widgets.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+		        <?php $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default. ?>
+                <input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
+		        <?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
+				<p class="description" style="color: #999; margin-top: 6px; margin-bottom: 0px; " >Enabling this option hides all members with this profile type from network search results.</p>
             </td>
         </tr>
         </tbody>
@@ -2186,6 +2195,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$enable_filter        = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive
 	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
+	$enable_search_remove = isset( $data['enable_search_remove'] ) ? absint( $data['enable_search_remove'] ) : 0; // default inactive
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active
 
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array
@@ -2210,6 +2220,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_member_type_enable_search_remove', $enable_search_remove );
 	update_post_meta( $post_id, '_bp_member_type_enable_profile_field', $enable_profile_field );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $enable_group_type_create );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
