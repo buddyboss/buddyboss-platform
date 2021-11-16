@@ -290,6 +290,45 @@ function bp_media_activity_append_media( $content, $activity ) {
 }
 
 /**
+ * Append the gif content to activity read more content
+ *
+ * @since BuddyBoss 1.7.4
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ */
+function bb_gif_activity_append_gif( $content, $activity ) {
+	$gif_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
+	if ( ! empty( $gif_data ) ) {
+		
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
+		$preview_url = $preview_url . '?' . wp_rand() . '=' . wp_rand();
+		$video_url   = $video_url . '?' . wp_rand() . '=' . wp_rand();
+		ob_start();
+		?>
+		<div class="activity-attached-gif-container">
+			<div class="gif-image-container">
+				<div class="gif-player">
+					<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
+						<source src="<?php echo $video_url; ?>" type="video/mp4">
+					</video>
+					<a href="#" class="gif-play-button">
+						<span class="bb-icon-play-thin"></span>
+					</a>
+					<span class="gif-icon"></span>
+				</div>
+			</div>
+		</div>
+		<?php
+		$content .= ob_get_clean();
+	}
+	return $content;
+}
+
+/**
  * Get activity comment entry media to render on front end
  */
 function bp_media_activity_comment_entry( $comment_id ) {
