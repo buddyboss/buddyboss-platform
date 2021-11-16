@@ -5538,10 +5538,10 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
 
 	if ( true === bb_check_server_disabled_symlink() ) {
-        return;
+		return;
 	}
 
-    if ( empty( $type ) || empty( $item ) ) {
+	if ( empty( $type ) || empty( $item ) ) {
 		return;
 	}
 
