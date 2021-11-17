@@ -6221,9 +6221,9 @@ window.bp = window.bp || {};
 				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
-				if ( $( '#hidden_parent_id' ).length ) {
-					$( '#hidden_parent_id' ).remove();
-				}
+			}
+			if ( $( '#hidden_parent_id' ).length ) {
+				$( '#hidden_parent_id' ).remove();
 			}
 		},
 
