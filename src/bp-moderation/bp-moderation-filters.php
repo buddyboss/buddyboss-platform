@@ -593,10 +593,17 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 	if ( empty( $content_type ) || empty( $content_id ) ) {
 		return;
 	}
+
 	wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . $content_id, 'bb' );
+
+	$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+	if ( ! empty( $blocked_user ) ) {
+		wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bb' );
+	}
+
 }
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
