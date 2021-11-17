@@ -20590,9 +20590,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .video-thumbnail-custom img {
   height: 100%;
-  width: 100%;
+  width: auto;
+  margin: 0 auto;
+  display: block;
   min-height: 120px;
-  object-fit: cover;
   border-radius: 4px;
 }
 
@@ -20711,10 +20712,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image img {
   max-width: inherit;
-  object-fit: cover;
-  width: 100%;
   cursor: pointer;
   border-radius: 5px;
+  height: 100%;
+  width: auto;
+  margin: 0 auto;
+  display: block;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-remove:after {
@@ -20812,11 +20815,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li img {
-  object-fit: cover;
   min-height: 155px;
   max-height: 155px;
   border-radius: 5px;
-  width: 100%;
+  width: auto;
+  height: 100%;
+  margin: 0 auto;
+  display: block;
 }
 
 .bp-video-thumbnail-uploader {
@@ -21442,9 +21447,10 @@ div.dropzone.dz-started .dz-default.dz-message .dz-button {
 #boss-video-create-album-popup .dz-video-thumbnail img,
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-video-thumbnail img,
 #video-uploader.dropzone .dz-video-thumbnail img {
+  display: block;
+  margin: 0 auto;
   height: 100%;
-  width: 100%;
-  object-fit: cover;
+  width: auto;
 }
 
 #activity-post-video-uploader .dz-success-mark,
