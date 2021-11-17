@@ -101,9 +101,10 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		// show the users the logged-in user is following.
 		if ( bp_has_members(
 			array(
-				'include'         => $following,
-				'per_page'        => $instance['max_users'],
-				'populate_extras' => false,
+				'include'             => $following,
+				'per_page'            => $instance['max_users'],
+				'populate_extras'     => false,
+				'member_type__not_in' => false
 			)
 		) ) {
 			do_action( 'bp_before_following_widget' );
@@ -121,7 +122,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 					bp_the_member();
 					?>
 					<div class="item-avatar">
-						<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo bp_core_get_user_displayname( bp_get_member_user_id() ); ?>"><?php bp_member_avatar() ?></a>
+						<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"><?php bp_member_avatar() ?></a>
 					</div>
 				<?php endwhile; ?>
 			</div>
@@ -159,7 +160,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		);
 		?>
 
-		<p><label for="bp-follow-widget-users-max"><?php _e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_users' ); ?>" name="<?php echo $this->get_field_name( 'max_users' ); ?>" type="text" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
+		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
 		<p><small><?php _e( 'Note: This widget is only displayed if a member is following other members.', 'buddyboss' ); ?></small></p>
 
 		<?php
