@@ -952,9 +952,10 @@
 
 		img {
 			height: 100%;
-			width: 100%;
+			width: auto;
+			margin: 0 auto;
+			display: block;
 			min-height: 120px;
-			object-fit: cover;
 			border-radius: 4px;
 		}
 
@@ -1075,10 +1076,12 @@
 
 					img {
 						max-width: inherit;
-						object-fit: cover;
-						width: 100%;
 						cursor: pointer;
 						border-radius: 5px;
+						height: 100%;
+						width: auto;
+						margin: 0 auto;
+						display: block;
 					}
 
 				}
@@ -1186,11 +1189,13 @@
 				}
 
 				img {
-					object-fit: cover;
 					min-height: 155px;
 					max-height: 155px;
 					border-radius: 5px;
-					width: 100%;
+					width: auto;
+					height: 100%;
+					margin: 0 auto;
+					display: block;
 				}
 
 			}
@@ -1682,8 +1687,8 @@ div.dropzone.dz-started {
 
 		img {
 			display: block;
-			height: 100%;
 			margin: 0 auto;
+			height: 100%;
 			width: auto;
 		}
 
