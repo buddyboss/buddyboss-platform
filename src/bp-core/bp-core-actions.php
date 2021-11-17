@@ -344,3 +344,14 @@ function bb_email_handle_cron_healthcheck() {
 }
 
 add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
+
+
+function bp_handle_cron_healthcheck() {
+	global $bp_background_updater;
+	if ( $bp_background_updater->is_updating() ) {
+		$bp_background_updater->handle_cron_healthcheck();
+//		$bp_background_updater->dispatch();
+	}
+}
+
+add_action( 'bp_init_background_updater', 'bp_handle_cron_healthcheck' );
