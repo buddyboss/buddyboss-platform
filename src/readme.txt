@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 Requires PHP: 5.6.20
-Stable tag: 1.7.8
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,63 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.1 =
+* Groups - Added support to Send emails in Batches in the Background to Group members on details update
+* Forums - Added support to Send emails in Batches in the Background to Forum and Topics subscribers
+* Forums - Fixed Forum discussion apostrophe slash issue on validation error
+* Forums - Fixed PHBB import issues
+* Profiles - Cross-browser compatibility added for profile picture image quality
+* Profiles - Fixed Profile field apostrophe slash issue on save
+* Media - Fixed video popup unable to close the issue in profile
+* Messages - Added support to Send emails in Batches in the Background for Group and Private Messages thread
+* Moderation - Fixed background process infinite loop critical issue
+* Notifications - Fixed notification read/unread status issue when multiple group access request notifications were received and followed
+* Emails - Small compatibility fix to show avatar in Outlook
+* Elementor - Minor fix to load right size profile picture on the dashboard template
+* REST API - Added API support to Send emails in Batches in the Background
+* REST API - Fixed delete custom thumbnail API issue on selecting auto-generated video thumbnail
+* REST API - Fixed API performance issue when many profile fields data added
+
+= 1.8.0 =
+* Profiles - Fixed Cross-Site Scripting vulnerability issue on edit and view profile
+* Groups - Fixed group type roles label 'an' and 'a' prefix issue
+* Groups - Code improvements to stop direct URL access when group tab removed using hooks
+* Forums - Fixed error on forum replies listing screen in the admin when reply moved to draft
+* Forums - Fixed forum search issue with the empty string
+* Media - Fixed symlink error on plugin activation when symlink not supported on the server
+* Media - Fixed Document popup download and edit description not showing issue
+* Messages - Fixed messages members list to not show suspended members
+* LearnDash - Fixed Learndash sub-groups sync issue with Social sub-groups
+* REST API - Fixed Media Privacy and Move option permission issue in the API
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issue to show both local and offloaded media properly
+* Compatibility - Fixed media access notice in admin to not show when Media offloaded fully using 'WP Offload Media' plugin
+* Compatibility - Fixed 'GeoDirectory' plugin compatibility issue with Messages screen
+* Compatibility - Fixed 'TranslatePress' compatibility UI issue with News Feed
+* Translations - Updated German (formal) language files
+
+= 1.7.9 =
+* Profiles - Provided option to hide specific profile type members in search results
+* Profiles - Fixed profile type issue to not hide members in Group manage members screen
+* Groups - Fixed 'Visit Group' button UI issue in the Group invite email
+* Forums - Fixed group organizer permission issue to allow adding a discussion and reply tags
+* Forums - Fixed Forum discussion and reply editor formatting issue
+* Forums - Fixed Forum reply widget wrong date issue
+* Forums - Fixed text formatting issue for Email tokens
+* Activity - Fixed URL preview issue when creating Activity post
+* Activity - Fixed Activity feed comment issue when popup opened in a specific order
+* Activity - Fixed issue with browser performance when @mention used many times in activity post
+* Messages - Fixed Email notification preference settings for Group messages
+* Network Search - Fixed search issue when all Forums deleted
+* Coding Standards - Added Security patch for SQL injections vulnerability
+* Elementor - Provided WordPress Widgets support in Elementor pages
+* WooCommerce - Fixed critical registration conflict on Private network
+* REST API - Provided endpoint to send hidden group details
+* REST API - Fixed mention API endpoint to return a response for empty string
+* REST API - Profile type new option support added in the API
+* REST API - Video thumbnail endpoint improvements in the API
+* REST API - Fixed videos count issue in Group details endpoint
+* Compatibility - Fixed SEOPress media compatibility issue
 
 = 1.7.8 =
 * Forums - Fixed forums logic by not allowing multiple Forum to be associated with a single Group
