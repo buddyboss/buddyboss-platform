@@ -820,7 +820,7 @@ class BP_Groups_Group {
 				'item_id'     => $group_id,
 				'inviter_id'  => $user_id,
 				'invite_sent' => $sent_arg,
-				'fields'      => 'user_ids',
+				'fields'      => 'user_ids'
 			)
 		);
 	}
@@ -1008,7 +1008,7 @@ class BP_Groups_Group {
 	 */
 	public static function get_membership_requests( $group_id, $limit = null, $page = null ) {
 		$args = array(
-			'item_id' => $group_id,
+			'item_id' => $group_id
 		);
 		if ( $limit ) {
 			$args['per_page'] = $limit;
@@ -1022,7 +1022,7 @@ class BP_Groups_Group {
 
 		return array(
 			'requests' => $requests,
-			'total'    => $total,
+			'total'    => $total
 		);
 	}
 
@@ -1749,7 +1749,7 @@ class BP_Groups_Group {
 
 		return $invites_class->delete(
 			array(
-				'item_id' => $group_id,
+				'item_id' => $group_id
 			)
 		);
 	}
