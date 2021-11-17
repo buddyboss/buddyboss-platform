@@ -844,38 +844,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) :
 		bp_message_thread();
 
-		if ( '' === trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
-			foreach ( $messages_template->thread->messages as $message ) {
-				$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
-				if ( '' !== $content ) {
-
-					$messages_template->thread->last_message_id      = $message->id;
-					$messages_template->thread->thread_id            = $message->thread_id;
-					$messages_template->thread->last_message_subject = $message->subject;
-					$messages_template->thread->last_message_content = $message->message;
-					$messages_template->thread->last_sender_id       = $message->sender_id;
-					$messages_template->thread->last_message_date    = $message->date_sent;
-
-					break;
-				}
-			}
-			if ( '' === $content ) {
-				$thread_messages = BP_Messages_Thread::get_messages( bp_get_message_thread_id(), null, 99999999 );
-				foreach ( $thread_messages as $thread_message ) {
-					$content = trim( wp_strip_all_tags( do_shortcode( $thread_message->message ) ) );
-					if ( '' !== $content ) {
-						$messages_template->thread->last_message_id      = $thread_message->id;
-						$messages_template->thread->thread_id            = $thread_message->thread_id;
-						$messages_template->thread->last_message_subject = $thread_message->subject;
-						$messages_template->thread->last_message_content = $thread_message->message;
-						$messages_template->thread->last_sender_id       = $thread_message->sender_id;
-						$messages_template->thread->last_message_date    = $thread_message->date_sent;
-						break;
-					}
-				}
-			}
-		}
-
 		$last_message_id           = (int) $messages_template->thread->last_message_id;
 		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		$group_name                = '';
@@ -1006,6 +974,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		if ( ! $last_message_id ) {
 			continue;
 		}
+
+		$message_left     = bp_messages_get_meta( $last_message_id, 'group_message_group_left', true );
+		$message_joined   = bp_messages_get_meta( $last_message_id, 'group_message_group_joined', true );
+		$message_banned   = bp_messages_get_meta( $last_message_id, 'group_message_group_ban', true );
+		$message_unbanned = bp_messages_get_meta( $last_message_id, 'group_message_group_un_ban', true );
+		$message_deleted  = bp_messages_get_meta( $last_message_id, 'bp_messages_deleted', true );
 
 		$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
 		$un_access_users = array();
@@ -1143,6 +1117,18 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 			$threads->threads[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . $sm_id );
 			$threads->threads[ $i ]['starred_id'] = $sm_id;
+		}
+
+		if ( $message_deleted && 'yes' === $message_deleted ) {
+			$threads->threads[ $i ]['excerpt'] = __( 'This message was deleted.', 'buddyboss' );
+		} elseif ( $message_left && 'yes' === $message_left ) {
+			$threads->threads[ $i ]['excerpt'] = sprintf( __( 'Left "%s"', 'buddyboss' ), ucwords( $group_name ) );
+		} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
+			$threads->threads[ $i ]['excerpt'] = sprintf( __( 'Removed Ban "%s"', 'buddyboss' ), ucwords( $group_name ) );
+		} elseif ( $message_banned && 'yes' === $message_banned ) {
+			$threads->threads[ $i ]['excerpt'] = sprintf( __( 'Ban "%s"', 'buddyboss' ), ucwords( $group_name ) );
+		} elseif ( $message_joined && 'yes' === $message_joined ) {
+			$threads->threads[ $i ]['excerpt'] = sprintf( __( 'Joined "%s"', 'buddyboss' ), ucwords( $group_name ) );
 		}
 
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
@@ -2211,10 +2197,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				}
 			}
 
-			if ( $message_left && 'yes' === $message_left ) {
-				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
-			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
+			if ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
+			} elseif ( $message_left && 'yes' === $message_left ) {
+				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				$content = sprintf( __( '<p class="joined">Removed Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
@@ -2268,10 +2254,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$message_unbanned = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
 			$message_deleted  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
 
-			if ( $message_left && 'yes' === $message_left ) {
-				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
-			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
+			if ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
+			} elseif ( $message_left && 'yes' === $message_left ) {
+				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				$content = sprintf( __( '<p class="joined">Removed Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
