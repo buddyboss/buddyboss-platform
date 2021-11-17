@@ -64,6 +64,12 @@ add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999
 add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
 add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
 
+// Widget display name.
+add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
+add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
+add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
+add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -509,6 +515,7 @@ function bp_core_activation_signup_blog_notification( $domain, $path, $title, $u
 			'user.email'        => $user_email,
 		),
 	);
+
 	bp_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
@@ -571,6 +578,7 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			'user.id'      => $user_id,
 		),
 	);
+
 	bp_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
@@ -791,6 +799,8 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
 					$component = $tab;
 					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'video' ), true ) ) {
 						$component = 'media';
 					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
 						$component = 'xprofile';
@@ -1565,3 +1575,52 @@ function bp_rest_restrict_oembed_request_post_id( $post_id ) {
 
 	return $post_id;
 }
+
+/**
+ * Add schedule to cron schedules.
+ *
+ * @param array $schedules Array of schedules for cron.
+ *
+ * @return array $schedules Array of schedules from cron.
+ * @since Buddyboss 1.7.0
+ */
+function bp_core_cron_schedules( $schedules = array() ) {
+	$bb_schedules = array(
+		'bb_schedule_1min'  => array(
+			'interval' => MINUTE_IN_SECONDS,
+			'display'  => __( 'Every minute', 'buddyboss' ),
+		),
+		'bb_schedule_5min'  => array(
+			'interval' => 5 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_10min' => array(
+			'interval' => 10 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_30min' => array(
+			'interval' => 30 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
+		),
+	);
+
+	/**
+	 * Filters the cron schedules.
+	 *
+	 * @param array $bb_schedules Schedules.
+	 * @since BuddyBoss 1.7.0
+	 */
+	$bb_schedules = apply_filters( 'bp_core_cron_schedules', $bb_schedules );
+
+	foreach ( $bb_schedules as $k => $bb_schedule ) {
+		if ( ! isset( $schedules[ $k ] ) ) {
+			$schedules[ $k ] = array(
+				'interval' => $bb_schedule['interval'],
+				'display'  => $bb_schedule['display'],
+			);
+		}
+	}
+
+	return $schedules;
+}
+add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval

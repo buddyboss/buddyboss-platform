@@ -51,6 +51,7 @@
 			margin: 0;
 			max-width: 100%;
 			width: 30px;
+			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 		}
 	} // close moderators-lists
 
@@ -108,6 +109,10 @@
 		}
 	}
 
+	.bb_more_options {
+		display: inline-block;
+	}
+
 	@media screen and (min-width: 783px) {
 
 		#item-header-content {
@@ -145,6 +150,14 @@
 				padding-bottom: $marg-med;
 			}
 		}
+	}
+
+	@media screen and (max-width: 380px) {
+
+		.bb_more_options {
+			margin-bottom: 10px;
+		}
+
 	}
 
 } // close groups-header

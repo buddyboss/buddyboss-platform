@@ -63,6 +63,10 @@ class BP_Core_Suspend {
 			new BP_Suspend_Media();
 		}
 
+		if ( bp_is_active( 'video' ) ) {
+			new BP_Suspend_Video();
+		}
+
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}
@@ -97,6 +101,15 @@ class BP_Core_Suspend {
 			$members = $args['blocked_user'];
 			unset( $args['blocked_user'] );
 		}
+
+		/**
+		 * Hook fire before item suspended
+		 *
+		 * @since BuddyBoss 1.6.2
+		 *
+		 * @param array $args Item data.
+		 */
+		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
@@ -244,6 +257,15 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		/**
+		 * Hook fire before item unsuspended
+		 *
+		 * @since BuddyBoss 1.6.2
+		 *
+		 * @param array $args item id.
+		 */
+		do_action( 'bb_suspend_before_remove_suspend', $args );
+
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
 		if ( ! empty( $recode ) ) {
 
@@ -263,7 +285,7 @@ class BP_Core_Suspend {
 
 			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 
-			// Remove suspend record if item is not hidden
+			// Remove suspend record if item is not hidden.
 			self::maybe_delete( $where['item_id'], $where['item_type'] );
 
 			/**
@@ -357,11 +379,16 @@ class BP_Core_Suspend {
 	 *
 	 * @return bool
 	 */
-	public static function check_hidden_content( $item_id, $item_type ) {
+	public static function check_hidden_content( $item_id, $item_type, $force = false ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_hidden_content_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+		if ( false === $result || true === $force ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}
@@ -391,20 +418,52 @@ class BP_Core_Suspend {
 	}
 
 	/**
+	 * Function to check whether content is added for moderation or not.
+	 *
+	 * @since BuddyBoss 1.8.1
+	 *
+	 * @param int    $item_id   Item id.
+	 * @param string $item_type Item type.
+	 * @param int    $user_id   User ID.
+	 * @param bool   $force     Force cache.
+	 *
+	 * @return bool
+	 */
+	public static function check_blocked_user_content( $item_id, $item_type, $user_id, $force = false ) {
+		global $wpdb;
+		$bp        = buddypress();
+		$cache_key = 'bb_check_blocked_user_content_' . $user_id . '_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
+
+		if ( false === $result || true === $force ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s  ) WHERE `user_id` = %d limit 1", (int) $item_id, $item_type, $user_id ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
+
+		return ! empty( $result );
+	}
+
+	/**
 	 * Function to check whether content is hide as suspend user's content or not.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
+	 * @param bool   $force     bypass caching or not.
 	 *
 	 * @return bool
 	 */
-	public static function check_suspended_content( $item_id, $item_type ) {
+	public static function check_suspended_content( $item_id, $item_type, $force = false ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_suspended_content_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
+		if ( false === $result || true === $force ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}
@@ -420,9 +479,14 @@ class BP_Core_Suspend {
 	 */
 	public static function check_user_suspend( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bb_check_user_suspend_user_' . $user_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE s.item_id = %d AND s.item_type = %s AND user_suspended = 1", $user_id, BP_Suspend_Member::$type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result );
 	}

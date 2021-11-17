@@ -221,6 +221,19 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
+			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+				$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+				if ( ! $can_send_video ) {
+					return new WP_Error(
+						'bp_rest_bp_activity_video',
+						__( 'You don\'t have access to send the video.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
 			if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
 				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_gif ) {
@@ -306,28 +319,27 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval   = true;
+			$activity = $this->get_activity_object( $request );
 
-		$activity = $this->get_activity_object( $request );
-
-		if ( empty( $activity ) || empty( $activity->id ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			if ( empty( $activity ) || empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
 		}
 
 		/**
@@ -466,7 +478,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 */
 	protected function get_activity_object( $request ) {
 		$activity_id      = is_numeric( $request ) ? $request : (int) $request['id'];
-		$display_comments = ( array_key_exists( 'display_comments', $request ) ? $request['display_comments'] : true );
+		$display_comments = ( property_exists( $request, 'display_comments' ) ? $request['display_comments'] : true );
 		$activity         = bp_activity_get_specific(
 			array(
 				'activity_ids'     => array( $activity_id ),
