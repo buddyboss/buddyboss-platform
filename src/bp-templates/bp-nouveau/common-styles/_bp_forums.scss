@@ -1038,6 +1038,21 @@ fieldset div.avatar {
 		padding: 12px 12px 12px 12px;
 		background-color: #fafafa;
 
+		ol li,
+		ul li {
+			margin: 0;
+			padding: 0;
+			list-style-type: disc;
+
+			&:before {
+				display: none;
+			}
+		}
+
+		ol li {
+			list-style-type: decimal;
+		}
+
 		.activity-read-more {
 
 			a {
