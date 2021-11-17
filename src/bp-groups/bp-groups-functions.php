@@ -373,6 +373,22 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 		groups_accept_all_pending_membership_requests( $group->id );
 	}
 
+	/**
+	 * Before we potentially switch the group status, if it has been changed to private
+	 * from public and there are existing activity feed, change feed status private. ( hide_sitewide = 1 )
+	 */
+	if ( 'public' === $group->status && ( 'private' === $status || 'hidden' === $status ) ) {
+		groups_change_all_activity_feed_status( $group->id, 1 );
+	}
+
+	/**
+	 * Before we potentially switch the group status, if it has been changed to public
+	 * from private and there are existing activity feed, change feed status public. ( hide_sitewide = 0 )
+	 */
+	if ( ( 'private' === $group->status || 'hidden' === $group->status ) && 'public' === $status ) {
+		groups_change_all_activity_feed_status( $group->id, 0 );
+	}
+
 	// Now update the status.
 	$group->status = $status;
 
@@ -794,6 +810,8 @@ function groups_get_group_members( $args = array() ) {
 			'group_role'          => array(),
 			'search_terms'        => false,
 			'type'                => 'last_joined',
+			'xprofile_query'      => false,
+			'populate_extras'     => true,
 		),
 		'groups_get_group_members'
 	);
@@ -821,13 +839,15 @@ function groups_get_group_members( $args = array() ) {
 		// Perform the group member query (extends BP_User_Query).
 		$members = new BP_Group_Member_Query(
 			array(
-				'group_id'     => $r['group_id'],
-				'per_page'     => $r['per_page'],
-				'page'         => $r['page'],
-				'group_role'   => $r['group_role'],
-				'exclude'      => $r['exclude'],
-				'search_terms' => $r['search_terms'],
-				'type'         => $r['type'],
+				'group_id'        => $r['group_id'],
+				'per_page'        => $r['per_page'],
+				'page'            => $r['page'],
+				'group_role'      => $r['group_role'],
+				'exclude'         => $r['exclude'],
+				'search_terms'    => $r['search_terms'],
+				'type'            => $r['type'],
+				'xprofile_query'  => $r['xprofile_query'],
+				'populate_extras' => $r['populate_extras'],
 			)
 		);
 
@@ -2653,6 +2673,41 @@ function groups_get_membership_requested_user_ids( $group_id = 0 ) {
 }
 
 /**
+ * Change all activity feed status for a group.
+ *
+ * @since BuddyPress 1.7.6
+ *
+ * @param int $group_id ID of the group.
+ * @param int $status ( 1 = private, 0 = public )
+ *
+ * @return bool True on success, false on failure.
+ */
+function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
+	global $wpdb, $bp;
+
+	//bail if no group_id
+	if ( $group_id === 0 ) {
+		return false;
+	}
+
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups' AND privacy = 'public' ", $status, $group_id );
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	/**
+	 * Fires after makeing all activity feed status to private to a group.
+	 *
+	 * @since BuddyPress 1.7.6
+	 *
+	 * @param int $group_id ID of the group.
+	 */
+	do_action( 'groups_change_all_activity_feed_status', $status, $group_id );
+
+	return true;
+}
+
+/**
  * Accept all pending membership requests to a group.
  *
  * @since BuddyPress 1.0.2
@@ -3561,6 +3616,12 @@ function bp_group_get_group_type_key( $post_id ) {
  * @return array Group types
  */
 function bp_get_active_group_types( $args = array() ) {
+
+	if ( ! bp_disable_group_type_creation() ) {
+		return array();
+	}
+
+	static $group_cache = array();
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
@@ -3572,6 +3633,12 @@ function bp_get_active_group_types( $args = array() ) {
         'fields'         => 'ids'
     ), 'group_types' );
 
+	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+
+	if ( isset( $group_cache[ $group_cache_key ] ) ) {
+		return $group_cache[ $group_cache_key ];
+	}
+
     $bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
@@ -3579,7 +3646,10 @@ function bp_get_active_group_types( $args = array() ) {
 	}
 	wp_reset_postdata();
 
-	return apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
+	$bp_active_group_types           = apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
+	$group_cache[ $group_cache_key ] = $bp_active_group_types;
+
+	return $bp_active_group_types;
 }
 
 if ( true === bp_disable_group_type_creation() ) {

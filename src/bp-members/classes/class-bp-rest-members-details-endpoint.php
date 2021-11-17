@@ -239,6 +239,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
 		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
+		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
 		remove_all_actions( 'bp_actions' );
 
 		/**
@@ -257,6 +260,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		add_action( 'bp_init', 'bp_add_permastructs', 40 );
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
+		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+		}
 
 		$_SERVER['REQUEST_URI'] = $tempurl;
 
