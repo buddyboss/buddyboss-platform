@@ -160,6 +160,9 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+// Filter check the single embed URL wrap with "P" tag or not.
+add_filter( 'bp_activity_content_before_save', 'bb_activity_content_has_paragraph_tag' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3008,4 +3011,29 @@ function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id 
 	$buttons['activity_delete']              = '';
 	$buttons['activity_state_comment_class'] = 'activity-state-no-comments';
 	return $buttons;
+}
+
+/**
+ * Wrap with "P" tag if found the single plan text link.
+ *
+ * @param string $content Activity content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_activity_content_has_paragraph_tag( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+	preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+	if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+		$content = sprintf( '<p>%s</p>', $content );
+	}
+
+	return $content;
 }
