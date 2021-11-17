@@ -79,6 +79,7 @@ add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
 add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 add_action( 'bp_init', 'bp_add_permastructs', 40 );
 add_action( 'bp_init', 'bp_init_background_updater', 50 );
+add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -189,12 +190,15 @@ function bp_restrict_single_attachment() {
  */
 function bb_media_symlink_validate() {
 
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
 
-	$type = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-	$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+	$type            = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+	$page            = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+	$output_file_src = '';
 
 	if ( isset( $_GET ) && isset( $type ) && 'bp-media' === $type && 'bp-settings' === $page ) {
-
 
 		$keys = array(
 			'bb_media_symlink_type',
@@ -219,7 +223,8 @@ function bb_media_symlink_validate() {
 			chmod( $media_symlinks_path, 0755 );
 		}
 
-		if ( empty( get_option( 'bb_media_symlink_type', '' ) ) ) {
+		$media_symlink = get_option( 'bb_media_symlink_type', '' );
+		if ( empty( $media_symlink ) ) {
 
 			$attachment_id = bb_core_upload_dummy_attachment();
 
@@ -293,9 +298,9 @@ function bb_media_symlink_validate() {
 							chdir( $tmp );
 
 							if ( empty( $sym_status ) ) {
+
 								if ( ! empty( $symlink_url ) ) {
 									$fetch = wp_remote_get( $symlink_url );
-
 									if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
 										$status     = true;
 										$sym_status = 'relative';
@@ -312,8 +317,9 @@ function bb_media_symlink_validate() {
 						}
 					}
 				}
-				wp_delete_post( $attachment_id, true );
+				wp_delete_attachment( $attachment_id, true );
 			} else {
+
 				foreach ( $keys as $k ) {
 					bp_delete_option( $k );
 				}
@@ -324,3 +330,17 @@ function bb_media_symlink_validate() {
 	}
 }
 add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
+
+/**
+ * Check and re-start the background process if queue is not empty.
+ *
+ * @since BuddyBoss 1.8.1
+ */
+function bb_email_handle_cron_healthcheck() {
+	global $bb_email_background_updater;
+	if ( $bb_email_background_updater->is_updating() ) {
+		$bb_email_background_updater->handle_cron_healthcheck();
+	}
+}
+
+add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );

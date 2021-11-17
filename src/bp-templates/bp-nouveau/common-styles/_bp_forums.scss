@@ -392,6 +392,10 @@ div.bbp-reply-header {
 	max-width: 100%;
 }
 
+#bbpress-forums div.bbp-reply-content div.bbcode_code {
+	overflow-x: auto;
+}
+
 /* =Reply to
 -------------------------------------------------------------- */
 
@@ -994,6 +998,24 @@ fieldset div.avatar {
 
 		}
 
+		.bb-content-inr-wrap + .gamipress-buddypress-user-details {
+			display: none;
+		}
+
+		.gamipress-buddypress-user-details {
+			margin-left: 10px;
+			position: relative;
+
+			.wp-post-image {
+				margin: 0;
+			}
+
+			span {
+				vertical-align: middle;
+			}
+
+		}
+
 	}
 
 }
@@ -1005,7 +1027,7 @@ fieldset div.avatar {
 		padding: 0;
 
 		.activity-discussion-title-wrap {
-			padding: 12px 12px 6px 12px;
+			padding: 12px 12px 0 12px;
 			margin-bottom: 0;
 			background-color: #fafafa;
 		}
@@ -1013,7 +1035,7 @@ fieldset div.avatar {
 	}
 
 	.bb-content-inr-wrap {
-		padding: 6px 12px 12px 12px;
+		padding: 12px 12px 12px 12px;
 		background-color: #fafafa;
 
 		.activity-read-more {
@@ -1043,6 +1065,13 @@ fieldset div.avatar {
 
 		}
 
+	}
+
+	.bb-activity-media-wrap.bb-media-length-1 .bb-activity-media-elem {
+		margin: 12px auto;
+		border: none;
+		width: -webkit-calc(100% - 24px);
+		width: calc(100% - 24px);
 	}
 
 }
@@ -1083,6 +1112,10 @@ fieldset div.avatar {
 
 	}
 
+}
+
+.activity-list li.activity .activity-inner .gamipress-buddypress-user-details + .gamipress-buddypress-user-details {
+	display: none;
 }
 
 /* =User Capabilities
