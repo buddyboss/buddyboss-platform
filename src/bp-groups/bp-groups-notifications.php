@@ -1177,9 +1177,10 @@ add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifi
  *
  * @since BuddyPress 1.9.0
  */
-function bp_groups_screen_group_admin_requests_mark_notifications() {
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->groups->id, 'new_membership_request' );
+function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
+	if ( bp_is_active( 'notifications' ) && ! empty( $group_id ) ) {
+		// Mark as read group join requests notification.
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'new_membership_request' );
 	}
 }
 add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_requests_mark_notifications', 10 );
