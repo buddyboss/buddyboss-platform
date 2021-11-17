@@ -404,34 +404,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
-		$related_content_hide = array();
-
-		if ( ! empty( $related_contents ) ) {
-			foreach ( $related_contents as $key => $related_content ) {
-				$related_content = (array) $related_content;
-				foreach ( $related_content as $item ) {
-					if ( ! BP_Core_Suspend::check_hidden_content( $item, $key, true ) && 'hide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					}
-					if ( ( BP_Core_Suspend::check_hidden_content( $item, $key, true ) || BP_Core_Suspend::check_suspended_content( $item, $key, true ) ) && 'unhide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					}
-				}
-			}
-		}
-
-		$related_content_hide = json_decode( wp_json_encode( $related_content_hide ), true );
-		if ( ! empty( $blocked_user ) && ! empty( $related_content_hide ) ) {
-			foreach ( $related_content_hide as $key => $related_content ) {
-				foreach ( (array) $related_content as $k => $item ) {
-					if ( BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
-						unset( $related_content_hide[ $key ][ $k ] );
-					}
-				}
-			}
-		}
-
-		return $related_content_hide;
+		return $related_contents;
 	}
 
 	/**
