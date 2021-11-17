@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 Requires PHP: 5.6.20
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.1 =
+* Groups - Added support to Send emails in Batches in the Background to Group members on details update
+* Forums - Added support to Send emails in Batches in the Background to Forum and Topics subscribers
+* Forums - Fixed Forum discussion apostrophe slash issue on validation error
+* Forums - Fixed PHBB import issues
+* Profiles - Cross-browser compatibility added for profile picture image quality
+* Profiles - Fixed Profile field apostrophe slash issue on save
+* Media - Fixed video popup unable to close the issue in profile
+* Messages - Added support to Send emails in Batches in the Background for Group and Private Messages thread
+* Moderation - Fixed background process infinite loop critical issue
+* Notifications - Fixed notification read/unread status issue when multiple group access request notifications were received and followed
+* Emails - Small compatibility fix to show avatar in Outlook
+* Elementor - Minor fix to load right size profile picture on the dashboard template
+* REST API - Added API support to Send emails in Batches in the Background
+* REST API - Fixed delete custom thumbnail API issue on selecting auto-generated video thumbnail
+* REST API - Fixed API performance issue when many profile fields data added
 
 = 1.8.0 =
 * Profiles - Fixed Cross-Site Scripting vulnerability issue on edit and view profile

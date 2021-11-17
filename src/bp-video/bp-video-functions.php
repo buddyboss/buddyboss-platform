@@ -829,8 +829,6 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
-			$bp_background_updater->cancel_process();
-
 			return;
 		}
 
@@ -923,14 +921,10 @@ function bp_video_background_create_thumbnail( $video ) {
 	global $bp_background_updater;
 
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$bp_background_updater->cancel_process();
-
 		return;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
-			$bp_background_updater->cancel_process();
-
 			return;
 		}
 	}
@@ -1118,7 +1112,6 @@ function bp_video_background_create_thumbnail( $video ) {
 
 		} catch ( Exception $ex ) {
 			update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
-			$bp_background_updater->cancel_process();
 		}
 	} else {
 		update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
