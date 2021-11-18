@@ -1691,21 +1691,16 @@ class BP_Messages_Thread {
 		 * @param array  $r     Array of parsed arguments for the get method.
 		 */
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
-		static $paged_recipient_ids = null;
-		if ( null === $paged_recipient_ids ) {
-			$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-		}
+
+		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$paged_recipients    = array();
 
 		if ( 'ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_recipients = array_map( 'intval', $paged_recipient_ids );
 		} elseif ( ! empty( $paged_recipient_ids ) ) {
-			$recipient_ids_sql = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
-			static $recipient_data_objects = null;
-			if ( null === $recipient_data_objects ) {
-				$recipient_data_objects = $wpdb->get_results( "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			}
+			$recipient_ids_sql      = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
+			$recipient_data_objects = $wpdb->get_results( "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			foreach ( (array) $recipient_data_objects as $mdata ) {
 				$recipient_data_objects[ $mdata->id ] = $mdata;
