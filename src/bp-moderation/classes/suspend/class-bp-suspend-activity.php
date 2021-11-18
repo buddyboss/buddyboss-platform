@@ -71,20 +71,25 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_ids( $member_id, $action = '' ) {
+	public static function get_member_activity_ids( $member_id, $action = '', $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'filter'           => array(
-					'user_id' => $member_id,
-				),
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'filter'           => array(
+				'user_id' => $member_id,
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -110,21 +115,26 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_group_activity_ids( $group_id ) {
+	public static function get_group_activity_ids( $group_id, $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'filter'           => array(
-					'primary_id' => $group_id,
-					'object'     => 'groups',
-				),
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'filter'           => array(
+				'primary_id' => $group_id,
+				'object'     => 'groups',
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -142,40 +152,45 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_bbpress_activity_ids( $post_id ) {
+	public static function get_bbpress_activity_ids( $post_id, $page = -1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'filter_query'     => array(
-					'relation' => 'or',
-					'bbpress'  => array(
-						array(
-							'column' => 'item_id',
-							'value'  => $post_id,
-						),
-						array(
-							'column' => 'component',
-							'value'  => 'bbpress',
-						),
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'filter_query'     => array(
+				'relation' => 'or',
+				'bbpress'  => array(
+					array(
+						'column' => 'item_id',
+						'value'  => $post_id,
 					),
-					'group'    => array(
-						array(
-							'column' => 'secondary_item_id',
-							'value'  => $post_id,
-						),
-						array(
-							'column' => 'component',
-							'value'  => 'groups',
-						),
+					array(
+						'column' => 'component',
+						'value'  => 'bbpress',
 					),
 				),
-			)
+				'group'    => array(
+					array(
+						'column' => 'secondary_item_id',
+						'value'  => $post_id,
+					),
+					array(
+						'column' => 'component',
+						'value'  => 'groups',
+					),
+				),
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -391,6 +406,11 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	protected function get_related_contents( $activity_id, $args = array() ) {
 		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page         = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return array();
+		}
 
 		$related_contents = array(
 			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),

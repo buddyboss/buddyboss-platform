@@ -66,17 +66,22 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_album_ids( $member_id, $action = '' ) {
+	public static function get_member_album_ids( $member_id, $action = '', $page = - 1 ) {
 		$album_ids = array();
 
-		$albums = bp_album_get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'user_id'          => $member_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$albums = bp_album_get( $args );
 
 		if ( ! empty( $albums['albums'] ) ) {
 			$album_ids = $albums['albums'];
@@ -102,17 +107,22 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_group_album_ids( $group_id ) {
+	public static function get_group_album_ids( $group_id, $page = - 1 ) {
 		$album_ids = array();
 
-		$albums = bp_album_get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'group_id'         => $group_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$albums = bp_album_get( $args );
 
 		if ( ! empty( $albums['albums'] ) ) {
 			$album_ids = $albums['albums'];
@@ -297,8 +307,14 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $album_id, $args = array() ) {
-		$related_contents                            = array();
-		$related_contents[ BP_Suspend_Media::$type ] = BP_Media::get_album_media_ids( $album_id );;
+		$related_contents = array();
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return $related_contents;
+		}
+
+		$related_contents[ BP_Suspend_Media::$type ] = BP_Media::get_album_media_ids( $album_id );
 
 		return $related_contents;
 	}

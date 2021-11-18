@@ -65,22 +65,27 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_activity_comment_ids( $member_id, $action = '' ) {
+	public static function get_member_activity_comment_ids( $member_id, $action = '', $page = - 1 ) {
 		$activities_ids = array();
 
-		$activities = BP_Activity_Activity::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'show_hidden'      => true,
-				'display_comments' => true,
-				'filter'           => array(
-					'user_id' => $member_id,
-					'action'  => 'activity_comment',
-				),
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'show_hidden'      => true,
+			'display_comments' => true,
+			'filter'           => array(
+				'user_id' => $member_id,
+				'action'  => 'activity_comment',
+			),
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$activities = BP_Activity_Activity::get( $args );
 
 		if ( ! empty( $activities['activities'] ) ) {
 			$activities_ids = $activities['activities'];
@@ -305,6 +310,11 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	protected function get_related_contents( $acomment_id, $args = array() ) {
 		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page         = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return array();
+		}
 
 		$related_contents = array();
 

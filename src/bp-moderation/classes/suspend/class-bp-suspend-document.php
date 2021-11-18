@@ -72,17 +72,22 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_document_ids( $member_id, $action = '' ) {
+	public static function get_member_document_ids( $member_id, $action = '', $page = - 1 ) {
 		$document_ids = array();
 
-		$documents = BP_Document::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'user_id'          => $member_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$documents = BP_Document::get( $args );
 
 		if ( ! empty( $documents['documents'] ) ) {
 			$document_ids = $documents['documents'];
@@ -108,17 +113,22 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_group_document_ids( $group_id ) {
+	public static function get_group_document_ids( $group_id, $page = - 1 ) {
 		$document_ids = array();
 
-		$documents = BP_Document::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'group_id'         => $group_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$documents = BP_Document::get( $args );
 
 		if ( ! empty( $documents['documents'] ) ) {
 			$document_ids = $documents['documents'];
@@ -351,8 +361,14 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	protected function get_related_contents( $document_id, $args = array() ) {
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
-		$document         = new BP_Document( $document_id );
+
+		if ( $page > 1 ) {
+			return $related_contents;
+		}
+
+		$document = new BP_Document( $document_id );
 
 		if ( bp_is_active( 'activity' ) && ! empty( $document ) && ! empty( $document->activity_id ) ) {
 

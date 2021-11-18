@@ -66,17 +66,22 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_folder_ids( $member_id, $action = '' ) {
+	public static function get_member_folder_ids( $member_id, $action = '', $page = - 1 ) {
 		$folder_ids = array();
 
-		$folders = BP_Document_Folder::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'user_id'          => $member_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$folders = BP_Document_Folder::get( $args );
 
 		if ( ! empty( $folders['folders'] ) ) {
 			$folder_ids = $folders['folders'];
@@ -102,17 +107,22 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_group_folder_ids( $group_id ) {
+	public static function get_group_folder_ids( $group_id, $page = - 1 ) {
 		$folder_ids = array();
 
-		$folders = BP_Document_Folder::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'group_id'         => $group_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$folders = BP_Document_Folder::get( $args );
 
 		if ( ! empty( $folders['folders'] ) ) {
 			$folder_ids = $folders['folders'];

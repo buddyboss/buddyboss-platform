@@ -69,16 +69,21 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_comment_ids( $member_id, $action = '' ) {
+	public static function get_member_comment_ids( $member_id, $action = '', $page = - 1 ) {
 
-		$comment_ids = get_comments(
-			array(
-				'user_id'                   => $member_id,
-				'fields'                    => 'ids',
-				'update_comment_meta_cache' => false,
-				'update_comment_post_cache' => false,
-			)
+		$args = array(
+			'user_id'                   => $member_id,
+			'fields'                    => 'ids',
+			'update_comment_meta_cache' => false,
+			'update_comment_post_cache' => false,
 		);
+
+		if ( $page > 0 ) {
+			$args['offset'] = ( $page - 1 ) * self::$item_per_page;
+			$args['paged']  = $page;
+		}
+
+		$comment_ids = get_comments( $args );
 
 		if ( 'hide' === $action && ! empty( $comment_ids ) ) {
 			foreach ( $comment_ids as $k => $comment_id ) {
@@ -381,6 +386,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	protected function get_related_contents( $comment_id, $args = array() ) {
 
 		$related_contents = array();
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return $related_contents;
+		}
 
 		if ( bp_is_active( 'activity' ) ) {
 			$a_comment_id = get_comment_meta( $comment_id, 'bp_activity_comment_id', true );

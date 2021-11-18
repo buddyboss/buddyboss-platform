@@ -79,22 +79,27 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_forum_ids( $member_id, $action = '' ) {
+	public static function get_member_forum_ids( $member_id, $action = '', $page = - 1 ) {
 		$forum_ids = array();
 
-		$forum_query = new WP_Query(
-			array(
-				'fields'                 => 'ids',
-				'post_type'              => bbp_get_forum_post_type(),
-				'post_status'            => 'publish',
-				'author'                 => $member_id,
-				'posts_per_page'         => - 1,
-				// Need to get all topics id of hidden forums.
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				'suppress_filters'       => true,
-			)
+		$args = array(
+			'fields'                 => 'ids',
+			'post_type'              => bbp_get_forum_post_type(),
+			'post_status'            => 'publish',
+			'author'                 => $member_id,
+			'posts_per_page'         => - 1,
+			// Need to get all topics id of hidden forums.
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'suppress_filters'       => true,
 		);
+
+		if ( $page > 0 ) {
+			$args['posts_per_page'] = self::$item_per_page;
+			$args['paged']          = $page;
+		}
+
+		$forum_query = new WP_Query( $args );
 
 		if ( $forum_query->have_posts() ) {
 			$forum_ids = $forum_query->posts;
@@ -371,13 +376,14 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		$related_contents = array();
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
 		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id );
+			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id, $page );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id );
+			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id, $page );
 		}
 
 		return $related_contents;

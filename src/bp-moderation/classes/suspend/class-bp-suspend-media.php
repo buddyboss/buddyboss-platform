@@ -76,17 +76,22 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_member_media_ids( $member_id, $action = '' ) {
+	public static function get_member_media_ids( $member_id, $action = '', $page = - 1 ) {
 		$media_ids = array();
 
-		$medias = bp_media_get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'user_id'          => $member_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$medias = bp_media_get( $args );
 
 		if ( ! empty( $medias['medias'] ) ) {
 			$media_ids = $medias['medias'];
@@ -112,17 +117,22 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_group_media_ids( $group_id ) {
+	public static function get_group_media_ids( $group_id, $page = - 1 ) {
 		$media_ids = array();
 
-		$medias = bp_media_get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'group_id'         => $group_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$medias = bp_media_get( $args );
 
 		if ( ! empty( $medias['medias'] ) ) {
 			$media_ids = $medias['medias'];
@@ -356,8 +366,14 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	protected function get_related_contents( $media_id, $args = array() ) {
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
-		$media            = new BP_Media( $media_id );
+
+		if ( $page > 1 ) {
+			return $related_contents;
+		}
+
+		$media = new BP_Media( $media_id );
 
 		if (
 			bp_is_active( 'activity' ) &&
