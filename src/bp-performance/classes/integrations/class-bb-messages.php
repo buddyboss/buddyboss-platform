@@ -51,7 +51,7 @@ class BB_Messages extends Integration_Abstract {
 		$purge_single_events = array(
 			'messages_message_sent'                 => 1, // when new message created.
 			'bp_messages_thread_after_delete'       => 2, // when message deleted.
-			'messages_delete_thread'                => 1, // when message thread deleted.
+			'messages_delete_thread'                => 2, // when message thread deleted.
 			'wp_ajax_messages_hide_thread'          => 1, // when message thread hide.
 			'messages_thread_mark_as_read'          => 1, // when messages mark as read.
 			'messages_thread_mark_as_unread'        => 1, // when messages mark as unread.
@@ -84,7 +84,7 @@ class BB_Messages extends Integration_Abstract {
 				'buddyboss/v1/messages',
 				Cache::instance()->month_in_seconds * 60,
 				array(
-					'unique_id'         => 'id',
+					'unique_id' => 'id',
 				),
 				true
 			);
@@ -122,11 +122,16 @@ class BB_Messages extends Integration_Abstract {
 	 * When message thread deleted
 	 *
 	 * @param int|array $thread_ids Thread ID or array of thread IDs that were deleted.
+	 * @param int       $user_id ID of the user that the threads were deleted for.
 	 */
-	public function event_messages_delete_thread( $thread_ids ) {
+	public function event_messages_delete_thread( $thread_ids, $user_id ) {
 		if ( ! empty( $thread_ids ) ) {
-			foreach ( $thread_ids as $thread_id ) {
-				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+			if ( is_array( $thread_ids ) || is_object( $thread_ids ) ) {
+				foreach ( (array) $thread_ids as $thread_id ) {
+					Cache::instance()->purge_by_group( 'bp-messages_' . $thread_id );
+				}
+			} else {
+				Cache::instance()->purge_by_group( 'bp-messages_' . $thread_ids );
 			}
 		}
 	}

@@ -79,10 +79,14 @@ add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_s
  */
 function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 	// Delete thread and thread recipient cache.
-	foreach ( (array) $thread_ids as $thread_id ) {
-		// wp_cache_delete( $thread_id, 'bp_messages_threads' );
-		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
-		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
+	if ( is_array( $thread_ids ) || is_object( $thread_ids ) ) {
+		foreach ( (array) $thread_ids as $thread_id ) {
+			bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+			wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
+		}
+	} else {
+		bp_messages_delete_thread_paginated_messages_cache( $thread_ids );
+		wp_cache_delete( "thread_recipients_{$thread_ids}", 'bp_messages' );
 	}
 
 	// Delete unread count for logged-in user.
