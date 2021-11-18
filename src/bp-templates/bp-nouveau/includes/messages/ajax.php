@@ -2339,14 +2339,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) && bp_has_media(
-					array(
-						'include'  => $media_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-						'user_id'  => false,
-					)
-				) ) {
+				array(
+					'include'  => $media_ids,
+					'privacy'  => array( 'message' ),
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+					'user_id'  => false,
+				)
+			) ) {
 				$thread->messages[ $i ]['media'] = array();
 				while ( bp_media() ) {
 					bp_the_media();
@@ -2404,12 +2404,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) && bp_has_document(
-					array(
-						'include'  => $document_ids,
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-					)
-				) ) {
+				array(
+					'include'  => $document_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				)
+			) ) {
 				$thread->messages[ $i ]['document'] = array();
 				while ( bp_document() ) {
 					bp_the_document();
@@ -2446,12 +2446,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
 						?>
-                        <div class="document-audio-wrap">
-                            <audio controls controlsList="nodownload">
-                                <source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+						<div class="document-audio-wrap">
+							<audio controls controlsList="nodownload">
+								<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
 								<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
-                            </audio>
-                        </div>
+							</audio>
+						</div>
 						<?php
 					}
 
@@ -2460,9 +2460,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					if ( '' !== $attachment_url ) {
 						?>
-                        <div class="document-preview-wrap">
-                            <img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
-                        </div><!-- .document-preview-wrap -->
+						<div class="document-preview-wrap">
+							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
+						</div><!-- .document-preview-wrap -->
 						<?php
 					}
 					$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
@@ -2472,17 +2472,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							$file_data = $data['text'];
 							$more_text = $data['more_text']
 							?>
-                            <div class="document-text-wrap">
-                                <div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
+							<div class="document-text-wrap">
+								<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
 									<textarea class="document-text-file-data-hidden"
-                                              style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
-                                </div>
-                                <div class="document-expand">
-                                    <a href="#" class="document-expand-anchor"><i
-                                                class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
-                                    </a>
-                                </div>
-                            </div> <!-- .document-text-wrap -->
+											  style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+								</div>
+								<div class="document-expand">
+									<a href="#" class="document-expand-anchor"><i
+												class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+									</a>
+								</div>
+							</div> <!-- .document-text-wrap -->
 							<?php
 							if ( true === $more_text ) {
 
@@ -2619,7 +2619,7 @@ function bp_nouveau_ajax_hide_thread() {
 			)
 		);
 
-		$unread_message_ids   = wp_list_pluck( $new_pm_notifications, 'item_id' );
+		$unread_message_ids = wp_list_pluck( $new_pm_notifications, 'item_id' );
 
 		if ( ! empty( $unread_message_ids ) ) {
 
@@ -2627,7 +2627,6 @@ function bp_nouveau_ajax_hide_thread() {
 			foreach ( $unread_message_ids as $message_id ) {
 				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
 			}
-
 		}
 	}
 
@@ -2824,7 +2823,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	wp_send_json_success(
 		array(
 			'content' => $html,
-			'type'       => 'success',
+			'type'    => 'success',
 		)
 	);
 }
