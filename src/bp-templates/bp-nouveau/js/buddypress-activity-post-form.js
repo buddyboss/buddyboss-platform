@@ -1943,7 +1943,7 @@ window.bp = window.bp || {};
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
-						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' ) {
+						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' || ( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ) {
 							break;
 						} else {
 							urlString += urlText[ i ];
