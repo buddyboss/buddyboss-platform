@@ -1824,8 +1824,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		)
 	);
 
-	$thread = new stdClass();
-
+	$thread     = new stdClass();
 	$recipients = (array) $thread_template->thread->recipients;
 
 	// Strip the sender from the recipient list, and unset them if they are
@@ -1834,11 +1833,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		unset( $recipients[ bp_loggedin_user_id() ] );
 	}
 
+	$check_recipients = $recipients;
+
 	// Check recipients if connected or not.
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 
 		foreach ( $recipients as $recipient ) {
-			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+			if ( bp_loggedin_user_id() !== $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 				if ( count( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
 						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
@@ -1873,6 +1874,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$last_message_id           = $thread_template->thread->messages[0]->id;
+	$bp_get_the_thread_id      = bp_get_the_thread_id();
 	$group_name                = '';
 	$group_avatar              = '';
 	$group_link                = '';
@@ -1880,10 +1882,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_message_type        = '';
 	$group_message_thread_type = '';
 	$group_message_fresh       = '';
-	$first_message             = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
+	$first_message             = BP_Messages_Thread::get_first_message( $bp_get_the_thread_id );
 	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-	$is_group_message_thread   = bb_messages_is_group_thread( bp_get_the_thread_id() );
+	$is_group_message_thread   = bb_messages_is_group_thread( $bp_get_the_thread_id );
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
@@ -1898,11 +1900,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$message_from              = bp_messages_get_meta( $last_message_id, 'message_from', true );
 
 		if ( bp_is_active( 'groups' ) ) {
-			$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+			$get_group  = groups_get_group( $group_id );
+			$group_name = bp_get_group_name( $get_group );
 			if ( empty( $group_name ) ) {
 				$group_link = 'javascript:void(0);';
 			} else {
-				$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+				$group_link = bp_get_group_permalink( $get_group );
 			}
 			$group_avatar = bp_core_fetch_avatar(
 				array(
@@ -1910,6 +1913,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'object'     => 'group',
 					'type'       => 'full',
 					'avatar_dir' => 'group-avatars',
+					/* translators: %s: Group Name */
 					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 					'title'      => $group_name,
 					'html'       => false,
@@ -1965,14 +1969,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( $group_id ) {
 			if ( bp_is_active( 'groups' ) ) {
-				$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
-				$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+				$get_group    = groups_get_group( $group_id );
+				$group_name   = bp_get_group_name( $get_group );
+				$group_link   = bp_get_group_permalink( $get_group );
 				$group_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id'    => $group_id,
 						'object'     => 'group',
 						'type'       => 'full',
 						'avatar_dir' => 'group-avatars',
+						/* translators: %s: Group Name */
 						'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 						'title'      => $group_name,
 						'html'       => false,
@@ -2014,7 +2020,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 
-		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		if ( 'group' === $message_from && $bp_get_the_thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
 			unset( $thread->feedback_error );
 		}
@@ -2049,13 +2055,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$check_recipients = (array) $thread_template->thread->recipients;
-	// Strip the sender from the recipient list, and unset them if they are
-	// not alone. If they are alone, let them talk to themselves.
-	if ( isset( $check_recipients[ bp_loggedin_user_id() ] ) && ( count( $check_recipients ) > 1 ) ) {
-		unset( $check_recipients[ bp_loggedin_user_id() ] );
-	}
-
 	// Check moderation if user blocked or not for single user thread.
 	if ( $can_message && ! $is_group_thread && bp_is_active( 'moderation' ) && ! empty( $check_recipients ) && 1 === count( $check_recipients ) ) {
 		$recipient_id = current( array_keys( $check_recipients ) );
@@ -2067,7 +2066,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$thread->thread = array(
-		'id'                              => bp_get_the_thread_id(),
+		'id'                              => $bp_get_the_thread_id,
 		'subject'                         => wp_strip_all_tags( bp_get_the_thread_subject() ),
 		'started_date'                    => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
 		'group_id'                        => $group_id,
@@ -2108,7 +2107,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
 					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
 					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
+					'is_you'     => bp_loggedin_user_id() === $recipient->user_id,
 					'id'         => $recipient->user_id,
 				);
 
@@ -2132,26 +2131,28 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	while ( bp_thread_messages() ) :
 		bp_thread_the_message();
 
-		$group_id                  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_id', true );
-		$group_message_users       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_users', true );
-		$group_message_type        = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_type', true );
-		$group_message_thread_type = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_thread_type', true );
-		$group_message_fresh       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_fresh', true );
-		$message_from              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'message_from', true );
-		$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
-		$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
-		$message_banned            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_ban', true );
-		$message_unbanned          = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
-		$message_deleted           = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
+		$bp_get_the_thread_message_id = bp_get_the_thread_message_id();
+		$group_id                     = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_id', true );
+		$group_message_users          = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_users', true );
+		$group_message_type           = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_type', true );
+		$group_message_thread_type    = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_thread_type', true );
+		$group_message_fresh          = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_fresh', true );
+		$message_from                 = bp_messages_get_meta( $bp_get_the_thread_message_id, 'message_from', true );
+		$message_left                 = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left', true );
+		$message_joined               = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined', true );
+		$message_banned               = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_ban', true );
+		$message_unbanned             = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_un_ban', true );
+		$message_deleted              = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_messages_deleted', true );
 
 		if ( $group_id && $message_from && 'group' === $message_from ) {
 
 			if ( bp_is_active( 'groups' ) ) {
+				$get_group  = groups_get_group( $group_id );
 				$group_name = bp_get_group_name( groups_get_group( $group_id ) );
 				if ( empty( $group_name ) ) {
 					$group_link = 'javascript:void(0);';
 				} else {
-					$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+					$group_link = bp_get_group_permalink( $get_group );
 				}
 				$group_avatar = bp_core_fetch_avatar(
 					array(
@@ -2159,6 +2160,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'object'     => 'group',
 						'type'       => 'full',
 						'avatar_dir' => 'group-avatars',
+						/* translators: %s: Group Name */
 						'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 						'title'      => $group_name,
 						'html'       => false,
@@ -2191,35 +2193,47 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			if ( empty( $group_name ) ) {
 				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
 				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
+					/* translators: %s: Group Name */
 					$group_text = sprintf( __( 'Sent from group %s to all group members.', 'buddyboss' ), $group_name );
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
+					/* translators: %s: Group Name */
 					$group_text = sprintf( __( 'Sent from group %s to the people in this conversation.', 'buddyboss' ), $group_name );
 				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
+					/* translators: %s: Group Name */
 					$group_text = sprintf( __( 'Sent from group %s individually to all group members.', 'buddyboss' ), $group_name );
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
+					/* translators: %s: Group Name */
 					$group_text = sprintf( __( 'Sent from group %s to individual members.', 'buddyboss' ), $group_name );
 				}
 			} else {
 				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
+					/* translators: 1: Group Link 2: Group Name */
 					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to all group members.', 'buddyboss' ), $group_link, $group_name );
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
+					/* translators: 1: Group Link 2: Group Name */
 					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to the people in this conversation.', 'buddyboss' ), $group_link, $group_name );
 				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
+					/* translators: 1: Group Link 2: Group Name */
 					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> individually to all group members.', 'buddyboss' ), $group_link, $group_name );
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
+					/* translators: 1: Group Link 2: Group Name */
 					$group_text = sprintf( __( 'Sent from group <a href="%1$s">%2$s</a> to individual members.', 'buddyboss' ), $group_link, $group_name );
 				}
 			}
 
 			if ( $message_left && 'yes' === $message_left ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Removed Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
