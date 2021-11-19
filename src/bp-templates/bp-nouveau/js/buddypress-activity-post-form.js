@@ -58,6 +58,9 @@ window.bp = window.bp || {};
 
 			// Display it.
 			this.postForm.inject( '#bp-nouveau-activity-form' );
+
+			// Wrap Avatar and Content section ito header.
+			$( '#whats-new-avatar, #whats-new-content' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 		},
 
 		postFormPlaceholderView: function () {
