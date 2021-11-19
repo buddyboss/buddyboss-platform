@@ -1118,6 +1118,11 @@ a.layout-grid-view {
   display: inline-block;
 }
 
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar > div,
+.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar > div {
+  pointer-events: none;
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup,
 .activity-update-form.modal-popup {
   position: fixed;

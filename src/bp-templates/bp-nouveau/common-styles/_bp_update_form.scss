@@ -94,6 +94,10 @@
 		}
 	}
 
+	.activity-form:not(.focus-in) #whats-new-toolbar > div {
+		pointer-events: none;
+	}
+
 	&.modal-popup {
 		position: fixed;
 		left: 0;

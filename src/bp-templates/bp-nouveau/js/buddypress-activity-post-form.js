@@ -3083,7 +3083,8 @@ window.bp = window.bp || {};
 				'focus #whats-new': 'displayFull',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
-				'keydown': 'postUpdate'
+				'keydown': 'postUpdate',
+				'click #whats-new-toolbar': 'triggerDisplayFull'
 			},
 
 			initialize: function () {
@@ -3108,7 +3109,8 @@ window.bp = window.bp || {};
 				this.views.set(
 					[
 						new bp.Views.FormAvatar(),
-						new bp.Views.FormContent( { activity: this.model, model: this.model } )
+						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
+						new bp.Views.ActivityToolbar( { model: this.model } )
 					]
 				);
 
@@ -3120,7 +3122,7 @@ window.bp = window.bp || {};
 				// Remove feedback.
 				this.cleanFeedback();
 
-				if ( 2 !== this.views._views[ '' ].length ) {
+				if ( 3 !== this.views._views[ '' ].length ) {
 					return;
 				}
 
@@ -3152,8 +3154,6 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
-				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
-				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
@@ -3186,11 +3186,20 @@ window.bp = window.bp || {};
 				this.updateMultiMediaOptions();
 			},
 
+			triggerDisplayFull: function ( event ) {
+				event.preventDefault();
+				if( !this.$el.hasClass( 'focus-in' ) ){
+					//Set focus on "#whats-new" to trigger 'displayFull' function
+					var element = this.$el.find( '#whats-new' );
+					setTimeout( function () { element.focus(); }, 0 );
+				}
+			},
+
 			resetForm: function () {
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
-						if ( index > 1 ) {
+						if ( index > 2 ) {
 							view.close();
 						}
 					}
