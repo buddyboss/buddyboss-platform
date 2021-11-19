@@ -1098,6 +1098,11 @@ a.layout-grid-view {
   width: calc(100% - 70px);
 }
 
+.bp-nouveau-activity-form-placeholder- .edit-activity-content-wrap #whats-new-content,
+.activity-update-form .edit-activity-content-wrap #whats-new-content {
+  width: 100%;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-attachments,
 .activity-update-form #whats-new-attachments {
   padding: 10px;
@@ -1145,6 +1150,7 @@ a.layout-grid-view {
 .activity-update-form.modal-popup .edit-activity-content-wrap {
   max-height: calc(100vh - 230px);
   overflow: auto;
+  width: 100%;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,

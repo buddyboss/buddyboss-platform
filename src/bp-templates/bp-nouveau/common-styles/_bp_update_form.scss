@@ -78,6 +78,10 @@
 		width: calc(100% - 70px);
 	}
 
+	.edit-activity-content-wrap #whats-new-content {
+		width: 100%;
+	}
+
 	#whats-new-attachments {
 		padding: 10px;
 	}
@@ -117,6 +121,7 @@
 		.edit-activity-content-wrap {
 			max-height: calc(100vh - 230px);
 			overflow: auto;
+			width: 100%;
 		}
 
 		#whats-new-form #whats-new-toolbar {
