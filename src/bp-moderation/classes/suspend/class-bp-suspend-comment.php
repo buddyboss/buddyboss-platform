@@ -124,7 +124,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $comment_id, $hide_sitewide, $args );
 		} else {
 			$bp_background_updater->data(
@@ -180,7 +180,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $comment_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$bp_background_updater->data(

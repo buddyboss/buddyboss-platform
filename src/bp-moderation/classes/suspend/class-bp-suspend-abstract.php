@@ -21,7 +21,7 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @var string
 	 */
-	public $backgroup_diabled = false;
+	public $background_disabled = false;
 
 	/**
 	 * Item per page
@@ -207,17 +207,15 @@ abstract class BP_Suspend_Abstract {
 				}
 			}
 
-			if ( $this->backgroup_diabled ) {
+			if ( $this->background_disabled ) {
 				$args['page'] = ++$page;
 				$this->hide_related_content( $item_id, $hide_sitewide, $args );
 			} else {
 				$args['page'] = ++$page;
-				$bp_background_updater->data(
+				$bp_background_updater->push_to_queue(
 					array(
-						array(
-							'callback' => array( $this, 'hide_related_content' ),
-							'args'     => array( $item_id, $hide_sitewide, $args ),
-						),
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $item_id, $hide_sitewide, $args ),
 					)
 				);
 				$bp_background_updater->save()->schedule_event();
@@ -349,17 +347,15 @@ abstract class BP_Suspend_Abstract {
 				}
 			}
 
-			if ( $this->backgroup_diabled ) {
+			if ( $this->background_disabled ) {
 				$args['page'] = ++$page;
 				$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );
 			} else {
 				$args['page'] = ++$page;
-				$bp_background_updater->data(
+				$bp_background_updater->push_to_queue(
 					array(
-						array(
-							'callback' => array( $this, 'unhide_related_content' ),
-							'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
-						),
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
 					)
 				);
 				$bp_background_updater->save()->schedule_event();
