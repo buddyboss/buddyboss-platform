@@ -1139,6 +1139,16 @@ a.layout-grid-view {
   pointer-events: none;
 }
 
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar > div.post-emoji:before,
+.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar > div.post-emoji:before {
+  content: "\E821";
+  color: rgba(18, 43, 70, 0.4);
+  font: normal 400 normal 24px/1 bb-icons;
+  opacity: 1;
+  background: none;
+  position: static;
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup,
 .activity-update-form.modal-popup {
   position: fixed;

@@ -109,6 +109,15 @@
 
 	.activity-form:not(.focus-in) #whats-new-toolbar > div {
 		pointer-events: none;
+
+		&.post-emoji:before {
+			content: "\E821";
+			color: rgba(18, 43, 70, 0.4);
+			font: normal 400 normal 24px/1 bb-icons;
+			opacity: 1;
+			background: none;
+			position: static;
+		}
 	}
 
 	&.modal-popup {
