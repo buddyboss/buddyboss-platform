@@ -1101,6 +1101,13 @@ a.layout-grid-view {
   background-color: transparent;
 }
 
+.bp-nouveau-activity-form-placeholder- .whats-new-form-footer,
+.activity-update-form .whats-new-form-footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #eaeaea;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-content-placeholder,
 .bp-nouveau-activity-form-placeholder- #whats-new-content,
 .activity-update-form #whats-new-content-placeholder,
@@ -1424,12 +1431,12 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
-  bottom: 56px;
+  bottom: 0;
   right: 39px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
-  transition: all ease 0.3s;
+  transition: bottom ease 0.3s;
   height: 0;
   left: 0;
   overflow: hidden;
@@ -1445,7 +1452,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 58px;
+  bottom: 4px;
+  background-color: #eaeaea;
+  width: auto;
+  left: auto;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1534,10 +1544,6 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 .buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li,
 .buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li {
   pointer-events: auto;
-}
-
-.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-  bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {

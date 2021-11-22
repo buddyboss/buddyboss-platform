@@ -81,6 +81,12 @@
 		}
 	}
 
+	.whats-new-form-footer {
+		display: flex;
+		justify-content: space-between;
+		background-color: $light-grey;
+	}
+
 	#whats-new-content-placeholder,
 	#whats-new-content {
 		padding: 0;
@@ -408,12 +414,12 @@
 
 		.medium-editor-toolbar {
 			top: inherit;
-			bottom: 56px;
+			bottom: 0;
 			left: 39px;
 			visibility: hidden;
 			z-index: 99;
 			background-color: #fff;
-			transition: all ease 0.3s;
+			transition: bottom ease 0.3s;
 			height: 0;
 			right: 0;
 			overflow: hidden;
@@ -427,7 +433,10 @@
 				height: 44px;
 
 				div & {
-					bottom: 58px;
+					bottom: 4px;
+					background-color: #eaeaea;
+					width: auto;
+					right: auto;
 				}
 			}
 
@@ -514,10 +523,6 @@
 		}
 
 	}
-}
-
-.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-	bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
