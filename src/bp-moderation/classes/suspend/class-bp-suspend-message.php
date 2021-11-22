@@ -92,7 +92,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 
 		$action_name = current_filter();
 
-		if ( 'bp_messages_recipient_get_join_sql' === $action_name ){
+		if ( 'bp_messages_recipient_get_join_sql' === $action_name ) {
 			$join_sql .= $this->exclude_joint_query( 'r.thread_id' );
 		} else {
 			$join_sql .= $this->exclude_joint_query( 'm.thread_id' );

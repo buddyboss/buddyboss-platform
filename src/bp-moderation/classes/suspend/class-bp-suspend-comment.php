@@ -232,7 +232,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( $this->check_is_hidden( $comment_id) ) {
+		if ( $this->check_is_hidden( $comment_id ) ) {
 			$return = esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 

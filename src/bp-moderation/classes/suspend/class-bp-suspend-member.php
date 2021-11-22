@@ -53,7 +53,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-		
+
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
@@ -79,7 +79,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
-	 *
 	 */
 	public static function suspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
@@ -115,7 +114,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $user_id user id.
-	 *
 	 */
 	public static function unsuspend_user( $user_id ) {
 		BP_Core_Suspend::add_suspend(
@@ -227,16 +225,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		) {
 			return $where_conditions;
 		}
-		
+
 		$where          = array();
 		$hidden_members = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_members ) ) {
 			$where['blocked_where'] = "( r.user_id NOT IN('" . implode( "','", $hidden_members ) . "') )";
 		}
-		
-		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s
-								  AND ( {$this->alias}.user_suspended = 1 )", 'user' ); // phpcs:ignore
-		$where['suspend_where'] = "( r.user_id NOT IN( " . $sql . " ) )";
+
+		// phpcs:ignore
+		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_suspended = 1 )", 'user' );
+		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
+
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
@@ -533,9 +532,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
 
-		/*if ( bp_is_active( 'groups' ) ) {
+		/*
+		if ( bp_is_active( 'groups' ) ) {
 			$related_contents[ BP_Suspend_Group::$type ] = BP_Suspend_Group::get_member_group_ids( $member_id );
-		}*/
+		}
+		*/
 
 		if ( bp_is_active( 'forums' ) ) {
 			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action, $page );
