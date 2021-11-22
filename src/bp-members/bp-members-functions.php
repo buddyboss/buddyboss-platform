@@ -3309,6 +3309,13 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
 function bp_member_type_post_by_type( $member_type ) {
 	global $wpdb;
 
+	$cache_key	= 'bb_member_type_post_by_type_' . $member_type;
+	$post_id	= wp_cache_get( $cache_key, 'bp' );
+
+	if( $post_id ) {
+		return $post_id;
+	}
+
 	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
 	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
 	$post_id = $wpdb->get_var( $query );
@@ -3320,6 +3327,8 @@ function bp_member_type_post_by_type( $member_type ) {
 		$query   = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
 		$post_id = $wpdb->get_var( $query );
 	}
+
+	wp_cache_set( $cache_key, $post_id, 'bp' );
 
 	return apply_filters( 'bp_member_type_post_by_type', $post_id );
 }
