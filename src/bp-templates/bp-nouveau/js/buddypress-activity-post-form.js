@@ -3110,7 +3110,7 @@ window.bp = window.bp || {};
 					[
 						new bp.Views.FormAvatar(),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
-						new bp.Views.ActivityToolbar( { model: this.model } )
+						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
 					]
 				);
 
@@ -3125,6 +3125,15 @@ window.bp = window.bp || {};
 				if ( 3 !== this.views._views[ '' ].length ) {
 					return;
 				}
+
+				_.each(
+					this.views._views[ '' ],
+					function ( view, index ) {
+						if ( index > 1 ) {
+							view.close(); //Remove Toolbar shown in default view
+						}
+					}
+				);
 
 				$( event.target ).css(
 					{
@@ -3154,6 +3163,8 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
@@ -3189,9 +3200,12 @@ window.bp = window.bp || {};
 			triggerDisplayFull: function ( event ) {
 				event.preventDefault();
 				if( !this.$el.hasClass( 'focus-in' ) ){
-					//Set focus on "#whats-new" to trigger 'displayFull' function
-					var element = this.$el.find( '#whats-new' );
-					setTimeout( function () { element.focus(); }, 0 );
+					//Set focus on "#whats-new" to trigger 'displayFull'
+					var element = this.$el.find( '#whats-new' )[0]; var element_selection = window.getSelection(); var element_range = document.createRange();
+					element_range.setStart( element, 0);
+					element_range.setEnd( element, 0);
+					element_selection.removeAllRanges();
+					element_selection.addRange( element_range );
 				}
 			},
 
@@ -3199,7 +3213,7 @@ window.bp = window.bp || {};
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
-						if ( index > 2 ) {
+						if ( index > 1 ) {
 							view.close();
 						}
 					}
@@ -3236,6 +3250,9 @@ window.bp = window.bp || {};
 				$( '.medium-editor-toolbar-actions' ).show();
 				$( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
 				$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
+				//Add Toolbar to show in default view
+				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 			},
 
 			cleanFeedback: function () {
