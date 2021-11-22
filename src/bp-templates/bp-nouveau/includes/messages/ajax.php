@@ -2252,7 +2252,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'group_message_fresh'       => $group_message_fresh,
 				'message_from'              => $message_from,
 				'group_text'                => $group_text,
-				'id'                        => bp_get_the_thread_message_id(),
+				'id'                        => $bp_get_the_thread_message_id,
 				'content'                   => $content,
 				'sender_id'                 => bp_get_the_thread_message_sender_id(),
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
@@ -2276,21 +2276,25 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		} else {
 
-			$message_left     = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
-			$message_joined   = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
-			$message_banned   = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_ban', true );
-			$message_unbanned = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
-			$message_deleted  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
+			$message_left     = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left', true );
+			$message_joined   = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined', true );
+			$message_banned   = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_ban', true );
+			$message_unbanned = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_un_ban', true );
+			$message_deleted  = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_messages_deleted', true );
 
 			if ( $message_left && 'yes' === $message_left ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
 				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Removed Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				/* translators: %s: Group Name */
 				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
@@ -2299,7 +2303,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			}
 
 			$thread->messages[ $i ] = array(
-				'id'            => bp_get_the_thread_message_id(),
+				'id'            => $bp_get_the_thread_message_id,
 				'content'       => $content,
 				'sender_id'     => bp_get_the_thread_message_sender_id(),
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
@@ -2337,20 +2341,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link(
 				array(
-					'message_id' => bp_get_the_thread_message_id(),
+					'message_id' => $bp_get_the_thread_message_id,
 					'url_only'   => true,
 				)
 			);
 
 			$thread->messages[ $i ]['star_link']  = $star_link;
 			$thread->messages[ $i ]['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
-			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . bp_get_the_thread_message_id() );
+			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' .$bp_get_the_thread_message_id );
 		}
 
 		$is_group_thread = bb_messages_is_group_thread( $thread_id );
 
 		if ( bp_is_active( 'media' ) && ( ( ( empty( $is_group_thread ) || ( ! empty( $is_group_thread ) && ! bp_is_active( 'groups' ) ) ) && bp_is_messages_media_support_enabled() ) || ( bp_is_active( 'groups' ) && ! empty( $is_group_thread ) && bp_is_group_media_support_enabled() ) ) ) {
-			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
+			$media_ids = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) && bp_has_media(
 				array(
@@ -2367,7 +2371,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					$thread->messages[ $i ]['media'][] = array(
 						'id'            => bp_get_media_id(),
-						'message_id'    => bp_get_the_thread_message_id(),
+						'message_id'    => $bp_get_the_thread_message_id,
 						'thread_id'     => bp_get_the_thread_id(),
 						'title'         => bp_get_media_title(),
 						'attachment_id' => bp_get_media_attachment_id(),
@@ -2381,7 +2385,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
-			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
+			$video_ids = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_video_ids', true );
 
 			if (
 				! empty( $video_ids ) &&
@@ -2401,7 +2405,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					$thread->messages[ $i ]['video'][] = array(
 						'id'            => bp_get_video_id(),
-						'message_id'    => bp_get_the_thread_message_id(),
+						'message_id'    => $bp_get_the_thread_message_id,
 						'thread_id'     => bp_get_the_thread_id(),
 						'title'         => bp_get_video_title(),
 						'attachment_id' => bp_get_video_attachment_id(),
