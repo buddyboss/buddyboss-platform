@@ -72,6 +72,11 @@
 		resize: none !important;
 	}
 
+	#whats-new-form #whats-new-toolbar {
+		padding: 15px 16px 10px;
+		background-color: $light-grey;
+	}
+
 	#whats-new-content-placeholder,
 	#whats-new-content {
 		padding: 0;

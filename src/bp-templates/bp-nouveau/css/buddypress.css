@@ -1090,6 +1090,12 @@ a.layout-grid-view {
   resize: none !important;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form #whats-new-toolbar,
+.activity-update-form #whats-new-form #whats-new-toolbar {
+  padding: 15px 16px 10px;
+  background-color: #eaeaea;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-content-placeholder,
 .bp-nouveau-activity-form-placeholder- #whats-new-content,
 .activity-update-form #whats-new-content-placeholder,
