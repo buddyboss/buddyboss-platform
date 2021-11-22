@@ -76,6 +76,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id Member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */

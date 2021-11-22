@@ -63,6 +63,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
@@ -104,6 +105,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id group id.
+	 * @param int $page     Number of page.
 	 *
 	 * @return array
 	 */
