@@ -212,10 +212,12 @@ abstract class BP_Suspend_Abstract {
 				$this->hide_related_content( $item_id, $hide_sitewide, $args );
 			} else {
 				$args['page'] = ++$page;
-				$bp_background_updater->push_to_queue(
+				$bp_background_updater->data(
 					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $item_id, $hide_sitewide, $args ),
+						array(
+							'callback' => array( $this, 'hide_related_content' ),
+							'args'     => array( $item_id, $hide_sitewide, $args ),
+						),
 					)
 				);
 				$bp_background_updater->save()->schedule_event();
@@ -352,10 +354,12 @@ abstract class BP_Suspend_Abstract {
 				$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );
 			} else {
 				$args['page'] = ++$page;
-				$bp_background_updater->push_to_queue(
+				$bp_background_updater->data(
 					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
+						array(
+							'callback' => array( $this, 'unhide_related_content' ),
+							'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
+						),
 					)
 				);
 				$bp_background_updater->save()->schedule_event();
