@@ -75,6 +75,10 @@
 	#whats-new-form #whats-new-toolbar {
 		padding: 15px 16px 10px;
 		background-color: $light-grey;
+
+		.medium-editor-placeholder {
+			background-color: transparent;
+		}
 	}
 
 	#whats-new-content-placeholder,

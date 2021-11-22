@@ -1096,6 +1096,11 @@ a.layout-grid-view {
   background-color: #eaeaea;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form #whats-new-toolbar .medium-editor-placeholder,
+.activity-update-form #whats-new-form #whats-new-toolbar .medium-editor-placeholder {
+  background-color: transparent;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-content-placeholder,
 .bp-nouveau-activity-form-placeholder- #whats-new-content,
 .activity-update-form #whats-new-content-placeholder,
