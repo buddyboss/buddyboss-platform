@@ -79,7 +79,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		);
 
 		if ( $page > 0 ) {
-			$args['offset'] = ( $page - 1 ) * self::$item_per_page;
+			$args['number'] = self::$item_per_page;
 			$args['paged']  = $page;
 		}
 

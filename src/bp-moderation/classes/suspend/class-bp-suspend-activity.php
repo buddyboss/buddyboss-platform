@@ -152,7 +152,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public static function get_bbpress_activity_ids( $post_id, $page = -1 ) {
+	public static function get_bbpress_activity_ids( $post_id, $page = - 1 ) {
 		$activities_ids = array();
 
 		$args = array(
