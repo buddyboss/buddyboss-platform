@@ -24,6 +24,12 @@ function messages_screen_inbox() {
 		while ( bp_message_threads() ) :
 			bp_message_thread();
 			$thread_id = bp_get_message_thread_id();
+			$first_message             = BP_Messages_Thread::get_first_message( $thread_id );
+			$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+			if( ! bp_is_active('groups') && 'group' === $message_from ) {  //checking the group thread or not.
+				$thread_id = 0;
+				continue;
+			}
 			break;
 		endwhile;
 
