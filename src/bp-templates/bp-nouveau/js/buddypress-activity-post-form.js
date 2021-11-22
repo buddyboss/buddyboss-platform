@@ -59,7 +59,7 @@ window.bp = window.bp || {};
 			// Display it.
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
-			// Wrap Avatar and Content section ito header.
+			// Wrap Avatar and Content section into header.
 			$( '#whats-new-avatar, #whats-new-content' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 		},
 
@@ -3194,6 +3194,9 @@ window.bp = window.bp || {};
 					);
 				}
 
+				// Wrap Toolbar and submit Wrapper into footer.
+				$( '#whats-new-toolbar, #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+
 				this.updateMultiMediaOptions();
 			},
 
@@ -3250,9 +3253,13 @@ window.bp = window.bp || {};
 				$( '.medium-editor-toolbar-actions' ).show();
 				$( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
 				$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
+
 				//Add Toolbar to show in default view
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+
+				// Remove footer wrapper
+				this.$el.find( '.whats-new-form-footer' ).remove();
 			},
 
 			cleanFeedback: function () {
