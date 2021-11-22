@@ -37,8 +37,16 @@
 		display: flex;
 	}
 
-	.activity-form.focus-in #whats-new {
-		min-height: 100px;
+	.activity-form.focus-in {
+
+		&#whats-new-form #whats-new-toolbar {
+			border: 0;
+		}
+
+		#whats-new {
+			min-height: 100px;
+		}
+
 	}
 
 	#whats-new-avatar {
@@ -75,6 +83,7 @@
 	#whats-new-form #whats-new-toolbar {
 		padding: 15px 16px 10px;
 		background-color: $light-grey;
+		border-top: 1px solid $bp-border-color;
 
 		.medium-editor-placeholder {
 			background-color: transparent;
@@ -85,6 +94,7 @@
 		display: flex;
 		justify-content: space-between;
 		background-color: $light-grey;
+		border-top: 1px solid $bp-border-color;
 	}
 
 	#whats-new-content-placeholder,
@@ -551,7 +561,6 @@
 }
 
 #activity-form-submit-wrapper {
-	border-top: 1px solid #ddd;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: center;
