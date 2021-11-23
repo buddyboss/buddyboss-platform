@@ -45,16 +45,14 @@ function bp_activity_update_meta_cache( $activity_ids = false ) {
  */
 function bp_activity_clear_cache_for_activity( $activity ) {
 	wp_cache_delete( $activity->id, 'bp_activity' );
-	wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );
-	wp_cache_delete( 'get_media_record_' . $activity->id, 'bp_activity' );
-	wp_cache_delete( 'suspend_record_exist_' . $activity->id, 'bp_activity' );
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
-	wp_cache_delete( 'bp_activity_media_id_' . $activity->id, 'bp_media' );
-	wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );
-	wp_cache_delete( 'bp_activity_document_id_' . $activity->id, 'bp_document' );
-	wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' );
-	wp_cache_delete( 'bp_activity_video_id_' . $activity->id, 'bp_video' );
-	wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );
+	wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
+	wp_cache_delete( 'bp_activity_media_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
+	wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );       // Used in get_activity_attachment_id().
+	wp_cache_delete( 'bp_activity_document_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
+	wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
+	wp_cache_delete( 'bp_activity_video_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
+	wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
 }
 add_action( 'bp_activity_after_save', 'bp_activity_clear_cache_for_activity' );
 
@@ -69,14 +67,13 @@ function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_activity' );
 		wp_cache_delete( 'bp_activity_media_id_' . $deleted_id, 'bp_media' );
-		wp_cache_delete( 'bp_media_attachment_id_' . $deleted_id, 'bp_media' );
-		wp_cache_delete( 'bp_activity_document_id_' . $deleted_id, 'bp_document' );
-		wp_cache_delete( 'bp_document_attachment_id_' . $deleted_id, 'bp_document' );
-		wp_cache_delete( 'bp_activity_video_id_' . $deleted_id, 'bp_video' );
-		wp_cache_delete( 'bp_video_attachment_id_' . $deleted_id, 'bp_video' );
-		wp_cache_delete( 'bb_activity_hierarchy_' . $deleted_id, 'bp_activity' );
-		wp_cache_delete( 'get_media_record_' . $deleted_id, 'bp_activity' );
-		wp_cache_delete( 'suspend_record_exist_' . $deleted_id, 'bp_activity' );
+		wp_cache_delete( 'bb_activity_hierarchy_' . $deleted_id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
+		wp_cache_delete( 'bp_activity_media_id_' . $deleted_id, 'bp_media' );         // Used in get_activity_media_id().
+		wp_cache_delete( 'bp_media_attachment_id_' . $deleted_id, 'bp_media' );       // Used in get_activity_attachment_id().
+		wp_cache_delete( 'bp_activity_document_id_' . $deleted_id, 'bp_document' );   // Used in get_activity_document_id().
+		wp_cache_delete( 'bp_document_attachment_id_' . $deleted_id, 'bp_document' ); // Used in get_activity_attachment_id().
+		wp_cache_delete( 'bp_activity_video_id_' . $deleted_id, 'bp_video' );         // Used in get_activity_video_id().
+		wp_cache_delete( 'bp_video_attachment_id_' . $deleted_id, 'bp_video' );       // Used in get_activity_attachment_id().
 	}
 }
 add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_deleted_activity' );
@@ -149,8 +146,8 @@ add_action( 'bp_stop_following', 'bp_activity_follow_reset_cache_incrementor' );
 function bp_activity_follow_delete_object_cache( $follow ) {
 	if ( ! empty( $follow->id ) ) {
 		wp_cache_delete( $follow->id, 'bp_activity_follow' );
+		bp_core_delete_incremented_cache( $follow->leader_id . '_' . $follow->follower_id, 'bp_activity_follow' );
 	}
-	wp_cache_delete( $follow->id . '_' . $follow->leader_id . '_' . $follow->follower_id, 'bp_activity_follow' );
 }
 add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
 

@@ -1285,9 +1285,7 @@ class BP_Video {
 			}
 		}
 
-		if ( ! empty( $activity_video_id ) ) {
-			wp_cache_set( $cache_key, $activity_video_id, 'bp_video' );
-		}
+		wp_cache_set( $cache_key, $activity_video_id, 'bp_video' );
 
 		return $activity_video_id;
 	}

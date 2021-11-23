@@ -63,12 +63,13 @@ class BP_Activity_Follow {
 	protected function populate() {
 		global $wpdb, $bp;
 
-		$cache_key = $this->id . '_' . $this->leader_id . '_' . $this->follower_id;
-		$row       = wp_cache_get( $cache_key, 'bp_activity_follow' );
+		$cache_key = $this->leader_id . '_' . $this->follower_id;
+		$row       = bp_core_get_incremented_cache( $cache_key, 'bp_activity_follow' );
 
 		if ( false === $row ) {
+			// phpcs:ignore
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name_follow} WHERE leader_id = %d AND follower_id = %d", $this->leader_id, $this->follower_id ) );
-			wp_cache_set( $cache_key, $row, 'bp_activity_follow' );
+			bp_core_set_incremented_cache( $cache_key, 'bp_activity_follow', $row );
 		}
 
 		if ( ! empty( $row ) ) {
@@ -87,7 +88,7 @@ class BP_Activity_Follow {
 		global $wpdb, $bp;
 
 		// do not use these filters
-		// use the 'bp_follow_before_save' hook instead
+		// use the 'bp_follow_before_save' hook instead.
 		$this->leader_id   = apply_filters( 'bp_follow_leader_id_before_save', $this->leader_id, $this->id );
 		$this->follower_id = apply_filters( 'bp_follow_follower_id_before_save', $this->follower_id, $this->id );
 

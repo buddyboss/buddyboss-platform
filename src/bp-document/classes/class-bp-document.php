@@ -1828,9 +1828,7 @@ class BP_Document {
 			}
 		}
 
-		if ( ! empty( $activity_document_id ) ) {
-			wp_cache_set( $cache_key, $activity_document_id, 'bp_document' );
-		}
+		wp_cache_set( $cache_key, $activity_document_id, 'bp_document' );
 
 		return $activity_document_id;
 	}
@@ -2042,6 +2040,7 @@ class BP_Document {
 			return $document_attachment_id;
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$document_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->document->table_name} WHERE activity_id = {$activity_id}" );
 		wp_cache_set( $cache_key, $document_attachment_id, 'bp_document' );
 
