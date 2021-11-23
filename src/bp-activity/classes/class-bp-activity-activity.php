@@ -1788,6 +1788,7 @@ class BP_Activity_Activity {
 		$result    = wp_cache_get( $cache_key, 'bp_activity' );
 
 		if ( false === $result ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND secondary_item_id = %d", $parent_id ) );
 			wp_cache_set( $cache_key, $result, 'bp_activity' );
 		}
