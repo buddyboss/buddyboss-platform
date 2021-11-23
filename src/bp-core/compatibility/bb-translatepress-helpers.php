@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss 1.7.8
+ * @since BuddyBoss [BBVERSION]
  */
 class BB_TranslatePress_Plugin_Compatibility {
 
@@ -19,7 +19,7 @@ class BB_TranslatePress_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss 1.7.8
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private static $instance = null;
 
@@ -33,7 +33,7 @@ class BB_TranslatePress_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss 1.7.8
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return Controller|null
 	 */
@@ -57,7 +57,7 @@ class BB_TranslatePress_Plugin_Compatibility {
     /**
      * Remove lang code from URL slug
      *
-     * @since BuddyBoss 1.7.8
+     * @since BuddyBoss [BBVERSION]
      *
      * @param string $path
      * @return string $path
