@@ -70,7 +70,6 @@ add_action( 'bp_activity_after_save', 'bp_activity_clear_cache_for_activity' );
 function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_activity' );
-		wp_cache_delete( 'bp_activity_media_id_' . $deleted_id, 'bp_media' );
 		wp_cache_delete( 'bb_activity_hierarchy_' . $deleted_id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
 		wp_cache_delete( 'bp_activity_media_id_' . $deleted_id, 'bp_media' );         // Used in get_activity_media_id().
 		wp_cache_delete( 'bp_media_attachment_id_' . $deleted_id, 'bp_media' );       // Used in get_activity_attachment_id().
@@ -92,7 +91,6 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_delet
 function bp_activity_clear_cache_after_deleted_activity( $activities ) {
 	foreach ( (array) $activities as $activity ) {
 		wp_cache_delete( $activity->id, 'bp_activity' );
-		wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 		wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
 		wp_cache_delete( 'bp_activity_media_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
 		wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );       // Used in get_activity_attachment_id().
