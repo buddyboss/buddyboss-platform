@@ -1784,12 +1784,12 @@ class BP_Activity_Activity {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$cache_key = 'get_child_comments_' . $parent_id;
-		$result    = wp_cache_get( $cache_key, 'bp_activity_comments' );
+		$cache_key = 'bp_get_child_comments_' . $parent_id;
+		$result    = wp_cache_get( $cache_key, 'bp_activity' );
 
 		if ( false === $result ) {
 			$result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND secondary_item_id = %d", $parent_id ) );
-			wp_cache_set( $cache_key, $result, 'bp_activity_comments' );
+			wp_cache_set( $cache_key, $result, 'bp_activity' );
 		}
 
 		return $result;
