@@ -176,7 +176,7 @@ class BP_Messages_Thread {
 		$this->messages_before  = $r['before'];
 		$this->thread_id        = (int) $thread_id;
 
-		// get the last message deleted for the thread
+		// get the last message deleted for the thread.
 		static::get_user_last_deleted_message( $this->thread_id );
 
 		// Get messages for thread.
@@ -1692,15 +1692,31 @@ class BP_Messages_Thread {
 		 */
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
 
-		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$cached = bp_core_get_incremented_cache( $paged_recipients_sql, 'bp_messages' );
+
+		if ( false === $cached ) {
+			$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			bp_core_set_incremented_cache( $paged_recipients_sql, 'bp_messages', $paged_recipient_ids );
+		} else {
+			$paged_recipient_ids = $cached;
+		}
+
 		$paged_recipients    = array();
 
 		if ( 'ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_recipients = array_map( 'intval', $paged_recipient_ids );
 		} elseif ( ! empty( $paged_recipient_ids ) ) {
-			$recipient_ids_sql      = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
-			$recipient_data_objects = $wpdb->get_results( "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$recipient_ids_sql          = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
+			$recipient_data_objects_sql = "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})";
+			$cached                     = bp_core_get_incremented_cache( $recipient_data_objects_sql, 'bp_messages' );
+
+			if ( false === $cached ) {
+				$recipient_data_objects = $wpdb->get_results( $recipient_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				bp_core_set_incremented_cache( $recipient_data_objects_sql, 'bp_messages', $recipient_data_objects );
+			} else {
+				$recipient_data_objects = $cached;
+			}
 
 			foreach ( (array) $recipient_data_objects as $mdata ) {
 				$recipient_data_objects[ $mdata->id ] = $mdata;
@@ -1730,7 +1746,15 @@ class BP_Messages_Thread {
 			 */
 			$total_recipients_sql = apply_filters( 'bp_recipients_recipient_get_total_sql', $total_recipients_sql, $sql, $r );
 
-			$total_recipients = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$cached = bp_core_get_incremented_cache( $total_recipients_sql, 'bp_messages' );
+
+			if ( false === $cached ) {
+				$total_recipients = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				bp_core_set_incremented_cache( $total_recipients_sql, 'bp_messages', $total_recipients );
+			} else {
+				$total_recipients = $cached;
+			}
+
 			$retval['total']  = $total_recipients;
 		}
 

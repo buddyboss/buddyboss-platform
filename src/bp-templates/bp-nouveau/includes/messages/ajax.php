@@ -844,6 +844,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) :
 		bp_message_thread();
 
+		$bp_get_message_thread_id = bp_get_message_thread_id();
+
 		if ( '' === trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
 			foreach ( $messages_template->thread->messages as $message ) {
 				$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
@@ -860,7 +862,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 			if ( '' === $content ) {
-				$thread_messages = BP_Messages_Thread::get_messages( bp_get_message_thread_id(), null, 99999999 );
+				$thread_messages = BP_Messages_Thread::get_messages( $bp_get_message_thread_id, null, 99999999 );
 				foreach ( $thread_messages as $thread_message ) {
 					$content = trim( wp_strip_all_tags( do_shortcode( $thread_message->message ) ) );
 					if ( '' !== $content ) {
@@ -941,7 +943,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		$is_deleted_group = 0;
 		if ( ! $group_id ) {
-			$first_message = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+			$first_message = BP_Messages_Thread::get_first_message( $bp_get_message_thread_id );
 			$group_id      = ( isset( $first_message->id ) ) ? (int) bp_messages_get_meta( $first_message->id, 'group_id', true ) : 0;
 
 			if ( $group_id ) {
@@ -991,14 +993,14 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		$is_group_thread = 0;
 		if ( (int) $group_id > 0 ) {
 
-			$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+			$first_message           = BP_Messages_Thread::get_first_message( $bp_get_message_thread_id );
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
 			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 
-			if ( 'group' === $message_from && bp_get_message_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			if ( 'group' === $message_from && $bp_get_message_thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 				$is_group_thread = 1;
 			}
 		}
@@ -1040,7 +1042,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		$threads->threads[ $i ] = array(
-			'id'                              => bp_get_message_thread_id(),
+			'id'                              => $bp_get_message_thread_id,
 			'message_id'                      => (int) $last_message_id,
 			'subject'                         => wp_strip_all_tags( bp_get_message_thread_subject() ),
 			'group_avatar'                    => $group_avatar,
@@ -1124,7 +1126,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link(
 				array(
-					'thread_id' => bp_get_message_thread_id(),
+					'thread_id' => $bp_get_message_thread_id,
 					'url_only'  => true,
 				)
 			);
@@ -1215,7 +1217,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false;
-		$threads->threads[ $i ]['avatars']   = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
+		$threads->threads[ $i ]['avatars']   = bp_messages_get_avatars( $bp_get_message_thread_id, bp_loggedin_user_id() );
 
 		$i += 1;
 	endwhile;
@@ -1236,7 +1238,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
 
-	// Return the successfull reply.
+	// Return the successful reply.
 	wp_send_json_success( $threads );
 }
 
