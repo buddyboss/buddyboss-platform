@@ -173,7 +173,7 @@ add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
 /**
  * Allow activity page content restriction via MemberPress
  * 
- * @since BuddyBoss 1.7.7
+ * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
