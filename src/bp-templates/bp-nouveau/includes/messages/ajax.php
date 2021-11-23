@@ -2042,15 +2042,60 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
 	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
 	$un_access_users = array();
-	if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
-			if ( $login_user_id !== $recipient->user_id ) {
-				if ( ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
-					$un_access_users[] = false;
+
+	if ( is_array( $thread_template->thread->recipients ) ) {
+
+		// Get the total number of recipients in the current thread.
+		$recipients_count               = bb_get_thread_total_recipients_count();
+		$count                          = 1;
+		$admins                         = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+		$bp_force_friendship_to_message = bp_force_friendship_to_message();
+
+		foreach ( $thread_template->thread->recipients as $recipient ) {
+			if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && $bp_force_friendship_to_message ) {
+				if ( $login_user_id !== $recipient->user_id ) {
+					if ( ! friends_check_friendship( $login_user_id, $recipient->user_id ) ) {
+						$un_access_users[] = false;
+					}
 				}
 			}
+
+			if ( empty( $recipient->is_deleted ) ) {
+				$thread->thread['recipients']['members'][ $count ] = array(
+					'avatar'     => esc_url(
+						bp_core_fetch_avatar(
+							array(
+								'item_id' => $recipient->user_id,
+								'object'  => 'user',
+								'type'    => 'thumb',
+								'width'   => BP_AVATAR_THUMB_WIDTH,
+								'height'  => BP_AVATAR_THUMB_HEIGHT,
+								'html'    => false,
+							)
+						)
+					),
+					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+					'is_you'     => $login_user_id === $recipient->user_id,
+					'id'         => $recipient->user_id,
+				);
+
+				if ( bp_is_active( 'moderation' ) ) {
+					$thread->thread['recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+				}
+
+				$count ++;
+			}
 		}
-		if ( ! empty( $un_access_users ) ) {
+
+		$thread->thread['recipients']['count']         = $recipients_count;
+		$thread->thread['recipients']['current_count'] = count( $thread->thread['recipients']['members'] );
+		$thread->thread['recipients']['per_page']      = bb_messages_recipients_per_page();
+		$thread->thread['recipients']['total_pages']   = ceil( (int) $recipients_count / (int) bb_messages_recipients_per_page() );
+
+		if ( $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && $bp_force_friendship_to_message && ! empty( $un_access_users ) ) {
 			$can_message = false;
 		}
 	}
@@ -2084,65 +2129,25 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
 	);
 
-	if ( is_array( $thread_template->thread->recipients ) ) {
-		// Get the total number of recipients in the current thread.
-		$recipients_count = bb_get_thread_total_recipients_count();
-		$count            = 1;
-		$admins           = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
-		foreach ( $thread_template->thread->recipients as $recipient ) {
-			if ( empty( $recipient->is_deleted ) ) {
-				$thread->thread['recipients']['members'][ $count ] = array(
-					'avatar'     => esc_url(
-						bp_core_fetch_avatar(
-							array(
-								'item_id' => $recipient->user_id,
-								'object'  => 'user',
-								'type'    => 'thumb',
-								'width'   => BP_AVATAR_THUMB_WIDTH,
-								'height'  => BP_AVATAR_THUMB_HEIGHT,
-								'html'    => false,
-							)
-						)
-					),
-					'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					'is_you'     => $login_user_id === $recipient->user_id,
-					'id'         => $recipient->user_id,
-				);
-
-				if ( bp_is_active( 'moderation' ) ) {
-					$thread->thread['recipients']['members'][ $count ]['is_blocked']     = bp_moderation_is_user_blocked( $recipient->user_id );
-					$thread->thread['recipients']['members'][ $count ]['can_be_blocked'] = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-				}
-
-				$count ++;
-			}
-		}
-		$thread->thread['recipients']['count']         = $recipients_count;
-		$thread->thread['recipients']['current_count'] = count( $thread->thread['recipients']['members'] );
-		$thread->thread['recipients']['per_page']      = bb_messages_recipients_per_page();
-		$thread->thread['recipients']['total_pages']   = ceil( (int) $recipients_count / (int) bb_messages_recipients_per_page() );
-	}
-
 	$thread->messages = array();
 	$i                = 0;
 
 	while ( bp_thread_messages() ) :
 		bp_thread_the_message();
 
-		$bp_get_the_thread_message_id = bp_get_the_thread_message_id();
-		$group_id                     = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_id', true );
-		$group_message_users          = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_users', true );
-		$group_message_type           = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_type', true );
-		$group_message_thread_type    = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_thread_type', true );
-		$group_message_fresh          = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_fresh', true );
-		$message_from                 = bp_messages_get_meta( $bp_get_the_thread_message_id, 'message_from', true );
-		$message_left                 = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left', true );
-		$message_joined               = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined', true );
-		$message_banned               = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_ban', true );
-		$message_unbanned             = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_un_ban', true );
-		$message_deleted              = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_messages_deleted', true );
+		$bp_get_the_thread_message_id        = bp_get_the_thread_message_id();
+		$bp_get_the_thread_message_sender_id = bp_get_the_thread_message_sender_id();
+		$group_id                            = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_id', true );
+		$group_message_users                 = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_users', true );
+		$group_message_type                  = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_type', true );
+		$group_message_thread_type           = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_thread_type', true );
+		$group_message_fresh                 = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_fresh', true );
+		$message_from                        = bp_messages_get_meta( $bp_get_the_thread_message_id, 'message_from', true );
+		$message_left                        = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_left', true );
+		$message_joined                      = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_joined', true );
+		$message_banned                      = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_ban', true );
+		$message_unbanned                    = bp_messages_get_meta( $bp_get_the_thread_message_id, 'group_message_group_un_ban', true );
+		$message_deleted                     = bp_messages_get_meta( $bp_get_the_thread_message_id, 'bp_messages_deleted', true );
 
 		if ( $group_id && $message_from && 'group' === $message_from ) {
 
@@ -2254,14 +2259,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'group_text'                => $group_text,
 				'id'                        => $bp_get_the_thread_message_id,
 				'content'                   => $content,
-				'sender_id'                 => bp_get_the_thread_message_sender_id(),
+				'sender_id'                 => $bp_get_the_thread_message_sender_id,
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
-				'sender_is_you'             => bp_get_the_thread_message_sender_id() === $login_user_id,
+				'sender_is_you'             => $bp_get_the_thread_message_sender_id === $login_user_id,
 				'sender_avatar'             => esc_url(
 					bp_core_fetch_avatar(
 						array(
-							'item_id' => bp_get_the_thread_message_sender_id(),
+							'item_id' => $bp_get_the_thread_message_sender_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
 							'width'   => 32,
@@ -2305,15 +2310,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$thread->messages[ $i ] = array(
 				'id'            => $bp_get_the_thread_message_id,
 				'content'       => $content,
-				'sender_id'     => bp_get_the_thread_message_sender_id(),
+				'sender_id'     => $bp_get_the_thread_message_sender_id,
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-				'is_deleted'    => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
+				'is_deleted'    => empty( get_userdata( $bp_get_the_thread_message_sender_id ) ) ? 1 : 0,
 				'sender_link'   => bp_get_the_thread_message_sender_link(),
-				'sender_is_you' => bp_get_the_thread_message_sender_id() === $login_user_id,
+				'sender_is_you' => $bp_get_the_thread_message_sender_id === $login_user_id,
 				'sender_avatar' => esc_url(
 					bp_core_fetch_avatar(
 						array(
-							'item_id' => bp_get_the_thread_message_sender_id(),
+							'item_id' => $bp_get_the_thread_message_sender_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
 							'width'   => 32,
@@ -2328,12 +2333,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if ( bp_is_active( 'moderation' ) ) {
-			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
-			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
+			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id );
+			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id );
 
-			if ( bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() ) ) {
+			if ( bp_moderation_is_user_suspended( $bp_get_the_thread_message_sender_id ) ) {
 				$thread->messages[ $i ]['content'] = '<p class="suspended">' . esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss' ) . '</p>';
-			} elseif ( bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() ) ) {
+			} elseif ( bp_moderation_is_user_blocked( $bp_get_the_thread_message_sender_id ) ) {
 				$thread->messages[ $i ]['content'] = '<p class="blocked">' . esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss' ) . '</p>';
 			}
 		}

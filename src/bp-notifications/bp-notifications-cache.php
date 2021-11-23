@@ -104,7 +104,7 @@ function bp_notifications_clear_all_for_user_cache_before_update( $update_args, 
 	// User ID is passed in where arugments.
 	if ( ! empty( $where_args['user_id'] ) ) {
 		bp_notifications_clear_all_for_user_cache( $where_args['user_id'] );
-		if ( $where_args['id'] ) {
+		if ( ! empty( $where_args['id'] ) ) {
 			wp_cache_delete( $where_args['id'], 'bp_notifications' );
 			wp_cache_delete( 'bp_notifications_check_access_' . $where_args['user_id'] . '_' . $where_args['id'], 'bp_notifications' );
 		}
