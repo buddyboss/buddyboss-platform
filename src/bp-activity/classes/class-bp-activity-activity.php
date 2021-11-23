@@ -829,6 +829,7 @@ class BP_Activity_Activity {
 	 */
 	protected static function get_activity_data( $activity_ids = array() ) {
 		global $wpdb;
+		static $user_query_cache = array();
 
 		// Bail if no activity ID's passed.
 		if ( empty( $activity_ids ) ) {
@@ -874,16 +875,21 @@ class BP_Activity_Activity {
 			$activities[] = $activity;
 		}
 
-		// Then fetch user data.
-		static $user_query = null;
+		$user_ids  = wp_list_pluck( $activities, 'user_id' );
+		$cache_key = 'bp_user_' . md5( maybe_serialize( $user_ids ) );
 
-		if ( null === $user_query ) {
+		// Then fetch user data.
+		if ( isset( $user_query_cache[ $cache_key ] ) ) {
+			$user_query = $user_query_cache[ $cache_key ];
+		} else {
 			$user_query = new BP_User_Query(
 				array(
-					'user_ids'        => wp_list_pluck( $activities, 'user_id' ),
+					'user_ids'        => $user_ids,
 					'populate_extras' => false,
 				)
 			);
+
+			$user_query_cache[ $cache_key ] = $user_query;
 		}
 
 		// Associated located user data with activity items.
