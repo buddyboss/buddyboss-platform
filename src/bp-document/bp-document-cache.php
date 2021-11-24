@@ -148,9 +148,6 @@ add_action( 'bp_document_before_delete', 'bp_document_clear_document_group_objec
  */
 function bp_document_clear_cache_for_folder( $folder ) {
 	wp_cache_delete( $folder->id, 'bp_document_folder' );
-	wp_cache_delete( 'get_folder_document_ids_' . $folder->id, 'bp_document_folder' );
-	wp_cache_delete( 'get_folder_attachment_ids_' . $folder->id, 'bp_document_folder' );
-	wp_cache_delete( 'get_folder_children_' . $folder->id, 'bp_document_folder' );
 }
 add_action( 'bp_document_folder_after_save', 'bp_document_clear_cache_for_folder' );
 
@@ -164,9 +161,6 @@ add_action( 'bp_document_folder_after_save', 'bp_document_clear_cache_for_folder
 function bp_document_clear_cache_for_deleted_folder( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_document_folder' );
-		wp_cache_delete( 'get_folder_document_ids_' . $deleted_id, 'bp_document_folder' );
-		wp_cache_delete( 'get_folder_attachment_ids_' . $deleted_id, 'bp_document_folder' );
-		wp_cache_delete( 'get_folder_children_' . $deleted_id, 'bp_document_folder' );
 	}
 }
 add_action( 'bp_folders_deleted_folders', 'bp_document_clear_cache_for_deleted_folder' );

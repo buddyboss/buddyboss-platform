@@ -2947,20 +2947,21 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 /**
  * Return all the documents ids of the folder.
  *
- * @param $folder_id
+ * @param int $folder_id Folder ID.
  *
  * @return array
  * @since BuddyBoss 1.4.0
  */
 function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
+	static $cache = array();
 
-	$cache_key = 'get_folder_document_ids_' . $folder_id;
-	$result    = wp_cache_get( $cache_key, 'bp_document_folder' );
-
-	if ( false === $result ) {
-		$result = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
-		wp_cache_set( $cache_key, $result, 'bp_document_folder' );
+	if ( ! isset( $cache[ $folder_id ] ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result              = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
+		$cache[ $folder_id ] = $result;
+	} else {
+		$result = $cache[ $folder_id ];
 	}
 
 	return $result;
@@ -2969,8 +2970,8 @@ function bp_document_get_folder_document_ids( $folder_id ) {
 /**
  * Return download link of the document.
  *
- * @param $attachment_id
- * @param $document_id
+ * @param int $attachment_id Attachment ID.
+ * @param int $document_id   Document ID.
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
@@ -3029,24 +3030,26 @@ function bp_document_get_allowed_extension() {
 /**
  * Return all the document ids inside folder.
  *
- * @param $folder_id
+ * @param int $folder_id Folder ID.
  *
  * @return array|object|null
  * @since BuddyBoss 1.4.0
  */
 function bp_document_get_folder_attachment_ids( $folder_id ) {
-
 	global $bp, $wpdb;
+	static $cache = array();
 
 	$table = $bp->document->table_name;
 
-	$cache_key = 'get_folder_attachment_ids_' . $folder_id;
-	$data      = wp_cache_get( $cache_key, 'bp_document_folder' );
-
-	if ( false === $data ) {
+	if ( ! isset( $cache[ $folder_id ] ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE folder_id = %d", $folder_id );
-		$data                       = $wpdb->get_results( $documents_attachment_query ); // db call ok; no-cache ok;
-		wp_cache_set( $cache_key, $data, 'bp_document_folder' );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data                = $wpdb->get_results( $documents_attachment_query );
+		$cache[ $folder_id ] = $data;
+	} else {
+		$data = $cache[ $folder_id ];
 	}
 
 	return $data;
@@ -3056,22 +3059,26 @@ function bp_document_get_folder_attachment_ids( $folder_id ) {
 /**
  * Return all the children folder of the given folder.
  *
- * @param $folder_id
+ * @param int $folder_id Folder ID.
  *
  * @return array
  * @since BuddyBoss 1.4.0
  */
 function bp_document_get_folder_children( $folder_id ) {
 	global $bp, $wpdb;
+	static $cache = array();
+
 	$table = $bp->document->table_name_folder;
 
-	$cache_key = 'get_folder_children_' . $folder_id;
-	$data      = wp_cache_get( $cache_key, 'bp_document_folder' );
-
-	if ( false === $data ) {
+	if ( ! isset( $cache[ $folder_id ] ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $wpdb->prepare( "SELECT id FROM `{$table}` WHERE FIND_IN_SET(`id`, ( SELECT GROUP_CONCAT(Level SEPARATOR ',') FROM ( SELECT @Ids := ( SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM `{$table}` WHERE FIND_IN_SET(`parent`, @Ids) ) Level FROM `{$table}` JOIN (SELECT @Ids := %d) temp1 ) temp2 ))", $folder_id );
-		$data  = array_map( 'intval', $wpdb->get_col( $query ) );
-		wp_cache_set( $cache_key, $data, 'bp_document_folder' );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data                = array_map( 'intval', $wpdb->get_col( $query ) );
+		$cache[ $folder_id ] = $data;
+	} else {
+		$data = $cache[ $folder_id ];
 	}
 
 	return $data;
@@ -3080,7 +3087,7 @@ function bp_document_get_folder_children( $folder_id ) {
 /**
  * Return root folder of the given user.
  *
- * @param $user_id
+ * @param int $user_id User ID.
  *
  * @return array
  * @since BuddyBoss 1.4.0
