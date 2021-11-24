@@ -71,6 +71,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
+		add_filter( 'bp_get_followers', array( $this, 'bb_exclude_moderated_user_ids' ), 9999, 1 );
+		add_filter( 'bp_get_following', array( $this, 'bb_exclude_moderated_user_ids' ), 9999, 1 );
+
 	}
 
 	/**
@@ -727,5 +730,25 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		return $avatar_url;
+	}
+
+	/**
+	 * Exclude moderated members from users lists.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $user_ids Array of users lists.
+	 *
+	 * @return array
+	 */
+	public function bb_exclude_moderated_user_ids( $user_ids = array() ) {
+
+		if ( empty( $user_ids ) ){
+			return $user_ids;
+		}
+
+		$hidden_members = bp_moderation_get_hidden_user_ids();
+
+		return array_diff( $user_ids, $hidden_members );
 	}
 }
