@@ -40,7 +40,10 @@ jQuery( document ).ready(
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+							}
 						}
 					);
 
@@ -141,7 +144,10 @@ jQuery( document ).ready(
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+							}
 						}
 					);
 
@@ -242,7 +248,10 @@ jQuery( document ).ready(
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								placeholderText: BP_Nouveau.anchorPlaceholderText,
+							}
 						}
 					);
 
@@ -409,7 +418,10 @@ jQuery( document ).ready(
 										cleanTags: ['meta'],
 										unwrapTags: []
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
+									}
 								}
 							);
 
@@ -457,7 +469,10 @@ jQuery( document ).ready(
 										cleanTags: ['meta'],
 										unwrapTags: []
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
+									}
 								}
 							);
 
@@ -505,7 +520,10 @@ jQuery( document ).ready(
 										cleanTags: ['meta'],
 										unwrapTags: []
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										placeholderText: BP_Nouveau.anchorPlaceholderText,
+									}
 								}
 							);
 
