@@ -916,15 +916,18 @@ class BP_Messages_Thread {
 		$r['user_id'] = (int) $r['user_id'];
 		$where_sql    = '1 = 1';
 
+		$additional_where = array();
+
 		if ( ! empty( $r['include'] ) ) {
 			$user_threads_query = $r['include'];
 		} elseif ( ! empty( $r['user_id'] ) ) {
-			$user_threads_sql = "SELECT DISTINCT(thread_id) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0";
+
+			$additional_where[] = 'r.is_deleted = 0';
+			$additional_where[] = 'r.user_id = ' . $r['user_id'];
+
 			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
-				$user_threads_sql .= ' AND is_hidden = 0';
+				$additional_where[] = 'r.is_hidden = 0';
 			}
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$user_threads_query = $wpdb->prepare( $user_threads_sql, $r['user_id'] );
 		}
 
 		$group_thread_in = array();
@@ -939,6 +942,8 @@ class BP_Messages_Thread {
 			$participants_sql['where']  = 'WHERE 1=1';
 			if ( ! empty( $user_threads_query ) ) {
 				$participants_sql['where'] .= " AND r.thread_id IN ($user_threads_query)";
+			} elseif ( ! empty( $additional_where ) ) {
+				$participants_sql['where'] .= ' AND ' . implode( ' AND ', $additional_where );
 			}
 			$participants_sql['where_like'] = 'u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s';
 
@@ -1070,6 +1075,8 @@ class BP_Messages_Thread {
 
 		if ( ! empty( $user_threads_query ) ) {
 			$where_sql .= " AND r.thread_id IN ($user_threads_query)";
+		} elseif ( ! empty( $additional_where ) ) {
+			$where_sql .= ' AND ' . implode( ' AND ', $additional_where );
 		}
 
 		// Process meta query into SQL.
