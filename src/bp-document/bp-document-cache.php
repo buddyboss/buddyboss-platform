@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_document_clear_cache_for_document( $document ) {
 	wp_cache_delete( $document->id, 'bp_document' );
+	wp_cache_delete( 'bb_document_activity_' . $document->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 }
 add_action( 'bp_document_after_save', 'bp_document_clear_cache_for_document' );
 
@@ -31,6 +32,7 @@ add_action( 'bp_document_after_save', 'bp_document_clear_cache_for_document' );
 function bp_document_clear_cache_for_deleted_document( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_document' );
+		wp_cache_delete( 'bb_document_activity_' . $deleted_id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 	}
 }
 add_action( 'bp_document_deleted_documents', 'bp_document_clear_cache_for_deleted_document' );
@@ -78,6 +80,8 @@ function bp_document_clear_document_user_object_cache_on_delete( $documents ) {
 	if ( ! empty( $documents[0] ) ) {
 		foreach ( (array) $documents[0] as $deleted_document ) {
 			$user_id = ! empty( $deleted_document->user_id ) ? $deleted_document->user_id : false;
+
+			wp_cache_delete( 'bb_document_activity_' . $deleted_document->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 
 			if ( $user_id ) {
 				wp_cache_delete( 'bp_total_document_for_user_' . $user_id, 'bp' );

@@ -569,9 +569,15 @@ add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cac
  * @param object $suspend_record suspend item record.
  */
 function bb_moderation_clear_delete_cache( $suspend_record ) {
+
+	if ( ! empty( $suspend_record->id ) ) {
+		wp_cache_delete( 'bb_suspend_' . $suspend_record->id, 'bb' );
+	}
+
 	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
 		return;
 	}
+
 	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );

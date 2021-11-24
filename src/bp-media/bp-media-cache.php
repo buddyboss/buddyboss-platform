@@ -23,6 +23,7 @@ function bp_media_clear_cache_for_media( $media ) {
 	wp_cache_delete( 'total_group_media_count_' . $media->group_id, 'bp_media' );
 	wp_cache_delete( 'get_activity_media_id_' . $media->activity_id, 'bp_media' );
 	wp_cache_delete( 'get_activity_attachment_id_' . $media->activity_id, 'bp_media' );
+	wp_cache_delete( 'bb_media_activity_' . $media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 }
 add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
 
@@ -36,6 +37,7 @@ add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
 function bp_media_clear_cache_for_deleted_media( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media' );
+		wp_cache_delete( 'bb_media_activity_' . $deleted_id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 	}
 }
 add_action( 'bp_media_deleted_medias', 'bp_media_clear_cache_for_deleted_media' );
@@ -83,7 +85,8 @@ function bp_media_clear_media_user_object_cache( $media ) {
 		wp_cache_delete( 'get_activity_attachment_id_' . $activity_id, 'bp_media' );
 	}
 }
-add_action( 'bp_media_add',       'bp_media_clear_media_user_object_cache', 10 );
+
+add_action( 'bp_media_add', 'bp_media_clear_media_user_object_cache', 10 );
 
 /**
  * Clear a user's cached media count when delete.
@@ -99,6 +102,8 @@ function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
 			$attachment_id = ! empty( $deleted_media->attachment_id ) ? $deleted_media->attachment_id : false;
 			$group_id      = ! empty( $deleted_media->group_id ) ? $deleted_media->group_id : false;
 			$activity_id   = ! empty( $deleted_media->activity_id ) ? $deleted_media->activity_id : false;
+
+			wp_cache_delete( 'bb_media_activity_' . $deleted_media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 
 			if ( $user_id ) {
 				wp_cache_delete( 'bp_total_media_for_user_' . $user_id, 'bp' );
@@ -120,7 +125,8 @@ function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
 		}
 	}
 }
-add_action( 'bp_media_before_delete',    'bp_media_clear_media_user_object_cache_on_delete', 10 );
+
+add_action( 'bp_media_before_delete', 'bp_media_clear_media_user_object_cache_on_delete', 10 );
 
 /**
  * Clear a user's cached media count.
@@ -153,7 +159,8 @@ function bp_media_clear_media_group_object_cache( $media ) {
 		wp_cache_delete( 'total_group_media_count_' . $group_id, 'bp_media' );
 	}
 }
-add_action( 'bp_media_add',       'bp_media_clear_media_group_object_cache', 10 );
+
+add_action( 'bp_media_add', 'bp_media_clear_media_group_object_cache', 10 );
 
 /**
  * Clear a group's cached media count when delete.
@@ -232,7 +239,8 @@ function bp_media_clear_album_group_object_cache( $album ) {
 		wp_cache_delete( 'bp_total_group_album_count_' . $group_id, 'bp_media_album' );
 	}
 }
-add_action( 'bp_album_add',       'bp_media_clear_album_group_object_cache', 10 );
+
+add_action( 'bp_album_add', 'bp_media_clear_album_group_object_cache', 10 );
 
 /**
  * Clear a group's cached album count when delete.
