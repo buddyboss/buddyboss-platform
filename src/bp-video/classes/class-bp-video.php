@@ -1262,7 +1262,7 @@ class BP_Video {
 			return false;
 		}
 
-		$cache_key         = 'bp_activity_video_id_' . $activity_id;
+		$cache_key         = 'bp_video_activity_id_' . $activity_id;
 		$activity_video_id = wp_cache_get( $cache_key, 'bp_video' );
 
 		if ( ! empty( $activity_video_id ) ) {

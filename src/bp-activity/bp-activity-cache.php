@@ -47,11 +47,11 @@ function bp_activity_clear_cache_for_activity( $activity ) {
 	wp_cache_delete( $activity->id, 'bp_activity' );
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 	wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
-	wp_cache_delete( 'bp_activity_media_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
+	wp_cache_delete( 'bp_media_activity_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
 	wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );       // Used in get_activity_attachment_id().
-	wp_cache_delete( 'bp_activity_document_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
+	wp_cache_delete( 'bp_document_activity_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
 	wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
-	wp_cache_delete( 'bp_activity_video_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
+	wp_cache_delete( 'bp_video_activity_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
 	wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
 
 	if ( ! empty( $activity->secondary_item_id ) ) {
@@ -71,11 +71,11 @@ function bp_activity_clear_cache_for_deleted_activity( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_activity' );
 		wp_cache_delete( 'bb_activity_hierarchy_' . $deleted_id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
-		wp_cache_delete( 'bp_activity_media_id_' . $deleted_id, 'bp_media' );         // Used in get_activity_media_id().
+		wp_cache_delete( 'bp_media_activity_id_' . $deleted_id, 'bp_media' );         // Used in get_activity_media_id().
 		wp_cache_delete( 'bp_media_attachment_id_' . $deleted_id, 'bp_media' );       // Used in get_activity_attachment_id().
-		wp_cache_delete( 'bp_activity_document_id_' . $deleted_id, 'bp_document' );   // Used in get_activity_document_id().
+		wp_cache_delete( 'bp_document_activity_id_' . $deleted_id, 'bp_document' );   // Used in get_activity_document_id().
 		wp_cache_delete( 'bp_document_attachment_id_' . $deleted_id, 'bp_document' ); // Used in get_activity_attachment_id().
-		wp_cache_delete( 'bp_activity_video_id_' . $deleted_id, 'bp_video' );         // Used in get_activity_video_id().
+		wp_cache_delete( 'bp_video_activity_id_' . $deleted_id, 'bp_video' );         // Used in get_activity_video_id().
 		wp_cache_delete( 'bp_video_attachment_id_' . $deleted_id, 'bp_video' );       // Used in get_activity_attachment_id().
 	}
 }
@@ -92,11 +92,11 @@ function bp_activity_clear_cache_after_deleted_activity( $activities ) {
 	foreach ( (array) $activities as $activity ) {
 		wp_cache_delete( $activity->id, 'bp_activity' );
 		wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
-		wp_cache_delete( 'bp_activity_media_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
+		wp_cache_delete( 'bp_media_activity_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
 		wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );       // Used in get_activity_attachment_id().
-		wp_cache_delete( 'bp_activity_document_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
+		wp_cache_delete( 'bp_document_activity_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
 		wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
-		wp_cache_delete( 'bp_activity_video_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
+		wp_cache_delete( 'bp_video_activity_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
 		wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
 
 		if ( ! empty( $activity->secondary_item_id ) ) {

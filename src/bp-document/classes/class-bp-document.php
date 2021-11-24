@@ -1805,7 +1805,7 @@ class BP_Document {
 			return false;
 		}
 
-		$cache_key            = 'bp_activity_document_id_' . $activity_id;
+		$cache_key            = 'bp_document_activity_id_' . $activity_id;
 		$activity_document_id = wp_cache_get( $cache_key, 'bp_document' );
 
 		if ( ! empty( $activity_document_id ) ) {

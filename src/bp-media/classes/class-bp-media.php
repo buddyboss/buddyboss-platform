@@ -1356,7 +1356,7 @@ class BP_Media {
 			return false;
 		}
 
-		$cache_key         = 'bp_activity_media_id_' . $activity_id;
+		$cache_key         = 'bp_media_activity_id_' . $activity_id;
 		$activity_media_id = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( ! empty( $activity_media_id ) ) {
