@@ -821,11 +821,11 @@ function bp_friends_prime_mentions_results() {
 	);
 
 	$cache_key     = 'bp_friends_user_query_' . get_current_user_id();
-	$friends_query = wp_cache_get( $cache_key, 'bp_friends' );
+	$friends_query = wp_cache_get( $cache_key, 'bp' );
 
 	if ( false === $friends_query ) {
 		$friends_query = new BP_User_Query( $friends_query_args );
-		wp_cache_set( $cache_key, $friends_query, 'bp_friends' );
+		wp_cache_set( $cache_key, $friends_query, 'bp' );
 	}
 	$results = array();
 

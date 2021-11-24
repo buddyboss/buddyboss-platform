@@ -28,8 +28,8 @@ function friends_clear_friend_object_cache( $friendship_id ) {
 
 	wp_cache_delete( 'friends_friend_ids_' . $friendship->initiator_user_id, 'bp' );
 	wp_cache_delete( 'friends_friend_ids_' . $friendship->friend_user_id, 'bp' );
-	wp_cache_delete( 'bp_friends_user_query_' . $friendship->initiator_user_id, 'bp_friends' );
-	wp_cache_delete( 'bp_friends_user_query_' . $friendship->friend_user_id, 'bp_friends' );
+	wp_cache_delete( 'bp_friends_user_query_' . $friendship->initiator_user_id, 'bp' );
+	wp_cache_delete( 'bp_friends_user_query_' . $friendship->friend_user_id, 'bp' );
 }
 
 // List actions to clear object caches on.
