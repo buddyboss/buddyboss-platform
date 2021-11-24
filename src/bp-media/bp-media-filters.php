@@ -1522,7 +1522,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 
 	$bp = buddypress();
 
-	$cache_key = 'bp_delete_attachment_media_' . $attachment_id;
+	$cache_key = 'bp_attachment_media_' . $attachment_id;
 	$media     = wp_cache_get( $cache_key, 'bp_media' );
 
 	if ( false === $media ) {
