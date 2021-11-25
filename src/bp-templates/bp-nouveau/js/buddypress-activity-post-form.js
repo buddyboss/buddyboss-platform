@@ -2139,7 +2139,7 @@ window.bp = window.bp || {};
 
 	bp.Views.WhatsNewPostIn = bp.View.extend(
 		{
-			tagName: 'select',
+			tagName: 'div',
 			id: 'whats-new-post-in',
 
 			attributes: {
@@ -2159,11 +2159,13 @@ window.bp = window.bp || {};
 				this.filters = this.options.filters || {};
 
 				// Build `<option>` elements.
-				this.$el.html(
+				this.$el.append( '<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="Post in: Profile"><span class="privacy profile"><i class="bb-icon-user-circle" style="font-size:20px;"></i></span></span>');
+				this.$el.append( '<ul class="whats-new-post-in-list" style="display:none"></ul>' );
+				this.$el.find('.whats-new-post-in-list').html(
 					_.chain( this.filters ).map(
 						function ( filter, value ) {
 							return {
-								el: $( '<option></option>' ).val( value ).html( filter.text )[ 0 ],
+								el: $( '<li></li>' ).html( filter.text ).attr( 'data-value', value )[ 0 ],
 								priority: filter.priority || 50
 							};
 						},
