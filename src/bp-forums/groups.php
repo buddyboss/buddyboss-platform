@@ -268,29 +268,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Get the first forum ID
 			if ( ! empty( $forum_ids ) ) {
 				$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
-			}
-
-			// Get forums that is already associated with group
-			$group_forum_ids = get_posts(
-				array(
-					'fields'      => 'ids',
-					'post_status' => 'publish',
-					'post_type'   => bbp_get_forum_post_type(),
-					'numberposts' => '-1',
-					'meta_query'  => array(
-						array(
-							'key'     => '_bbp_group_ids',
-							'compare' => 'EXISTS'
-						),
-						array(
-							'key'     => '_bbp_group_ids',
-							'value'   => 'a:0:{}',
-							'compare' => '!='
-						),
-					)
-				)
-			);
-			$group_forum_ids = array_diff( $group_forum_ids, (array) $forum_id );		
+			}	
 
 			// Should box be checked already?
 			$checked = is_admin() ? bp_group_is_forum_enabled( $group ) : bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( bp_get_group_id() ); ?>
@@ -318,8 +296,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							array(
 								'select_id' => 'bbp_group_forum_id',
 								'show_none' => __( '(No Forum)', 'buddyboss' ),
-								'selected'  => $forum_id,
-								'exclude'	=> $group_forum_ids
+								'selected'  => $forum_id
 							)
 						);
 					?>
@@ -380,35 +357,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				foreach ( $current_forum_ids as $f_id ) {
 					bbp_update_forum_group_ids( $f_id, array() );
 				}
-			}
-
-
-			// Get forums that is already associated with group
-			$group_forum_ids = get_posts(
-				array(
-					'fields'      => 'ids',
-					'post_status' => 'publish',
-					'post_type'   => bbp_get_forum_post_type(),
-					'numberposts' => '-1',
-					'meta_query'  => array(
-						array(
-							'key'     => '_bbp_group_ids',
-							'compare' => 'EXISTS'
-						),
-						array(
-							'key'     => '_bbp_group_ids',
-							'value'   => 'a:0:{}',
-							'compare' => '!='
-						),
-					)
-				)
-			);	
-			$group_forum_ids = array_diff( $group_forum_ids, $current_forum_ids );	
-
-			// Check if forum is already associated with group
-			if( in_array( $_POST['bbp_group_forum_id'], $group_forum_ids ) ){
-				bbp_add_error( 'bbp_edit_group_forum_screen_save', __( '<strong>ERROR</strong>: Selected forum is already associated with other group.', 'buddyboss' ) );
-				return;
 			}
 
 			// Keymasters have the ability to reconfigure forums
