@@ -553,7 +553,6 @@ function bb_moderation_clear_suspend_cache( $moderation_data ) {
 	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_blocked_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 	wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
 }
@@ -582,7 +581,6 @@ function bb_moderation_clear_delete_cache( $suspend_record ) {
 	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-	wp_cache_delete( 'bb_check_blocked_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 	wp_cache_delete( 'bb_get_recode_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
 }
 
@@ -609,7 +607,6 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . $content_id, 'bb' );
-	wp_cache_delete( 'bb_check_blocked_content_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_get_recode_' . $content_type . '_' . $content_id, 'bb' );
 	wp_cache_delete( 'bb_is_content_reported_hidden_' . $content_type . '_' . $content_id, 'bb' );
 
