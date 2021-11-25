@@ -372,7 +372,7 @@ function bb_media_symlink_validate( $updated_value ) {
 /**
  * Check the symlink type default/relative on symlink option update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.2
  *
  * @param mixed $old_value The old option value.
  * @param mixed $value     The new option value.
