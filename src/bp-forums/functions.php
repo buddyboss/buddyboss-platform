@@ -861,7 +861,7 @@ function bbp_forum_recursive_group_id( $forum_id ) {
  *
  * @param $forum_id
  *
- * @since Buddyboss [version]
+ * @since Buddyboss [BBVERSION]
  * @return bool
  */
 function bb_forum_has_parent_with_private_group( $forum_id ) {
