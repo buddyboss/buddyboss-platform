@@ -302,7 +302,7 @@ window.bp = window.bp || {};
 				var membersDiv = document.getElementById( 'members-list' );
 				$( '.bb-icon-loader' ).hide();
 				var scroll_xhr;
-				if ( membersDiv.length ) {
+				if ( $(membersDiv).length ) {
 					membersDiv.addEventListener(
 						'scroll',
 						function () {
@@ -852,6 +852,10 @@ window.bp = window.bp || {};
 					);
 				}
 			);
+		},
+
+		getMemberOnScroll: function() {
+
 		},
 
 		/**
