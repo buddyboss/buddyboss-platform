@@ -415,12 +415,11 @@ class BP_Core_Suspend {
 
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
-			$cache_key = 'bb_check_blocked_content_' . $item_type . '_' . $item_id;
-			$result    = wp_cache_get( $cache_key, 'bb' );
 
-			if ( false === $result ) {
+			static $result = null;
+
+			if ( null === $result ) {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
-				wp_cache_set( $cache_key, $result, 'bb' );
 			}
 
 			return ! empty( $result );
