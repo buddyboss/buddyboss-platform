@@ -5536,6 +5536,11 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $attachment_path Symbolising path to generate.
  */
 function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
+
 	if ( empty( $type ) || empty( $item ) ) {
 		return;
 	}
@@ -5796,7 +5801,7 @@ function bb_core_get_browser() {
 	$i = count( $matches['browser'] );
 	if ( $i != 1 ) {
 		// we will have two since we are not using 'other' argument yet
-		// see if version is before or after the name.
+		// see if version is before or after the name
 		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
 			$version = $matches['version'][0];
 		} else {
@@ -5806,7 +5811,7 @@ function bb_core_get_browser() {
 		$version = $matches['version'][0];
 	}
 
-	// check if we have a number.
+	// check if we have a number
 	if ( $version == null || $version == '' ) {
 		$version = '?';
 	}
