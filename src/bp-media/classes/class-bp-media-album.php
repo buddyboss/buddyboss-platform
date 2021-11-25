@@ -619,7 +619,7 @@ class BP_Media_Album {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param int $group_id
+	 * @param int $group_id Group ID.
 	 *
 	 * @return array|bool|int
 	 */

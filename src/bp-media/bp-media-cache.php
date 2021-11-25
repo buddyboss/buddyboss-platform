@@ -31,6 +31,10 @@ function bp_media_clear_cache_for_media( $media ) {
 		wp_cache_delete( 'total_group_media_count_' . $media->group_id, 'bp_media' );
 	}
 
+	if ( ! empty( $media->user_id ) ) {
+		wp_cache_delete( 'bp_total_media_count_' . $media->user_id, 'bp_media' );
+	}
+
 }
 add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
 

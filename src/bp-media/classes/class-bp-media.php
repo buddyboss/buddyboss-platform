@@ -1207,7 +1207,7 @@ class BP_Media {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $user_id
+	 * @param int $user_id User id.
 	 *
 	 * @return array|bool|int
 	 */
@@ -1290,7 +1290,7 @@ class BP_Media {
 	/**
 	 * Count total groups media for the given user.
 	 *
-	 * @param int $user_id
+	 * @param int $user_id User id.
 	 *
 	 * @return array|bool|int
 	 * @since BuddyBoss 1.4.0
