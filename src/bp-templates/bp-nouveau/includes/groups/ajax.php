@@ -1715,14 +1715,17 @@ function bp_nouveau_ajax_groups_send_message() {
 				$chunk_members = array_chunk( $members, 10 );
 				if ( ! empty( $chunk_members ) ) {
 					foreach ( $chunk_members as $key => $members ) {
-						$bb_email_background_updater->push_to_queue(
+						$bb_email_background_updater->data(
 							array(
-								'callback' => 'bb_send_group_message_background',
-								'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content, true ),
+								array(
+									'callback' => 'bb_send_group_message_background',
+									'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content, true ),
+								),
 							)
 						);
+						$bb_email_background_updater->save();
 					}
-					$bb_email_background_updater->save()->dispatch();
+					$bb_email_background_updater->dispatch();
 				}
 
 				$message = true;
