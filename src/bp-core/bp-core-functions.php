@@ -710,20 +710,24 @@ function bp_core_add_page_mappings( $components, $existing = 'keep', $map_regist
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy.
-	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
-	$static_pages   = array( 'terms' );
+	// Mapping Policy and Term pages when registration pages required.
+	if ( $map_register ) {
 
-	if ( empty( $policy_page_id ) ) {
-		$static_pages[] = 'privacy';
-	} else {
-		$pages_to_create['privacy'] = $page_titles['privacy'];
-	}
+		// Check for privacy page if already exists in WP settings > privacy.
+		$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
+		$static_pages   = array( 'terms' );
 
-	// Create terms and privacy pages.
-	foreach ( $static_pages as $slug ) {
-		if ( ! isset( $pages[ $slug ] ) ) {
-			$pages_to_create[ $slug ] = $page_titles[ $slug ];
+		if ( empty( $policy_page_id ) ) {
+			$static_pages[] = 'privacy';
+		} else {
+			$pages_to_create['privacy'] = $page_titles['privacy'];
+		}
+
+		// Create terms and privacy pages.
+		foreach ( $static_pages as $slug ) {
+			if ( ! isset( $pages[ $slug ] ) ) {
+				$pages_to_create[ $slug ] = $page_titles[ $slug ];
+			}
 		}
 	}
 
