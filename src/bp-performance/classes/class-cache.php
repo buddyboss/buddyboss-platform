@@ -229,12 +229,8 @@ class Cache {
 	public function purge_by_group( $group_name ) {
 		global $wpdb;
 
-		static $caches = null;
-
-		if ( null === $caches ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
-		}
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
 		if ( ! empty( $caches ) ) {
 			foreach ( $caches as $key => $cache ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
