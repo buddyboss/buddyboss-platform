@@ -229,9 +229,15 @@ class BP_Core_Suspend {
 	 */
 	public static function get_recode_details( $suspend_id, $user_id ) {
 		global $wpdb;
+		static $cache = array();
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id = %d AND sd.user_id = %d limit 1", (int) $suspend_id, (int) $user_id ) ); // phpcs:ignore
+		if ( ! isset( $cache[$suspend_id .  $user_id] ) ) {
+			$result = $wpdb->get_var($wpdb->prepare("SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id = %d AND sd.user_id = %d limit 1", (int) $suspend_id, (int) $user_id)); // phpcs:ignore
+			$cache[$suspend_id .  $user_id] = $result;
+		} else {
+			$result = $cache[$suspend_id .  $user_id];
+		}
 
 		return ! empty( $result );
 	}
