@@ -64,6 +64,12 @@ add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999
 add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
 add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
 
+// Widget display name.
+add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
+add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
+add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
+add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -509,6 +515,7 @@ function bp_core_activation_signup_blog_notification( $domain, $path, $title, $u
 			'user.email'        => $user_email,
 		),
 	);
+
 	bp_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
@@ -571,6 +578,7 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			'user.id'      => $user_id,
 		),
 	);
+
 	bp_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
@@ -1616,3 +1624,22 @@ function bp_core_cron_schedules( $schedules = array() ) {
 	return $schedules;
 }
 add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+
+/**
+ * Filter to update the Avatar URL for the rest api.
+ *
+ * @since BuddyBoss 1.8.2
+ *
+ * @param string $gravatar Avatar Url.
+ *
+ * @return array|mixed|string|string[]
+ */
+function bb_rest_decode_default_avatar_url( $gravatar ) {
+	if ( function_exists( 'bb_is_rest' ) && bb_is_rest() ) {
+		$gravatar = str_replace( '&#038;', '&', $gravatar );
+	}
+
+	return $gravatar;
+}
+
+add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
