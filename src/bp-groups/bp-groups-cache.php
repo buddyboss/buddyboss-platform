@@ -75,7 +75,6 @@ function bp_groups_delete_group_cache( $group_id = 0 ) {
 	wp_cache_delete( 'has_membership_requests_' . $group_id, 'bp_groups' );
 	wp_cache_delete( 'get_total_member_count_' . $group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_populate_group_member_extras_' . $group_id, 'bp_groups' );
-	wp_cache_delete( 'bp_groups_get_group_members_' . $group_id, 'bp_groups' );
 }
 add_action( 'groups_delete_group', 'bp_groups_delete_group_cache' );
 add_action( 'groups_update_group', 'bp_groups_delete_group_cache' );
