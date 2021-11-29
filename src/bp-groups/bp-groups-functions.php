@@ -779,6 +779,7 @@ function groups_get_group_mods( $group_id ) {
  */
 function groups_get_group_members( $args = array() ) {
 
+	static $cache  = array();
 	$function_args = func_get_args();
 
 	// Backward compatibility with old method of passing arguments.
@@ -836,9 +837,8 @@ function groups_get_group_members( $args = array() ) {
 			}
 		}
 
-		$cache_key = 'bp_groups_get_group_members_' . $r['group_id'];
-		$members   = wp_cache_get( $cache_key, 'bp_group' );
-		if ( false === $members ) {
+		$cache_key = 'bp_groups_get_group_members_' . md5( serialize( $args ) );
+		if ( ! isset( $cache[ $cache_key ] ) ) {
 			// Perform the group member query (extends BP_User_Query).
 			$members = new BP_Group_Member_Query(
 				array(
@@ -853,7 +853,8 @@ function groups_get_group_members( $args = array() ) {
 				'populate_extras' => $r['populate_extras'],
 				)
 			);
-				wp_cache_set( $cache_key, $members, 'bp_group' );
+		} else {
+			$members = $cache[ $cache_key ];
 		}
 
 		// Structure the return value as expected by the template functions.
