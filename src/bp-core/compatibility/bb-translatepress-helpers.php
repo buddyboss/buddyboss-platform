@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class BB_TranslatePress_Plugin_Compatibility {
 
-    /**
+	/**
 	 * The single instance of the class.
 	 *
 	 * @var self
@@ -47,11 +47,11 @@ class BB_TranslatePress_Plugin_Compatibility {
 		return self::$instance;
 	}
 
-    /**
+	/**
 	 * Register the compatibility hooks for the plugin.
 	 */
 	public function compatibility_init() {
-        add_filter( 'bp_uri', array( $this, 'remove_langcode_from_url' ), PHP_INT_MAX );
+		add_filter( 'bp_uri', array( $this, 'remove_langcode_from_url' ), PHP_INT_MAX );
 	}
 
     /**
