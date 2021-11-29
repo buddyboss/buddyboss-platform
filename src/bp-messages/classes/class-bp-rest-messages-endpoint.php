@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Current Message ID.
+	 *
+	 * @var integer
+	 */
+	protected $message_id;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -23,6 +30,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base = buddypress()->messages->id;
+
+		$this->message_id = 0;
 
 		add_filter( 'rest_post_dispatch', array( $this, 'bp_rest_post_dispatch' ), 10, 3 );
 	}
@@ -1434,6 +1443,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$message->message = $message->message;
 		}
 
+		$this->message_id = (int) $message->id;
+
+		add_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
+
 		$data = array(
 			'id'                        => (int) $message->id,
 			'thread_id'                 => (int) $message->thread_id,
@@ -1457,6 +1470,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'group_message_fresh'       => $group_message_fresh,
 			'message_from'              => $message_from,
 		);
+
+		remove_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -2593,5 +2608,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		return apply_filters( 'bp_rest_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+	}
+
+	/**
+	 * Update the current message ID.
+	 *
+	 * @param int $message_id Message ID.
+	 *
+	 * @return int
+	 */
+	public function bb_get_the_thread_message_id( $message_id ) {
+		if ( 0 === $this->message_id ) {
+			return $message_id;
+		}
+
+		return $this->message_id;
 	}
 }
