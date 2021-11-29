@@ -14,45 +14,45 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class BB_TranslatePress_Plugin_Compatibility {
 
-	/**
-	 * The single instance of the class.
-	 *
-	 * @var self
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private static $instance = null;
+/**
+ * The single instance of the class.
+ *
+ * @var self
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+private static $instance = null;
 
-	/**
-	 * BB_TranslatePress_Plugin_Compatibility constructor.
-	 */
-	public function __construct() {
-		$this->compatibility_init();
+/**
+ * BB_TranslatePress_Plugin_Compatibility constructor.
+ */
+public function __construct() {
+	$this->compatibility_init();
+}
+
+/**
+ * Get the instance of this class.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return Controller|null
+ */
+public static function instance() {
+
+	if ( null === self::$instance ) {
+		$class_name     = __CLASS__;
+		self::$instance = new $class_name();
 	}
 
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
+	return self::$instance;
+}
 
-		if ( null === self::$instance ) {
-			$class_name     = __CLASS__;
-			self::$instance = new $class_name();
-		}
-
-		return self::$instance;
-	}
-
-	/**
-	 * Register the compatibility hooks for the plugin.
-	 */
-	public function compatibility_init() {
-		add_filter( 'bp_uri', array( $this, 'remove_langcode_from_url' ), PHP_INT_MAX );
-	}
+/**
+ * Register the compatibility hooks for the plugin.
+ */
+public function compatibility_init() {
+	add_filter( 'bp_uri', array( $this, 'remove_langcode_from_url' ), PHP_INT_MAX );
+}
 
     /**
      * Remove lang code from URL slug
