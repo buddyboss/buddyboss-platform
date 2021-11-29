@@ -1059,7 +1059,6 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
 .activity-update-form .activity-form.focus-in #whats-new {
-  min-height: 100px;
   padding: 0 15px 10px;
 }
 
@@ -1121,14 +1120,18 @@ a.layout-grid-view {
   resize: none !important;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder #whats-new-toolbar,
 .bp-nouveau-activity-form-placeholder- #whats-new-form #whats-new-toolbar,
+.activity-update-form #whats-new-form-placeholder #whats-new-toolbar,
 .activity-update-form #whats-new-form #whats-new-toolbar {
   padding: 15px 16px 10px;
   background-color: #eaeaea;
   border-top: 1px solid #eee;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder #whats-new-toolbar .medium-editor-placeholder,
 .bp-nouveau-activity-form-placeholder- #whats-new-form #whats-new-toolbar .medium-editor-placeholder,
+.activity-update-form #whats-new-form-placeholder #whats-new-toolbar .medium-editor-placeholder,
 .activity-update-form #whats-new-form #whats-new-toolbar .medium-editor-placeholder {
   background-color: transparent;
 }

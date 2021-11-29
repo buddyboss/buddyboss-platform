@@ -44,7 +44,6 @@
 		}
 
 		#whats-new {
-			min-height: 100px;
 			padding: 0 15px 10px;
 		}
 
@@ -102,6 +101,7 @@
 		resize: none !important;
 	}
 
+	#whats-new-form-placeholder #whats-new-toolbar,
 	#whats-new-form #whats-new-toolbar {
 		padding: 15px 16px 10px;
 		background-color: $light-grey;

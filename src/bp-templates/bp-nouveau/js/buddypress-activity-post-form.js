@@ -60,7 +60,7 @@ window.bp = window.bp || {};
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
 			// Wrap Avatar and Content section into header.
-			$( '#whats-new-avatar, #whats-new-content' ).wrapAll( '<div class="whats-new-form-header"></div>' );
+			$( '.activity-update-form #whats-new-avatar, .activity-update-form #whats-new-content' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 		},
 
 		postFormPlaceholderView: function () {
@@ -77,6 +77,8 @@ window.bp = window.bp || {};
 
 			// Display it within selector.
 			this.postFormPlaceholder.inject( '#bp-nouveau-activity-form-placeholder' );
+
+			$( '.activity-form-placeholder #whats-new-avatar, .activity-form-placeholder #whats-new-content-placeholder' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 		},
 
 		dropzoneView: function () {
@@ -3061,7 +3063,10 @@ window.bp = window.bp || {};
 					this.views.add( privacy );
 				}
 
-				$( '#whats-new-form' ).addClass( 'focus-in' ); // add some class to form so that DOM knows about focus.
+				$( '#whats-new-form' ).addClass( 'focus-in' ).parent().addClass( 'modal-popup' ); // add some class to form so that DOM knows about focus.
+
+				//Show placeholder form
+				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
@@ -3195,7 +3200,7 @@ window.bp = window.bp || {};
 				}
 
 				// Wrap Toolbar and submit Wrapper into footer.
-				$( '#whats-new-toolbar, #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
 
 				this.updateMultiMediaOptions();
 			},
@@ -3229,7 +3234,10 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#whats-new-form' ).removeClass( 'focus-in' ); // remove class when reset.
+				$( '#whats-new-form' ).removeClass( 'focus-in' ).parent().removeClass( 'modal-popup' ); // remove class when reset.
+
+				//Hide placeholder form
+				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); // remove edit class if in edit mode.
@@ -3697,7 +3705,8 @@ window.bp = window.bp || {};
 				this.views.set(
 					[
 						new bp.Views.FormAvatar(),
-						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } )
+						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
+						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
 					]
 				);
 
