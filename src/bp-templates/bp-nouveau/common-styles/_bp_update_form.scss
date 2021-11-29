@@ -43,6 +43,7 @@
 			display: inline-block;
 			margin-right: 10px;
 			vertical-align: middle;
+			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 		}
 	}
 

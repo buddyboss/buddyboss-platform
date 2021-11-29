@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Current Message ID.
+	 *
+	 * @var integer
+	 */
+	protected $message_id;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -23,6 +30,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base = buddypress()->messages->id;
+
+		$this->message_id = 0;
 
 		add_filter( 'rest_post_dispatch', array( $this, 'bp_rest_post_dispatch' ), 10, 3 );
 	}
@@ -1434,6 +1443,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$message->message = $message->message;
 		}
 
+		$this->message_id = (int) $message->id;
+
+		add_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
+
 		$data = array(
 			'id'                        => (int) $message->id,
 			'thread_id'                 => (int) $message->thread_id,
@@ -1457,6 +1470,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'group_message_fresh'       => $group_message_fresh,
 			'message_from'              => $message_from,
 		);
+
+		remove_filter( 'embed_post_id', array( $this, 'bb_get_the_thread_message_id' ) );
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -2011,24 +2026,24 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_messages',
 			'type'       => 'object',
 			'properties' => array(
-				'id'                     => array(
+				'id'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Thread.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'message_id'             => array(
+				'message_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID of the latest message of the Thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'last_sender_id'         => array(
+				'last_sender_id'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID of latest sender of the Thread.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'subject'                => array(
+				'subject'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Title of the latest message of the Thread.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2052,7 +2067,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'excerpt'                => array(
+				'excerpt'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Summary of the latest message of the Thread.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2074,7 +2089,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'message'                => array(
+				'message'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Content of the latest message of the Thread.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2097,27 +2112,27 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'date'                   => array(
+				'date'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( "The date the latest message of the Thread, in the site's timezone.", 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'start_date'             => array(
+				'start_date'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( "The date the first message of the Thread, in the site's timezone.", 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'unread_count'           => array(
+				'unread_count'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Total count of unread messages into the Thread for the requested user.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'sender_ids'             => array(
+				'sender_ids'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The list of user IDs for all messages in the Thread.', 'buddyboss' ),
 					'readonly'    => true,
@@ -2126,13 +2141,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						'type' => 'integer',
 					),
 				),
-				'current_user'           => array(
+				'current_user'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current Logged in user\'s ID.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'avatar'                 => array(
+				'avatar'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2154,62 +2169,62 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'is_group'               => array(
+				'is_group'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Group ID if message sent from group.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'is_group_thread'        => array(
+				'is_group_thread'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether is a group thread or not.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
-				'group_name'             => array(
+				'group_name'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Group name if thread created from group.  ', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'group_link'             => array(
+				'group_link'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The permalink to the Group on the site.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
 				),
-				'group_message_users'    => array(
+				'group_message_users'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Thread for all group users or selected one.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'group_message_type'     => array(
+				'group_message_type'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Thread type its from all or private one.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'group_message_from'     => array(
+				'group_message_from'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Message from group or not.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'recipients_count'       => array(
+				'recipients_count'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Recipient users count.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'recipients_per_page'    => array(
+				'recipients_per_page'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Number of recipient loading per page.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'recipients_total_pages' => array(
+				'recipients_total_pages'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Total number of pages for the recipients.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'recipients'             => array(
+				'recipients'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The list of recipient User Objects involved into the Thread.', 'buddyboss' ),
 					'type'        => 'array',
@@ -2245,7 +2260,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						'type' => 'object',
 					),
 				),
-				'starred_message_ids'    => array(
+				'starred_message_ids'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'List of starred message IDs.', 'buddyboss' ),
 					'readonly'    => true,
@@ -2593,5 +2608,20 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		return apply_filters( 'bp_rest_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+	}
+
+	/**
+	 * Update the current message ID.
+	 *
+	 * @param int $message_id Message ID.
+	 *
+	 * @return int
+	 */
+	public function bb_get_the_thread_message_id( $message_id ) {
+		if ( 0 === $this->message_id ) {
+			return $message_id;
+		}
+
+		return $this->message_id;
 	}
 }
