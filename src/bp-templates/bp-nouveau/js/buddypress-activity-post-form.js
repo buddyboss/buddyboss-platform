@@ -699,6 +699,18 @@ window.bp = window.bp || {};
 
 	/** Views *****************************************************************/
 
+	// Header.
+	bp.Views.ActivityHeader = bp.View.extend(
+		{
+			tagName: 'header',
+			id: 'activity-header',
+			template: bp.template( 'activity-header' ),
+			attributes: {
+				class: 'bb-model-header'
+			}
+		}
+	);
+
 	// Feedback messages.
 	bp.Views.activityFeedback = bp.View.extend(
 		{
@@ -3113,6 +3125,7 @@ window.bp = window.bp || {};
 
 				this.views.set(
 					[
+						new bp.Views.ActivityHeader( { model: this.model } ),
 						new bp.Views.FormAvatar(),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
 						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
@@ -3127,14 +3140,14 @@ window.bp = window.bp || {};
 				// Remove feedback.
 				this.cleanFeedback();
 
-				if ( 3 !== this.views._views[ '' ].length ) {
+				if ( 4 !== this.views._views[ '' ].length ) {
 					return;
 				}
 
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
-						if ( index > 1 ) {
+						if ( index > 2 ) {
 							view.close(); //Remove Toolbar shown in default view
 						}
 					}
@@ -3221,7 +3234,7 @@ window.bp = window.bp || {};
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
-						if ( index > 1 ) {
+						if ( index > 2 ) {
 							view.close();
 						}
 					}

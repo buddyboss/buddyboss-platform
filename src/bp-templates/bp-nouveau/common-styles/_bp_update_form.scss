@@ -37,6 +37,10 @@
 		display: flex;
 	}
 
+	.bb-model-header {
+		display: none;
+	}
+
 	.activity-form.focus-in {
 
 		&#whats-new-form #whats-new-toolbar {
@@ -45,6 +49,11 @@
 
 		#whats-new {
 			padding: 0 15px 10px;
+		}
+
+		.bb-model-header {
+			display: flex;
+			margin: 0;
 		}
 
 		.whats-new-form-header {

@@ -23,6 +23,7 @@ $template_parts = apply_filters(
 		'parts/bp-activity-post-form-buttons',
 		'parts/bp-activity-post-form-feedback',
 		'parts/bp-activity-post-form-options',
+		'parts/bp-activity-header',
 		'parts/bp-activity-target-item',
 		'parts/bp-gif-media-search-dropdown',
 		'parts/bp-gif-result-item',

@@ -1052,6 +1052,11 @@ a.layout-grid-view {
   display: flex;
 }
 
+.bp-nouveau-activity-form-placeholder- .bb-model-header,
+.activity-update-form .bb-model-header {
+  display: none;
+}
+
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in#whats-new-form #whats-new-toolbar,
 .activity-update-form .activity-form.focus-in#whats-new-form #whats-new-toolbar {
   border: 0;
@@ -1060,6 +1065,12 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
 .activity-update-form .activity-form.focus-in #whats-new {
   padding: 0 15px 10px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .bb-model-header,
+.activity-update-form .activity-form.focus-in .bb-model-header {
+  display: flex;
+  margin: 0;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header,
