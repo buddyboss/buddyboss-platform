@@ -1202,7 +1202,7 @@ a.layout-grid-view {
   padding: 10px 0;
   background-color: rgba(250, 251, 253, 0.9);
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-  z-index: 9999901;
+  z-index: 999991;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14422,7 +14422,7 @@ body.login .login-popup .mfp-close:hover {
 
 .modal-mask {
   position: fixed;
-  z-index: 999901;
+  z-index: 999991;
   top: 0;
   left: 0;
   width: 100vw;
