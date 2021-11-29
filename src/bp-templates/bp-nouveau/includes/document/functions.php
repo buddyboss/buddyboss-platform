@@ -105,7 +105,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'sidebar_download_text'           => __( 'Download', 'buddyboss' ),
 		'sidebar_view_text'               => __( 'View', 'buddyboss' ),
 		'create_folder'                   => __( 'Create Folder', 'buddyboss' ),
-		'document_dict_file_exceeded'     => sprintf( __( 'You are allowed to upload only %s documents at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_document_per_batch() ) ),
+		'document_dict_file_exceeded'     => sprintf( __( 'You are allowed to upload only %s documents at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_document_per_batch() ) ),
 		'can_manage_document'             => ( is_user_logged_in() && bb_user_can_create_document() ),
 	);
 

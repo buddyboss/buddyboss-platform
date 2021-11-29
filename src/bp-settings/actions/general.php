@@ -110,7 +110,6 @@ function bp_settings_action_general() {
 						),
 					);
 					bp_send_email( 'settings-verify-email-change', bp_displayed_user_id(), $args );
-
 					// We mark that the change has taken place so as to ensure a
 					// success message, even though verification is still required.
 					$_POST['email'] = $update_user->user_email;
@@ -174,7 +173,7 @@ function bp_settings_action_general() {
 		// Clear cached data, so that the changed settings take effect
 		// on the current page load.
 		clean_user_cache( bp_displayed_user_id() );
-		
+
 		if ( ( false === $email_error ) && ( false === $pass_error ) && ( wp_update_user( $update_user ) ) ) {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}
