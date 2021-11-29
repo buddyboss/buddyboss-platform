@@ -446,3 +446,18 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 }
 
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
+
+
+/**
+ * Check and reschedule the background process if queue is not empty.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_handle_cron_healthcheck() {
+	global $bp_background_updater;
+	if ( $bp_background_updater->is_updating() ) {
+		$bp_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
