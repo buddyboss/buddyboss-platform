@@ -705,8 +705,15 @@ window.bp = window.bp || {};
 			tagName: 'header',
 			id: 'activity-header',
 			template: bp.template( 'activity-header' ),
-			attributes: {
-				class: 'bb-model-header'
+			className: 'bb-model-header',
+
+			events: {
+				'click .bb-model-close-button': 'click',
+			},
+
+			click: function ( e ) {
+				e.preventDefault();
+				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 			}
 		}
 	);

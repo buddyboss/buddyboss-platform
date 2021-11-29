@@ -1057,6 +1057,11 @@ a.layout-grid-view {
   display: none;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-submit #aw-whats-new-reset,
+.activity-update-form #whats-new-submit #aw-whats-new-reset {
+  display: none;
+}
+
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in#whats-new-form #whats-new-toolbar,
 .activity-update-form .activity-form.focus-in#whats-new-form #whats-new-toolbar {
   border: 0;
