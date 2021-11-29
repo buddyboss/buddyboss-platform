@@ -426,9 +426,9 @@ class BP_Core_Suspend {
 
 			if ( ! isset( $cache[ $item_id .  $item_type ] ) ) {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
-				$cache[ $item_id .  $item_type ] = $result;
+				$cache[ $item_id . $item_type ] = ! empty( $result ) ? $result : false;
 			} else {
-				$result = $cache[ $item_id .  $item_type ];
+				$result = $cache[ $item_id . $item_type ];
 			}
 
 			return ! empty( $result );
