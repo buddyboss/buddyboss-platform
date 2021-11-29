@@ -1060,6 +1060,27 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
 .activity-update-form .activity-form.focus-in #whats-new {
   min-height: 100px;
+  padding-right: 15px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header,
+.activity-update-form .activity-form.focus-in .whats-new-form-header {
+  flex-flow: column;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar {
+  width: auto;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-avatar,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-avatar {
+  display: flex;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar .user-name,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar .user-name {
+  display: block;
 }
 
 .bp-nouveau-activity-form-placeholder- #whats-new-avatar,
@@ -1076,6 +1097,11 @@ a.layout-grid-view {
   margin-left: 10px;
   vertical-align: middle;
   image-rendering: -webkit-optimize-contrast;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-avatar .user-name,
+.activity-update-form #whats-new-avatar .user-name {
+  display: none;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-post-avatar,

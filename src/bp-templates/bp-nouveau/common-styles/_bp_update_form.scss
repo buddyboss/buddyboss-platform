@@ -45,6 +45,24 @@
 
 		#whats-new {
 			min-height: 100px;
+			padding-left: 15px;
+		}
+
+		.whats-new-form-header {
+			flex-flow: column;
+
+			#whats-new-avatar {
+				width: auto;
+
+				.activity-post-avatar {
+					display: flex;
+				}
+
+				.user-name {
+					display: block;
+				}
+
+			}
 		}
 
 	}
@@ -60,6 +78,10 @@
 			margin-right: 10px;
 			vertical-align: middle;
 			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+		}
+
+		.user-name {
+			display: none;
 		}
 	}
 
