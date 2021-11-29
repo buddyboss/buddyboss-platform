@@ -1060,7 +1060,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
 .activity-update-form .activity-form.focus-in #whats-new {
   min-height: 100px;
-  padding-left: 15px;
+  padding: 0 15px 10px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header,
