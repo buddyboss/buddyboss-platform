@@ -40,7 +40,7 @@ function xprofile_screen_edit_profile() {
 		// Check the nonce.
 		check_admin_referer( 'bp_xprofile_edit' );
 
-		// First, clear the data for deleted fields, if any
+		// First, clear the data for deleted fields, if any.
 		if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
 			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
@@ -110,11 +110,11 @@ function xprofile_screen_edit_profile() {
 						$bp_current_user = new WP_User( bp_displayed_user_id() );
 
 						foreach ( $bp_current_user->roles as $role ) {
-							// Remove role
+							// Remove role.
 							$bp_current_user->remove_role( $role );
 						}
 
-						// Add role
+						// Add role.
 						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				}
