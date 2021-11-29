@@ -149,7 +149,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					'post_type' 		=> $this->pt_name,
 					'post__in'  		=> $post_ids,
 					// Override global per page settings and just query with the given IDs
-					'posts_per_page'	=> -1
+					'posts_per_page'	=> count( $post_ids )
 				)
 			);
 
