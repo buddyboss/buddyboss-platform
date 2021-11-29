@@ -54,25 +54,25 @@ class BB_TranslatePress_Plugin_Compatibility {
 		add_filter( 'bp_uri', array( $this, 'remove_langcode_from_url' ), PHP_INT_MAX );
 	}
 
-    /**
-     * Remove lang code from URL slug
-     *
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @param string $path
-     * @return string $path
-     */
-    public function remove_langcode_from_url( $path ) {
+	/**
+	 * Remove lang code from URL slug
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $path
+	 * @return string $path
+	 */
+	public function remove_langcode_from_url( $path ) {
 
-        $tp_settings = get_option( 'trp_settings' );
-        if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
-            foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
-                $path = str_replace( $lang_slug . '/', '', $path );
-            }
-        }
-        return $path;
+		$tp_settings = get_option( 'trp_settings' );
+		if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
+			foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
+				$path = str_replace( $lang_slug . '/', '', $path );
+			}
+		}
+		return $path;
 
-    }
+	}
 
 }
 
