@@ -503,14 +503,12 @@ class BP_Core_Suspend {
 		if ( ! is_array( $user_id ) ) {
 			$user_id = array( $user_id );
 		}
-		$cache_key = md5( serialize( $user_id ) ) . BP_Suspend_Member::$type;
-		static $cache = array();
-		if ( ! isset( $cache[ $cache_key ] ) ) {
-			$user_ids            = sprintf( 's.item_id IN(\'%s\')', implode( "','", $user_id ) );
-			$result              = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} s WHERE {$user_ids} AND s.item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
-			$cache[ $cache_key ] = ! empty( $result ) ? $result : false;
-		} else {
-			$result = $cache[ $cache_key ];
+		$cache_key = 'bb_check_user_suspend_user_' . BP_Suspend_Member::$type . '_' . md5( serialize( $user_id ) );
+		$result    = wp_cache_get( $cache_key, 'bb' );
+		if ( false === $result ) {
+			$user_ids = sprintf( 'item_id IN(\'%s\')', implode( "','", $user_id ) );
+			$result   = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} WHERE {$user_ids} AND item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
 		}
 
 		return ! empty( $result );
