@@ -934,6 +934,50 @@
 				);
 			}
 
+			// Profile Avatar Settings Show/Hide.
+			var allowAvatarUpload = $('#bp-disable-avatar-uploads');
+
+			if (allowAvatarUpload.length) {
+
+				if (allowAvatarUpload.prop('checked')) {
+					$('.profile-avatar-options').show();
+				} else {
+					$('.profile-avatar-options').hide();
+				}
+
+				$(allowAvatarUpload).change(
+					function () {
+						if ($(this).prop('checked')) {
+							$('.profile-avatar-options').show();
+						} else {
+							$('.profile-avatar-options').hide();
+						}
+					}
+				);
+			}
+
+			// Profile Cover Settings Show/Hide.
+			var allowCoverUpload = $('#bp-disable-cover-image-uploads');
+
+			if (allowCoverUpload.length) {
+
+				if (allowCoverUpload.prop('checked')) {
+					$('.profile-cover-options').show();
+				} else {
+					$('.profile-cover-options').hide();
+				}
+
+				$(allowCoverUpload).change(
+					function () {
+						if ($(this).prop('checked')) {
+							$('.profile-cover-options').show();
+						} else {
+							$('.profile-cover-options').hide();
+						}
+					}
+				);
+			}
+
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',

@@ -6019,3 +6019,170 @@ function bb_check_server_disabled_symlink() {
 
 	return false;
 }
+
+/**
+ * Setup default custom avatar upload directory for a user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $upload_dir The original Uploads dir.
+ * @return array Array containing the path, URL, and other helpful settings.
+ */
+function xprofile_default_custom_avatar_upload_dir( $upload_dir = array() ) {
+	$directory = 'avatars';
+
+	$path      = bp_core_avatar_upload_path() . '/' . $directory;
+	$newbdir   = $path;
+	$newurl    = bp_core_avatar_url() . '/' . $directory;
+	$newburl   = $newurl;
+	$newsubdir = '/' . $directory;
+
+	/**
+	 * Filters default custom avatar upload directory for a user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $value Array containing the path, URL, and other helpful settings.
+	 */
+	return apply_filters(
+		'xprofile_default_custom_avatar_upload_dir',
+		array(
+			'path'    => $path,
+			'url'     => $newurl,
+			'subdir'  => $newsubdir,
+			'basedir' => $newbdir,
+			'baseurl' => $newburl,
+			'error'   => false,
+		),
+		$upload_dir
+	);
+}
+
+/**
+ * Validate when upload custom profile and group images.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $file The temporary file attributes (before it has been moved).
+ * @return array The file with extra errors if needed.
+ */
+function bb_default_custom_avatar_cover_validate_upload( $file = array() ) {
+	// Bail if already an error.
+	if ( ! empty( $file['error'] ) ) {
+		return $file;
+	}
+
+	// File size is too big.
+	if ( ! bp_core_check_avatar_size( array( 'file' => $file ) ) ) {
+		$file['error'] = 9;
+
+		// File is of invalid type.
+	} elseif ( ! bp_core_check_avatar_type( array( 'file' => $file ) ) ) {
+		$file['error'] = 10;
+	}
+
+	// Return with error code attached.
+	return $file;
+}
+
+/**
+ * Set Upload error messages for custom profile and group images.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array $upload_errors The list of upload errors.
+ */
+function bb_default_custom_avatar_cover_upload_error_strings() {
+	// Allowed avatar types.
+	$allowed_types = bp_core_get_allowed_avatar_types();
+
+	$types               = array_map( 'strtoupper', $allowed_types );
+	$comma               = _x( ',', 'avatar types separator', 'buddyboss' );
+	$allow_types_message = join( $comma . ' ', $types );
+
+	$upload_error_strings = array(
+		0  => __( 'The file was uploaded successfully', 'buddyboss' ),
+		1  => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddyboss' ),
+		2  => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddyboss' ), size_format( (int) wp_max_upload_size() ) ),
+		3  => __( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
+		4  => __( 'No file was uploaded.', 'buddyboss' ),
+		5  => '',
+		6  => __( 'Missing a temporary folder.', 'buddyboss' ),
+		7  => __( 'Failed to write file to disk.', 'buddyboss' ),
+		8  => __( 'File upload stopped by extension.', 'buddyboss' ),
+		9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( bp_core_avatar_original_max_filesize() ) ),
+		10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), $allow_types_message ),
+	);
+
+	/**
+	 * Filters set upload error messages for custom profile and group images.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $upload_errors The list of upload errors.
+	 */
+	return apply_filters( 'bb_default_custom_avatar_cover_upload_error_strings', $upload_error_strings );
+}
+
+/**
+ * Validate the allowed mime types using WordPress allowed mime types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array $valid_mimes The list of allowed mime types.
+ */
+function bb_default_custom_avatar_cover_mime_types() {
+	$wp_mimes      = get_allowed_mime_types();
+	$allowed_types = bp_attachments_get_allowed_types();
+	$valid_mimes   = array();
+
+	// Set the allowed mimes for the upload.
+	foreach ( (array) $allowed_types as $ext ) {
+		foreach ( $wp_mimes as $ext_pattern => $mime ) {
+			if ( '' !== $ext && strpos( $ext_pattern, $ext ) !== false ) {
+				$valid_mimes[ $ext_pattern ] = $mime;
+			}
+		}
+	}
+
+	/**
+	 * Filters the allowed mime types.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $valid_mimes   Array containing the allowed mime types.
+	 * @param array $allowed_types Array of mime types keyed by the file extension regex corresponding to those types.
+	 */
+	return apply_filters( 'bb_default_custom_avatar_cover_mime_types', $valid_mimes, $allowed_types );
+}
+
+/**
+ * Handle custom profile and group images uploading.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $file              The appropriate entry the from $_FILES superglobal.
+ * @param string $action Action to determine the file action.
+ *
+ * @return array On success, returns an associative array of file attributes.
+ *               On failure, returns `$overrides['upload_error_handler']( &$file, $message )` or `array( 'error' => $message )`.
+ */
+function bb_custom_avatar_cover_handle_upload( $file, $action = 'custom_profile_avatar' ) {
+
+	$overrides = array(
+		'action'               => 'custom_profile_avatar',
+		'mimes'                => bb_default_custom_avatar_cover_mime_types(),
+		'test_type'            => bp_attachments_get_allowed_types(),
+		'test_form'            => false,
+		'upload_error_strings' => bb_default_custom_avatar_cover_upload_error_strings(),
+	);
+
+	add_filter( "{$action}_prefilter", 'bb_default_custom_avatar_cover_validate_upload', 10, 1 );
+	add_filter( 'upload_dir', "xprofile_default_custom_{$action}_upload_dir", 10 );
+
+	$attachment = wp_handle_upload( $file, $overrides );
+
+	remove_filter( 'upload_dir', "xprofile_default_custom_{$action}_upload_dir" );
+
+	return $attachment;
+}

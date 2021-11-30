@@ -407,6 +407,80 @@ function bp_admin_setting_callback_cover_image_uploads() {
 }
 
 /**
+ * Allow admin to set default profile avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_avatar_type() {
+	?>
+	<input id="bp-default-profile-avatar-transparent" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
+	<label for="bp-default-profile-avatar-transparent"><img src="<?php echo bb_get_default_transparent_profile_avatar(); ?>" /></label>
+
+	<input id="bp-default-profile-avatar-solid" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
+	<label for="bp-default-profile-avatar-solid"><img src="<?php echo bb_get_default_solid_profile_avatar(); ?>" /></label>
+
+	<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
+	<label for="bp-default-profile-avatar-custom"><?php _e( 'Custom', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * Allow admin to upload default custom profile avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_custom_profile_avatar() {
+	?>
+	<div class="bb-upload-container">
+		<img src="<?php echo bb_get_default_profile_avatar_placeholder(); ?>" class="bb-upload-preview">
+		<input type="hidden" name="bp-custom-profile-avatar" value="">
+	</div>
+	<div class="bb-img-button-wrap">
+		<input type="file" name="default-profile-avatar-file" id="default-profile-avatar-file" class="bb-setting-profile button" accept="image/*">
+		<button style="" type="button" class="button bb-img-upload-button">Upload</button>
+		<a style="" href="#" class="delete button button-link bb-img-remove-button">Remove</a>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to set default profile cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_cover_type() {
+	?>
+	<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="0" <?php checked( ! bb_default_profile_cover_type() ); ?> />
+	<label for="bp-default-profile-cover-none"><?php _e( 'None', 'buddyboss' ); ?></label>
+
+	<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="1" <?php checked( bb_default_profile_cover_type(), 1 ); ?> />
+	<label for="bp-default-profile-cover-default"><img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" /></label>
+
+	<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="2" <?php checked( bb_default_profile_cover_type(), 2 ); ?> />
+	<label for="bp-default-profile-cover-custom"><?php _e( 'Custom', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * Allow admin to upload default custom profile cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_custom_profile_cover() {
+	?>
+	<div class="bb-upload-container">
+		<img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" class="bb-upload-preview">
+		<input type="hidden" name="bp-custom-profile-cover" value="">
+	</div>
+	<div class="bb-img-button-wrap">
+		<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button" accept="image/*">
+		<button style="" type="button" class="button bb-img-upload-button">Upload</button>
+		<a style="" href="#" class="delete button button-link bb-img-remove-button">Remove</a>
+	</div>
+	<?php
+}
+
+/**
  * Link to Profile Photos tutorial
  *
  * @since BuddyBoss 1.1.1
@@ -661,7 +735,16 @@ function bp_core_admin_settings() {
 				<?php bp_core_settings_admin_tabs(); ?>
 			</ul>
 		</div>
-		<form action="<?php echo esc_url( $form_action ); ?>" method="post">
+		<form action="<?php echo esc_url( $form_action ); ?>" method="post"
+		<?php
+		/**
+		 * Fires inside the option page form tag.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 */
+		do_action( 'bb_admin_settings_form_tag' ); ?>
+		>
 			<?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
 	</div>
