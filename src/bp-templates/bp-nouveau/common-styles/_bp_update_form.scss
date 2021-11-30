@@ -39,6 +39,11 @@
 
 	.bb-model-header {
 		display: none;
+
+		.bb-icon-close {
+			color: #939597;
+		}
+
 	}
 
 	#whats-new-submit #aw-whats-new-reset {
@@ -53,6 +58,10 @@
 
 		#whats-new {
 			padding: 0 15px 10px;
+		}
+
+		#whats-new-content {
+			width: 100%;
 		}
 
 		.bb-model-header {
@@ -198,7 +207,7 @@
 		}
 
 		#whats-new-form {
-			width: 700px;
+			width: 800px;
 			max-width: 90%;
 			margin: auto;
 			border: 1px solid #d2d4d6;

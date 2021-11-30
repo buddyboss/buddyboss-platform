@@ -1057,6 +1057,11 @@ a.layout-grid-view {
   display: none;
 }
 
+.bp-nouveau-activity-form-placeholder- .bb-model-header .bb-icon-close,
+.activity-update-form .bb-model-header .bb-icon-close {
+  color: #939597;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-submit #aw-whats-new-reset,
 .activity-update-form #whats-new-submit #aw-whats-new-reset {
   display: none;
@@ -1070,6 +1075,11 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
 .activity-update-form .activity-form.focus-in #whats-new {
   padding: 0 15px 10px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-content,
+.activity-update-form .activity-form.focus-in #whats-new-content {
+  width: 100%;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in .bb-model-header,
@@ -1240,7 +1250,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
-  width: 700px;
+  width: 800px;
   max-width: 90%;
   margin: auto;
   border: 1px solid #d2d4d6;
