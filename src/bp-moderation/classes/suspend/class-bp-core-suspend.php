@@ -493,7 +493,7 @@ class BP_Core_Suspend {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int|array $user_id user id.
+	 * @param int $user_id user id.
 	 *
 	 * @return bool
 	 */
