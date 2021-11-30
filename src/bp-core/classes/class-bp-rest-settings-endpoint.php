@@ -153,7 +153,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'name'        => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Name of the setting.', 'buddyboss' ),
+					'description' => __( 'Name of the setting.', 'buddypress' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_key',
@@ -161,7 +161,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'status'      => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Whether the setting is active or inactive.', 'buddyboss' ),
+					'description' => __( 'Whether the setting is active or inactive.', 'buddypress' ),
 					'type'        => 'string',
 					'enum'        => array( 'active', 'inactive' ),
 					'arg_options' => array(
@@ -170,7 +170,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'title'       => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Title of the setting.', 'buddyboss' ),
+					'description' => __( 'Title of the setting.', 'buddypress' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -178,7 +178,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'description' => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Description of the setting.', 'buddyboss' ),
+					'description' => __( 'Description of the setting.', 'buddypress' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -502,6 +502,43 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results['bp_page_privacy']               = $privacy;
 		$results['bp_page_terms']                 = $terms;
 		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
+
+		$results['bp-pages'] = array();
+
+		$component_pages = array(
+			'members'  => 'xprofile',
+			'videos'   => 'video',
+			'media'    => 'media',
+			'document' => 'document',
+			'group'    => 'group',
+			'activity' => 'activity',
+			'register' => 'xprofile',
+			'terms'    => 'xprofile',
+			'privacy'  => 'xprofile',
+			'activate' => 'xprofile',
+		);
+
+		foreach ( $component_pages as $key => $component ) {
+			if ( bp_is_active( $component ) ) {
+				$id = (int) ( isset( $bp_pages[ $key ] ) ? $bp_pages[ $key ] : 0 );
+
+				$results['bp-pages'][ $key ] = array(
+					'id'    => $id,
+					'slug'  => ( 0 !== $id ? get_post_field( 'post_name', $id ) : '' ),
+					'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
+				);
+			}
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+
+			$results['bp-pages']['forums'] = array(
+				'id'    => $id,
+				'slug'  => ( 0 !== $id ? get_post_field( 'post_name', $id ) : '' ),
+				'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
+			);
+		}
 
 		return $results;
 	}
