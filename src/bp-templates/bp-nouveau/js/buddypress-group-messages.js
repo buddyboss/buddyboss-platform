@@ -854,10 +854,6 @@ window.bp = window.bp || {};
 			);
 		},
 
-		getMemberOnScroll: function() {
-
-		},
-
 		/**
 		 * [setupGlobals description]
 		 *
