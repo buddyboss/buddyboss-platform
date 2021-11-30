@@ -158,12 +158,10 @@ function bbp_has_forums( $args = '' ) {
 	$bbp = bbpress();
 	static $bbp_forum_query = array();
 	$cache_key = 'bbp_has_forums_' . md5( maybe_serialize( $bbp_f ) );
-	if ( isset( $bbp_forum_query[ $cache_key ] ) ) {
-		$bbp->forum_query = $bbp_forum_query[ $cache_key ];
-	} else {
-		$bbp->forum_query              = new WP_Query( $bbp_f );
-		$bbp_forum_query[ $cache_key ] = $bbp->forum_query;
+	if ( ! isset( $bbp_forum_query[ $cache_key ] ) ) {
+		$bbp_forum_query[ $cache_key ] = new WP_Query( $bbp_f );
 	}
+	$bbp->forum_query = $bbp_forum_query[ $cache_key ];
 
 	// Add pagination values to query object
 	$bbp->forum_query->posts_per_page = $bbp_f['posts_per_page'];
