@@ -853,6 +853,7 @@ function groups_get_group_members( $args = array() ) {
 				'populate_extras' => $r['populate_extras'],
 				)
 			);
+			$cache[ $cache_key ] = $members;
 		} else {
 			$members = $cache[ $cache_key ];
 		}
