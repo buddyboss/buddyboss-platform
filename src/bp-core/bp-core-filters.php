@@ -1628,7 +1628,7 @@ add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPr
 /**
  * Filter to update the Avatar URL for the rest api.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.2
  *
  * @param string $gravatar Avatar Url.
  *

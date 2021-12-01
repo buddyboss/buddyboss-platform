@@ -160,6 +160,9 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+// Filter check the single embed URL wrap with "P" tag or not.
+add_filter( 'bp_activity_content_before_save', 'bb_activity_content_has_paragraph_tag' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -800,6 +803,10 @@ add_filter( 'bp_get_activity_css_class', 'bp_activity_timestamp_class', 9, 1 );
  */
 function bp_activity_heartbeat_last_recorded( $response = array(), $data = array() ) {
 	if ( empty( $data['bp_activity_last_recorded'] ) ) {
+		return $response;
+	}
+
+	if ( ! bp_is_activity_heartbeat_active() ) {
 		return $response;
 	}
 
@@ -2417,6 +2424,11 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$content_img = apply_filters( 'bb_add_feature_image_blog_post_as_activity_content', '', $blog_post->ID );
 			$post_title  = sprintf( '<a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
 			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( get_the_excerpt( $blog_post->ID ) ) ) );
+
+			if ( empty( $content ) ) {
+				$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content ) ) );
+			}
+
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
@@ -3003,4 +3015,29 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Wrap with "P" tag if found the single plan text link.
+ *
+ * @param string $content Activity content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_activity_content_has_paragraph_tag( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+	preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+	if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+		$content = sprintf( '<p>%s</p>', $content );
+	}
+
+	return $content;
 }
