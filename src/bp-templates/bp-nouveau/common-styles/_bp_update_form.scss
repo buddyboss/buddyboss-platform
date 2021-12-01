@@ -86,6 +86,38 @@
 			}
 		}
 
+		#editor-toolbar {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-pack: end;
+			-ms-flex-pack: end;
+			justify-content: flex-end;
+			position: relative;
+			padding: 0 15px;
+
+			.emojionearea-button:before {
+				content: "\E821";
+				color: rgba(18, 43, 70, 0.4);
+				font: normal 400 normal 24px/1 bb-icons;
+				opacity: 1;
+				background: none;
+				position: static;
+			}
+
+			.bb-icon {
+				color: rgba(18, 43, 70, 0.4);
+				font-size: 24px;
+				margin-right: 10px;
+			}
+
+			.emojionearea .emojionearea-button.active:before,
+			.toolbar-button.active .bb-icon:before {
+				color: #122b46;
+			}
+
+		}
+
 	}
 
 	#whats-new-avatar {
@@ -175,6 +207,10 @@
 			cursor: pointer;
 		}
 
+	}
+
+	#editor-toolbar {
+		display: none;
 	}
 
 	&.modal-popup {
@@ -308,50 +344,6 @@
 
 		}
 
-		@media screen and (max-width: 646px) {
-
-			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
-
-				#buddypress & {
-					bottom: 111px;
-				}
-
-			}
-
-		}
-
-		@media screen and (max-width: 603px) {
-
-			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-
-				#buddypress > & {
-					bottom: 112px;
-				}
-
-			}
-
-		}
-
-		@media screen and (max-width: 544px) {
-
-			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-
-				#buddypress > & {
-					bottom: 146px;
-				}
-
-			}
-
-			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
-
-				#buddypress & {
-					bottom: 146px;
-				}
-
-			}
-
-		}
-
 	}
 
 	// close @media
@@ -401,7 +393,7 @@
 		&.active {
 			display: block;
 			border-radius: 0;
-			z-index: 112;
+			z-index: 1;
 			opacity: 1;
 			visibility: visible;
 			bottom: 12px;
@@ -461,84 +453,72 @@
 
 .activity-update-form {
 
-	#whats-new-content {
+	.medium-editor-toolbar {
+		top: inherit;
+		bottom: 0;
+		left: 0;
+		visibility: hidden;
+		z-index: 99;
+		background-color: #fff;
+		transition: bottom ease 0.3s;
+		height: 0;
+		overflow: hidden;
+		display: none;
 
-		.medium-editor-toolbar {
-			top: inherit;
-			bottom: 0;
-			left: 39px;
-			visibility: hidden;
-			z-index: 99;
+		&.active {
+			border-radius: 0;
+			z-index: 112;
+			visibility: visible;
+			height: auto;
+		}
+
+		.medium-editor-toolbar-actions {
+			background-color: transparent;
+
+			button.medium-editor-button-first {
+				padding-right: 6px;
+			}
+
+			button {
+				box-shadow: none !important;
+				padding: 0 10px 0 0;
+				height: 35px;
+				min-width: 30px;
+				border: 0;
+				background-color: transparent !important;
+				color: rgba(18, 43, 70, 0.4) !important;
+
+				&.medium-editor-button-active {
+					color: #122b46 !important;
+					background: none transparent !important;
+				}
+
+				&.medium-editor-action-close {
+					padding-right: 0;
+				}
+
+			}
+
+		}
+
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			width: 210px;
+			margin-bottom: 0;
 			background-color: #fff;
-			transition: bottom ease 0.3s;
-			height: 0;
-			right: 0;
-			overflow: hidden;
-			display: none;
+			border: 1px solid #dedfe2;
+			color: #4d5c6d;
 
-			&.active {
-				border-radius: 0;
-				z-index: 112;
-				visibility: visible;
-				bottom: 0;
-				height: 44px;
-
-				div & {
-					bottom: 4px;
-					background-color: #eaeaea;
-					width: auto;
-					right: auto;
-				}
-			}
-
-			.medium-editor-toolbar-actions {
-				background-color: transparent;
-
-				button.medium-editor-button-first {
-					padding-right: 6px;
-				}
-
-				button {
-					box-shadow: none;
-					padding: 10px 10px 10px 0;
-					min-width: 30px;
-					border: 0;
-					background-color: transparent !important;
-					color: rgba(18, 43, 70, 0.4) !important;
-
-					&.medium-editor-button-active {
-						color: #122b46 !important;
-						background: none transparent !important;
-					}
-
-					&.medium-editor-action-close {
-						padding-right: 0;
-					}
-
-				}
-
-			}
-
-			.medium-editor-toolbar-form .medium-editor-toolbar-input {
-				width: 210px;
-				margin-bottom: 0;
-				background-color: #fff;
-				border: 1px solid #dedfe2;
+			&::-webkit-input-placeholder {
 				color: #4d5c6d;
-
-				&::-webkit-input-placeholder {
-					color: #4d5c6d;
-				}
 			}
-
 		}
 
-		.medium-editor-toolbar .medium-editor-toolbar-form-active {
-			position: absolute;
-			bottom: -6px;
-			box-shadow: none;
-		}
+	}
 
+	.medium-editor-toolbar .medium-editor-toolbar-form-active {
+		position: absolute;
+		bottom: -6px;
+		box-shadow: none;
 	}
 
 }
@@ -581,7 +561,7 @@
 	left: -15px;
 }
 
-.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+.activity-update-form .focus-in .medium-editor-toolbar {
 	display: block;
 }
 
@@ -1101,7 +1081,6 @@ input.search-query-input {
 
 @media screen and (max-width: 768px) {
 
-	.activity-update-form .activity-form.focus-in #whats-new-content,
 	.bbp-topic-form #whats-new-toolbar {
 
 		.medium-editor-toolbar-actions {
@@ -1117,15 +1096,10 @@ input.search-query-input {
 
 	}
 
-	.activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.active {
-		opacity: 1;
-	}
-
 }
 
 @media screen and (max-width: 560px) {
 
-	.activity-update-form .activity-form.focus-in #whats-new-content,
 	.bbp-topic-form #whats-new-toolbar {
 
 		.medium-editor-toolbar-actions button {
@@ -1137,101 +1111,4 @@ input.search-query-input {
 			width: auto;
 		}
 	}
-}
-
-@media screen and (max-width: 603px) {
-
-	#buddypress > .activity-update-form .focus-in {
-
-		#whats-new-content {
-
-			.medium-editor-toolbar {
-				bottom: 109px;
-
-				&.active {
-
-					div & {
-						bottom: 109px;
-					}
-				}
-			}
-
-		}
-
-	}
-
-	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 109px;
-	}
-}
-
-@media screen and (max-width: 560px) {
-
-	#buddypress .activity-update-form .focus-in {
-
-		#whats-new-content {
-
-			.medium-editor-toolbar {
-				bottom: 112px;
-
-				&.active {
-
-					div & {
-						bottom: 112px;
-					}
-				}
-			}
-
-		}
-	}
-
-	.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 111px;
-	}
-
-	.groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 58px;
-	}
-
-	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 143px;
-	}
-
-	.bp_group #buddypress .activity-update-form .focus-in {
-
-		#whats-new-content {
-
-			.medium-editor-toolbar {
-				bottom: 58px;
-
-				&.active {
-
-					div & {
-						bottom: 58px;
-					}
-				}
-			}
-
-		}
-	}
-
-	#buddypress > .activity-update-form .focus-in {
-
-		#whats-new-content {
-
-			.medium-editor-toolbar {
-				bottom: 146px;
-
-				&.active {
-
-					div & {
-						bottom: 146px;
-					}
-				}
-			}
-
-		}
-
-	}
-
 }
