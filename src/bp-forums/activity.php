@@ -424,7 +424,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			 * If available then take the activity object from global template.
 			 * Else create a new instance.
 			 */
-			if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $activity_id ) {
+			if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id === $activity_id ) {
 
 				$activity = $activities_template->activity;
 

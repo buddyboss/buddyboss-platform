@@ -105,7 +105,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 * If available then take the activity object from global template.
 		 * Else create a new instance.
 		 */
-		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $activity_id ) {
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id === $activity_id ) {
 			$activity = $activities_template->activity;
 		} else {
 			$activity = new BP_Activity_Activity( $activity_id );
@@ -197,7 +197,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 * If available then take the activity object from global template.
 		 * Else create a new instance.
 		 */
-		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $item_id ) {
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id === $item_id ) {
 			$activity = $activities_template->activity;
 		} else {
 			$activity = new BP_Activity_Activity( (int) $item_id );
@@ -363,7 +363,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 * If available then take the activity object from global template.
 		 * Else create a new instance.
 		 */
-		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $item_id ) {
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id === $item_id ) {
 			$activity = $activities_template->activity;
 		} else {
 			$activity = new BP_Activity_Activity( (int) $item_id );

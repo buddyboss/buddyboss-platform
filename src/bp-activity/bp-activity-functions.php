@@ -3551,7 +3551,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
 		 * If available then take the activity object from global template.
 		 * Else create a new instance.
 		 */
-		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id == $activity_id ) {
+		if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id === $activity_id ) {
 			$activity_obj = $activities_template->activity;
 		} else {
 			$activity_obj = new BP_Activity_Activity( $activity_id );
