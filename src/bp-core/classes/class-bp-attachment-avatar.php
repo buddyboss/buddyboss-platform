@@ -220,7 +220,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		 * Original file is a relative path to the image
 		 * eg: /avatars/1/avatar.jpg
 		 */
-		$relative_path = sprintf( '/%s/%s/%s', $avatar_dir, $args['item_id'], basename( $args['original_file'] ) );
+		$relative_path = apply_filters( 'bb_core_avatar_relative_path', sprintf( '/%s/%s/%s', $avatar_dir, $args['item_id'], basename( $args['original_file'] ) ), $args['item_id'], $args['object'], $args['avatar_dir'] );
 		$absolute_path = $this->upload_path . $relative_path;
 
 		// Bail if the avatar is not available.

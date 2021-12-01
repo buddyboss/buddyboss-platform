@@ -22,15 +22,18 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->tab_name  = 'bp-xprofile';
 		$this->tab_order = 10;
 
+		$this->active_tab  = bp_core_get_admin_active_tab();
+
 		add_action( 'bb_admin_settings_form_tag', array( $this, 'bb_admin_setting_xprofile_add_enctype' ) );
+		add_filter( 'bp_attachment_avatar_script_data', array( $this, 'bb_admin_setting_xprofile_script_data' ), 10, 2 );
+		add_filter( 'xprofile_avatar_upload_dir', array( $this, 'bb_xprofile_default_custom_profile_avatar_upload_dir' ), 10, 1 );
+		add_filter( 'bb_core_avatar_relative_path', array( $this, 'bb_default_custom_profile_avatar_set_relative_path' ), 10, 4 );
+		add_filter( 'bp_core_avatar_folder_url', array( $this, 'bb_default_custom_profile_avatar_folder_url' ), 10, 4 );
+		add_filter( 'bp_core_avatar_folder_dir', array( $this, 'bb_default_custom_profile_avatar_folder_path' ), 10, 4 );
 	}
 
 	public function settings_save() {
 		$if_disabled_before_saving = bp_disable_advanced_profile_search();
-
-		// Get value before the update.
-		$default_profile_avatar_type = bb_default_profile_avatar_type();
-		$default_profile_cover_type  = bb_default_profile_cover_type();
 
 		parent::settings_save();
 
@@ -73,30 +76,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$nickname_field_id = bp_xprofile_nickname_field_id();
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
-			}
-		}
-
-		// Profile custom avatar and cover.
-		if ( isset( $_FILES['default-profile-avatar-file'] ) || isset( $_FILES['default-profile-cover-file'] ) ) {
-
-			// Upload the avatar.
-			$profile_avatar = bb_custom_avatar_cover_handle_upload( $_FILES['default-profile-avatar-file'], 'custom_profile_avatar' );
-
-			if ( isset( $profile_avatar['url'] ) ) {
-				bp_update_option( 'bp-custom-profile-avatar', $profile_avatar['url'] );
-			} else {
-				bp_update_option( 'bp-default-profile-avatar-type', $default_profile_avatar_type );
-				bp_core_add_admin_notice( $profile_avatar['error'], 'error' );
-			}
-
-			// Upload the cover image.
-			$profile_cover = bb_custom_avatar_cover_handle_upload( $_FILES['default-profile-avatar-file'], 'custom_profile_cover' );
-
-			if ( isset( $profile_cover['url'] ) ) {
-				bp_update_option( 'bp-custom-profile-cover', $profile_cover['url'] );
-			} else {
-				bp_update_option( 'bp-default-profile-cover-type', $default_profile_cover_type );
-				bp_core_add_admin_notice( $profile_cover['error'], 'error' );
 			}
 		}
 
@@ -160,10 +139,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args          = array();
 		$args['class'] = 'profile-avatar-options default-profile';
 		$this->add_field( 'bp-default-profile-avatar-type', __( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'intval', $args );
-
-		$args          = array();
-		$args['class'] = 'profile-avatar-options custom-profile';
-		$this->add_field( 'bp-custom-profile-avatar', '', 'bp_admin_setting_callback_custom_profile_avatar', 'sanitize_text_field', $args );
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
@@ -583,6 +558,146 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bb_admin_setting_xprofile_add_enctype() {
 		echo ' enctype="multipart/form-data"';
 	}
+
+	public function bb_admin_setting_xprofile_script_data( $script_data, $object = '' ) {
+
+		if ( $this->active_tab !== $this->tab_name ) {
+			return $script_data;
+		}
+
+		$script_data['bp_params'] = array(
+			'object'     => 'user',
+			'item_id'    => false,
+			'has_avatar' => false,
+			'nonces'     => array(
+				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
+				'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
+			),
+		);
+
+		// Set feedback messages.
+		$script_data['feedback_messages'] = array(
+			1 => __( 'There was a problem cropping your profile photo.', 'buddyboss' ),
+			2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ),
+			3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ),
+			4 => __( 'Your profile photo was deleted successfully!', 'buddyboss' ),
+		);
+
+		return $script_data;
+	}
+
+	/**
+	 * Setup default custom avatar upload directory for a user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $upload_dir The original Uploads dir.
+	 * @return array Array containing the path, URL, and other helpful settings.
+	 */
+	public function bb_xprofile_default_custom_profile_avatar_upload_dir( $upload_dir = array() ) {
+		$bp_params = array();
+
+		if ( ! empty( $_POST['bp_params'] ) ) {
+			$bp_params = $_POST['bp_params'];
+		}
+
+		if ( ! is_admin() || empty( $bp_params ) || ! isset( $bp_params['object'] ) || ! isset( $bp_params['item_id'] ) ) {
+			return $upload_dir;
+		}
+
+		$item_id = $bp_params['item_id'];
+		$object  = $bp_params['object'];
+
+		if ( ! is_admin() || ( $item_id > 0 && 'user' === $object ) || ( 'user' !== $object ) ) {
+			return $upload_dir;
+		}
+
+		$directory = 'avatars';
+
+		$path      = bp_core_avatar_upload_path() . '/' . $directory . '/custom';
+		$newbdir   = $path;
+		$newurl    = bp_core_avatar_url() . '/' . $directory . '/custom';
+		$newburl   = $newurl;
+		$newsubdir = '/' . $directory . '/custom';
+
+		/**
+		 * Filters default custom avatar upload directory for a user.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $value Array containing the path, URL, and other helpful settings.
+		 */
+		return apply_filters(
+			'bb_xprofile_default_custom_profile_avatar_upload_dir',
+			array(
+				'path'    => $path,
+				'url'     => $newurl,
+				'subdir'  => $newsubdir,
+				'basedir' => $newbdir,
+				'baseurl' => $newburl,
+				'error'   => false,
+			),
+			$upload_dir
+		);
+	}
+
+	/**
+	 * Setup relative path for default custom avatar upload.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $relative_path The original avatar relative path.
+	 * @param int    $item_id ID of the avatar item being requested.
+	 * @param string $object  Avatar type being requested.
+	 * @param string $avatar_dir Subdirectory where the requested avatar should be found.
+	 * @return string Actual custom uploaded avatar relative path.
+	 */
+	public function bb_default_custom_profile_avatar_set_relative_path( $relative_path, $item_id = 0, $object, $avatar_dir ) {
+		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $object ) {
+			return sprintf( '/%s/%s/%s', $avatar_dir, 'custom', basename( $relative_path ) );
+		}
+
+		return $relative_path;
+	}
+
+	/**
+	 * The Avatar URL for default custom avatar upload.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $avatar_folder_url Path to the avatar folder URL.
+	 * @param int    $item_id ID of the avatar item being requested.
+	 * @param string $object Avatar type being requested.
+	 * @param string $avatar_dir Subdirectory where the requested avatar should be found.
+	 * @return string Actual custom uploaded avatar relative URL.
+	 */
+	public function bb_default_custom_profile_avatar_folder_url( $avatar_folder_url, $item_id = 0, $object, $avatar_dir ) {
+		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $object ) {
+			return trailingslashit( bp_core_avatar_url() ) . trailingslashit( $avatar_dir ) . 'custom';
+		}
+
+		return $avatar_folder_url;
+	}
+
+	/**
+	 * The Avatar path for default custom avatar upload.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $avatar_folder_path Path to the avatar folder path.
+	 * @param int    $item_id ID of the avatar item being requested.
+	 * @param string $object Avatar type being requested.
+	 * @param string $avatar_dir Subdirectory where the requested avatar should be found.
+	 * @return string Actual custom uploaded avatar relative path.
+	 */
+	public function bb_default_custom_profile_avatar_folder_path( $avatar_folder_path, $item_id = 0, $object, $avatar_dir ) {
+		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $object ) {
+			return trailingslashit( bp_core_avatar_upload_path() ) . trailingslashit( $avatar_dir ) . 'custom';
+		}
+
+		return $avatar_folder_path;
+	}
+
 }
 
 return new BP_Admin_Setting_Xprofile();

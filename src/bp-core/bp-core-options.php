@@ -72,8 +72,8 @@ function bp_get_default_options() {
 		// Avatar type.
 		'bp-default-profile-avatar-type'             => 1,
 
-		// Default cutom avatar.
-		'bp-custom-profile-avatar'                   => '',
+		// Avatar type.
+		'bp-default-profile-cover-type'              => false,
 
 		// cover photo uploads.
 		'bp-disable-cover-image-uploads'             => false,
@@ -1939,57 +1939,75 @@ function bb_feed_not_allowed_comment_post_types() {
 }
 
 /**
- * Get default transparent profile avatar URL.
+ * Get default BuddyBoss profile avatar URL.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string Return default transparent profile avatar URL.
+ * @return string Return default BuddyBoss profile avatar URL.
  */
-function bb_get_default_transparent_profile_avatar() {
+function bb_get_default_buddyboss_profile_avatar() {
 	/**
-	 * Filters to change default transparent avatar image.
+	 * Filters to change default BuddyBoss avatar image.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Default transparent profile avatar URL.
+	 * @param string $value Default BuddyBoss profile avatar URL.
 	 */
-	return apply_filters( 'bb_get_default_transparent_profile_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man-transparent.png' );
+	return apply_filters( 'bb_get_default_buddyboss_profile_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man-transparent.png' );
 }
 
 /**
- * Get default solid profile avatar URL.
+ * Get default legacy profile avatar URL.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string Return default solid profile avatar URL.
+ * @return string Return default legacy profile avatar URL.
  */
-function bb_get_default_solid_profile_avatar() {
+function bb_get_default_legacy_profile_avatar() {
 	/**
-	 * Filters to change default solid avatar image.
+	 * Filters to change default legacy avatar image.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Default solid profile avatar URL.
+	 * @param string $value Default legacy profile avatar URL.
 	 */
-	return apply_filters( 'bb_get_default_solid_profile_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+	return apply_filters( 'bb_get_default_legacy_profile_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 }
 
 /**
- * Get default profile placeholder URL.
+ * Get default custom profile avatar upload placeholder URL.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string Return default profile placeholder URL.
+ * @return string Return default custom profile avatar upload placeholder URL.
  */
-function bb_get_default_profile_avatar_placeholder() {
+function bb_get_default_custom_profile_avatar_upload_placeholder() {
+	/**
+	 * Filters default custom profile avatar upload placeholder URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value default custom profile avatar upload placeholder URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_profile_avatar_upload_placeholder', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+}
+
+/**
+ * Get placeholder URL for profile and group custom avatar option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return placeholder URL for profile and group custom avatar option.
+ */
+function bb_get_profile_group_custom_avatar_option_placeholder() {
 	/**
 	 * Filters to change default avatar placeholder image.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Default profile placeholder URL.
+	 * @param string $value placeholder URL for profile and group custom avatar option.
 	 */
-	return apply_filters( 'bb_get_default_profile_avatar_placeholder', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+	return apply_filters( 'bb_get_profile_group_custom_avatar_option_placeholder', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 }
 
 /**
@@ -2022,15 +2040,24 @@ function bb_default_profile_avatar_type( $default = null ) {
  *                      Default: null.
  * @return string Return default custom upload avatar URL.
  */
-function bb_default_custom_upload_profile_avatar( $default = null ) {
+function bb_default_custom_upload_profile_avatar() {
+
+	$custom_upload_profile_avatar = bp_core_fetch_avatar(
+		array(
+			'object'  => 'user',
+			'item_id' => 'custom',
+			'html'    => false,
+			'type'    => 'full',
+		)
+	);
 	/**
 	 * Filters to change default custom upload avatar image.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Default custom upload avatar URL.
+	 * @param string $$custom_upload_profile_avatar Default custom upload avatar URL.
 	 */
-	return apply_filters( 'bb_default_custom_upload_profile_avatar', bp_get_option( 'bp-custom-profile-avatar', $default ) );
+	return apply_filters( 'bb_default_custom_upload_profile_avatar', $custom_upload_profile_avatar );
 }
 
 /**
