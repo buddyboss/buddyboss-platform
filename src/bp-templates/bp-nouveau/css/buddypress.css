@@ -1203,19 +1203,13 @@ a.layout-grid-view {
   display: inline-block;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar > div,
-.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar > div {
-  pointer-events: none;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar > div.post-emoji:before,
-.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar > div.post-emoji:before {
-  content: "\E821";
-  color: rgba(18, 43, 70, 0.4);
-  font: normal 400 normal 24px/1 bb-icons;
-  opacity: 1;
-  background: none;
-  position: static;
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new,
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new:before,
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-form #whats-new-toolbar,
+.activity-update-form .activity-form:not(.focus-in) #whats-new,
+.activity-update-form .activity-form:not(.focus-in) #whats-new:before,
+.activity-update-form .activity-form:not(.focus-in) #whats-new-form #whats-new-toolbar {
+  cursor: pointer;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup,
