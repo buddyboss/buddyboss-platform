@@ -75,6 +75,36 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$this->add_field( '_bp_on_screen_notification_visibility', __( 'Automatically Hide', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_visibility', 'intval' );
 		$this->add_field( '_bp_on_screen_notification_browser_tab', __( 'Show in Browser Tab', 'buddyboss' ), 'bb_admin_setting_callback_on_screen_notifications_browser_tab', 'intval' );
 
+		$sections = bb_notification_get_settings_sections();
+
+		foreach ( (array) $sections as $section_id => $section ) {
+
+			// Only add section and fields if section has fields.
+			$fields = bb_notification_get_settings_fields_for_section( $section_id );
+
+			if ( empty( $fields ) ) {
+				continue;
+			}
+
+			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
+			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
+
+			// Add the section.
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
+
+			// Loop through fields for this section.
+			foreach ( (array) $fields as $field_id => $field ) {
+
+				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
+
+				if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
+					$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : array();
+					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
+				}
+			}
+		}
+
 		/**
 		 * Fires to register Notifications tab settings fields and section.
 		 *
