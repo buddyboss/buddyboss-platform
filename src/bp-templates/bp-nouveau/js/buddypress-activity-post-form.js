@@ -2372,6 +2372,10 @@ window.bp = window.bp || {};
 			id: 'whats-new-avatar',
 			template: bp.template( 'activity-post-form-avatar' ),
 
+			events: {
+				'click #bp-activity-privacy': 'privacySelector'
+			},
+
 			initialize: function () {
 				this.model = new Backbone.Model(
 					_.pick(
@@ -2391,6 +2395,11 @@ window.bp = window.bp || {};
 				if ( this.model.has( 'avatar_url' ) ) {
 					this.model.set( 'display_avatar', true );
 				}
+			},
+
+			privacySelector: function ( e ) {
+				e.preventDefault();
+				console.log('select privacy mode..');
 			}
 		}
 	);

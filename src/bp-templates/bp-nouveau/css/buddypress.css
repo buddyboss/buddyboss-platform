@@ -1098,8 +1098,8 @@ a.layout-grid-view {
   width: auto;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-avatar,
-.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-avatar {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-construct,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-construct {
   display: flex;
 }
 
@@ -1108,45 +1108,9 @@ a.layout-grid-view {
   display: block;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar,
-.activity-update-form .activity-form.focus-in #editor-toolbar {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  position: relative;
-  padding: 0 15px;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea-button:before {
-  content: "\E821";
-  color: rgba(18, 43, 70, 0.4);
-  font: normal 400 normal 24px/1 bb-icons;
-  opacity: 1;
-  background: none;
-  position: static;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .bb-icon,
-.activity-update-form .activity-form.focus-in #editor-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
-  font-size: 24px;
-  margin-right: 10px;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea .emojionearea-button.active:before,
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .toolbar-button.active .bb-icon:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea .emojionearea-button.active:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .toolbar-button.active .bb-icon:before {
-  color: #122b46;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-mention .bb-icon,
-.activity-update-form .activity-form.focus-in #editor-toolbar .post-mention .bb-icon {
-  font-size: 20px;
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar #bp-activity-privacy,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar #bp-activity-privacy {
+  display: block;
 }
 
 .bp-nouveau-activity-form-placeholder- #whats-new-avatar,
@@ -1167,6 +1131,11 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- #whats-new-avatar .user-name,
 .activity-update-form #whats-new-avatar .user-name {
+  display: none;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-avatar #bp-activity-privacy,
+.activity-update-form #whats-new-avatar #bp-activity-privacy {
   display: none;
 }
 
@@ -1244,18 +1213,19 @@ a.layout-grid-view {
   display: inline-block;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new,
-.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new:before,
-.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-form #whats-new-toolbar,
-.activity-update-form .activity-form:not(.focus-in) #whats-new,
-.activity-update-form .activity-form:not(.focus-in) #whats-new:before,
-.activity-update-form .activity-form:not(.focus-in) #whats-new-form #whats-new-toolbar {
-  cursor: pointer;
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar > div,
+.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar > div {
+  pointer-events: none;
 }
 
-.bp-nouveau-activity-form-placeholder- #editor-toolbar,
-.activity-update-form #editor-toolbar {
-  display: none;
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar > div.post-emoji:before,
+.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar > div.post-emoji:before {
+  content: "\E821";
+  color: rgba(18, 43, 70, 0.4);
+  font: normal 400 normal 24px/1 bb-icons;
+  opacity: 1;
+  background: none;
+  position: static;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup,
@@ -1398,6 +1368,31 @@ a.layout-grid-view {
   color: #fff;
 }
 
+@media screen and (max-width: 646px) {
+  #buddypress .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar, #buddypress
+  .activity-update-form.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 111px;
+  }
+}
+
+@media screen and (max-width: 603px) {
+  #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
+  .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 112px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
+  .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 146px;
+  }
+  #buddypress .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar, #buddypress
+  .activity-update-form.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 146px;
+  }
+}
+
 .atwho-container .atwho-view {
   z-index: 999999;
 }
@@ -1443,7 +1438,7 @@ a.layout-grid-view {
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
   display: block;
   border-radius: 0;
-  z-index: 1;
+  z-index: 112;
   opacity: 1;
   visibility: visible;
   bottom: 12px;
@@ -1506,54 +1501,62 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: #4d5c6d;
 }
 
-.activity-update-form .medium-editor-toolbar {
+.activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
   bottom: 0;
-  left: 4px;
+  left: 39px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
   transition: bottom ease 0.3s;
   height: 0;
+  right: 0;
   overflow: hidden;
   display: none;
 }
 
-.activity-update-form .medium-editor-toolbar.active {
+.activity-update-form #whats-new-content .medium-editor-toolbar.active {
   border-radius: 0;
   z-index: 112;
   visibility: visible;
-  height: auto;
+  bottom: 0;
+  height: 44px;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions {
+div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
+  bottom: 4px;
+  background-color: #eaeaea;
+  width: auto;
+  right: auto;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
   padding-right: 6px;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button {
-  box-shadow: none !important;
-  padding: 0 10px 0 0;
-  height: 35px;
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 10px 10px 0;
   min-width: 30px;
   border: 0;
   background-color: transparent !important;
   color: rgba(18, 43, 70, 0.4) !important;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
   background: none transparent !important;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
   padding-right: 0;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
   width: 210px;
   margin-bottom: 0;
   background-color: #fff;
@@ -1561,11 +1564,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: #4d5c6d;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
   color: #4d5c6d;
 }
 
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form-active {
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form-active {
   position: absolute;
   bottom: -6px;
   box-shadow: none;
@@ -1620,7 +1623,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   left: -15px;
 }
 
-.activity-update-form .focus-in .medium-editor-toolbar {
+.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
   display: block;
 }
 
@@ -2138,21 +2141,70 @@ input.search-query-input {
 }
 
 @media screen and (max-width: 768px) {
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button,
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 5px 10px 0;
   }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button.medium-editor-button-first,
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
     padding-left: 5px !important;
+  }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.active {
+    opacity: 1;
   }
 }
 
 @media screen and (max-width: 560px) {
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button,
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
   }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-form .medium-editor-toolbar-input,
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
     max-width: calc(100% - 90px);
     width: auto;
+  }
+}
+
+@media screen and (max-width: 603px) {
+  #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 109px;
+  }
+  div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 109px;
+  }
+  .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 109px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 112px;
+  }
+  div #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 112px;
+  }
+  .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 111px;
+  }
+  .groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 58px;
+  }
+  .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 143px;
+  }
+  .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 58px;
+  }
+  div .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 58px;
+  }
+  #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 146px;
+  }
+  div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 146px;
   }
 }
 

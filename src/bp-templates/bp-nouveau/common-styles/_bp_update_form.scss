@@ -75,11 +75,15 @@
 			#whats-new-avatar {
 				width: auto;
 
-				.activity-post-avatar {
+				.activity-post-construct {
 					display: flex;
 				}
 
 				.user-name {
+					display: block;
+				}
+
+				#bp-activity-privacy {
 					display: block;
 				}
 
@@ -138,6 +142,10 @@
 		}
 
 		.user-name {
+			display: none;
+		}
+
+		#bp-activity-privacy {
 			display: none;
 		}
 	}
