@@ -44,19 +44,21 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 	public function settings_save() {
 		parent::settings_save();
 
-		$enabel         = empty( $_POST['_bp_on_screen_notifications_enable'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_enable'] );
-		$position       = empty( $_POST['_bp_on_screen_notifications_position'] ) ? '' : sanitize_text_field( $_POST['_bp_on_screen_notifications_position'] );
-		$mobile_support = empty( $_POST['_bp_on_screen_notifications_mobile_support'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_mobile_support'] );
-		$visibility     = empty( $_POST['_bp_on_screen_notifications_visibility'] ) ? '' : sanitize_text_field( $_POST['_bp_on_screen_notifications_visibility'] );
-		$browser_tab    = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
+		$enabel               = empty( $_POST['_bp_on_screen_notifications_enable'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_enable'] );
+		$position             = empty( $_POST['_bp_on_screen_notifications_position'] ) ? '' : sanitize_text_field( $_POST['_bp_on_screen_notifications_position'] );
+		$mobile_support       = empty( $_POST['_bp_on_screen_notifications_mobile_support'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_mobile_support'] );
+		$visibility           = empty( $_POST['_bp_on_screen_notifications_visibility'] ) ? '' : sanitize_text_field( $_POST['_bp_on_screen_notifications_visibility'] );
+		$browser_tab          = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
+		$enabled_notification          = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
 		bp_update_option( '_bp_on_screen_notifications_enable', $enabel );
 		bp_update_option( '_bp_on_screen_notifications_position', $position );
 		bp_update_option( '_bp_on_screen_notifications_mobile_support', $mobile_support );
 		bp_update_option( '_bp_on_screen_notifications_visibility', $visibility );
 		bp_update_option( '_bp_on_screen_notifications_browser_tab', $browser_tab );
-
+		bp_update_option( 'bb_enabled_notification', $enabled_notification );
 	}
+
 	/**
 	 * Register setting fields
 	 *
