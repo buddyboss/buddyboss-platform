@@ -2371,9 +2371,8 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			id: 'whats-new-avatar',
 			template: bp.template( 'activity-post-form-avatar' ),
-
 			events: {
-				'click #bp-activity-privacy': 'privacySelector'
+				'click #bp-activity-privacy-point': 'privacyTarget'
 			},
 
 			initialize: function () {
@@ -2397,10 +2396,25 @@ window.bp = window.bp || {};
 				}
 			},
 
-			privacySelector: function ( e ) {
+			privacyTarget: function ( e ) {
 				e.preventDefault();
-				console.log('select privacy mode..');
+				$( '#whats-new-form' ).addClass( 'focus-in-privacy' );
 			}
+		}
+	);
+
+	bp.Views.PrivacyStage = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-privacy-stage',
+			template: bp.template( 'activity-post-privacy-stage' ),
+			events: {
+				'click .bp-activity-privacy-selector': 'privacySelector'
+			},
+
+			/*privacySelector: function ( e ) {
+				
+			}*/
 		}
 	);
 
@@ -3159,6 +3173,7 @@ window.bp = window.bp || {};
 					[
 						new bp.Views.ActivityHeader( { model: this.model } ),
 						new bp.Views.FormAvatar(),
+						new bp.Views.PrivacyStage( { model: this.model } ),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
 						new bp.Views.EditorToolbar( { model: this.model } ),
 						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
@@ -3173,14 +3188,14 @@ window.bp = window.bp || {};
 				// Remove feedback.
 				this.cleanFeedback();
 
-				if ( 5 !== this.views._views[ '' ].length ) {
+				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
 				}
 
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
-						if ( index > 3 ) {
+						if ( index > 4 ) {
 							view.close(); //Remove Toolbar shown in default view
 						}
 					}
@@ -3267,7 +3282,7 @@ window.bp = window.bp || {};
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
-						if ( index > 3 ) {
+						if ( index > 4 ) {
 							view.close();
 						}
 					}
@@ -3280,7 +3295,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#whats-new-form' ).removeClass( 'focus-in' ).parent().removeClass( 'modal-popup' ); // remove class when reset.
+				$( '#whats-new-form' ).removeClass( 'focus-in focus-in-privacy' ).parent().removeClass( 'modal-popup' ); // remove class when reset.
 
 				//Hide placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();

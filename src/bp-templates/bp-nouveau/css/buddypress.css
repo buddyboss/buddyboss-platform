@@ -1032,6 +1032,41 @@ a.layout-grid-view {
   display: none;
 }
 
+#bp-activity-privacy-point {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-privacy-stage,
+.bp-nouveau-activity-form-placeholder- #bp-activity-privacy-point,
+#whats-new-form #whats-new-privacy-stage,
+#whats-new-form #bp-activity-privacy-point {
+  display: none;
+}
+
+#whats-new-form.focus-in #bp-activity-privacy-point {
+  display: block;
+}
+
+#whats-new-form.focus-in-privacy #whats-new-privacy-stage {
+  display: block;
+}
+
+#whats-new-form.focus-in-privacy .whats-new-form-header,
+#whats-new-form.focus-in-privacy #editor-toolbar,
+#whats-new-form.focus-in-privacy #whats-new-attachments {
+  display: none;
+}
+
+#bp-activity-privacy-stage {
+  padding: 15px 30px;
+}
+
+.bp-activity-privacy-selector {
+  padding: 5px 0;
+}
+
 .bp-nouveau-activity-form-placeholder-,
 .activity-update-form {
   border: 1px solid #ccc;
