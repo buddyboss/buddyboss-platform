@@ -128,37 +128,48 @@ function bb_notification_get_settings_fields() {
 		),
 	);
 
-	$fields['bp_notification_settings_automatic'] = array(
-		'bp_media_gif_api_key' => array(
-			'title'             => __( 'GIPHY API Key', 'buddyboss' ),
-			'callback'          => 'bb_notification_settings_callback_gif_key',
-			'sanitize_callback' => 'string',
-			'args'              => array(),
-		),
-	);
+	$all_notifications = bb_register_notifications_by_group();
+
+	$fields['bp_notification_settings_automatic'] = array();
+
+	if ( ! empty( $all_notifications ) ) {
+		foreach ( $all_notifications as $key => $data ) {
+			$fields['bp_notification_settings_automatic'][ $key ] = array(
+				'title'             => $data['label'],
+				'callback'          => 'bb_activate_notification',
+				'sanitize_callback' => 'string',
+				'args'              => $data,
+			);
+		}
+	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
 }
 
 /**
- * Setting > Notifications > Automatic Notifications
+ * Callback fields for the notification fields options.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $data Array of fieldset.
  */
-function bb_notification_settings_callback_gif_key() {
-	?>
-	<input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>" style="width: 300px;" />
-	<p class="description">
-		<?php
-		printf(
-			'%1$s <a href="%2$s" target="_blank">GIPHY</a>. %3$s <a href="%4$s" target="_blank">Create an App</a>. %5$s',
-			__( 'This feature requires an account at', 'buddyboss' ),
-			esc_url( 'https://developers.giphy.com/' ),
-			__( 'Create your account, and then click', 'buddyboss' ),
-			esc_url( 'https://developers.giphy.com/dashboard/?create=true' ),
-			__( 'Once done, copy the API key and paste it in the field above.', 'buddyboss' )
-		);
-		?>
-	</p>
-	<?php
+function bb_activate_notification( $data ) {
+	$fields               = isset( $data['fields'] ) ? $data['fields'] : array();
+	$enabeld_notification = bp_get_option( 'bb_enabled_notification' );
+
+	if ( ! empty( $fields ) ) {
+		foreach ( $fields as $field ) {
+
+			if ( empty( $field['key'] ) || empty( $field['label'] ) ) {
+				continue;
+			}
+			?>
+			<p>
+				<input id="bb_enabled_notification_<?php echo sanitize_title( $field['key'] ); ?>" name="bb_enabled_notification" type="checkbox" value="<?php esc_attr( $field['key'] ); ?>>"/>
+				<label class="notification-label" for="bb_enabled_notification_<?php echo sanitize_title( $field['key'] ); ?>"><?php echo $field['label']; ?></label>
+			</p>
+			<?php
+		}
+	}
 }
+
