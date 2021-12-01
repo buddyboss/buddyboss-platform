@@ -30,7 +30,12 @@ function bp_profile_field_set_max_cap() {
 function bp_get_repeater_template_field_ids( $field_group_id ) {
 	global $wpdb;
 	$bp = buddypress();
-	$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
+	static $bp_group_field_ids = array();
+	$cache_key = 'bp_group_field_ids_' . $field_group_id;
+	if ( ! isset( $bp_group_field_ids[ $cache_key ] ) ) {
+		$bp_group_field_ids[ $cache_key ] = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
+	}
+	$group_field_ids = $bp_group_field_ids[ $cache_key ];
 	if ( empty( $group_field_ids ) || is_wp_error( $group_field_ids ) ) {
 		return array();
 	}
