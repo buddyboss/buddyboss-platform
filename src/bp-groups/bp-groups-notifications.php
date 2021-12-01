@@ -1377,3 +1377,119 @@ function groups_screen_notification_settings() {
 }
 
 add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
+
+/**
+ * Add Notifications for the groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $array Array of notifications.
+ *
+ * @return mixed
+ */
+function bb_groups_register_notifications( $array ) {
+	$groups_notification = array(
+		'label'  => esc_html__( 'Social Groups', 'buddyboss' ),
+		'fields' => array(
+			array(
+				'key'     => 'notification_groups_invite',
+				'label'   => esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_groups_group_updated',
+				'label'   => esc_html__( 'Group information is updated', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_groups_admin_promotion',
+				'label'   => esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_groups_membership_request',
+				'label'   => esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_membership_request_completed',
+				'label'   => esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+		),
+	);
+
+	if ( true === bp_disable_group_messages() ) {
+		$groups_notification['fields'][] = array(
+			'key'     => 'notification_group_messages_new_message',
+			'label'   => esc_html__( 'A group sends you a new message', 'buddyboss' ),
+			'default' => 'yes',
+			'options' => array(
+				array(
+					'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+					'value' => 'yes',
+				),
+				array(
+					'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+					'value' => 'no',
+				),
+			),
+		);
+	}
+
+	$array['groups'] = $groups_notification;
+
+	return $array;
+}
+
+add_filter( 'bb_register_notifications_by_group', 'bb_groups_register_notifications', 12, 1 );

@@ -317,3 +317,56 @@ function friends_screen_notification_settings() {
 }
 
 add_action( 'bp_notification_settings', 'friends_screen_notification_settings', 15 );
+
+/**
+ * Add Notifications for the friends.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $array Array of notifications.
+ *
+ * @return mixed
+ */
+function bb_friends_register_notifications( $array ) {
+	$friends_notification = array(
+		'label'  => esc_html__( 'Connections', 'buddyboss' ),
+		'fields' => array(
+			array(
+				'key'     => 'notification_friends_friendship_request',
+				'label'   => esc_html__( 'A member invites you to connect', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_friends_friendship_accepted',
+				'label'   => esc_html__( 'A member accepts your connection request', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+		),
+	);
+
+	$array['friends'] = $friends_notification;
+
+	return $array;
+}
+
+add_filter( 'bb_register_notifications_by_group', 'bb_friends_register_notifications', 14, 1 );

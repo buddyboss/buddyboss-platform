@@ -840,3 +840,17 @@ function bb_heartbeat_on_screen_notifications( $response = array(), $data = arra
 // Heartbeat receive for on-screen notification.
 add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
 add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
+
+/**
+ * Functions to get all registered notifications.
+ *
+ * @param string $component component name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_notifications_by_group( $component = '' ) {
+
+	$notifications = apply_filters( 'bb_register_notifications_by_group', array() );
+
+	return $notifications;
+}

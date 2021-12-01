@@ -404,3 +404,57 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	exit();
 }
 add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
+
+
+/**
+ * Add Notifications for the forums.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $array Array of notifications.
+ *
+ * @return mixed
+ */
+function bb_forums_register_notifications( $array ) {
+	$forums_notification = array(
+		'label'  => esc_html__( 'Forums', 'buddyboss' ),
+		'fields' => array(
+			array(
+				'key'     => 'notification_forums_following_reply',
+				'label'   => esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_forums_following_topic',
+				'label'   => esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+		),
+	);
+
+	$array['forums'] = $forums_notification;
+
+	return $array;
+}
+
+add_filter( 'bb_register_notifications_by_group', 'bb_forums_register_notifications', 13, 1 );

@@ -553,3 +553,55 @@ function bp_activity_remove_screen_notifications_single_post() {
 	}
 }
 add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single_post' );
+
+/**
+ * Add Notifications for the activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $array Array of notifications.
+ *
+ * @return mixed
+ */
+function bb_activity_register_notifications( $array ) {
+	$activity_notification = array(
+		'label'  => esc_html__( 'Activity Feed', 'buddyboss' ),
+		'fields' => array(
+			array(
+				'key'     => 'notification_activity_new_mention',
+				'label'   => esc_html__( 'A member is mentioned in another member’s update', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+			array(
+				'key'     => 'notification_activity_new_reply',
+				'label'   => esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+		),
+	);
+
+	$array['activity'] = $activity_notification;
+
+	return $array;
+}
+add_filter( 'bb_register_notifications_by_group', 'bb_activity_register_notifications', 10, 1 );

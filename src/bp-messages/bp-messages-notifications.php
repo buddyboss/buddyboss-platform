@@ -338,3 +338,41 @@ function messages_screen_notification_settings() {
 	<?php
 }
 add_action( 'bp_notification_settings', 'messages_screen_notification_settings', 2 );
+
+/**
+ * Add Notifications for the messages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $array Array of notifications.
+ *
+ * @return mixed
+ */
+function bb_message_register_notifications( $array ) {
+	$messages_notification = array(
+		'label'  => esc_html__( 'Messages', 'buddyboss' ),
+		'fields' => array(
+			array(
+				'key'     => 'notification_messages_new_message',
+				'label'   => esc_html__( 'A member sends you a new message', 'buddyboss' ),
+				'default' => 'yes',
+				'options' => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+		),
+	);
+
+	$array['messages'] = $messages_notification;
+
+	return $array;
+}
+
+add_filter( 'bb_register_notifications_by_group', 'bb_message_register_notifications', 11, 1 );
