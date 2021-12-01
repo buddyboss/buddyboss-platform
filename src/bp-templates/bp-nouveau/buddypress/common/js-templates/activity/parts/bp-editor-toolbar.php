@@ -6,6 +6,11 @@
 			</a>
 		</div>
 	<?php endif; ?>
+	<div class="post-elements-buttons-item post-mention bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Mention Member', 'buddyboss' ); ?>">
+		<span class="toolbar-button">
+			<i class="bb-icon bb-icon-at-sign"></i>
+		</span>
+	</div>
 	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profiles_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profiles_emoji_support_enabled() ) || ( bp_is_group_activity() && bp_is_groups_emoji_support_enabled() ) ) ) : ?>
 		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 	<?php endif; ?>

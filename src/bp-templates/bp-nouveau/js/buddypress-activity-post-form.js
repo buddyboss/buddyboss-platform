@@ -2631,7 +2631,8 @@ window.bp = window.bp || {};
 			id: 'editor-toolbar',
 			template: bp.template( 'editor-toolbar' ),
 			events: {
-				'click .show-toolbar': 'toggleToolbarSelector'
+				'click .show-toolbar': 'toggleToolbarSelector',
+				'click .post-mention': 'triggerMention'
 			},
 
 			toggleToolbarSelector: function ( e ) {
@@ -2651,6 +2652,11 @@ window.bp = window.bp || {};
 				}
 				$( window.activity_editor.elements[0] ).focus();
 				medium_editor.toggleClass( 'medium-editor-toolbar-active active' );
+			},
+
+			triggerMention: function ( e ) {
+				e.preventDefault();
+				
 			}
 		}
 	);

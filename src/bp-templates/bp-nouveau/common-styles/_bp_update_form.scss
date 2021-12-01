@@ -116,6 +116,10 @@
 				color: #122b46;
 			}
 
+			.post-mention .bb-icon {
+				font-size: 20px;
+			}
+
 		}
 
 	}
@@ -456,7 +460,7 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 0;
-		left: 0;
+		left: 4px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;

@@ -1144,6 +1144,11 @@ a.layout-grid-view {
   color: #122b46;
 }
 
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-mention .bb-icon,
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-mention .bb-icon {
+  font-size: 20px;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-avatar,
 .activity-update-form #whats-new-avatar {
   margin: 0;
@@ -1504,7 +1509,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form .medium-editor-toolbar {
   top: inherit;
   bottom: 0;
-  left: 0;
+  left: 4px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
