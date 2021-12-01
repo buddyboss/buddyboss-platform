@@ -8334,7 +8334,104 @@ body .bp-messages-user-threads {
 }
 
 /*__ General __*/
-/*__ Email notifications __*/
+.notification_info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.notification_info .notification_type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 33.33%;
+}
+
+.notification_info .notification_type:not(:last-child) {
+  padding-right: 20px;
+}
+
+.notification_info .notification_type_icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-right: 20px;
+}
+
+.notification_info .notification_type_icon .bb-icon {
+  font-size: 40px;
+}
+
+.notification_info .notification_type .notification_type_info h3,
+.notification_info .notification_type .notification_type_info p {
+  margin-bottom: 0;
+}
+
+.main-notification-settings {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.main-notification-settings thead {
+  background-color: #ededed;
+}
+
+.main-notification-settings thead .title {
+  padding-left: 20px;
+  border-left: 1px solid #ccc;
+  font-weight: 400;
+  width: 100%;
+}
+
+.main-notification-settings thead .app {
+  border-right: 1px solid #ccc;
+  padding-right: 20px;
+}
+
+.main-notification-settings .title {
+  vertical-align: middle;
+}
+
+.main-notification-settings th {
+  min-width: 95px;
+  padding: 10px;
+  vertical-align: middle;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.main-notification-settings tbody .title {
+  font-size: 14px;
+  color: #a3a5a9;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.main-notification-settings tbody td {
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+.main-notification-settings tbody td:first-child {
+  padding-left: 0;
+}
+
+.main-notification-settings tbody td.notification_no_option {
+  text-align: center;
+}
+
+.main-notification-settings tbody .notification_heading td {
+  border-bottom: 0;
+  padding: 15px 0 0 0;
+}
+
+/*__ notifications __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
 /**

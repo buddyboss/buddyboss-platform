@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-11-25 06:44:14+00:00\n"
+"POT-Creation-Date: 2021-12-01 13:47:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -844,19 +844,20 @@ msgstr ""
 msgid "%1$s replied to one of your activity comments"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:437
+#: bp-activity/bp-activity-notifications.php:440
+#: bp-activity/bp-activity-notifications.php:568
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:580
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:438
+#: bp-activity/bp-activity-notifications.php:441
 #: bp-blogs/bp-blogs-template.php:1163
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
 #: bp-core/profile-search/templates/members/bps-form-default.php:33
-#: bp-forums/groups.php:1564 bp-friends/bp-friends-notifications.php:262
-#: bp-groups/bp-groups-notifications.php:1241
+#: bp-forums/groups.php:1564 bp-friends/bp-friends-notifications.php:264
+#: bp-groups/bp-groups-notifications.php:1253
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:284
 #: bp-messages/bp-messages-notifications.php:303
 #: bp-templates/bp-nouveau/includes/functions.php:1195
@@ -866,14 +867,14 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:439
+#: bp-activity/bp-activity-notifications.php:442
 #: bp-blogs/bp-blogs-template.php:1171
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
 #: bp-core/profile-search/templates/members/bps-form-default.php:34
-#: bp-forums/groups.php:1565 bp-friends/bp-friends-notifications.php:263
-#: bp-groups/bp-groups-notifications.php:1242
+#: bp-forums/groups.php:1565 bp-friends/bp-friends-notifications.php:265
+#: bp-groups/bp-groups-notifications.php:1254
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:291
 #: bp-messages/bp-messages-notifications.php:304
 #: bp-templates/bp-nouveau/includes/functions.php:1203
@@ -883,44 +884,76 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:448
+#: bp-activity/bp-activity-notifications.php:451
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:588
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:452
-#: bp-activity/bp-activity-notifications.php:470 bp-forums/groups.php:1578
-#: bp-forums/groups.php:1600 bp-friends/bp-friends-notifications.php:274
-#: bp-friends/bp-friends-notifications.php:290
-#: bp-groups/bp-groups-notifications.php:1253
-#: bp-groups/bp-groups-notifications.php:1269
-#: bp-groups/bp-groups-notifications.php:1285
-#: bp-groups/bp-groups-notifications.php:1301
-#: bp-groups/bp-groups-notifications.php:1317
-#: bp-groups/bp-groups-notifications.php:1337
+#: bp-activity/bp-activity-notifications.php:458
+#: bp-activity/bp-activity-notifications.php:482
+#: bp-activity/bp-activity-notifications.php:576
+#: bp-activity/bp-activity-notifications.php:591 bp-forums/groups.php:1578
+#: bp-forums/groups.php:1600 bp-forums/notifications.php:428
+#: bp-forums/notifications.php:443 bp-friends/bp-friends-notifications.php:276
+#: bp-friends/bp-friends-notifications.php:292
+#: bp-friends/bp-friends-notifications.php:340
+#: bp-friends/bp-friends-notifications.php:355
+#: bp-groups/bp-groups-notifications.php:1265
+#: bp-groups/bp-groups-notifications.php:1281
+#: bp-groups/bp-groups-notifications.php:1297
+#: bp-groups/bp-groups-notifications.php:1313
+#: bp-groups/bp-groups-notifications.php:1329
+#: bp-groups/bp-groups-notifications.php:1349
+#: bp-groups/bp-groups-notifications.php:1400
+#: bp-groups/bp-groups-notifications.php:1415
+#: bp-groups/bp-groups-notifications.php:1430
+#: bp-groups/bp-groups-notifications.php:1445
+#: bp-groups/bp-groups-notifications.php:1460
+#: bp-groups/bp-groups-notifications.php:1479
 #: bp-messages/bp-messages-notifications.php:315
+#: bp-messages/bp-messages-notifications.php:361
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:458
-#: bp-activity/bp-activity-notifications.php:476 bp-forums/groups.php:1587
-#: bp-forums/groups.php:1609 bp-friends/bp-friends-notifications.php:280
-#: bp-friends/bp-friends-notifications.php:296
-#: bp-groups/bp-groups-notifications.php:1259
-#: bp-groups/bp-groups-notifications.php:1275
-#: bp-groups/bp-groups-notifications.php:1291
-#: bp-groups/bp-groups-notifications.php:1307
-#: bp-groups/bp-groups-notifications.php:1323
-#: bp-groups/bp-groups-notifications.php:1343
+#: bp-activity/bp-activity-notifications.php:467
+#: bp-activity/bp-activity-notifications.php:491
+#: bp-activity/bp-activity-notifications.php:580
+#: bp-activity/bp-activity-notifications.php:595 bp-forums/groups.php:1587
+#: bp-forums/groups.php:1609 bp-forums/notifications.php:432
+#: bp-forums/notifications.php:447 bp-friends/bp-friends-notifications.php:282
+#: bp-friends/bp-friends-notifications.php:298
+#: bp-friends/bp-friends-notifications.php:344
+#: bp-friends/bp-friends-notifications.php:359
+#: bp-groups/bp-groups-notifications.php:1271
+#: bp-groups/bp-groups-notifications.php:1287
+#: bp-groups/bp-groups-notifications.php:1303
+#: bp-groups/bp-groups-notifications.php:1319
+#: bp-groups/bp-groups-notifications.php:1335
+#: bp-groups/bp-groups-notifications.php:1355
+#: bp-groups/bp-groups-notifications.php:1404
+#: bp-groups/bp-groups-notifications.php:1419
+#: bp-groups/bp-groups-notifications.php:1434
+#: bp-groups/bp-groups-notifications.php:1449
+#: bp-groups/bp-groups-notifications.php:1464
+#: bp-groups/bp-groups-notifications.php:1483
 #: bp-messages/bp-messages-notifications.php:321
+#: bp-messages/bp-messages-notifications.php:365
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:466
+#: bp-activity/bp-activity-notifications.php:475
 #: bp-core/gdpr/class-bp-settings-export.php:155
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:603
 msgid "A member replies to an update or comment you've posted"
+msgstr ""
+
+#: bp-activity/bp-activity-notifications.php:572
+msgid "A member is mentioned in another member’s update"
+msgstr ""
+
+#: bp-activity/bp-activity-notifications.php:587
+msgid "A member receives a reply to an update or comment they’ve posted"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:461
@@ -961,7 +994,7 @@ msgstr[1] ""
 #: bp-members/classes/class-bp-members-component.php:465
 #: bp-messages/bp-messages-template.php:733
 #: bp-messages/classes/class-bp-messages-component.php:367
-#: bp-notifications/classes/class-bp-notifications-component.php:290
+#: bp-notifications/classes/class-bp-notifications-component.php:291
 #: bp-templates/bp-nouveau/includes/activity/functions.php:111
 #: bp-xprofile/classes/class-bp-xprofile-component.php:447
 #. translators: %s = member name
@@ -1313,10 +1346,11 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:278
 #: bp-forums/classes/class-bp-forums-component.php:329
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:49
-#: bp-forums/groups.php:1563 bp-media/bp-media-filters.php:1409
-#: bp-media/bp-media-settings.php:239 bp-media/bp-media-settings.php:246
-#: bp-media/bp-media-settings.php:253 bp-media/bp-media-settings.php:260
-#: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:743
+#: bp-forums/groups.php:1563 bp-forums/notifications.php:420
+#: bp-media/bp-media-filters.php:1409 bp-media/bp-media-settings.php:239
+#: bp-media/bp-media-settings.php:246 bp-media/bp-media-settings.php:253
+#: bp-media/bp-media-settings.php:260 bp-media/bp-media-settings.php:267
+#: bp-media/classes/class-bp-media.php:743
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1141
 #: bp-search/bp-search-functions.php:369
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:738
@@ -3132,6 +3166,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-learndash-functions.php:467
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1070
+#: bp-notifications/bp-notifications-settings.php:61
 #: bp-search/bp-search-settings.php:471 bp-video/bp-video-settings.php:218
 msgid "View Tutorial"
 msgstr ""
@@ -3698,7 +3733,8 @@ msgstr ""
 #: bp-document/classes/class-bp-document.php:1396
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119
-#: bp-friends/bp-friends-notifications.php:261
+#: bp-friends/bp-friends-notifications.php:263
+#: bp-friends/bp-friends-notifications.php:332
 #: bp-friends/classes/class-bp-friends-component.php:29
 #: bp-friends/classes/class-bp-friends-component.php:175
 #: bp-friends/classes/class-bp-friends-component.php:259
@@ -4293,6 +4329,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1020
 #: bp-messages/bp-messages-notifications.php:30
 #: bp-messages/bp-messages-notifications.php:302
+#: bp-messages/bp-messages-notifications.php:353
 #: bp-messages/classes/class-bp-messages-component.php:214
 #: bp-messages/classes/class-bp-messages-component.php:221
 #: bp-messages/classes/class-bp-messages-component.php:237
@@ -4317,36 +4354,12 @@ msgstr ""
 #: bp-core/gdpr/class-bp-notification-export.php:57
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:983
 #: bp-notifications/classes/class-bp-notifications-component.php:27
-#: bp-notifications/classes/class-bp-notifications-component.php:159
-#: bp-notifications/classes/class-bp-notifications-component.php:166
-#: bp-notifications/classes/class-bp-notifications-component.php:238
-#: bp-notifications/classes/class-bp-notifications-component.php:284
+#: bp-notifications/classes/class-bp-notifications-component.php:160
+#: bp-notifications/classes/class-bp-notifications-component.php:167
+#: bp-notifications/classes/class-bp-notifications-component.php:239
+#: bp-notifications/classes/class-bp-notifications-component.php:285
 #: bp-performance/classes/class-settings.php:133
 msgid "Notifications"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:69
-msgid "On-screen Notifications"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:72
-msgid "On-screen notifications"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:73
-msgid "Position on Screen"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:74
-msgid "Mobile Support"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:75
-msgid "Automatically Hide"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:76
-msgid "Show in Browser Tab"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-performance.php:27
@@ -5404,7 +5417,8 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2541
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
 #: bp-groups/bp-groups-functions.php:3542
-#: bp-groups/bp-groups-notifications.php:1240
+#: bp-groups/bp-groups-notifications.php:1252
+#: bp-groups/bp-groups-notifications.php:1392
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-theme-compat.php:184
 #: bp-integrations/learndash/core/Requirements.php:36
@@ -8057,13 +8071,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8535,9 +8549,6 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:91
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:865
-#: bp-settings/classes/class-bp-settings-component.php:166
-#: bp-settings/classes/class-bp-settings-component.php:263
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:12
 msgid "Email Preferences"
 msgstr ""
 
@@ -8550,43 +8561,50 @@ msgid "A member sends you a new message\t"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:161
-#: bp-friends/bp-friends-notifications.php:270
+#: bp-friends/bp-friends-notifications.php:272
+#: bp-friends/bp-friends-notifications.php:336
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:781
 msgid "A member invites you to connect"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:162
-#: bp-friends/bp-friends-notifications.php:286
+#: bp-friends/bp-friends-notifications.php:288
+#: bp-friends/bp-friends-notifications.php:351
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:793
 msgid "A member accepts your connection request"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:165
-#: bp-groups/bp-groups-notifications.php:1249
+#: bp-groups/bp-groups-notifications.php:1261
+#: bp-groups/bp-groups-notifications.php:1396
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:655
 msgid "A member invites you to join a group"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:166
-#: bp-groups/bp-groups-notifications.php:1265
+#: bp-groups/bp-groups-notifications.php:1277
+#: bp-groups/bp-groups-notifications.php:1411
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:667
 msgid "Group information is updated"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:167
-#: bp-groups/bp-groups-notifications.php:1281
+#: bp-groups/bp-groups-notifications.php:1293
+#: bp-groups/bp-groups-notifications.php:1426
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:679
 msgid "You are promoted to a group organizer or moderator"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:168
-#: bp-groups/bp-groups-notifications.php:1297
+#: bp-groups/bp-groups-notifications.php:1309
+#: bp-groups/bp-groups-notifications.php:1441
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:691
 msgid "A member requests to join a private group you organize"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:169
-#: bp-groups/bp-groups-notifications.php:1313
+#: bp-groups/bp-groups-notifications.php:1325
+#: bp-groups/bp-groups-notifications.php:1456
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:703
 msgid "Your request to join a group has been approved or denied"
 msgstr ""
@@ -8596,11 +8614,13 @@ msgid "Message from Group Send Message"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:174 bp-forums/groups.php:1571
+#: bp-forums/notifications.php:424
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:743
 msgid "A member replies to a discussion you are subscribed"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:175 bp-forums/groups.php:1593
+#: bp-forums/notifications.php:439
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:755
 msgid "A member creates discussion in a forum you are subscribed"
 msgstr ""
@@ -16471,55 +16491,56 @@ msgstr ""
 msgid "* Permalink changed from \"%1$s\" to \"%2$s\"."
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:416
+#: bp-groups/bp-groups-notifications.php:422
 msgid "%1$d new membership requests for the group \"%2$s\""
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:470
+#: bp-groups/bp-groups-notifications.php:476
 msgid "%1$s requests membership for the group: %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:533
+#: bp-groups/bp-groups-notifications.php:539
 msgid "%d accepted group membership requests"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:579
+#: bp-groups/bp-groups-notifications.php:585
 msgid "Membership for group \"%s\" accepted"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:636
+#: bp-groups/bp-groups-notifications.php:642
 msgid "%d rejected group membership requests"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:682
+#: bp-groups/bp-groups-notifications.php:688
 msgid "Membership for group \"%s\" rejected"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:738
+#: bp-groups/bp-groups-notifications.php:744
 msgid "You were promoted to the role of %1$s in %2$d groups"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:779
+#: bp-groups/bp-groups-notifications.php:785
 msgid "You were promoted to the role of %1$s in the group \"%2$s\""
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:833
+#: bp-groups/bp-groups-notifications.php:839
 msgid "You were promoted to a %1$s in %2$d groups"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:874
+#: bp-groups/bp-groups-notifications.php:880
 msgid "You were promoted to a %1$s in the group \"%2$s\""
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:929
+#: bp-groups/bp-groups-notifications.php:935
 msgid "You have %d new group invitations"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:969
+#: bp-groups/bp-groups-notifications.php:975
 msgid "You have an invitation to the group: %s"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:1333
+#: bp-groups/bp-groups-notifications.php:1345
+#: bp-groups/bp-groups-notifications.php:1475
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:716
 msgid "A group sends you a new message"
 msgstr ""
@@ -19497,6 +19518,8 @@ msgid "Profile Albums"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:869
+#: bp-notifications/bp-notifications-settings.php:133
+#: bp-notifications/bp-notifications-settings.php:150
 msgid "GIPHY API Key"
 msgstr ""
 
@@ -19604,14 +19627,17 @@ msgid ""
 msgstr ""
 
 #: bp-media/bp-media-settings.php:874
+#: bp-notifications/bp-notifications-settings.php:155
 msgid "This feature requires an account at"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:876
+#: bp-notifications/bp-notifications-settings.php:157
 msgid "Create your account, and then click"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:878
+#: bp-notifications/bp-notifications-settings.php:159
 msgid "Once done, copy the API key and paste it in the field above."
 msgstr ""
 
@@ -21108,15 +21134,15 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:989
 #: bp-messages/bp-messages-template.php:1022
 #: bp-notifications/bp-notifications-template.php:653
-#: bp-notifications/classes/class-bp-notifications-component.php:182
-#: bp-notifications/classes/class-bp-notifications-component.php:239
+#: bp-notifications/classes/class-bp-notifications-component.php:183
+#: bp-notifications/classes/class-bp-notifications-component.php:240
 msgid "Unread"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:995
 #: bp-notifications/bp-notifications-template.php:561
-#: bp-notifications/classes/class-bp-notifications-component.php:193
-#: bp-notifications/classes/class-bp-notifications-component.php:263
+#: bp-notifications/classes/class-bp-notifications-component.php:194
+#: bp-notifications/classes/class-bp-notifications-component.php:264
 msgid "Read"
 msgstr ""
 
@@ -21699,6 +21725,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-messages/bp-messages-notifications.php:311
+#: bp-messages/bp-messages-notifications.php:357
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:629
 msgid "A member sends you a new message"
 msgstr ""
@@ -23353,6 +23380,34 @@ msgstr ""
 msgid "No new notifications"
 msgstr ""
 
+#: bp-notifications/bp-notifications-settings.php:25
+msgid "On-screen Notifications"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:30
+msgid "Automatic Notifications"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:100
+msgid "On-screen notifications"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:106
+msgid "Position on Screen"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:112
+msgid "Mobile Support"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:118
+msgid "Automatically Hide"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:124
+msgid "Show in Browser Tab"
+msgstr ""
+
 #: bp-notifications/bp-notifications-template.php:477
 msgid "Date not found"
 msgstr ""
@@ -23381,16 +23436,16 @@ msgstr ""
 msgid "Clear All"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-notifications-component.php:120
+#: bp-notifications/classes/class-bp-notifications-component.php:121
 msgid "Search Notifications..."
 msgstr ""
 
-#: bp-notifications/classes/class-bp-notifications-component.php:229
+#: bp-notifications/classes/class-bp-notifications-component.php:230
 #. translators: %s: Unread notification count for the current user
 msgid "Notifications %s"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-notifications-component.php:234
+#: bp-notifications/classes/class-bp-notifications-component.php:235
 #. translators: %s: Unread notification count for the current user
 msgid "Unread %s"
 msgstr ""
@@ -23949,6 +24004,12 @@ msgstr ""
 msgid ""
 "There is a pending change of your email address to %1$s. Check your email "
 "(%2$s) for the verification link."
+msgstr ""
+
+#: bp-settings/classes/class-bp-settings-component.php:166
+#: bp-settings/classes/class-bp-settings-component.php:263
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:12
+msgid "Notification Preferences"
 msgstr ""
 
 #: bp-settings/classes/class-bp-settings-component.php:200
@@ -25226,7 +25287,7 @@ msgid "Leave password fields blank for no change"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:16
-msgid "Choose your email notification preferences."
+msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:12
@@ -29200,14 +29261,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 

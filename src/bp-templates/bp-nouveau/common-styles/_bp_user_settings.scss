@@ -3,7 +3,7 @@
 
 // 1. Settings Global
 // 1. General (email/password change)
-// 2. Email notifications
+// 2. notifications
 // 3. Profile visibility
 // 4. group Invites
 
@@ -33,9 +33,119 @@
 /*__ General __*/
 
 
-// Email notifications
+// notifications
+.notification_info {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	margin-bottom: 30px;
 
-/*__ Email notifications __*/
+	.notification_type {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		width: 33.33%;
+
+		&:not(:last-child) {
+			padding-right: 20px;
+		}
+
+	}
+
+	.notification_type_icon {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		padding-right: 20px;
+
+		.bb-icon {
+			font-size: 40px;
+		}
+
+	}
+
+	.notification_type .notification_type_info {
+
+		h3,
+		p {
+			margin-bottom: 0;
+		}
+
+	}
+
+}
+
+.main-notification-settings {
+	font-size: 16px;
+	margin-bottom: 0;
+
+	thead {
+		background-color: $buttons-background;
+
+		.title {
+			padding-left: 20px;
+			border-left: 1px solid $primary-grey;
+			font-weight: 400;
+			width: 100%;
+		}
+
+		.app {
+			border-right: 1px solid $primary-grey;
+			padding-right: 20px;
+		}
+
+	}
+
+	.title {
+		vertical-align: middle;
+	}
+
+	th {
+		min-width: 95px;
+		padding: 10px;
+		vertical-align: middle;
+		border-top: 1px solid $primary-grey;
+		border-bottom: 1px solid $primary-grey;
+	}
+
+	tbody {
+
+		.title {
+			font-size: 14px;
+			color: #a3a5a9;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			font-weight: 500;
+		}
+
+		td {
+			border-bottom: 1px solid $primary-grey;
+			vertical-align: middle;
+			padding: 10px;
+
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&.notification_no_option {
+				text-align: center;
+			}
+
+		}
+
+		.notification_heading td {
+			border-bottom: 0;
+			padding: 15px 0 0 0;
+		}
+
+	}
+
+}
+
+/*__ notifications __*/
 
 
 // Profile visibility
