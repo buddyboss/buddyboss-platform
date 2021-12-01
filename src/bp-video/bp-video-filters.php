@@ -69,7 +69,7 @@ add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
 
 add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
-add_action( 'template_include', 'bb_setup_template_for_video_preview' );
+add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
 
 /**
  * Add video theatre template for activity pages.
@@ -942,7 +942,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -981,7 +981,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -1487,7 +1487,7 @@ function bp_video_activity_after_email_content( $activity ) {
 		$video_ids  = explode( ',', $video_ids );
 		$video_text = sprintf(
 			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
-			number_format_i18n( count( $video_ids ) )
+			bp_core_number_format( count( $video_ids ) )
 		);
 		$content    = sprintf(
 			/* translator: 1. Activity link, 2. Activity video count */
@@ -1611,8 +1611,20 @@ function bp_video_check_download_album_protection() {
 		array(
 			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => '.htaccess',
-			'content' => 'deny from all
+			'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>

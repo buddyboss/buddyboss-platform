@@ -810,6 +810,8 @@ function groups_get_group_members( $args = array() ) {
 			'group_role'          => array(),
 			'search_terms'        => false,
 			'type'                => 'last_joined',
+			'xprofile_query'      => false,
+			'populate_extras'     => true,
 		),
 		'groups_get_group_members'
 	);
@@ -837,13 +839,15 @@ function groups_get_group_members( $args = array() ) {
 		// Perform the group member query (extends BP_User_Query).
 		$members = new BP_Group_Member_Query(
 			array(
-				'group_id'     => $r['group_id'],
-				'per_page'     => $r['per_page'],
-				'page'         => $r['page'],
-				'group_role'   => $r['group_role'],
-				'exclude'      => $r['exclude'],
-				'search_terms' => $r['search_terms'],
-				'type'         => $r['type'],
+				'group_id'        => $r['group_id'],
+				'per_page'        => $r['per_page'],
+				'page'            => $r['page'],
+				'group_role'      => $r['group_role'],
+				'exclude'         => $r['exclude'],
+				'search_terms'    => $r['search_terms'],
+				'type'            => $r['type'],
+				'xprofile_query'  => $r['xprofile_query'],
+				'populate_extras' => $r['populate_extras'],
 			)
 		);
 
@@ -3612,6 +3616,12 @@ function bp_group_get_group_type_key( $post_id ) {
  * @return array Group types
  */
 function bp_get_active_group_types( $args = array() ) {
+
+	if ( ! bp_disable_group_type_creation() ) {
+		return array();
+	}
+
+	static $group_cache = array();
 	$bp_active_group_types = array();
 
 	$args = bp_parse_args( $args, array(
@@ -3623,6 +3633,12 @@ function bp_get_active_group_types( $args = array() ) {
         'fields'         => 'ids'
     ), 'group_types' );
 
+	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+
+	if ( isset( $group_cache[ $group_cache_key ] ) ) {
+		return $group_cache[ $group_cache_key ];
+	}
+
     $bp_active_group_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_group_types_query->have_posts() ) {
@@ -3630,7 +3646,10 @@ function bp_get_active_group_types( $args = array() ) {
 	}
 	wp_reset_postdata();
 
-	return apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
+	$bp_active_group_types           = apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
+	$group_cache[ $group_cache_key ] = $bp_active_group_types;
+
+	return $bp_active_group_types;
 }
 
 if ( true === bp_disable_group_type_creation() ) {
