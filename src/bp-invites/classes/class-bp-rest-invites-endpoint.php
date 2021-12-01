@@ -262,6 +262,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
 			}
 
+			// check if it has enough recipients to use batch emails.
+			$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
+
 			foreach ( $invite_correct_array as $key => $value ) {
 
 				$_POST = array();
@@ -350,7 +353,13 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					$invitations_ids[] = $post_id;
 
 					// Send invitation email.
-					bp_send_email( 'invites-member-invite', $email, $args );
+					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+						bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
+						// call email background process.
+						bb_email_queue()->bb_email_background_process();
+					} else {
+						bp_send_email( 'invites-member-invite', $email, $args );
+					}
 
 					// Save a blank bp_ia_accepted post_meta.
 					update_post_meta( $post_id, 'bp_member_invites_accepted', '' );
