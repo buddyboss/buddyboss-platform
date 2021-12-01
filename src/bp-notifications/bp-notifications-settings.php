@@ -3,7 +3,7 @@
  * Notifications Settings
  *
  * @package BuddyBoss\Notifications
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get the Media settings sections.
+ * Get the Notification settings sections.
  *
  * @return array
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_notification_get_settings_sections() {
 
