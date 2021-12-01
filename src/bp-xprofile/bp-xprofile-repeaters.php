@@ -40,10 +40,15 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
 		return array();
 	}
 
-	$clone_field_ids = $wpdb->get_col(
-		"SELECT object_id FROM {$bp->profile->table_name_meta} "
-		. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
-	);
+	static $bp_clone_field_ids = array();
+	$bp_clone_cache_key = 'bp_clone_field_ids_' . md5( maybe_serialize( $group_field_ids ) );
+	if ( ! isset( $bp_clone_field_ids[ $bp_clone_cache_key ] ) ) {
+		$bp_clone_field_ids[ $bp_clone_cache_key ] = $wpdb->get_col(
+			"SELECT object_id FROM {$bp->profile->table_name_meta} "
+			. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
+		);
+	}
+	$clone_field_ids = $bp_clone_field_ids[ $bp_clone_cache_key ];
 
 	if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
 		$template_field_ids = $group_field_ids;
