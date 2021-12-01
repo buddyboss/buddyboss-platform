@@ -20,6 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bb_notification_get_settings_sections() {
 
 	$settings = array(
+		'bp_notifications'                   => array(
+			'page'              => 'notifications',
+			'title'             => __( 'On-screen Notifications', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
+		),
 		'bp_notification_settings_automatic' => array(
 			'page'              => 'notifications',
 			'title'             => __( 'Automatic Notifications', 'buddyboss' ),
@@ -88,16 +93,48 @@ function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
  */
 function bb_notification_get_settings_fields() {
 
-	$fields                           = array();
-	$fields['bp_notification_settings_automatic'] = array(
+	$fields = array();
 
+	$fields['bp_notifications'] = array(
+		'_bp_on_screen_notifications_enable'        => array(
+			'title'             => __( 'On-screen notifications', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_enable',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+		'_bp_on_screen_notification_position'       => array(
+			'title'             => __( 'Position on Screen', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_position',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+		'_bp_on_screen_notification_mobile_support' => array(
+			'title'             => __( 'Mobile Support', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_mobile_support',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+		'_bp_on_screen_notification_visibility'     => array(
+			'title'             => __( 'Automatically Hide', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_visibility',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+		'_bp_on_screen_notification_browser_tab'    => array(
+			'title'             => __( 'Show in Browser Tab', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_browser_tab',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+	);
+
+	$fields['bp_notification_settings_automatic'] = array(
 		'bp_media_gif_api_key' => array(
 			'title'             => __( 'GIPHY API Key', 'buddyboss' ),
 			'callback'          => 'bb_notification_settings_callback_gif_key',
 			'sanitize_callback' => 'string',
 			'args'              => array(),
 		),
-
 	);
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
