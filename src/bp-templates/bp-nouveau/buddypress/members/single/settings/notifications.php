@@ -9,7 +9,7 @@
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading email-settings-screen">
-	<?php _e( 'Email Preferences', 'buddyboss' ); ?>
+	<?php _e( 'Notification Preferences', 'buddyboss' ); ?>
 </h2>
 
 <p class="bp-help-text email-notifications-info">
