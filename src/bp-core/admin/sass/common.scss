@@ -2555,6 +2555,11 @@ h2.has_tutorial_btn {
 			margin-left: 5px;
 		}
 
+		&.cover-uploader .bb-upload-container img {
+			max-width: 300px;
+			width: 100%;
+		}
+
 	}
 
 }

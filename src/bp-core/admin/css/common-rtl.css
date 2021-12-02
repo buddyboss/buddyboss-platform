@@ -2405,3 +2405,8 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   color: #3c434a;
   margin-right: 5px;
 }
+
+.avatar-options .bb-default-custom-upload-file.cover-uploader .bb-upload-container img {
+  max-width: 300px;
+  width: 100%;
+}

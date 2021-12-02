@@ -499,15 +499,15 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 		</label>
 	</div>
 
-	<div class="bb-default-custom-upload-file custom-profile-avatar">
+	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader">
 		<div class="bb-upload-container">
 			<img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" class="bb-upload-preview">
 			<input type="hidden" name="bp-custom-profile-cover" value="">
 		</div>
 		<div class="bb-img-button-wrap">
 			<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button" accept="image/*">
-			<button style="" type="button" class="button bb-img-upload-button">Upload</button>
-			<a style="" href="#" class="delete button button-link bb-img-remove-button">Remove</a>
+			<button style="" type="button" class="button button-large bb-img-upload-button">Upload</button>
+			<a style="" href="#" class="delete button button-large  bb-img-remove-button">Remove</a>
 		</div>
 	</div>
 	<p class="description"><?php _e( 'Upload an image to be used as the default profile cover image. Recommended size is 1300x300px.', 'buddyboss' ); ?></p>
