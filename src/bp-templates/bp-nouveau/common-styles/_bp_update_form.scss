@@ -43,6 +43,7 @@
 			display: inline-block;
 			margin-right: 10px;
 			vertical-align: middle;
+			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 		}
 	}
 
@@ -644,7 +645,7 @@
 		line-height: 1;
 
 		&:before {
-			content: "\e960";
+			content: "\e819";
 			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
@@ -759,7 +760,7 @@
 		}
 
 		&.public:before {
-			content: "\e960";
+			content: "\e819";
 		}
 
 		&.onlyme:before {

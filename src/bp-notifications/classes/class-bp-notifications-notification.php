@@ -84,6 +84,20 @@ class BP_Notifications_Notification {
 	 */
 	public $is_new;
 
+	/**
+	 * Columns in the notifications table.
+	 */
+	public static $columns = array(
+		'id',
+		'user_id',
+		'item_id',
+		'secondary_item_id',
+		'component_name',
+		'component_action',
+		'date_notified',
+		'is_new',
+	);
+
 	/** Public Methods ********************************************************/
 
 	/**
@@ -407,8 +421,17 @@ class BP_Notifications_Notification {
 
 		// Order by.
 		if ( ! empty( $args['order_by'] ) ) {
-			$order_by               = implode( ', ', (array) $args['order_by'] );
-			$conditions['order_by'] = "{$order_by}";
+			// Added security patch for SQL Injections vulnerability
+			$order_by_clean = array();
+			foreach ( (array) $args['order_by'] as $key => $value ) {
+				if ( in_array( $value, self::$columns, true ) ) {
+					$order_by_clean[] = $value;
+				}
+			}
+			if ( ! empty( $order_by_clean ) ) {
+				$order_by               = implode( ', ', $order_by_clean );
+				$conditions['order_by'] = "{$order_by}";
+			}
 		}
 
 		// Sort order direction.

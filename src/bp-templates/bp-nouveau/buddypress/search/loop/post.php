@@ -5,7 +5,7 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
-				<img src="<?php echo $result['post_thumbnail']; ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title() ?>"/>
+				<img src="<?php echo esc_url( $result['post_thumbnail'] ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>"/>
 			</a>
 		</div>
 

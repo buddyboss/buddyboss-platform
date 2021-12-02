@@ -161,7 +161,6 @@ class BP_Messages_Thread {
 			bp_displayed_user_id() ?
 				bp_displayed_user_id() :
 				bp_loggedin_user_id();
-
 		// Merge $args with our defaults.
 		$r = wp_parse_args(
 			$args,
@@ -172,7 +171,6 @@ class BP_Messages_Thread {
 				'before'            => null,
 			)
 		);
-
 		$this->messages_order   = $order;
 		$this->messages_perpage = $r['per_page'];
 		$this->messages_before  = $r['before'];
@@ -201,9 +199,9 @@ class BP_Messages_Thread {
 		foreach ( (array) $this->messages as $key => $message ) {
 			$this->sender_ids[ $message->sender_id ] = $message->sender_id;
 		}
-
+		$args['per_page'] = bb_messages_recipients_per_page();
 		// Fetch the recipients.
-		$this->recipients = $this->get_recipients();
+		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 
 		// Get the unread count for the logged in user.
 		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
@@ -1463,7 +1461,7 @@ class BP_Messages_Thread {
 	public static function get_recipient_links( $recipients ) {
 
 		if ( count( $recipients ) >= 5 ) {
-			return sprintf( __( '%s Recipients', 'buddyboss' ), number_format_i18n( count( $recipients ) ) );
+			return sprintf( __( '%s Recipients', 'buddyboss' ), bp_core_number_format( count( $recipients ) ) );
 		}
 
 		$recipient_links = array();
@@ -1780,5 +1778,63 @@ class BP_Messages_Thread {
 		$where_conditions['columns'] = $wpdb->prepare( 'm.id > %d', $last_deleted_id );
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Returns recipients for a message thread with pagination.
+	 *
+	 * @since BuddyBoss 1.7.6
+	 *
+	 * @param int   $thread_id The thread ID.
+	 * @param array $args      Array of parsed arguments for the get method.
+	 *
+	 * @return array
+	 */
+	public function get_pagination_recipients( $thread_id = 0, $args = array() ) {
+		if ( empty( $thread_id ) ) {
+			$thread_id = $this->thread_id;
+		}
+
+		$r = bp_parse_args(
+			$args,
+			array(
+				'per_page'        => bb_messages_recipients_per_page(),
+				'include_threads' => array( (int) $thread_id ),
+				'count_total'     => true,
+			)
+		);
+
+		if ( isset( $r['exclude_current_user'] ) && true === (bool) $r['exclude_current_user'] ) {
+			// Exclude admins users list in the message.
+			$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+			if ( ! empty( $r['exclude_admin_user'] ) ) {
+				$r['exclude_admin_user'] = array_merge( $r['exclude_admin_user'], array( $user_id ) );
+			} else {
+				$r['exclude_admin_user'] = array( $user_id );
+			}
+			$r['exclude_admin_user'] = array_unique( $r['exclude_admin_user'] );
+		}
+		$results    = self::get( $r );
+		$recipients = array();
+
+		if ( ! empty( $results['recipients'] ) ) {
+			foreach ( (array) $results['recipients'] as $recipient ) {
+				$recipients[ $recipient->user_id ] = (object) array_map( 'intval', (array) $recipient );
+			}
+		}
+
+		if ( isset( $results['total'] ) ) {
+			$this->total_recipients_count = $results['total'];
+		}
+
+		/**
+		 * Filters the recipients of a message thread.
+		 *
+		 * @since BuddyBoss 1.7.6
+		 *
+		 * @param array $recipients Array of recipient objects.
+		 * @param int   $thread_id  ID of the current thread.
+		 */
+		return apply_filters( 'bp_messages_thread_get_pagination_recipients', $recipients, $thread_id );
 	}
 }

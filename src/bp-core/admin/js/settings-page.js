@@ -378,6 +378,39 @@
 					);
 			}
 
+			// Activity settings.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
+				$( '.bp-feed-post-type-checkbox' ).each( function() {
+					var post_type = $(this).data('post_type');
+					
+					if ( true === this.checked ) {
+						$('.bp-feed-post-type-comment-'+post_type)
+							.closest('tr')
+							.show();
+					}
+				});
+
+				$( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).on(
+					'click',
+					'.bp-feed-post-type-checkbox',
+					function () {
+						var post_type = $(this).data('post_type'),
+							commentField = $('.bp-feed-post-type-comment-'+post_type);
+						
+						if ( true === this.checked ) {
+							commentField
+								.closest('tr')
+								.show();
+						} else {
+							commentField
+								.prop( 'checked', false )
+								.closest('tr')
+								.hide();
+						}
+					}
+				);
+			}
+
 			$( '#bp_media_profile_media_support' ).change(
 				function () {
 					if ( ! this.checked) {
@@ -772,7 +805,7 @@
 							if ( BbToolsCommunityRepairActions.length ) {
 								$( 'body .section-repair_community .settings fieldset .submit a' ).addClass( 'disable-btn' );
 								$( 'body .section-repair_community .settings fieldset .checkbox code' ).remove();
-								bp_admin_repair_tools_wrapper_function( 1, 0 );
+								bp_admin_repair_tools_wrapper_function( 0, 0 );
 							}
 						}
 					);
