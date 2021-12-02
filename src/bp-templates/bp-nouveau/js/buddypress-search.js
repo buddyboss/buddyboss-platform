@@ -10,6 +10,13 @@ jQuery(document).ready(function($) {
 			$(BP_SEARCH.autocomplete_selector).each(function() {
 				var $form = $(this),
 					$search_field = $form.find('input[name="s"], input[type=search]');
+				/**
+				 * Continue the loop if it is woocommerce product search widget
+				 */
+				if ( $( 'input[name="post_type"]', $form ).length > 0 && 'product' === $( 'input[name="post_type"]', $form ).val() ) {
+					return;
+				}
+
 				if ($search_field.length > 0) {
 
 					/**
@@ -219,7 +226,7 @@ jQuery(document).ready(function($) {
 	$( [ BP_SEARCH.autocomplete_selector, BP_SEARCH.form_selector ].filter(Boolean).join(',') ).each(function () {
 		var $form = $(this);
 
-		if ( ! $( 'input[name="bp_search"]', $form ).length ) {
+		if ( ! $( 'input[name="bp_search"]', $form ).length && 'product' !== $( 'input[name="post_type"]', $form ).val() ) {
 			$( '<input>' ).attr( {
 				type: 'hidden',
 				name: 'bp_search',
