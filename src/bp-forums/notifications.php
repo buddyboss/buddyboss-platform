@@ -461,15 +461,15 @@ function forums_notification_settings() {
 				<tr>
 					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
 					<td class="email">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_email' ); ?>" name="notifications['<?php echo esc_attr( $field['key'] ); ?>']" class="bs-styled-checkbox" value="yes" <?php checked( $email_checked, 'yes' ); ?> />
+						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_email' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $email_checked, 'yes' ); ?> />
 						<label for="<?php echo esc_attr( $field['key'] . '_email' ); ?>"><?php esc_html_e( 'Email', 'buddyboss' ); ?></label>
 					</td>
 					<td class="web">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_web' ); ?>" name="notifications['<?php echo esc_attr( $field['key'] . '_web' ); ?>']" class="bs-styled-checkbox" value="yes" <?php checked( $web_checked, 'yes' ); ?> />
+						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_web' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] . '_web' ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $web_checked, 'yes' ); ?> />
 						<label for="<?php echo esc_attr( $field['key'] . '_web' ); ?>"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
 					</td>
 					<td class="app">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_app' ); ?>" name="notifications['<?php echo esc_attr( $field['key'] . '_app' ); ?>']" class="bs-styled-checkbox" value="yes" <?php checked( $app_checked, 'yes' ); ?> />
+						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_app' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] . '_app' ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $app_checked, 'yes' ); ?> />
 						<label for="<?php echo esc_attr( $field['key'] . '_app' ); ?>"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
 					</td>
 				</tr>
