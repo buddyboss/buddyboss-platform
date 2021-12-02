@@ -509,6 +509,9 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 			<button style="" type="button" class="button button-large bb-img-upload-button">Upload</button>
 			<a style="" href="#" class="delete button button-large  bb-img-remove-button">Remove</a>
 		</div>
+		<div class="bp-cover-image-status bb-custom-profile-cover-feedback" style="display:none;">
+			<p id="bp-cover-image-feedback" class="updated"></p>
+		</div>
 	</div>
 	<p class="description"><?php _e( 'Upload an image to be used as the default profile cover image. Recommended size is 1300x300px.', 'buddyboss' ); ?></p>
 	<?php

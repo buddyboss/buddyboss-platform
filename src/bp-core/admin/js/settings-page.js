@@ -978,6 +978,133 @@
 				);
 			}
 
+			function profileGroupFileFeedback( container, feedback, type ) {
+				container.find( 'p' ).removeClass( 'success error' ).addClass( type ).html( feedback );
+				container.show();
+			}
+
+			$( document ).on(
+				'change',
+				'#default-profile-cover-file',
+				function(e) {
+					e.preventDefault();
+					var fileData = $( this )[0].files[0];
+					var coverContainer = $( '.custom-profile-cover' );
+					var feedbackContainer = coverContainer.find( '.bb-custom-profile-cover-feedback' );
+					var imageContainer = coverContainer.find( '.bb-upload-preview' );
+
+					feedbackContainer.hide();
+					feedbackContainer.find( 'p' ).removeClass( 'success error' );
+
+					if ( 'undefined' === typeof fileData ) {
+						profileGroupFileFeedback( feedbackContainer, BP_ADMIN.custom_profile_cover.select_file, 'error' );
+						return false;
+					}
+
+					var form_data = new FormData();
+					form_data.append( 'file', fileData );
+					form_data.append( 'name', fileData.name );
+					form_data.append( '_wpnonce', BP_ADMIN.custom_profile_cover.upload.nonce );
+					form_data.append( 'action', BP_ADMIN.custom_profile_cover.upload.action );
+					form_data.append( 'bp_params[object]', BP_ADMIN.custom_profile_cover.upload.object );
+					form_data.append( 'bp_params[item_id]', BP_ADMIN.custom_profile_cover.upload.item_id );
+					form_data.append( 'bp_params[has_cover_image]', BP_ADMIN.custom_profile_cover.upload.has_cover_image );
+					form_data.append( 'bp_params[nonces][remove]', BP_ADMIN.custom_profile_cover.remove.nonce );
+					
+					$.ajax(
+						{
+							url: BP_ADMIN.ajax_url, // point to server-side PHP script.
+							cache: false,
+							contentType: false,
+							processData: false,
+							data: form_data,
+							type: 'post',
+							success: function( response ){
+
+								var feedback, 
+								    feedbackType = 'error';
+								
+								if ( 'undefined' === typeof response ) {
+									feedback = BP_ADMIN.custom_profile_cover.file_upload_error;
+								} else if ( ! response.success ) {
+
+									if ( 'undefined' === typeof response.data.feedback_code ) {
+										feedback = response.data.message;
+									} else {
+										feedback = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+									}
+
+								} else {
+
+									imageContainer.prop( 'src', response.data.url );
+									feedbackType = 'success'
+									feedback = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+								}
+
+								// Show feedback.
+								profileGroupFileFeedback( feedbackContainer, feedback, feedbackType );
+								
+								// Reset the file field.
+								$( '#default-profile-cover-file' ).val( '' );
+							}
+						}
+					);
+				}
+			);
+
+			$( '.custom-profile-cover' ).on(
+				'click',
+				'a.bb-img-remove-button',
+				function(e) {
+					e.preventDefault();
+					var coverContainer = $( '.custom-profile-cover' );
+					var feedbackContainer = coverContainer.find( '.bb-custom-profile-cover-feedback' );
+
+					feedbackContainer.hide();
+					feedbackContainer.find( 'p' ).removeClass( 'success error' );
+					
+					$.ajax(
+						{
+							url: BP_ADMIN.ajax_url, // point to server-side PHP script.
+							cache: false,
+							data: {
+								json:          true,
+								action:       BP_ADMIN.custom_profile_cover.remove.action,
+								item_id:       BP_ADMIN.custom_profile_cover.upload.item_id,
+								object:        BP_ADMIN.custom_profile_cover.upload.object,
+								nonce:         BP_ADMIN.custom_profile_cover.remove.nonce
+							},
+							type: 'post',
+							success: function( response ){
+
+								var feedback, 
+								    feedbackType = 'error';
+								
+								if ( 'undefined' === typeof response ) {
+									feedback = BP_ADMIN.custom_profile_cover.file_upload_error;
+								} else if ( ! response.success ) {
+
+									if ( 'undefined' === typeof response.data.feedback_code ) {
+										feedback = response.data.message;
+									} else {
+										feedback = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+									}
+
+								} else {
+
+									imageContainer.prop( 'src', response.data.url );
+									feedbackType = 'success'
+									feedback = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+								}
+
+								// Show feedback.
+								profileGroupFileFeedback( feedbackContainer, feedback, feedbackType );
+							}
+						}
+					);
+				}
+			);
+
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',

@@ -122,7 +122,28 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'moderation' => array(
 					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-				)
+				),
+				'custom_profile_cover' => array(
+					'select_file'       => esc_js( __( 'No file was uploaded.', 'buddyboss' ) ),
+					'file_upload_error' => esc_js( __( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
+					'feedback_messages' => array(
+						1 => __( 'Cover photo was uploaded successfully.', 'buddyboss' ),
+						2 => __( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
+						3 => __( 'Cover photo was deleted successfully.', 'buddyboss' ),
+					),
+					'upload'            => array(
+						'nonce'           => wp_create_nonce( 'bp-uploader' ),
+						'action'          => 'bp_cover_image_upload',
+						'object'          => 'user',
+						'item_id'         => 'custom',
+						'has_cover_image' => false,
+					),
+					'remove'            => array(
+						'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
+						'action' => 'bp_cover_image_delete',
+						'json'   => true,
+					),
+				),
 			) );
 
 			$active_tab  = bp_core_get_admin_active_tab();

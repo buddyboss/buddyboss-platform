@@ -1449,8 +1449,9 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
-	$cover_subdir = $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image';
+	$cover_subdir = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $bp_params, $object_data, $bp_attachments_uploads_dir );
 	$cover_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
+	$cover_dir    = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_dir', $cover_dir, $bp_params, $object_data, $bp_attachments_uploads_dir );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.

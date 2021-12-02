@@ -31,6 +31,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		add_filter( 'bp_core_avatar_folder_url', array( $this, 'bb_default_custom_profile_avatar_folder_url' ), 10, 4 );
 		add_filter( 'bp_core_avatar_folder_dir', array( $this, 'bb_default_custom_profile_avatar_folder_path' ), 10, 4 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bb_default_custom_profile_avatar_url_check' ), 10, 2 );
+
+		// Profile Cover.
+		add_filter( 'bp_attachments_cover_image_upload_dir', array( $this, 'bb_profile_cover_image_upload_dir' ), 10, 1 );
+		add_filter( 'bp_attachments_post_cover_image_ajax_upload_dir', array( $this, 'bb_post_profile_cover_image_ajax_upload_dir' ), 10, 4 );
+		add_filter( 'bp_attachments_post_cover_image_ajax_upload_sub_dir', array( $this, 'bb_post_profile_cover_image_ajax_upload_sub_dir' ), 10, 4 );
+		
 	}
 
 	public function settings_save() {
@@ -584,7 +590,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Setup default custom avatar upload directory for a user.
+	 * Setup default custom avatar upload directory.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -618,7 +624,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$newsubdir = '/' . $directory . '/custom';
 
 		/**
-		 * Filters default custom avatar upload directory for a user.
+		 * Filters default custom avatar upload directory.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -713,6 +719,121 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		return $gravatar;
+	}
+
+	/**
+	 * Validate ajax request for custom profile cover.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $return_data If false then return default data.
+	 */
+	public function bb_validate_custom_profile_avatar_reuqest( $return_data = array() ) {
+		$bp_params = array();
+
+		if ( ! isset( $_POST['bp_params'] ) || empty( $_POST['bp_params'] ) ) {
+			return $return_data;
+		}
+
+		$bp_params = $_POST['bp_params'];
+
+		if ( ! is_admin() || ! isset( $bp_params['object'] ) || ! isset( $bp_params['item_id'] ) ) {
+			return $return_data;
+		}
+
+		$item_id = $bp_params['item_id'];
+		$object  = $bp_params['object'];
+
+		if ( ! is_admin() || ( $item_id > 0 && 'user' === $object ) || ( 'user' !== $object ) ) {
+			return $return_data;
+		}
+
+	}
+
+	/**
+	 * Setup default custom cover upload directory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $upload_dir The original Uploads dir.
+	 * @return array Array containing the path, URL, and other helpful settings.
+	 */
+	public function bb_profile_cover_image_upload_dir( $upload_dir = array() ) {
+
+		// Validate ajax request for upload custom profile cover.
+		$this->bb_validate_custom_profile_avatar_reuqest( $upload_dir );
+
+		$bp_params = $_POST['bp_params'];
+
+		// Set the subdir.
+		$subdir = '/members/custom/cover-image';
+
+		$upload_dir = bp_attachments_uploads_dir_get();
+
+		/**
+		 * Filters default custom cover upload directory.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $value Array containing the path, URL, and other helpful settings.
+		 */
+		return apply_filters(
+			'bb_profile_cover_image_upload_dir',
+			array(
+				'path'    => $upload_dir['basedir'] . $subdir,
+				'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
+				'subdir'  => $subdir,
+				'basedir' => $upload_dir['basedir'],
+				'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
+				'error'   => false,
+			),
+			$upload_dir
+		);
+
+	}
+
+	/**
+	 * The cover path for default custom cover upload.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $cover_dir Path to the cover folder path.
+	 * @param array  $bp_params Contains data for requested cover upload.
+	 * @param array  $object_data The type requested.
+	 * @param array  $bp_attachments_uploads_dir Array containing the path, URL, and other helpful settings.
+	 * @return string Actual custom uploaded cover relative path.
+	 */
+	public function bb_post_profile_cover_image_ajax_upload_dir( $cover_dir, $bp_params, $object_data, $bp_attachments_uploads_dir ) {
+
+		// Validate ajax request for upload custom profile cover.
+		$this->bb_validate_custom_profile_avatar_reuqest( $cover_dir );
+
+		// Get profile cover directory array
+		$profile_cover_dir = $this->bb_profile_cover_image_upload_dir();
+
+		return $profile_cover_dir['path'];
+	}
+
+	/**
+	 * The cover sub path for default custom cover upload.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $cover_dir Path to the cover folder path.
+	 * @param array  $bp_params Contains data for requested cover upload.
+	 * @param array  $object_data The type requested.
+	 * @param array  $bp_attachments_uploads_dir Array containing the path, URL, and other helpful settings.
+	 * @return string Actual custom uploaded cover relative sub path.
+	 */
+	public function bb_post_profile_cover_image_ajax_upload_sub_dir( $cover_sub_dir, $bp_params, $object_data, $bp_attachments_uploads_dir ) {
+
+		// Validate ajax request for upload custom profile cover.
+		$this->bb_validate_custom_profile_avatar_reuqest( $cover_sub_dir );
+
+		// Get profile cover directory array
+		$profile_cover_dir = $this->bb_profile_cover_image_upload_dir();
+
+		return $profile_cover_dir['subdir'];
 	}
 
 }
