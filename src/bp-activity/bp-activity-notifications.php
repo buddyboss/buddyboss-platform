@@ -568,10 +568,11 @@ function bb_activity_register_notifications( $array ) {
 		'label'  => esc_html__( 'Activity Feed', 'buddyboss' ),
 		'fields' => array(
 			array(
-				'key'     => 'notification_activity_new_mention',
-				'label'   => esc_html__( 'A member is mentioned in another member’s update', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_activity_new_mention',
+				'admin_label' => esc_html__( 'A member is mentioned in another member’s update', 'buddyboss' ),
+				'label'       => esc_html__( 'A member mentions you in an update using "@john"', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -583,10 +584,11 @@ function bb_activity_register_notifications( $array ) {
 				),
 			),
 			array(
-				'key'     => 'notification_activity_new_reply',
-				'label'   => esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_activity_new_reply',
+				'admin_label' => esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+				'label'       => esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',

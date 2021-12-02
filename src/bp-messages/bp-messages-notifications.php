@@ -45,7 +45,6 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 
 			if ( ! empty( $secondary_item_id ) ) {
 
-
 				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
 
 					$group         = bp_messages_get_meta( $item_id, 'group_id', true ); // group id
@@ -57,21 +56,19 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 					if ( empty( $message_from ) ) {
 						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
-						$text = sprintf( __( '%s sent you a new private message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%s sent you a new group message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf( __( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%s sent you a new private message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
-						$text = sprintf( __( '%s sent you a new private message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 					} else {
 						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 					}
-
 				} else {
 					$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 				}
-
 			} else {
 				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ), bp_core_number_format( $total_items ) );
 			}
@@ -353,10 +350,11 @@ function bb_message_register_notifications( $array ) {
 		'label'  => esc_html__( 'Messages', 'buddyboss' ),
 		'fields' => array(
 			array(
-				'key'     => 'notification_messages_new_message',
-				'label'   => esc_html__( 'A member sends you a new message', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_messages_new_message',
+				'label'       => esc_html__( 'A member sends you a new message', 'buddyboss' ),
+				'admin_label' => esc_html__( 'A member sends you a new message', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',

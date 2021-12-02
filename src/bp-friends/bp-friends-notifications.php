@@ -332,10 +332,11 @@ function bb_friends_register_notifications( $array ) {
 		'label'  => esc_html__( 'Connections', 'buddyboss' ),
 		'fields' => array(
 			array(
-				'key'     => 'notification_friends_friendship_request',
-				'label'   => esc_html__( 'A member invites you to connect', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_friends_friendship_request',
+				'admin_label' => esc_html__( 'A member invites you to connect', 'buddyboss' ),
+				'label'       => esc_html__( 'A member invites you to connect', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -347,10 +348,11 @@ function bb_friends_register_notifications( $array ) {
 				),
 			),
 			array(
-				'key'     => 'notification_friends_friendship_accepted',
-				'label'   => esc_html__( 'A member accepts your connection request', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_friends_friendship_accepted',
+				'admin_label' => esc_html__( 'A member accepts your connection request', 'buddyboss' ),
+				'label'       => esc_html__( 'A member accepts your connection request', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',

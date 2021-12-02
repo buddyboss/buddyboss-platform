@@ -1392,10 +1392,11 @@ function bb_groups_register_notifications( $array ) {
 		'label'  => esc_html__( 'Social Groups', 'buddyboss' ),
 		'fields' => array(
 			array(
-				'key'     => 'notification_groups_invite',
-				'label'   => esc_html__( 'A member invites you to join a group', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_groups_invite',
+				'label'       => esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+				'admin_label' => esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -1407,10 +1408,11 @@ function bb_groups_register_notifications( $array ) {
 				),
 			),
 			array(
-				'key'     => 'notification_groups_group_updated',
-				'label'   => esc_html__( 'Group information is updated', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_groups_group_updated',
+				'label'       => esc_html__( 'Group information is updated', 'buddyboss' ),
+				'admin_label' => esc_html__( 'Group information is updated', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -1422,10 +1424,11 @@ function bb_groups_register_notifications( $array ) {
 				),
 			),
 			array(
-				'key'     => 'notification_groups_admin_promotion',
-				'label'   => esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_groups_admin_promotion',
+				'label'       => esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
+				'admin_label' => esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -1437,10 +1440,11 @@ function bb_groups_register_notifications( $array ) {
 				),
 			),
 			array(
-				'key'     => 'notification_groups_membership_request',
-				'label'   => esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_groups_membership_request',
+				'label'       => esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
+				'admin_label' => esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -1452,10 +1456,11 @@ function bb_groups_register_notifications( $array ) {
 				),
 			),
 			array(
-				'key'     => 'notification_membership_request_completed',
-				'label'   => esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
-				'default' => 'yes',
-				'options' => array(
+				'key'         => 'notification_membership_request_completed',
+				'label'       => esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
+				'admin_label' => esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
 					array(
 						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 						'value' => 'yes',
@@ -1471,10 +1476,11 @@ function bb_groups_register_notifications( $array ) {
 
 	if ( true === bp_disable_group_messages() ) {
 		$groups_notification['fields'][] = array(
-			'key'     => 'notification_group_messages_new_message',
-			'label'   => esc_html__( 'A group sends you a new message', 'buddyboss' ),
-			'default' => 'yes',
-			'options' => array(
+			'key'         => 'notification_group_messages_new_message',
+			'label'       => esc_html__( 'A group sends you a new message', 'buddyboss' ),
+			'admin_label' => esc_html__( 'A group sends you a new message', 'buddyboss' ),
+			'default'     => 'yes',
+			'options'     => array(
 				array(
 					'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
 					'value' => 'yes',
