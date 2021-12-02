@@ -49,17 +49,20 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 	 *
 	 * @todo use register_meta()
 	 */
-	$core_notification_settings = array(
-		'notification_messages_new_message',
-		'notification_activity_new_mention',
-		'notification_activity_new_reply',
-		'notification_groups_invite',
-		'notification_groups_group_updated',
-		'notification_groups_admin_promotion',
-		'notification_groups_membership_request',
-		'notification_membership_request_completed',
-		'notification_friends_friendship_request',
-		'notification_friends_friendship_accepted',
+	$core_notification_settings = apply_filters(
+		'bp_settings_core_notification_setting',
+		array(
+			'notification_messages_new_message',
+			'notification_activity_new_mention',
+			'notification_activity_new_reply',
+			'notification_groups_invite',
+			'notification_groups_group_updated',
+			'notification_groups_admin_promotion',
+			'notification_groups_membership_request',
+			'notification_membership_request_completed',
+			'notification_friends_friendship_request',
+			'notification_friends_friendship_accepted',
+		)
 	);
 
 	foreach ( (array) $settings as $key => $value ) {
@@ -76,7 +79,7 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 		$sanitized_settings[ $key ] = $value;
 	}
 
-	return $sanitized_settings;
+	return apply_filters( 'bp_settings_sanitize_notification_settings', $sanitized_settings );
 }
 
 /**
