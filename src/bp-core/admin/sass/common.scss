@@ -34,6 +34,7 @@ TABLE OF CONTENTS:
 9.0 Miscellaneous
 10.0 On-screen Notifications
 11.0 Notices UI
+12.0 Profile Photo
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -2489,6 +2490,71 @@ h2.has_tutorial_btn {
 	&:before {
 		font-family: "bb-icons"; /* stylelint-disable-line */
 		content: "\e855";
+	}
+
+}
+
+
+/*------------------------------------------------------------------------------
+ * 12.0 Profile Photo UI
+ *----------------------------------------------------------------------------*/
+
+.profile-avatar-options {
+
+	.avatar-custon-input {
+		display: inline-block;
+		margin: 0 15px 25px 0;
+
+		input[type="radio"] {
+			opacity: 0;
+			visibility: hidden;
+			height: 0;
+			margin: 0;
+			padding: 0 !important;
+			border: 0;
+			display: block;
+
+			&:checked + label {
+				border-color: #2271b1;
+			}
+		}
+
+		label {
+			display: flex;
+			border: 2px solid transparent;
+			margin-bottom: 5px;
+		}
+
+		img {
+			max-width: 75px;
+			height: 75px;
+			object-fit: cover;
+		}
+
+		span {
+			display: block;
+			text-align: center;
+		}
+
+		.description {
+			margin-top: 15px;
+		}
+
+	}
+
+	.bb-default-custom-upload-file {
+
+		.bb-upload-container img {
+			margin-bottom: 10px;
+			max-width: 120px;
+		}
+
+		.button.delete {
+			border-color: #d33;
+			color: #3c434a;
+			margin-left: 5px;
+		}
+
 	}
 
 }

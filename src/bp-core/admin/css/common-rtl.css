@@ -35,6 +35,7 @@ TABLE OF CONTENTS:
 9.0 Miscellaneous
 10.0 On-screen Notifications
 11.0 Notices UI
+12.0 Profile Photo
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -2349,4 +2350,58 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e855";
+}
+
+/*------------------------------------------------------------------------------
+ * 12.0 Profile Photo UI
+ *----------------------------------------------------------------------------*/
+.profile-avatar-options .avatar-custon-input {
+  display: inline-block;
+  margin: 0 0 25px 15px;
+}
+
+.profile-avatar-options .avatar-custon-input input[type="radio"] {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  padding: 0 !important;
+  border: 0;
+  display: block;
+}
+
+.profile-avatar-options .avatar-custon-input input[type="radio"]:checked + label {
+  border-color: #2271b1;
+}
+
+.profile-avatar-options .avatar-custon-input label {
+  display: flex;
+  border: 2px solid transparent;
+  margin-bottom: 5px;
+}
+
+.profile-avatar-options .avatar-custon-input img {
+  max-width: 75px;
+  height: 75px;
+  object-fit: cover;
+}
+
+.profile-avatar-options .avatar-custon-input span {
+  display: block;
+  text-align: center;
+}
+
+.profile-avatar-options .avatar-custon-input .description {
+  margin-top: 15px;
+}
+
+.profile-avatar-options .bb-default-custom-upload-file .bb-upload-container img {
+  margin-bottom: 10px;
+  max-width: 120px;
+}
+
+.profile-avatar-options .bb-default-custom-upload-file .button.delete {
+  border-color: #d33;
+  color: #3c434a;
+  margin-right: 5px;
 }

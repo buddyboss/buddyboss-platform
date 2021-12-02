@@ -420,14 +420,28 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		$delete_btn_style  = 'display:none';
 	}
 	?>
-	<input id="bp-default-profile-avatar-transparent" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
-	<label for="bp-default-profile-avatar-transparent"><img src="<?php echo bb_get_default_buddyboss_profile_avatar(); ?>" /><?php _e( 'BuddyBoss', 'buddyboss' ); ?></label>
+	<div class="avatar-custon-input">
+		<input id="bp-default-profile-avatar-transparent" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
+		<label for="bp-default-profile-avatar-transparent">
+			<img src="<?php echo bb_get_default_buddyboss_profile_avatar(); ?>" />
+		</label>
+		<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
+	</div>
 
-	<input id="bp-default-profile-avatar-solid" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
-	<label for="bp-default-profile-avatar-solid"><img src="<?php echo bb_get_default_legacy_profile_avatar(); ?>" /><?php _e( 'Legacy', 'buddyboss' ); ?></label>
-
-	<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
-	<label for="bp-default-profile-avatar-custom"><img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" /><?php _e( 'Custom', 'buddyboss' ); ?></label>
+	<div class="avatar-custon-input">
+		<input id="bp-default-profile-avatar-solid" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
+		<label for="bp-default-profile-avatar-solid">
+			<img src="<?php echo bb_get_default_legacy_profile_avatar(); ?>" />
+		</label>
+		<span><?php _e( 'Legacy', 'buddyboss' ); ?></span>
+	</div>
+	<div class="avatar-custon-input">
+		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
+		<label for="bp-default-profile-avatar-custom">
+			<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
+		</label>
+		<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
+	</div>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar">
 		<div class="bb-upload-container">
@@ -435,8 +449,8 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 			<input type="hidden" name="bp-custom-profile-avatar" value="<?php echo bb_default_custom_upload_profile_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
-			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-link bb-img-remove-button bp-delete-custom-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button bb-img-remove-button bp-delete-custom-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 					<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
