@@ -166,10 +166,11 @@ function bb_notification_get_settings_fields() {
 function bb_activate_notification( $field ) {
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 	$checked              = in_array( esc_attr( $field['key'] ), $enabled_notification, true );
+	$label                = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
 	?>
 
 	<input id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[]" type="checkbox" value="<?php echo esc_attr( $field['key'] ); ?>" <?php checked( $checked, 1 ); ?> />
-	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
+	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
 }
