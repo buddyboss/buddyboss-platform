@@ -138,7 +138,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		$args          = array();
-		$args['class'] = 'profile-avatar-options default-profile';
+		$args['class'] = 'profile-avatar-options avatar-options default-profile';
 		$this->add_field( 'bp-default-profile-avatar-type', __( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'intval', $args );
 
 		// cover photos.
@@ -146,7 +146,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 
 			$args          = array();
-			$args['class'] = 'profile-cover-options default-profile-cover';
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover';
 			$this->add_field( 'bp-default-profile-cover-type', __( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'intval', $args );
 		}
 

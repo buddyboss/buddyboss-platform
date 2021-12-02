@@ -423,24 +423,30 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	<div class="avatar-custon-input">
 		<input id="bp-default-profile-avatar-transparent" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
 		<label for="bp-default-profile-avatar-transparent">
-			<img src="<?php echo bb_get_default_buddyboss_profile_avatar(); ?>" />
+			<div class="img-block">	
+				<img src="<?php echo bb_get_default_buddyboss_profile_avatar(); ?>" />
+			</div>
+			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
 		</label>
-		<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
 	</div>
 
 	<div class="avatar-custon-input">
 		<input id="bp-default-profile-avatar-solid" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
 		<label for="bp-default-profile-avatar-solid">
-			<img src="<?php echo bb_get_default_legacy_profile_avatar(); ?>" />
+			<div class="img-block">
+				<img src="<?php echo bb_get_default_legacy_profile_avatar(); ?>" />
+			</div>
+			<span><?php _e( 'Legacy', 'buddyboss' ); ?></span>
 		</label>
-		<span><?php _e( 'Legacy', 'buddyboss' ); ?></span>
 	</div>
 	<div class="avatar-custon-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
 		<label for="bp-default-profile-avatar-custom">
-			<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
+			<div class="img-block">
+				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
+			</div>
+			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
-		<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 	</div>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar">
@@ -467,14 +473,31 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
  */
 function bp_admin_setting_callback_default_profile_cover_type() {
 	?>
-	<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="0" <?php checked( ! bb_default_profile_cover_type() ); ?> />
-	<label for="bp-default-profile-cover-none"><?php _e( 'None', 'buddyboss' ); ?></label>
+	<div class="avatar-custon-input">
+		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="0" <?php checked( ! bb_default_profile_cover_type() ); ?> />
+		<label for="bp-default-profile-cover-none">
+			<div class="img-block"></div>
+			<span><?php _e( 'None', 'buddyboss' ); ?></span>
+		</label>
+	</div>
 
-	<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="1" <?php checked( bb_default_profile_cover_type(), 1 ); ?> />
-	<label for="bp-default-profile-cover-default"><img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" /></label>
+	<div class="avatar-custon-input">
+		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="1" <?php checked( bb_default_profile_cover_type(), 1 ); ?> />
+		<label for="bp-default-profile-cover-default">
+			<div class="img-block">
+				<img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" />
+			</div>
+			<span></span>
+		</label>
+	</div>
 
-	<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="2" <?php checked( bb_default_profile_cover_type(), 2 ); ?> />
-	<label for="bp-default-profile-cover-custom"><?php _e( 'Custom', 'buddyboss' ); ?></label>
+	<div class="avatar-custon-input">
+		<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="2" <?php checked( bb_default_profile_cover_type(), 2 ); ?> />
+		<label for="bp-default-profile-cover-custom">
+			<div class="img-block"></div>
+			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar">
 		<div class="bb-upload-container">

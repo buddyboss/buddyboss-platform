@@ -2355,12 +2355,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 /*------------------------------------------------------------------------------
  * 12.0 Profile Photo UI
  *----------------------------------------------------------------------------*/
-.profile-avatar-options .avatar-custon-input {
+.avatar-options .avatar-custon-input {
   display: inline-block;
   margin: 0 15px 25px 0;
 }
 
-.profile-avatar-options .avatar-custon-input input[type="radio"] {
+.avatar-options .avatar-custon-input input[type="radio"] {
   opacity: 0;
   visibility: hidden;
   height: 0;
@@ -2370,37 +2370,37 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   display: block;
 }
 
-.profile-avatar-options .avatar-custon-input input[type="radio"]:checked + label {
+.avatar-options .avatar-custon-input input[type="radio"]:checked + label .img-block {
   border-color: #2271b1;
 }
 
-.profile-avatar-options .avatar-custon-input label {
+.avatar-options .avatar-custon-input .img-block {
   display: flex;
   border: 2px solid transparent;
   margin-bottom: 5px;
 }
 
-.profile-avatar-options .avatar-custon-input img {
+.avatar-options .avatar-custon-input img {
   max-width: 75px;
   height: 75px;
   object-fit: cover;
 }
 
-.profile-avatar-options .avatar-custon-input span {
+.avatar-options .avatar-custon-input span {
   display: block;
   text-align: center;
 }
 
-.profile-avatar-options .avatar-custon-input .description {
+.avatar-options .avatar-custon-input .description {
   margin-top: 15px;
 }
 
-.profile-avatar-options .bb-default-custom-upload-file .bb-upload-container img {
+.avatar-options .bb-default-custom-upload-file .bb-upload-container img {
   margin-bottom: 10px;
   max-width: 120px;
 }
 
-.profile-avatar-options .bb-default-custom-upload-file .button.delete {
+.avatar-options .bb-default-custom-upload-file .button.delete {
   border-color: #d33;
   color: #3c434a;
   margin-left: 5px;

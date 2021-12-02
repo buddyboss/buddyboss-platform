@@ -2499,7 +2499,7 @@ h2.has_tutorial_btn {
  * 12.0 Profile Photo UI
  *----------------------------------------------------------------------------*/
 
-.profile-avatar-options {
+.avatar-options {
 
 	.avatar-custon-input {
 		display: inline-block;
@@ -2514,12 +2514,12 @@ h2.has_tutorial_btn {
 			border: 0;
 			display: block;
 
-			&:checked + label {
+			&:checked + label .img-block {
 				border-color: #2271b1;
 			}
 		}
 
-		label {
+		.img-block {
 			display: flex;
 			border: 2px solid transparent;
 			margin-bottom: 5px;
