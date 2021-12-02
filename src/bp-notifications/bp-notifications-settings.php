@@ -166,10 +166,9 @@ function bb_activate_notification( $data ) {
 
 			$checked = in_array( esc_attr( $field['key'] ), $enabled_notification, true );
 			?>
-            <p>
-                <input id="bb_enabled_notification_<?php echo sanitize_title( $field['key'] ); ?>" name="bb_enabled_notification[]" type="checkbox" value="<?php echo esc_attr( $field['key'] ); ?>" <?php checked( $checked, 1 ); ?> />
-                <label class="notification-label" for="bb_enabled_notification_<?php echo sanitize_title( $field['key'] ); ?>"><?php echo $field['label']; ?></label>
-            </p>
+			<input id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[]" type="checkbox" value="<?php echo esc_attr( $field['key'] ); ?>" <?php checked( $checked, 1 ); ?> />
+			<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
+			<br>
 			<?php
 		}
 	}
