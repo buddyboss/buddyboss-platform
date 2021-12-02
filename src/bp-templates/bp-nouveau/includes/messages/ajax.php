@@ -2045,6 +2045,24 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$can_message     = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $thread_template->thread->thread_id, (array) $thread_template->thread->recipients );
 	$un_access_users = array();
 
+	$thread->thread = array(
+		'id'                              => $bp_get_the_thread_id,
+		'subject'                         => wp_strip_all_tags( bp_get_the_thread_subject() ),
+		'started_date'                    => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
+		'group_id'                        => $group_id,
+		'group_name'                      => html_entity_decode( ucwords( $group_name ) ),
+		'is_group_thread'                 => $is_group_thread,
+		'is_deleted'                      => $is_deleted_group,
+		'group_avatar'                    => $group_avatar,
+		'group_link'                      => $group_link,
+		'group_message_users'             => $group_message_users,
+		'group_message_type'              => $group_message_type,
+		'group_message_thread_type'       => $group_message_thread_type,
+		'group_message_fresh'             => $group_message_fresh,
+		'message_from'                    => $message_from,
+		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
+	);
+
 	if ( is_array( $thread_template->thread->recipients ) ) {
 
 		// Get the total number of recipients in the current thread.
@@ -2112,24 +2130,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$thread->thread = array(
-		'id'                              => $bp_get_the_thread_id,
-		'subject'                         => wp_strip_all_tags( bp_get_the_thread_subject() ),
-		'started_date'                    => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option( 'date_format' ) ),
-		'group_id'                        => $group_id,
-		'group_name'                      => html_entity_decode( ucwords( $group_name ) ),
-		'is_group_thread'                 => $is_group_thread,
-		'can_user_send_message_in_thread' => $can_message,
-		'is_deleted'                      => $is_deleted_group,
-		'group_avatar'                    => $group_avatar,
-		'group_link'                      => $group_link,
-		'group_message_users'             => $group_message_users,
-		'group_message_type'              => $group_message_type,
-		'group_message_thread_type'       => $group_message_thread_type,
-		'group_message_fresh'             => $group_message_fresh,
-		'message_from'                    => $message_from,
-		'is_participated'                 => empty( $is_participated ) ? 0 : 1,
-	);
+	$thread->thread['can_user_send_message_in_thread'] = $can_message;
 
 	$thread->messages = array();
 	$i                = 0;
