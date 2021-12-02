@@ -141,7 +141,7 @@ function bb_notification_get_settings_fields() {
 					$field['class'] = ( 1 === $c ? 'child-no-padding-first' : 'child-no-padding' );
 
 					$fields['bp_notification_settings_automatic'][ $field['key'] ] = array(
-						'title'             => ( 1 === $c ? $data['label'] . ' ' . __( 'Notifications', 'buddyboss' ) : ' ' ),
+						'title'             => ( 1 === $c ? $data['label'] . ' ' . esc_html_x( 'Notifications', 'Notification label for an admin', 'buddyboss' ) : ' ' ),
 						'callback'          => 'bb_activate_notification',
 						'sanitize_callback' => 'string',
 						'args'              => $field,
