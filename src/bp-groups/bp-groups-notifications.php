@@ -1212,20 +1212,30 @@ add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notif
  */
 function groups_screen_notification_settings() {
 
-	$options = bb_register_notifications_by_group( buddypress()->groups->id );
-	?>
+	$options              = bb_register_notifications_by_group( buddypress()->groups->id );
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$fields_keys          = array_column( $options['fields'], 'key' );
+	$enabled_fields       = array_intersect( $fields_keys, $enabled_notification );
+	$options['fields']    = array_filter(
+		$options['fields'],
+		function ( $var ) use ( $enabled_fields ) {
+			return ( in_array( $var['key'], $enabled_fields, true ) );
+		}
+	);
 
-	<table class="main-notification-settings">
-		<tbody>
+	if ( ! empty( $options['fields'] ) ) {
+		?>
 
-		<?php if ( ! empty( $options['label'] ) ) { ?>
-			<tr class="notification_heading">
-				<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
-			</tr>
-		<?php } ?>
+		<table class="main-notification-settings">
+			<tbody>
 
-		<?php
-		if ( ! empty( $options['fields'] ) ) {
+			<?php if ( ! empty( $options['label'] ) ) { ?>
+				<tr class="notification_heading">
+					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+				</tr>
+				<?php
+			}
+
 			foreach ( $options['fields'] as $field ) {
 				$email_checked = bp_get_user_meta( bp_displayed_user_id(), $field['key'], true );
 				$web_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['key'] . '_web', true );
@@ -1260,12 +1270,13 @@ function groups_screen_notification_settings() {
 				</tr>
 				<?php
 			}
-		}
-		?>
-		</tbody>
-	</table>
 
-	<?php
+			?>
+			</tbody>
+		</table>
+
+		<?php
+	}
 }
 
 add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
