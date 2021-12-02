@@ -709,7 +709,7 @@ window.bp = window.bp || {};
 			className: 'bb-model-header',
 
 			events: {
-				'click .bb-model-close-button': 'click'
+				'click .bb-model-close-button': 'close'
 			},
 
 			initialize: function() {
@@ -726,7 +726,7 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy_modal', true );
 			},
 
-			click: function ( e ) {
+			close: function ( e ) {
 				e.preventDefault();
 				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 				this.model.set( 'privacy_modal', false );
@@ -2439,6 +2439,7 @@ window.bp = window.bp || {};
 			closePrivacySelector: function ( e ) {
 				e.preventDefault();
 				$( '#whats-new-form' ).removeClass( 'focus-in-privacy' );
+				this.model.set( 'privacy_modal', false );
 			}
 		}
 	);
