@@ -30,6 +30,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		add_filter( 'bb_core_avatar_relative_path', array( $this, 'bb_default_custom_profile_avatar_set_relative_path' ), 10, 4 );
 		add_filter( 'bp_core_avatar_folder_url', array( $this, 'bb_default_custom_profile_avatar_folder_url' ), 10, 4 );
 		add_filter( 'bp_core_avatar_folder_dir', array( $this, 'bb_default_custom_profile_avatar_folder_path' ), 10, 4 );
+		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bb_default_custom_profile_avatar_url_check' ), 10, 2 );
 	}
 
 	public function settings_save() {
@@ -147,10 +148,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$args          = array();
 			$args['class'] = 'profile-cover-options default-profile-cover';
 			$this->add_field( 'bp-default-profile-cover-type', __( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'intval', $args );
-
-			$args          = array();
-			$args['class'] = 'profile-cover-options custom-profile-cover';
-			$this->add_field( 'bp-custom-profile-cover', '', 'bp_admin_setting_callback_custom_profile_cover', 'sanitize_text_field', $args );
 		}
 
 		// @todo will use this later on
@@ -567,8 +564,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		$script_data['bp_params'] = array(
 			'object'     => 'user',
-			'item_id'    => false,
-			'has_avatar' => false,
+			'item_id'    => 'custom',
+			'has_avatar' => bb_has_default_custom_upload_profile_avatar(),
 			'nonces'     => array(
 				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 				'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
@@ -577,10 +574,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => __( 'There was a problem cropping your profile photo.', 'buddyboss' ),
-			2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ),
-			3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ),
-			4 => __( 'Your profile photo was deleted successfully!', 'buddyboss' ),
+			1 => __( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
+			2 => __( 'New custom profile avatar was uploaded successfully.', 'buddyboss' ),
+			3 => __( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
+			4 => __( 'Custom profile avatar was deleted successfully!', 'buddyboss' ),
 		);
 
 		return $script_data;
@@ -696,6 +693,26 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		return $avatar_folder_path;
+	}
+
+	/**
+	 * Modify a gravatar avatar URL for custom uploaded avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $avatar_url URL for a gravatar.
+	 * @param array  $params     Array of parameters for the request.
+	 */
+	public function bb_default_custom_profile_avatar_url_check( $gravatar, $params ) {
+
+		$item_id = $params['item_id'];
+		$object  = $params['object'];
+
+		if ( is_admin() && ( 'custom' === $item_id && 'user' === $object ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
+			return bb_get_default_custom_profile_avatar_upload_placeholder();
+		}
+
+		return $gravatar;
 	}
 
 }

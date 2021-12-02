@@ -429,19 +429,20 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
 	<label for="bp-default-profile-avatar-custom"><img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" /><?php _e( 'Custom', 'buddyboss' ); ?></label>
 
-	<div class="custom-profile-avatar">
+	<div class="bb-default-custom-upload-file custom-profile-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-false-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_avatar_upload_placeholder(); ?>">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_avatar_upload_placeholder(); ?>">
 			<input type="hidden" name="bp-custom-profile-avatar" value="<?php echo bb_default_custom_upload_profile_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-link bb-img-remove-button" id="bp-delete-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-link bb-img-remove-button bp-delete-custom-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 					<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
 		</div>
 	</div>
+	<p class="description"><?php _e( 'Upload an image to be used as the default profile avatar. Recommended size is 256x256px.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -460,25 +461,19 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 
 	<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="2" <?php checked( bb_default_profile_cover_type(), 2 ); ?> />
 	<label for="bp-default-profile-cover-custom"><?php _e( 'Custom', 'buddyboss' ); ?></label>
-	<?php
-}
 
-/**
- * Allow admin to upload default custom profile cover.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bp_admin_setting_callback_custom_profile_cover() {
-	?>
-	<div class="bb-upload-container">
-		<img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" class="bb-upload-preview">
-		<input type="hidden" name="bp-custom-profile-cover" value="">
+	<div class="bb-default-custom-upload-file custom-profile-avatar">
+		<div class="bb-upload-container">
+			<img src="<?php echo bb_get_default_profile_cover_placeholder(); ?>" class="bb-upload-preview">
+			<input type="hidden" name="bp-custom-profile-cover" value="">
+		</div>
+		<div class="bb-img-button-wrap">
+			<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button" accept="image/*">
+			<button style="" type="button" class="button bb-img-upload-button">Upload</button>
+			<a style="" href="#" class="delete button button-link bb-img-remove-button">Remove</a>
+		</div>
 	</div>
-	<div class="bb-img-button-wrap">
-		<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button" accept="image/*">
-		<button style="" type="button" class="button bb-img-upload-button">Upload</button>
-		<a style="" href="#" class="delete button button-link bb-img-remove-button">Remove</a>
-	</div>
+	<p class="description"><?php _e( 'Upload an image to be used as the default profile cover image. Recommended size is 1300x300px.', 'buddyboss' ); ?></p>
 	<?php
 }
 
