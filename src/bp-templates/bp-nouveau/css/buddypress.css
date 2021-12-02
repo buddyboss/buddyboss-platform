@@ -1055,16 +1055,42 @@ a.layout-grid-view {
 
 #whats-new-form.focus-in-privacy .whats-new-form-header,
 #whats-new-form.focus-in-privacy #editor-toolbar,
-#whats-new-form.focus-in-privacy #whats-new-attachments {
+#whats-new-form.focus-in-privacy #whats-new-attachments,
+#whats-new-form.focus-in-privacy .whats-new-form-footer {
   display: none;
 }
 
-#bp-activity-privacy-stage {
+.privacy-stage-list {
   padding: 15px 30px;
 }
 
 .bp-activity-privacy-selector {
   padding: 5px 0;
+}
+
+.privacy-status-actions {
+  margin-left: auto;
+  padding: 10px 15px;
+}
+
+.privacy-status-form-footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fbfbfc;
+  border-top: 1px solid #eee;
+  border-radius: 0 0 4px 4px;
+}
+
+#buddypress input#privacy-status-back {
+  background: transparent;
+  border: 0;
+  font-size: 14px;
+  color: #a3a5a9;
+  font-weight: 400;
+  margin: 0 10px;
+  padding: 0 10px;
+  width: auto;
+  box-shadow: none;
 }
 
 .bp-nouveau-activity-form-placeholder-,

@@ -628,6 +628,7 @@ window.bp = window.bp || {};
 				link_url: '',
 				gif_data: {},
 				privacy: 'public',
+				privacy_modal: false,
 			}
 		}
 	);
@@ -708,13 +709,28 @@ window.bp = window.bp || {};
 			className: 'bb-model-header',
 
 			events: {
-				'click .bb-model-close-button': 'click',
+				'click .bb-model-close-button': 'click'
+			},
+
+			initialize: function() {
+				this.listenTo(Backbone, 'privacy:statusbutton', this.updateHeader);
+				this.model.on( 'change:privacy_modal', this.render, this );
+			},
+
+			render: function () {
+				this.$el.html( this.template( this.model.toJSON() ) );
+				return this;
+			},
+		
+			updateHeader: function() {
+				this.model.set( 'privacy_modal', true );
 			},
 
 			click: function ( e ) {
 				e.preventDefault();
 				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
-			}
+				this.model.set( 'privacy_modal', false );
+			},
 		}
 	);
 
@@ -2396,13 +2412,12 @@ window.bp = window.bp || {};
 				}
 
 				this.model.set( 'privacy', this.$el.closest( '#whats-new-form' ).find( '#bp-activity-privacy' ).val() );
-					
-				var privacyValue = this.model.get( 'privacy' );
 			},
 
 			privacyTarget: function ( e ) {
 				e.preventDefault();
 				$( '#whats-new-form' ).addClass( 'focus-in-privacy' );
+				Backbone.trigger('privacy:statusbutton');
 			}
 		}
 	);
@@ -2413,12 +2428,18 @@ window.bp = window.bp || {};
 			id: 'whats-new-privacy-stage',
 			template: bp.template( 'activity-post-privacy-stage' ),
 			events: {
-				'click .bp-activity-privacy-selector': 'privacySelector'
+				'click .bp-activity-privacy-selector': 'privacySelector',
+				'click #privacy-status-back': 'closePrivacySelector'
 			},
 
 			/*privacySelector: function ( e ) {
 				
 			}*/
+
+			closePrivacySelector: function ( e ) {
+				e.preventDefault();
+				$( '#whats-new-form' ).removeClass( 'focus-in-privacy' );
+			}
 		}
 	);
 
