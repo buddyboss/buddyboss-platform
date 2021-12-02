@@ -620,12 +620,12 @@ class BP_XProfile_Field {
 		}
 
 		$bp = buddypress();
-		static $xprofile_get_children = array();
+		static $bp_get_children_cache = array();
 		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id;
-		if ( ! isset( $xprofile_get_children[ $cache_key ] ) ) {
-			$xprofile_get_children[ $cache_key ] = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
+		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
+			$bp_get_children_cache[ $cache_key ] = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
 		}
-		$children = $xprofile_get_children[ $cache_key ];
+		$children = $bp_get_children_cache[ $cache_key ];
 
 		/**
 		 * Filters the found children for a field.
