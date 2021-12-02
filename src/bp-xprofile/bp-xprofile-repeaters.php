@@ -83,13 +83,17 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$sql = "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
-        JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
-        WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
-        AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC";
-		$sql = $wpdb->prepare( $sql, $template_field_id );
-
-		$results = $wpdb->get_results( $sql, ARRAY_A );
+		static $bp_clone_ids_subset = array();
+		$cache_key = 'bp_clone_field_ids_subset_' . $template_field_id;
+		if ( ! isset( $bp_clone_ids_subset[ $cache_key ] ) ) {
+			$sql                               = "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+		       JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
+		       WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
+		       AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC";
+			$sql                               = $wpdb->prepare( $sql, $template_field_id );
+			$bp_clone_ids_subset[ $cache_key ] = $wpdb->get_results( $sql, ARRAY_A );
+		}
+		$results = $bp_clone_ids_subset[ $cache_key ];
 
 		for ( $i = 1; $i <= $count; $i++ ) {
 			// is there a clone already?
