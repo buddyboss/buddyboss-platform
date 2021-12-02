@@ -689,6 +689,10 @@ function bp_attachments_get_plupload_l10n() {
 			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss' ),
 			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss' ),
 			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss' ),
+			'avatar_size_warning'       => sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+				bp_core_avatar_full_height(),
+				bp_core_avatar_full_width(),
+			),
 		)
 	);
 }

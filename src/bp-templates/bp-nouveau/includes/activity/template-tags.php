@@ -273,8 +273,11 @@ function bp_nouveau_activity_state() {
 			</span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
-		<?php if ( bp_activity_can_comment() ) : ?>
-			<a href="#" class="activity-state-comments">
+		<?php if ( bp_activity_can_comment() ) :
+			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
+			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
+			?>
+			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
@@ -330,7 +333,7 @@ function bb_nouveau_activity_inner_buttons( $args = array() ) {
  * @since BuddyBoss 1.7.2
  *
  * @param array $args Button attributes.
- * 
+ *
  * @return array
  */
 function bb_nouveau_get_activity_inner_buttons( $args ) {
@@ -375,7 +378,7 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 	}
 
 	$return = bp_nouveau()->activity->inner_buttons->get( $sort );
-	
+
 	return $return;
 }
 
@@ -836,83 +839,25 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	$buttons = array();
 
 	$buttons['activity_comment_reply'] = array(
-		'id'                => 'activity_comment_reply',
-		'position'          => 5,
-		'component'         => 'activity',
-		'must_be_logged_in' => true,
-		'parent_element'    => $parent_element,
-		'parent_attr'       => $parent_attr,
-		'button_element'    => $button_element,
-		'link_text'         => __( 'Reply', 'buddyboss' ),
-		'button_attr'       => array(
-			'class' => 'acomment-reply bp-primary-action',
-			'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
-		),
-	);
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
-			array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
-			)
-		);
-	}
-
-	$buttons['activity_comment_delete'] = array(
-		'id'                => 'activity_comment_delete',
-		'position'          => 15,
-		'component'         => 'activity',
-		'must_be_logged_in' => true,
-		'parent_element'    => $parent_element,
-		'parent_attr'       => $parent_attr,
-		'button_element'    => $button_element,
-		'link_text'         => __( 'Delete', 'buddyboss' ),
-		'button_attr'       => array(
-			'class' => 'delete acomment-delete confirm bp-secondary-action',
-			'rel'   => 'nofollow',
-		),
-	);
-
-	// If button element set add nonce link to data-attr attr
-	if ( 'button' === $button_element ) {
-		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
-		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
-	} else {
-		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
-		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
-	}
-
-	// Add the Spam Button if supported
-	if ( bp_is_akismet_active() && isset( buddypress()->activity->akismet ) && bp_activity_user_can_mark_spam() ) {
-		$buttons['activity_comment_spam'] = array(
-			'id'                => 'activity_comment_spam',
-			'position'          => 25,
+			'id'                => 'activity_comment_reply',
+			'position'          => 5,
 			'component'         => 'activity',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
 			'parent_attr'       => $parent_attr,
 			'button_element'    => $button_element,
-			'link_text'         => __( 'Spam', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reply', 'buddyboss' ),
 			'button_attr'       => array(
-				'id'    => "activity_make_spam_{$activity_comment_id}",
-				'class' => 'bp-secondary-action spam-activity-comment confirm',
-				'rel'   => 'nofollow',
+					'class' => "acomment-reply bp-primary-action",
+					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
 			),
-		);
+	);
 
-		// If button element set add nonce link to data-attr attr
-		if ( 'button' === $button_element ) {
-			$data_element = 'data-bp-act-spam-nonce';
-		} else {
-			$data_element = 'href';
-		}
-
-		$buttons['activity_comment_spam']['button_attr'][ $data_element ] = wp_nonce_url(
-			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_comment_id . '/?cid=' . $activity_comment_id,
-			'bp_activity_akismet_spam_' . $activity_comment_id
-		);
+	// If button element set add nonce link to data-attr attr
+	if ( 'button' === $button_element ) {
+		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
+	} else {
+		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
 	}
 
 	/**
@@ -953,18 +898,6 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	 */
 	if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
 		unset( $return['activity_comment_reply'] );
-	}
-
-	/**
-	 * If there was an activity of the user before one af another
-	 * user as we're updating buttons, we need to unset the delete link
-	 */
-	if ( ! bp_activity_user_can_delete() ) {
-		unset( $return['activity_comment_delete'] );
-	}
-
-	if ( isset( $return['activity_comment_spam'] ) && ( ! bp_activity_current_comment() || ! in_array( bp_activity_current_comment()->type, BP_Akismet::get_activity_types(), true ) ) ) {
-		unset( $return['activity_comment_spam'] );
 	}
 
 	/**
@@ -1632,7 +1565,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -1781,13 +1714,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	if ( $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
-		$video_id = BP_Video::get_activity_video_id( $activity_id );
+		$video_id       = BP_Video::get_activity_video_id( $activity_id );
+		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {
 			$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
 			if ( ! empty( $attachment_id ) ) {
 				$video_privacy = bb_media_user_can_access( $video_id, 'video' );
 				$can_edit      = true === (bool) $video_privacy['can_edit'];
-				if ( $can_edit ) {
+				if ( $can_edit && ( bb_user_can_create_video() || $video_group_id > 0 ) ) {
 					$parent_activity_id          = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 					$attachment_urls             = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 					$buttons['change_thumbnail'] = array(
@@ -1888,6 +1822,194 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	 * @param int   $activity_id The current activity ID.
 	 */
 	do_action_ref_array( 'bb_nouveau_return_activity_entry_bubble_buttons', array( &$return, $activity_id ) );
+
+	return $return;
+}
+
+/**
+ * Output the action buttons for the activity comments
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ */
+function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
+	$output = join( ' ', bb_nouveau_get_activity_comment_bubble_buttons( $args ) );
+
+	ob_start();
+	/**
+	 * Fires after the default comment action options display.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 */
+	do_action( 'bp_activity_comment_bubble_options' );
+
+	$output      .= ob_get_clean();
+	$has_content = trim( $output, ' ' );
+
+	if ( ! $has_content ) {
+		return;
+	}
+
+	if ( ! $args ) {
+		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
+	}
+
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+
+	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+}
+
+/**
+ * Get the top action buttons for the activity comments
+ *
+ * @since BuddyBoss 1.7.3
+ *
+ * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ *
+ * @return array
+ */
+function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
+
+	$buttons = array();
+
+	if ( ! isset( $GLOBALS['activities_template'] ) ) {
+		return $buttons;
+	}
+
+	$activity_comment_id = bp_get_activity_comment_id();
+	$activity_id         = bp_get_activity_id();
+
+	if ( ! $activity_comment_id || ! $activity_id ) {
+		return $buttons;
+	}
+
+	/*
+	 * If the 'container' is set to 'ul'
+	 * set a var $parent_element to li
+	 * otherwise simply pass any value found in args
+	 * or set var false.
+	 */
+	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
+		$parent_element = 'li';
+	} elseif ( ! empty( $args['parent_element'] ) ) {
+		$parent_element = $args['parent_element'];
+	} else {
+		$parent_element = false;
+	}
+
+	$parent_attr = ( ! empty( $args['parent_attr'] ) ) ? $args['parent_attr'] : array();
+
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor).
+	 */
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	} else {
+		$button_element = 'a';
+	}
+
+	$buttons = array();
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
+			array(
+				'parent_element' => $parent_element,
+				'parent_attr'    => $parent_attr,
+				'button_element' => $button_element,
+			)
+		);
+	}
+
+	// If button element set add nonce link to data-attr attr
+	if ( 'button' === $button_element ) {
+		$buttons['activity_comment_reply']['button_attr']['data-bp-act-reply-nonce']         = sprintf( '#acomment-%s', $activity_comment_id );
+		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
+	} else {
+		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
+		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+	}
+
+	$buttons['activity_comment_delete'] = array(
+		'id'                => 'activity_comment_delete',
+		'component'         => 'activity',
+		'must_be_logged_in' => true,
+		'parent_element'    => $parent_element,
+		'parent_attr'       => $parent_attr,
+		'button_element'    => $button_element,
+		'link_text'         => esc_html__( 'Delete', 'buddyboss' ),
+		'button_attr'       => array(
+			'class' => 'delete acomment-delete confirm bp-secondary-action',
+			'rel'   => 'nofollow',
+		),
+	);
+
+	// If button element set add nonce link to data-attr attr.
+	if ( 'button' === $button_element ) {
+		$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
+	} else {
+		$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+	}
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param array $buttons             The list of buttons.
+	 * @param int   $activity_comment_id The current activity comment ID.
+	 * @param int   $activity_id         The current activity ID.
+	 */
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_comment_bubble_buttons', $buttons, $activity_comment_id, $activity_id );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first comment of the loop, so build the Group and sort it.
+	if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                                   = true;
+		bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
+
+		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
+	} else {
+		$sort = false;
+		bp_nouveau()->activity->comment_buttons->update( $buttons_group );
+	}
+
+	$return = bp_nouveau()->activity->comment_buttons->get( $sort );
+
+	if ( ! $return ) {
+		return array();
+	}
+
+	/**
+	 * If there was an activity of the user before one af another
+	 * user as we're updating buttons, we need to unset the delete link
+	 */
+	if ( ! bp_activity_user_can_delete() ) {
+		unset( $return['activity_comment_delete'] );
+	}
+
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param array $return              The list of buttons ordered.
+	 * @param int   $activity_comment_id The current activity comment ID.
+	 * @param int   $activity_id         The current activity ID.
+	 */
+	do_action_ref_array(
+		'bb_nouveau_return_activity_comment_bubble_buttons',
+		array(
+			&$return,
+			$activity_comment_id,
+			$activity_id,
+		)
+	);
 
 	return $return;
 }
