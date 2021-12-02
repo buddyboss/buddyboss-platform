@@ -55,7 +55,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 	</div><!-- .notification_info -->
 
-	<table class="main-notification-settings" id="main-notification-settings">
+	<table class="main-notification-settings">
 		<thead>
 			<tr>
 				<th class="title">Enable notifications</th>

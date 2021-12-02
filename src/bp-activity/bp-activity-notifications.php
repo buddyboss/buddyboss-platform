@@ -419,88 +419,55 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
  */
 function bp_activity_screen_notification_settings() {
 
-	if ( bp_activity_do_mentions() ) {
-		$mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true );
-		if ( ! $mention ) {
-			$mention = 'yes';
-		}
-	}
-
-	$reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true );
-	if ( ! $reply ) {
-		$reply = 'yes';
-	}
-
+	$options = bb_register_notifications_by_group( buddypress()->activity->id );
 	?>
 
-	<table class="notification-settings" id="activity-notification-settings">
-		<thead>
-		<tr>
-			<th class="icon">&nbsp;</th>
-			<th class="title"><?php _e( 'Activity Feed', 'buddyboss' ); ?></th>
-			<th class="yes"><?php _e( 'Yes', 'buddyboss' ); ?></th>
-			<th class="no"><?php _e( 'No', 'buddyboss' ); ?></th>
-		</tr>
-		</thead>
-
+	<table class="main-notification-settings">
 		<tbody>
-		<?php if ( bp_activity_do_mentions() ) : ?>
-			<?php $current_user = wp_get_current_user(); ?>
-			<tr id="activity-notification-settings-mentions">
-				<td>&nbsp;</td>
-				<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_activity_new_mention]"
-							   id="notification-activity-new-mention-yes" class="bs-styled-radio"
-							   value="yes" <?php checked( $mention, 'yes', true ); ?> />
-						<label for="notification-activity-new-mention-yes"><span
-									class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_activity_new_mention]"
-							   id="notification-activity-new-mention-no" class="bs-styled-radio"
-							   value="no" <?php checked( $mention, 'no', true ); ?> />
-						<label for="notification-activity-new-mention-no"><span
-									class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
-		<?php endif; ?>
 
-		<tr id="activity-notification-settings-replies">
-			<td>&nbsp;</td>
-			<td><?php _e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
-			<td class="yes">
-				<div class="bp-radio-wrap">
-					<input type="radio" name="notifications[notification_activity_new_reply]"
-						   id="notification-activity-new-reply-yes" class="bs-styled-radio"
-						   value="yes" <?php checked( $reply, 'yes', true ); ?> />
-					<label for="notification-activity-new-reply-yes"><span
-								class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-				</div>
-			</td>
-			<td class="no">
-				<div class="bp-radio-wrap">
-					<input type="radio" name="notifications[notification_activity_new_reply]"
-						   id="notification-activity-new-reply-no" class="bs-styled-radio"
-						   value="no" <?php checked( $reply, 'no', true ); ?> />
-					<label for="notification-activity-new-reply-no"><span
-								class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-				</div>
-			</td>
-		</tr>
+		<?php if ( ! empty( $options['label'] ) ) { ?>
+			<tr class="notification_heading">
+				<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+			</tr>
+		<?php } ?>
 
 		<?php
+		if ( ! empty( $options['fields'] ) ) {
+			foreach ( $options['fields'] as $field ) {
+				$email_checked = bp_get_user_meta( bp_displayed_user_id(), $field['label'], true );
+				$web_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['label'] . '_web', true );
+				$app_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['label'] . '_app', true );
 
-		/**
-		 * Fires inside the closing </tbody> tag for activity screen notification settings.
-		 *
-		 * @since BuddyPress 1.2.0
-		 */
-		do_action( 'bp_activity_screen_notification_settings' )
+				if ( ! $email_checked ) {
+					$email_checked = $field['default'];
+				}
+
+				if ( ! $web_checked ) {
+					$web_checked = $field['default'];
+				}
+
+				if ( ! $app_checked ) {
+					$app_checked = $field['default'];
+				}
+				?>
+				<tr>
+					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
+					<td class="email">
+						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_email' ); ?>" name="<?php echo esc_attr( $field['key'] ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $email_checked, 'yes' ); ?> />
+						<label for="<?php echo esc_attr( $field['key'] . '_email' ); ?>"><?php esc_html_e( 'Email', 'buddyboss' ); ?></label>
+					</td>
+					<td class="web">
+						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_web' ); ?>" name="<?php echo esc_attr( $field['key'] . '_web' ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $web_checked, 'yes' ); ?> />
+						<label for="<?php echo esc_attr( $field['key'] . '_web' ); ?>"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
+					</td>
+					<td class="app">
+						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_app' ); ?>" name="<?php echo esc_attr( $field['key'] . '_app' ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $app_checked, 'yes' ); ?> />
+						<label for="<?php echo esc_attr( $field['key'] . '_app' ); ?>"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
+					</td>
+				</tr>
+				<?php
+			}
+		}
 		?>
 		</tbody>
 	</table>
@@ -566,38 +533,42 @@ add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single
 function bb_activity_register_notifications( $array ) {
 	$activity_notification = array(
 		'label'  => esc_html__( 'Activity Feed', 'buddyboss' ),
-		'fields' => array(
-			array(
-				'key'         => 'notification_activity_new_mention',
-				'admin_label' => esc_html__( 'A member is mentioned in another member’s update', 'buddyboss' ),
-				'label'       => esc_html__( 'A member mentions you in an update using "@john"', 'buddyboss' ),
-				'default'     => 'yes',
-				'options'     => array(
-					array(
-						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
-						'value' => 'yes',
-					),
-					array(
-						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
-						'value' => 'no',
-					),
+		'fields' => array(),
+	);
+
+	if ( bp_activity_do_mentions() ) {
+		$current_user                      = wp_get_current_user();
+		$activity_notification['fields'][] = array(
+			'key'         => 'notification_activity_new_mention',
+			'admin_label' => esc_html__( 'A member is mentioned in another member’s update', 'buddyboss' ),
+			'label'       => sprintf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ),
+			'default'     => 'yes',
+			'options'     => array(
+				array(
+					'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+					'value' => 'yes',
+				),
+				array(
+					'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+					'value' => 'no',
 				),
 			),
+		);
+	}
+
+	$activity_notification['fields'][] = array(
+		'key'         => 'notification_activity_new_reply',
+		'admin_label' => esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+		'label'       => esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
+		'default'     => 'yes',
+		'options'     => array(
 			array(
-				'key'         => 'notification_activity_new_reply',
-				'admin_label' => esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
-				'label'       => esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
-				'default'     => 'yes',
-				'options'     => array(
-					array(
-						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
-						'value' => 'yes',
-					),
-					array(
-						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
-						'value' => 'no',
-					),
-				),
+				'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+				'value' => 'yes',
+			),
+			array(
+				'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+				'value' => 'no',
 			),
 		),
 	);

@@ -852,5 +852,9 @@ function bb_register_notifications_by_group( $component = '' ) {
 
 	$notifications = apply_filters( 'bb_register_notifications_by_group', array() );
 
+	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
+		return $notifications[ $component ];
+	}
+
 	return $notifications;
 }
