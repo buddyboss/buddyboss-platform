@@ -2394,6 +2394,10 @@ window.bp = window.bp || {};
 				if ( this.model.has( 'avatar_url' ) ) {
 					this.model.set( 'display_avatar', true );
 				}
+
+				this.model.set( 'privacy', this.$el.closest( '#whats-new-form' ).find( '#bp-activity-privacy' ).val() );
+					
+				var privacyValue = this.model.get( 'privacy' );
 			},
 
 			privacyTarget: function ( e ) {
@@ -3172,7 +3176,7 @@ window.bp = window.bp || {};
 				this.views.set(
 					[
 						new bp.Views.ActivityHeader( { model: this.model } ),
-						new bp.Views.FormAvatar(),
+						new bp.Views.FormAvatar( { model: this.model } ),
 						new bp.Views.PrivacyStage( { model: this.model } ),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
 						new bp.Views.EditorToolbar( { model: this.model } ),
@@ -3765,7 +3769,7 @@ window.bp = window.bp || {};
 
 				this.views.set(
 					[
-						new bp.Views.FormAvatar(),
+						new bp.Views.FormAvatar( { model: this.model } ),
 						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
 						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
 					]
