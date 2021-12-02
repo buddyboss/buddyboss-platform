@@ -86,11 +86,10 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 		static $bp_clone_ids_subset = array();
 		$cache_key = 'bp_clone_field_ids_subset_' . $template_field_id;
 		if ( ! isset( $bp_clone_ids_subset[ $cache_key ] ) ) {
-			$sql                               = "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+			$sql                               = $wpdb->prepare( "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
 		       JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
 		       WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
-		       AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC";
-			$sql                               = $wpdb->prepare( $sql, $template_field_id );
+		       AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC", $template_field_id );
 			$bp_clone_ids_subset[ $cache_key ] = $wpdb->get_results( $sql, ARRAY_A );
 		}
 		$results = $bp_clone_ids_subset[ $cache_key ];
@@ -146,10 +145,14 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$sql = "select m1.object_id FROM {$bp->profile->table_name_meta} as m1
-        WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d";
-		$sql = $wpdb->prepare( $sql, $template_field_id );
-		$results = $wpdb->get_col( $sql );
+		static $bp_clone_field_ids_all = array();
+		$cache_key = 'clone_field_ids_all_' . $template_field_id;
+		if ( ! isset( $bp_clone_field_ids_all[ $cache_key ] ) ) {
+			$sql                                  = $wpdb->prepare( "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 
+				WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d", $template_field_id );
+			$bp_clone_field_ids_all[ $cache_key ] = $wpdb->get_col( $sql );
+		}
+		$results = $bp_clone_field_ids_all[ $cache_key ];
 
 		if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 			$ids = array_merge( $ids, $results );
