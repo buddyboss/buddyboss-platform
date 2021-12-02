@@ -111,6 +111,16 @@
 		border-bottom: 1px solid $primary-grey;
 	}
 
+	.disabled {
+		opacity: 0.6;
+		pointer-events: none;
+
+		input[type="checkbox"] {
+			opacity: 0;
+		}
+
+	}
+
 	tbody {
 
 		.title {
