@@ -615,26 +615,23 @@ function bp_nouveau_send_invite_content_css( $mceInit ) {
  *
  */
 function bp_get_member_invitation_query() {
-	$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
+	static $cache = null;
+	if ( null === $cache ) {
+		$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
 
-	$args = array(
-		'post_type' => bp_get_email_post_type(),
-		'tax_query' => array(
-			array(
-				'taxonomy' => bp_get_email_tax_type(),
-				'field'    => 'term_id',
-				'terms'    => $term->term_id,
+		$args = array(
+			'post_type' => bp_get_email_post_type(),
+			'tax_query' => array(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'field'    => 'term_id',
+					'terms'    => $term->term_id,
+				),
 			),
-		),
-	);
+		);
 
-	static $bp_invite_cache = array();
-	$cache_key = 'bp_get_member_invitation_query_' . md5( maybe_serialize( $args ) );
-	if ( ! isset( $bp_invite_cache[ $cache_key ] ) ) {
-		$bp_invite_cache[ $cache_key ] = new WP_Query( $args );
+		$cache = new WP_Query( $args );
 	}
 
-	$query = $bp_invite_cache[ $cache_key ];
-
-	return apply_filters( 'bp_get_member_invitation_query', $query );
+	return apply_filters( 'bp_get_member_invitation_query', $cache );
 }
