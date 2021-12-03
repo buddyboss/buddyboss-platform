@@ -505,8 +505,10 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 			<input type="hidden" name="bp-custom-profile-cover" value="">
 		</div>
 		<div class="bb-img-button-wrap">
-			<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button" accept="image/*">
-			<button style="" type="button" class="button button-large bb-img-upload-button">Upload</button>
+			<label class="cover-uploader-label">
+				<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
+				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+			</label>
 			<a style="" href="#" class="delete button button-large  bb-img-remove-button">Remove</a>
 		</div>
 		<div class="bp-cover-image-status bb-custom-profile-cover-feedback" style="display:none;">
