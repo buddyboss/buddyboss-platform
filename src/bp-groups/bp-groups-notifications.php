@@ -75,7 +75,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Continue if member opted out of receiving this email.
-		if ( 'no' === bp_get_user_meta( $user_id, 'notification_groups_group_updated', true ) ) {
+		if ( false === bb_is_notification_enabled( (int) $user_id, 'notification_groups_group_updated' ) ) {
 			continue;
 		}
 
