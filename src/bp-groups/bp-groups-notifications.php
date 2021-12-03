@@ -286,7 +286,7 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 	}
 
 	// Bail if admin opted out of receiving this email.
-	if ( 'no' === bp_get_user_meta( $user_id, 'notification_groups_admin_promotion', true ) ) {
+	if ( false === bb_is_notification_enabled( (int) $user_id, 'notification_groups_admin_promotion' ) ) {
 		return;
 	}
 
