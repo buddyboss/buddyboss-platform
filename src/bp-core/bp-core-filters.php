@@ -1624,3 +1624,22 @@ function bp_core_cron_schedules( $schedules = array() ) {
 	return $schedules;
 }
 add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+
+/**
+ * Filter to update the Avatar URL for the rest api.
+ *
+ * @since BuddyBoss 1.8.2
+ *
+ * @param string $gravatar Avatar Url.
+ *
+ * @return array|mixed|string|string[]
+ */
+function bb_rest_decode_default_avatar_url( $gravatar ) {
+	if ( function_exists( 'bb_is_rest' ) && bb_is_rest() ) {
+		$gravatar = str_replace( '&#038;', '&', $gravatar );
+	}
+
+	return $gravatar;
+}
+
+add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
