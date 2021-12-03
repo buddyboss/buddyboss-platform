@@ -212,12 +212,12 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 
 				// Don't leave multiple notifications for the same activity item.
 				foreach ( $notifications as $notification ) {
-					if ( $activity_id == $notification->item_id && 'new_at_mention' === $notification->component_action ) {
+					if ( $activity_id === $notification->item_id && 'new_at_mention' === $notification->component_action ) {
 						return;
 					}
 				}
 				// Now email the user with the contents of the message (if they have enabled email notifications).
-				if ( 'no' != bp_get_user_meta( $user_id, 'notification_activity_new_mention', true ) ) {
+				if ( 'no' !== bp_get_user_meta( $user_id, 'notification_activity_new_mention', true ) ) {
 					if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 						$email_type = 'groups-at-message';
 						$group_name = bp_get_current_group_name();
