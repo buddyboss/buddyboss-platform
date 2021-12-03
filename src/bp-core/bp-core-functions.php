@@ -6019,3 +6019,30 @@ function bb_check_server_disabled_symlink() {
 
 	return false;
 }
+
+/**
+ * Check the notification is enabled for the user ot not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id User ID.
+ * @param string $key     Notification key.
+ *
+ * @return bool
+ */
+function bb_is_notification_enabled( $user_id, $key ) {
+	if ( empty( $user_id ) || empty( $key ) ) {
+		return false;
+	}
+
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	if (
+		in_array( $key, $enabled_notification, true )
+		&& 'no' !== bp_get_user_meta( $user_id, $key, true )
+	) {
+		return true;
+	}
+
+	return false;
+}

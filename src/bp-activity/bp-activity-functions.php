@@ -4076,7 +4076,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
 	// Now email the user with the contents of the message (if they have enabled email notifications).
-	if ( 'no' != bp_get_user_meta( $receiver_user_id, 'notification_activity_new_mention', true ) ) {
+	if ( true === bb_is_notification_enabled( $receiver_user_id, 'notification_activity_new_mention' ) ) {
 		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			$email_type = 'groups-at-message';
 			$group_name = bp_get_current_group_name();
