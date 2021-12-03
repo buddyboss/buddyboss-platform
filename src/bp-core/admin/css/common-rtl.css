@@ -2355,12 +2355,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 /*------------------------------------------------------------------------------
  * 12.0 Profile Photo UI
  *----------------------------------------------------------------------------*/
-.avatar-options .avatar-custon-input {
+.avatar-options .avatar-custom-input {
   display: inline-block;
   margin: 0 0 25px 15px;
 }
 
-.avatar-options .avatar-custon-input input[type="radio"] {
+.avatar-options .avatar-custom-input input[type="radio"] {
   opacity: 0;
   visibility: hidden;
   height: 0;
@@ -2370,28 +2370,28 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   display: block;
 }
 
-.avatar-options .avatar-custon-input input[type="radio"]:checked + label .img-block {
+.avatar-options .avatar-custom-input input[type="radio"]:checked + label .img-block {
   border-color: #2271b1;
 }
 
-.avatar-options .avatar-custon-input .img-block {
+.avatar-options .avatar-custom-input .img-block {
   display: flex;
   border: 2px solid transparent;
   margin-bottom: 5px;
 }
 
-.avatar-options .avatar-custon-input img {
+.avatar-options .avatar-custom-input img {
   max-width: 75px;
   height: 75px;
   object-fit: cover;
 }
 
-.avatar-options .avatar-custon-input span {
+.avatar-options .avatar-custom-input span {
   display: block;
   text-align: center;
 }
 
-.avatar-options .avatar-custon-input .description {
+.avatar-options .avatar-custom-input .description {
   margin-top: 15px;
 }
 

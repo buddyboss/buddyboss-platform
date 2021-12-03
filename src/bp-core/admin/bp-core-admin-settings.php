@@ -420,7 +420,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		$delete_btn_style  = 'display:none';
 	}
 	?>
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-transparent" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
 		<label for="bp-default-profile-avatar-transparent">
 			<div class="img-block">	
@@ -430,7 +430,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-solid" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
 		<label for="bp-default-profile-avatar-solid">
 			<div class="img-block">
@@ -440,7 +440,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-wordpress" name="bp-default-profile-avatar-type" type="radio" value="0" <?php checked( ! bb_default_profile_avatar_type() ); ?> />
 		<label for="bp-default-profile-avatar-wordpress">
 			<div class="img-block">
@@ -450,7 +450,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
@@ -501,7 +501,7 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
  */
 function bp_admin_setting_callback_default_profile_cover_type() {
 	?>
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="0" <?php checked( ! bb_default_profile_cover_type() ); ?> />
 		<label for="bp-default-profile-cover-none">
 			<div class="img-block">
@@ -511,7 +511,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 		</label>
 	</div>
 
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="1" <?php checked( bb_default_profile_cover_type(), 1 ); ?> />
 		<label for="bp-default-profile-cover-default">
 			<div class="img-block">
@@ -521,7 +521,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 		</label>
 	</div>
 
-	<div class="avatar-custon-input">
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="2" <?php checked( bb_default_profile_cover_type(), 2 ); ?> />
 		<label for="bp-default-profile-cover-custom">
 			<div class="img-block">
