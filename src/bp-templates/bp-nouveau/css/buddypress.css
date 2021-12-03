@@ -8441,6 +8441,12 @@ body .bp-messages-user-threads {
   padding: 15px 0 0 0;
 }
 
+.main-notification-settings .email,
+.main-notification-settings .web,
+.main-notification-settings .app {
+  min-width: 95px;
+}
+
 /*__ notifications __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
