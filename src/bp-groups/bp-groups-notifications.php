@@ -213,7 +213,7 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 	}
 
 	// Bail if member opted out of receiving this email.
-	if ( 'no' === bp_get_user_meta( $requesting_user_id, 'notification_membership_request_completed', true ) ) {
+	if ( false === bb_is_notification_enabled( $requesting_user_id, 'notification_membership_request_completed' ) ) {
 		return;
 	}
 
