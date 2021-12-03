@@ -557,20 +557,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_member_video_ids( $member_id, $action );
 		}
 
-		$related_content_hide = array();
-		if ( ! empty( $related_contents ) ) {
-			foreach ( $related_contents as $key => $related_content ) {
-				foreach ( (array) $related_content as $item ) {
-					if ( ! BP_Core_Suspend::check_suspended_content( $item, $key, true ) && 'hide' === $action ) {
-						$related_content_hide[ $key ][] = $item;
-					} else {
-						$related_content_hide[ $key ][] = $item;
-					}
-				}
-			}
-		}
-
-		return $related_content_hide;
+		return $related_contents;
 	}
 
 	/**
