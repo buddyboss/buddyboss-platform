@@ -2357,7 +2357,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
  *----------------------------------------------------------------------------*/
 .avatar-options .avatar-custom-input {
   display: inline-block;
-  margin: 0 15px 25px 0;
+  margin: 0 7px 25px 0;
 }
 
 .avatar-options .avatar-custom-input input[type="radio"] {
@@ -2370,25 +2370,28 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   display: block;
 }
 
-.avatar-options .avatar-custom-input input[type="radio"]:checked + label .img-block {
+.avatar-options .avatar-custom-input input[type="radio"]:checked + label .img-block img {
   border-color: #2271b1;
 }
 
 .avatar-options .avatar-custom-input .img-block {
   display: flex;
-  border: 2px solid transparent;
+  border-radius: 5px;
   margin-bottom: 5px;
 }
 
 .avatar-options .avatar-custom-input img {
-  max-width: 75px;
-  height: 75px;
+  width: 80px;
+  height: 80px;
+  border: 2px solid transparent;
+  border-radius: 5px;
   object-fit: cover;
 }
 
 .avatar-options .avatar-custom-input span {
   display: block;
   text-align: center;
+  color: #999;
 }
 
 .avatar-options .avatar-custom-input .description {
