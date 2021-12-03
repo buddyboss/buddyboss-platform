@@ -28,9 +28,10 @@ function bp_profile_field_set_max_cap() {
  * @return type
  */
 function bp_get_repeater_template_field_ids( $field_group_id ) {
-	global $wpdb;
-	$bp = buddypress();
 	static $bp_group_field_ids = array();
+	static $bp_clone_field_ids = array();
+	global $wpdb;
+	$bp        = buddypress();
 	$cache_key = 'bp_group_field_ids_' . $field_group_id;
 	if ( ! isset( $bp_group_field_ids[ $cache_key ] ) ) {
 		$bp_group_field_ids[ $cache_key ] = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
@@ -40,7 +41,6 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
 		return array();
 	}
 
-	static $bp_clone_field_ids = array();
 	$bp_clone_cache_key = 'bp_clone_field_ids_' . md5( maybe_serialize( $group_field_ids ) );
 	if ( ! isset( $bp_clone_field_ids[ $bp_clone_cache_key ] ) ) {
 		$bp_clone_field_ids[ $bp_clone_cache_key ] = $wpdb->get_col(
@@ -71,6 +71,7 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
  * @return array
  */
 function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
+	static $bp_clone_ids_subset = array();
 	global $wpdb;
 	$bp = buddypress();
 
@@ -83,7 +84,6 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		static $bp_clone_ids_subset = array();
 		$cache_key = 'bp_clone_field_ids_subset_' . $template_field_id;
 		if ( ! isset( $bp_clone_ids_subset[ $cache_key ] ) ) {
 			$sql                               = $wpdb->prepare( "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
@@ -133,6 +133,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
  * @return array
  */
 function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
+	static $bp_clone_field_ids_all = array();
 	global $wpdb;
 	$bp = buddypress();
 
@@ -145,7 +146,6 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		static $bp_clone_field_ids_all = array();
 		$cache_key = 'clone_field_ids_all_' . $template_field_id;
 		if ( ! isset( $bp_clone_field_ids_all[ $cache_key ] ) ) {
 			$sql                                  = $wpdb->prepare( "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 

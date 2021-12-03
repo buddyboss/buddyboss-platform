@@ -194,6 +194,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function populate() {
+		static $bb_report_row_query = array();
 		global $wpdb;
 
 		$row = wp_cache_get( $this->id, 'bb_moderation' );
@@ -221,12 +222,11 @@ class BP_Moderation {
 		 */
 		$bp        = buddypress();
 		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id;
-		static $cache = array();
-		if ( ! isset( $cache[ $cache_key ] ) ) {
-			$report_row          = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
-			$cache[ $cache_key ] = ! empty( $report_row ) ? $report_row : false;
+		if ( ! isset( $bb_report_row_query[ $cache_key ] ) ) {
+			$report_row                        = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+			$bb_report_row_query[ $cache_key ] = ! empty( $report_row ) ? $report_row : false;
 		} else {
-			$report_row = $cache[ $cache_key ];
+			$report_row = $bb_report_row_query[ $cache_key ];
 		}
 		if ( empty( $report_row ) ) {
 			return;

@@ -100,7 +100,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * @return array
  */
 function bp_core_get_users( $args = '' ) {
-
+	static $bp_core_get_users = array();
 	// Parse the user query arguments.
 	$r = bp_parse_args(
 		$args,
@@ -142,7 +142,6 @@ function bp_core_get_users( $args = '' ) {
 	} else {
 
 		// Get users like we were asked to do...
-		static $bp_core_get_users = array();
 		$cache_key = 'bp_core_get_users_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_core_get_users[ $cache_key ] ) ) {
 			$bp_core_get_users[ $cache_key ] = new BP_User_Query( $r );

@@ -596,6 +596,7 @@ class BP_XProfile_Field {
 	 * @return array
 	 */
 	public function get_children( $for_editing = false ) {
+		static $bp_get_children_cache = array();
 		global $wpdb;
 
 		// This is done here so we don't have problems with sql injection.
@@ -619,8 +620,7 @@ class BP_XProfile_Field {
 			$parent_id = $this->id;
 		}
 
-		$bp = buddypress();
-		static $bp_get_children_cache = array();
+		$bp        = buddypress();
 		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id;
 		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
 			$bp_get_children_cache[ $cache_key ] = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );

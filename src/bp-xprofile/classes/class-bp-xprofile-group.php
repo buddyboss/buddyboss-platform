@@ -270,6 +270,8 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
+		static $bp_xprofile_group_ids = array();
+		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
@@ -313,7 +315,6 @@ class BP_XProfile_Group {
 		$bp = buddypress();
 
 		// Include or exclude empty groups.
-		static $bp_xprofile_group_ids = array();
 		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
 			if ( ! empty( $r['hide_empty_groups'] ) ) {
@@ -423,7 +424,6 @@ class BP_XProfile_Group {
 		}
 
 		// Fetch the fields.
-		static $bp_xprofile_field_ids = array();
 		$cache_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_xprofile_field_ids[ $cache_key ] ) ) {
 			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
