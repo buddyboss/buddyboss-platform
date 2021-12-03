@@ -128,7 +128,7 @@ function bb_notification_get_settings_fields() {
 		),
 	);
 
-	$all_notifications = bb_register_notifications_by_group();
+	$all_notifications = bb_register_notifications();
 
 	$fields['bp_notification_settings_automatic'] = array();
 

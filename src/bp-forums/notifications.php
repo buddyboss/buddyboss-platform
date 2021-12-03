@@ -427,7 +427,7 @@ function forums_notification_settings() {
 		return;
 	}
 
-	$options              = bb_register_notifications_by_group( buddypress()->forums->id );
+	$options              = bb_register_notifications( buddypress()->forums->id );
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 	$fields_keys          = array_column( $options['fields'], 'key' );
 	$enabled_fields       = array_intersect( $fields_keys, $enabled_notification );
@@ -548,4 +548,4 @@ function bb_forums_register_notifications( $array ) {
 	return $array;
 }
 
-add_filter( 'bb_register_notifications_by_group', 'bb_forums_register_notifications', 13, 1 );
+add_filter( 'bb_register_notifications', 'bb_forums_register_notifications', 13, 1 );
