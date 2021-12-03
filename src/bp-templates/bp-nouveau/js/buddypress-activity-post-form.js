@@ -2731,6 +2731,9 @@ window.bp = window.bp || {};
 			initialize: function () {
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
+				if( this.$el.children().length === 0 ) {
+					this.$el.addClass( 'hidden' );
+				}
 			},
 
 			render: function () {

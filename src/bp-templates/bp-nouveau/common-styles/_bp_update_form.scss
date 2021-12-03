@@ -234,6 +234,7 @@
 		padding: 22px 15px 10px 0;
 		min-height: 73px;
 		resize: none !important;
+		border-radius: 0 4px 4px 0;
 	}
 
 	#whats-new-form-placeholder #whats-new-toolbar,
@@ -286,6 +287,10 @@
 		#whats-new:before,
 		#whats-new-form #whats-new-toolbar {
 			cursor: pointer;
+		}
+
+		#whats-new-toolbar.hidden {
+			display: none;
 		}
 
 	}

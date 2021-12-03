@@ -1256,6 +1256,7 @@ a.layout-grid-view {
   padding: 22px 0 10px 15px;
   min-height: 73px;
   resize: none !important;
+  border-radius: 4px 0 0 4px;
 }
 
 .bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder #whats-new-toolbar,
@@ -1322,6 +1323,11 @@ a.layout-grid-view {
 .activity-update-form .activity-form:not(.focus-in) #whats-new:before,
 .activity-update-form .activity-form:not(.focus-in) #whats-new-form #whats-new-toolbar {
   cursor: pointer;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form:not(.focus-in) #whats-new-toolbar.hidden,
+.activity-update-form .activity-form:not(.focus-in) #whats-new-toolbar.hidden {
+  display: none;
 }
 
 .bp-nouveau-activity-form-placeholder- #editor-toolbar,
