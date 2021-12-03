@@ -18,6 +18,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		public $type = 'topic';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
+			static  $bbp_search_forum_ids = array();
 			global $wpdb;
 
 			$bp_prefix = bp_core_get_table_prefix();
@@ -162,15 +163,19 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$group_forum_ids = array_merge( $group_forum_ids, $group_forum_child_ids );
 			
 			// Get group associated forum ids. Where current user is not connected to those groups.
-			$forum_ids = get_posts(
-				array(
-					'fields'       => 'ids',
-					'post_status'  => $post_status,
-					'post_type'    => bbp_get_forum_post_type(),
-					'numberposts'  => '-1',
-					'post__not_in' => $group_forum_ids
-				)
+			$forum_args = array(
+				'fields'       => 'ids',
+				'post_status'  => $post_status,
+				'post_type'    => bbp_get_forum_post_type(),
+				'numberposts'  => '-1',
+				'post__not_in' => $group_forum_ids
 			);
+
+			$forum_ids_cache_key = 'bbp_search_forum_ids_' . md5( maybe_serialize( $forum_args ) );
+			if ( ! isset( $bbp_search_forum_ids[ $forum_ids_cache_key ] ) ) {
+				$bbp_search_forum_ids[ $forum_ids_cache_key ] = get_posts( $forum_args );
+			}
+			$forum_ids = $bbp_search_forum_ids[ $forum_ids_cache_key ];
 
 			$where   = array();
 			$where[] = '1=1';
