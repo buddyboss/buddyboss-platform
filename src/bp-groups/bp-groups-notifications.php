@@ -349,7 +349,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 	}
 
 	// Bail if member opted out of receiving this email.
-	if ( 'no' === bp_get_user_meta( $invited_user_id, 'notification_groups_invite', true ) ) {
+	if ( false === bb_is_notification_enabled( $invited_user_id, 'notification_groups_invite' ) ) {
 		return;
 	}
 
