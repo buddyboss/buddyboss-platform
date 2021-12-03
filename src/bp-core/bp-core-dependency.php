@@ -535,7 +535,9 @@ function bp_add_permastructs() {
 function bp_init_background_updater() {
 	global $bp_background_updater;
 
-	include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+	if ( ! class_exists( 'BP_Background_Updater' ) ) {
+		include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+	}
 	$bp_background_updater = new BP_Background_Updater();
 
 	/**
@@ -781,4 +783,25 @@ function bp_get_request() {
 	 * @param string $action The action being run.
 	 */
 	do_action( 'bp_get_request', $action );
+}
+
+/**
+ * Fire the 'bb_init_email_background_updater' action, where BP email updates data.
+ *
+ * @since BuddyBoss 1.8.1
+ */
+function bb_init_email_background_updater() {
+	global $bb_email_background_updater;
+
+	if ( ! class_exists( 'BP_Background_Updater' ) ) {
+		include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+	}
+	$bb_email_background_updater = new BP_Email_Background_Updater();
+
+	/**
+	 * Fires inside the 'bb_init_email_background_updater' function, where BP email updates data.
+	 *
+	 * @since BuddyBoss 1.8.1
+	 */
+	do_action( 'bb_init_email_background_updater' );
 }

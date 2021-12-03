@@ -707,10 +707,15 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'registered_date'    => bp_rest_prepare_date_response( get_userdata( $user->ID )->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
-			'xprofile'           => $this->xprofile_data( $user->ID ),
+			'xprofile'           => array(),
 			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
 			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
 		);
+
+		// Load xprofile data when required.
+		if ( 'embed' !== $context ) {
+			$data['xprofile'] = $this->xprofile_data( $user->ID );
+		}
 
 		$data['friendship_status'] = (
 			(
