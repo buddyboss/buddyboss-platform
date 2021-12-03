@@ -25,11 +25,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->active_tab  = bp_core_get_admin_active_tab();
 
 		add_action( 'bb_admin_settings_form_tag', array( $this, 'bb_admin_setting_xprofile_add_enctype' ) );
+
+		// Profile Avatar.
 		add_filter( 'bp_attachment_avatar_script_data', array( $this, 'bb_admin_setting_xprofile_script_data' ), 10, 2 );
 		add_filter( 'xprofile_avatar_upload_dir', array( $this, 'bb_xprofile_default_custom_profile_avatar_upload_dir' ), 10, 1 );
-		add_filter( 'bb_core_avatar_relative_path', array( $this, 'bb_default_custom_profile_avatar_set_relative_path' ), 10, 4 );
-		add_filter( 'bp_core_avatar_folder_url', array( $this, 'bb_default_custom_profile_avatar_folder_url' ), 10, 4 );
-		add_filter( 'bp_core_avatar_folder_dir', array( $this, 'bb_default_custom_profile_avatar_folder_path' ), 10, 4 );
+		add_filter( 'bb_core_avatar_crop_item_id_args', array( $this, 'bb_default_custom_profile_avatar_crop_item_id_args' ), 10, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bb_default_custom_profile_avatar_url_check' ), 10, 2 );
 
 		// Profile Cover.
@@ -144,16 +144,24 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile';
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type';
 		$this->add_field( 'bp-default-profile-avatar-type', __( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'intval', $args );
+
+		$args          = array();
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom';
+		$this->add_field( 'bp-default-profile-custom-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 
 			$args          = array();
-			$args['class'] = 'profile-cover-options avatar-options default-profile-cover';
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type';
 			$this->add_field( 'bp-default-profile-cover-type', __( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'intval', $args );
+
+			$args          = array();
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom';
+			$this->add_field( 'bp-default-profile-custom-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
 		}
 
 		// @todo will use this later on
@@ -562,6 +570,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		echo ' enctype="multipart/form-data"';
 	}
 
+	/**
+	 * The custom profile avatar script data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $script_data The avatar script data.
+	 * @param string $object      The object the avatar belongs to (eg: user or group).
+	 */
 	public function bb_admin_setting_xprofile_script_data( $script_data, $object = '' ) {
 
 		if ( $this->active_tab !== $this->tab_name ) {
@@ -581,9 +597,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
 			1 => __( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
-			2 => __( 'New custom profile avatar was uploaded successfully.', 'buddyboss' ),
+			2 => __( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
 			3 => __( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
-			4 => __( 'Custom profile avatar was deleted successfully!', 'buddyboss' ),
+			4 => __( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
 		);
 
 		return $script_data;
@@ -645,60 +661,25 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Setup relative path for default custom avatar upload.
+	 * Set item ID for image crop.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $relative_path The original avatar relative path.
-	 * @param int    $item_id ID of the avatar item being requested.
-	 * @param string $object  Avatar type being requested.
-	 * @param string $avatar_dir Subdirectory where the requested avatar should be found.
-	 * @return string Actual custom uploaded avatar relative path.
+	 * @param int|string    $item_id ID of the avatar item being requested.
+	 * @param array $args {
+	 *     @type string     $original_file The source file (absolute path) for the Attachment.
+	 *     @type string     $object        Avatar type being requested.
+	 *     @type int|string $item_id       ID of the avatar item being requested.
+	 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
+	 * }
+	 * @return int|string Actual item ID for upload custom avatar.
 	 */
-	public function bb_default_custom_profile_avatar_set_relative_path( $relative_path, $item_id = 0, $object, $avatar_dir ) {
-		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $object ) {
-			return sprintf( '/%s/%s/%s', $avatar_dir, 'custom', basename( $relative_path ) );
+	public function bb_default_custom_profile_avatar_crop_item_id_args( $itm_id = 0, $args ) {
+		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $args['object'] ) {
+			return 'custom';
 		}
 
-		return $relative_path;
-	}
-
-	/**
-	 * The Avatar URL for default custom avatar upload.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $avatar_folder_url Path to the avatar folder URL.
-	 * @param int    $item_id ID of the avatar item being requested.
-	 * @param string $object Avatar type being requested.
-	 * @param string $avatar_dir Subdirectory where the requested avatar should be found.
-	 * @return string Actual custom uploaded avatar relative URL.
-	 */
-	public function bb_default_custom_profile_avatar_folder_url( $avatar_folder_url, $item_id = 0, $object, $avatar_dir ) {
-		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $object ) {
-			return trailingslashit( bp_core_avatar_url() ) . trailingslashit( $avatar_dir ) . 'custom';
-		}
-
-		return $avatar_folder_url;
-	}
-
-	/**
-	 * The Avatar path for default custom avatar upload.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $avatar_folder_path Path to the avatar folder path.
-	 * @param int    $item_id ID of the avatar item being requested.
-	 * @param string $object Avatar type being requested.
-	 * @param string $avatar_dir Subdirectory where the requested avatar should be found.
-	 * @return string Actual custom uploaded avatar relative path.
-	 */
-	public function bb_default_custom_profile_avatar_folder_path( $avatar_folder_path, $item_id = 0, $object, $avatar_dir ) {
-		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $object ) {
-			return trailingslashit( bp_core_avatar_upload_path() ) . trailingslashit( $avatar_dir ) . 'custom';
-		}
-
-		return $avatar_folder_path;
+		return $itm_id;
 	}
 
 	/**
@@ -763,8 +744,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Validate ajax request for upload custom profile cover.
 		$this->bb_validate_custom_profile_avatar_reuqest( $upload_dir );
 
-		$bp_params = $_POST['bp_params'];
-
 		// Set the subdir.
 		$subdir = '/members/custom/cover-image';
 
@@ -797,13 +776,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $cover_dir Path to the cover folder path.
-	 * @param array  $bp_params Contains data for requested cover upload.
-	 * @param array  $object_data The type requested.
-	 * @param array  $bp_attachments_uploads_dir Array containing the path, URL, and other helpful settings.
+	 * @param string     $cover_dir  Path to the cover folder path.
+	 * @param string     $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int|string $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string     $type       The type of the attachment which is also the subdir where files are saved.
+	 *                               Defaults to 'cover-image'
 	 * @return string Actual custom uploaded cover relative path.
 	 */
-	public function bb_post_profile_cover_image_ajax_upload_dir( $cover_dir, $bp_params, $object_data, $bp_attachments_uploads_dir ) {
+	public function bb_post_profile_cover_image_ajax_upload_dir( $cover_dir, $object_dir, $item_id, $type ) {
 
 		// Validate ajax request for upload custom profile cover.
 		$this->bb_validate_custom_profile_avatar_reuqest( $cover_dir );
@@ -819,21 +799,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $cover_dir Path to the cover folder path.
-	 * @param array  $bp_params Contains data for requested cover upload.
-	 * @param array  $object_data The type requested.
-	 * @param array  $bp_attachments_uploads_dir Array containing the path, URL, and other helpful settings.
+	 * @param string     $cover_dir  Path to the cover folder path.
+	 * @param string     $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int|string $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string     $type       The type of the attachment which is also the subdir where files are saved.
+	 *                               Defaults to 'cover-image'
 	 * @return string Actual custom uploaded cover relative sub path.
 	 */
-	public function bb_post_profile_cover_image_ajax_upload_sub_dir( $cover_sub_dir, $bp_params, $object_data, $bp_attachments_uploads_dir ) {
+	public function bb_post_profile_cover_image_ajax_upload_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
 
 		// Validate ajax request for upload custom profile cover.
 		$this->bb_validate_custom_profile_avatar_reuqest( $cover_sub_dir );
 
-		// Get profile cover directory array
-		$profile_cover_dir = $this->bb_profile_cover_image_upload_dir();
-
-		return $profile_cover_dir['subdir'];
+		return $object_dir . '/custom/' . $type;
 	}
 
 }

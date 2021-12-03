@@ -56,6 +56,15 @@ window.bp = window.bp || {};
 
 			$( 'body.wp-admin' ).on(
 				'click',
+				'.bp-delete-custom-avatar',
+				function( e ) {
+					e.preventDefault();
+					$( '.bp-xprofile-avatar-user-edit' ).trigger('click');
+				}
+			);
+
+			$( 'body.wp-admin' ).on(
+				'click',
 				'.bp-xprofile-avatar-user-edit',
 				function() {
 					self.resetViews();

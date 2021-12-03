@@ -70,10 +70,10 @@ function bp_get_default_options() {
 		'bp-disable-avatar-uploads'                  => false,
 
 		// Avatar type.
-		'bp-default-profile-avatar-type'             => 1,
+		'bp-default-profile-avatar-type'             => 0,
 
 		// Avatar type.
-		'bp-default-profile-cover-type'              => false,
+		'bp-default-profile-cover-type'              => 0,
 
 		// cover photo uploads.
 		'bp-disable-cover-image-uploads'             => false,
@@ -1989,7 +1989,7 @@ function bb_get_profile_group_custom_avatar_option_placeholder() {
 	 *
 	 * @param string $value placeholder URL for profile and group custom avatar option.
 	 */
-	return apply_filters( 'bb_get_profile_group_custom_avatar_option_placeholder', buddypress()->plugin_url . 'bp-core/images/mystery-man-option.jpg' );
+	return apply_filters( 'bb_get_profile_group_custom_avatar_option_placeholder', buddypress()->plugin_url . 'bp-core/images/profile-group-custom.png' );
 }
 
 /**
@@ -2016,7 +2016,7 @@ function bb_get_default_custom_profile_avatar_upload_placeholder() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int|null $default Optional. Fallback value if not found in the database.
- *                      Default: null.
+ *                          Default: null.
  * @return int Return the default profile avatar type.
  */
 function bb_default_profile_avatar_type( $default = null ) {
@@ -2054,8 +2054,6 @@ function bb_has_default_custom_upload_profile_avatar() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string|null $default Optional. Fallback value if not found in the database.
- *                      Default: null.
  * @return string Return default custom upload avatar URL.
  */
 function bb_default_custom_upload_profile_avatar() {
@@ -2083,21 +2081,60 @@ function bb_default_custom_upload_profile_avatar() {
 }
 
 /**
- * Get default defined profile cover URL.
+ * Get image URL for none option of profile and group.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string Return default defined profile cover URL.
+ * @return string Return image URL for none option of profile and group.
  */
-function bb_get_default_defined_profile_cover() {
+function bb_get_profile_group_none_option_image() {
 	/**
-	 * Filters to change default defined profile cover image.
+	 * Filters image URL for none option of profile and group.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Default defined profile cover URL.
+	 * @param string $value image URL for none option of profile and group.
 	 */
-	return apply_filters( 'bb_get_default_defined_profile_cover', buddypress()->plugin_url . 'bp-core/images/profile-cover.png' );
+	return apply_filters( 'bb_get_profile_group_none_option_image', buddypress()->plugin_url . 'bp-core/images/profile-group-none.png' );
+}
+
+/**
+ * Get default custom cover photo Width and Height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
+ * @return array|bool An associative array containing the advised width and height for the cover photo. False if settings are empty.
+ */
+function bp_attachments_get_default_custom_cover_image_dimensions( $component = 'xprofile' ) {
+	$cover_dimensions = bp_attachments_get_cover_image_dimensions( $component );
+
+	if ( ! $cover_dimensions ) {
+		$cover_dimensions = array(
+			'width'  => 1950,
+			'height' => 450,
+		);
+	}
+
+	return $cover_dimensions;
+}
+
+/**
+ * Get default BuddyBoss profile cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return default BuddyBoss profile cover URL.
+ */
+function bb_get_default_custom_buddyboss_profile_cover() {
+	/**
+	 * Filters default cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss profile cover URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_buddyboss_profile_cover', buddypress()->plugin_url . 'bp-core/images/profile-cover.png' );
 }
 
 /**
@@ -2107,15 +2144,15 @@ function bb_get_default_defined_profile_cover() {
  *
  * @return string Return default profile cover placeholder URL.
  */
-function bb_get_default_profile_cover_placeholder() {
+function bb_get_default_custom_profile_cover_upload_placeholder() {
 	/**
-	 * Filters to change default avatar placeholder image.
+	 * Filters default cover placeholder image.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $value Default profile cover placeholder URL.
 	 */
-	return apply_filters( 'bb_get_default_profile_cover_placeholder', buddypress()->plugin_url . 'bp-core/images/profile-cover.png' );
+	return apply_filters( 'bb_get_default_custom_profile_cover_upload_placeholder', buddypress()->plugin_url . 'bp-core/images/profile-cover.png' );
 }
 
 /**
@@ -2124,7 +2161,7 @@ function bb_get_default_profile_cover_placeholder() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int|null $default Optional. Fallback value if not found in the database.
- *                      Default: null.
+ *                          Default: null.
  * @return int Return the default profile cover type.
  */
 function bb_default_profile_cover_type( $default = null ) {
@@ -2140,21 +2177,29 @@ function bb_default_profile_cover_type( $default = null ) {
 }
 
 /**
- * Get default custom upload cover URL.
+ * Get default custom upload profile cover URL.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
- *                      Default: null.
- * @return string Return default custom upload cover URL.
+ *                             Default: null.
+ * @return string Return default custom upload profile cover URL.
  */
-function bb_default_custom_upload_profile_cover( $default = null ) {
+function bb_default_custom_upload_profile_cover() {
+
+	$cover_image_url          = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => 'members',
+			'item_id'    => 'custom',
+		)
+	);
 	/**
 	 * Filters to change default custom upload cover image.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value Default custom upload cover URL.
+	 * @param string $value Default custom upload profile cover URL.
 	 */
-	return apply_filters( 'bb_default_custom_upload_profile_cover', bp_get_option( 'bp-custom-profile-cover', $default ) );
+	return apply_filters( 'bb_default_custom_upload_profile_cover', $cover_image_url );
 }

@@ -107,44 +107,55 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			wp_localize_script( 'bp-admin', 'BP_ADMIN', array(
-				'ajax_url'        => admin_url( 'admin-ajax.php' ),
-				'select_document' => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
-				'tools'           => array(
-					'default_data' => array(
-						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
-						'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
+			$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+
+			wp_localize_script(
+				'bp-admin',
+				'BP_ADMIN',
+				array(
+					'ajax_url'             => admin_url( 'admin-ajax.php' ),
+					'select_document'      => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+					'tools'                => array(
+						'default_data'  => array(
+							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
+							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
+						),
+						'repair_forums' => array(
+							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+						),
 					),
-					'repair_forums' => array(
-						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+					'moderation'           => array(
+						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					),
-				),
-				'moderation' => array(
-					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-				),
-				'custom_profile_cover' => array(
-					'select_file'       => esc_js( __( 'No file was uploaded.', 'buddyboss' ) ),
-					'file_upload_error' => esc_js( __( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
-					'feedback_messages' => array(
-						1 => __( 'Cover photo was uploaded successfully.', 'buddyboss' ),
-						2 => __( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
-						3 => __( 'Cover photo was deleted successfully.', 'buddyboss' ),
+					'custom_profile_cover' => array(
+						'select_file'       => esc_js( __( 'No file was uploaded.', 'buddyboss' ) ),
+						'file_upload_error' => esc_js( __( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
+						'feedback_messages' => array(
+							0 => sprintf(
+								__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+								(int) $cover_dimensions['width'],
+								(int) $cover_dimensions['height']
+							),
+							1 => __( 'Cover photo was uploaded successfully.', 'buddyboss' ),
+							2 => __( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
+							3 => __( 'Cover photo was deleted successfully.', 'buddyboss' ),
+						),
+						'upload'            => array(
+							'nonce'           => wp_create_nonce( 'bp-uploader' ),
+							'action'          => 'bp_cover_image_upload',
+							'object'          => 'user',
+							'item_id'         => 'custom',
+							'has_cover_image' => false,
+						),
+						'remove'            => array(
+							'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
+							'action' => 'bp_cover_image_delete',
+							'json'   => true,
+						),
 					),
-					'upload'            => array(
-						'nonce'           => wp_create_nonce( 'bp-uploader' ),
-						'action'          => 'bp_cover_image_upload',
-						'object'          => 'user',
-						'item_id'         => 'custom',
-						'has_cover_image' => false,
-					),
-					'remove'            => array(
-						'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
-						'action' => 'bp_cover_image_delete',
-						'json'   => true,
-					),
-				),
-			) );
+				)
+			);
 
 			$active_tab  = bp_core_get_admin_active_tab();
 

@@ -214,7 +214,18 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$avatar_dir = sanitize_key( $args['object'] ) . '-avatars';
 		}
 
-		$args['item_id'] = (int) $args['item_id'];
+		/**
+		 * Filters the args contains for image crop.
+		 *
+		 * @param int    $item_id ID of the avatar item being requested.
+		 * @param array $args {
+		 *     @type string     $original_file The source file (absolute path) for the Attachment.
+		 *     @type string     $object        Avatar type being requested.
+		 *     @type int|string $item_id       ID of the avatar item being requested.
+		 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
+		 * }
+		 */
+		$args['item_id'] = apply_filters( 'bb_core_avatar_crop_item_id_args', (int) $args['item_id'], $args );
 
 		/**
 		 * Original file is a relative path to the image

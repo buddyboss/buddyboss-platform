@@ -515,8 +515,33 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 		return $attachment_data;
 	}
 
-	$type_subdir = $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'];
+	/**
+	 * Filters uploaded BuddyPress image attachment sub directory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $subdir     The sub dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$type_subdir = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_sub_dir', $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'], $r['object_dir'], $r['item_id'], $r['type'] );
+	
 	$type_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $type_subdir;
+
+	/**
+	 * Filters uploaded BuddyPress image attachment directory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $dir        The dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$type_dir = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_dir', $type_dir, $r['object_dir'], $r['item_id'], $r['type'] );
 
 	if ( 1 === validate_file( $type_dir ) || ! is_dir( $type_dir ) ) {
 		return $attachment_data;
@@ -582,7 +607,7 @@ function bp_attachments_delete_file( $args = array() ) {
 	 * @since BuddyPress 2.5.1
 	 *
 	 * @param bool $value Whether or not to delete the BuddyPress attachment.
-`	 * @param array $args Array of arguments for the attachment deletion.
+	 * @param array $args Array of arguments for the attachment deletion.
 	 */
 	if ( ! apply_filters( 'bp_attachments_pre_delete_file', true, $args ) ) {
 		return true;
@@ -1449,9 +1474,33 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
-	$cover_subdir = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $bp_params, $object_data, $bp_attachments_uploads_dir );
+	/**
+	 * Filters uploaded BuddyPress image attachment sub directory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $subdir     The sub dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$cover_subdir = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+
 	$cover_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
-	$cover_dir    = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_dir', $cover_dir, $bp_params, $object_data, $bp_attachments_uploads_dir );
+
+	/**
+	 * Filters uploaded BuddyPress image attachment directory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $dir        The dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$cover_dir    = apply_filters( 'bp_attachments_post_cover_image_ajax_upload_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
