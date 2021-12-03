@@ -145,7 +145,7 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 	}
 
 	// Bail if member opted out of receiving this email.
-	if ( 'no' === bp_get_user_meta( $admin_id, 'notification_groups_membership_request', true ) ) {
+	if ( false === bb_is_notification_enabled( (int) $admin_id, 'notification_groups_membership_request' ) ) {
 		return;
 	}
 
