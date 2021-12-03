@@ -220,16 +220,19 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		 * @return array
 		 */
 		public function nested_child_forum_ids( $forum_id ) {
+			static $bp_nested_child_forum_ids = array();
 			global $wpdb;
-
-			// SQL query for getting all nested child forum id from parent forum id.
-			$sql = "SELECT ID
-				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
-					  ( SELECT @pv := %d ) initialisation
-				WHERE FIND_IN_SET( post_parent, @pv )
-				AND   LENGTH( @pv := CONCAT(@pv, ',', ID ) )";
-
-			$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id ) );
+			$cache_key = 'nested_child_forum_ids_' . bbp_get_forum_post_type() . '_' . $forum_id;
+			if ( ! isset( $bp_nested_child_forum_ids[ $cache_key ] ) ) {
+				// SQL query for getting all nested child forum id from parent forum id.
+				$sql = "SELECT ID
+					FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
+						  ( SELECT @pv := %d ) initialisation
+					WHERE FIND_IN_SET( post_parent, @pv )
+					AND   LENGTH( @pv := CONCAT(@pv, ',', ID ) )";
+				$bp_nested_child_forum_ids[ $cache_key ] = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id ) );
+			}
+			$child_forum_ids = $bp_nested_child_forum_ids[ $cache_key ];
 
 			return $child_forum_ids;
 		}
