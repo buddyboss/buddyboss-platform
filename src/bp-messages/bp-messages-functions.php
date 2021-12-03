@@ -810,7 +810,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+		if ( $sender_id == $recipient->user_id || false === bb_is_notification_enabled( $recipient->user_id, 'notification_messages_new_message' ) ) {
 			continue;
 		}
 
