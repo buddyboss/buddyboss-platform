@@ -3354,7 +3354,12 @@ function bp_member_type_by_type( $type_id ) {
 		return $member_ids;
 	}
 
-	$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+	$cache_key  = 'bp_member_type_by_type_' . $type_id;
+	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
+	if ( false === $member_ids ) {
+		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
+	}
 
 	return $member_ids;
 }
