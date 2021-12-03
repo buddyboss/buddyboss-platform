@@ -189,7 +189,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
-		'whatsnewPlaceholder' => sprintf( __( "Write here or use @ to mention someone.", 'buddyboss' ), bp_get_user_firstname( $user_displayname ) ),
+		'whatsnewPlaceholder' => sprintf( __( "Share what's on your mind, %s...", 'buddyboss' ), bp_get_user_firstname( $user_displayname ) ),
 		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => __( 'Post', 'buddyboss' ),
