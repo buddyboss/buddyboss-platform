@@ -5536,13 +5536,18 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $attachment_path Symbolising path to generate.
  */
 function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
+
 	if ( empty( $type ) || empty( $item ) ) {
 		return;
 	}
 
-	if ( ! bp_is_active( 'media') ) {
-	    return;
-    }
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
 
 	$key           = '';
 	$sym_path      = '';
@@ -5630,8 +5635,8 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 							$upl_dir          = wp_get_upload_dir();
 
 							if ( ! $is_image ) {
-								if ( ! empty( $meta['sizes'][$size] ) ) {
-									$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
+								if ( ! empty( $meta['sizes'][ $size ] ) ) {
+									$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
 								} else {
 									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
 								}
@@ -5705,116 +5710,6 @@ function bb_check_ios_device() {
 }
 
 /**
- * Enable symlink automatically.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_core_enable_default_symlink_support() {
-
-	if ( ! bp_is_active( 'media' ) ) {
-		return;
-	}
-
-	if ( (bool) get_option( 'bp_media_symlink_support', false ) ) {
-		return;
-	}
-
-	if ( true === bb_check_server_disabled_symlink() ) {
-		return;
-	}
-
-	$upload_dir = wp_upload_dir();
-	$upload_dir = $upload_dir['basedir'];
-
-	$platform_previews_path = $upload_dir . '/bb-platform-previews';
-	if ( ! is_dir( $platform_previews_path ) ) {
-		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
-	}
-
-	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
-	if ( ! is_dir( $media_symlinks_path ) ) {
-		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
-	}
-
-	$upload_dir      = wp_upload_dir();
-	$upload_dir      = $upload_dir['basedir'];
-	$output_file_src = '';
-	$attachment_id   = bb_core_upload_dummy_attachment();
-
-	if ( ! empty( $attachment_id ) ) {
-
-		$attachment_url          = wp_get_attachment_image_src( $attachment_id );
-		$attachment_file         = get_attached_file( $attachment_id );
-		$symlinks_path           = $media_symlinks_path;
-		$size                    = 'thumbnail';
-		$symlink_name            = md5( 'testsymlink' . $attachment_id . $size );
-		$attachment_path         = $symlinks_path . '/' . $symlink_name;
-		$file                    = image_get_intermediate_size( $attachment_id, $size );
-		$upload_directory        = wp_get_upload_dir();
-		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
-		$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
-
-		if ( $file && ! empty( $file['path'] ) ) {
-			$output_file_src = $upload_dir . '/' . $file['path'];
-		} elseif ( $attachment_url ) {
-			$output_file_src = $attachment_file;
-		}
-
-		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-
-			if ( ! is_link( $attachment_path ) ) {
-
-				symlink( $output_file_src, $attachment_path );
-
-				if ( ! empty( $symlink_url ) ) {
-					$fetch = wp_remote_get( $symlink_url );
-
-					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-						bp_update_option( 'bp_media_symlink_support', 1 );
-					}
-				}
-				unlink( $attachment_path );
-
-				if ( bb_enable_symlinks() ) {
-					wp_delete_attachment( $attachment_id, true );
-					return;
-				}
-
-				$tmp = getcwd();
-				chdir( wp_normalize_path( ABSPATH ) );
-				$sym_path   = explode( '/', $symlinks_path );
-				$search_key = array_search( 'wp-content', $sym_path, true );
-				if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
-					$sym_path = array_slice( array_filter( $sym_path ), $search_key );
-					$sym_path = implode( '/', $sym_path );
-				}
-				if ( is_dir( 'wp-content/' . $sym_path ) ) {
-					chdir( 'wp-content/' . $sym_path );
-					if ( empty( $file['path'] ) ) {
-						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
-					}
-					$output_file_src = '../../' . $file['path'];
-					if ( file_exists( $output_file_src ) ) {
-						symlink( $output_file_src, $symlink_name );
-					}
-				}
-				chdir( $tmp );
-
-				if ( ! empty( $symlink_url ) ) {
-					$fetch = wp_remote_get( $symlink_url );
-					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-						bp_update_option( 'bp_media_symlink_support', 1 );
-					}
-				}
-			}
-		}
-		wp_delete_attachment( $attachment_id, true );
-	}
-}
-
-/**
  * Create a dummy attachment and return the id.
  *
  * @return int|WP_Error
@@ -5860,9 +5755,9 @@ function bb_core_get_browser() {
 	$u_agent  = $_SERVER['HTTP_USER_AGENT'];
 	$bname    = 'Unknown';
 	$platform = 'Unknown';
-	$version  = "";
+	$version  = '';
 
-	//First get the platform?
+	// First get the platform?
 	if ( preg_match( '/linux/i', $u_agent ) ) {
 		$platform = 'linux';
 	} elseif ( preg_match( '/macintosh|mac os x/i', $u_agent ) ) {
@@ -5874,28 +5769,28 @@ function bb_core_get_browser() {
 	// Next get the name of the useragent yes seperately and for good reason
 	if ( preg_match( '/MSIE/i', $u_agent ) && ! preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Internet Explorer';
-		$ub    = "MSIE";
+		$ub    = 'MSIE';
 	} elseif ( preg_match( '/Firefox/i', $u_agent ) ) {
 		$bname = 'Mozilla Firefox';
-		$ub    = "Firefox";
+		$ub    = 'Firefox';
 	} elseif ( preg_match( '/Chrome/i', $u_agent ) ) {
 		$bname = 'Google Chrome';
-		$ub    = "Chrome";
+		$ub    = 'Chrome';
 	} elseif ( preg_match( '/Safari/i', $u_agent ) ) {
 		$bname = 'Apple Safari';
-		$ub    = "Safari";
+		$ub    = 'Safari';
 	} elseif ( preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Opera';
-		$ub    = "Opera";
+		$ub    = 'Opera';
 	} elseif ( preg_match( '/Netscape/i', $u_agent ) ) {
 		$bname = 'Netscape';
-		$ub    = "Netscape";
+		$ub    = 'Netscape';
 	}
 
 	// finally get the correct version number
 	$known   = array( 'Version', $ub, 'other' );
 	$pattern = '#(?<browser>' . join( '|', $known ) .
-	           ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+			   ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 	if ( ! preg_match_all( $pattern, $u_agent, $matches ) ) {
 		// we have no matching number just continue
 	}
@@ -5903,9 +5798,9 @@ function bb_core_get_browser() {
 	// see how many we have
 	$i = count( $matches['browser'] );
 	if ( $i != 1 ) {
-		//we will have two since we are not using 'other' argument yet
-		//see if version is before or after the name
-		if ( strripos( $u_agent, "Version" ) < strripos( $u_agent, $ub ) ) {
+		// we will have two since we are not using 'other' argument yet
+		// see if version is before or after the name
+		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
 			$version = $matches['version'][0];
 		} else {
 			$version = $matches['version'][1];
@@ -5915,8 +5810,8 @@ function bb_core_get_browser() {
 	}
 
 	// check if we have a number
-	if ( $version == null || $version == "" ) {
-		$version = "?";
+	if ( $version == null || $version == '' ) {
+		$version = '?';
 	}
 
 	return array(
@@ -5924,7 +5819,7 @@ function bb_core_get_browser() {
 		'name'      => $bname,
 		'version'   => $version,
 		'platform'  => $platform,
-		'pattern'   => $pattern
+		'pattern'   => $pattern,
 	);
 }
 
@@ -6006,15 +5901,23 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 				if ( ! empty( $media_results ) ) {
 					$suspend_record = bb_moderation_suspend_record_exist( $media_results->activity_id );
 					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $suspend_record->item_id,
-							'item_type' => $suspend_record->item_type,
-						), array( 'id' => $moderated_activity->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $suspend_record->item_id,
+								'item_type' => $suspend_record->item_type,
+							),
+							array( 'id' => $moderated_activity->id )
+						);
 
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $moderated_activity->item_id,
-							'item_type' => $moderated_activity->item_type,
-						), array( 'id' => $suspend_record->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $moderated_activity->item_id,
+								'item_type' => $moderated_activity->item_type,
+							),
+							array( 'id' => $suspend_record->id )
+						);
 					}
 				}
 			}
@@ -6024,15 +5927,23 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 				if ( ! empty( $document_results ) ) {
 					$suspend_record = bb_moderation_suspend_record_exist( $document_results->activity_id );
 					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $suspend_record->item_id,
-							'item_type' => $suspend_record->item_type,
-						), array( 'id' => $moderated_activity->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $suspend_record->item_id,
+								'item_type' => $suspend_record->item_type,
+							),
+							array( 'id' => $moderated_activity->id )
+						);
 
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $moderated_activity->item_id,
-							'item_type' => $moderated_activity->item_type,
-						), array( 'id' => $suspend_record->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $moderated_activity->item_id,
+								'item_type' => $moderated_activity->item_type,
+							),
+							array( 'id' => $suspend_record->id )
+						);
 					}
 				}
 			}
@@ -6074,7 +5985,7 @@ function bb_moderation_bg_update_moderation_data() {
  * @return array
  */
 function bb_get_all_admin_users() {
-	$args = array(
+	$args  = array(
 		'role'    => 'administrator',
 		'orderby' => 'user_nicename',
 		'order'   => 'ASC',
