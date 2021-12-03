@@ -4146,7 +4146,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $original_activity->user_id != $commenter_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( 'no' != bp_get_user_meta( $original_activity->user_id, 'notification_activity_new_reply', true ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, 'notification_activity_new_reply' ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4194,7 +4194,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( 'no' != bp_get_user_meta( $parent_comment->user_id, 'notification_activity_new_reply', true ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'notification_activity_new_reply' ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
