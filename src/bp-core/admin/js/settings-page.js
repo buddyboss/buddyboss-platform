@@ -1,4 +1,5 @@
 /* global BP_ADMIN */
+/* global BP_Confirm */
 (function() {
 	var $                             = jQuery.noConflict();
 	var BbToolsCommunityRepairActions = [];
