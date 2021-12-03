@@ -64,7 +64,7 @@ function bp_members_clear_member_type_cache( $user_id ) {
 	wp_cache_delete( 'bp_get_all_posts_for_user_' . $user_id, 'bp_member' );
 	wp_cache_delete( 'bp_check_user_status_' . $user_id, 'bp_member' );
 	// Use below code for bp_member_type_by_type( $type_id ) function.
-	$member_type = bp_get_member_type( $user_id );
+	$member_type = function_exists( 'bp_get_member_type' ) ? bp_get_member_type( $user_id ) : '';
 	if ( ! empty( $member_type ) ) {
 		$get_term = get_term_by( 'slug', $member_type, 'bp_member_type' );
 		if ( ! empty( $get_term ) ) {
