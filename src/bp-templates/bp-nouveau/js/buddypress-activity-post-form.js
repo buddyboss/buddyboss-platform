@@ -2438,7 +2438,6 @@ window.bp = window.bp || {};
 				var privacy_label = this.$el.find( '.bp-activity-privacy__input:checked' ).data('title');
 
 				$( '#whats-new-form' ).removeClass( 'focus-in-privacy' );
-				Backbone.trigger( 'privacy:statuslabel' );
 				$( '#whats-new-form' ).find( '.bp-activity-privacy-status' ).text( privacy_label );
 			},
 
@@ -2468,7 +2467,7 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
 
-				// activity privacy dropdown for profile.
+				// activity privacy options for profile.
 				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
 					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
 					this.views.add( privacy );
@@ -3228,7 +3227,7 @@ window.bp = window.bp || {};
 				this.views.set(
 					[
 						new bp.Views.ActivityHeader( { model: this.model } ),
-						new bp.Views.FormAvatar( { activity: this.model, model: this.model } ),
+						new bp.Views.FormAvatar( { model: this.model } ),
 						new bp.Views.PrivacyStage( { model: this.model } ),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
 						new bp.Views.EditorToolbar( { model: this.model } ),
@@ -3821,7 +3820,7 @@ window.bp = window.bp || {};
 
 				this.views.set(
 					[
-						new bp.Views.FormAvatar( { activity: this.model, model: this.model } ),
+						new bp.Views.FormAvatar( { model: this.model } ),
 						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
 						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
 					]
