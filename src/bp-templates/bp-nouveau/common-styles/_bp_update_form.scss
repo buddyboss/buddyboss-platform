@@ -60,8 +60,69 @@
 	padding: 15px 30px;
 }
 
-.bp-activity-privacy-selector {
-	padding: 5px 0;
+.bp-activity-privacy__label {
+	margin: 20px 0;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+
+	.privacy-tag-wrapper {
+		display: flex;
+		align-items: center;
+	}
+
+	.privacy-radio {
+		margin-left: auto;
+	}
+
+	.privacy-figure {
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
+		border-radius: 50%;
+		background-color: #efefef;
+		text-align: center;
+		margin: 0 20px 0 0;
+
+		&:before {
+			font-family: bb-icons;
+			speak: none;
+			display: inline-block;
+			text-decoration: inherit;
+			text-transform: none;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		&--public:before {
+			content: "\e819";
+		}
+
+		&--loggedin:before {
+			content: "\e95d";
+		}
+
+		&--friends:before {
+			content: "\e95e";
+		}
+
+		&--onlyme:before {
+			content: "\e95f";
+		}
+	}
+
+	.privacy-label {
+		display: inline-block;
+		font-weight: 500;
+		margin: 0 0 5px;
+	}
+
+	.privacy-sub-label {
+		display: block;
+		font-size: 80%;
+		color: #7f868f;
+	}
 }
 
 .privacy-status-actions {

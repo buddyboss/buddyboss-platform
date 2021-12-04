@@ -1064,8 +1064,69 @@ a.layout-grid-view {
   padding: 15px 30px;
 }
 
-.bp-activity-privacy-selector {
-  padding: 5px 0;
+.bp-activity-privacy__label {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.bp-activity-privacy__label .privacy-tag-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.bp-activity-privacy__label .privacy-radio {
+  margin-left: auto;
+}
+
+.bp-activity-privacy__label .privacy-figure {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  background-color: #efefef;
+  text-align: center;
+  margin: 0 20px 0 0;
+}
+
+.bp-activity-privacy__label .privacy-figure:before {
+  font-family: bb-icons;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bp-activity-privacy__label .privacy-figure--public:before {
+  content: "\e819";
+}
+
+.bp-activity-privacy__label .privacy-figure--loggedin:before {
+  content: "\e95d";
+}
+
+.bp-activity-privacy__label .privacy-figure--friends:before {
+  content: "\e95e";
+}
+
+.bp-activity-privacy__label .privacy-figure--onlyme:before {
+  content: "\e95f";
+}
+
+.bp-activity-privacy__label .privacy-label {
+  display: inline-block;
+  font-weight: 500;
+  margin: 0 0 5px;
+}
+
+.bp-activity-privacy__label .privacy-sub-label {
+  display: block;
+  font-size: 80%;
+  color: #7f868f;
 }
 
 .privacy-status-actions {

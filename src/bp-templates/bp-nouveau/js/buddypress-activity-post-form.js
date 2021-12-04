@@ -3371,6 +3371,12 @@ window.bp = window.bp || {};
 				this.model.clear();
 				this.model.set( this.resetModel.attributes );
 
+				var whats_new_form = $( '#whats-new-form' );
+
+				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
+				var privacy_label = whats_new_form.find( '.bp-activity-privacy__input:checked' ).data('title');
+				whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
+
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
 				$( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
