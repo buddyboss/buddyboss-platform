@@ -361,7 +361,7 @@ window.bp = window.bp || {};
 					$( '#whats-new-content, #whats-new-attachments' ).wrapAll( '<div class="edit-activity-content-wrap"></div>' );
 
 					// Make selected current privacy.
-					var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
+					var $activityPrivacySelect = self.postForm.$el.find( '.bp-activity-privacy__input:checked' );
 
 					$activityPrivacySelect.val( activity_data.privacy );
 
@@ -2224,17 +2224,9 @@ window.bp = window.bp || {};
 			id: 'activity-post-form-privacy',
 			template: bp.template( 'activity-post-form-privacy' ),
 
-			events: {
-				'change #bp-activity-privacy': 'change',
-			},
-
 			initialize: function () {
-				this.model.set( 'privacy', this.$el.find( '#bp-activity-privacy' ).val() );
+				this.model = new bp.Models.Activity();
 			},
-
-			change: function () {
-				this.model.set( { 'selected': this.el.value } );
-			}
 		}
 	);
 
@@ -2410,8 +2402,6 @@ window.bp = window.bp || {};
 				if ( this.model.has( 'avatar_url' ) ) {
 					this.model.set( 'display_avatar', true );
 				}
-
-				this.model.set( 'privacy', this.$el.closest( '#whats-new-form' ).find( '#bp-activity-privacy' ).val() );
 			},
 
 			privacyTarget: function ( e ) {
@@ -2426,21 +2416,73 @@ window.bp = window.bp || {};
 		{
 			tagName: 'div',
 			id: 'whats-new-privacy-stage',
-			template: bp.template( 'activity-post-privacy-stage' ),
+			className: 'bp-activity-privacy-stage',
 			events: {
-				'click .bp-activity-privacy-selector': 'privacySelector',
+				'click #privacy-status-submit': 'privacyStatusSubmit',
 				'click #privacy-status-back': 'closePrivacySelector'
 			},
 
-			/*privacySelector: function ( e ) {
-				
-			}*/
+			initialize: function() {
+				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
+					var privacy_body = new bp.Views.PrivacyStageBody( { model: this.model } );
+					this.views.add( privacy_body );
+				}
+
+				this.views.add( new bp.Views.PrivacyStageFooter( { model: this.model } ) );
+			},
+
+			privacyStatusSubmit: function ( e ) {
+				e.preventDefault();
+				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
+				this.model.set( 'privacy_modal', false );
+				var privacy_label = this.$el.find( '.bp-activity-privacy__input:checked' ).data('title');
+
+				$( '#whats-new-form' ).removeClass( 'focus-in-privacy' );
+				Backbone.trigger( 'privacy:statuslabel' );
+				$( '#whats-new-form' ).find( '.bp-activity-privacy-status' ).text( privacy_label );
+			},
 
 			closePrivacySelector: function ( e ) {
 				e.preventDefault();
+				var privacySelected = this.model.get( 'privacy' );
 				$( '#whats-new-form' ).removeClass( 'focus-in-privacy' );
 				this.model.set( 'privacy_modal', false );
+				this.$el.find( 'input#' + privacySelected ).prop( 'checked', true );
 			}
+		}
+	);
+
+	bp.Views.PrivacyStageBody = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-privacy-stage-body',
+			className: 'privacy-status-form-body',
+
+			initialize: function () {
+				// Select box for the object.
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) ) {
+					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
+
+					// when editing activity, need to display which object is being edited.
+				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && ! _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) {
+					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
+				}
+
+				// activity privacy dropdown for profile.
+				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
+					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
+					this.views.add( privacy );
+				}
+			}
+		}
+	);
+
+	bp.Views.PrivacyStageFooter = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-privacy-stage-footer',
+			className: 'privacy-status-form-footer',
+			template: bp.template( 'activity-post-privacy-stage-footer' )
 		}
 	);
 
@@ -3135,21 +3177,6 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			id: 'activity-form-submit-wrapper',
 			initialize: function () {
-				// Select box for the object.
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) ) {
-					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
-
-					// when editing activity, need to display which object is being edited.
-				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && ! _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) {
-					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
-				}
-
-				// activity privacy dropdown for profile.
-				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
-					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
-					this.views.add( privacy );
-				}
-
 				$( '#whats-new-form' ).addClass( 'focus-in' ).parent().addClass( 'modal-popup' ); // add some class to form so that DOM knows about focus.
 
 				//Show placeholder form
@@ -3201,7 +3228,7 @@ window.bp = window.bp || {};
 				this.views.set(
 					[
 						new bp.Views.ActivityHeader( { model: this.model } ),
-						new bp.Views.FormAvatar( { model: this.model } ),
+						new bp.Views.FormAvatar( { activity: this.model, model: this.model } ),
 						new bp.Views.PrivacyStage( { model: this.model } ),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
 						new bp.Views.EditorToolbar( { model: this.model } ),
@@ -3794,7 +3821,7 @@ window.bp = window.bp || {};
 
 				this.views.set(
 					[
-						new bp.Views.FormAvatar( { model: this.model } ),
+						new bp.Views.FormAvatar( { activity: this.model, model: this.model } ),
 						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
 						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
 					]

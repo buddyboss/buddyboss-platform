@@ -6,7 +6,7 @@
             <a class="activity-post-user-name" href="{{data.user_domain}}"><span class="user-name">{{data.user_display_name}}</span></a>
 			<div id="bp-activity-privacy-point">
 				<i class="bb-icon-globe"></i>
-				<span class="bp-activity-privacy-status"><?php esc_html_e( 'Public', 'buddyboss' ); ?></span>
+				<span class="bp-activity-privacy-status {{data.privacy}}"><?php esc_html_e( 'Public', 'buddyboss' ); ?></span>
 				<i class="bb-icon-angle-down"></i>
 			</div>
         </span>
