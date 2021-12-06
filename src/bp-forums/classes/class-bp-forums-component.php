@@ -382,9 +382,9 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$sep   = apply_filters( 'document_title_separator', '-' );
 				$group = groups_get_current_group();
 
-				if ( ! empty( $group ) && bp_is_current_action( 'forum' ) && function_exists( 'bbpress' ) ) {
+				if ( ! empty( $group ) && bp_is_current_action( get_option( '_bbp_forum_slug', 'forum' ) ) && function_exists( 'bbpress' ) ) {
 
-					if ( bp_is_action_variable( 'topic', 0 ) && bp_action_variable( 1 ) ) {
+					if ( bp_is_action_variable( get_option( '_bbp_topic_slug', 'discussion' ), 0 ) && bp_action_variable( 1 ) ) {
 
 						// get the topic as post.
 						$topics = get_posts(
