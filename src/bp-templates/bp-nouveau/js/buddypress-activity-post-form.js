@@ -2772,9 +2772,6 @@ window.bp = window.bp || {};
 			initialize: function () {
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
-				if( this.$el.children().length === 0 ) {
-					this.$el.addClass( 'hidden' );
-				}
 			},
 
 			render: function () {
@@ -2782,6 +2779,9 @@ window.bp = window.bp || {};
 				this.$self          = this.$el.find( '#activity-gif-button' );
 				this.$gifPickerEl   = this.$el.find( '.gif-media-search-dropdown' );
 				this.$emojiPickerEl = $( '#whats-new' );
+				if( this.$el.children().length === 0 ) {
+					this.$el.addClass( 'hidden' );
+				}
 				return this;
 			},
 
