@@ -36,30 +36,35 @@
 	}
 
 	&.public {
+
 		.privacy-point-icon:before {
 			content: "\e819";
 		}
 	}
 
 	&.loggedin {
+
 		.privacy-point-icon:before {
 			content: "\e95d";
 		}
 	}
 
 	&.friends {
+
 		.privacy-point-icon:before {
 			content: "\e95e";
 		}
 	}
 
 	&.onlyme {
+
 		.privacy-point-icon:before {
 			content: "\e95f";
 		}
 	}
 
 	&.group {
+
 		.privacy-point-icon:before {
 			content: "\e93d";
 		}
@@ -67,6 +72,7 @@
 }
 
 .activity-post-target {
+
 	.activity-post-user-name {
 		line-height: 1;
 	}
