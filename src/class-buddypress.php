@@ -514,6 +514,10 @@ class BuddyPress {
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
+		require_once $this->plugin_dir . 'bp-core/notifications/class-bp-notification-abstract.php';
+
+//		require_once $this->plugin_dir . 'bp-core/notifications/class-bp-notification-activity-mention.php';
+
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 
