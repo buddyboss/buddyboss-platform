@@ -24,6 +24,46 @@
 	display: flex;
 	align-items: center;
 	cursor: pointer;
+
+	.privacy-point-icon:before {
+		font-family: bb-icons;
+		speak: none;
+		display: inline-block;
+		text-decoration: inherit;
+		text-transform: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	&.public {
+		.privacy-point-icon:before {
+			content: "\e819";
+		}
+	}
+
+	&.loggedin {
+		.privacy-point-icon:before {
+			content: "\e95d";
+		}
+	}
+
+	&.friends {
+		.privacy-point-icon:before {
+			content: "\e95e";
+		}
+	}
+
+	&.onlyme {
+		.privacy-point-icon:before {
+			content: "\e95f";
+		}
+	}
+}
+
+.activity-post-target {
+	.activity-post-user-name {
+		line-height: 1;
+	}
 }
 
 .bp-nouveau-activity-form-placeholder-,

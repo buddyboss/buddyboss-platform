@@ -2435,10 +2435,14 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', false );
+				var whats_new_form = $( '#whats-new-form' );
+				var privacy_val = this.$el.find( '.bp-activity-privacy__input:checked' ).val();
 				var privacy_label = this.$el.find( '.bp-activity-privacy__input:checked' ).data('title');
 
-				$( '#whats-new-form' ).removeClass( 'focus-in-privacy' );
-				$( '#whats-new-form' ).find( '.bp-activity-privacy-status' ).text( privacy_label );
+				whats_new_form.removeClass( 'focus-in-privacy' );
+				whats_new_form.find(' #bp-activity-privacy-point' ).removeClass();
+				whats_new_form.find(' #bp-activity-privacy-point' ).addClass( privacy_val );
+				whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
 			},
 
 			closePrivacySelector: function ( e ) {
@@ -2458,6 +2462,12 @@ window.bp = window.bp || {};
 			className: 'privacy-status-form-body',
 
 			initialize: function () {
+				// activity privacy options for profile.
+				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
+					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
+					this.views.add( privacy );
+				}
+
 				// Select box for the object.
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
@@ -2465,12 +2475,6 @@ window.bp = window.bp || {};
 					// when editing activity, need to display which object is being edited.
 				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && ! _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) {
 					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
-				}
-
-				// activity privacy options for profile.
-				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
-					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
-					this.views.add( privacy );
 				}
 			}
 		}
@@ -3374,7 +3378,11 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 
 				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
+
+				var privacy_val = whats_new_form.find( '.bp-activity-privacy__input:checked' ).val();
 				var privacy_label = whats_new_form.find( '.bp-activity-privacy__input:checked' ).data('title');
+				whats_new_form.find(' #bp-activity-privacy-point' ).removeClass();
+				whats_new_form.find(' #bp-activity-privacy-point' ).addClass( privacy_val );
 				whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );

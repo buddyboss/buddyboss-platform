@@ -1038,6 +1038,36 @@ a.layout-grid-view {
   cursor: pointer;
 }
 
+#bp-activity-privacy-point .privacy-point-icon:before {
+  font-family: bb-icons;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bp-activity-privacy-point.public .privacy-point-icon:before {
+  content: "\e819";
+}
+
+#bp-activity-privacy-point.loggedin .privacy-point-icon:before {
+  content: "\e95d";
+}
+
+#bp-activity-privacy-point.friends .privacy-point-icon:before {
+  content: "\e95e";
+}
+
+#bp-activity-privacy-point.onlyme .privacy-point-icon:before {
+  content: "\e95f";
+}
+
+.activity-post-target .activity-post-user-name {
+  line-height: 1;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-privacy-stage,
 .bp-nouveau-activity-form-placeholder- #bp-activity-privacy-point,
 #whats-new-form #whats-new-privacy-stage,
