@@ -23,7 +23,7 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private static $notification_email_key;
+	private $notification_email_key;
 
 	/**
 	 * Notification Email lable.
@@ -32,7 +32,7 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private static $notification_email_label;
+	private $notification_email_label;
 
 	/**
 	 * Notification Email admin label.
@@ -41,7 +41,7 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private static $notification_email_admin_label;
+	private $notification_email_admin_label;
 
 	/**
 	 * Notification Email Position.
@@ -50,7 +50,7 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private static $notification_email_position;
+	private $notification_email_position;
 
 	/**
 	 * Component.
@@ -115,7 +115,7 @@ abstract class BB_Notification_Abstract {
 			return $notifications;
 		}
 
-		if ( ! isset( $this->component ) ) {
+		if ( ! isset( $notifications[ $this->component ] ) ) {
 			$notifications[ $this->component ]['label'] = $this->component_name;
 		}
 
