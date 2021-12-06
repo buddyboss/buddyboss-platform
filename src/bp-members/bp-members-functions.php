@@ -4799,7 +4799,12 @@ function bp_get_hidden_member_types() {
 		'nopaging'       => true,
 	);
 
-	$hidden_profile_types = new WP_Query( $args );
+	$cache_key            = 'bp_get_hidden_member_types_cache';
+	$hidden_profile_types = wp_cache_get( $cache_key, 'bp_member_type' );
+	if ( false === $hidden_profile_types ) {
+		$hidden_profile_types = new WP_Query( $args );
+		wp_cache_set( $cache_key, $hidden_profile_types, 'bp_member_type' );
+	}
 
 	/**
 	 * Filters hidden profile types.
