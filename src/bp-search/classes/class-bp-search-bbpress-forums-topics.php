@@ -18,7 +18,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 		public $type = 'topic';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
-			static  $bbp_search_forum_ids = array();
+			static $bbp_search_forum_ids = array();
+			static $bbp_search_group_forum_ids = array();
 			global $wpdb;
 
 			$bp_prefix = bp_core_get_table_prefix();
@@ -126,30 +127,33 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			}
 			
 			// Get all private group forum ids where current user is not enrolled.
-			$group_forum_ids = get_posts(
-				array(
-					'fields'      => 'ids',
-					'post_status' => $post_status,
-					'post_type'   => bbp_get_forum_post_type(),
-					'numberposts' => '-1',
-					'meta_query'  => array(
-						array(
-							'key'     => '_bbp_group_ids',
-							'compare' => 'EXISTS'
-						),
-						array(
-							'key'     => '_bbp_group_ids',
-							'value'   => 'a:0:{}',
-							'compare' => '!='
-						),
-						array(
-							'key'     => '_bbp_group_ids',
-							'value'   => $membership_in,
-							'compare' => 'NOT IN'
-						)
-					)
-				)
+			$group_forum_args          = array(
+				'fields'      => 'ids',
+				'post_status' => $post_status,
+				'post_type'   => bbp_get_forum_post_type(),
+				'numberposts' => '-1',
+				'meta_query'  => array(
+					array(
+						'key'     => '_bbp_group_ids',
+						'compare' => 'EXISTS',
+					),
+					array(
+						'key'     => '_bbp_group_ids',
+						'value'   => 'a:0:{}',
+						'compare' => '!=',
+					),
+					array(
+						'key'     => '_bbp_group_ids',
+						'value'   => $membership_in,
+						'compare' => 'NOT IN',
+					),
+				),
 			);
+			$group_forum_ids_cache_key = 'bbp_search_group_forum_ids_' . md5( maybe_serialize( $group_forum_args ) );
+			if ( ! isset( $bbp_search_group_forum_ids[ $group_forum_ids_cache_key ] ) ) {
+				$bbp_search_group_forum_ids[ $group_forum_ids_cache_key ] = get_posts( $group_forum_args );
+			}
+			$group_forum_ids = $bbp_search_group_forum_ids[ $group_forum_ids_cache_key ];
 			
 			$group_forum_child_ids = array();
 			
