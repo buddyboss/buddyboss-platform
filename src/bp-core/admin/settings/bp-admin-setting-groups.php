@@ -32,18 +32,30 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	// Register setting fields
 	public function register_fields() {
-		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
-
-		// Allow subscriptions setting.
-		$this->add_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
+		// Group avatar and cover.
+		$this->add_section( 'bp_groups_avatar_settings', __( 'Group Photos', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
 		// Allow group avatars.
 		$this->add_field( 'bp-disable-group-avatar-uploads', __( 'Group Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
+
+		$args          = array();
+		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type';
+		$this->add_field( 'bp-default-group-avatar-type', __( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'intval', $args );
+
+		$args          = array();
+		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom';
+		$this->add_field( 'bp-default-group-custom-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
 
 		// Allow group cover photos.
 		if ( bp_is_active( 'groups', 'cover_image' ) ) {
 			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 		}
+
+		// Group Settings.
+		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
+
+		// Allow subscriptions setting.
+		$this->add_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
 
 		// Allow Group Message.
 		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {

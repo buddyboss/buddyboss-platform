@@ -449,6 +449,10 @@ tr.bp-search-parent-field label {
 }
 
 /* Groups */
+.bp-admin-card.section-bp_groups_avatar_settings h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/solid/camera.svg);
+}
+
 .bp-admin-card.section-bp_groups h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
 }

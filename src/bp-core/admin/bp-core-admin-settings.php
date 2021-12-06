@@ -416,13 +416,13 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	$custom_avatar_url = bb_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
-		$custom_avatar_url = bb_get_default_custom_profile_avatar_upload_placeholder();
+		$custom_avatar_url = bb_get_default_custom_profile_group_avatar_upload_placeholder();
 		$delete_btn_style  = 'display:none';
 	}
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-transparent" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
-		<label for="bp-default-profile-avatar-transparent">
+		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
+		<label for="bp-default-profile-avatar-buddyboss">
 			<div class="img-block">	
 				<img src="<?php echo bb_get_default_buddyboss_profile_avatar(); ?>" />
 			</div>
@@ -431,8 +431,8 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-solid" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
-		<label for="bp-default-profile-avatar-solid">
+		<input id="bp-default-profile-avatar-legacy" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
+		<label for="bp-default-profile-avatar-legacy">
 			<div class="img-block">
 				<img src="<?php echo bb_get_default_legacy_profile_avatar(); ?>" />
 			</div>
@@ -472,14 +472,14 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 	$custom_avatar_url = bb_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
-		$custom_avatar_url = bb_get_default_custom_profile_avatar_upload_placeholder();
+		$custom_avatar_url = bb_get_default_custom_profile_group_avatar_upload_placeholder();
 		$delete_btn_style  = 'display:none';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_avatar_upload_placeholder(); ?>">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_group_avatar_upload_placeholder(); ?>">
 			<input type="hidden" name="bp-custom-profile-avatar" value="<?php echo bb_default_custom_upload_profile_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
@@ -597,6 +597,109 @@ function bp_profile_photos_tutorial() {
 		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
+	<?php
+}
+
+/** Group Photos ************************************************************/
+
+/**
+ * Link to Group Photos Settings tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_group_avatar_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62811,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
+ * Allow admin to set default group avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_avatar_type() {
+	$delete_btn_style  = '';
+	$custom_avatar_url = bb_default_custom_upload_profile_avatar();
+
+	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
+		$custom_avatar_url = bb_get_default_custom_profile_group_avatar_upload_placeholder();
+		$delete_btn_style  = 'display:none';
+	}
+	?>
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-buddyboss" name="bp-default-group-avatar-type" type="radio" value="1" <?php checked( bb_default_group_avatar_type(), 1 ); ?> />
+		<label for="bp-default-group-avatar-buddyboss">
+			<div class="img-block">	
+				<img src="<?php echo bb_get_default_buddyboss_group_avatar(); ?>" />
+			</div>
+			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-legacy" name="bp-default-group-avatar-type" type="radio" value="2" <?php checked( bb_default_group_avatar_type(), 2 ); ?> />
+		<label for="bp-default-group-avatar-legacy">
+			<div class="img-block">
+				<img src="<?php echo bb_get_default_legacy_group_avatar(); ?>" />
+			</div>
+			<span><?php _e( 'Legacy', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="3" <?php checked( bb_default_group_avatar_type(), 3 ); ?> />
+		<label for="bp-default-group-avatar-custom">
+			<div class="img-block">
+				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
+			</div>
+			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to upload custom default group avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_custom_avatar() {
+	$delete_btn_style  = '';
+	$custom_avatar_url = bb_default_custom_upload_group_avatar();
+
+	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
+		$custom_avatar_url = bb_get_default_custom_profile_group_avatar_upload_placeholder();
+		$delete_btn_style  = 'display:none';
+	}
+	?>
+
+	<div class="bb-default-custom-upload-file custom-group-avatar">
+		<div class="bb-upload-container">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_group_avatar_upload_placeholder(); ?>">
+			<input type="hidden" name="bp-custom-group-avatar" value="<?php echo bb_default_custom_upload_group_avatar(); ?>">
+		</div>
+		<div class="bb-img-button-wrap">
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-group-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<div id="bp-xprofile-avatar-editor" style="display:none;">
+				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
+			</div>
+		</div>
+	</div>
+	<p class="description"><?php echo sprintf( __( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
 	<?php
 }
 

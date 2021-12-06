@@ -936,7 +936,9 @@
 			}
 
 			// Profile Avatar Settings Show/Hide.
-			var allowAvatarUpload = $( '#bp-disable-avatar-uploads' );
+			var allowAvatarUpload    = $( '#bp-disable-avatar-uploads' ),
+                profileAvatarType    = $( 'input[type=radio][name=bp-default-profile-avatar-type]' ),
+			    profileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
 
 			if ( allowAvatarUpload.length ) {
 
@@ -950,6 +952,13 @@
 					function () {
 						if ( $( this ).prop( 'checked' ) ) {
 							$( '.profile-avatar-options' ).show();
+
+							profileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
+
+							if ( 3 != profileAvatarTypeVal ) {
+								$( '.default-profile-avatar-custom' ).hide();
+							}
+
 						} else {
 							$( '.profile-avatar-options' ).hide();
 						}
@@ -958,9 +967,6 @@
 			}
 
 			// Upload Custom Avatar Settings Show/Hide.
-			var profileAvatarType = $( 'input[type=radio][name=bp-default-profile-avatar-type]' ),
-			    profileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
-
 			if ( profileAvatarType.length ) {
 
 				if ( 3 == profileAvatarTypeVal ) {
@@ -981,7 +987,9 @@
 			}
 
 			// Profile Cover Settings Show/Hide.
-			var allowCoverUpload = $( '#bp-disable-cover-image-uploads' );
+			var allowCoverUpload    = $( '#bp-disable-cover-image-uploads' ),
+			    profileCoverType    = $( 'input[type=radio][name=bp-default-profile-cover-type]' ),
+			    profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
 
 			if ( allowCoverUpload.length ) {
 
@@ -995,6 +1003,12 @@
 					function () {
 						if ( $( this ).prop( 'checked' ) ) {
 							$( '.profile-cover-options' ).show();
+
+							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
+		
+							if ( 2 != profileCoverTypeVal ) {
+								$( '.default-profile-cover-custom' ).hide();
+							}
 						} else {
 							$( '.profile-cover-options' ).hide();
 						}
@@ -1003,9 +1017,6 @@
 			}
 
 			// Upload Custom Cover Settings Show/Hide.
-			var profileCoverType = $( 'input[type=radio][name=bp-default-profile-cover-type]' ),
-			    profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
-
 			if ( profileCoverType.length ) {
 
 				if ( 2 == profileCoverTypeVal ) {
@@ -1160,6 +1171,57 @@
 					}
 				}
 			);
+
+			// Group Avatar Settings Show/Hide.
+			var allowGroupAvatarUpload = $( '#bp-disable-group-avatar-uploads' ),
+			    groupAvatarType        = $( 'input[type=radio][name=bp-default-group-avatar-type]' ),
+				groupAvatarTypeVal     = $( 'input[type=radio][name=bp-default-group-avatar-type]:checked' ).val();
+
+			if ( allowGroupAvatarUpload.length ) {
+
+				if ( allowGroupAvatarUpload.prop( 'checked' ) ) {
+					$( '.group-avatar-options' ).show();
+				} else {
+					$( '.group-avatar-options' ).hide();
+				}
+
+				$( allowGroupAvatarUpload ).change(
+					function () {
+						if ( $( this ).prop( 'checked' ) ) {
+							$( '.group-avatar-options' ).show();
+
+							groupAvatarTypeVal = $( 'input[type=radio][name=bp-default-group-avatar-type]:checked' ).val();
+
+							if ( 3 != groupAvatarTypeVal ) {
+								$( '.default-group-avatar-custom' ).hide();
+							}
+
+						} else {
+							$( '.group-avatar-options' ).hide();
+						}
+					}
+				);
+			}
+
+			// Upload Custom Group Settings Show/Hide.
+			if ( groupAvatarType.length ) {
+
+				if ( 3 == groupAvatarTypeVal ) {
+					$( '.default-group-avatar-custom' ).show();
+				} else {
+					$( '.default-group-avatar-custom' ).hide();
+				}
+
+				$( groupAvatarType ).change(
+					function () {
+						if ( 3 == this.value ) {
+							$( '.default-group-avatar-custom' ).show();
+						} else {
+							$( '.default-group-avatar-custom' ).hide();
+						}
+					}
+				);
+			}
 
 			$( document ).on(
 				'click',

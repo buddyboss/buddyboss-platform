@@ -429,6 +429,10 @@ tr.bp-search-parent-field label {
 }
 
 /* Groups */
+.bp-admin-card.section-bp_groups_avatar_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/camera.svg);
+}
+
 .bp-admin-card.section-bp_groups h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
 }
@@ -2357,7 +2361,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
  *----------------------------------------------------------------------------*/
 .avatar-options .avatar-custom-input {
   display: inline-block;
-  margin: 0 7px 25px 0;
+  margin: 0 0 25px 7px;
 }
 
 .avatar-options .avatar-custom-input input[type="radio"] {
