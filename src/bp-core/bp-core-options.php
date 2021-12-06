@@ -72,7 +72,7 @@ function bp_get_default_options() {
 		// Avatar type.
 		'bp-default-profile-avatar-type'             => 0,
 
-		// Avatar type.
+		// Cover type.
 		'bp-default-profile-cover-type'              => 0,
 
 		// cover photo uploads.
@@ -80,6 +80,9 @@ function bp_get_default_options() {
 
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
+
+		// Group Profile Photos Type.
+		'bp-default-group-avatar-type'               => 2,
 
 		// Group cover photo uploads.
 		'bp-disable-group-cover-image-uploads'       => false,
@@ -2041,13 +2044,13 @@ function bb_default_profile_avatar_type( $default = null ) {
  */
 function bb_has_default_custom_upload_profile_avatar() {
 	/**
-	 * Filters to change default custom upload avatar image.
+	 * Filters has custom upload avatar image?
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $value True if found the custom profile avatar otherwise false.
+	 * @param bool $value True if found the custom profile avatar otherwise false.
 	 */
-	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', bp_get_user_has_avatar( 'custom' ) );
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bp_get_user_has_avatar( 'custom' ) );
 }
 
 /**
@@ -2294,4 +2297,22 @@ function bb_default_custom_upload_group_avatar() {
 	 * @param string $custom_upload_group_avatar Default custom upload avatar URL.
 	 */
 	return apply_filters( 'bb_default_custom_upload_group_avatar', $custom_upload_group_avatar );
+}
+
+/**
+ * Has default custom upload group avatar?.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if found the custom group avatar otherwise false.
+ */
+function bb_has_default_custom_upload_group_avatar() {
+	/**
+	 * Filters has custom upload group avatar image?
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value True if found the custom group avatar otherwise false.
+	 */
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bb_default_custom_upload_group_avatar() );
 }

@@ -23,6 +23,16 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
 		$this->tab_order = 20;
+
+		$this->active_tab = bp_core_get_admin_active_tab();
+
+		add_action( 'bb_admin_settings_form_tag', array( $this, 'bb_admin_setting_group_add_enctype' ) );
+
+		// Group Avatar.
+		add_filter( 'bp_attachment_avatar_script_data', array( $this, 'bb_admin_setting_group_script_data' ), 10, 2 );
+		add_filter( 'groups_avatar_upload_dir', array( $this, 'bb_group_default_custom_group_avatar_upload_dir' ), 10, 1 );
+		add_filter( 'bb_core_avatar_crop_item_id_args', array( $this, 'bb_default_custom_group_avatar_crop_item_id_args' ), 10, 2 );
+		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bb_default_custom_group_avatar_url_check' ), 10, 2 );
 	}
 
 	// Check if groups are enabled
@@ -100,9 +110,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		);
 
 		// Admin Settings for Settings > Groups > Group Directories > Default View
-		$args = array();
+		$args          = array();
 		$args['class'] = 'group-default-layout group-layout-options';
-		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option',  'radio', $args );
+		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.
@@ -112,6 +122,147 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		 * @param Object $this BP_Admin_Setting_Groups.
 		 */
 		do_action( 'bp_admin_setting_groups_register_fields', $this );
+	}
+
+	/**
+	 * Add data encoding type for file uploading
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_group_add_enctype() {
+		echo ' enctype="multipart/form-data"';
+	}
+
+	/**
+	 * The custom group avatar script data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $script_data The avatar script data.
+	 * @param string $object      The object the avatar belongs to (eg: user or group).
+	 */
+	public function bb_admin_setting_group_script_data( $script_data, $object = '' ) {
+
+		if ( $this->active_tab !== $this->tab_name ) {
+			return $script_data;
+		}
+
+		$script_data['bp_params'] = array(
+			'object'     => 'group',
+			'item_id'    => 'custom',
+			'has_avatar' => bb_has_default_custom_upload_group_avatar(),
+			'nonces'     => array(
+				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
+				'remove' => wp_create_nonce( 'bp_group_avatar_delete' ),
+			),
+		);
+
+		// Set feedback messages.
+		$script_data['feedback_messages'] = array(
+			1 => __( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
+			2 => __( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
+			3 => __( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
+			4 => __( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
+		);
+
+		return $script_data;
+	}
+
+	/**
+	 * Setup default custom avatar upload directory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $upload_dir The original Uploads dir.
+	 * @return array Array containing the path, URL, and other helpful settings.
+	 */
+	public function bb_group_default_custom_group_avatar_upload_dir( $upload_dir = array() ) {
+		$bp_params = array();
+
+		if ( ! empty( $_POST['bp_params'] ) ) {
+			$bp_params = $_POST['bp_params'];
+		}
+
+		if ( ! is_admin() || empty( $bp_params ) || ! isset( $bp_params['object'] ) || ! isset( $bp_params['item_id'] ) ) {
+			return $upload_dir;
+		}
+
+		$item_id = $bp_params['item_id'];
+		$object  = $bp_params['object'];
+
+		if ( ! is_admin() || ( 0 < $item_id && 'group' === $object ) || ( 'group' !== $object ) ) {
+			return $upload_dir;
+		}
+
+		$directory = 'group-avatars';
+
+		$path      = bp_core_avatar_upload_path() . '/' . $directory . '/custom';
+		$newbdir   = $path;
+		$newurl    = bp_core_avatar_url() . '/' . $directory . '/custom';
+		$newburl   = $newurl;
+		$newsubdir = '/' . $directory . '/custom';
+
+		/**
+		 * Filters default custom avatar upload directory.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $value Array containing the path, URL, and other helpful settings.
+		 */
+		return apply_filters(
+			'bb_group_default_custom_group_avatar_upload_dir',
+			array(
+				'path'    => $path,
+				'url'     => $newurl,
+				'subdir'  => $newsubdir,
+				'basedir' => $newbdir,
+				'baseurl' => $newburl,
+				'error'   => false,
+			),
+			$upload_dir
+		);
+	}
+
+	/**
+	 * Set item ID for image crop.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int|string $item_id ID of the avatar item being requested.
+	 * @param array      $args {
+	 *     @type string     $original_file The source file (absolute path) for the Attachment.
+	 *     @type string     $object        Avatar type being requested.
+	 *     @type int|string $item_id       ID of the avatar item being requested.
+	 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
+	 * }
+	 * @return int|string Actual item ID for upload custom avatar.
+	 */
+	public function bb_default_custom_group_avatar_crop_item_id_args( $item_id = 0, $args ) {
+		if ( is_admin() && ( empty( $item_id ) || 0 == $item_id ) && 'group' === $args['object'] ) {
+			return 'custom';
+		}
+
+		return $item_id;
+	}
+
+	/**
+	 * Modify a gravatar avatar URL for custom uploaded avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $gravatar URL for a gravatar.
+	 * @param array  $params   Array of parameters for the request.
+	 */
+	public function bb_default_custom_group_avatar_url_check( $gravatar, $params ) {
+
+		$item_id = $params['item_id'];
+		$object  = $params['object'];
+
+		if ( is_admin() && ( 'custom' === $item_id && 'group' === $object ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
+			return bb_get_default_custom_profile_group_avatar_upload_placeholder();
+		}
+
+		return $gravatar;
 	}
 }
 

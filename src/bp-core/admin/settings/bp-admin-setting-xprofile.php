@@ -22,7 +22,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->tab_name  = 'bp-xprofile';
 		$this->tab_order = 10;
 
-		$this->active_tab  = bp_core_get_admin_active_tab();
+		$this->active_tab = bp_core_get_admin_active_tab();
 
 		add_action( 'bb_admin_settings_form_tag', array( $this, 'bb_admin_setting_xprofile_add_enctype' ) );
 
@@ -36,7 +36,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		add_filter( 'bp_attachments_cover_image_upload_dir', array( $this, 'bb_profile_cover_image_upload_dir' ), 10, 1 );
 		add_filter( 'bp_attachments_post_cover_image_ajax_upload_dir', array( $this, 'bb_post_profile_cover_image_ajax_upload_dir' ), 10, 4 );
 		add_filter( 'bp_attachments_post_cover_image_ajax_upload_sub_dir', array( $this, 'bb_post_profile_cover_image_ajax_upload_sub_dir' ), 10, 4 );
-		
+
 	}
 
 	public function settings_save() {
@@ -627,7 +627,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$item_id = $bp_params['item_id'];
 		$object  = $bp_params['object'];
 
-		if ( ! is_admin() || ( $item_id > 0 && 'user' === $object ) || ( 'user' !== $object ) ) {
+		if ( ! is_admin() || ( 0 < $item_id && 'user' === $object ) || ( 'user' !== $object ) ) {
 			return $upload_dir;
 		}
 
@@ -665,8 +665,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int|string    $item_id ID of the avatar item being requested.
-	 * @param array $args {
+	 * @param int|string $item_id ID of the avatar item being requested.
+	 * @param array      $args {
 	 *     @type string     $original_file The source file (absolute path) for the Attachment.
 	 *     @type string     $object        Avatar type being requested.
 	 *     @type int|string $item_id       ID of the avatar item being requested.
@@ -674,12 +674,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * }
 	 * @return int|string Actual item ID for upload custom avatar.
 	 */
-	public function bb_default_custom_profile_avatar_crop_item_id_args( $itm_id = 0, $args ) {
-		if ( is_admin() && ( empty( $item_id ) || $item_id == 0 ) && 'user' === $args['object'] ) {
+	public function bb_default_custom_profile_avatar_crop_item_id_args( $item_id = 0, $args ) {
+		if ( is_admin() && ( empty( $item_id ) || 0 == $item_id ) && 'user' === $args['object'] ) {
 			return 'custom';
 		}
 
-		return $itm_id;
+		return $item_id;
 	}
 
 	/**
@@ -687,8 +687,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $avatar_url URL for a gravatar.
-	 * @param array  $params     Array of parameters for the request.
+	 * @param string $gravatar URL for a gravatar.
+	 * @param array  $params   Array of parameters for the request.
 	 */
 	public function bb_default_custom_profile_avatar_url_check( $gravatar, $params ) {
 
@@ -696,7 +696,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$object  = $params['object'];
 
 		if ( is_admin() && ( 'custom' === $item_id && 'user' === $object ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
-			return bb_get_default_custom_profile_avatar_upload_placeholder();
+			return bb_get_default_custom_profile_group_avatar_upload_placeholder();
 		}
 
 		return $gravatar;
@@ -725,7 +725,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$item_id = $bp_params['item_id'];
 		$object  = $bp_params['object'];
 
-		if ( ! is_admin() || ( $item_id > 0 && 'user' === $object ) || ( 'user' !== $object ) ) {
+		if ( ! is_admin() || ( 0 < $item_id && 'user' === $object ) || ( 'user' !== $object ) ) {
 			return $return_data;
 		}
 
@@ -780,7 +780,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * @param string     $object_dir The object dir (eg: members/groups). Defaults to members.
 	 * @param int|string $item_id    The object id (eg: a user or a group id). Defaults to current user.
 	 * @param string     $type       The type of the attachment which is also the subdir where files are saved.
-	 *                               Defaults to 'cover-image'
+	 *                               Defaults to 'cover-image'.
 	 * @return string Actual custom uploaded cover relative path.
 	 */
 	public function bb_post_profile_cover_image_ajax_upload_dir( $cover_dir, $object_dir, $item_id, $type ) {
@@ -788,7 +788,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Validate ajax request for upload custom profile cover.
 		$this->bb_validate_custom_profile_avatar_reuqest( $cover_dir );
 
-		// Get profile cover directory array
+		// Get profile cover directory array.
 		$profile_cover_dir = $this->bb_profile_cover_image_upload_dir();
 
 		return $profile_cover_dir['path'];
@@ -799,11 +799,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string     $cover_dir  Path to the cover folder path.
-	 * @param string     $object_dir The object dir (eg: members/groups). Defaults to members.
-	 * @param int|string $item_id    The object id (eg: a user or a group id). Defaults to current user.
-	 * @param string     $type       The type of the attachment which is also the subdir where files are saved.
-	 *                               Defaults to 'cover-image'
+	 * @param string     $cover_sub_dir Path to the cover folder path.
+	 * @param string     $object_dir    The object dir (eg: members/groups). Defaults to members.
+	 * @param int|string $item_id       The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string     $type          The type of the attachment which is also the subdir where files are saved.
+	 *                                  Defaults to 'cover-image'.
 	 * @return string Actual custom uploaded cover relative sub path.
 	 */
 	public function bb_post_profile_cover_image_ajax_upload_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {

@@ -159,7 +159,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$active_tab  = bp_core_get_admin_active_tab();
 
-			if ( $active_tab == 'bp-xprofile' ) {
+			if ( 'bp-xprofile' === $active_tab || 'bp-groups' === $active_tab ) {
 	
 				wp_enqueue_style( 'thickbox' );
 				wp_enqueue_script( 'media-upload' );

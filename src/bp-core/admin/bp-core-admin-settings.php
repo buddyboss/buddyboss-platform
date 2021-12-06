@@ -688,7 +688,7 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 
 	<div class="bb-default-custom-upload-file custom-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_group_avatar_upload_placeholder(); ?>">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_group_avatar_upload_placeholder(); ?>">
 			<input type="hidden" name="bp-custom-group-avatar" value="<?php echo bb_default_custom_upload_group_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
