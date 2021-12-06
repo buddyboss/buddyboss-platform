@@ -54,6 +54,7 @@ function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array(
  * @return bool
  */
 function bp_xprofile_update_meta_cache( $object_ids = array() ) {
+	static $xprofile_update_meta_cache = array();
 	global $wpdb;
 
 	// Bail if no objects.
@@ -131,7 +132,11 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 	$where_sql = implode( ' OR ', $where_conditions );
 
 	// Attempt to query meta values.
-	$meta_list = $wpdb->get_results( "SELECT object_id, object_type, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE {$where_sql}" );
+	$cache_key = 'xprofile_update_meta_cache_' . md5( maybe_serialize( $uncached_object_ids ) );
+	if ( ! isset( $xprofile_update_meta_cache[ $cache_key ] ) ) {
+		$xprofile_update_meta_cache[ $cache_key ] = $wpdb->get_results( "SELECT object_id, object_type, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE {$where_sql}" );
+	}
+	$meta_list = $xprofile_update_meta_cache[ $cache_key ];
 
 	// Bail if no results found.
 	if ( empty( $meta_list ) || is_wp_error( $meta_list ) ) {
