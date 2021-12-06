@@ -268,7 +268,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Get the first forum ID
 			if ( ! empty( $forum_ids ) ) {
 				$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
-			}	
+			}
 
 			// Should box be checked already?
 			$checked = is_admin() ? bp_group_is_forum_enabled( $group ) : bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( bp_get_group_id() ); ?>
@@ -296,7 +296,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							array(
 								'select_id' => 'bbp_group_forum_id',
 								'show_none' => __( '(No Forum)', 'buddyboss' ),
-								'selected'  => $forum_id
+								'selected'  => $forum_id,
 							)
 						);
 					?>
@@ -347,9 +347,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			$edit_forum = ! empty( $_POST['bbp-edit-group-forum'] ) ? true : false;
 			$forum_id   = 0;
-			$group_id   = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();
-
-			
+			$group_id   = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();			
 
 			// update current forum id groups meta data
 			$current_forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );

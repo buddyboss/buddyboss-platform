@@ -226,7 +226,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			// Sanity check required info.
 			if ( ! empty( $content ) || ( empty( $attr['id'] ) || ! is_numeric( $attr['id'] ) ) ) {
 				return $content;
-			}	
+			}
 
 			// Set passed attribute to $forum_id for clarity.
 			$forum_id = bbpress()->current_forum_id = $attr['id'];
