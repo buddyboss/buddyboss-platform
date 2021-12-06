@@ -1064,6 +1064,10 @@ a.layout-grid-view {
   content: "\e95f";
 }
 
+#bp-activity-privacy-point.group .privacy-point-icon:before {
+  content: "\e93d";
+}
+
 .activity-post-target .activity-post-user-name {
   line-height: 1;
 }
@@ -1087,6 +1091,18 @@ a.layout-grid-view {
 #whats-new-form.focus-in-privacy #editor-toolbar,
 #whats-new-form.focus-in-privacy #whats-new-attachments,
 #whats-new-form.focus-in-privacy .whats-new-form-footer {
+  display: none;
+}
+
+#whats-new-form:not(.focus-in-group) #privacy-status-group-back {
+  display: none !important;
+}
+
+#whats-new-form.focus-in-privacy.focus-in-group #privacy-status-back {
+  display: none;
+}
+
+#whats-new-form:not(.focus-in-group) #whats-new-post-in-box-items {
   display: none;
 }
 
@@ -1147,6 +1163,10 @@ a.layout-grid-view {
   content: "\e95f";
 }
 
+.bp-activity-privacy__label .privacy-figure--group:before {
+  content: "\e93d";
+}
+
 .bp-activity-privacy__label .privacy-label {
   display: inline-block;
   font-weight: 500;
@@ -1172,7 +1192,8 @@ a.layout-grid-view {
   border-radius: 0 0 4px 4px;
 }
 
-#buddypress input#privacy-status-back {
+#buddypress input#privacy-status-back,
+#buddypress input#privacy-status-group-back {
   background: transparent;
   border: 0;
   font-size: 14px;
@@ -1881,6 +1902,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 #whats-new-post-in {
   margin-right: 10px;
+  display: none;
 }
 
 #bp-activity-group-ac-items {
