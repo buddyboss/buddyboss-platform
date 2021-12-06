@@ -88,7 +88,21 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		
 		// Private REST APIs Settings.
 		$this->add_field( 'bb-enable-private-rest-apis', esc_html__( 'Private REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis', 'intval' );
-		if ( true === bp_enable_private_rest_apis() || function_exists( 'bbapp_is_private_app_enabled' ) ) {
+		if (
+			(
+				true === bp_enable_private_rest_apis() &&
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled()
+			) ||
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled()
+			) ||
+			(
+				! function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bp_enable_private_rest_apis()
+			)
+		) {
 			$this->add_field( 'bb-enable-private-rest-apis-public-content', '', 'bb_admin_setting_callback_private_rest_apis_public_content', 'stripslashes' );
 		}
 		
