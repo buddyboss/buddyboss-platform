@@ -1616,7 +1616,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	printf(
 		'<p class="description">%s</p>',
 		sprintf(
-			__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss' ),
+			__( 'Login and <a href="%s">Registration</a> APIs will remain publicly visible.', 'buddyboss' ),
 			add_query_arg(
 				array(
 					'page' => 'bp-pages',
@@ -1669,18 +1669,6 @@ function bb_admin_setting_callback_private_rss_feeds() {
 	<input id="bb-enable-private-rss-feeds" name="bb-enable-private-rss-feeds" type="checkbox" value="1" <?php checked( bp_enable_private_rss_feeds() ); ?>/>
 	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS Feeds access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
-	printf(
-		'<p class="description">%s</p>',
-		sprintf(
-			__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss' ),
-			add_query_arg(
-				array(
-					'page' => 'bp-pages',
-				),
-				admin_url( 'admin.php' )
-			)
-		)
-	);
 }
 
 /**
