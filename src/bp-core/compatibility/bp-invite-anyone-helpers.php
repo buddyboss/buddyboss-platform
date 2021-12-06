@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
- * @since BuddyBoss 1.7.8
+ * @since BuddyBoss [BBVERSION]
  */
 class BB_Invite_Anyone_Plugin_Compatibility {
 
@@ -19,7 +19,7 @@ class BB_Invite_Anyone_Plugin_Compatibility {
 	 *
 	 * @var self
 	 *
-	 * @since BuddyBoss 1.7.8
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private static $instance = null;
 
@@ -34,7 +34,7 @@ class BB_Invite_Anyone_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss 1.7.8
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return Controller|null
 	 */
@@ -63,7 +63,7 @@ class BB_Invite_Anyone_Plugin_Compatibility {
 	/**
 	 * Function to rename step name for both Buddyboss Platform and Invite Anyone
 	 *
-	 * @since BuddyBoss 1.7.8
+	 * @since BuddyBoss [BBVERSION]
 	 */
     public function bb_rename_send_envites_steps_for_invite_anyone() {
 
