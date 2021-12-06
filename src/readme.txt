@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8.2
 Requires PHP: 5.6.20
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.2 =
+* Forums - Fixed Forums directory page search issue
+* Profiles - Fixed WordPress role sync issue on Members Profile type update
+* Media - Improved symlink auto-detection logic for server compatibility
+* REST API - Fixed member default avatar issue in the API
+* REST API - Fixed wrong content issue in the message thread API
 
 = 1.8.1 =
 * Groups - Added support to Send emails in Batches in the Background to Group members on details update
@@ -152,7 +159,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed @mention not working critical issue
 
 = 1.7.7 =
-* Profiles - Fixed wrong 'Nickname' after migrating from BuddyPress 
+* Profiles - Fixed wrong 'Nickname' after migrating from BuddyPress
 * Forums - Fixed discussion pagination issue on Forums directory
 * Forums - Fixed forum discussion invalid count to make it consistent
 * Activity - Fixed post form GIF highlight UI issue on close
@@ -397,7 +404,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed issues with the group type pages
 * Activity - Fixed activity comments read more issue
 * Activity - Fixed a bunch of issues with @mention
-* Activity - Fixed Youtube video embed issue in activity comments on edit activity 
+* Activity - Fixed Youtube video embed issue in activity comments on edit activity
 * Media - Small improvements in documents query
 * RTL - Fixed select2 library rtl issue
 * REST API - Cache improvements to fix BuddyBoss App deep linking and Web fallback bugs
@@ -784,7 +791,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed link preview image not always displaying in activity posts
 * Activity - Fixed video embeds not displaying after editing the post in admin
 * Connections - Display 'More' button on Connections widget when list is maxed out
-* Connections - Fixed inconsistent display of Connections based on profile type 
+* Connections - Fixed inconsistent display of Connections based on profile type
 * Widgets - Fixed the member counts showing incorrect in 'Who's Online' widget
 * Email Invites - Added ability to invite between 1 to 20 members at once
 * Emails - Now sending emails through the WordPress core wp_mail function
@@ -959,7 +966,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed link previews when embedding links from an AMP url
 * Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
-* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios
 * Groups - When a group member changes their Name, now updates their name in previous group activity feeds
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
@@ -1065,7 +1072,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed members without First Name displaying in messages as 'Deleted User'
 * Groups - Status button said "You're an Member" instead of "You're a Member"
 * Compatibility - Allow 'Events Manager' and other plugins to activate properly with Platform
-* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress 
+* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
@@ -1073,7 +1080,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed word-wrapping when long sentences are posted in activity
 * Activity - Fixed crop ratio for wide/landscape media images
 * Activity - Fixed media disappearing when clicking 'Read more' in activity feed
-* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh'
 * Media - Improved the image rotation script for photos uploaded in mobile browsers
 * Media - Improved experience for media migrations, and ability to re-migrate
 * Profile Types - When creating new type, fixed issue when selecting 'None' as WordPress role
