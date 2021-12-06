@@ -248,9 +248,14 @@ function friends_screen_notification_settings() {
 
 	$options              = bb_register_notifications( buddypress()->friends->id );
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	$fields_keys          = array_column( $options['fields'], 'key' );
-	$enabled_fields       = array_intersect( $fields_keys, $enabled_notification );
-	$options['fields']    = array_filter(
+
+	if ( empty( $options['fields'] ) ) {
+		return;
+	}
+
+	$fields_keys       = array_column( $options['fields'], 'key' );
+	$enabled_fields    = array_intersect( $fields_keys, $enabled_notification );
+	$options['fields'] = array_filter(
 		$options['fields'],
 		function ( $var ) use ( $enabled_fields ) {
 			return ( in_array( $var['key'], $enabled_fields, true ) );

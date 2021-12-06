@@ -9,10 +9,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'BB_Notification_Activity_Mention' ) ) {
-	return;
-}
-
 /**
  * Set up the BB_Notification_Activity_Mention class.
  *
