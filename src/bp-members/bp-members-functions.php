@@ -678,13 +678,6 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 		}
 	}
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'followers' === $querystring['scope'] ) {
-		$counts = bp_total_follow_counts();
-		if ( ! empty( $counts['followers'] ) ) {
-			unset( $querystring['include'] );
-		}
-	}
-
 	$querystring['scope']    = 'all';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
@@ -4401,7 +4394,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 						'compare' => '=',
 					),
 				),
-            );
+			);
 
 			$bp_get_invitee_email = new WP_Query( $args );
 
@@ -4425,8 +4418,8 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 							$bp_user->remove_role( $role );
 						}
 						// Add role.
-                        $bp_user->add_role( $selected_member_type_wp_roles[0] );
-                    }
+						$bp_user->add_role( $selected_member_type_wp_roles[0] );
+					}
 				} else {
 					/**
 					 * Assign the default member type to user on Admin.
@@ -4461,7 +4454,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 			 */
 			do_action( 'bb_assign_default_member_type_to_activate_user_on_admin', $user_id, $existing_selected );
 		}
-    }
+	}
 
 }
 add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_admin', 10, 1 );
