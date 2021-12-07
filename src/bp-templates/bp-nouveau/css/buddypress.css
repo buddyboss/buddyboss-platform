@@ -1508,6 +1508,8 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
   top: inherit;
+  left: initial;
+  right: -15px;
   bottom: 100%;
   margin-bottom: 10px;
   height: 230px;
@@ -1528,6 +1530,8 @@ a.layout-grid-view {
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
   bottom: -9px;
   top: inherit;
+  left: initial;
+  right: 19px;
   transform: rotate(180deg);
 }
 

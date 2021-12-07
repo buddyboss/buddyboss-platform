@@ -482,6 +482,8 @@
 
 		.emojionearea .emojionearea-picker {
 			top: inherit;
+			left: initial;
+			right: -15px;
 			bottom: 100%;
 			margin-bottom: 10px;
 			height: 230px;
@@ -497,6 +499,8 @@
 				&:after {
 					bottom: -9px;
 					top: inherit;
+					left: initial;
+					right: 19px;
 					transform: rotate(180deg);
 				}
 			}
