@@ -1720,7 +1720,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar.active {
   border-radius: 0;
-  z-index: 112;
+  z-index: 10;
   visibility: visible;
   height: auto;
 }
