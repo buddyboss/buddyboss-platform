@@ -339,6 +339,11 @@ window.bp = window.bp || {};
 								{ url: response.avatar, action: 'uploaded' }
 							)
 						);
+						
+						// Show 'Remove' button when upload a new avatar.
+						if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
+							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
+						}
 
 				}
 			).fail(
@@ -456,7 +461,11 @@ window.bp = window.bp || {};
 							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
 							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
 						}
-
+						
+						// Hide 'Remove' button when upload a new avatar.
+						if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
+							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).hide();
+						}
 				}
 			).fail(
 				function( response ) {

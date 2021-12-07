@@ -955,7 +955,7 @@
 
 							profileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
 
-							if ( 3 != profileAvatarTypeVal ) {
+							if ( 'custom' !== profileAvatarTypeVal ) {
 								$( '.default-profile-avatar-custom' ).hide();
 							}
 
@@ -969,7 +969,7 @@
 			// Upload Custom Avatar Settings Show/Hide.
 			if ( profileAvatarType.length ) {
 
-				if ( 3 == profileAvatarTypeVal ) {
+				if ( 'custom' === profileAvatarTypeVal ) {
 					$( '.default-profile-avatar-custom' ).show();
 				} else {
 					$( '.default-profile-avatar-custom' ).hide();
@@ -977,7 +977,7 @@
 
 				$( profileAvatarType ).change(
 					function () {
-						if ( 3 == this.value ) {
+						if ( 'custom' === this.value ) {
 							$( '.default-profile-avatar-custom' ).show();
 						} else {
 							$( '.default-profile-avatar-custom' ).hide();
@@ -1006,7 +1006,7 @@
 
 							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
 		
-							if ( 2 != profileCoverTypeVal ) {
+							if ( 'custom' !== profileCoverTypeVal ) {
 								$( '.default-profile-cover-custom' ).hide();
 							}
 						} else {
@@ -1019,7 +1019,7 @@
 			// Upload Custom Cover Settings Show/Hide.
 			if ( profileCoverType.length ) {
 
-				if ( 2 == profileCoverTypeVal ) {
+				if ( 'custom' === profileCoverTypeVal ) {
 					$( '.default-profile-cover-custom' ).show();
 				} else {
 					$( '.default-profile-cover-custom' ).hide();
@@ -1027,7 +1027,7 @@
 
 				$( profileCoverType ).change(
 					function () {
-						if ( 2 == this.value ) {
+						if ( 'custom' === this.value ) {
 							$( '.default-profile-cover-custom' ).show();
 						} else {
 							$( '.default-profile-cover-custom' ).hide();
@@ -1192,7 +1192,7 @@
 
 							groupAvatarTypeVal = $( 'input[type=radio][name=bp-default-group-avatar-type]:checked' ).val();
 
-							if ( 3 != groupAvatarTypeVal ) {
+							if ( 'custom' !== groupAvatarTypeVal ) {
 								$( '.default-group-avatar-custom' ).hide();
 							}
 
@@ -1206,7 +1206,7 @@
 			// Upload Custom Group Settings Show/Hide.
 			if ( groupAvatarType.length ) {
 
-				if ( 3 == groupAvatarTypeVal ) {
+				if ( 'custom' === groupAvatarTypeVal ) {
 					$( '.default-group-avatar-custom' ).show();
 				} else {
 					$( '.default-group-avatar-custom' ).hide();
@@ -1214,7 +1214,7 @@
 
 				$( groupAvatarType ).change(
 					function () {
-						if ( 3 == this.value ) {
+						if ( 'custom' === this.value ) {
 							$( '.default-group-avatar-custom' ).show();
 						} else {
 							$( '.default-group-avatar-custom' ).hide();
@@ -1243,7 +1243,7 @@
 
 							groupCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
 		
-							if ( 2 != groupCoverTypeVal ) {
+							if ( 'custom' !== groupCoverTypeVal ) {
 								$( '.default-group-cover-custom' ).hide();
 							}
 						} else {
@@ -1256,7 +1256,7 @@
 			// Upload Custom Group Cover Settings Show/Hide.
 			if ( groupCoverType.length ) {
 
-				if ( 2 == groupCoverTypeVal ) {
+				if ( 'custom' === groupCoverTypeVal ) {
 					$( '.default-group-cover-custom' ).show();
 				} else {
 					$( '.default-group-cover-custom' ).hide();
@@ -1264,7 +1264,7 @@
 
 				$( groupCoverType ).change(
 					function () {
-						if ( 2 == this.value ) {
+						if ( 'custom' === this.value ) {
 							$( '.default-group-cover-custom' ).show();
 						} else {
 							$( '.default-group-cover-custom' ).hide();

@@ -138,30 +138,30 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
+		$args          = array();
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type';
+		$this->add_field( 'bp-default-profile-avatar-type', __( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'string', $args );
+
+		$args          = array();
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom';
+		$this->add_field( 'bp-default-custom-profile-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
+
 		if ( bp_get_option( 'show_avatars' ) ) {
 			// Gravatars.
 			$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
 		}
 
-		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type';
-		$this->add_field( 'bp-default-profile-avatar-type', __( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'intval', $args );
-
-		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom';
-		$this->add_field( 'bp-default-profile-custom-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
-
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
+			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'string' );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type';
-			$this->add_field( 'bp-default-profile-cover-type', __( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'intval', $args );
+			$this->add_field( 'bp-default-profile-cover-type', __( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom';
-			$this->add_field( 'bp-default-profile-custom-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
+			$this->add_field( 'bp-default-custom-profile-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
 		}
 
 		// @todo will use this later on

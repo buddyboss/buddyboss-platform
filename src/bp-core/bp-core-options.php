@@ -70,10 +70,10 @@ function bp_get_default_options() {
 		'bp-disable-avatar-uploads'                  => false,
 
 		// Avatar type.
-		'bp-default-profile-avatar-type'             => 0,
+		'bp-default-profile-avatar-type'             => 'buddyboss',
 
 		// Cover type.
-		'bp-default-profile-cover-type'              => 0,
+		'bp-default-profile-cover-type'              => 'buddyboss',
 
 		// cover photo uploads.
 		'bp-disable-cover-image-uploads'             => false,
@@ -81,8 +81,11 @@ function bp_get_default_options() {
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
 
-		// Group Profile Photos Type.
-		'bp-default-group-avatar-type'               => 2,
+		// Group Photos Type.
+		'bp-default-group-avatar-type'               => 'buddyboss',
+
+		// Group Cover Type.
+		'bp-default-group-cover-type'                => 'buddyboss',
 
 		// Group cover photo uploads.
 		'bp-disable-group-cover-image-uploads'       => false,
@@ -2019,20 +2022,20 @@ function bb_get_default_custom_profile_group_avatar_upload_placeholder() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int|null $default Optional. Fallback value if not found in the database.
- *                          Default: null.
- * @return int Return the default profile avatar type.
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile avatar type.
  */
-function bb_default_profile_avatar_type( $default = null ) {
+function bb_default_profile_avatar_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default profile avatar type.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $value Default profile avatar type.
+	 * @param string $value Default profile avatar type.
 	 */
-	return (int) apply_filters( 'bb_default_profile_avatar_type', (int) bp_get_option( 'bp-default-profile-avatar-type', $default ) );
+	return apply_filters( 'bb_default_profile_avatar_type', bp_get_option( 'bp-default-profile-avatar-type', $default ) );
 }
 
 /**
@@ -2165,20 +2168,20 @@ function bb_get_default_custom_profile_cover_upload_placeholder() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int|null $default Optional. Fallback value if not found in the database.
- *                          Default: null.
- * @return int Return the default profile cover type.
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile cover type.
  */
-function bb_default_profile_cover_type( $default = null ) {
+function bb_default_profile_cover_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default profile cover type.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $value Default profile cover type.
+	 * @param string $value Default profile cover type.
 	 */
-	return (int) apply_filters( 'bb_default_profile_cover_type', (int) bp_get_option( 'bp-default-profile-cover-type', $default ) );
+	return apply_filters( 'bb_default_profile_cover_type', bp_get_option( 'bp-default-profile-cover-type', $default ) );
 }
 
 /**
@@ -2251,20 +2254,20 @@ function bb_get_default_legacy_group_avatar() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int|null $default Optional. Fallback value if not found in the database.
- *                          Default: null.
- * @return int Return the default group avatar type.
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default group avatar type.
  */
-function bb_default_group_avatar_type( $default = null ) {
+function bb_default_group_avatar_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default group avatar type.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $value Default group avatar type.
+	 * @param string $value Default group avatar type.
 	 */
-	return (int) apply_filters( 'bb_default_group_avatar_type', (int) bp_get_option( 'bp-default-group-avatar-type', $default ) );
+	return apply_filters( 'bb_default_group_avatar_type', bp_get_option( 'bp-default-group-avatar-type', $default ) );
 }
 
 /**
@@ -2360,20 +2363,20 @@ function bb_get_default_custom_group_cover_upload_placeholder() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int|null $default Optional. Fallback value if not found in the database.
- *                          Default: null.
- * @return int Return the default group cover type.
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default group cover type.
  */
-function bb_default_group_cover_type( $default = null ) {
+function bb_default_group_cover_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default group cover type.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $value Default group cover type.
+	 * @param string $value Default group cover type.
 	 */
-	return (int) apply_filters( 'bb_default_group_cover_type', (int) bp_get_option( 'bp-default-group-cover-type', $default ) );
+	return apply_filters( 'bb_default_group_cover_type', bp_get_option( 'bp-default-group-cover-type', $default ) );
 }
 
 /**

@@ -56,11 +56,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		$args          = array();
 		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type';
-		$this->add_field( 'bp-default-group-avatar-type', __( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'intval', $args );
+		$this->add_field( 'bp-default-group-avatar-type', __( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'string', $args );
 
 		$args          = array();
 		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom';
-		$this->add_field( 'bp-default-group-custom-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
+		$this->add_field( 'bp-default-custom-group-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
 
 		// Allow group cover photos.
 		if ( bp_is_active( 'groups', 'cover_image' ) ) {
@@ -68,11 +68,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-type';
-			$this->add_field( 'bp-default-group-cover-type', __( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'intval', $args );
+			$this->add_field( 'bp-default-group-cover-type', __( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom';
-			$this->add_field( 'bp-default-group-custom-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
+			$this->add_field( 'bp-default-custom-group-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
 		}
 
 		// Group Settings.

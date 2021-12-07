@@ -412,16 +412,18 @@ function bp_admin_setting_callback_cover_image_uploads() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_avatar_type() {
-	$delete_btn_style  = '';
-	$custom_avatar_url = bb_default_custom_upload_profile_avatar();
-
-	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
-		$custom_avatar_url = bb_get_default_custom_profile_group_avatar_upload_placeholder();
-		$delete_btn_style  = 'display:none';
-	}
+	$wordpress_avatar_type = get_option( 'avatar_default', 'mystery' );
+	$wordpress_avatar      = get_avatar_url(
+		'',
+		array(
+			'size'          => 64,
+			'default'       => $wordpress_avatar_type,
+			'force_default' => true,
+		)
+	);
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="1" <?php checked( bb_default_profile_avatar_type(), 1 ); ?> />
+		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="buddyboss" <?php checked( bb_default_profile_avatar_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-avatar-buddyboss">
 			<div class="img-block">	
 				<img src="<?php echo bb_get_default_buddyboss_profile_avatar(); ?>" />
@@ -431,7 +433,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-legacy" name="bp-default-profile-avatar-type" type="radio" value="2" <?php checked( bb_default_profile_avatar_type(), 2 ); ?> />
+		<input id="bp-default-profile-avatar-legacy" name="bp-default-profile-avatar-type" type="radio" value="legacy" <?php checked( bb_default_profile_avatar_type(), 'legacy' ); ?> />
 		<label for="bp-default-profile-avatar-legacy">
 			<div class="img-block">
 				<img src="<?php echo bb_get_default_legacy_profile_avatar(); ?>" />
@@ -441,17 +443,17 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-wordpress" name="bp-default-profile-avatar-type" type="radio" value="0" <?php checked( ! bb_default_profile_avatar_type() ); ?> />
+		<input id="bp-default-profile-avatar-wordpress" name="bp-default-profile-avatar-type" type="radio" value="wordpress" <?php checked( bb_default_profile_avatar_type(), 'wordpress' ); ?> />
 		<label for="bp-default-profile-avatar-wordpress">
 			<div class="img-block">
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/mystery-man-wordpress.png'; ?>" />
+				<img src="<?php echo $wordpress_avatar; ?>" />
 			</div>
 			<span><?php _e( 'WordPress', 'buddyboss' ); ?></span>
 		</label>
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="3" <?php checked( bb_default_profile_avatar_type(), 3 ); ?> />
+		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
 				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
@@ -459,6 +461,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+	<p class="description"><?php echo sprintf( __( 'Select which image should be used for members who haven\'t uploaded a profile avatar. The WordPress default avatar can be configured in the <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
 	<?php
 }
 
@@ -477,10 +480,10 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 	}
 	?>
 
-	<div class="bb-default-custom-upload-file custom-profile-avatar">
+	<div class="bb-default-custom-upload-file custom-profile-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
 			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_group_avatar_upload_placeholder(); ?>">
-			<input type="hidden" name="bp-custom-profile-avatar" value="<?php echo bb_default_custom_upload_profile_avatar(); ?>">
+			<input type="hidden" name="bp-default-custom-profile-avatar" value="<?php echo bb_default_custom_upload_profile_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
@@ -502,7 +505,7 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 function bp_admin_setting_callback_default_profile_cover_type() {
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="0" <?php checked( ! bb_default_profile_cover_type() ); ?> />
+		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="none" <?php checked( bb_default_profile_cover_type(), 'none' ); ?> />
 		<label for="bp-default-profile-cover-none">
 			<div class="img-block">
 				<img src="<?php echo bb_get_profile_group_none_option_image(); ?>" />
@@ -512,7 +515,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="1" <?php checked( bb_default_profile_cover_type(), 1 ); ?> />
+		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="buddyboss" <?php checked( bb_default_profile_cover_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-cover-default">
 			<div class="img-block">
 				<img src="<?php echo bb_get_default_custom_buddyboss_profile_cover(); ?>" />
@@ -522,7 +525,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="2" <?php checked( bb_default_profile_cover_type(), 2 ); ?> />
+		<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="custom" <?php checked( bb_default_profile_cover_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-cover-custom">
 			<div class="img-block">
 				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
@@ -552,7 +555,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
 			<img src="<?php echo $profile_cover_image; ?>" data-default="<?php echo bb_get_default_custom_profile_cover_upload_placeholder();?>" class="bb-upload-preview">
-			<input type="hidden" name="bp-default-profile-custom-cover" value="<?php echo bb_default_custom_upload_profile_cover();?>">
+			<input type="hidden" name="bp-default-custom-profile-cover" value="<?php echo bb_default_custom_upload_profile_cover();?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<label class="cover-uploader-label">
@@ -631,16 +634,9 @@ function bp_group_avatar_tutorial() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_group_avatar_type() {
-	$delete_btn_style  = '';
-	$custom_avatar_url = bb_default_custom_upload_profile_avatar();
-
-	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
-		$custom_avatar_url = bb_get_default_custom_profile_group_avatar_upload_placeholder();
-		$delete_btn_style  = 'display:none';
-	}
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-avatar-buddyboss" name="bp-default-group-avatar-type" type="radio" value="1" <?php checked( bb_default_group_avatar_type(), 1 ); ?> />
+		<input id="bp-default-group-avatar-buddyboss" name="bp-default-group-avatar-type" type="radio" value="buddyboss" <?php checked( bb_default_group_avatar_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-group-avatar-buddyboss">
 			<div class="img-block">	
 				<img src="<?php echo bb_get_default_buddyboss_group_avatar(); ?>" />
@@ -650,7 +646,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-avatar-legacy" name="bp-default-group-avatar-type" type="radio" value="2" <?php checked( bb_default_group_avatar_type(), 2 ); ?> />
+		<input id="bp-default-group-avatar-legacy" name="bp-default-group-avatar-type" type="radio" value="legacy" <?php checked( bb_default_group_avatar_type(), 'legacy' ); ?> />
 		<label for="bp-default-group-avatar-legacy">
 			<div class="img-block">
 				<img src="<?php echo bb_get_default_legacy_group_avatar(); ?>" />
@@ -660,7 +656,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="3" <?php checked( bb_default_group_avatar_type(), 3 ); ?> />
+		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="custom" <?php checked( bb_default_group_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-group-avatar-custom">
 			<div class="img-block">
 				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
@@ -686,10 +682,10 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 	}
 	?>
 
-	<div class="bb-default-custom-upload-file custom-group-avatar">
+	<div class="bb-default-custom-upload-file custom-group-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
 			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo bb_get_default_custom_profile_group_avatar_upload_placeholder(); ?>">
-			<input type="hidden" name="bp-custom-group-avatar" value="<?php echo bb_default_custom_upload_group_avatar(); ?>">
+			<input type="hidden" name="bp-default-custom-group-avatar" value="<?php echo bb_default_custom_upload_group_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
@@ -711,7 +707,7 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 function bp_admin_setting_callback_default_group_cover_type() {
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-cover-none" name="bp-default-group-cover-type" type="radio" value="0" <?php checked( ! bb_default_group_cover_type() ); ?> />
+		<input id="bp-default-group-cover-none" name="bp-default-group-cover-type" type="radio" value="None" <?php checked( bb_default_group_cover_type(), 'none' ); ?> />
 		<label for="bp-default-group-cover-none">
 			<div class="img-block">
 				<img src="<?php echo bb_get_profile_group_none_option_image(); ?>" />
@@ -721,7 +717,7 @@ function bp_admin_setting_callback_default_group_cover_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-cover-default" name="bp-default-group-cover-type" type="radio" value="1" <?php checked( bb_default_group_cover_type(), 1 ); ?> />
+		<input id="bp-default-group-cover-default" name="bp-default-group-cover-type" type="radio" value="buddyboss" <?php checked( bb_default_group_cover_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-group-cover-default">
 			<div class="img-block">
 				<img src="<?php echo bb_get_default_custom_buddyboss_group_cover(); ?>" />
@@ -731,7 +727,7 @@ function bp_admin_setting_callback_default_group_cover_type() {
 	</div>
 
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-cover-custom" name="bp-default-group-cover-type" type="radio" value="2" <?php checked( bb_default_group_cover_type(), 2 ); ?> />
+		<input id="bp-default-group-cover-custom" name="bp-default-group-cover-type" type="radio" value="custom" <?php checked( bb_default_group_cover_type(), 'custom' ); ?> />
 		<label for="bp-default-group-cover-custom">
 			<div class="img-block">
 				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
@@ -761,7 +757,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 	<div class="bb-default-custom-upload-file custom-group-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
 			<img src="<?php echo $group_cover_image; ?>" data-default="<?php echo bb_get_default_custom_group_cover_upload_placeholder(); ?>" class="bb-upload-preview">
-			<input type="hidden" name="bp-default-group-custom-cover" value="<?php echo bb_default_custom_upload_profile_cover(); ?>">
+			<input type="hidden" name="bp-default-custom-group-cover" value="<?php echo bb_default_custom_upload_profile_cover(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<label class="cover-uploader-label">
