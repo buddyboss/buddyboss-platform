@@ -1080,7 +1080,7 @@ a.layout-grid-view {
 }
 
 #whats-new-form.focus-in #bp-activity-privacy-point {
-  display: block;
+  display: inline-block;
 }
 
 #whats-new-form.focus-in-privacy #whats-new-privacy-stage {
@@ -1705,6 +1705,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: #4d5c6d;
 }
 
+.activity-update-form #activity-header h3 {
+  margin: 0;
+  font-weight: 500;
+}
+
 .activity-update-form .medium-editor-toolbar {
   top: inherit;
   bottom: -10px;
@@ -1891,22 +1896,22 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 #whats-new-post-in-box-items .bp-activity-object .avatar {
-  width: 24px;
+  width: 40px;
+  border-radius: 4px;
+  margin-right: 20px;
 }
 
 #whats-new-post-in-box-items .bp-activity-object .bp-item-name {
   font-size: 16px;
-  padding-left: 10px;
+  font-weight: 500;
   vertical-align: middle;
 }
 
 #whats-new-post-in-box-items .bp-activity-object:focus, #whats-new-post-in-box-items .bp-activity-object:hover {
-  background: #eaeaea;
   cursor: pointer;
 }
 
 #whats-new-post-in-box-items .bp-activity-object.selected {
-  border: 1px solid #d6d6d6;
   padding: 0;
 }
 
@@ -1927,7 +1932,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   min-width: 200px;
   max-height: 290px;
   overflow: auto;
-  padding: 5px 0;
+  padding: 10px 0;
   width: 100%;
   z-index: 11;
 }

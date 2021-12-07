@@ -10,7 +10,7 @@
 						<span class="privacy-sub-label">Proin sapien ipsum porta</span>
 					</div>
 				</div>
-				<span class="privacy-radio"><input type="radio" id="<?php echo $key; ?>" class="bp-activity-privacy__input" name="privacy" value="<?php echo $key; ?>" data-title="<?php echo $privacy; ?>" <?php if( $key == 'public' ) echo 'checked'; ?>></span>
+				<span class="privacy-radio"><input type="radio" id="<?php echo $key; ?>" class="bp-activity-privacy__input" name="privacy" value="<?php echo $key; ?>" data-title="<?php echo $privacy; ?>" <?php if( $key == 'public' ) echo 'checked'; ?>><span></span></span>
 			</label>
 		<?php endforeach; ?>
 		
@@ -23,7 +23,7 @@
 					<span class="privacy-sub-label">Proin sapien ipsum porta</span>
 				</div>
 			</div>
-			<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="group"></span>
+			<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="group"><span></span></span>
 		</label>
 		<?php }	?>
 	</div>

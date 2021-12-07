@@ -90,7 +90,7 @@
 #whats-new-form.focus-in {
 
 	#bp-activity-privacy-point {
-		display: block;
+		display: inline-block;
 	}
 }
 
@@ -678,6 +678,11 @@
 
 .activity-update-form {
 
+	#activity-header h3 {
+		margin: 0;
+		font-weight: 500;
+	}
+
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: -10px;
@@ -857,23 +862,23 @@
 		padding: 5px 10px;
 
 		.avatar {
-			width: 24px;
+			width: 40px;
+			border-radius: 4px;
+			margin-right: 20px;
 		}
 
 		.bp-item-name {
 			font-size: 16px;
-			padding-left: $marg-sml;
+			font-weight: 500;
 			vertical-align: middle;
 		}
 
 		&:focus,
 		&:hover {
-			background: $light-grey;
 			cursor: pointer;
 		}
 
 		&.selected {
-			border: 1px solid $med-light-grey;
 			padding: 0;
 		}
 
@@ -896,7 +901,7 @@
 	min-width: 200px;
 	max-height: 290px;
 	overflow: auto;
-	padding: 5px 0;
+	padding: 10px 0;
 	width: 100%;
 	z-index: 11;
 

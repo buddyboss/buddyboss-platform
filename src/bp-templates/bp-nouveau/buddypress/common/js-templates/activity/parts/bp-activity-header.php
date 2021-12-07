@@ -1,5 +1,5 @@
 <script type="text/html" id="tmpl-activity-header">
-    <h4>
+    <h3>
         <span class="activity-header-data">
 			<# if ( data.privacy_modal === 'profile' ) {  #>	
 				<?php esc_html_e( 'Who can see your post?', 'buddyboss' ); ?>
@@ -9,7 +9,7 @@
 				<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
 			<# } #>
 			<span>
-    </h4>
+    </h3>
     <a class="bb-model-close-button" href="#">
         <span class="bb-icon bb-icon-close"></span>
     </a>
