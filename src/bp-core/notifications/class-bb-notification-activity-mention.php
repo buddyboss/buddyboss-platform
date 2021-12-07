@@ -19,11 +19,6 @@ class BB_Notification_Activity_Mention extends BB_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @param string $email_key         Email Key.
-	 * @param string $email_label       Email label.
-	 * @param string $email_admin_label Email admin label.
-	 * @param int    $email_position    Email position.
-	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
