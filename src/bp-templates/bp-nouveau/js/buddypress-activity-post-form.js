@@ -2529,7 +2529,7 @@ window.bp = window.bp || {};
 				'click #privacy-status-submit': 'privacyStatusSubmit',
 				'click #privacy-status-back': 'backPrivacySelector',
 				'click #privacy-status-group-back': 'backGroupSelector',
-				'change input.bp-activity-privacy__input': 'privacySelector'
+				'click input.bp-activity-privacy__input': 'privacySelector'
 			},
 
 			initialize: function() {
@@ -2565,6 +2565,7 @@ window.bp = window.bp || {};
 
 			backGroupSelector: function ( e ) {
 				e.preventDefault();
+				this.model.set( 'privacy_modal', 'profile' );
 				$( '#whats-new-form' ).removeClass( 'focus-in-group' );
 				$( '#activity-post-form-privacy' ).show();
 			},

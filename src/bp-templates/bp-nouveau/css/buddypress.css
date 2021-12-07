@@ -1864,6 +1864,14 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 #whats-new-post-in-box-items {
   list-style: none;
   position: relative;
+  width: 100%;
+}
+
+#whats-new-post-in-box-items #activity-autocomplete {
+  width: 100%;
+  border-radius: 3px;
+  padding: 5px 10px;
+  height: 44px;
 }
 
 #whats-new-post-in-box-items li {
@@ -1916,14 +1924,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 #bp-activity-group-ac-items {
-  background: #fff;
-  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
-  border-radius: 4px;
   min-width: 200px;
   max-height: 290px;
   overflow: auto;
   padding: 5px 0;
-  position: absolute;
   width: 100%;
   z-index: 11;
 }
