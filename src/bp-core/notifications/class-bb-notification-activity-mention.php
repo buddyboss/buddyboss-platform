@@ -26,10 +26,16 @@ class BB_Notification_Activity_Mention extends BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function __construct( $email_key, $email_label, $email_admin_label, $email_position ) {
-		$this->component      = buddypress()->activity->id;
-		$this->component_name = __( 'Activity Feed', 'buddyboss' );
-		parent::__construct( $email_key, $email_label, $email_admin_label, $email_position );
+	public function __construct() {
+		$this->register_preferences_group( 'groups', 'Social Groups', 'Social Groups Notifications' );
+		$this->register_preference( 'notification_groups_admin_promotion', 'groups', 'A member is promoted to a group organizer or moderator', 'A member is promoted to a group organizer or moderator' );
+		$this->register_notification( 'groups', 'member_promoted_to_admin', '', '', 'notification_groups_admin_promotion' );
+		$this->register_notification( 'groups', 'member_promoted_to_mod', '', '', 'notification_groups_admin_promotion' );
+
+//		$this->component      = buddypress()->activity->id;
+		$this->start();
+//		$this->component_name = __( 'Activity Feed', 'buddyboss' );
+//		parent::__construct( $email_key, $email_label, $email_admin_label, $email_position );
 	}
 
 	/**
@@ -39,42 +45,35 @@ class BB_Notification_Activity_Mention extends BB_Notification_Abstract {
 	 *
 	 * @returns array $schema Email schema array.
 	 */
-	public function add_email_schema() {
-		return array(
-			'activity-at-message' => array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-			),
-			'groups-at-message'   => array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-			),
-		);
-	}
+//	public function add_email_schema() {
+//		return array(
+//			'activity-at-message' => array(
+//				/* translators: do not remove {} brackets or translate its contents. */
+//				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
+//				/* translators: do not remove {} brackets or translate its contents. */
+//				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
+//				/* translators: do not remove {} brackets or translate its contents. */
+//				'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+//			),
+//			'groups-at-message'   => array(
+//				/* translators: do not remove {} brackets or translate its contents. */
+//				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
+//				/* translators: do not remove {} brackets or translate its contents. */
+//				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
+//				/* translators: do not remove {} brackets or translate its contents. */
+//				'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+//			),
+//		);
+//	}
+
+
 }
 
 add_action(
 	'bp_init',
 	function () {
 		if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) {
-			new BB_Notification_Activity_Mention(
-				'notification_activity_new_mention',
-				sprintf(
-				/* translators: %s: users mention name. */
-					__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
-					bp_activity_get_user_mentionname( bp_loggedin_user_id() )
-				),
-				__( 'A member is mentioned in another member\'s update', 'buddyboss' ),
-				1,
-			);
+			new BB_Notification_Activity_Mention();
 		}
 	}
 );

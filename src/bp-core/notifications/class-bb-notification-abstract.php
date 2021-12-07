@@ -70,24 +70,9 @@ abstract class BB_Notification_Abstract {
 	 */
 	public $component_name = '';
 
-	/**
-	 * BB_Notification_Abstract constructor.
-	 *
-	 * @param string $email_key         Email Key.
-	 * @param string $email_label       Email label.
-	 * @param string $email_admin_label Email admin label.
-	 * @param int    $email_position    Email position.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function __construct( $email_key, $email_label, $email_admin_label, $email_position ) {
-		$this->notification_email_key         = $email_key;
-		$this->notification_email_label       = $email_label;
-		$this->notification_email_admin_label = ( ! empty( $email_admin_label ) ? $email_admin_label : $email_label );
-		$this->notification_email_position    = $email_position;
-
-		$this->start();
-	}
+	private $notifications = array();
+	private $prefernces = array();
+	private $prefernce_groups = array();
 
 	/**
 	 * Initialize.
@@ -96,9 +81,9 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private function start() {
-		add_filter( 'bb_register_notifications', array( $this, 'bb_register_notifications' ), $this->notification_email_position );
-		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ) );
+	public function start() {
+		add_filter( 'bb_register_notifications', array( $this, 'register_notification_preferences' ), $this->notification_email_position );
+//		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ) );
 	}
 
 	/**
@@ -110,20 +95,39 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_register_notifications( $notifications ) {
-		if ( empty( $this->component ) ) {
-			return $notifications;
+	public function register_notification_preferences( $notifications ) {
+
+		if ( ! empty( $this->prefernces ) ) {
+			foreach ( $this->prefernces as $prefernce ) {
+				$notifications[$prefernce['pref_group'] ]['fields'][] = array(
+					'key'         => $prefernce['pref_key'],
+					'label'       => $prefernce['pref_label'],
+					'admin_label' => $prefernce['pref_admin_label'],
+				);
+			}
 		}
 
-		if ( ! isset( $notifications[ $this->component ] ) ) {
-			$notifications[ $this->component ]['label'] = $this->component_name;
+		if( !empty( $this->prefernce_groups ) ) {
+			foreach ( $this->prefernce_groups as $group ) {
+				$notifications[ $group['group_key'] ]['label'] = $group['group_label'];
+				$notifications[ $group['group_key'] ]['admin_label'] = $group['group_admin_label'];
+			}
 		}
 
-		$notifications[ $this->component ]['fields'][] = array(
-			'key'         => $this->notification_email_key,
-			'label'       => $this->notification_email_label,
-			'admin_label' => $this->notification_email_admin_label,
-		);
+//		if( $this->prefernce_groups)
+//
+//
+//		if ( ! isset( $notifications[ $this->component ] ) ) {
+//			$notifications[ $this->component ]['label'] = $this->component_name;
+//		}
+
+//		$notifications[ $this->component ]['fields'][] = array(
+//			'name'         => $this->notification_email_key,
+//			'label'       => $this->notification_email_label,
+//			'admin_label' => $this->notification_email_admin_label,
+//		);
+
+		error_log( print_r( $notifications, 1 ) );
 
 		return $notifications;
 	}
@@ -154,5 +158,36 @@ abstract class BB_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	abstract public function add_email_schema();
+//	public function add_email_schema();
+
+	/**
+	 * Register notification
+	 */
+	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '' ) {
+		$this->notifications[] = array(
+			'component'        => $component,
+			'component_action' => $component_action,
+			'label'            => $notification_label,
+			'admin_label'      => $notification_admin_label,
+			'preference_key'   => $pref_key,
+		);
+	}
+
+	public function register_preferences_group( $group_key, $group_label, $group_admin_label ) {
+		$this->prefernce_groups[] = array(
+			'group_key'         => $group_key,
+			'group_label'       => $group_label,
+			'group_admin_label' => $group_admin_label,
+		);
+	}
+
+	public function register_preference( $pref_key, $pref_group, $pref_label, $pref_admin_label ) {
+		$this->prefernces[] = array(
+			'pref_key'         => $pref_key,
+			'pref_group'       => $pref_group,
+			'pref_label'       => $pref_label,
+			'pref_admin_label' => $pref_admin_label,
+		);
+	}
+
 }
