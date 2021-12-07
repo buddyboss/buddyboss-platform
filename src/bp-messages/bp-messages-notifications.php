@@ -397,4 +397,4 @@ function bb_message_register_notifications( $array ) {
 	return $array;
 }
 
-add_filter( 'bb_register_notifications', 'bb_message_register_notifications', 11, 1 );
+// add_filter( 'bb_register_notifications', 'bb_message_register_notifications', 11, 1 );
