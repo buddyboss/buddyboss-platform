@@ -1061,7 +1061,7 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point.onlyme .privacy-point-icon:before {
-  content: "\e95f";
+  content: "\e90d";
 }
 
 #bp-activity-privacy-point.group .privacy-point-icon:before {
@@ -1160,7 +1160,7 @@ a.layout-grid-view {
 }
 
 .bp-activity-privacy__label .privacy-figure--onlyme:before {
-  content: "\e95f";
+  content: "\e90d";
 }
 
 .bp-activity-privacy__label .privacy-figure--group:before {
@@ -2012,7 +2012,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .bb-document-privacy-wrap .privacy.onlyme:before,
 .bb-media-privacy-wrap .privacy.onlyme:before {
-  content: "\e95f";
+  content: "\e90d";
 }
 
 .bb-document-privacy-wrap .privacy.loggedin:before,
