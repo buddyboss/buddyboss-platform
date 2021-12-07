@@ -3448,10 +3448,22 @@ window.bp = window.bp || {};
 				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
 
 				this.updateMultiMediaOptions();
+
+				//Trigger Media click
+				if( window.activityMediaAction !== null ) {
+					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+					window.activityMediaAction = null;
+				}
+
 			},
 
 			triggerDisplayFull: function ( event ) {
 				event.preventDefault();
+
+				//Check for media click
+				if( $( event.target ).hasClass( 'toolbar-button' ) || $( event.target ).parent().hasClass( 'toolbar-button' ) ) {
+					window.activityMediaAction = $( event.target ).parent().attr( 'id' );
+				}
 				if( !this.$el.hasClass( 'focus-in' ) ){
 					//Set focus on "#whats-new" to trigger 'displayFull'
 					var element = this.$el.find( '#whats-new' )[0]; var element_selection = window.getSelection(); var element_range = document.createRange();
