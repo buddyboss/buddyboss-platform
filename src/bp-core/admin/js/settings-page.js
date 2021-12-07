@@ -1043,12 +1043,12 @@
 
 			$( document ).on(
 				'change',
-				'#default-profile-cover-file',
+				'#default-profile-cover-file, #default-group-cover-file',
 				function(e) {
 					e.preventDefault();
 					var fileData           = $( this )[0].files[0];
-					var coverContainer     = $( '.custom-profile-cover' );
-					var feedbackContainer  = coverContainer.find( '.bb-custom-profile-cover-feedback' );
+					var coverContainer     = $( '.custom-profile-group-cover' );
+					var feedbackContainer  = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
 					var imageContainer     = coverContainer.find( '.bb-upload-preview' );
 					var deleteBtnContainer = coverContainer.find( 'a.bb-img-remove-button' );
 
@@ -1105,14 +1105,14 @@
 								profileGroupFileFeedback( feedbackContainer, feedback, feedbackType );
 
 								// Reset the file field.
-								$( '#default-profile-cover-file' ).val( '' );
+								$( '#default-profile-cover-file, #default-group-cover-file' ).val( '' );
 							}
 						}
 					);
 				}
 			);
 
-			$( '.custom-profile-cover' ).on(
+			$( '.custom-profile-group-cover' ).on(
 				'click',
 				'a.bb-img-remove-button',
 				function(e) {
@@ -1120,8 +1120,8 @@
 
 					if ( confirm( BP_Confirm.are_you_sure ) ) {
 						var $this                   = $( this );
-						var coverContainer          = $( '.custom-profile-cover' );
-						var feedbackContainer       = coverContainer.find( '.bb-custom-profile-cover-feedback' );
+						var coverContainer          = $( '.custom-profile-group-cover' );
+						var feedbackContainer       = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
 						var imageContainer          = coverContainer.find( '.bb-upload-preview' );
 						var defaultImageplaceholder = imageContainer.data( 'default' );
 
@@ -1218,6 +1218,56 @@
 							$( '.default-group-avatar-custom' ).show();
 						} else {
 							$( '.default-group-avatar-custom' ).hide();
+						}
+					}
+				);
+			}
+
+			// Group Cover Settings Show/Hide.
+			var allowGroupCoverUpload    = $( '#bp-disable-group-cover-image-uploads' ),
+			    groupCoverType    = $( 'input[type=radio][name=bp-default-group-cover-type]' ),
+			    groupCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
+
+			if ( allowGroupCoverUpload.length ) {
+
+				if ( allowGroupCoverUpload.prop( 'checked' ) ) {
+					$( '.group-cover-options' ).show();
+				} else {
+					$( '.group-cover-options' ).hide();
+				}
+
+				$( allowGroupCoverUpload ).change(
+					function () {
+						if ( $( this ).prop( 'checked' ) ) {
+							$( '.group-cover-options' ).show();
+
+							groupCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
+		
+							if ( 2 != groupCoverTypeVal ) {
+								$( '.default-group-cover-custom' ).hide();
+							}
+						} else {
+							$( '.group-cover-options' ).hide();
+						}
+					}
+				);
+			}
+
+			// Upload Custom Group Cover Settings Show/Hide.
+			if ( groupCoverType.length ) {
+
+				if ( 2 == groupCoverTypeVal ) {
+					$( '.default-group-cover-custom' ).show();
+				} else {
+					$( '.default-group-cover-custom' ).hide();
+				}
+
+				$( groupCoverType ).change(
+					function () {
+						if ( 2 == this.value ) {
+							$( '.default-group-cover-custom' ).show();
+						} else {
+							$( '.default-group-cover-custom' ).hide();
 						}
 					}
 				);

@@ -549,7 +549,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 		$delete_btn_style    = 'display:none';
 	}
 	?>
-	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader custom-profile-cover">
+	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
 			<img src="<?php echo $profile_cover_image; ?>" data-default="<?php echo bb_get_default_custom_profile_cover_upload_placeholder();?>" class="bb-upload-preview">
 			<input type="hidden" name="bp-default-profile-custom-cover" value="<?php echo bb_default_custom_upload_profile_cover();?>">
@@ -561,7 +561,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 			</label>
 			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo $delete_btn_style; ?>">Remove</a>
 		</div>
-		<div class="bp-cover-image-status bb-custom-profile-cover-feedback" style="display:none;">
+		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
 			<p id="bp-cover-image-feedback" class="updated"></p>
 		</div>
 	</div>
@@ -700,6 +700,89 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 		</div>
 	</div>
 	<p class="description"><?php echo sprintf( __( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
+	<?php
+}
+
+/**
+ * Allow admin to set default group cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_cover_type() {
+	?>
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-none" name="bp-default-group-cover-type" type="radio" value="0" <?php checked( ! bb_default_group_cover_type() ); ?> />
+		<label for="bp-default-group-cover-none">
+			<div class="img-block">
+				<img src="<?php echo bb_get_profile_group_none_option_image(); ?>" />
+			</div>
+			<span><?php _e( 'None', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-default" name="bp-default-group-cover-type" type="radio" value="1" <?php checked( bb_default_group_cover_type(), 1 ); ?> />
+		<label for="bp-default-group-cover-default">
+			<div class="img-block">
+				<img src="<?php echo bb_get_default_custom_buddyboss_group_cover(); ?>" />
+			</div>
+			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-custom" name="bp-default-group-cover-type" type="radio" value="2" <?php checked( bb_default_group_cover_type(), 2 ); ?> />
+		<label for="bp-default-group-cover-custom">
+			<div class="img-block">
+				<img src="<?php echo bb_get_profile_group_custom_avatar_option_placeholder(); ?>" />
+			</div>
+			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to upload custom default group cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_custom_cover() {
+	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+
+	$delete_btn_style  = '';
+	$group_cover_image = bb_default_custom_upload_group_cover();
+
+	if ( empty( $group_cover_image ) ) {
+		$group_cover_image = bb_get_default_custom_group_cover_upload_placeholder();
+		$delete_btn_style  = 'display:none';
+	}
+	?>
+	<div class="bb-default-custom-upload-file custom-group-avatar cover-uploader custom-profile-group-cover">
+		<div class="bb-upload-container">
+			<img src="<?php echo $group_cover_image; ?>" data-default="<?php echo bb_get_default_custom_group_cover_upload_placeholder(); ?>" class="bb-upload-preview">
+			<input type="hidden" name="bp-default-group-custom-cover" value="<?php echo bb_default_custom_upload_profile_cover(); ?>">
+		</div>
+		<div class="bb-img-button-wrap">
+			<label class="cover-uploader-label">
+				<input type="file" name="default-group-cover-file" id="default-group-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
+				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+			</label>
+			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo $delete_btn_style; ?>">Remove</a>
+		</div>
+		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
+			<p id="bp-cover-image-feedback" class="updated"></p>
+		</div>
+	</div>
+	<p class="description">
+		<?php
+		echo sprintf(
+			__( 'Upload an image to be used as the default group cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) $cover_dimensions['width'],
+			(int) $cover_dimensions['height']
+		);
+		?>
+	</p>
 	<?php
 }
 

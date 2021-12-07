@@ -2192,7 +2192,7 @@ function bb_default_profile_cover_type( $default = null ) {
  */
 function bb_default_custom_upload_profile_cover() {
 
-	$cover_image_url          = bp_attachments_get_attachment(
+	$cover_image_url = bp_attachments_get_attachment(
 		'url',
 		array(
 			'object_dir' => 'members',
@@ -2315,4 +2315,91 @@ function bb_has_default_custom_upload_group_avatar() {
 	 * @param bool $value True if found the custom group avatar otherwise false.
 	 */
 	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bb_default_custom_upload_group_avatar() );
+}
+
+/** Group Cover ************************************************************/
+
+/**
+ * Get default BuddyBoss group cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return default BuddyBoss group cover URL.
+ */
+function bb_get_default_custom_buddyboss_group_cover() {
+	/**
+	 * Filters default BuddyBoss group cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss group cover URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_buddyboss_group_cover', buddypress()->plugin_url . 'bp-core/images/group-cover.png' );
+}
+
+/**
+ * Get default group cover placeholder URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return default group cover placeholder URL.
+ */
+function bb_get_default_custom_group_cover_upload_placeholder() {
+	/**
+	 * Filters default group cover placeholder image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default group cover placeholder URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_group_cover_upload_placeholder', buddypress()->plugin_url . 'bp-core/images/group-cover.png' );
+}
+
+/**
+ * Which type of group cover selected?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|null $default Optional. Fallback value if not found in the database.
+ *                          Default: null.
+ * @return int Return the default group cover type.
+ */
+function bb_default_group_cover_type( $default = null ) {
+
+	/**
+	 * Filters default group cover type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $value Default group cover type.
+	 */
+	return (int) apply_filters( 'bb_default_group_cover_type', (int) bp_get_option( 'bp-default-group-cover-type', $default ) );
+}
+
+/**
+ * Get default custom upload group cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: null.
+ * @return string Return default custom upload group cover URL.
+ */
+function bb_default_custom_upload_group_cover() {
+
+	$cover_image_url = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => 'groups',
+			'item_id'    => 'custom',
+		)
+	);
+	/**
+	 * Filters default custom upload cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default custom upload group cover URL.
+	 */
+	return apply_filters( 'bb_default_custom_upload_group_cover', $cover_image_url );
 }
