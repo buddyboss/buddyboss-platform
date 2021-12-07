@@ -353,6 +353,8 @@ function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $val
  * @return false|int
  */
 function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_count = 0 ) {
+	static $db_row_cache = array();
+	static $metas_cache  = array();
 	global $wpdb;
 	$bp = buddypress();
 
@@ -361,7 +363,11 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 		return false;
 	}
 
-	$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
+	$db_row_cache_key = 'db_row_cache_' . $field_id;
+	if ( ! isset( $db_row_cache[ $db_row_cache_key ] ) ) {
+		$db_row_cache[ $db_row_cache_key ] = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
+	}
+	$db_row = $db_row_cache[ $db_row_cache_key ];
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
 		$template_field_id = $db_row['id'];
@@ -388,8 +394,12 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			$new_field_column_data_types
 		);
 		if ( $inserted ) {
-			$new_field_id = $wpdb->insert_id;
-			$metas        = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+			$new_field_id    = $wpdb->insert_id;
+			$metas_cache_key = 'metas_cache_' . $template_field_id;
+			if ( ! isset( $metas_cache[ $metas_cache_key ] ) ) {
+				$metas_cache[ $metas_cache_key ] = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+			}
+			$metas = $metas_cache[ $metas_cache_key ];
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
 					if ( ! empty( $meta['meta_key'] ) && $meta['meta_key'] === 'member_type' ) {
