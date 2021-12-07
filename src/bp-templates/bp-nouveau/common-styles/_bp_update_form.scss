@@ -298,6 +298,7 @@
 			justify-content: flex-end;
 			position: relative;
 			padding: 0 15px;
+			margin: 15px 0;
 
 			.emojionearea-button:before {
 				content: "\E821";
@@ -323,6 +324,10 @@
 				font-size: 20px;
 			}
 
+		}
+
+		#whats-new-attachments .dropzone.open {
+			margin: 0 0 15px 0;
 		}
 
 	}
@@ -675,7 +680,7 @@
 
 	.medium-editor-toolbar {
 		top: inherit;
-		bottom: 0;
+		bottom: -10px;
 		left: 4px;
 		visibility: hidden;
 		z-index: 99;
