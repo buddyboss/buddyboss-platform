@@ -1164,7 +1164,6 @@ class BP_Groups_Component extends BP_Component {
 				'bp_group_mods',
 				'bp_groups_invitations_as_memberships',
 				'bp_groups_group_type',
-				'bp_group_ids_for_user',
 			)
 		);
 
