@@ -121,11 +121,11 @@ abstract class BB_Notification_Abstract {
 	public function register_notification_preferences( $notifications ) {
 
 		if ( ! empty( $this->prefernces ) ) {
-			foreach ( $this->prefernces as $prefernce ) {
-				$notifications[ $prefernce['pref_group'] ]['fields'][] = array(
-					'key'         => $prefernce['pref_key'],
-					'label'       => $prefernce['pref_label'],
-					'admin_label' => $prefernce['pref_admin_label'],
+			foreach ( $this->prefernces as $preference ) {
+				$notifications[ $preference['pref_group'] ]['fields'][] = array(
+					'key'         => $preference['pref_key'],
+					'label'       => $preference['pref_label'],
+					'admin_label' => $preference['pref_admin_label'],
 				);
 			}
 		}
@@ -150,7 +150,7 @@ abstract class BB_Notification_Abstract {
 		// 'admin_label' => $this->notification_email_admin_label,
 		// );
 
-		error_log( print_r( $notifications, 1 ) );
+		// error_log( print_r( $notifications, 1 ) );
 
 		return $notifications;
 	}
