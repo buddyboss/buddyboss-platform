@@ -2,10 +2,12 @@
 /**
  * BuddyBoss Notification Abstract Class.
  *
- * @package BuddyBoss
+ * @package BuddyBoss\Core
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
+
+error_log( print_r( 'called', 1 ) );
 
 defined( 'ABSPATH' ) || exit;
 
@@ -14,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss [BBVERSION]
  */
-abstract class BB_Notification_Abstract {
+abstract class BP_Core_Notification_Abstract {
 
 	/**
 	 * Notification Email Key.
