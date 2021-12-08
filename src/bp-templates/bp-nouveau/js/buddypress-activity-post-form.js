@@ -127,6 +127,7 @@ window.bp = window.bp || {};
 
 			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
 			self.postForm.$el.removeClass( 'bp-hide' );
+			self.postForm.$el.find( '#whats-new-toolbar' ).addClass( 'hidden' );
 
 			// add a pause to form to let it cool down a bit.
 			setTimeout(
@@ -2944,9 +2945,17 @@ window.bp = window.bp || {};
 				this.$self          = this.$el.find( '#activity-gif-button' );
 				this.$gifPickerEl   = this.$el.find( '.gif-media-search-dropdown' );
 				this.$emojiPickerEl = $( '#whats-new' );
-				if( this.$el.children(':visible').length === 0 ) {
-					this.$el.addClass( 'hidden' );
-				}
+				this.$el.removeClass( 'hidden' );
+				setTimeout( function() { 
+					if( this.$el ) {
+						if( this.$el.children(':visible').length === 0 ) {
+							this.$el.addClass( 'hidden' );
+						} else {
+							this.$el.removeClass( 'hidden' );
+						}
+					}
+				},0);
+				
 				return this;
 			},
 
