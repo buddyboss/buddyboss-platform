@@ -5696,8 +5696,10 @@ function bb_check_ios_device() {
 	$ipod   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$iphone = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$ipad   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$safari = bb_core_get_browser();
+	$safari = ( isset( $safari['name'] ) ? 'Safari' === $safari['b_name'] : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
-	if ( $ipod || $iphone || $ipad ) {
+	if ( $ipod || $iphone || $ipad || $safari ) {
 		$is_ios = true;
 	}
 
@@ -5819,6 +5821,7 @@ function bb_core_get_browser() {
 		'version'   => $version,
 		'platform'  => $platform,
 		'pattern'   => $pattern,
+		'b_name'    => $ub,
 	);
 }
 

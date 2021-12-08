@@ -203,11 +203,11 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'offensive'        => array(
+				'offensive'      => array(
 					'name'        => __( 'Offensive', 'buddyboss' ),
 					'description' => __( 'Contains abusive or derogatory content', 'buddyboss' ),
 				),
-				'inappropriate'       => array(
+				'inappropriate'  => array(
 					'name'        => __( 'Inappropriate', 'buddyboss' ),
 					'description' => __( 'Contains mature or sensitive content', 'buddyboss' ),
 				),
@@ -215,11 +215,11 @@ class BP_Moderation_Component extends BP_Component {
 					'name'        => __( 'Misinformation', 'buddyboss' ),
 					'description' => __( 'Contains misleading or false information', 'buddyboss' ),
 				),
-				'suspicious'  => array(
+				'suspicious'     => array(
 					'name'        => __( 'Suspicious', 'buddyboss' ),
 					'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss' ),
 				),
-				'harassment'  => array(
+				'harassment'     => array(
 					'name'        => __( 'Harassment', 'buddyboss' ),
 					'description' => __( 'Harassment or bullying behavior', 'buddyboss' ),
 				),
