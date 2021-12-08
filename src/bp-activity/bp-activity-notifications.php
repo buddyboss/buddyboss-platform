@@ -594,4 +594,12 @@ function bb_activity_register_notifications( $array ) {
 
 	return $array;
 }
-add_filter( 'bb_register_notifications', 'bb_activity_register_notifications', 10, 1 );
+//add_filter( 'bb_register_notifications', 'bb_activity_register_notifications', 10, 1 );
+
+
+add_action(
+	'bp_init',
+	function () {
+		new BP_Activity_Notification();
+	}
+);

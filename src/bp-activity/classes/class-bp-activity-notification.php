@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Mention Notification Class.
+ * BuddyBoss Activity Notification Class.
  *
- * @package BuddyBoss
+ * @package BuddyBoss/Activity
  *
  * @since   BuddyBoss [BBVERSION]
  */
@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BB_Notification_Activity_Mention class.
+ * Set up the BP_Activity_Notification class.
  *
  * @since BuddyBoss [BBVERSION]
  */
-class BB_Notification_Activity_Mention extends BB_Notification_Abstract {
+class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Constructor method.
@@ -22,15 +22,47 @@ class BB_Notification_Activity_Mention extends BB_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		$this->register_preferences_group( 'groups', 'Social Groups', 'Social Groups Notifications' );
-		$this->register_preference( 'notification_groups_admin_promotion', 'groups', 'A member is promoted to a group organizer or moderator', 'A member is promoted to a group organizer or moderator' );
-		$this->register_notification( 'groups', 'member_promoted_to_admin', '', '', 'notification_groups_admin_promotion' );
-		$this->register_notification( 'groups', 'member_promoted_to_mod', '', '', 'notification_groups_admin_promotion' );
+		$this->register_preferences_group(
+			buddypress()->activity->id,
+			esc_html__( 'Activity Feed', 'buddyboss' ),
+			esc_html__( 'Activity Feed Notifications', 'buddyboss' )
+		);
 
-//		$this->component      = buddypress()->activity->id;
+		$this->register_preference(
+			'notification_activity_new_mention',
+			buddypress()->activity->id,
+			sprintf(
+				/* translators: %s: users mention name. */
+				__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
+				bp_activity_get_user_mentionname( bp_loggedin_user_id() )
+			),
+			esc_html__( 'A member is mentioned in another member\’s update', 'buddybobss' )
+		);
+
+		$this->register_preference(
+			'notification_activity_new_reply',
+			buddypress()->activity->id,
+			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
+			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+		);
+
+		$this->register_notification(
+			buddypress()->activity->id,
+			'update_reply',
+			'',
+			'',
+			'notification_activity_new_reply'
+		);
+
+		$this->register_notification(
+			buddypress()->activity->id,
+			'comment_reply',
+			'',
+			'',
+			'notification_activity_new_reply'
+		);
+
 		$this->start();
-//		$this->component_name = __( 'Activity Feed', 'buddyboss' );
-//		parent::__construct( $email_key, $email_label, $email_admin_label, $email_position );
 	}
 
 	/**
@@ -61,15 +93,4 @@ class BB_Notification_Activity_Mention extends BB_Notification_Abstract {
 //		);
 //	}
 
-
 }
-
-add_action(
-	'bp_init',
-	function () {
-		if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) {
-			new BB_Notification_Activity_Mention();
-		}
-	}
-);
-

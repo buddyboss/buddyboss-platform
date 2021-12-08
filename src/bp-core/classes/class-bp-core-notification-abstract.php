@@ -7,8 +7,6 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-error_log( print_r( 'called', 1 ) );
-
 defined( 'ABSPATH' ) || exit;
 
 /**
