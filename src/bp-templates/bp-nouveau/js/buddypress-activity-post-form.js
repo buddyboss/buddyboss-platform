@@ -480,6 +480,8 @@ window.bp = window.bp || {};
 					} else {
 						$activityPrivacySelect.parent().css( 'display', 'block' );
 					}
+
+					Backbone.trigger('editactivity');
 				},
 				0
 			);
@@ -857,6 +859,7 @@ window.bp = window.bp || {};
 
 			initialize: function() {
 				this.listenTo(Backbone, 'privacy:statusbutton', this.updateHeader);
+				this.listenTo(Backbone, 'editactivity', this.updateEditActivityHeader);
 				this.model.on( 'change:privacy_modal', this.render, this );
 			},
 
@@ -867,6 +870,10 @@ window.bp = window.bp || {};
 		
 			updateHeader: function() {
 				this.model.set( 'privacy_modal', 'profile' );
+			},
+
+			updateEditActivityHeader: function() {
+				this.model.set( 'privacy_modal', 'edit_activity' );
 			},
 
 			close: function ( e ) {

@@ -5,6 +5,8 @@
 				<?php esc_html_e( 'Who can see your post?', 'buddyboss' ); ?>
 			<# } else if ( data.privacy_modal === 'group' ) { #>
 				<?php esc_html_e( 'Select a group', 'buddyboss' ); ?>
+			<# } else if ( data.privacy_modal === 'edit_activity' ) { #>
+				<?php esc_html_e( 'Edit activity', 'buddyboss' ); ?>
 			<# } else { #>
 				<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
 			<# } #>
