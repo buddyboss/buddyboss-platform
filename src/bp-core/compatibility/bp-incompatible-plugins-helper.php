@@ -46,6 +46,15 @@ function bp_helper_plugins_loaded_callback() {
 	/**
 	 * Include plugin when plugin is activated
 	 *
+	 * Support Rank Math SEO
+	 */
+	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
+		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
 	 * Support Co-Authors Plus
 	 */
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
@@ -789,25 +798,6 @@ function bb_get_elementor_maintenance_mode_template() {
 	}
 }
 add_action( 'bp_loaded', 'bb_get_elementor_maintenance_mode_template' );
-
-/**
- * Update the current component and action for elementor saved library preview link.
- * 
- * @since BuddyBoss [BBVERSION]
- *
- * @param object $bp     BuddyPress object.
- * @param array  $bp_uri Array of URI.
- * 
- * @return void
- */
-function bb_support_elementor_library_preview_permalink( $bp, $bp_uri ) {
-	global $bp_plugins;
-	if ( in_array( 'elementor/elementor.php', $bp_plugins ) && isset( $_GET['elementor_library'] ) ) {
-		$bp->current_component = '';
-		$bp->current_action    = '';
-	}
-}
-add_action( 'bp_core_set_uri_globals', 'bb_support_elementor_library_preview_permalink', 10, 2 );
 
 /**
  * Load rest compatibility.
