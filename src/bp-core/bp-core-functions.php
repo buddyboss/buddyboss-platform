@@ -6006,3 +6006,72 @@ function bb_is_notification_enabled( $user_id, $key ) {
 
 	return false;
 }
+
+/**
+ * Functions to get all registered notifications.
+ *
+ * @param string $component component name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_notifications( $component = '' ) {
+
+	$notifications = apply_filters( 'bb_register_notifications', array() );
+
+	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
+		return $notifications[ $component ];
+	}
+
+	return $notifications;
+}
+
+function bp_can_send_notification( $component_name, $component_action = '', $pref_type = 'email' ) {
+	$component_notification = bb_register_notifications( $component_name );
+	$notification_keys = array();
+	if ( ! empty( $component_notification['fields'] ) ) {
+		$notification_keys = array_column( $component_notification['fields'], 'key' );
+	}
+
+	error_log( print_r( $notification_keys, 1 ) );
+}
+
+add_action( 'bp_init', function() {
+	bp_can_send_notification( 'activity' );
+}, 999 );
+
+function bp_send_notification( $component_name, $component_action, $args = array() ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'           => 0,
+			'item_id'           => 0,
+			'secondary_item_id' => 0,
+			'component_name'    => $component_name,
+			'component_action'  => $component_action,
+			'date_notified'     => bp_core_current_time(),
+			'is_new'            => 1,
+			'allow_duplicate'   => false,
+			'email_type'        => false,
+			'email_args'        => array(),
+		),
+		'notifications_add_notification'
+	);
+
+	if ( ! empty( $r['email_type'] ) && ! empty( $r['user_id'] ) ) {
+		bp_send_email( $r['email_type'], (int) $r['user_id'], $r['email_args'] );
+	}
+
+	if ( bp_is_active( 'notifications' ) ) {
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $r['user_id'],
+				'item_id'           => $r['item_id'],
+				'secondary_item_id' => $r['secondary_item_id'],
+				'component_name'    => $r['component_name'],
+				'component_action'  => $r['component_action'],
+				'date_notified'     => bp_core_current_time(),
+				'is_new'            => 1,
+			)
+		);
+	}
+}

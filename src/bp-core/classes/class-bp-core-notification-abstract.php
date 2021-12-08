@@ -97,7 +97,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	private $prefernce_groups = array();
 
-	private $email_schema = array();
+	private $email_types = array();
 
 	/**
 	 * Initialize.
@@ -153,8 +153,8 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function email_schema( $schema ) {
 
-		if ( ! empty( $this->email_schema ) ) {
-			$new_schema = array_column( $this->email_schema, 'args', 'email_key' );
+		if ( ! empty( $this->email_types ) ) {
+			$new_schema = array_column( $this->email_types, 'args', 'email_type' );
 			if ( ! empty( $new_schema ) ) {
 				$schema = array_merge( $schema, $new_schema );
 			}
@@ -168,15 +168,13 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $pref_key  Preference key.
-	 * @param string $email_key Email key.
-	 * @param array  $args      Email arguments.
+	 * @param string $email_type Type of email being sent.
+	 * @param array  $args       Email arguments.
 	 */
-	public function add_email_schema( $pref_key, $email_key, $args ) {
-		$this->email_schema[ $email_key ] = array(
-			'pref_key'  => $pref_key,
-			'email_key' => $email_key,
-			'args'      => array(
+	public function register_email_type( $email_type, $args ) {
+		$this->email_types[ $email_type ] = array(
+			'email_type' => $email_type,
+			'args'       => array(
 				'post_title'   => ( isset( $args['post_title'] ) ? $args['post_title'] : '' ),
 				'post_content' => ( isset( $args['post_content'] ) ? $args['post_content'] : '' ),
 				'post_excerpt' => ( isset( $args['post_excerpt'] ) ? $args['post_excerpt'] : '' ),
