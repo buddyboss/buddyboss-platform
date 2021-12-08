@@ -288,7 +288,7 @@ function messages_screen_notification_settings() {
 		return;
 	}
 
-	$options              = bb_register_notifications( buddypress()->messages->id );
+	$options              = bb_register_notification_preferences( buddypress()->messages->id );
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
@@ -397,4 +397,4 @@ function bb_message_register_notifications( $array ) {
 	return $array;
 }
 
-// add_filter( 'bb_register_notifications', 'bb_message_register_notifications', 11, 1 );
+// add_filter( 'bb_register_notification_preferences', 'bb_message_register_notifications', 11, 1 );

@@ -107,8 +107,25 @@ abstract class BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function start() {
-		add_filter( 'bb_register_notifications', array( $this, 'register_notification_preferences' ), $this->notification_email_position );
+		add_filter( 'bb_register_notifications', array( $this, 'register_notifications' ), $this->notification_email_position );
+		add_filter( 'bb_register_notification_preferences', array( $this, 'register_notification_preferences' ), $this->notification_email_position );
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
+	}
+
+	/**
+	 * Register the notifications.
+	 *
+	 * @param array $notifications List of notifications.
+	 *
+	 * @return array
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notifications( $notifications ) {
+
+		$notifications = array_merge( $notifications, $this->notifications );
+
+		return $notifications;
+
 	}
 
 	/**

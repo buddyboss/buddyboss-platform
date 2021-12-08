@@ -246,7 +246,7 @@ add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1
  */
 function friends_screen_notification_settings() {
 
-	$options              = bb_register_notifications( buddypress()->friends->id );
+	$options              = bb_register_notification_preferences( buddypress()->friends->id );
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
@@ -372,4 +372,4 @@ function bb_friends_register_notifications( $array ) {
 	return $array;
 }
 
-add_filter( 'bb_register_notifications', 'bb_friends_register_notifications', 14, 1 );
+add_filter( 'bb_register_notification_preferences', 'bb_friends_register_notifications', 14, 1 );

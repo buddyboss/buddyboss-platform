@@ -419,7 +419,7 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
  */
 function bp_activity_screen_notification_settings() {
 
-	$options              = bb_register_notifications( buddypress()->activity->id );
+	$options              = bb_register_notification_preferences( buddypress()->activity->id );
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
@@ -594,7 +594,7 @@ function bb_activity_register_notifications( $array ) {
 
 	return $array;
 }
-//add_filter( 'bb_register_notifications', 'bb_activity_register_notifications', 10, 1 );
+//add_filter( 'bb_register_notification_preferences', 'bb_activity_register_notifications', 10, 1 );
 
 
 add_action(

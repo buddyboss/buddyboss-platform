@@ -1212,7 +1212,7 @@ add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notif
  */
 function groups_screen_notification_settings() {
 
-	$options              = bb_register_notifications( buddypress()->groups->id );
+	$options              = bb_register_notification_preferences( buddypress()->groups->id );
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
@@ -1406,7 +1406,7 @@ function bb_groups_register_notifications( $array ) {
 	return $array;
 }
 
-//add_filter( 'bb_register_notifications', 'bb_groups_register_notifications', 12, 1 );
+//add_filter( 'bb_register_notification_preferences', 'bb_groups_register_notifications', 12, 1 );
 
 add_action(
 	'bp_init',
