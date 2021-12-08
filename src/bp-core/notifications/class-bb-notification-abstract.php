@@ -137,21 +137,6 @@ abstract class BB_Notification_Abstract {
 			}
 		}
 
-		// if( $this->prefernce_groups)
-		//
-		//
-		// if ( ! isset( $notifications[ $this->component ] ) ) {
-		// $notifications[ $this->component ]['label'] = $this->component_name;
-		// }
-
-		// $notifications[ $this->component ]['fields'][] = array(
-		// 'name'         => $this->notification_email_key,
-		// 'label'       => $this->notification_email_label,
-		// 'admin_label' => $this->notification_email_admin_label,
-		// );
-
-		// error_log( print_r( $notifications, 1 ) );
-
 		return $notifications;
 	}
 
