@@ -403,7 +403,7 @@ add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthchec
 /**
  * Check and reschedule the background process if queue is not empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.3
  */
 function bb_handle_cron_healthcheck() {
 	global $bp_background_updater;
