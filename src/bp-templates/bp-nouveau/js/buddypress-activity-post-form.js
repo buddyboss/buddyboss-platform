@@ -371,6 +371,7 @@ window.bp = window.bp || {};
 					var $activityPrivacySelect = self.postForm.$el.find( '.bp-activity-privacy__input:checked' );
 
 					$activityPrivacySelect.val( activity_data.privacy );
+					self.postForm.$el.find( '.bp-activity-privacy__input#' + activity_data.privacy ).prop( 'checked', true );
 
 					var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
 					if ( ! _.isUndefined( privacy ) ) {
