@@ -125,6 +125,7 @@ window.bp = window.bp || {};
 			// set edit activity data.
 			self.editActivityData = activity_data;
 
+			this.model.set( 'edit_activity', true );
 			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
 			self.postForm.$el.removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new-toolbar' ).addClass( 'hidden' );
@@ -514,6 +515,7 @@ window.bp = window.bp || {};
 
 			// Set the activity value.
 			self.displayEditActivity( activity_data );
+			this.model.set( 'edit_activity', true );
 
 			var edit_activity_editor         = $( '#whats-new' )[0];
 			var edit_activity_editor_content = $( '#whats-new-content' )[0];
@@ -774,6 +776,7 @@ window.bp = window.bp || {};
 				gif_data: {},
 				privacy: 'public',
 				privacy_modal: 'general',
+				edit_activity: false,
 			}
 		}
 	);
@@ -861,6 +864,7 @@ window.bp = window.bp || {};
 				this.listenTo(Backbone, 'privacy:statusbutton', this.updateHeader);
 				this.listenTo(Backbone, 'editactivity', this.updateEditActivityHeader);
 				this.model.on( 'change:privacy_modal', this.render, this );
+				this.model.on( 'change:edit_activity', this.render, this );
 			},
 
 			render: function () {
@@ -873,7 +877,7 @@ window.bp = window.bp || {};
 			},
 
 			updateEditActivityHeader: function() {
-				this.model.set( 'privacy_modal', 'edit_activity' );
+				this.model.set( 'edit_activity', true );
 			},
 
 			close: function ( e ) {
@@ -3550,6 +3554,7 @@ window.bp = window.bp || {};
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); // remove edit class if in edit mode.
+				this.model.set( 'edit_activity', false );
 				bp.Nouveau.Activity.postForm.editActivityData = false;
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
