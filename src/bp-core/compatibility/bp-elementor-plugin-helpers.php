@@ -14,41 +14,41 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class BB_Elementor_Plugin_Compatibility {
 
-	/**
-	 * The single instance of the class.
-	 *
-	 * @var self
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private static $instance = null;
+    /**
+     * The single instance of the class.
+     *
+     * @var self
+     *
+     * @since BuddyBoss [BBVERSION]
+     */
+    private static $instance = null;
 
-	/**
-	 * BB_Elementor_Plugin_Compatibility constructor.
+    /**
+     * BB_Elementor_Plugin_Compatibility constructor.
      * 
      * @since BuddyBoss [BBVERSION]
-	 */
-	public function __construct() {
+     */
+    public function __construct() {
 
-		$this->compatibility_init();
-	}
+        $this->compatibility_init();
+    }
 
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
+    /**
+     * Get the instance of this class.
+     *
+     * @since BuddyBoss [BBVERSION]
+     *
+     * @return Controller|null
+     */
+    public static function instance() {
 
-		if ( null === self::$instance ) {
-			$class_name     = __CLASS__;
-			self::$instance = new $class_name();
-		}
+        if ( null === self::$instance ) {
+            $class_name     = __CLASS__;
+            self::$instance = new $class_name();
+        }
 
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 
     /**
      * Register the compatibility hook for the plugin
