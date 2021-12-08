@@ -57,6 +57,17 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.8.3 =
+* Messages - Improved logic to send group messages by processing members and notifications in the background
+* Moderation - Improved moderation module core logic to hide content in the background batches on Report, Block, and Suspend
+* Media - Fixed video playing issue on upload in Safari browser
+* Media - Fixed Album feature option avail even when disabled in the settings
+* Coding Standards - Code refactoring to handle when PHP system function disabled
+* Coding Standards - Code refactoring to fix warnings and deprecated functions
+* Elementor - Fixed templates builder popup settings compatibility issue with Forums discussion and replies
+* REST API - Added Group messages improvements in the APIs
+* REST API - Fixed cache issue on password change to fix a critical issue
+
 = 1.8.2 =
 * Forums - Fixed Forums directory page search issue
 * Profiles - Fixed WordPress role sync issue on Members Profile type update
