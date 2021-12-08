@@ -127,7 +127,7 @@ abstract class BP_Core_Notification_Abstract {
 				$notifications[ $preference['pref_group'] ]['fields'][] = array(
 					'key'         => $preference['pref_key'],
 					'label'       => $preference['pref_label'],
-					'admin_label' => $preference['pref_admin_label'],
+					'admin_label' => ( isset( $preference['pref_admin_label'] ) && ! empty( $preference['pref_admin_label'] ) ? $preference['pref_admin_label'] : $preference['pref_label'] ),
 				);
 			}
 		}
@@ -135,7 +135,7 @@ abstract class BP_Core_Notification_Abstract {
 		if ( ! empty( $this->prefernce_groups ) ) {
 			foreach ( $this->prefernce_groups as $group ) {
 				$notifications[ $group['group_key'] ]['label']       = $group['group_label'];
-				$notifications[ $group['group_key'] ]['admin_label'] = $group['group_admin_label'];
+				$notifications[ $group['group_key'] ]['admin_label'] = ( isset( $group['group_admin_label'] ) && ! empty( $group['group_admin_label'] ) ? $group['group_admin_label'] : $group['group_label'] );
 			}
 		}
 
