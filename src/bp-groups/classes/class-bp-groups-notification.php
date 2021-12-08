@@ -35,6 +35,20 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			esc_html__( 'A member is invited to join a group', 'buddybobss' ),
 		);
 
+		$this->register_preference(
+			'notification_groups_group_updated',
+			buddypress()->groups->id,
+			esc_html__( 'Group information is updated', 'buddybobss' ),
+			'',
+		);
+
+		$this->register_preference(
+			'notification_groups_admin_promotion',
+			buddypress()->groups->id,
+			esc_html__( 'You are promoted to a group organizer or moderator', 'buddybobss' ),
+			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddybobss' ),
+		);
+
 		$this->start();
 	}
 
