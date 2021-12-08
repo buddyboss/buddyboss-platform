@@ -4,7 +4,7 @@
 				<span class="bb-icon bb-icon-text-format"></span>
 			</a>
 		</div>
-	<div class="post-elements-buttons-item post-mention bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Mention Member', 'buddyboss' ); ?>">
+	<div class="post-elements-buttons-item post-mention bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Mention Member', 'buddyboss' ); ?>">
 		<span class="toolbar-button">
 			<i class="bb-icon bb-icon-at-sign"></i>
 		</span>

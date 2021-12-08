@@ -1471,9 +1471,9 @@ a.layout-grid-view {
   overflow: auto;
 }
 
-.bp-nouveau-activity-form-placeholder-.modal-popup .edit-activity-content-wrap,
-.activity-update-form.modal-popup .edit-activity-content-wrap {
-  max-height: calc(100vh - 230px);
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-content,
+.activity-update-form.modal-popup #whats-new-content {
+  max-height: calc(100vh - 420px);
   overflow: auto;
   width: 100%;
 }

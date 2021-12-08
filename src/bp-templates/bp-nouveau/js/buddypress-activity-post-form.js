@@ -66,7 +66,7 @@ window.bp = window.bp || {};
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
 			// Wrap Avatar and Content section into header.
-			$( '.activity-update-form #whats-new-avatar, .activity-update-form #whats-new-content' ).wrapAll( '<div class="whats-new-form-header"></div>' );
+			$( '.activity-update-form #whats-new-avatar, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
 			Backbone.trigger('mediaprivacy');
 		},
@@ -366,9 +366,6 @@ window.bp = window.bp || {};
 
 					self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 					self.postForm.$el.removeClass( 'loading' );
-
-					// Wrap content section for better scroll.
-					$( '#whats-new-content, #whats-new-attachments' ).wrapAll( '<div class="edit-activity-content-wrap"></div>' );
 
 					// Make selected current privacy.
 					var $activityPrivacySelect = self.postForm.$el.find( '.bp-activity-privacy__input:checked' );

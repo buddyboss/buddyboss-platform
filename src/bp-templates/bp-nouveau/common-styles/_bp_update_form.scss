@@ -450,8 +450,8 @@
 		max-height: 100%;
 		overflow: auto;
 
-		.edit-activity-content-wrap {
-			max-height: calc(100vh - 230px);
+		#whats-new-content {
+			max-height: calc(100vh - 420px);
 			overflow: auto;
 			width: 100%;
 		}
