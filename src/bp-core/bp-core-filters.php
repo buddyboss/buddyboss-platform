@@ -1739,16 +1739,13 @@ function bb_default_custom_profile_group_avatar_crop_item_id_args( $item_id = 0,
  * @param array  $params   Array of parameters for the request.
  */
 function bb_default_custom_profile_group_avatar_url_check( $gravatar, $params ) {
+	$profile_group_types = array( 'user', 'group' );
 
 	$item_id = $params['item_id'];
 	$object  = $params['object'];
 
-	if ( is_admin() && ( 'custom' === $item_id && 'user' === $object ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
-		return bb_get_default_custom_profile_group_avatar_upload_placeholder();
-	}
-
-	if ( is_admin() && ( 'custom' === $item_id && 'group' === $object ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
-		return bb_get_default_custom_profile_group_avatar_upload_placeholder();
+	if ( is_admin() && ( 'custom' === $item_id && in_array( $object, $profile_group_types, true ) ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
+		return buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	}
 
 	return $gravatar;

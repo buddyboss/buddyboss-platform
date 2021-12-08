@@ -1952,15 +1952,15 @@ function bb_feed_not_allowed_comment_post_types() {
  *
  * @return string Return default BuddyBoss profile avatar URL.
  */
-function bb_get_default_buddyboss_profile_avatar() {
+function bb_get_buddyboss_profile_avatar() {
 	/**
-	 * Filters to change default BuddyBoss avatar image.
+	 * Filters default BuddyBoss avatar image URL.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 */
-	return apply_filters( 'bb_get_default_buddyboss_profile_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man-buddyboss.png' );
+	return apply_filters( 'bb_get_buddyboss_profile_avatar', buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' );
 }
 
 /**
@@ -1970,51 +1970,15 @@ function bb_get_default_buddyboss_profile_avatar() {
  *
  * @return string Return default legacy profile avatar URL.
  */
-function bb_get_default_legacy_profile_avatar() {
+function bb_get_legacy_profile_avatar() {
 	/**
-	 * Filters to change default legacy avatar image.
+	 * Filters default legacy avatar image URL.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $value Default legacy profile avatar URL.
 	 */
-	return apply_filters( 'bb_get_default_legacy_profile_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man-legacy.jpg' );
-}
-
-/**
- * Get placeholder URL for profile and group custom avatar option.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Return placeholder URL for profile and group custom avatar option.
- */
-function bb_get_profile_group_custom_avatar_option_placeholder() {
-	/**
-	 * Filters to change default avatar placeholder image.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value placeholder URL for profile and group custom avatar option.
-	 */
-	return apply_filters( 'bb_get_profile_group_custom_avatar_option_placeholder', buddypress()->plugin_url . 'bp-core/images/profile-group-custom.png' );
-}
-
-/**
- * Get default custom profile avatar upload placeholder URL.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Return default custom profile avatar upload placeholder URL.
- */
-function bb_get_default_custom_profile_group_avatar_upload_placeholder() {
-	/**
-	 * Filters default custom profile avatar upload placeholder URL.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value default custom profile avatar upload placeholder URL.
-	 */
-	return apply_filters( 'bb_get_default_custom_profile_group_avatar_upload_placeholder', buddypress()->plugin_url . 'bp-core/images/mystery-man-placeholder.jpg' );
+	return apply_filters( 'bb_get_legacy_profile_avatar', buddypress()->plugin_url . 'bp-core/images/profile-avatar-legacy.png' );
 }
 
 /**
@@ -2026,7 +1990,7 @@ function bb_get_default_custom_profile_group_avatar_upload_placeholder() {
  *                          Default: 'buddyboss'.
  * @return string Return the default profile avatar type.
  */
-function bb_default_profile_avatar_type( $default = 'buddyboss' ) {
+function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default profile avatar type.
@@ -2035,7 +1999,7 @@ function bb_default_profile_avatar_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default profile avatar type.
 	 */
-	return apply_filters( 'bb_default_profile_avatar_type', bp_get_option( 'bp-default-profile-avatar-type', $default ) );
+	return apply_filters( 'bb_get_default_profile_avatar_type', bp_get_option( 'bp-default-profile-avatar-type', $default ) );
 }
 
 /**
@@ -2063,20 +2027,7 @@ function bb_has_default_custom_upload_profile_avatar() {
  *
  * @return string Return default custom upload avatar URL.
  */
-function bb_default_custom_upload_profile_avatar() {
-
-	$custom_upload_profile_avatar = bp_core_fetch_avatar(
-		array(
-			'object'  => 'user',
-			'item_id' => 'custom',
-			'html'    => false,
-			'type'    => 'full',
-		)
-	);
-
-	if ( false === strpos( $custom_upload_profile_avatar, 'custom' ) ) {
-		$custom_upload_profile_avatar = '';
-	}
+function bb_get_default_custom_upload_profile_avatar() {
 	/**
 	 * Filters to change default custom upload avatar image.
 	 *
@@ -2084,25 +2035,7 @@ function bb_default_custom_upload_profile_avatar() {
 	 *
 	 * @param string $custom_upload_profile_avatar Default custom upload avatar URL.
 	 */
-	return apply_filters( 'bb_default_custom_upload_profile_avatar', $custom_upload_profile_avatar );
-}
-
-/**
- * Get image URL for none option of profile and group.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Return image URL for none option of profile and group.
- */
-function bb_get_profile_group_none_option_image() {
-	/**
-	 * Filters image URL for none option of profile and group.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value image URL for none option of profile and group.
-	 */
-	return apply_filters( 'bb_get_profile_group_none_option_image', buddypress()->plugin_url . 'bp-core/images/profile-group-none.png' );
+	return apply_filters( 'bb_get_default_custom_upload_profile_avatar', bp_get_option( 'bp-default-custom-profile-avatar' ) );
 }
 
 /** Profile Cover ************************************************************/
@@ -2134,7 +2067,7 @@ function bp_attachments_get_default_custom_cover_image_dimensions( $component = 
  *
  * @return string Return default BuddyBoss profile cover URL.
  */
-function bb_get_default_custom_buddyboss_profile_cover() {
+function bb_get_buddyboss_profile_cover() {
 	/**
 	 * Filters default cover image.
 	 *
@@ -2142,25 +2075,7 @@ function bb_get_default_custom_buddyboss_profile_cover() {
 	 *
 	 * @param string $value Default BuddyBoss profile cover URL.
 	 */
-	return apply_filters( 'bb_get_default_custom_buddyboss_profile_cover', buddypress()->plugin_url . 'bp-core/images/profile-cover.png' );
-}
-
-/**
- * Get default profile cover placeholder URL.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Return default profile cover placeholder URL.
- */
-function bb_get_default_custom_profile_cover_upload_placeholder() {
-	/**
-	 * Filters default cover placeholder image.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value Default profile cover placeholder URL.
-	 */
-	return apply_filters( 'bb_get_default_custom_profile_cover_upload_placeholder', buddypress()->plugin_url . 'bp-core/images/profile-cover.png' );
+	return apply_filters( 'bb_get_buddyboss_profile_cover', buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
 }
 
 /**
@@ -2172,7 +2087,7 @@ function bb_get_default_custom_profile_cover_upload_placeholder() {
  *                          Default: 'buddyboss'.
  * @return string Return the default profile cover type.
  */
-function bb_default_profile_cover_type( $default = 'buddyboss' ) {
+function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default profile cover type.
@@ -2181,7 +2096,7 @@ function bb_default_profile_cover_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default profile cover type.
 	 */
-	return apply_filters( 'bb_default_profile_cover_type', bp_get_option( 'bp-default-profile-cover-type', $default ) );
+	return apply_filters( 'bb_get_default_profile_cover_type', bp_get_option( 'bp-default-profile-cover-type', $default ) );
 }
 
 /**
@@ -2193,15 +2108,7 @@ function bb_default_profile_cover_type( $default = 'buddyboss' ) {
  *                             Default: null.
  * @return string Return default custom upload profile cover URL.
  */
-function bb_default_custom_upload_profile_cover() {
-
-	$cover_image_url = bp_attachments_get_attachment(
-		'url',
-		array(
-			'object_dir' => 'members',
-			'item_id'    => 'custom',
-		)
-	);
+function bb_get_default_custom_upload_profile_cover() {
 	/**
 	 * Filters to change default custom upload cover image.
 	 *
@@ -2209,7 +2116,7 @@ function bb_default_custom_upload_profile_cover() {
 	 *
 	 * @param string $value Default custom upload profile cover URL.
 	 */
-	return apply_filters( 'bb_default_custom_upload_profile_cover', $cover_image_url );
+	return apply_filters( 'bb_get_default_custom_upload_profile_cover', bp_get_option( 'bp-default-custom-profile-cover' ) );
 }
 
 /** Group Avatar ************************************************************/
@@ -2220,7 +2127,7 @@ function bb_default_custom_upload_profile_cover() {
  *
  * @return string Return default BuddyBoss group avatar URL.
  */
-function bb_get_default_buddyboss_group_avatar() {
+function bb_get_buddyboss_group_avatar() {
 	/**
 	 * Filters to change default BuddyBoss avatar image.
 	 *
@@ -2228,7 +2135,7 @@ function bb_get_default_buddyboss_group_avatar() {
 	 *
 	 * @param string $value Default BuddyBoss group avatar URL.
 	 */
-	return apply_filters( 'bb_get_default_buddyboss_group_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-group-buddyboss.png' );
+	return apply_filters( 'bb_get_buddyboss_group_avatar', buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png' );
 }
 
 /**
@@ -2238,7 +2145,7 @@ function bb_get_default_buddyboss_group_avatar() {
  *
  * @return string Return default legacy group avatar URL.
  */
-function bb_get_default_legacy_group_avatar() {
+function bb_get_legacy_group_avatar() {
 	/**
 	 * Filters to change default legacy avatar image.
 	 *
@@ -2246,7 +2153,7 @@ function bb_get_default_legacy_group_avatar() {
 	 *
 	 * @param string $value Default legacy group avatar URL.
 	 */
-	return apply_filters( 'bb_get_default_legacy_group_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-group.png' );
+	return apply_filters( 'bb_get_legacy_group_avatar', buddypress()->plugin_url . 'bp-core/images/group-avatar-legacy.png' );
 }
 
 /**
@@ -2258,7 +2165,7 @@ function bb_get_default_legacy_group_avatar() {
  *                          Default: 'buddyboss'.
  * @return string Return the default group avatar type.
  */
-function bb_default_group_avatar_type( $default = 'buddyboss' ) {
+function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default group avatar type.
@@ -2267,7 +2174,7 @@ function bb_default_group_avatar_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default group avatar type.
 	 */
-	return apply_filters( 'bb_default_group_avatar_type', bp_get_option( 'bp-default-group-avatar-type', $default ) );
+	return apply_filters( 'bb_get_default_group_avatar_type', bp_get_option( 'bp-default-group-avatar-type', $default ) );
 }
 
 /**
@@ -2277,21 +2184,7 @@ function bb_default_group_avatar_type( $default = 'buddyboss' ) {
  *
  * @return string Return default custom upload avatar URL.
  */
-function bb_default_custom_upload_group_avatar() {
-
-	$custom_upload_group_avatar = bp_core_fetch_avatar(
-		array(
-			'item_id'    => 'custom',
-			'avatar_dir' => 'group-avatars',
-			'object'     => 'group',
-			'type'       => 'full',
-			'html'       => false,
-		)
-	);
-
-	if ( false === strpos( $custom_upload_group_avatar, 'custom' ) ) {
-		$custom_upload_group_avatar = '';
-	}
+function bb_get_default_custom_upload_group_avatar() {
 	/**
 	 * Filters to change default custom upload avatar image.
 	 *
@@ -2299,7 +2192,7 @@ function bb_default_custom_upload_group_avatar() {
 	 *
 	 * @param string $custom_upload_group_avatar Default custom upload avatar URL.
 	 */
-	return apply_filters( 'bb_default_custom_upload_group_avatar', $custom_upload_group_avatar );
+	return apply_filters( 'bb_get_default_custom_upload_group_avatar', bp_get_option( 'bp-default-custom-group-avatar' ) );
 }
 
 /**
@@ -2317,7 +2210,7 @@ function bb_has_default_custom_upload_group_avatar() {
 	 *
 	 * @param bool $value True if found the custom group avatar otherwise false.
 	 */
-	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bb_default_custom_upload_group_avatar() );
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bb_get_default_custom_upload_group_avatar() );
 }
 
 /** Group Cover ************************************************************/
@@ -2329,7 +2222,7 @@ function bb_has_default_custom_upload_group_avatar() {
  *
  * @return string Return default BuddyBoss group cover URL.
  */
-function bb_get_default_custom_buddyboss_group_cover() {
+function bb_get_custom_buddyboss_group_cover() {
 	/**
 	 * Filters default BuddyBoss group cover image.
 	 *
@@ -2337,25 +2230,7 @@ function bb_get_default_custom_buddyboss_group_cover() {
 	 *
 	 * @param string $value Default BuddyBoss group cover URL.
 	 */
-	return apply_filters( 'bb_get_default_custom_buddyboss_group_cover', buddypress()->plugin_url . 'bp-core/images/group-cover.png' );
-}
-
-/**
- * Get default group cover placeholder URL.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Return default group cover placeholder URL.
- */
-function bb_get_default_custom_group_cover_upload_placeholder() {
-	/**
-	 * Filters default group cover placeholder image.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $value Default group cover placeholder URL.
-	 */
-	return apply_filters( 'bb_get_default_custom_group_cover_upload_placeholder', buddypress()->plugin_url . 'bp-core/images/group-cover.png' );
+	return apply_filters( 'bb_get_custom_buddyboss_group_cover', buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
 }
 
 /**
@@ -2367,7 +2242,7 @@ function bb_get_default_custom_group_cover_upload_placeholder() {
  *                          Default: 'buddyboss'.
  * @return string Return the default group cover type.
  */
-function bb_default_group_cover_type( $default = 'buddyboss' ) {
+function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
 
 	/**
 	 * Filters default group cover type.
@@ -2376,7 +2251,7 @@ function bb_default_group_cover_type( $default = 'buddyboss' ) {
 	 *
 	 * @param string $value Default group cover type.
 	 */
-	return apply_filters( 'bb_default_group_cover_type', bp_get_option( 'bp-default-group-cover-type', $default ) );
+	return apply_filters( 'bb_get_default_group_cover_type', bp_get_option( 'bp-default-group-cover-type', $default ) );
 }
 
 /**
@@ -2388,15 +2263,7 @@ function bb_default_group_cover_type( $default = 'buddyboss' ) {
  *                             Default: null.
  * @return string Return default custom upload group cover URL.
  */
-function bb_default_custom_upload_group_cover() {
-
-	$cover_image_url = bp_attachments_get_attachment(
-		'url',
-		array(
-			'object_dir' => 'groups',
-			'item_id'    => 'custom',
-		)
-	);
+function bb_get_default_custom_upload_group_cover() {
 	/**
 	 * Filters default custom upload cover image URL.
 	 *
@@ -2404,5 +2271,5 @@ function bb_default_custom_upload_group_cover() {
 	 *
 	 * @param string $value Default custom upload group cover URL.
 	 */
-	return apply_filters( 'bb_default_custom_upload_group_cover', $cover_image_url );
+	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
 }

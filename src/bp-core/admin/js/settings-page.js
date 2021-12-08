@@ -1046,11 +1046,12 @@
 				'#default-profile-cover-file, #default-group-cover-file',
 				function(e) {
 					e.preventDefault();
-					var fileData           = $( this )[0].files[0];
-					var coverContainer     = $( '.custom-profile-group-cover' );
-					var feedbackContainer  = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
-					var imageContainer     = coverContainer.find( '.bb-upload-preview' );
-					var deleteBtnContainer = coverContainer.find( 'a.bb-img-remove-button' );
+					var fileData            = $( this )[0].files[0];
+					var coverContainer      = $( '.custom-profile-group-cover' );
+					var feedbackContainer   = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
+					var imageContainer      = coverContainer.find( '.bb-upload-preview' );
+					var imageFieldContainer = coverContainer.find( '#bp-default-custom-' + BP_ADMIN.custom_profile_cover.upload.object + '-cover' );
+					var deleteBtnContainer  = coverContainer.find( 'a.bb-img-remove-button' );
 
 					feedbackContainer.hide();
 					feedbackContainer.find( 'p' ).removeClass( 'success error' );
@@ -1096,6 +1097,7 @@
 								} else {
 
 									imageContainer.prop( 'src', response.data.url );
+									imageFieldContainer.val( response.data.url );
 									deleteBtnContainer.show();
 									feedbackType = 'success';
 									feedback     = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
@@ -1123,6 +1125,7 @@
 						var coverContainer          = $( '.custom-profile-group-cover' );
 						var feedbackContainer       = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
 						var imageContainer          = coverContainer.find( '.bb-upload-preview' );
+						var imageFieldContainer     = coverContainer.find( '#bp-default-custom-' + BP_ADMIN.custom_profile_cover.upload.object + '-cover' );
 						var defaultImageplaceholder = imageContainer.data( 'default' );
 
 						feedbackContainer.hide();
@@ -1158,6 +1161,7 @@
 									} else {
 
 										imageContainer.prop( 'src', defaultImageplaceholder );
+										imageFieldContainer.val( '' );
 										$this.hide();
 										feedbackType = 'success';
 										feedback     = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];

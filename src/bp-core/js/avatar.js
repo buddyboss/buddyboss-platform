@@ -345,6 +345,13 @@ window.bp = window.bp || {};
 							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
 						}
 
+						// Update each avatars fields of the page
+						$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
+							function() {
+								$( this ).val( response.avatar );
+							}
+						);
+
 				}
 			).fail(
 				function( response ) {
@@ -466,6 +473,13 @@ window.bp = window.bp || {};
 						if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
 							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).hide();
 						}
+
+						// Update each avatars fields of the page
+						$( '#bp-default-' + model.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
+							function() {
+								$( this ).val( '' );
+							}
+						);
 				}
 			).fail(
 				function( response ) {

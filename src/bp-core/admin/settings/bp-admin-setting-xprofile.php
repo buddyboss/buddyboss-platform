@@ -40,11 +40,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function settings_save() {
-		$if_disabled_before_saving = bp_disable_advanced_profile_search();
+		$if_disabled_before_saving         = bp_disable_advanced_profile_search();
+		$profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
+		$profile_cover_type_before_saving  = bb_get_default_profile_cover_type();
 
 		parent::settings_save();
 
-		$if_disabled_after_saving = bp_disable_advanced_profile_search();
+		$if_disabled_after_saving         = bp_disable_advanced_profile_search();
+		$profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
+		$profile_cover_type_after_saving  = bb_get_default_profile_cover_type();
 
 		/**
 		 * sync bp-enable-member-dashboard with cutomizer settings.
@@ -84,6 +88,29 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
+		}
+
+		/**
+		 * Validate custom option for profile avatar and cover.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		if ( ! isset( $_POST['bp-default-custom-profile-avatar'] ) || ( isset( $_POST['bp-default-custom-profile-avatar'] ) && empty( $_POST['bp-default-custom-profile-avatar'] ) && 'custom' === $profile_avatar_type_after_saving ) ) {
+
+			if ( 'custom' === $profile_avatar_type_before_saving ) {
+				$profile_avatar_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-default-profile-avatar-type', $profile_avatar_type_before_saving );
+		}
+
+		if ( ! isset( $_POST['bp-default-custom-profile-cover'] ) || ( isset( $_POST['bp-default-custom-profile-cover'] ) && empty( $_POST['bp-default-custom-profile-cover'] ) && 'custom' === $profile_cover_type_after_saving ) ) {
+
+			if ( 'custom' === $profile_cover_type_before_saving ) {
+				$profile_cover_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-default-profile-cover-type', $profile_cover_type_before_saving );
 		}
 
 		if ( $if_disabled_before_saving && ! $if_disabled_after_saving ) {

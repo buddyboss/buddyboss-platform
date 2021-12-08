@@ -41,6 +41,39 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		add_filter( 'bb_attachments_cover_image_ajax_delete_args', 'bb_attachments_profile_group_cover_image_ajax_delete_args', 10, 1 );
 	}
 
+	public function settings_save() {
+		$group_avatar_type_before_saving = bb_get_default_group_avatar_type();
+		$group_cover_type_before_saving  = bb_get_default_group_cover_type();
+
+		parent::settings_save();
+
+		$group_avatar_type_after_saving = bb_get_default_group_avatar_type();
+		$group_cover_type_after_saving  = bb_get_default_group_cover_type();
+
+		/**
+		 * Validate custom option for group avatar and cover.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		if ( ! isset( $_POST['bp-default-custom-group-avatar'] ) || ( isset( $_POST['bp-default-custom-group-avatar'] ) && empty( $_POST['bp-default-custom-group-avatar'] ) && 'custom' === $group_avatar_type_after_saving ) ) {
+
+			if ( 'custom' === $group_avatar_type_before_saving ) {
+				$group_avatar_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-default-group-avatar-type', $group_avatar_type_before_saving );
+		}
+
+		if ( ! isset( $_POST['bp-default-custom-group-cover'] ) || ( isset( $_POST['bp-default-custom-group-cover'] ) && empty( $_POST['bp-default-custom-group-cover'] ) && 'custom' === $group_cover_type_after_saving ) ) {
+
+			if ( 'custom' === $group_cover_type_before_saving ) {
+				$group_cover_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-default-group-cover-type', $group_cover_type_before_saving );
+		}
+	}
+
 	// Check if groups are enabled
 	public function is_active() {
 		return bp_is_active( 'groups' );
