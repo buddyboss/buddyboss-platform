@@ -3497,6 +3497,9 @@ window.bp = window.bp || {};
 				// Remove footer wrapper
 				this.$el.find( '.whats-new-form-footer' ).remove();
 
+				//Destroy Emoji Picker
+				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
+
 				this.updateMultiMediaOptions();
 			},
 
