@@ -3822,22 +3822,6 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 function bp_email_get_schema() {
 
 	$schema = array(
-		'activity-comment'                   => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-		),
-		'activity-comment-author'            => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-		),
 		'core-user-registration'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
