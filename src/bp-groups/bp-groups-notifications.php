@@ -1408,9 +1408,9 @@ function bb_groups_register_notifications( $array ) {
 
 //add_filter( 'bb_register_notification_preferences', 'bb_groups_register_notifications', 12, 1 );
 
-add_action(
-	'bp_init',
-	function () {
-		new BP_Groups_Notification();
-	}
-);
+//add_action(
+//	'bp_init',
+//	function () {
+//		new BP_Groups_Notification();
+//	}
+//);

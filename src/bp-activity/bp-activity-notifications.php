@@ -465,21 +465,50 @@ function bp_activity_screen_notification_settings() {
 				if ( ! $app_checked ) {
 					$app_checked = $field['default'];
 				}
+
+				$options = apply_filters(
+					'bb_notifications_types',
+					array(
+						'email' => array(
+							'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
+							'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
+						),
+						'web'   => array(
+							'is_checked' => ( ! $web_checked ? $field['default'] : $email_checked ),
+							'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
+						),
+						'app'   => array(
+							'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
+							'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
+						),
+					)
+				);
+
 				?>
 				<tr>
 					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
-					<td class="email">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_email' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $email_checked, 'yes' ); ?> />
-						<label for="<?php echo esc_attr( $field['key'] . '_email' ); ?>"><?php esc_html_e( 'Email', 'buddyboss' ); ?></label>
-					</td>
-					<td class="web">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_web' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] . '_web' ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $web_checked, 'yes' ); ?> />
-						<label for="<?php echo esc_attr( $field['key'] . '_web' ); ?>"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
-					</td>
-					<td class="app">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_app' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] . '_app' ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $app_checked, 'yes' ); ?> />
-						<label for="<?php echo esc_attr( $field['key'] . '_app' ); ?>"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
-					</td>
+
+					<?php
+					foreach ( $options as $key => $v ) {
+
+						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', false );
+						$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', true );
+						if ( $is_render ) {
+							?>
+							<td class="<?php echo esc_attr( $key ); ?>">
+								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="notifications[<?php echo esc_attr( $field['key'] ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+								<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+							</td>
+							<?php
+						} else {
+							?>
+							<td class="<?php echo esc_attr( $key ); ?> notification_no_option">
+								<?php esc_html_e( '-', 'buddyboss' ); ?>
+							</td>
+							<?php
+						}
+					}
+					?>
 				</tr>
 				<?php
 			}
@@ -594,7 +623,7 @@ function bb_activity_register_notifications( $array ) {
 
 	return $array;
 }
-//add_filter( 'bb_register_notification_preferences', 'bb_activity_register_notifications', 10, 1 );
+// add_filter( 'bb_register_notification_preferences', 'bb_activity_register_notifications', 10, 1 );
 
 
 add_action(

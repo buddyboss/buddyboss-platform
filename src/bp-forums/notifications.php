@@ -553,4 +553,4 @@ function bb_forums_register_notifications( $array ) {
 	return $array;
 }
 
-add_filter( 'bb_register_notification_preferences', 'bb_forums_register_notifications', 13, 1 );
+//add_filter( 'bb_register_notification_preferences', 'bb_forums_register_notifications', 13, 1 );

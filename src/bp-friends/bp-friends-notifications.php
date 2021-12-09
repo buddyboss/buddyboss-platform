@@ -372,4 +372,4 @@ function bb_friends_register_notifications( $array ) {
 	return $array;
 }
 
-add_filter( 'bb_register_notification_preferences', 'bb_friends_register_notifications', 14, 1 );
+//add_filter( 'bb_register_notification_preferences', 'bb_friends_register_notifications', 14, 1 );
