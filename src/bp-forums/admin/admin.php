@@ -609,7 +609,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			wp_register_script( 'bbp-admin-common-js', $this->js_url . 'common.js', array( 'jquery' ), $version );
 			wp_register_script( 'bbp-admin-topics-js', $this->js_url . 'topics.js', array( 'jquery' ), $version );
 			wp_register_script( 'bbp-admin-replies-js', $this->js_url . 'replies.js', array( 'jquery' ), $version );
-			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery', 'postbox', 'dashboard' ), $version );
+			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery', 'postbox' ), $version );
 		}
 
 		/**
