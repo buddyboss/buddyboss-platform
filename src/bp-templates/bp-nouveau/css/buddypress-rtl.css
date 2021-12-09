@@ -1068,7 +1068,7 @@ a.layout-grid-view {
   content: "\e93d";
 }
 
-.activity-post-target .activity-post-user-name {
+.activity-post-user-name-container .activity-post-user-name {
   line-height: 1;
 }
 
@@ -1266,23 +1266,19 @@ a.layout-grid-view {
   flex-flow: column;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar,
-.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle {
   width: auto;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-construct,
-.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar .activity-post-construct {
   display: flex;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar .user-name,
-.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar .user-name {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle .user-name,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle .user-name {
   display: block;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #whats-new-avatar #bp-activity-privacy,
-.activity-update-form .activity-form.focus-in .whats-new-form-header #whats-new-avatar #bp-activity-privacy {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .whats-new-form-header #user-status-huddle #bp-activity-privacy,
+.activity-update-form .activity-form.focus-in .whats-new-form-header #user-status-huddle #bp-activity-privacy {
   display: block;
 }
 
@@ -1333,15 +1329,15 @@ a.layout-grid-view {
   margin: 0 0 15px 0;
 }
 
-.bp-nouveau-activity-form-placeholder- #whats-new-avatar,
-.activity-update-form #whats-new-avatar {
+.bp-nouveau-activity-form-placeholder- #user-status-huddle,
+.activity-update-form #user-status-huddle {
   margin: 0;
   width: 70px;
   padding: 16px;
 }
 
-.bp-nouveau-activity-form-placeholder- #whats-new-avatar img,
-.activity-update-form #whats-new-avatar img {
+.bp-nouveau-activity-form-placeholder- #user-status-huddle img,
+.activity-update-form #user-status-huddle img {
   box-shadow: none;
   display: inline-block;
   margin-left: 10px;
@@ -1349,13 +1345,13 @@ a.layout-grid-view {
   image-rendering: -webkit-optimize-contrast;
 }
 
-.bp-nouveau-activity-form-placeholder- #whats-new-avatar .user-name,
-.activity-update-form #whats-new-avatar .user-name {
+.bp-nouveau-activity-form-placeholder- #user-status-huddle .user-name,
+.activity-update-form #user-status-huddle .user-name {
   display: none;
 }
 
-.bp-nouveau-activity-form-placeholder- #whats-new-avatar #bp-activity-privacy,
-.activity-update-form #whats-new-avatar #bp-activity-privacy {
+.bp-nouveau-activity-form-placeholder- #user-status-huddle #bp-activity-privacy,
+.activity-update-form #user-status-huddle #bp-activity-privacy {
   display: none;
 }
 
