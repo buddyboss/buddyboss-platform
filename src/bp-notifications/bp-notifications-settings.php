@@ -183,10 +183,13 @@ function bb_activate_notification( $field ) {
 }
 
 /**
+ * Added instructions for the notification type.
  *
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_on_automatic_notification_information() {
-	?>
-    <p class="description"><?php esc_html_e( 'Select which types of notifications are sent to members when specific actions happen on your site. When a notification is disabled, it will not be generated for any member. Members can configure which notifications they receive via email, web or app in their Notification Preferences.', 'buddyboss' ); ?></p>
-	<?php
+	echo '<p class="description">' .
+		esc_html__( 'Select which types of notifications are sent to members when specific actions happen on your site. When a notification is disabled, it will not be generated for any member. Members can configure which notifications they receive via email, web or app in their Notification Preferences.', 'buddyboss' ) .
+	'</p>';
 }
+
