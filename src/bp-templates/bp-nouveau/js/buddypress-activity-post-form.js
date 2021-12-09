@@ -3003,6 +3003,11 @@ window.bp = window.bp || {};
 
 			toggleMediaSelector: function ( e ) {
 				e.preventDefault();
+
+				if( !$( '.activity-form' ).hasClass( 'focus-in' ) ) {
+					return;
+				}
+
 				this.closeGifSelector();
 				this.closeDocumentSelector();
 				this.closeVideoSelector();
@@ -3013,6 +3018,11 @@ window.bp = window.bp || {};
 
 			toggleDocumentSelector: function ( e ) {
 				e.preventDefault();
+
+				if( !$( '.activity-form' ).hasClass( 'focus-in' ) ) {
+					return;
+				}
+
 				this.closeGifSelector();
 				this.closeMediaSelector();
 				this.closeVideoSelector();
@@ -3023,6 +3033,10 @@ window.bp = window.bp || {};
 
 			toggleVideoSelector: function ( e ) {
 				e.preventDefault();
+
+				if( !$( '.activity-form' ).hasClass( 'focus-in' ) ) {
+					return;
+				}
 
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
