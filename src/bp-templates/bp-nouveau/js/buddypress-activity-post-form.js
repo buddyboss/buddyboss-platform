@@ -141,7 +141,7 @@ window.bp = window.bp || {};
 					self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
 					self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 
-					var tool_box = $( '#whats-new-toolbar' );
+					var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 					// set object of activity and item id when group activity.
 					if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
