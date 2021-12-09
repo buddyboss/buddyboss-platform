@@ -2565,13 +2565,9 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', 'general' );
-				var whats_new_form = $( '#whats-new-form' );
-				var privacy_val = this.$el.find( '.bp-activity-privacy__input:checked' ).val();
-				var privacy_label = this.$el.find( '.bp-activity-privacy__input:checked' ).data('title');
 
+				var whats_new_form = $( '#whats-new-form' );		
 				whats_new_form.removeClass( 'focus-in-privacy focus-in-group' );
-				whats_new_form.find(' #bp-activity-privacy-point' ).removeClass().addClass( privacy_val );
-				whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
 				Backbone.trigger('privacy:updatestatus');
 			},
@@ -2581,7 +2577,6 @@ window.bp = window.bp || {};
 				var privacySelected = this.model.get( 'privacy' );
 				$( '#whats-new-form' ).removeClass( 'focus-in-privacy focus-in-group' );
 				this.model.set( 'privacy_modal', 'general' );
-				$( e.currentTarget ).closest( '#whats-new-privacy-stage' ).find( '#whats-new-post-in' ).val( 'profile' ).trigger('change');
 				this.$el.find( 'input#' + privacySelected ).prop( 'checked', true );
 			},
 
@@ -3600,12 +3595,6 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 
 				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
-
-				var privacy_val = whats_new_form.find( '.bp-activity-privacy__input:checked' ).val();
-				var privacy_label = whats_new_form.find( '.bp-activity-privacy__input:checked' ).data('title');
-				whats_new_form.find(' #bp-activity-privacy-point' ).removeClass();
-				whats_new_form.find(' #bp-activity-privacy-point' ).addClass( privacy_val );
-				whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
