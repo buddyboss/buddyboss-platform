@@ -450,8 +450,8 @@
 		max-height: 100%;
 		overflow: auto;
 
-		#whats-new-content {
-			max-height: calc(100vh - 420px);
+		.whats-new-scroll-view {
+			max-height: calc(100vh - 140px);
 			overflow: auto;
 			width: 100%;
 		}

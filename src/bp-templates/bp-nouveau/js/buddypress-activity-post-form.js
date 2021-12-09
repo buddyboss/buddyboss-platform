@@ -66,7 +66,7 @@ window.bp = window.bp || {};
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
 			// Wrap Avatar and Content section into header.
-			$( '.activity-update-form #whats-new-avatar, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar' ).wrapAll( '<div class="whats-new-form-header"></div>' );
+			$( '.activity-update-form #whats-new-avatar, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
 			Backbone.trigger('mediaprivacy');
 		},
@@ -3403,6 +3403,12 @@ window.bp = window.bp || {};
 
 				// Wrap Toolbar and submit Wrapper into footer.
 				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+
+				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
+				} else {
+					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
+				}
 
 				this.updateMultiMediaOptions();
 
