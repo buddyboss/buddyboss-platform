@@ -3488,6 +3488,24 @@ window.bp = window.bp || {};
 					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
 
+				this.activityHideModalEvent();
+
+			},
+
+			activityHideModalEvent: function () {
+	
+				$( document ).on(
+					'keyup',
+					function ( event ) {
+						if ( event.keyCode === 27 && false === event.ctrlKey ) {
+							setTimeout( function() {
+								$( '.activity-update-form.modal-popup #whats-new' ).blur();
+								$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+							},0);
+						}
+					}
+				);
+	
 			},
 
 			triggerDisplayFull: function ( event ) {
