@@ -68,8 +68,11 @@ window.bp = window.bp || {};
 			// Wrap Avatar and Content section into header.
 			$( '.activity-update-form #user-status-huddle, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
-			jQuery( document ).on( 'click', '.activity-update-form.modal-popup .activity-update-form-overlay', function() {
-				$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+			jQuery( document ).on( 'click', '.activity-update-form.modal-popup:not(.bp-activity-edit) .activity-update-form-overlay', function() {
+				setTimeout( function() {
+					$( '.activity-update-form.modal-popup #whats-new' ).blur();
+					$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+				},0);
 			});
 
 			Backbone.trigger('mediaprivacy');
@@ -568,14 +571,14 @@ window.bp = window.bp || {};
 				'keyup',
 				function ( event ) {
 					if ( event.keyCode === 27 && false === event.ctrlKey ) {
-						$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+						$( '.activity-update-form.modal-popup.bp-activity-edit #aw-whats-new-reset' ).trigger( 'click' );
 					}
 				}
 			);
 
 			$( document ).on(
 				'click',
-				'.activity-update-form.modal-popup #aw-whats-new-reset',
+				'.activity-update-form.modal-popup.bp-activity-edit #aw-whats-new-reset',
 				function () {
 					self.postActivityEditHideModal();
 				}
