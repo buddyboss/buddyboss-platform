@@ -25,6 +25,20 @@ add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
 add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 
+//user is removed from ld group
+add_action('ld_removed_group_access', function($user_id, $group_id){
+
+	bb_add_or_remove_user_in_social_group($group_id, $user_id, 'leave');
+
+}, 99, 2);
+
+//user is added from ld group
+add_action('ld_added_group_access', function($user_id, $group_id){
+
+	bb_add_or_remove_user_in_social_group($group_id, $user_id, 'join');
+
+}, 99, 2);
+
 /** Functions *****************************************************************/
 
 /**
@@ -369,5 +383,35 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
 	if ( ! empty( $bp_uri ) && implode( '/', $bp_uri ) === bb_learndash_profile_courses_slug() ) {
 		$bp->current_component = bb_learndash_profile_courses_slug();
 		$bp->current_action    = '';
+	}
+}
+
+/**
+ * Function to fix the issue when adding/removing user from LD group 
+ * with courses from LD group is directly associated with buddyboss social groups
+ * 
+ * Get all social groups from the courses associated with LD group
+ * Add or remove user from that social groups
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id  learndash group id.
+ * @param int  $user_id user id.
+ * @param int $type 'join' or 'leave' group
+ */
+function bb_add_or_remove_user_in_social_group($group_id, $user_id, $type = 'join'){
+	
+	$courses = learndash_get_group_courses_list($group_id);
+
+	foreach($courses as $course_id){
+
+		$group_attached = (int) get_post_meta( $course_id, 'bp_course_group', true );
+		$join_or_leave_group = 'groups_' . $type . '_group';
+
+		if(0 === $group_attached || false === $group_attached){
+			continue;
+		}
+
+		$join_or_leave_group($group_attached, $user_id);
 	}
 }
