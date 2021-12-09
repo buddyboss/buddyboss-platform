@@ -1929,6 +1929,19 @@ tr.child-no-padding-first th {
   padding: 20px 10px 0 0;
 }
 
+tr.notes-hidden-header th {
+  opacity: 0;
+  visibility: hidden;
+}
+
+tr.notes-hidden-header td {
+  padding-left: 0;
+}
+
+tr.notes-hidden-header td .description {
+  margin-left: -210px;
+}
+
 tr.child-no-padding-first td {
   padding: 15px 10px 5px;
 }

@@ -27,7 +27,7 @@ function bb_notification_get_settings_sections() {
 		),
 		'bp_notification_settings_automatic' => array(
 			'page'              => 'notifications',
-			'title'             => __( 'Automatic Notifications', 'buddyboss' ),
+			'title'             => __( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
 		),
 	);
@@ -132,6 +132,13 @@ function bb_notification_get_settings_fields() {
 
 	$fields['bp_notification_settings_automatic'] = array();
 
+	$fields['bp_notification_settings_automatic']['infos'] = array(
+		'title'             => __( 'Notes', 'buddyboss' ),
+		'callback'          => 'bb_admin_setting_callback_on_automatic_notification_information',
+		'sanitize_callback' => 'string',
+		'args'              => array( 'class' => 'notes-hidden-header' ),
+	);
+
 	if ( ! empty( $all_notifications ) ) {
 
 		foreach ( $all_notifications as $key => $data ) {
@@ -175,3 +182,11 @@ function bb_activate_notification( $field ) {
 	<?php
 }
 
+/**
+ *
+ */
+function bb_admin_setting_callback_on_automatic_notification_information() {
+	?>
+    <p class="description"><?php esc_html_e( 'Select which types of notifications are sent to members when specific actions happen on your site. When a notification is disabled, it will not be generated for any member. Members can configure which notifications they receive via email, web or app in their Notification Preferences.', 'buddyboss' ); ?></p>
+	<?php
+}

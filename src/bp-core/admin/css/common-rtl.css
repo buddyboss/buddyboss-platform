@@ -1929,6 +1929,15 @@ tr.child-no-padding-first th {
   padding: 20px 0 0 10px;
 }
 
+tr.notes-hidden-header th {
+  opacity: 0;
+  visibility: hidden;
+}
+
+tr.notes-hidden-header td .description {
+  margin-right: -200px;
+}
+
 tr.child-no-padding-first td {
   padding: 15px 10px 5px;
 }
