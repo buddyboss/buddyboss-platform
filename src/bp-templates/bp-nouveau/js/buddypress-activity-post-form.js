@@ -2540,6 +2540,9 @@ window.bp = window.bp || {};
 				$( '#activity-post-form-privacy' ).show();
 				$( '#whats-new-form' ).addClass( 'focus-in-privacy' );
 				Backbone.trigger('privacy:headerupdate');
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					this.model.set( 'privacy', this.$el.closest( '#whats-new-form' ).find( '.bp-activity-privacy__input:checked' ).val() );
+				}
 			}
 		}
 	);
