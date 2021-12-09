@@ -1806,11 +1806,23 @@ function bp_core_display_name_format( $default = 'first_name' ) {
  */
 function bp_rest_enable_private_network() {
 
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		return (bool) bbapp_is_private_app_enabled();
-	} else {
-		$retval = (bool) bp_enable_private_rest_apis();
-	}
+	$retval = (
+		function_exists( 'bp_enable_private_network' ) &&
+		true !== bp_enable_private_network() &&
+		(
+			! function_exists( 'bbapp_is_private_app_enabled' ) ||
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled() // Check for buddyboss app private network.
+			)
+		)
+	);
+
+//	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+//		return (bool) bbapp_is_private_app_enabled();
+//	} else {
+//		$retval = (bool) bp_enable_private_rest_apis();
+//	}
 
 	/**
 	 * Filters whether private private REST APIs is enabled.
