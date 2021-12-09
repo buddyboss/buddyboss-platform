@@ -447,6 +447,14 @@
 		max-height: 100%;
 		overflow: auto;
 
+		.activity-update-form-overlay {
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+		}
+
 		.whats-new-scroll-view {
 			max-height: calc(100vh - 140px);
 			overflow: auto;
@@ -489,14 +497,14 @@
 			right: -15px;
 			bottom: 100%;
 			margin-bottom: 10px;
-			height: 160px;
+			height: 150px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 160px;
+				height: 150px;
 
 				.emojionearea-scroll-area {
-					height: 80px;
+					height: 70px;
 				}
 
 				&:after {

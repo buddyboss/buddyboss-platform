@@ -68,6 +68,10 @@ window.bp = window.bp || {};
 			// Wrap Avatar and Content section into header.
 			$( '.activity-update-form #user-status-huddle, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
+			jQuery( document ).on( 'click', '.activity-update-form.modal-popup .activity-update-form-overlay', function() {
+				$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+			});
+
 			Backbone.trigger('mediaprivacy');
 		},
 
@@ -3477,6 +3481,11 @@ window.bp = window.bp || {};
 				if( window.activityMediaAction !== null ) {
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
+				}
+
+				//Add Overlay
+				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
+					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
 
 			},
