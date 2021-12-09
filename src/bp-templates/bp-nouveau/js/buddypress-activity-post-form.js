@@ -66,7 +66,7 @@ window.bp = window.bp || {};
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
 			// Wrap Avatar and Content section into header.
-			$( '.activity-update-form #whats-new-avatar, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
+			$( '.activity-update-form #user-status-huddle, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
 			Backbone.trigger('mediaprivacy');
 		},
@@ -86,7 +86,7 @@ window.bp = window.bp || {};
 			// Display it within selector.
 			this.postFormPlaceholder.inject( '#bp-nouveau-activity-form-placeholder' );
 
-			$( '.activity-form-placeholder #whats-new-avatar, .activity-form-placeholder #whats-new-content-placeholder' ).wrapAll( '<div class="whats-new-form-header"></div>' );
+			$( '.activity-form-placeholder #user-status-huddle, .activity-form-placeholder #whats-new-content-placeholder' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 		},
 
 		dropzoneView: function () {
@@ -2427,14 +2427,27 @@ window.bp = window.bp || {};
 		}
 	);
 
-	bp.Views.FormAvatar = bp.View.extend(
+	bp.Views.UserStatusHuddle = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'user-status-huddle',
+			className: 'bp-activity-huddle',
+
+			initialize: function() {
+				this.views.add( new bp.Views.CaseAvatar( { model: this.model } ) );
+				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
+				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
+
+				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+			},
+		}
+	);
+
+	bp.Views.CaseAvatar = bp.View.extend(
 		{
 			tagName: 'div',
 			id: 'whats-new-avatar',
-			template: bp.template( 'activity-post-form-avatar' ),
-			events: {
-				'click #bp-activity-privacy-point': 'privacyTarget'
-			},
+			template: bp.template( 'activity-post-case-avatar' ),
 
 			initialize: function () {
 				this.model = new Backbone.Model(
@@ -2455,6 +2468,46 @@ window.bp = window.bp || {};
 				if ( this.model.has( 'avatar_url' ) ) {
 					this.model.set( 'display_avatar', true );
 				}
+			}
+		}
+	);
+
+	bp.Views.CaseHeading = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-heading',
+			template: bp.template( 'activity-post-case-heading' ),
+
+			initialize: function () {
+				this.model = new Backbone.Model(
+					_.pick(
+						BP_Nouveau.activity.params,
+						[
+							'user_id',
+							'avatar_url',
+							'avatar_width',
+							'avatar_height',
+							'avatar_alt',
+							'user_domain',
+							'user_display_name'
+						]
+					)
+				);
+
+				if ( this.model.has( 'avatar_url' ) ) {
+					this.model.set( 'display_avatar', true );
+				}
+			}
+		}
+	);
+
+	bp.Views.CasePrivacy = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-status',
+			template: bp.template( 'activity-post-case-privacy' ),
+			events: {
+				'click #bp-activity-privacy-point': 'privacyTarget'
 			},
 
 			privacyTarget: function ( e ) {
@@ -3314,7 +3367,7 @@ window.bp = window.bp || {};
 				this.views.set(
 					[
 						new bp.Views.ActivityHeader( { model: this.model } ),
-						new bp.Views.FormAvatar( { model: this.model } ),
+						new bp.Views.UserStatusHuddle( { model: this.model } ),
 						new bp.Views.PrivacyStage( { model: this.model } ),
 						new bp.Views.FormContent( { activity: this.model, model: this.model } ),
 						new bp.Views.EditorToolbar( { model: this.model } ),
@@ -3941,7 +3994,7 @@ window.bp = window.bp || {};
 
 				this.views.set(
 					[
-						new bp.Views.FormAvatar( { model: this.model } ),
+						new bp.Views.UserStatusHuddle( { model: this.model } ),
 						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
 						new bp.Views.ActivityToolbar( { model: this.model } ) //Add Toolbar to show in default view
 					]

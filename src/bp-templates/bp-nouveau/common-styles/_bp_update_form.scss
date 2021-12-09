@@ -71,7 +71,7 @@
 	}
 }
 
-.activity-post-target {
+.activity-post-user-name-container {
 
 	.activity-post-user-name {
 		line-height: 1;
@@ -271,12 +271,9 @@
 		.whats-new-form-header {
 			flex-flow: column;
 
-			#whats-new-avatar {
+			#user-status-huddle {
 				width: auto;
-
-				.activity-post-construct {
-					display: flex;
-				}
+				display: flex;
 
 				.user-name {
 					display: block;
@@ -332,7 +329,7 @@
 
 	}
 
-	#whats-new-avatar {
+	#user-status-huddle {
 		margin: 0;
 		width: 70px;
 		padding: 16px;
