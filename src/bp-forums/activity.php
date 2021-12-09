@@ -417,29 +417,14 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
 
-			global $activities_template;
+			// Get activity post data.
+			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
-			/**
-			 * Check if activity object is available in global activity template.
-			 * If available then take the activity object from global template.
-			 * Else create a new instance.
-			 */
-			if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) && $activities_template->activity->id === $activity_id ) {
-
-				$activity = $activities_template->activity;
-
-			} else {
-
-				// Get activity post data.
-				$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-				if ( empty( $activities['activities'] ) ) {
-					return $buttons;
-				}
-
-				$activity = array_shift( $activities['activities'] );
-
+			if ( empty( $activities['activities'] ) ) {
+				return $buttons;
 			}
+
+			$activity = array_shift( $activities['activities'] );
 
 			// Set default meta buttons when the activity type is not topic.
 			if ( $this->topic_create === $activity->type ) {
