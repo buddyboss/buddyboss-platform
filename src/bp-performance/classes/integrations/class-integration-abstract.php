@@ -418,7 +418,6 @@ abstract class Integration_Abstract {
 	 */
 	public function endpoint_cache_render() {
 		if ( $this->api_cache_data ) {
-			$current_endpoint = $this->get_current_endpoint();
 
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
@@ -447,7 +446,7 @@ abstract class Integration_Abstract {
 				}
 			}
 
-			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'], $current_endpoint );
+			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'] );
 			echo wp_json_encode( $this->api_cache_data );
 			exit;
 		}

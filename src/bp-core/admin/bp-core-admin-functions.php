@@ -3123,7 +3123,7 @@ function bp_block_category( $categories = array(), $post = null ) {
 /**
  * Select the `block_categories` filter according to WP version.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.3
  */
 function bb_block_init_category_filter() {
 	if ( function_exists( 'get_default_block_categories' ) ) {

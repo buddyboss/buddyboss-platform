@@ -5812,7 +5812,7 @@ function bb_core_get_browser() {
 	$i = count( $matches['browser'] );
 	if ( $i != 1 ) {
 		// we will have two since we are not using 'other' argument yet
-		// see if version is before or after the name
+		// see if version is before or after the name.
 		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
 			$version = $matches['version'][0];
 		} else {
@@ -5822,7 +5822,7 @@ function bb_core_get_browser() {
 		$version = $matches['version'][0];
 	}
 
-	// check if we have a number
+	// check if we have a number.
 	if ( $version == null || $version == '' ) {
 		$version = '?';
 	}
