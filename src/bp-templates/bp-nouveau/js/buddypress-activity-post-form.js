@@ -2875,7 +2875,14 @@ window.bp = window.bp || {};
 
 			triggerMention: function ( e ) {
 				e.preventDefault();
-				
+				var editor = this.$el.closest( '.activity-update-form' ).find( '#whats-new' );
+
+				setTimeout( function () {
+					editor.focus();
+					document.execCommand('insertText', false, ' @');
+					editor.trigger( 'keyup' );
+				},0);
+
 			}
 		}
 	);

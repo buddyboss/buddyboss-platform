@@ -451,6 +451,7 @@
 			max-height: calc(100vh - 140px);
 			overflow: auto;
 			width: 100%;
+			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
 		}
 
 		#whats-new-form #whats-new-toolbar {
@@ -488,14 +489,14 @@
 			right: -15px;
 			bottom: 100%;
 			margin-bottom: 10px;
-			height: 230px;
+			height: 160px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 230px;
+				height: 160px;
 
 				.emojionearea-scroll-area {
-					height: 150px;
+					height: 80px;
 				}
 
 				&:after {

@@ -1472,6 +1472,7 @@ a.layout-grid-view {
   max-height: calc(100vh - 140px);
   overflow: auto;
   width: 100%;
+  overscroll-behavior: contain;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,
@@ -1514,18 +1515,18 @@ a.layout-grid-view {
   right: -15px;
   bottom: 100%;
   margin-bottom: 10px;
-  height: 230px;
+  height: 160px;
   z-index: 999;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
-  height: 230px;
+  height: 160px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 150px;
+  height: 80px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
