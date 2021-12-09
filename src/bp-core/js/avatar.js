@@ -345,12 +345,11 @@ window.bp = window.bp || {};
 							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
 						}
 
+						// Show image preview when avatar deleted.
+						$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).show();
+
 						// Update each avatars fields of the page
-						$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
-							function() {
-								$( this ).val( response.avatar );
-							}
-						);
+						$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( response.avatar );
 
 				}
 			).fail(
@@ -469,17 +468,16 @@ window.bp = window.bp || {};
 							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
 						}
 						
-						// Hide 'Remove' button when upload a new avatar.
+						// Hide 'Remove' button when avatar deleted.
 						if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
 							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).hide();
 						}
 
-						// Update each avatars fields of the page
-						$( '#bp-default-' + model.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
-							function() {
-								$( this ).val( '' );
-							}
-						);
+						// Hide image preview when avatar deleted.
+						$( '.custom-profile-group-avatar .' + model.get( 'object' ) + '-' + response.item_id + '-avatar' ).hide();
+
+						// Update each avatars fields of the page.
+						$( '#bp-default-' + model.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( '' );
 				}
 			).fail(
 				function( response ) {

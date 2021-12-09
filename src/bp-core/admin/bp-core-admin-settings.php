@@ -412,15 +412,6 @@ function bp_admin_setting_callback_cover_image_uploads() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_avatar_type() {
-	$wordpress_avatar_type = get_option( 'avatar_default', 'mystery' );
-	$wordpress_avatar      = get_avatar_url(
-		'',
-		array(
-			'size'          => 64,
-			'default'       => $wordpress_avatar_type,
-			'force_default' => true,
-		)
-	);
 	?>
 	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_avatar_type(), 'buddyboss' ); ?> />
@@ -442,15 +433,29 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<div class="avatar-custom-input">
-		<input id="bp-default-profile-avatar-wordpress" name="bp-default-profile-avatar-type" type="radio" value="wordpress" <?php checked( bb_get_default_profile_avatar_type(), 'wordpress' ); ?> />
-		<label for="bp-default-profile-avatar-wordpress">
-			<div class="img-block">
-				<img src="<?php echo $wordpress_avatar; ?>" />
-			</div>
-			<span><?php _e( 'WordPress', 'buddyboss' ); ?></span>
-		</label>
-	</div>
+	<?php 
+	if ( bp_get_option( 'show_avatars' ) ) {
+
+		$wordpress_avatar_type  = bp_get_option( 'avatar_default', 'mystery' );
+		$wordpress_avatar       = get_avatar_url(
+			'',
+			array(
+				'size'          => 64,
+				'default'       => $wordpress_avatar_type,
+				'force_default' => true,
+			)
+		);
+		?>
+		<div class="avatar-custom-input">
+			<input id="bp-default-profile-avatar-wordpress" name="bp-default-profile-avatar-type" type="radio" value="wordpress" <?php checked( bb_get_default_profile_avatar_type(), 'wordpress' ); ?> />
+			<label for="bp-default-profile-avatar-wordpress">
+				<div class="img-block">
+					<img src="<?php echo $wordpress_avatar; ?>" />
+				</div>
+				<span><?php _e( 'WordPress', 'buddyboss' ); ?></span>
+			</label>
+		</div>
+	<?php } ?>
 
 	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
@@ -461,7 +466,12 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+
 	<p class="description"><?php echo sprintf( __( 'Select which image should be used for members who haven\'t uploaded a profile avatar. The WordPress default avatar can be configured in the <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+
+	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display:none;">
+		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' );?></p>
+	</div>
 	<?php
 }
 
@@ -471,24 +481,24 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_custom_avatar() {
-	$delete_btn_style       = '';
+	$hide_show_style        = '';
 	$placeholder_avatar_url = buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	$custom_avatar_url      = bb_get_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
 		$custom_avatar_url = $placeholder_avatar_url;
-		$delete_btn_style  = 'display:none';
+		$hide_show_style   = 'display:none';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>" style="<?php echo $hide_show_style; ?>">
 			<input type="hidden" name="bp-default-custom-profile-avatar" id="bp-default-user-custom-avatar" value="<?php echo bb_get_default_custom_upload_profile_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
@@ -534,6 +544,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+	<p class="description"><?php _e( 'Select which image should be used for members who haven\'t uploaded a profile cover image.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -545,18 +556,18 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 function bp_admin_setting_callback_default_profile_custom_cover() {
 	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
 
-	$delete_btn_style      = '';
+	$hide_show_style       = '';
 	$placeholder_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg';
 	$profile_cover_image   = bb_get_default_custom_upload_profile_cover();
 
 	if ( empty( $profile_cover_image ) ) {
 		$profile_cover_image = $placeholder_cover_url;
-		$delete_btn_style    = 'display:none';
+		$hide_show_style     = 'display:none';
 	}
 	?>
 	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
-			<img src="<?php echo $profile_cover_image; ?>" data-default="<?php echo $placeholder_cover_url;?>" class="bb-upload-preview">
+			<img src="<?php echo $profile_cover_image; ?>" data-default="<?php echo $placeholder_cover_url;?>" class="bb-upload-preview" style="<?php echo $hide_show_style; ?>">
 			<input type="hidden" name="bp-default-custom-profile-cover" id="bp-default-custom-user-cover" value="<?php echo bb_get_default_custom_upload_profile_cover();?>">
 		</div>
 		<div class="bb-img-button-wrap">
@@ -564,7 +575,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 				<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
 				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
 			</label>
-			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo $delete_btn_style; ?>">Remove</a>
+			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo $hide_show_style; ?>">Remove</a>
 		</div>
 		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
 			<p id="bp-cover-image-feedback" class="updated"></p>
@@ -666,10 +677,6 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
-
-	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display:none;">
-		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php _e( 'Please enable Profile Gravatars below in order to use one of WordPress\' generated default avatars.' );?></p>
-	</div>
 	<?php
 }
 
@@ -679,24 +686,24 @@ function bp_admin_setting_callback_default_group_avatar_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_group_custom_avatar() {
-	$delete_btn_style       = '';
+	$hide_show_style        = '';
 	$placeholder_avatar_url = buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	$custom_avatar_url      = bb_get_default_custom_upload_group_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
 		$custom_avatar_url = $placeholder_avatar_url;
-		$delete_btn_style  = 'display:none';
+		$hide_show_style   = 'display:none';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-group-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>" style="<?php echo $hide_show_style; ?>">
 			<input type="hidden" name="bp-default-custom-group-avatar" id="bp-default-group-custom-avatar" value="<?php echo bb_get_default_custom_upload_group_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-group-avatar" style="<?php echo $delete_btn_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-group-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
@@ -753,18 +760,18 @@ function bp_admin_setting_callback_default_group_cover_type() {
 function bp_admin_setting_callback_default_group_custom_cover() {
 	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
 
-	$delete_btn_style      = '';
+	$hide_show_style       = '';
 	$placeholder_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg';
 	$group_cover_image     = bb_get_default_custom_upload_group_cover();
 
 	if ( empty( $group_cover_image ) ) {
 		$group_cover_image = $placeholder_cover_url;
-		$delete_btn_style  = 'display:none';
+		$hide_show_style   = 'display:none';
 	}
 	?>
 	<div class="bb-default-custom-upload-file custom-group-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
-			<img src="<?php echo $group_cover_image; ?>" data-default="<?php echo $placeholder_cover_url; ?>" class="bb-upload-preview">
+			<img src="<?php echo $group_cover_image; ?>" data-default="<?php echo $placeholder_cover_url; ?>" class="bb-upload-preview" style="<?php echo $hide_show_style; ?>">
 			<input type="hidden" name="bp-default-custom-group-cover" id="bp-default-custom-group-cover" value="<?php echo bb_get_default_custom_upload_group_cover(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
@@ -772,7 +779,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 				<input type="file" name="default-group-cover-file" id="default-group-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
 				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
 			</label>
-			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo $delete_btn_style; ?>">Remove</a>
+			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo $hide_show_style; ?>">Remove</a>
 		</div>
 		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
 			<p id="bp-cover-image-feedback" class="updated"></p>
@@ -1352,6 +1359,7 @@ function bp_admin_setting_callback_enable_profile_gravatar() {
 	?>
 	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
 	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile avatars', 'buddyboss' ); ?></label>
+	<p class="description"><?php _e( 'When enabled, members can use avatars from their <a href="https://en.gravatar.com/">Gravatar</a> account.', 'buddyboss' ); ?></p>
 	<?php
 }
 

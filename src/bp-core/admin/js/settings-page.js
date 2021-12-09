@@ -936,9 +936,11 @@
 			}
 
 			// Profile Avatar Settings Show/Hide.
-			var allowAvatarUpload    = $( '#bp-disable-avatar-uploads' ),
-                profileAvatarType    = $( 'input[type=radio][name=bp-default-profile-avatar-type]' ),
-			    profileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
+			var allowAvatarUpload              = $( '#bp-disable-avatar-uploads' ),
+                profileAvatarType              = $( 'input[type=radio][name=bp-default-profile-avatar-type]' ),
+			    profileAvatarTypeVal           = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
+				bbAllowProfileGavatar          = $( '#bp-enable-profile-gravatar' ),
+				profileAvatarfeedbackContainer = $( '.profile-avatar-options .bb-wordpress-profile-gavatar-warning' );
 
 			if ( allowAvatarUpload.length ) {
 
@@ -977,10 +979,32 @@
 
 				$( profileAvatarType ).change(
 					function () {
+						
+						profileAvatarfeedbackContainer.hide();
+
 						if ( 'custom' === this.value ) {
 							$( '.default-profile-avatar-custom' ).show();
 						} else {
 							$( '.default-profile-avatar-custom' ).hide();
+						}
+
+						// Show notice when Default Profile Avatar is 'WordPress' and Profile Gravatars	is disabled.
+						if ( 'wordpress' === this.value && ! bbAllowProfileGavatar.is( ':checked' ) && -1 !== $.inArray( BP_ADMIN.avatar_settings.wordpress_avatar_default, BP_ADMIN.avatar_settings.wordpress_avatar_types.slice( 2 ) ) ) {
+							profileAvatarfeedbackContainer.show();
+						}
+					}
+				);
+			}
+
+			if ( bbAllowProfileGavatar.length ) {
+				$( bbAllowProfileGavatar ).change(
+					function () {
+
+						profileAvatarfeedbackContainer.hide();
+						profileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
+
+						if ( 'wordpress' === profileAvatarTypeVal && ! $( this ).is( ':checked' ) && -1 !== $.inArray( BP_ADMIN.avatar_settings.wordpress_avatar_default, BP_ADMIN.avatar_settings.wordpress_avatar_types.slice( 2 ) ) ) {
+							profileAvatarfeedbackContainer.show();
 						}
 					}
 				);
@@ -1050,26 +1074,26 @@
 					var coverContainer      = $( '.custom-profile-group-cover' );
 					var feedbackContainer   = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
 					var imageContainer      = coverContainer.find( '.bb-upload-preview' );
-					var imageFieldContainer = coverContainer.find( '#bp-default-custom-' + BP_ADMIN.custom_profile_cover.upload.object + '-cover' );
+					var imageFieldContainer = coverContainer.find( '#bp-default-custom-' + BP_ADMIN.profile_group_cover.upload.object + '-cover' );
 					var deleteBtnContainer  = coverContainer.find( 'a.bb-img-remove-button' );
 
 					feedbackContainer.hide();
 					feedbackContainer.find( 'p' ).removeClass( 'success error' );
 
 					if ( 'undefined' === typeof fileData ) {
-						profileGroupFileFeedback( feedbackContainer, BP_ADMIN.custom_profile_cover.select_file, 'error' );
+						profileGroupFileFeedback( feedbackContainer, BP_ADMIN.profile_group_cover.select_file, 'error' );
 						return false;
 					}
 
 					var form_data = new FormData();
 					form_data.append( 'file', fileData );
 					form_data.append( 'name', fileData.name );
-					form_data.append( '_wpnonce', BP_ADMIN.custom_profile_cover.upload.nonce );
-					form_data.append( 'action', BP_ADMIN.custom_profile_cover.upload.action );
-					form_data.append( 'bp_params[object]', BP_ADMIN.custom_profile_cover.upload.object );
-					form_data.append( 'bp_params[item_id]', BP_ADMIN.custom_profile_cover.upload.item_id );
-					form_data.append( 'bp_params[has_cover_image]', BP_ADMIN.custom_profile_cover.upload.has_cover_image );
-					form_data.append( 'bp_params[nonces][remove]', BP_ADMIN.custom_profile_cover.remove.nonce );
+					form_data.append( '_wpnonce', BP_ADMIN.profile_group_cover.upload.nonce );
+					form_data.append( 'action', BP_ADMIN.profile_group_cover.upload.action );
+					form_data.append( 'bp_params[object]', BP_ADMIN.profile_group_cover.upload.object );
+					form_data.append( 'bp_params[item_id]', BP_ADMIN.profile_group_cover.upload.item_id );
+					form_data.append( 'bp_params[has_cover_image]', BP_ADMIN.profile_group_cover.upload.has_cover_image );
+					form_data.append( 'bp_params[nonces][remove]', BP_ADMIN.profile_group_cover.remove.nonce );
 
 					$.ajax(
 						{
@@ -1085,22 +1109,22 @@
 									feedbackType = 'error';
 
 								if ( 'undefined' === typeof response ) {
-									feedback = BP_ADMIN.custom_profile_cover.file_upload_error;
+									feedback = BP_ADMIN.profile_group_cover.file_upload_error;
 								} else if ( ! response.success ) {
 
 									if ( 'undefined' === typeof response.data.feedback_code ) {
 										feedback = response.data.message;
 									} else {
-										feedback = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+										feedback = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
 									}
 
 								} else {
 
-									imageContainer.prop( 'src', response.data.url );
+									imageContainer.prop( 'src', response.data.url ).show();
 									imageFieldContainer.val( response.data.url );
 									deleteBtnContainer.show();
 									feedbackType = 'success';
-									feedback     = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+									feedback     = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
 								}
 
 								// Show feedback.
@@ -1125,7 +1149,7 @@
 						var coverContainer          = $( '.custom-profile-group-cover' );
 						var feedbackContainer       = coverContainer.find( '.bb-custom-profile-group-cover-feedback' );
 						var imageContainer          = coverContainer.find( '.bb-upload-preview' );
-						var imageFieldContainer     = coverContainer.find( '#bp-default-custom-' + BP_ADMIN.custom_profile_cover.upload.object + '-cover' );
+						var imageFieldContainer     = coverContainer.find( '#bp-default-custom-' + BP_ADMIN.profile_group_cover.upload.object + '-cover' );
 						var defaultImageplaceholder = imageContainer.data( 'default' );
 
 						feedbackContainer.hide();
@@ -1136,11 +1160,11 @@
 								url: BP_ADMIN.ajax_url, // point to server-side PHP script.
 								cache: false,
 								data: {
-									json:          true,
-									action:       BP_ADMIN.custom_profile_cover.remove.action,
-									item_id:       BP_ADMIN.custom_profile_cover.upload.item_id,
-									object:        BP_ADMIN.custom_profile_cover.upload.object,
-									nonce:         BP_ADMIN.custom_profile_cover.remove.nonce
+									json: true,
+									action: BP_ADMIN.profile_group_cover.remove.action,
+									item_id: BP_ADMIN.profile_group_cover.upload.item_id,
+									object: BP_ADMIN.profile_group_cover.upload.object,
+									nonce: BP_ADMIN.profile_group_cover.remove.nonce
 								},
 								type: 'post',
 								success: function( response ){
@@ -1149,22 +1173,22 @@
 										feedbackType = 'error';
 
 									if ( 'undefined' === typeof response ) {
-										feedback = BP_ADMIN.custom_profile_cover.file_upload_error;
+										feedback = BP_ADMIN.profile_group_cover.file_upload_error;
 									} else if ( ! response.success ) {
 
 										if ( 'undefined' === typeof response.data.feedback_code ) {
 											feedback = response.data.message;
 										} else {
-											feedback = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+											feedback = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
 										}
 
 									} else {
 
-										imageContainer.prop( 'src', defaultImageplaceholder );
+										imageContainer.prop( 'src', defaultImageplaceholder ).hide();
 										imageFieldContainer.val( '' );
 										$this.hide();
 										feedbackType = 'success';
-										feedback     = BP_ADMIN.custom_profile_cover.feedback_messages[response.data.feedback_code];
+										feedback     = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
 									}
 
 									// Show feedback.
