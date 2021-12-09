@@ -19,8 +19,8 @@
 			<div class="privacy-tag-wrapper">
 				<span class="privacy-figure privacy-figure--group"></span>
 				<div class="privacy-tag">
-					<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss' ); ?></div>
-					<span class="privacy-sub-label">Proin sapien ipsum porta</span>
+					<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss' ); ?><i class="bb-icon-chevron-right"></i></div>
+					<span class="privacy-sub-label"><?php esc_html_e( 'Visible to members of a group', 'buddyboss' ); ?></span>
 				</div>
 			</div>
 			<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="group"><span></span></span>

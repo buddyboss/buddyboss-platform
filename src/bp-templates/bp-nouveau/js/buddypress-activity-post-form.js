@@ -487,6 +487,9 @@ window.bp = window.bp || {};
 						$activityPrivacySelect.parent().css( 'display', 'block' );
 					}
 
+					$( '#whats-new-form' ).find(' #bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
+					$( '#whats-new-form' ).find( '.bp-activity-privacy-status' ).text( activity_data.privacy );
+
 					Backbone.trigger('editactivity');
 				},
 				0

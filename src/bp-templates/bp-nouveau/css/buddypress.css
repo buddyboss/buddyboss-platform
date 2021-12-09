@@ -1173,6 +1173,10 @@ a.layout-grid-view {
   margin: 0 0 5px;
 }
 
+.bp-activity-privacy__label .privacy-label i {
+  margin: 0 0 0 5px;
+}
+
 .bp-activity-privacy__label .privacy-sub-label {
   display: block;
   font-size: 80%;
