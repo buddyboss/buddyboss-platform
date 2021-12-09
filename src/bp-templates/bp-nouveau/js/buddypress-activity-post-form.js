@@ -487,8 +487,9 @@ window.bp = window.bp || {};
 						$activityPrivacySelect.parent().css( 'display', 'block' );
 					}
 
-					$( '#whats-new-form' ).find(' #bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
-					$( '#whats-new-form' ).find( '.bp-activity-privacy-status' ).text( activity_data.privacy );
+					privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
+					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
+					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
 					Backbone.trigger('editactivity');
 				},
@@ -2577,16 +2578,21 @@ window.bp = window.bp || {};
 
 			backPrivacySelector: function ( e ) {
 				e.preventDefault();
-				var privacySelected = this.model.get( 'privacy' );
+				var privacyStatus = this.model.get( 'privacy' );
 				$( '#whats-new-form' ).removeClass( 'focus-in-privacy focus-in-group' );
 				this.model.set( 'privacy_modal', 'general' );
-				this.$el.find( 'input#' + privacySelected ).prop( 'checked', true );
+				this.$el.find( 'input#' + privacyStatus ).prop( 'checked', true );
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
+				}
 			},
 
 			backGroupSelector: function ( e ) {
 				e.preventDefault();
 				this.model.set( 'privacy_modal', 'profile' );
 				$( '#whats-new-form' ).removeClass( 'focus-in-group' );
+				var privacyStatus = this.model.get( 'privacy' );
+				this.$el.find( 'input#' + privacyStatus ).prop( 'checked', true );
 				$( '#activity-post-form-privacy' ).show();
 			},
 
