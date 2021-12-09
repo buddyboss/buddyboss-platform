@@ -78,7 +78,7 @@ function bb_is_email_queue() {
 /**
  * Function to used for disabled email queue.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.3
  *
  * @return false
  */
