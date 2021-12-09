@@ -764,7 +764,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function() {
-				this.listenTo(Backbone, 'privacy:statusbutton', this.updateHeader);
+				this.listenTo(Backbone, 'privacy:headerupdate', this.updateHeader);
 				this.listenTo(Backbone, 'editactivity', this.updateEditActivityHeader);
 				this.model.on( 'change:privacy_modal', this.render, this );
 				this.model.on( 'change:edit_activity', this.render, this );
@@ -2514,11 +2514,25 @@ window.bp = window.bp || {};
 				'click #bp-activity-privacy-point': 'privacyTarget'
 			},
 
+			initialize: function () {
+				this.listenTo(Backbone, 'privacy:updatestatus', this.updateStatus);
+				this.model.on( 'change:privacy', this.render, this );
+			},
+
+			render: function () {
+				this.$el.html( this.template( this.model.toJSON() ) );
+				return this;
+			},
+		
+			updateStatus: function() {
+				this.model.get( 'privacy' );
+			},
+
 			privacyTarget: function ( e ) {
 				e.preventDefault();
 				$( '#activity-post-form-privacy' ).show();
 				$( '#whats-new-form' ).addClass( 'focus-in-privacy' );
-				Backbone.trigger('privacy:statusbutton');
+				Backbone.trigger('privacy:headerupdate');
 			}
 		}
 	);
@@ -2555,6 +2569,8 @@ window.bp = window.bp || {};
 				whats_new_form.removeClass( 'focus-in-privacy focus-in-group' );
 				whats_new_form.find(' #bp-activity-privacy-point' ).removeClass().addClass( privacy_val );
 				whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
+
+				Backbone.trigger('privacy:updatestatus');
 			},
 
 			backPrivacySelector: function ( e ) {
