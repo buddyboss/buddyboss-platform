@@ -16650,7 +16650,7 @@ div.dropzone .dz-preview .dz-error-mark {
 }
 
 div.dropzone .dz-preview .dz-filename {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .dz-preview .dz-image {
@@ -16659,8 +16659,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .dz-preview .dz-image img {
   max-width: 160px;
-  height: 155px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 #media-stream .document-data-table-head {
@@ -21326,11 +21325,12 @@ div.dropzone.dz-started .dz-default.dz-message {
   left: 50%;
   width: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
-  border-radius: 30px;
+  border-radius: 10px;
   padding: 0 20px 0 15px;
   font-size: 13px;
+  letter-spacing: 0.3px;
   line-height: 2.5;
   min-width: 140px;
 }
@@ -21485,7 +21485,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   top: 5px;
   left: inherit;
   right: 5px;
-  background-color: #f8f8f8;
+  background-color: #e7e7ea;
   height: 16px;
   width: 16px;
   line-height: inherit;
@@ -21515,7 +21515,8 @@ div.dropzone.dz-started .dz-default.dz-message {
 #boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
 #video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
-  background-color: #f8f8f8 !important;
+  background-color: #fafafa !important;
+  border: 1px solid #e7e9eb;
   z-index: 1;
   border-radius: 4px;
 }
@@ -22435,7 +22436,7 @@ body > .open-popup.video-error-popup {
 
 .dropzone.dz-started .dz-default.dz-message .dz-button {
   background-size: 35px !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   padding: 40px 5px 0 !important;
 }
 

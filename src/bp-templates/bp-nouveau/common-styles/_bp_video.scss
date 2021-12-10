@@ -1469,11 +1469,12 @@ div.dropzone.dz-started {
 		left: 50%;
 		width: 50%;
 		transform: translateX(-50%);
-		background-color: #333;
+		background-color: rgba(0, 0, 0, 0.4);
 		color: #fff;
-		border-radius: 30px;
+		border-radius: 10px;
 		padding: 0 20px 0 15px;
 		font-size: 13px;
+		letter-spacing: 0.3px;
 		line-height: 2.5;
 		min-width: 140px;
 	}
@@ -1546,7 +1547,7 @@ div.dropzone.dz-started {
 			top: 5px;
 			left: inherit;
 			right: 5px;
-			background-color: #f8f8f8;
+			background-color: #e7e7ea;
 			height: 16px;
 			width: 16px;
 			line-height: inherit;
@@ -1564,7 +1565,8 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
-		background-color: #f8f8f8 !important;
+		background-color: #fafafa !important;
+		border: 1px solid #e7e9eb;
 		z-index: 1;
 		border-radius: 4px;
 

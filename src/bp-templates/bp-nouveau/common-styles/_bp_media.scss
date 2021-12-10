@@ -2397,7 +2397,7 @@ div.dropzone .dz-preview {
 	}
 
 	.dz-filename {
-		font-size: 14px;
+		font-size: 15px;
 	}
 
 }
@@ -2407,8 +2407,7 @@ div.dropzone .dz-preview {
 
 	img {
 		max-width: 160px;
-		height: 155px;
-		object-fit: contain;
+		object-fit: cover;
 	}
 }
 
