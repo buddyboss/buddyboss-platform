@@ -487,7 +487,7 @@ window.bp = window.bp || {};
 						$activityPrivacySelect.parent().css( 'display', 'block' );
 					}
 
-					privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
+					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
 					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
 

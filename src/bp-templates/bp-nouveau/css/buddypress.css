@@ -21312,38 +21312,6 @@ div.dropzone.dz-started .dz-default.dz-message {
   padding: 0 5px;
 }
 
-div.dropzone.dz-started .dz-default.dz-message .dz-button {
-  font-size: 16px !important;
-  background-size: 48px !important;
-  padding: 50px 0 0 0 !important;
-}
-
-#activity-post-video-uploader .dz-default.dz-message,
-#bp-video-dropzone-content .dz-default.dz-message,
-#forums-post-video-uploader .dz-default.dz-message,
-#messages-post-video-uploader .dz-default.dz-message,
-#bp-group-messages-post-video-uploader .dz-default.dz-message,
-#boss-video-create-album-popup .dz-default.dz-message,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-default.dz-message,
-#video-uploader.dropzone .dz-default.dz-message {
-  flex-basis: 100%;
-  max-width: inherit;
-  min-height: 15vh;
-}
-
-#activity-post-video-uploader .dz-default.dz-message .dz-button,
-#bp-video-dropzone-content .dz-default.dz-message .dz-button,
-#forums-post-video-uploader .dz-default.dz-message .dz-button,
-#messages-post-video-uploader .dz-default.dz-message .dz-button,
-#bp-group-messages-post-video-uploader .dz-default.dz-message .dz-button,
-#boss-video-create-album-popup .dz-default.dz-message .dz-button,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-default.dz-message .dz-button,
-#video-uploader.dropzone .dz-default.dz-message .dz-button {
-  font-size: 16px !important;
-  background-size: 48px !important;
-  padding: 50px 0 0 0 !important;
-}
-
 #activity-post-video-uploader .dz-progress-count,
 #bp-video-dropzone-content .dz-progress-count,
 #forums-post-video-uploader .dz-progress-count,
@@ -22456,7 +22424,6 @@ body > .open-popup.video-error-popup {
 
 .dropzone.dz-started .dz-default.dz-message {
   display: flex;
-  order: 2;
   min-height: 1px;
   max-width: 120px;
   height: 120px;

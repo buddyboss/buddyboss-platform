@@ -1448,13 +1448,6 @@ div.dropzone.dz-started {
 		min-height: 160px !important;
 		margin: 0 4px 10px;
 		padding: 0 5px;
-
-		.dz-button {
-			font-size: 16px !important;
-			background-size: 48px !important;
-			padding: 50px 0 0 0 !important;
-		}
-
 	}
 
 }
@@ -1468,19 +1461,6 @@ div.dropzone.dz-started {
 #boss-video-create-album-popup,
 .ac-reply-content .ac-reply-attachments .dropzone.video,
 #video-uploader.dropzone {
-
-	.dz-default.dz-message {
-		flex-basis: 100%;
-		max-width: inherit;
-		min-height: 15vh;
-
-		.dz-button {
-			font-size: 16px !important;
-			background-size: 48px !important;
-			padding: 50px 0 0 0 !important;
-		}
-
-	}
 
 	.dz-progress-count {
 		position: absolute;
