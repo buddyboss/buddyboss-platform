@@ -2037,6 +2037,7 @@ tr.notes-hidden-header td {
 
 tr.notes-hidden-header td .description {
 	margin-left: -210px;
+	color: #3c434a;
 }
 
 tr.child-no-padding-first td {
@@ -2134,6 +2135,10 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 	.bb-nickname-hide-first-name {
 		margin-top: 0;
+	}
+
+	tr.notes-hidden-header td .description {
+		margin-left: 0;
 	}
 }
 
