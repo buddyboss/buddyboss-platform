@@ -490,6 +490,7 @@ window.bp = window.bp || {};
 						self.postForm.model.set( 'object', 'group' );
 						self.postForm.model.set( 'group_name', activity_data.group_name );
 
+						self.postForm.$el.find( 'input#group' ).prop( 'checked', true );
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
 					}
