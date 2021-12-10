@@ -971,10 +971,14 @@
 			// Upload Custom Avatar Settings Show/Hide.
 			if ( profileAvatarType.length ) {
 
-				if ( 'custom' === profileAvatarTypeVal ) {
+				if ( allowAvatarUpload.prop( 'checked' ) && 'custom' === profileAvatarTypeVal ) {
 					$( '.default-profile-avatar-custom' ).show();
 				} else {
 					$( '.default-profile-avatar-custom' ).hide();
+				}
+
+				if ( allowAvatarUpload.prop( 'checked' ) && 'wordpress' === profileAvatarTypeVal && ! bbAllowProfileGavatar.is( ':checked' ) && -1 !== $.inArray( BP_ADMIN.avatar_settings.wordpress_avatar_default, BP_ADMIN.avatar_settings.wordpress_avatar_types.slice( 2 ) ) ) {
+					profileAvatarfeedbackContainer.show();
 				}
 
 				$( profileAvatarType ).change(
@@ -1043,7 +1047,7 @@
 			// Upload Custom Cover Settings Show/Hide.
 			if ( profileCoverType.length ) {
 
-				if ( 'custom' === profileCoverTypeVal ) {
+				if ( allowCoverUpload.prop( 'checked' ) && 'custom' === profileCoverTypeVal ) {
 					$( '.default-profile-cover-custom' ).show();
 				} else {
 					$( '.default-profile-cover-custom' ).hide();
@@ -1234,7 +1238,7 @@
 			// Upload Custom Group Settings Show/Hide.
 			if ( groupAvatarType.length ) {
 
-				if ( 'custom' === groupAvatarTypeVal ) {
+				if ( allowGroupAvatarUpload.prop( 'checked' ) && 'custom' === groupAvatarTypeVal ) {
 					$( '.default-group-avatar-custom' ).show();
 				} else {
 					$( '.default-group-avatar-custom' ).hide();
@@ -1252,9 +1256,9 @@
 			}
 
 			// Group Cover Settings Show/Hide.
-			var allowGroupCoverUpload    = $( '#bp-disable-group-cover-image-uploads' ),
-			    groupCoverType    = $( 'input[type=radio][name=bp-default-group-cover-type]' ),
-			    groupCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
+			var allowGroupCoverUpload = $( '#bp-disable-group-cover-image-uploads' ),
+			    groupCoverType        = $( 'input[type=radio][name=bp-default-group-cover-type]' ),
+			    groupCoverTypeVal     = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
 
 			if ( allowGroupCoverUpload.length ) {
 
@@ -1284,7 +1288,7 @@
 			// Upload Custom Group Cover Settings Show/Hide.
 			if ( groupCoverType.length ) {
 
-				if ( 'custom' === groupCoverTypeVal ) {
+				if ( allowGroupCoverUpload.prop( 'checked' ) && 'custom' === groupCoverTypeVal ) {
 					$( '.default-group-cover-custom' ).show();
 				} else {
 					$( '.default-group-cover-custom' ).hide();

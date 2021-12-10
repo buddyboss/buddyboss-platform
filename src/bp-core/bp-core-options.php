@@ -1982,6 +1982,24 @@ function bb_get_legacy_profile_avatar() {
 }
 
 /**
+ * Get default blank profile avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return default blank profile avatar URL.
+ */
+function bb_get_blank_profile_avatar() {
+	/**
+	 * Filters default blank avatar image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default blank profile avatar URL.
+	 */
+	return apply_filters( 'bb_get_blank_profile_avatar', buddypress()->plugin_url . 'bp-core/images/profile-avatar-blank.png' );
+}
+
+/**
  * Which type of profile avatar selected?
  *
  * @since BuddyBoss [BBVERSION]
@@ -2272,4 +2290,160 @@ function bb_get_default_custom_upload_group_cover() {
 	 * @param string $value Default custom upload group cover URL.
 	 */
 	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
+}
+
+/**
+ * Get default avatar image URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component The component to get the settings for ("user" for user or "group").
+ * @return false|array The avatar photo settings in array, false on failure.
+ */
+function bb_attachments_get_default_profile_group_avatar_image( $component ) {
+
+	$avatar_image_url        = false;
+	$disable_avatar_uploads  = ( 'user' === $component ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
+
+	if ( 'user' === $component ) {
+
+		$show_avatar         = bp_get_option( 'show_avatars' );
+		$profile_avatar_type = bb_get_default_profile_avatar_type();
+
+		if ( ! $show_avatar && $disable_avatar_uploads ) {
+			$avatar_image_url = bb_get_blank_profile_avatar();
+		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_buddyboss_profile_avatar();
+		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'legacy' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_legacy_profile_avatar();
+		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'custom' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_default_custom_upload_profile_avatar();
+
+			if ( empty( $avatar_image_url ) ) {
+				$avatar_image_url = bb_get_buddyboss_profile_avatar();
+			}
+		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'WordPress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = bb_get_blank_profile_avatar();
+		}
+	} elseif ( ! $disable_avatar_uploads && 'group' === $component ) {
+
+		$group_avatar_type = bb_get_default_group_avatar_type();
+
+		if ( 'buddyboss' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_buddyboss_group_avatar();
+		} elseif ( 'legacy' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_legacy_group_avatar();
+		} elseif ( 'custom' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_default_custom_upload_group_avatar();
+
+			if ( empty( $avatar_image_url ) ) {
+				$avatar_image_url = bb_get_buddyboss_group_avatar();
+			}
+		}
+	}
+
+	/**
+	 * Filters default avatar image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
+	 * @param string $component The component to get the settings for ("user" for user or "group").
+	 */
+	return apply_filters( 'bb_attachments_get_default_profile_group_avatar_image', $avatar_image_url, $component );
+}
+
+/**
+ * Get default cover image URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component The component to get the settings for ("members" or "xprofile" for user or "groups").
+ * @return false|array The cover photo settings in array, false on failure.
+ */
+function bb_attachments_get_default_profile_group_cover_image( $component ) {
+
+	if ( 'xprofile' === $component ) {
+		$component = 'members';
+	}
+
+	$cover_image_url        = false;
+	$disable_avatar_uploads = ( 'members' === $component ) ? bp_disable_cover_image_uploads() : bp_disable_group_cover_image_uploads();
+
+	if ( 'members' === $component ) {
+		$profile_cover_type = bb_get_default_profile_cover_type();
+
+		if ( ! $disable_avatar_uploads && 'buddyboss' === $profile_cover_type ) {
+			$cover_image_url = bb_get_buddyboss_profile_cover();
+		} elseif ( ! $disable_avatar_uploads && 'custom' === $profile_cover_type ) {
+			$cover_image_url = bb_get_default_custom_upload_profile_cover();
+
+			if ( empty( $cover_image_url ) ) {
+				$cover_image_url = bb_get_buddyboss_profile_cover();
+			}
+		}
+	} elseif ( 'groups' === $component ) {
+		$group_cover_type = bb_get_default_group_cover_type();
+
+		if ( ! $disable_avatar_uploads && 'buddyboss' === $group_cover_type ) {
+			$cover_image_url = bb_get_custom_buddyboss_group_cover();
+		} elseif ( ! $disable_avatar_uploads && 'custom' === $group_cover_type ) {
+			$cover_image_url = bb_get_default_custom_upload_group_cover();
+
+			if ( empty( $cover_image_url ) ) {
+				$cover_image_url = bb_get_custom_buddyboss_group_cover();
+			}
+		}
+	}
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+	 * @param string $component The component to get the settings for ("members" for user or "groups").
+	 */
+	return apply_filters( 'bb_attachments_get_default_profile_group_cover_image', $cover_image_url, $component );
+}
+
+/**
+ * Get default cover image URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $data whether to get the url or the path.
+ * @param array  $args {
+ *     @type string $object_dir  The object dir (eg: members/groups). Defaults to members.
+ *     @type int    $item_id     The object id (eg: a user or a group id). Defaults to current user.
+ *     @type string $type        The type of the attachment which is also the subdir where files are saved.
+ *                               Defaults to 'cover-image'
+ *     @type string $file        The name of the file.
+ * }
+ * @return string|bool The url or the path to the attachment, false otherwise.
+ */
+function bb_get_default_profile_group_cover( $data, $args ) {
+
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) ) {
+		return false;
+	}
+
+	$cover_image_url = bb_attachments_get_default_profile_group_cover_image( $args['object_dir'] );
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+	 * @param string $data whether to get the url or the path.
+	 * @param array $r {
+	 *     @type string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 *     @type int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 *     @type string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                              Defaults to 'cover-image'
+	 *     @type string $file       The name of the file.
+	 * }
+	 */
+	return apply_filters( 'bb_get_default_profile_group_cover', $cover_image_url, $data, $args );
 }

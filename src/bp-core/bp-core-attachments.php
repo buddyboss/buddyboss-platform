@@ -544,12 +544,12 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	$type_dir = apply_filters( 'bp_attachments_get_attachment_dir', $type_dir, $r['object_dir'], $r['item_id'], $r['type'] );
 
 	if ( 1 === validate_file( $type_dir ) || ! is_dir( $type_dir ) ) {
-		return $attachment_data;
+		return bb_get_default_profile_group_cover( $data, $r );
 	}
 
 	if ( ! empty( $r['file'] ) ) {
 		if ( ! file_exists( trailingslashit( $type_dir ) . $r['file'] ) ) {
-			return $attachment_data;
+			return bb_get_default_profile_group_cover( $data, $r );
 		}
 
 		if ( 'url' === $data ) {
@@ -573,7 +573,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 		}
 
 		if ( empty( $file ) ) {
-			return $attachment_data;
+			return bb_get_default_profile_group_cover( $data, $r );
 		}
 
 		if ( 'url' === $data ) {
@@ -1128,6 +1128,11 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 		return false;
 	}
 
+	// Set default cover if 'default_cover' is not found.
+	if ( empty( $settings['default_cover'] ) ) {
+		$settings['default_cover'] = bb_attachments_get_default_profile_group_cover_image( $component );
+	}
+
 	// Finally return the settings.
 	return $settings;
 }
@@ -1219,6 +1224,10 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 		)
 	);
 
+	if ( false !== strpos( $cover_src, '/custom/' ) ) {
+		$cover_src = '';
+	}
+
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $user_id );
 }
 
@@ -1242,6 +1251,10 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 			'item_id'    => $group_id,
 		)
 	);
+
+	if ( false !== strpos( $cover_src, '/custom/' ) ) {
+		$cover_src = '';
+	}
 
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $group_id );
 }

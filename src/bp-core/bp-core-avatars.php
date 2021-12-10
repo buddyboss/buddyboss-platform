@@ -588,6 +588,32 @@ function bp_core_fetch_avatar( $args = '' ) {
 		}
 	}
 
+	// Find default avatar option.
+	$avatar_url = bb_attachments_get_default_profile_group_avatar_image( $params['object'] );
+	
+	if ( ! empty( $avatar_url ) ) {
+
+		/**
+		 * Filters a default avatar URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $avatar_url URL for a default avatar.
+		 * @param array  $params     Array of parameters for the request.
+		 */
+		$avatar_url = apply_filters( 'bb_default_fetch_avatar_url_check', $avatar_url, $params );
+
+		if ( true === $params['html'] ) {
+
+			/** This filter is documented in bp-core/bp-core-avatars.php */
+			return apply_filters( 'bp_core_fetch_avatar', '<img src="' . $avatar_url . '"' . $html_css_id . $html_class . $html_width . $html_height . $html_alt . $html_title . $extra_attr . ' />', $params, $params['item_id'], $params['avatar_dir'], $html_css_id, $html_width, $html_height, $avatar_folder_url, $avatar_folder_dir );
+		} else {
+
+			/** This filter is documented in bp-core/bp-core-avatars.php */
+			return apply_filters( 'bp_core_fetch_avatar_url', $avatar_url, $params );
+		}
+	}
+
 	// By default, Gravatar is not pinged for groups.
 	if ( null === $params['no_grav'] ) {
 		$params['no_grav'] = 'group' === $params['object'];
@@ -682,7 +708,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		}
 
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
-			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', bb_get_blank_profile_avatar() );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
 			$key      = base64_encode( 'https://www.gravatar.com/avatar/' . md5( strtolower( $params['email'] ) ) . '?d=404' );
 			$response = get_transient( $key );
@@ -692,7 +718,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 				set_transient( $key, $response, DAY_IN_SECONDS );
 			}
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
-				$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+				$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', get_avatar_url( $params['email'], array( 'force_default' => true ) ) );
 			} else {
 
 				// Set up the Gravatar URL.
@@ -732,7 +758,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		 * @param string $value  Default avatar for non-gravatar requests.
 		 * @param array  $params Array of parameters for the avatar request.
 		 */
-		$gravatar = apply_filters( 'bp_core_default_avatar_' . $params['object'], bp_core_avatar_default( 'local', $params ), $params );
+		$gravatar = apply_filters( 'bp_core_default_avatar_' . $params['object'], get_avatar_url( $params['email'], array( 'force_default' => true ) ), $params );
 	}
 
 	/**
@@ -2236,7 +2262,7 @@ function bb_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	global $pagenow;
 	if ( 'options-discussion.php' === $pagenow ) {
 		if ( true === $args['force_default'] && 'mm' === $args['default'] ) {
-			return apply_filters( 'bp_set_wp_backend_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+			return $retval;
 		} elseif ( true === $args['force_default'] ) {
 			return $retval;
 		}
@@ -2280,4 +2306,4 @@ function bb_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 
 	return $retval;
 }
-add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
+//add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );

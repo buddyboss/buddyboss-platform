@@ -1906,12 +1906,9 @@ function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
  */
 function bb_attachments_profile_group_cover_image_ajax_delete_args( $args ) {
 
-	// Validate ajax request for cover deletion.
-	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && 'bp_cover_image_delete' !== sanitize_text_field( $_POST['action'] ) ) ) {
-		return $args;
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' !== sanitize_text_field( $_POST['action'] ) && 0 === $args['item_id'] ) {
+		$args['item_id'] = 'custom';
 	}
-
-	$args['item_id'] = 'custom';
 
 	return $args;
 }
@@ -1938,7 +1935,18 @@ add_action( 'updated_option', 'bb_set_profile_avatar_type_on_update_show_avatars
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $args
+ * @param array $args {
+ *     Array of function parameters.
+ *
+ *     @type string|bool|int    $item_id    ID of the item whose avatar you're deleting.
+ *                                          Defaults to the current item of type $object.
+ *     @type string             $object     Object type of the item whose avatar you're
+ *                                          deleting. 'user', 'group', 'blog', or custom.
+ *                                          Default: 'user'.
+ *     @type bool|string        $avatar_dir Subdirectory where avatar is located.
+ *                                          Default: false, which falls back on the default location
+ *                                          corresponding to the $object.
+ * }
  */
 function bb_delete_default_profile_group_avatar( $args ) {
 	$item_id = ! empty( $args['item_id'] ) ? $args['item_id'] : '';
@@ -1946,11 +1954,13 @@ function bb_delete_default_profile_group_avatar( $args ) {
 
 		// check for user avatars getting deleted
 		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
+			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 			bp_update_option( 'bp-default-custom-profile-avatar', '' );
 		}
 
 		// check for group avatars getting deleted
 		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
+			bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 			bp_update_option( 'bp-default-custom-group-avatar', '' );
 		}
 	}
@@ -1959,6 +1969,8 @@ add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_a
 
 /**
  * Delete default group cover photo attachment
+ * 
+ * @param int $item_id Inform about the item id the cover photo was deleted for.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -1967,11 +1979,25 @@ function bb_delete_profile_group_cover_images_url( $item_id ) {
 	if ( isset( $_POST['action'], $_POST['item_id'], $_POST['object'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) && 'custom' === sanitize_text_field( $_POST['item_id'] ) && 0 === $item_id ) {
 
 		if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
+			bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 			bp_update_option( 'bp-default-custom-profile-cover', '' );
 		} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
+			bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
 			bp_update_option( 'bp-default-custom-group-cover', '' );
 		}
 	}
 }
 add_action( 'xprofile_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
 add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
+
+/**
+ * Override BuddyBoss mystery person to WordPress mystery person image.
+ * 
+ * @param string $avatar_url URL for not found from gravatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_override_mystery_image_buddyboss_to_wordpress( $avatar_url ) {
+	return buddypress()->plugin_url . 'bp-core/images/cover-image.png';
+}
+//add_action( 'bp_gravatar_not_found_avatar', 'bb_override_mystery_image_buddyboss_to_wordpress', 10, 1 );
