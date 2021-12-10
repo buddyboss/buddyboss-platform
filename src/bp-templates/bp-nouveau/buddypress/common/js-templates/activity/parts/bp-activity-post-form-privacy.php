@@ -7,7 +7,19 @@
 					<span class="privacy-figure privacy-figure--<?php echo $key; ?>"></span>
 					<div class="privacy-tag">
 						<div class="privacy-label"><?php echo $privacy; ?></div>
-						<span class="privacy-sub-label">Proin sapien ipsum porta</span>
+						<span class="privacy-sub-label">
+							<?php
+							if ( $key === 'public' ) {
+								esc_html_e( 'Visible to anyone, on or off this site', 'buddyboss' );
+							} else if ( $key === 'loggedin' ) {
+								esc_html_e( 'Visible to all members on this site', 'buddyboss' );
+							} else if ( $key === 'friends' ) {
+								esc_html_e( 'Visible only to your connections', 'buddyboss' );
+							} else if ( $key === 'onlyme' ) {
+								esc_html_e( 'Visible only to you', 'buddyboss' );
+							}
+							?>	
+						</span>
 					</div>
 				</div>
 				<span class="privacy-radio"><input type="radio" id="<?php echo $key; ?>" class="bp-activity-privacy__input" name="privacy" value="<?php echo $key; ?>" data-title="<?php echo $privacy; ?>" <?php if( $key == 'public' ) echo 'checked'; ?>><span></span></span>
