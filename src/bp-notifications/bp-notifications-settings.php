@@ -128,8 +128,6 @@ function bb_notification_get_settings_fields() {
 		),
 	);
 
-	$all_notifications = bb_register_notification_preferences();
-
 	$fields['bp_notification_settings_automatic'] = array();
 
 	$fields['bp_notification_settings_automatic']['infos'] = array(
@@ -139,28 +137,65 @@ function bb_notification_get_settings_fields() {
 		'args'              => array( 'class' => 'notes-hidden-header' ),
 	);
 
-	if ( ! empty( $all_notifications ) ) {
-
-		foreach ( $all_notifications as $key => $data ) {
-			$c = 1;
-			if ( ! empty( $data['fields'] ) ) {
-				foreach ( $data['fields'] as $field ) {
-					$field['class'] = ( 1 === $c ? 'child-no-padding-first' : 'child-no-padding' );
-
-					$fields['bp_notification_settings_automatic'][ $field['key'] ] = array(
-						'title'             => ( 1 === $c ? $data['label'] . ' ' . esc_html_x( 'Notifications', 'Notification label for an admin', 'buddyboss' ) : ' ' ),
-						'callback'          => 'bb_activate_notification',
-						'sanitize_callback' => 'string',
-						'args'              => $field,
-					);
-
-					$c ++;
-				}
-			}
-		}
-	}
+	$fields['bp_notification_settings_automatic']['fields'] = array(
+		'title'             => __( 'Notification Fields', 'buddyboss' ),
+		'callback'          => 'bb_admin_setting_callback_on_automatic_notification_fields',
+		'sanitize_callback' => 'string',
+		'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
+	);
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
+}
+
+/**
+ * Added instructions for the notification type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_on_automatic_notification_information() {
+	echo '<p class="description notification-information">' .
+		esc_html__( 'Select which types of notifications are sent to members when specific actions happen on your site. When a notification is disabled, it will not be generated for any member. Members can configure which notifications they receive via email, web or app in their Notification Preferences.', 'buddyboss' ) .
+	'</p>';
+}
+
+/**
+ * Callback fields for the notification fields options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_on_automatic_notification_fields() {
+	$all_notifications = bb_register_notification_preferences();
+	if ( ! empty( $all_notifications ) ) {
+		echo '<table class="form-table"><tbody>';
+		foreach ( $all_notifications as $field_group ) {
+			?>
+			<tr class="child-no-padding">
+				<th><?php echo isset( $field_group['admin_label'] ) ? $field_group['admin_label'] : ''; ?></th>
+				<td class="no-padding">
+					<?php
+					if ( ! empty( $field_group['fields'] ) ) {
+						echo '<div class="field-set">';
+						foreach ( $field_group['fields'] as $field ) {
+							?>
+									<div class="field-block">
+										<div class="field-render">
+											<?php bb_activate_notification( $field ); ?>
+										</div>
+										<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
+										<div class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></div>
+									</div>
+									<?php
+						}
+								echo '</div>';
+					}
+					?>
+				</td>
+			</tr>
+
+			<?php
+		}
+		echo '</tbody></table>';
+	}
 }
 
 /**
@@ -181,15 +216,3 @@ function bb_activate_notification( $field ) {
 
 	<?php
 }
-
-/**
- * Added instructions for the notification type.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_admin_setting_callback_on_automatic_notification_information() {
-	echo '<p class="description">' .
-		esc_html__( 'Select which types of notifications are sent to members when specific actions happen on your site. When a notification is disabled, it will not be generated for any member. Members can configure which notifications they receive via email, web or app in their Notification Preferences.', 'buddyboss' ) .
-	'</p>';
-}
-

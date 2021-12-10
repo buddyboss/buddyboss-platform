@@ -1929,20 +1929,6 @@ tr.child-no-padding-first th {
   padding: 20px 10px 0 0;
 }
 
-tr.notes-hidden-header th {
-  opacity: 0;
-  visibility: hidden;
-}
-
-tr.notes-hidden-header td {
-  padding-left: 0;
-}
-
-tr.notes-hidden-header td .description {
-  margin-left: -210px;
-  color: #3c434a;
-}
-
 tr.child-no-padding-first td {
   padding: 15px 10px 5px;
 }
@@ -2031,9 +2017,6 @@ body .section-repair_community .settings fieldset .checkbox label code {
   }
   .bb-nickname-hide-first-name {
     margin-top: 0;
-  }
-  tr.notes-hidden-header td .description {
-    margin-left: 0;
   }
 }
 
@@ -2366,4 +2349,62 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e855";
+}
+
+#bp_notification_settings_automatic table.form-table,
+#bp_notification_settings_automatic table.form-table tbody,
+#bp_notification_settings_automatic table.form-table tr,
+#bp_notification_settings_automatic table.form-table th,
+#bp_notification_settings_automatic table.form-table td {
+  display: block;
+}
+
+#bp_notification_settings_automatic table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_notification_settings_automatic table.form-table .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bp_notification_settings_automatic table.form-table .notes-hidden-header .notification-information {
+  color: #444;
+}
+
+#bp_notification_settings_automatic table.form-table .no-padding {
+  padding: 0;
+}
+
+#bp_notification_settings_automatic .field-set {
+  margin-top: 10px;
+  background-color: #F6F6F8;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+}
+
+#bp_notification_settings_automatic .field-set .field-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px;
+}
+
+#bp_notification_settings_automatic .field-set .field-block + .field-block {
+  border-top: 1px solid #ccd0d4;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .no-email-info {
+  margin-right: 15px;
+  margin-left: auto;
+  background-color: #FFDCDC;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: #8C0202;
+  font-size: 11px;
+}
+
+#bp_notification_settings_automatic .field-set .field-block input[type="checkbox"] {
+  margin-top: 0;
 }

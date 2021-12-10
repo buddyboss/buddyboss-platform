@@ -2026,20 +2026,6 @@ tr.child-no-padding-first th {
 	padding: 20px 10px 0 0;
 }
 
-tr.notes-hidden-header th {
-	opacity: 0;
-	visibility: hidden;
-}
-
-tr.notes-hidden-header td {
-	padding-left: 0;
-}
-
-tr.notes-hidden-header td .description {
-	margin-left: -210px;
-	color: #3c434a;
-}
-
 tr.child-no-padding-first td {
 	padding: 15px 10px 5px;
 }
@@ -2135,10 +2121,6 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 	.bb-nickname-hide-first-name {
 		margin-top: 0;
-	}
-
-	tr.notes-hidden-header td .description {
-		margin-left: 0;
 	}
 }
 
@@ -2509,4 +2491,68 @@ h2.has_tutorial_btn {
 		content: "\e855";
 	}
 
+}
+
+#bp_notification_settings_automatic {
+	table.form-table,
+	table.form-table tbody,
+	table.form-table tr,
+	table.form-table th,
+	table.form-table td {
+		display: block;
+	}
+
+	table.form-table {
+		.notes-hidden-header {
+			> th {
+				display: none;
+
+				+ td {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+
+			.notification-information {
+				color: #444;
+			}
+		}
+
+		.no-padding {
+			padding: 0;
+		}
+	}
+
+	.field-set {
+		margin-top: 10px;
+		background-color: #F6F6F8;
+		border: 1px solid #ccd0d4;
+		border-radius: 3px;
+
+		.field-block {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: flex-start;
+			padding: 15px;
+
+			+ .field-block {
+				border-top: 1px solid #ccd0d4;
+			}
+
+			.no-email-info {
+				margin-right: 15px;
+				margin-left: auto;
+				background-color: #FFDCDC;
+				border-radius: 5px;
+				padding: 5px 10px;
+				color: #8C0202;
+				font-size: 11px;
+			}
+
+			input[type="checkbox"] {
+				margin-top: 0;
+			}
+		}
+	}
 }
