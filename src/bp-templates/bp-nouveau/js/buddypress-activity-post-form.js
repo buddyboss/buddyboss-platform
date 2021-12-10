@@ -146,13 +146,6 @@ window.bp = window.bp || {};
 
 					var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
-					// set object of activity and item id when group activity.
-					if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
-						self.postForm.model.set( 'item_id', activity_data.item_id );
-						self.postForm.model.set( 'object', 'group' );
-						self.postForm.model.set( 'group_name', activity_data.group_name );
-					}
-
 					var bpActivityEvent = new Event( 'bp_activity_edit' );
 
 					if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -490,6 +483,16 @@ window.bp = window.bp || {};
 					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
 					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
+
+					// set object of activity and item id when group activity.
+					if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+						self.postForm.model.set( 'item_id', activity_data.item_id );
+						self.postForm.model.set( 'object', 'group' );
+						self.postForm.model.set( 'group_name', activity_data.group_name );
+
+						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
+						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
+					}
 
 					Backbone.trigger('editactivity');
 				},
