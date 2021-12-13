@@ -177,16 +177,50 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 						echo '<div class="field-set">';
 						foreach ( $field_group['fields'] as $field ) {
 							?>
-									<div class="field-block">
-										<div class="field-render">
-											<?php bb_activate_notification( $field ); ?>
-										</div>
-										<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
-										<div class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></div>
+								<div class="field-block">
+									<div class="field-render">
+										<?php bb_activate_notification( $field ); ?>
 									</div>
-									<?php
+									<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
+									<a href="javascript:;" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
+									<div class="manage-defaults">
+										<?php
+										$options = apply_filters(
+											'bb_notifications_types',
+											array(
+												'email' => array(
+													'is_checked' => ( ! $email_checked ? true : $email_checked ),
+													'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
+												),
+												'web'   => array(
+													'is_checked' => ( ! $web_checked ? true : $email_checked ),
+													'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
+												),
+												'app'   => array(
+													'is_checked' => ( ! $app_checked ? true : $app_checked ),
+													'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
+												),
+											)
+										);
+
+										foreach ( $options as $key => $v ) {
+											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', false );
+											$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', true );
+											if ( $is_render ) {
+												?>
+												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
+													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $field['key'] . '[' . $key . ']' ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+													<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+												</div>
+												<?php
+											}
+										}
+										?>
+									</div>
+								</div>
+							<?php
 						}
-								echo '</div>';
+						echo '</div>';
 					}
 					?>
 				</td>

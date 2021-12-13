@@ -2405,6 +2405,22 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-size: 11px;
 }
 
+#bp_notification_settings_automatic .field-set .field-block .notification-defaults {
+  padding: 3px 0;
+  cursor: pointer;
+}
+
 #bp_notification_settings_automatic .field-set .field-block input[type="checkbox"] {
   margin-top: 0;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap {
+  margin-left: 15px;
 }

@@ -2550,8 +2550,24 @@ h2.has_tutorial_btn {
 				font-size: 11px;
 			}
 
+			.notification-defaults {
+				padding: 3px 0;
+				cursor: pointer;
+			}
+
 			input[type="checkbox"] {
 				margin-top: 0;
+			}
+
+			.manage-defaults {
+				margin-top: 15px;
+				display: flex;
+				justify-content: flex-end;
+				width: 100%;
+
+				.field-wrap {
+					margin-left: 15px;
+				}
 			}
 		}
 	}
