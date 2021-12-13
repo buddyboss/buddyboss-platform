@@ -416,19 +416,27 @@ class BP_Groups_Group {
 
 		$bp = buddypress();
 
-		// Finally remove the group entry from the DB.
+		// Finally, remove the group entry from the DB.
 		if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) ) {
 			return false;
 		}
 
-		// delete group avatars
+		// Delete group avatars.
 		$upload_path = bp_core_avatar_upload_path();
-		system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $upload_path . '/group-avatars/' . $this->id );
+		}
 
-		// delete group avatars
+		// Delete group avatars.
 		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
-		system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
+		}
 
 		return true;
 	}
@@ -801,18 +809,20 @@ class BP_Groups_Group {
 	public static function get_invites( $user_id, $group_id, $sent = null ) {
 		if ( 0 === $sent ) {
 			$sent_arg = 'draft';
-		} else if ( 1 === $sent ) {
+		} elseif ( 1 === $sent ) {
 			$sent_arg = 'sent';
 		} else {
 			$sent_arg = 'all';
 		}
 
-		return groups_get_invites( array(
-			'item_id'     => $group_id,
-			'inviter_id'  => $user_id,
-			'invite_sent' => $sent_arg,
-			'fields'      => 'user_ids',
-		) );
+		return groups_get_invites(
+			array(
+				'item_id'     => $group_id,
+				'inviter_id'  => $user_id,
+				'invite_sent' => $sent_arg,
+				'fields'      => 'user_ids'
+			)
+		);
 	}
 
 	/**
@@ -1012,7 +1022,7 @@ class BP_Groups_Group {
 
 		return array(
 			'requests' => $requests,
-			'total' => $total
+			'total'    => $total
 		);
 	}
 
@@ -1262,7 +1272,7 @@ class BP_Groups_Group {
 		}
 
 		if ( ! empty( $r['creator_id'] ) ) {
-			$where_conditions['creator'] = $wpdb->prepare( "g.creator_id = %d", $r['creator_id'] );
+			$where_conditions['creator'] = $wpdb->prepare( 'g.creator_id = %d', $r['creator_id'] );
 		}
 
 		if ( ! empty( $r['include'] ) ) {
@@ -1360,7 +1370,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
@@ -1376,7 +1386,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the From SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r    Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
@@ -1737,9 +1747,11 @@ class BP_Groups_Group {
 
 		$invites_class = new BP_Groups_Invitation_Manager();
 
-		return $invites_class->delete( array(
-			'item_id' => $group_id,
-		) );
+		return $invites_class->delete(
+			array(
+				'item_id' => $group_id
+			)
+		);
 	}
 
 	/**

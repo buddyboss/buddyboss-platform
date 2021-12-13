@@ -1427,23 +1427,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
-		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
-			$activity = new BP_Activity_Activity( $data['activity_id'] );
-			if ( isset( $activity->secondary_item_id ) ) {
-				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-				if (
-					! empty( $get_activity->id ) &&
-					(
-						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
-					)
-				) {
-					$data['hide_activity_actions'] = true;
-				}
-			}
-		}
-
 		if ( 'video' === $media->type ) {
 			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
 			$data['url'] = bb_video_get_symlink( $media->id );
