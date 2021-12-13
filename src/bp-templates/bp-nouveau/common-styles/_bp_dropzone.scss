@@ -705,11 +705,31 @@
 
 			.dz-icon {
 				display: block;
+				height: 28px;
 				margin-top: 20px;
+				position: relative;
 
-				.bb-icon-file {
+				&:before {
+					content: "\e98e";
 					font-size: 28px;
 					color: #92949d;
+					font-family: "bb-icons";/* stylelint-disable-line */
+					display: inline-block;
+					line-height: 1;
+					position: absolute;
+					top: 0;
+					left: 50%;
+					transform: translateX(-50%);
+				}
+
+				[class*="bb-icon"] {
+					font-size: 28px;
+					color: #92949d;
+					left: 50%;
+					background-color: #fafafa;
+					display: block;
+					position: absolute;
+					transform: translateX(-50%);
 				}
 			}
 		}

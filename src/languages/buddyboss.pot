@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-13 08:36:01+00:00\n"
+"POT-Creation-Date: 2021-12-13 10:00:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24124,7 +24124,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php:3
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php:4
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:92
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:93
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:142
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:122
 msgid "Back"
@@ -24439,7 +24439,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:17
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:31
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:73
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:74
 msgid "Create new folder"
 msgstr ""
 
@@ -24555,12 +24555,12 @@ msgstr ""
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:59
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:60
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:24
 msgid "Select Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:91
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:92
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:100

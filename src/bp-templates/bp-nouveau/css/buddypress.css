@@ -22394,17 +22394,43 @@ body > .open-popup.video-error-popup {
 .bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon,
 .dropzone.document .dz-preview.dz-complete .dz-details .dz-icon {
   display: block;
+  height: 28px;
   margin-top: 20px;
+  position: relative;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
-#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
-#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
-.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
-.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file {
+#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
+#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
+#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
+.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
+.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
+.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon:before {
+  content: "\e98e";
   font-size: 28px;
   color: #92949d;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  display: inline-block;
+  line-height: 1;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
+#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
+#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
+.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
+.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
+.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"] {
+  font-size: 28px;
+  color: #92949d;
+  left: 50%;
+  background-color: #fafafa;
+  display: block;
+  position: absolute;
+  transform: translateX(-50%);
 }
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,

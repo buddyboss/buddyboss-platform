@@ -1098,6 +1098,9 @@ window.bp = window.bp || {};
 							self.document.push( file.document_edit_data );
 							self.model.set( 'document', self.document );
 						}
+						var filename = file.upload.filename;
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 					}
 				);
 

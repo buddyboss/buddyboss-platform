@@ -1306,6 +1306,15 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-document-uploader', bp.Nouveau.Messages.dropzone_document_options );
 
 				bp.Nouveau.Messages.dropzone.on(
+					'addedfile',
+					function ( file ) {
+						var filename = file.upload.filename;
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
 					'sending',
 					function(file, xhr, formData) {
 						formData.append( 'action', 'document_document_upload' );
