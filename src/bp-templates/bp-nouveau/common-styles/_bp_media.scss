@@ -2085,26 +2085,7 @@ img.emojioneemoji {
 	}
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader,
-body.documents #buddypress #item-body #media-uploader,
-body.documents #buddypress #item-body #media-uploader-child-folder,
-body.messages #buddypress #item-body #messages-post-document-uploader,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
-#new-post #whats-new-attachments #forums-post-document-uploader,
-.bp-media-document-uploader.has-folderlocationUI,
-.ac-reply-content .ac-reply-attachments,
-.modal-container.has-folderlocationUI,
-#activity-post-video-uploader,
-#bp-video-dropzone-content,
-#forums-post-video-uploader,
-#messages-post-video-uploader,
-#bp-group-messages-post-video-uploader,
-#boss-video-create-album-popup {
+.dropzone {
 
 	.dz-preview.dz-file-preview .dz-image {
 		padding-top: 0;
@@ -2118,14 +2099,14 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		border-radius: 4px;
 		position: relative;
 		overflow: hidden;
-		padding: 25px 10px;
+		padding: 5px 10px;
 		display: flex;
 		background-color: #fafafa;
 		border: 1px solid #e7e9eb;
 		text-align: center;
 		height: 100%;
-		min-height: 160px;
-		width: 160px;
+		min-height: 130px;
+		width: 130px;
 		flex-flow: column;
 		align-items: center;
 		justify-content: center;
@@ -2143,15 +2124,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	.dz-preview.dz-file-preview .dz-details .dz-filename span {
 		margin-top: 0;
-	}
-
-	@media screen and (max-width: 420px) {
-
-		.dz-preview.dz-file-preview .dz-details {
-			min-height: 142px;
-			width: 142px;
-		}
-
 	}
 
 }
@@ -2389,7 +2361,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 div.dropzone .dz-preview {
-	min-width: 160px;
+	min-width: 130px;
 
 	.dz-success-mark,
 	.dz-progress,
@@ -2404,10 +2376,10 @@ div.dropzone .dz-preview {
 }
 
 .dz-preview .dz-image {
-	height: 160px;
+	height: 130px;
 
 	img {
-		max-width: 160px;
+		max-width: 130px;
 		object-fit: cover;
 	}
 }

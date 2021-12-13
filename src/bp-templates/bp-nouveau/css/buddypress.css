@@ -16277,183 +16277,43 @@ img.emojioneemoji {
   content: "\f110";
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-image,
-body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-image,
-body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-image,
-body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-image,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-image,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-image,
-.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-image,
-.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-image,
-.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-image,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-image,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-image,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-image,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-image,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-image,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-image {
+.dropzone .dz-preview.dz-file-preview .dz-image {
   padding-top: 0;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details,
-body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details,
-body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
-.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details {
+.dropzone .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details,
-body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details,
-body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
-.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details {
+.dropzone .dz-preview.dz-file-preview .dz-details {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
-  padding: 25px 10px;
+  padding: 5px 10px;
   display: flex;
   background-color: #fafafa;
   border: 1px solid #e7e9eb;
   text-align: center;
   height: 100%;
-  min-height: 160px;
-  width: 160px;
+  min-height: 130px;
+  width: 130px;
   flex-flow: column;
   align-items: center;
   justify-content: center;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details .dz-size,
-body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size,
-.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-size,
-.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-size,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-size {
+.dropzone .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0;
   font-size: 14px;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details .dz-filename,
-body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename,
-.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-filename,
-.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-filename,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-filename {
+.dropzone .dz-preview.dz-file-preview .dz-details .dz-filename {
   display: block;
   width: 100%;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details .dz-filename span,
-body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-filename span,
-.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-filename span {
+.dropzone .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0;
-}
-
-@media screen and (max-width: 420px) {
-  .documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-  .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details,
-  .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-  .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details,
-  .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details,
-  .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-  body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details,
-  body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details,
-  body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-  body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-  #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-  .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-  .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
-  .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
-  #activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-  #bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
-  #forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-  #messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-  #boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details {
-    min-height: 142px;
-    width: 142px;
-  }
 }
 
 #buddypress .bp-media-document-uploader .media-uploader-wrapper {
@@ -16641,7 +16501,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 div.dropzone .dz-preview {
-  min-width: 160px;
+  min-width: 130px;
 }
 
 div.dropzone .dz-preview .dz-success-mark,
@@ -16655,11 +16515,11 @@ div.dropzone .dz-preview .dz-filename {
 }
 
 .dz-preview .dz-image {
-  height: 160px;
+  height: 130px;
 }
 
 .dz-preview .dz-image img {
-  max-width: 160px;
+  max-width: 130px;
   object-fit: cover;
 }
 
@@ -21306,8 +21166,8 @@ div.dropzone.dz-started {
 
 div.dropzone.dz-started .dz-default.dz-message {
   flex-basis: 100%;
-  max-width: 160px !important;
-  min-height: 160px !important;
+  max-width: 130px !important;
+  min-height: 130px !important;
   margin: 0 4px 10px;
   padding: 0 5px;
 }
@@ -21517,7 +21377,6 @@ div.dropzone.dz-started .dz-default.dz-message {
 .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
 #video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
   background-color: #fafafa !important;
-  border: 1px solid #e7e9eb;
   z-index: 1;
   border-radius: 4px;
 }
@@ -21544,6 +21403,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   opacity: 1;
   visibility: visible;
   position: absolute;
+  left: 0;
   bottom: 15px;
   color: #828890;
 }
@@ -22450,7 +22310,7 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone .dz-preview .dz-image img {
-  width: 160px;
+  width: 130px;
 }
 
 .dropzone .dz-preview .dz-progress-ring-wrap {
@@ -22498,6 +22358,15 @@ body > .open-popup.video-error-popup {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+#bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-icon,
+#messages-post-document-uploader.dropzone .dz-preview .dz-icon,
+#forums-post-document-uploader.dropzone .dz-preview .dz-icon,
+.activity-document-container .dropzone .dz-preview .dz-icon,
+.bp-media-document-uploader .dropzone .dz-preview .dz-icon,
+.dropzone.document .dz-preview .dz-icon {
+  display: none;
+}
+
 #bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
 #messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
 #forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
@@ -22506,7 +22375,7 @@ body > .open-popup.video-error-popup {
 .dropzone.document .dz-preview.dz-complete .dz-details .dz-filename {
   position: static;
   padding-right: 0;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 
 #bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
@@ -22518,6 +22387,26 @@ body > .open-popup.video-error-popup {
   display: block;
 }
 
+#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon,
+#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon,
+#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon,
+.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon,
+.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon,
+.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon {
+  display: block;
+  margin-top: 20px;
+}
+
+#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
+#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
+#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
+.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
+.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file,
+.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon .bb-icon-file {
+  font-size: 28px;
+  color: #92949d;
+}
+
 #bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
 #messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
 #forums-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
@@ -22525,7 +22414,7 @@ body > .open-popup.video-error-popup {
 .bp-media-document-uploader .dropzone .dz-preview .dz-details .dz-filename,
 .dropzone.document .dz-preview .dz-details .dz-filename {
   position: absolute;
-  bottom: 12px;
+  bottom: 3px;
   left: 10px;
   right: 0;
   padding-right: 20px;
@@ -22538,22 +22427,6 @@ body > .open-popup.video-error-popup {
 .bp-media-document-uploader .dropzone .dz-preview .dz-details .dz-size,
 .dropzone.document .dz-preview .dz-details .dz-size {
   display: none;
-}
-
-@media screen and (max-width: 420px) {
-  div.dropzone .dz-preview {
-    min-width: 142px;
-  }
-  div.dropzone .dz-preview .dz-image {
-    height: 142px;
-  }
-  div.dropzone .dz-preview .dz-image img {
-    width: 142px;
-  }
-  div.dropzone.dz-started .dz-default.dz-message {
-    max-width: 142px !important;
-    min-height: 142px !important;
-  }
 }
 
 /*
