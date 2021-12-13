@@ -146,7 +146,7 @@ if ( 'video' === $media_template->media->type ) {
 		<div class="media-action-wrap">
 			<?php
 			$report_btn = bp_media_get_report_link( array( 'id' => bp_get_media_id() ) );
-			if ( $can_move || $report_btn ) {
+			if ( $can_move || $report_btn || $can_delete ) {
 				?>
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>
