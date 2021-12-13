@@ -123,6 +123,8 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Setup the components
 			add_action( 'bp_init', array( $this, 'setup_components' ), 7 );
+			// Setup meta title.
+			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 999, 1 );
 
 			parent::setup_actions();
 		}
@@ -363,6 +365,44 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				'BP_REST_Reply_Endpoint',
 				'BP_REST_Reply_Actions_Endpoint',
 			) );
+		}
+
+		/**
+		 * Setup title tag for the group forum discussion page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $title Page title.
+		 * @return mixed
+		 */
+		public function bb_group_forums_set_title_tag( $title ) {
+
+			if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) && bp_is_group() ) {
+
+				$sep   = apply_filters( 'document_title_separator', '-' );
+				$group = groups_get_current_group();
+
+				if ( ! empty( $group ) && bp_is_current_action( get_option( '_bbp_forum_slug', 'forum' ) ) && function_exists( 'bbpress' ) ) {
+
+					if ( bp_is_action_variable( get_option( '_bbp_topic_slug', 'discussion' ), 0 ) && bp_action_variable( 1 ) ) {
+
+						// get the topic as post.
+						$topics = get_posts(
+							array(
+								'name'      => bp_action_variable( 1 ),
+								'post_type' => bbp_get_topic_post_type(),
+								'per_page'  => 1,
+							)
+						);
+
+						if ( ! empty( $topics ) ) {
+							return esc_html( bbp_get_topic_title( $topics[0]->ID ) ) . ' ' . $sep . ' ' . esc_html( $group->name ) . ' ' . $sep . ' ' . bp_get_site_name();
+						}
+					}
+				}
+			}
+
+			return $title;
 		}
 	}
 endif;
