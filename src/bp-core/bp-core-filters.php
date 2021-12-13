@@ -1923,7 +1923,7 @@ function bb_attachments_profile_group_cover_image_ajax_delete_args( $args ) {
  * @param string $option    Option name.
  */
 function bb_set_profile_avatar_type_on_update_show_avatars( $old_value, $value, $option ) {
-	if ( 'show_avatars' === $option && ! $value && 'WordPress' === bb_get_default_profile_avatar_type() ) {
+	if ( 'show_avatars' === $option && ! $value && 'wordpress' === bb_get_default_profile_avatar_type() ) {
 		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	}
 }
@@ -1989,15 +1989,3 @@ function bb_delete_profile_group_cover_images_url( $item_id ) {
 }
 add_action( 'xprofile_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
 add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
-
-/**
- * Override BuddyBoss mystery person to WordPress mystery person image.
- * 
- * @param string $avatar_url URL for not found from gravatar.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_override_mystery_image_buddyboss_to_wordpress( $avatar_url ) {
-	return buddypress()->plugin_url . 'bp-core/images/cover-image.png';
-}
-//add_action( 'bp_gravatar_not_found_avatar', 'bb_override_mystery_image_buddyboss_to_wordpress', 10, 1 );
