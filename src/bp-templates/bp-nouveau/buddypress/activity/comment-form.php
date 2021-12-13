@@ -56,6 +56,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 						<div class="ac-reply-post-document-template" style="display:none;">
 							<div class="dz-preview dz-file-preview">
 								<div class="dz-details">
+									<div class="dz-icon"><span class="bb-icon-file"></span></div>
 									<div class="dz-filename"><span data-dz-name></span></div>
 									<div class="dz-size" data-dz-size></div>
 								</div>

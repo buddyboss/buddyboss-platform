@@ -208,6 +208,7 @@ if ( 0 === $total_count ) {
 								<div class="forum-post-document-template" style="display:none;">
 									<div class="dz-preview dz-file-preview">
 										<div class="dz-details">
+											<div class="dz-icon"><span class="bb-icon-file"></span></div>
 											<div class="dz-filename"><span data-dz-name></span></div>
 											<div class="dz-size" data-dz-size></div>
 										</div>
