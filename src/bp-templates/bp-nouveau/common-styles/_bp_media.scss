@@ -2115,6 +2115,13 @@ img.emojioneemoji {
 	.dz-preview.dz-file-preview .dz-details .dz-size {
 		margin-bottom: 0;
 		font-size: 14px;
+		font-weight: 400;
+		line-height: 1;
+		text-transform: lowercase;
+
+		strong {
+			font-weight: 500;
+		}
 	}
 
 	.dz-preview.dz-file-preview .dz-details .dz-filename {
