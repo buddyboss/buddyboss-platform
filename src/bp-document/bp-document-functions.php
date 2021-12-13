@@ -4244,7 +4244,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
 					$file      = image_get_intermediate_size( $attachment_id, $size );
 					$file_path = $file_path . '/' . $file['file'];
-				} elseif ( 'pdf' === $extension ) {
+				} else {
 					bp_document_generate_document_previews( $attachment_id );
 					$file      = image_get_intermediate_size( $attachment_id, $size );
 					$file_path = $file_path . '/' . $file['file'];
