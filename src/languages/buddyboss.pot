@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-08 11:22:15+00:00\n"
+"POT-Creation-Date: 2021-12-13 11:21:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -525,9 +525,9 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:1157
 #: bp-activity/classes/class-bp-activity-list-table.php:665
 #: bp-core/bp-core-wp-emails.php:233 bp-core/bp-core-wp-emails.php:523
-#: bp-core/classes/class-bp-email-tokens.php:554
-#: bp-core/classes/class-bp-email-tokens.php:689
-#: bp-core/classes/class-bp-email-tokens.php:870
+#: bp-core/classes/class-bp-email-tokens.php:573
+#: bp-core/classes/class-bp-email-tokens.php:708
+#: bp-core/classes/class-bp-email-tokens.php:889
 #: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:329
 #: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1764
 #: bp-forums/replies/template.php:1807 bp-forums/topics/template.php:3341
@@ -678,7 +678,7 @@ msgstr ""
 #: bp-activity/bp-activity-functions.php:1162
 #: bp-activity/bp-activity-functions.php:1173
 #: bp-activity/bp-activity-functions.php:1186
-#: bp-activity/bp-activity-functions.php:1194 bp-core/bp-core-catchuri.php:1528
+#: bp-activity/bp-activity-functions.php:1194 bp-core/bp-core-catchuri.php:1526
 msgid "and"
 msgstr ""
 
@@ -3218,6 +3218,8 @@ msgid "Restrict site access to only logged-in members"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:106
+#: bp-core/admin/bp-core-admin-settings.php:1619
+#: bp-core/admin/bp-core-admin-settings.php:1675
 msgid ""
 "Login and <a href=\"%s\">Registration</a> content will remain publicly "
 "visible."
@@ -3594,6 +3596,33 @@ msgstr ""
 msgid "5 Minutes"
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-settings.php:1614
+msgid "Restrict REST APIs access to only logged-in members"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1642
+msgid ""
+"Enter REST endpoints URLs or URI fragments (e.g. "
+"wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
+"one URL or URI per line. "
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1649
+msgid ""
+"BuddyBoss App is enabled. Please go to <a href=\"%s\">settings</a> here to "
+"restrict App and REST APIs access to logged-in members only."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1670
+msgid "Restrict RSS Feeds access to only logged-in members"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1694
+msgid ""
+"Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
+"publicly visible always. Enter one endpoint URL or URI per line. "
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-slugs.php:38
 msgid "Profile Dashboard"
 msgstr ""
@@ -3666,7 +3695,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:54
 #: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:783
 #: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:879
-#: bp-core/classes/class-bp-email-tokens.php:398 bp-forums/admin/topics.php:679
+#: bp-core/classes/class-bp-email-tokens.php:417 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1426 bp-groups/bp-groups-admin.php:2082
 #: bp-groups/bp-groups-functions.php:4098
 #: bp-groups/bp-groups-functions.php:4117
@@ -4073,7 +4102,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:102
+#: bp-core/admin/settings/bp-admin-setting-general.php:128
 msgid "Activity Settings"
 msgstr ""
 
@@ -4186,12 +4215,20 @@ msgstr ""
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:93
+#: bp-core/admin/settings/bp-admin-setting-general.php:90
+msgid "Private REST APIs"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:110
+msgid "Private RSS Feeds"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:119
 #: bp-forums/admin/settings.php:1549
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:99
+#: bp-core/admin/settings/bp-admin-setting-general.php:125
 msgid "Groups Settings"
 msgstr ""
 
@@ -5024,7 +5061,8 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1260
+#: bp-core/bp-core-catchuri.php:1261 bp-core/bp-core-functions.php:6054
+#: bp-core/bp-core-functions.php:6068
 msgid "Please login to access this website."
 msgstr ""
 
@@ -5032,9 +5070,9 @@ msgstr ""
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1276 bp-core/bp-core-catchuri.php:1292
+#: bp-core/bp-core-catchuri.php:1277 bp-core/bp-core-catchuri.php:1293
 #: bp-core/bp-core-catchuri.php:1313 bp-core/bp-core-catchuri.php:1330
-#: bp-core/bp-core-catchuri.php:1354 bp-core/bp-core-catchuri.php:1374
+#: bp-core/bp-core-catchuri.php:1352 bp-core/bp-core-catchuri.php:1372
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -6513,6 +6551,11 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
+#: bp-core/bp-core-functions.php:6105
+#: bp-performance/bp-performance-mu-loader.php:91
+msgid "Only authenticated users can access the REST API."
+msgstr ""
+
 #: bp-core/bp-core-moderation.php:134
 msgid "You have posted too many links"
 msgstr ""
@@ -7643,7 +7686,7 @@ msgid "Private"
 msgstr ""
 
 #: bp-core/classes/class-bp-email-tokens.php:216
-#: bp-core/classes/class-bp-email-tokens.php:348
+#: bp-core/classes/class-bp-email-tokens.php:367
 #: bp-groups/bp-groups-template.php:744 bp-groups/bp-groups-template.php:749
 #: bp-groups/bp-groups-template.php:754 bp-groups/bp-groups-template.php:757
 #: bp-groups/bp-groups-template.php:768 bp-groups/bp-groups-template.php:857
@@ -7661,33 +7704,34 @@ msgstr ""
 msgid "member"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:247
-#: bp-core/classes/class-bp-email-tokens.php:430
+#: bp-core/classes/class-bp-email-tokens.php:251
+#: bp-core/classes/class-bp-email-tokens.php:263
+#: bp-core/classes/class-bp-email-tokens.php:449
 #: bp-groups/bp-groups-admin.php:791
 msgid "Visit Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:424
+#: bp-core/classes/class-bp-email-tokens.php:443
 msgid "Leave Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:427
+#: bp-core/classes/class-bp-email-tokens.php:446
 msgid "Join Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:831
+#: bp-core/classes/class-bp-email-tokens.php:850
 msgid "and %d more"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:976
+#: bp-core/classes/class-bp-email-tokens.php:995
 msgid "connections"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:976
+#: bp-core/classes/class-bp-email-tokens.php:995
 msgid "connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:987
+#: bp-core/classes/class-bp-email-tokens.php:1006
 #: bp-members/classes/class-bp-members-admin.php:1275
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:11
 msgid "View Profile"
@@ -17993,11 +18037,11 @@ msgstr ""
 msgid "Groups must have a name and a description. Please try again."
 msgstr ""
 
-#: bp-groups/screens/single/admin/edit-details.php:45
+#: bp-groups/screens/single/admin/edit-details.php:46
 msgid "There was an error updating group details. Please try again."
 msgstr ""
 
-#: bp-groups/screens/single/admin/edit-details.php:47
+#: bp-groups/screens/single/admin/edit-details.php:48
 msgid "Group details were successfully updated."
 msgstr ""
 
@@ -24713,7 +24757,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:70
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:939
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:944
 msgid "Promote to co-%s"
 msgstr ""
 
@@ -25241,6 +25285,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:54
 msgid "Manage Privacy"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:11
+msgid "Sorry, you were not able to report this member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:20
@@ -26360,7 +26408,7 @@ msgid "Sorry, no photos were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:998
-msgid "Sorry, no photos & videos were found."
+msgid "Sorry, no photos or videos were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1002
@@ -26764,42 +26812,42 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:766
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:821
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:771
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:826
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:344
 msgid "Accept"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:793
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:848
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:798
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:853
 msgid "Reject"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:882
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:887
 msgid "Remove Ban"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:901
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:906
 msgid "Kick &amp; Ban"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:930
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:935
 msgid "Promote to %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:959
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:964
 msgid "Remove from group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1505
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1510
 msgid "Groups default front page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1523
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1528
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1560
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1565
 msgid "Notify group members of these changes via email"
 msgstr ""
 
@@ -29025,7 +29073,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:96
+#: bp-core/admin/settings/bp-admin-setting-general.php:122
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
