@@ -5696,8 +5696,10 @@ function bb_check_ios_device() {
 	$ipod   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$iphone = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$ipad   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$safari = bb_core_get_browser();
+	$safari = ( isset( $safari['name'] ) ? 'Safari' === $safari['b_name'] : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
-	if ( $ipod || $iphone || $ipad ) {
+	if ( $ipod || $iphone || $ipad || $safari ) {
 		$is_ios = true;
 	}
 
@@ -5766,7 +5768,7 @@ function bb_core_get_browser() {
 		$platform = 'windows';
 	}
 
-	// Next get the name of the useragent yes seperately and for good reason
+	// Next get the name of the useragent yes seperately and for good reason.
 	if ( preg_match( '/MSIE/i', $u_agent ) && ! preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Internet Explorer';
 		$ub    = 'MSIE';
@@ -5787,19 +5789,19 @@ function bb_core_get_browser() {
 		$ub    = 'Netscape';
 	}
 
-	// finally get the correct version number
+	// finally get the correct version number.
 	$known   = array( 'Version', $ub, 'other' );
 	$pattern = '#(?<browser>' . join( '|', $known ) .
 			   ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 	if ( ! preg_match_all( $pattern, $u_agent, $matches ) ) {
-		// we have no matching number just continue
+		// we have no matching number just continue.
 	}
 
-	// see how many we have
+	// see how many we have.
 	$i = count( $matches['browser'] );
 	if ( $i != 1 ) {
 		// we will have two since we are not using 'other' argument yet
-		// see if version is before or after the name
+		// see if version is before or after the name.
 		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
 			$version = $matches['version'][0];
 		} else {
@@ -5809,7 +5811,7 @@ function bb_core_get_browser() {
 		$version = $matches['version'][0];
 	}
 
-	// check if we have a number
+	// check if we have a number.
 	if ( $version == null || $version == '' ) {
 		$version = '?';
 	}
@@ -5820,6 +5822,7 @@ function bb_core_get_browser() {
 		'version'   => $version,
 		'platform'  => $platform,
 		'pattern'   => $pattern,
+		'b_name'    => $ub,
 	);
 }
 
