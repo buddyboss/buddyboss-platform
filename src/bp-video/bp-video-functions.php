@@ -829,8 +829,6 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
-			$bp_background_updater->cancel_process();
-
 			return;
 		}
 
@@ -923,14 +921,10 @@ function bp_video_background_create_thumbnail( $video ) {
 	global $bp_background_updater;
 
 	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
-		$bp_background_updater->cancel_process();
-
 		return;
 	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
-			$bp_background_updater->cancel_process();
-
 			return;
 		}
 	}
@@ -1118,7 +1112,6 @@ function bp_video_background_create_thumbnail( $video ) {
 
 		} catch ( Exception $ex ) {
 			update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
-			$bp_background_updater->cancel_process();
 		}
 	} else {
 		update_post_meta( $video_attachment_id, 'bb_ffmpeg_preview_generated', 'no' );
@@ -2232,7 +2225,7 @@ function bp_video_download_url_file() {
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'album' !== $video_type ) {
-			$video_privacy    = bb_media_user_can_access( $video_file, 'video' ); // phpcs:ignore WordPress.Security.NonceVerification
+			$video_privacy    = bb_media_user_can_access( $video_file, 'video', $attachment_id ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
 		}
 		if ( $can_download_btn ) {
