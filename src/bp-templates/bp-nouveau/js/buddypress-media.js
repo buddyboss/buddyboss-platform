@@ -6204,7 +6204,6 @@ window.bp = window.bp || {};
 			var currentVideo =  document.getElementById( $( '.bb-media-model-wrapper.video video' ).attr('id') );
 			if( currentVideo ) {
 				currentVideo.pause();
-				currentVideo.src = '';
 			}
 			$( '.bb-media-model-wrapper.video' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
@@ -6414,7 +6413,7 @@ window.bp = window.bp || {};
 			
 			$('.bb-media-model-wrapper.media .bb-media-section').find('img').attr('src', '');
 			if( $('.bb-media-model-wrapper.video .bb-media-section').find('video').length ){
-				$('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('src', '');
+				videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
 			}
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_media = false;
