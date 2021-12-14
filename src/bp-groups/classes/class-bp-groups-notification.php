@@ -31,22 +31,22 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_preference(
 			'notification_groups_invite',
 			buddypress()->groups->id,
-			esc_html__( 'A member invites you to join a group', 'buddybobss' ),
-			esc_html__( 'A member is invited to join a group', 'buddybobss' ),
+			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+			esc_html__( 'A member is invited to join a group', 'buddyboss' ),
 		);
 
 		$this->register_preference(
 			'notification_groups_group_updated',
 			buddypress()->groups->id,
-			esc_html__( 'Group information is updated', 'buddybobss' ),
+			esc_html__( 'Group information is updated', 'buddyboss' ),
 			'',
 		);
 
 		$this->register_preference(
 			'notification_groups_admin_promotion',
 			buddypress()->groups->id,
-			esc_html__( 'You are promoted to a group organizer or moderator', 'buddybobss' ),
-			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddybobss' ),
+			esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
+			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddyboss' ),
 		);
 
 		$this->start();

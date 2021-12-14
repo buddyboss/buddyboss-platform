@@ -382,7 +382,7 @@
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each( function() {
 					var post_type = $(this).data('post_type');
-					
+
 					if ( true === this.checked ) {
 						$('.bp-feed-post-type-comment-'+post_type)
 							.closest('tr')
@@ -396,7 +396,7 @@
 					function () {
 						var post_type = $(this).data('post_type'),
 							commentField = $('.bp-feed-post-type-comment-'+post_type);
-						
+
 						if ( true === this.checked ) {
 							commentField
 								.closest('tr')
@@ -1307,6 +1307,21 @@
 						return confirm( BP_ADMIN.moderation.suspend_confirm_message );
 					} else if ( 'unsuspend' === DataAction ) {
 						return confirm( BP_ADMIN.moderation.unsuspend_confirm_message );
+					}
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.notification-defaults',
+				function () {
+					var isHidden = $(this).next( '.manage-defaults' );
+					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
+						$(this).next( '.manage-defaults' ).addClass( 'manage-defaults-show' );
+						$(this).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
+					} else {
+						$(this).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
+						$(this).next( '.manage-defaults' ).removeClass( 'manage-defaults-show' );
 					}
 				}
 			);

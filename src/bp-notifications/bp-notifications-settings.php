@@ -183,7 +183,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									</div>
 									<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
 									<a href="javascript:;" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
-									<div class="manage-defaults">
+									<div class="manage-defaults manage-defaults-hide">
 										<?php
 										$options = apply_filters(
 											'bb_notifications_types',

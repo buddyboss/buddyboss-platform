@@ -2378,7 +2378,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 #bp_notification_settings_automatic .field-set {
   margin-top: 10px;
-  background-color: #F6F6F8;
+  background-color: #f6f6f8;
   border: 1px solid #ccd0d4;
   border-radius: 3px;
 }
@@ -2398,10 +2398,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 #bp_notification_settings_automatic .field-set .field-block .no-email-info {
   margin-right: 15px;
   margin-left: auto;
-  background-color: #FFDCDC;
+  background-color: #ffdcdc;
   border-radius: 5px;
   padding: 5px 10px;
-  color: #8C0202;
+  color: #8c0202;
   font-size: 11px;
 }
 
@@ -2416,11 +2416,18 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults {
   margin-top: 15px;
-  display: flex;
   justify-content: flex-end;
   width: 100%;
 }
 
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap {
   margin-left: 15px;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults-show {
+  display: flex;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults-hide {
+  display: none;
 }
