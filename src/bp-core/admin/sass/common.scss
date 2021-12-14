@@ -2566,20 +2566,16 @@ h2.has_tutorial_btn {
 				margin-top: 15px;
 				justify-content: flex-end;
 				width: 100%;
+				display: flex;
 
 				.field-wrap {
 					margin-left: 15px;
 				}
 			}
 
-			.manage-defaults-show {
-				display: flex;
-			}
-
 			.manage-defaults-hide {
 				display: none;
 			}
-
 		}
 	}
 }

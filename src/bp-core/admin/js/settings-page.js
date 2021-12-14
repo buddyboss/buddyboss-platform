@@ -1317,11 +1317,9 @@
 				function () {
 					var isHidden = $(this).next( '.manage-defaults' );
 					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
-						$(this).next( '.manage-defaults' ).addClass( 'manage-defaults-show' );
 						$(this).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
 					} else {
 						$(this).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
-						$(this).next( '.manage-defaults' ).removeClass( 'manage-defaults-show' );
 					}
 				}
 			);

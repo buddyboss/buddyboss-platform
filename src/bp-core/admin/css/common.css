@@ -2418,14 +2418,11 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-top: 15px;
   justify-content: flex-end;
   width: 100%;
+  display: flex;
 }
 
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap {
   margin-left: 15px;
-}
-
-#bp_notification_settings_automatic .field-set .field-block .manage-defaults-show {
-  display: flex;
 }
 
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults-hide {
