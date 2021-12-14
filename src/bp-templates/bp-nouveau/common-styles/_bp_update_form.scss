@@ -498,25 +498,25 @@
 		.emojionearea .emojionearea-picker {
 			top: inherit;
 			left: initial;
-			right: -15px;
-			bottom: 100%;
+			right: 30px;
+			bottom: -25px;
 			margin-bottom: 10px;
-			height: 150px;
+			height: 200px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 150px;
+				height: 200px;
 
 				.emojionearea-scroll-area {
-					height: 70px;
+					height: 115px;
 				}
 
 				&:after {
-					bottom: -9px;
+					bottom: 22px;
 					top: inherit;
 					left: initial;
-					right: 19px;
-					transform: rotate(180deg);
+					right: -14px;
+					transform: rotate(90deg);
 				}
 			}
 		}

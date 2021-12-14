@@ -1525,30 +1525,30 @@ a.layout-grid-view {
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
   top: inherit;
   right: initial;
-  left: -15px;
-  bottom: 100%;
+  left: 30px;
+  bottom: -25px;
   margin-bottom: 10px;
-  height: 150px;
+  height: 200px;
   z-index: 999;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
-  height: 150px;
+  height: 200px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 70px;
+  height: 115px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-  bottom: -9px;
+  bottom: 22px;
   top: inherit;
   right: initial;
-  left: 19px;
-  transform: rotate(-180deg);
+  left: -14px;
+  transform: rotate(-90deg);
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading,
