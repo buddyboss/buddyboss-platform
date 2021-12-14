@@ -14,16 +14,23 @@ if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {
 
 $user_progress  = $bp_nouveau->xprofile->profile_completion_widget_para;
 $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['completion_percentage'] . '%' );
+$user_progress_offset = 100 - $user_progress['completion_percentage'];
 
 ?>
 <div class="profile_completion_wrap">
 
 	<div class="pc_progress_wrap">
+		<svg class="pc_progress_graph" width="146" height="73" viewBox="0 0 146 73" fill="none">
+			<linearGradient id="gradient" x1="0" y1="0" x2="0" y2="100%">
+				<stop offset="0%" stop-color="#05d786" />
+      			<stop offset="100%" stop-color="#05d786" />
+    		</linearGradient>
+			<path d="M143 73C143 34.3401 111.66 3 73 3C34.3401 3 3 34.3401 3 73" stroke="#F1F3F5" stroke-width="6"/>
+			<path stroke-dasharray="<?php echo esc_attr( $user_progress['completion_percentage'] ); ?>, 100" stroke-dashoffset="-<?php echo $user_progress_offset; ?>" class="pc_progress_rate" d="M143 73C143 34.3401 111.66 3 73 3C34.3401 3 3 34.3401 3 73" stroke="#F1F3F5" stroke-width="6" pathLength="100"/>
+		</svg>
 		<div class="progress_text_wrap">
-			<span class="progress_text"><?php echo esc_html( $progress_label ); ?></span>
-		</div>
-		<div class="progress_container">
-			<div class="pc_progress" style="width: <?php echo esc_attr( $user_progress['completion_percentage'] ); ?>%;"></div>
+			<h3><span class="progress_text_value"><?php echo $user_progress['completion_percentage']; ?></span><?php  echo __( '%', 'buddyboss' ) ?></h3>
+			<span class="progress_text_label"><?php  echo __( 'Completed', 'buddyboss' ) ?></span>
 		</div>
 	</div>
 

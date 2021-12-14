@@ -383,20 +383,7 @@ body.register .buddypress-wrap .page ul {
 div.profile_completion_wrap {
 
 	.progress_text_wrap {
-		text-align: right;
-		margin-bottom: 5px;
-	}
-
-	.progress_container {
-
-		border: 1px solid #000;
-		border-radius: 12px;
-
-		.pc_progress {
-			height: 8px;
-			background-color: $informational;
-			border-radius: 12px 0 0 12px;
-		}
+		text-align: center;
 	}
 
 	ul.pc_detailed_progress li {
@@ -432,6 +419,45 @@ div.profile_completion_wrap {
 		}
 	}
 
+}
+
+.pc_progress_graph {
+
+	path {
+		stroke: #e7e7e8;
+		stroke-linecap: round;
+		stroke-width: 6;
+	}
+}
+
+.pc_progress_wrap {
+	margin: 0 0 30px;
+
+	svg {
+		width: 70%;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.pc_progress_rate {
+		stroke: url(#gradient);
+	}
+}
+
+.progress_text_wrap {
+	margin-top: -50px;
+
+	h3 {
+		margin: 0;
+	}
+
+	.progress_text_value {
+		font-weight: 600;
+	}
+}
+
+.progress_text_label {
+	display: block;
 }
 
 /* Send Invites Table */
