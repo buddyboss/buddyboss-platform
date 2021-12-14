@@ -1551,6 +1551,46 @@ a.layout-grid-view {
   transform: rotate(-90deg);
 }
 
+@media screen and (max-width: 390px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
+    height: 150px;
+    width: 270px;
+    left: -10px;
+    bottom: 25px;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-search,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-search {
+    width: 120px;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter {
+    width: 30px;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter img.emojioneemoji,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter img.emojioneemoji {
+    height: 20px !important;
+    width: 20px !important;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
+    width: 270px;
+    height: 150px;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
+    height: 65px;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+    bottom: -10px;
+    top: inherit;
+    right: initial;
+    left: 14px;
+    transform: rotate(-181deg);
+  }
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading,
 .activity-update-form.modal-popup .bp-activity-edit.loading {
   text-align: center;
