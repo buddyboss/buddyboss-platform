@@ -2888,7 +2888,6 @@ window.bp = window.bp || {};
 			template: bp.template( 'editor-toolbar' ),
 			events: {
 				'click .show-toolbar': 'toggleToolbarSelector',
-				'click .post-emoji': 'toggleEmoji',
 				'click .post-mention': 'triggerMention'
 			},
 
@@ -2921,15 +2920,6 @@ window.bp = window.bp || {};
 					editor.trigger( 'keyup' );
 				},0);
 
-			},
-
-			toggleEmoji: function ( e ) {
-				e.preventDefault();
-
-				this.$el.toggleClass( 'active' ).find( '.post-emoji' ).toggleClass( 'active' );
-				this.$el.closest( '.activity-update-form' ).find( '.emoji-wrapper .emojionearea-button' ).toggleClass( 'active' ).parent().find( '.emojionearea-scroll-area' ).scroll();
-				var emojiPosition = this.$el.find( '.post-emoji' )[0].getBoundingClientRect();
-				this.$el.closest( '.activity-update-form' ).find( '.emoji-wrapper' ).css( { left:emojiPosition.x, top: emojiPosition.y } );
 			}
 		}
 	);
@@ -3505,22 +3495,11 @@ window.bp = window.bp || {};
 					)
 				) {
 
-					var $this = this.$el;
-					if( !$this.find( '.emoji-wrapper' ).length ) {
-						$this.append( '<div class="emoji-wrapper"></div>' );
-
-						$( document ).on( 'click', function( event ) {
-							if( !$( event.target ).hasClass('post-emoji') && !$( event.target ).closest( '.post-emoji' ).length ) {
-								$this.find( '.emoji-wrapper .emojionearea-button' ).removeClass( 'active' );
-								$this.closest( '.activity-form' ).find( '#editor-toolbar .post-emoji' ).removeClass( 'active' );
-							}
-						});
-					}
 					$( '#whats-new' ).emojioneArea(
 						{
 							standalone: true,
 							hideSource: false,
-							container: '.emoji-wrapper',
+							container: '#editor-toolbar > .post-emoji',
 							autocomplete: false,
 							pickerPosition: 'bottom',
 							hidePickerOnBlur: true,
@@ -3541,10 +3520,6 @@ window.bp = window.bp || {};
 					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
 				} else {
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
-					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
-						$this.find( '.emoji-wrapper .emojionearea-button' ).removeClass( 'active' );
-						$this.closest( '.activity-form' ).find( '#editor-toolbar .post-emoji' ).removeClass( 'active' );
-					});
 				}
 
 				this.updateMultiMediaOptions();
@@ -3655,7 +3630,7 @@ window.bp = window.bp || {};
 				this.$el.find( '.whats-new-form-footer' ).remove();
 
 				//Destroy Emoji Picker
-				this.$el.find('.emoji-wrapper' ).html('');
+				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
 
 				this.updateMultiMediaOptions();
 			},
