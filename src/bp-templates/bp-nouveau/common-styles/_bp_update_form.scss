@@ -301,7 +301,7 @@
 			padding: 0 15px;
 			margin: 15px 0;
 
-			.emojionearea-button:before {
+			.post-emoji > span:before {
 				content: "\E821";
 				color: rgba(18, 43, 70, 0.4);
 				font: normal 400 normal 24px/1 bb-icons;
@@ -316,7 +316,7 @@
 				margin-right: 10px;
 			}
 
-			.emojionearea .emojionearea-button.active:before,
+			.post-emoji.active span:before,
 			.toolbar-button.active .bb-icon:before {
 				color: #122b46;
 			}
@@ -451,6 +451,21 @@
 		max-height: 100%;
 		overflow: auto;
 
+		.emoji-wrapper {
+			position: fixed;
+			margin: 40px 0 0 -20px;
+
+			.emojionearea-button.active + .emojionearea-picker {
+				opacity: 1;
+				visibility: visible;
+				display: block;
+			}
+
+			.emojionearea-button {
+				display: none;
+			}
+		}
+
 		.activity-update-form-overlay {
 			position: fixed;
 			left: 0;
@@ -501,22 +516,22 @@
 			right: -15px;
 			bottom: 100%;
 			margin-bottom: 10px;
-			height: 150px;
+			height: 270px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 150px;
+				height: 270px;
 
 				.emojionearea-scroll-area {
-					height: 70px;
+					height: 190px;
 				}
 
 				&:after {
-					bottom: -9px;
+					bottom: 13px;
 					top: inherit;
 					left: initial;
-					right: 19px;
-					transform: rotate(180deg);
+					right: -14px;
+					transform: rotate(90deg);
 				}
 			}
 		}
