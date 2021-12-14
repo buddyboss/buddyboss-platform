@@ -389,7 +389,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 	?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload photos for profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload photos a profile avatars', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -402,7 +402,31 @@ function bp_admin_setting_callback_avatar_uploads() {
 function bp_admin_setting_callback_cover_image_uploads() {
 	?>
 	<input id="bp-disable-cover-image-uploads" name="bp-disable-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_cover_image_uploads() ); ?> />
-	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow members to upload cover images', 'buddyboss' ); ?></label>
+	<label for="bp-disable-cover-image-uploads"><?php _e( 'Enable cover images for member profiles', 'buddyboss' ); ?></label>
+
+	<p class="description"><?php echo __( 'When enabled, members will be able to upload cover images in their profile settings.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Which type of avatar needs to display.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_profile_avatar_type() {
+	?>
+	<div class="avatar-custom-input">
+		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
+			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'wordpress' ); ?>><?php _e( 'WordPress', 'buddyboss' ); ?></option>
+			<option value="buddyboss" <?php selected( bb_get_profile_avatar_type(), 'buddyboss' ); ?>><?php _e( 'BuddyBoss', 'buddyboss' ); ?></option>
+		</select>
+	</div>
+
+	<p class="description"><?php echo sprintf( __( 'Select which image should be used for members who haven\'t uploaded a profile avatar. The WordPress default avatar can be configured in the <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+
+	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display: none;">
+		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php echo sprintf( __( 'Please enable "Avatar display" in your WordPress <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+	</div>
 	<?php
 }
 
@@ -433,30 +457,6 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<?php 
-	if ( bp_get_option( 'show_avatars' ) ) {
-
-		$wordpress_avatar_type  = bp_get_option( 'avatar_default', 'mystery' );
-		$wordpress_avatar       = get_avatar_url(
-			'',
-			array(
-				'size'          => 64,
-				'default'       => $wordpress_avatar_type,
-				'force_default' => true,
-			)
-		);
-		?>
-		<div class="avatar-custom-input">
-			<input id="bp-default-profile-avatar-wordpress" name="bp-default-profile-avatar-type" type="radio" value="wordpress" <?php checked( bb_get_default_profile_avatar_type(), 'wordpress' ); ?> />
-			<label for="bp-default-profile-avatar-wordpress">
-				<div class="img-block">
-					<img src="<?php echo $wordpress_avatar; ?>" />
-				</div>
-				<span><?php _e( 'WordPress', 'buddyboss' ); ?></span>
-			</label>
-		</div>
-	<?php } ?>
-
 	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
@@ -467,7 +467,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
-	<p class="description"><?php echo sprintf( __( 'Select which image should be used for members who haven\'t uploaded a profile avatar. The WordPress default avatar can be configured in the <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+	<p class="description"><?php echo __( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
 	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display:none;">
 		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' );?></p>
@@ -822,7 +822,7 @@ function bp_admin_setting_callback_group_creation() {
 function bp_admin_setting_callback_group_avatar_uploads() {
 	?>
 	<input id="bp-disable-group-avatar-uploads" name="bp-disable-group-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_avatar_uploads() ); ?> />
-	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow group organizers to upload an avatar', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow group organizers to upload a group avatar', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -834,7 +834,8 @@ function bp_admin_setting_callback_group_avatar_uploads() {
 function bp_admin_setting_callback_group_cover_image_uploads() {
 	?>
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
-	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow group organizers to upload cover photos', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Enable cover images for groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bp_group_creation_description"><?php _e( 'When enabled, group organizers will be able to upload cover images in the group\'s settings', 'buddyboss' ); ?></p>
 	<?php
 }
 

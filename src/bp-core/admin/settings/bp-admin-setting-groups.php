@@ -38,7 +38,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
 		add_filter( 'bp_attachments_get_attachment_dir', 'bp_attachments_get_profile_group_attachment_dir', 10, 4 );
 		add_filter( 'bp_attachments_get_attachment_sub_dir', 'bp_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
-		add_filter( 'bb_attachments_cover_image_ajax_delete_args', 'bb_attachments_profile_group_cover_image_ajax_delete_args', 10, 1 );
 	}
 
 	public function settings_save() {
@@ -82,10 +81,10 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	// Register setting fields
 	public function register_fields() {
 		// Group avatar and cover.
-		$this->add_section( 'bp_groups_avatar_settings', __( 'Group Photos', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
+		$this->add_section( 'bp_groups_avatar_settings', __( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
 		// Allow group avatars.
-		$this->add_field( 'bp-disable-group-avatar-uploads', __( 'Group Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
+		$this->add_field( 'bp-disable-group-avatar-uploads', __( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
 
 		$args          = array();
 		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type';

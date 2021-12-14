@@ -36,19 +36,24 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
 		add_filter( 'bp_attachments_get_attachment_dir', 'bp_attachments_get_profile_group_attachment_dir', 10, 4 );
 		add_filter( 'bp_attachments_get_attachment_sub_dir', 'bp_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
-		add_filter( 'bb_attachments_cover_image_ajax_delete_args', 'bb_attachments_profile_group_cover_image_ajax_delete_args', 10, 1 );
 	}
 
 	public function settings_save() {
-		$if_disabled_before_saving         = bp_disable_advanced_profile_search();
-		$profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
-		$profile_cover_type_before_saving  = bb_get_default_profile_cover_type();
+		$if_disabled_before_saving                 = bp_disable_advanced_profile_search();
+		$profile_avatar_type_before_saving         = bb_get_profile_avatar_type();
+		$bp_disable_avatar_uploads_before_saving   = bp_disable_avatar_uploads();
+		$default_profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
+		$bp_enable_profile_gravatar_before_saving  = bp_enable_profile_gravatar();
+		$profile_cover_type_before_saving          = bb_get_default_profile_cover_type();
 
 		parent::settings_save();
 
-		$if_disabled_after_saving         = bp_disable_advanced_profile_search();
-		$profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
-		$profile_cover_type_after_saving  = bb_get_default_profile_cover_type();
+		$if_disabled_after_saving                 = bp_disable_advanced_profile_search();
+		$profile_avatar_type_after_saving         = bb_get_profile_avatar_type();
+		$bp_disable_avatar_uploads_after_saving   = bp_disable_avatar_uploads();
+		$default_profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
+		$bp_enable_profile_gravatar_after_saving  = bp_enable_profile_gravatar();
+		$profile_cover_type_after_saving          = bb_get_default_profile_cover_type();
 
 		/**
 		 * sync bp-enable-member-dashboard with cutomizer settings.
@@ -91,17 +96,35 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		/**
+		 * Enable Gravatars set disable if Profile Avatars is WordPress.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		if ( isset( $_POST['bp-profile-avatar-type'] ) && 'wordpress' === sanitize_text_field( $_POST['bp-profile-avatar-type'] ) ) {
+			bp_update_option( 'bp-enable-profile-gravatar', '' );
+		}
+
+		/**
 		 * Validate custom option for profile avatar and cover.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		if ( ! isset( $_POST['bp-default-custom-profile-avatar'] ) || ( isset( $_POST['bp-default-custom-profile-avatar'] ) && empty( $_POST['bp-default-custom-profile-avatar'] ) && 'custom' === $profile_avatar_type_after_saving ) ) {
+		if ( ! isset( $_POST['bp-default-custom-profile-avatar'] ) || ( isset( $_POST['bp-default-custom-profile-avatar'] ) && empty( $_POST['bp-default-custom-profile-avatar'] ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
 
-			if ( 'custom' === $profile_avatar_type_before_saving ) {
-				$profile_avatar_type_before_saving = 'buddyboss';
+			if ( 'wordpress' === $profile_avatar_type_before_saving ) {
+
+				$bp_disable_avatar_uploads_before_saving   = '1';
+				$default_profile_avatar_type_before_saving = 'buddyboss';
+				$bp_enable_profile_gravatar_before_saving  = '';
+
+			} else if ( 'custom' === $default_profile_avatar_type_before_saving ) {
+				$default_profile_avatar_type_before_saving = 'buddyboss';
 			}
 
-			bp_update_option( 'bp-default-profile-avatar-type', $profile_avatar_type_before_saving );
+			bp_update_option( 'bp-profile-avatar-type', $profile_avatar_type_before_saving );
+			bp_update_option( 'bp-disable-avatar-uploads', $bp_disable_avatar_uploads_before_saving );
+			bp_update_option( 'bp-default-profile-avatar-type', $default_profile_avatar_type_before_saving );
+			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
 		}
 
 		if ( ! isset( $_POST['bp-default-custom-profile-cover'] ) || ( isset( $_POST['bp-default-custom-profile-cover'] ) && empty( $_POST['bp-default-custom-profile-cover'] ) && 'custom' === $profile_cover_type_after_saving ) ) {
@@ -160,10 +183,17 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
 		// Section for Profile Photos
-		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ), '', 'bp_profile_photos_tutorial' );
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Images', 'buddyboss' ), '', 'bp_profile_photos_tutorial' );
+
+		// Profile Avatar type
+		$args          = array();
+		$args['class'] = 'profile-avatars-field';
+		$this->add_field( 'bp-profile-avatar-type', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_profile_avatar_type', 'string', $args );
 
 		// Avatars.
-		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
+		$args          = array();
+		$args['class'] = 'upload-avatars-field';
+		$this->add_field( 'bp-disable-avatar-uploads', __( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval', $args );
 
 		$args          = array();
 		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type';
@@ -175,7 +205,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		if ( bp_get_option( 'show_avatars' ) ) {
 			// Gravatars.
-			$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
+			$args          = array();
+			$args['class'] = 'enable-profile-gravatar-field';
+			$this->add_field( 'bp-enable-profile-gravatar', __( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
 		}
 
 		// cover photos.

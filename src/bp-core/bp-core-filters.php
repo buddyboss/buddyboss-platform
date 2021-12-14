@@ -1761,6 +1761,11 @@ function bb_default_custom_profile_group_avatar_url_check( $gravatar, $params ) 
 function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
 	$bp_params           = array();
 	$profile_group_types = array( 'user', 'group' );
+	$request_actions     = array( 'bp_cover_image_upload' );
+
+	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && ! in_array( sanitize_text_field( $_POST['action'] ), $request_actions, true ) ) ) {
+		return false;
+	}
 
 	if ( ! isset( $_POST['bp_params'] ) || empty( $_POST['bp_params'] ) ) {
 		return false;
@@ -1776,10 +1781,6 @@ function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
 	$object  = $bp_params['object'];
 
 	if ( ! is_admin() || 0 < $item_id || ! in_array( $object, $profile_group_types, true ) ) {
-		return false;
-	}
-
-	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && 'bp_cover_image_upload' !== sanitize_text_field( $_POST['action'] ) ) ) {
 		return false;
 	}
 
@@ -1894,26 +1895,6 @@ function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 }
 
 /**
- * Set item ID for delete profile or group cover image.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $args {
- *     @type string     $object  Avatar type being requested.
- *     @type int|string $item_id ID of the avatar item being requested.
- * }
- * @return int|string Actual item ID for upload custom avatar.
- */
-function bb_attachments_profile_group_cover_image_ajax_delete_args( $args ) {
-
-	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' !== sanitize_text_field( $_POST['action'] ) && 0 === $args['item_id'] ) {
-		$args['item_id'] = 'custom';
-	}
-
-	return $args;
-}
-
-/**
  * Set profile avatar type 'BuddyBoss' if disabled 'Show Avatar' option disabled and 'WordPress' option is enabled in Default Profile Avatar.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1970,9 +1951,9 @@ add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_a
 /**
  * Delete default group cover photo attachment
  * 
- * @param int $item_id Inform about the item id the cover photo was deleted for.
- *
  * @since BuddyBoss [BBVERSION]
+ * 
+ * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
 function bb_delete_profile_group_cover_images_url( $item_id ) {
 
@@ -1989,3 +1970,21 @@ function bb_delete_profile_group_cover_images_url( $item_id ) {
 }
 add_action( 'xprofile_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
 add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
+
+/**
+ * Set gravatars when Gravatars is enabled from the Profile Images and Profile Avatars is BuddyBoss.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *  
+ * @param string $default_grav The avatar default.
+ * @param array  $params       The avatar's data.
+ */
+function bb_profile_set_gravatar_default( $avatar_default, $params ) {
+	
+	if ( 'buddyboss' === bb_get_profile_avatar_type() ) {
+		$avatar_default = 'mm';
+	}
+
+	return $avatar_default;
+}
+add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 );

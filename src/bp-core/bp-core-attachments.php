@@ -597,7 +597,51 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
  * @return bool True if the attachment was deleted, false otherwise.
  */
 function bp_attachments_delete_file( $args = array() ) {
-	$attachment_path = bp_attachments_get_attachment( 'path', $args );
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'object_dir' => 'members',
+			'item_id'    => bp_loggedin_user_id(),
+			'type'       => 'cover-image',
+			'file'       => '',
+		),
+		'bp_attachments_delete_file_agrs'
+	);
+
+	$attachment_path = '';
+	if ( is_admin() && 0 === $r['item_id'] ) {
+
+		$upload_dir = bp_attachments_uploads_dir_get();
+
+		$cover_url = bb_get_default_custom_upload_profile_cover();
+		$subdir    = '/members/custom/cover-image';
+		if ( 'groups' === $r['object_dir'] ) {
+			$cover_url = bb_get_default_custom_upload_group_cover();
+			$subdir    = '/groups/custom/cover-image';
+		}
+
+		if ( empty( $cover_url ) ) {
+			return false;
+		}
+
+		$r['file'] = basename( $cover_url );
+
+		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
+
+		if ( 0 === validate_file( $type_dir ) && is_dir( $type_dir ) ) {
+
+			if ( ! empty( $r['file'] ) ) {
+				if ( ! file_exists( trailingslashit( $type_dir ) . $r['file'] ) ) {
+					return false;
+				}
+
+				$attachment_path = trailingslashit( $type_dir ) . $r['file'];
+			}
+		}
+	} else {
+		$attachment_path = bp_attachments_get_attachment( 'path', $args );
+	}
 
 	/**
 	 * Filters whether or not to handle deleting an existing BuddyPress attachment.
@@ -1225,7 +1269,7 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 		)
 	);
 
-	if ( false !== strpos( $cover_src, '/custom/' ) ) {
+	if ( false !== strpos( $cover_src, '/custom/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
 		$cover_src = '';
 	}
 
@@ -1253,7 +1297,7 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 		)
 	);
 
-	if ( false !== strpos( $cover_src, '/custom/' ) ) {
+	if ( false !== strpos( $cover_src, '/custom/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
 		$cover_src = '';
 	}
 
@@ -1628,18 +1672,6 @@ function bp_attachments_cover_image_ajax_delete() {
 		'object'  => sanitize_text_field( $_POST['object'] ),
 		'item_id' => (int) $_POST['item_id'],
 	);
-
-	/**
-	 * Filters the args contains for delete cover image.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 * 
-	 * @param array $args {
-	 *     @type string     $object  Avatar type being requested.
-	 *     @type int|string $item_id ID of the avatar item being requested.
-	 * }
-	 */
-	$args = apply_filters( 'bb_attachments_cover_image_ajax_delete_args', $args );
 
 	// Check permissions.
 	check_admin_referer( 'bp_delete_cover_image', 'nonce' );

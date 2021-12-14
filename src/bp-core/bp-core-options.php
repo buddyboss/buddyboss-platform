@@ -70,6 +70,9 @@ function bp_get_default_options() {
 		'bp-disable-avatar-uploads'                  => false,
 
 		// Avatar type.
+		'bp-profile-avatar-type'                     => 'buddyboss',
+
+		// Default Avatar type.
 		'bp-default-profile-avatar-type'             => 'buddyboss',
 
 		// Cover type.
@@ -2000,7 +2003,28 @@ function bb_get_blank_profile_avatar() {
 }
 
 /**
- * Which type of profile avatar selected?
+ * Which type of profile avatar configured?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile avatar type.
+ */
+function bb_get_profile_avatar_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters profile avatar type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Profile avatar type.
+	 */
+	return apply_filters( 'bb_get_profile_avatar_type', bp_get_option( 'bp-profile-avatar-type', $default ) );
+}
+
+/**
+ * Which type of default profile avatar selected?
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2302,27 +2326,61 @@ function bb_get_default_custom_upload_group_cover() {
  */
 function bb_attachments_get_default_profile_group_avatar_image( $component ) {
 
-	$avatar_image_url        = false;
-	$disable_avatar_uploads  = ( 'user' === $component ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
+	$avatar_image_url       = false;
+	$disable_avatar_uploads = ( 'user' === $component ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
 
 	if ( 'user' === $component ) {
 
-		$show_avatar         = bp_get_option( 'show_avatars' );
-		$profile_avatar_type = bb_get_default_profile_avatar_type();
+		$show_avatar                 = bp_get_option( 'show_avatars' );
+		$profile_avatar_type         = bb_get_profile_avatar_type();
+		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
 
-		if ( ! $show_avatar && $disable_avatar_uploads ) {
-			$avatar_image_url = bb_get_blank_profile_avatar();
-		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
-			$avatar_image_url = bb_get_buddyboss_profile_avatar();
-		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'legacy' === $profile_avatar_type ) {
-			$avatar_image_url = bb_get_legacy_profile_avatar();
-		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'custom' === $profile_avatar_type ) {
-			$avatar_image_url = bb_get_default_custom_upload_profile_avatar();
+		/**
+		 * Profile Avatars = BuddyBoss.
+		 * Upload Avatars = checked.
+		 */
+		if ( 'buddyboss' === $profile_avatar_type && ! $disable_avatar_uploads ) {
 
-			if ( empty( $avatar_image_url ) ) {
+			// Default Profile Avatar = BuddyBoss.
+			if ( 'buddyboss' === $default_profile_avatar_type ) {
 				$avatar_image_url = bb_get_buddyboss_profile_avatar();
+
+				// Default Profile Avatar = Legacy.
+			} elseif ( 'legacy' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_legacy_profile_avatar();
+
+				// Default Profile Avatar = Custom.
+			} elseif ( 'custom' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_default_custom_upload_profile_avatar();
+
+				// Upload Custom Avatar = null then set BuddyBoss Avatar.
+				if ( empty( $avatar_image_url ) ) {
+					$avatar_image_url = bb_get_buddyboss_profile_avatar();
+				}
 			}
-		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'WordPress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+
+			/**
+			 * Avatar Display = checked.
+			 * Upload Avatars = checked.
+			 * Profile Avatars = WordPress.
+			 * Default Avatar = Blank.
+			 */
+		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'wordpress' === $default_profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = bb_get_blank_profile_avatar();
+
+			/**
+			 * Avatar Display = unchecked.
+			 * Profile Avatars = BuddyBoss.
+			 * Upload Avatars = unchecked.
+			 */
+		} elseif ( $show_avatar && $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_blank_profile_avatar();
+
+			/**
+			 * Avatar Display = unchecked.
+			 * Profile Avatars = WordPress.
+			 */
+		} elseif ( ! $show_avatar && 'wordpress' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar();
 		}
 	} elseif ( ! $disable_avatar_uploads && 'group' === $component ) {

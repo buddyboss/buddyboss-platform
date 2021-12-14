@@ -1406,10 +1406,11 @@ function bb_update_to_1_8_4() {
 	$show_profile_avatar = bp_get_option( 'show_avatars' );
 	$default_avatar      = bp_get_option( 'avatar_default', 'mystery' );
 
-	if ( $show_profile_avatar && 'mystery' !== $default_avatar ) {
-		bp_update_option( 'bp-default-profile-avatar-type', 'wordpress' );
-	} else {
+	if ( $show_profile_avatar && 'mystery' === $default_avatar ) {
+		bp_update_option( 'bp-profile-avatar-type', 'buddyboss' );
 		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	} else {
+		bp_update_option( 'bp-profile-avatar-type', 'wordpress' );
 	}
 
 	// Set Group Avatar.
@@ -1418,7 +1419,7 @@ function bb_update_to_1_8_4() {
 	// Profile Cover.
 	bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 
-	if ( function_exists( 'buddyboss_theme_get_option' ) ) {
+	if ( ! bp_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) ) {
 		$theme_default_profile_cover_url = buddyboss_theme_get_option( 'buddyboss_profile_cover_default', 'url' );
 
 		if ( ! empty( $theme_default_profile_cover_url ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
@@ -1469,7 +1470,8 @@ function bb_update_to_1_8_4() {
 
 	// Group Cover.
 	bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
-	if ( function_exists( 'buddyboss_theme_get_option' ) ) {
+
+	if ( ! bp_disable_group_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) ) {
 		$theme_default_group_cover_url = buddyboss_theme_get_option( 'buddyboss_group_cover_default', 'url' );
 
 		if ( ! empty( $theme_default_group_cover_url ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
@@ -1535,11 +1537,11 @@ function bb_to_1_8_4_upload_temp_cover_file( $cover_type ) {
 		'url'      => '',
 	);
 
-	$default_profile_cover_url = buddyboss_theme_get_option( $cover_type, 'url' );
+	$default_cover_url = buddyboss_theme_get_option( $cover_type, 'url' );
 
-	if ( ! empty( $default_profile_cover_url ) ) {
+	if ( ! empty( $default_cover_url ) ) {
 
-		$default_cover_path = str_replace( trailingslashit( get_site_url() ), ABSPATH, $default_profile_cover_url );
+		$default_cover_path = str_replace( trailingslashit( get_site_url() ), ABSPATH, $default_cover_url );
 		$upload_dir         = wp_upload_dir();
 		$upload_dir         = $upload_dir['basedir'];
 
