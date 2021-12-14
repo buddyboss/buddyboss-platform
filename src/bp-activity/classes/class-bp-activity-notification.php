@@ -46,7 +46,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
 				bp_activity_get_user_mentionname( bp_loggedin_user_id() )
 			),
-			esc_html__( 'A member is mentioned in another member\’s update', 'buddyboss' )
+			esc_html__( 'A member is mentioned in another member\'s update', 'buddyboss' )
 		);
 
 		$this->register_email_type(
