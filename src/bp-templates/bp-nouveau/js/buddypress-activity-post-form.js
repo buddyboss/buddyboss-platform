@@ -1927,7 +1927,8 @@ window.bp = window.bp || {};
 			id: 'whats-new',
 			events: {
 				'paste': 'handlePaste',
-				'keyup': 'handleKeyUp'
+				'keyup': 'handleKeyUp',
+				'click': 'handleClick'
 			},
 			attributes: {
 				name: 'whats-new',
@@ -2007,6 +2008,28 @@ window.bp = window.bp || {};
 					},
 					500
 				);
+
+				this.saveCaretPosition();
+
+			},
+
+			handleClick: function() {
+				this.saveCaretPosition();
+			},
+
+			saveCaretPosition: function () {
+
+				var range = window.getSelection().getRangeAt(0);
+				var preSelectionRange = range.cloneRange();
+				preSelectionRange.selectNodeContents(this.$el[0]);
+				preSelectionRange.setEnd(range.startContainer, range.startOffset);
+				var start = preSelectionRange.toString().length;
+
+				window.activityCaretPosition = {
+					start: start,
+					end: start + range.toString().length
+				};
+
 			},
 
 			scrapURL: function ( urlText ) {
@@ -2914,12 +2937,49 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				var editor = this.$el.closest( '.activity-update-form' ).find( '#whats-new' );
 
+				var $this = this;
+
 				setTimeout( function () {
 					editor.focus();
-					document.execCommand('insertText', false, ' @');
+					$this.restoreSelection(editor[0], window.activityCaretPosition );
+					document.execCommand('insertText', false, '@');
 					editor.trigger( 'keyup' );
+					setTimeout( function () {
+						editor.trigger( 'keyup' );
+					},0);
 				},0);
 
+			},
+
+			restoreSelection: function ( element, selection ) {
+				var charIndex = 0, range = document.createRange();
+				range.setStart(element, 0);
+				range.collapse(true);
+				var nodeStack = [element], node, foundStart = false, stop = false;
+
+				while (!stop && (node = nodeStack.pop())) {
+					if (node.nodeType === 3) {
+						var nextCharIndex = charIndex + node.length;
+						if (!foundStart && selection.start >= charIndex && selection.start <= nextCharIndex) {
+							range.setStart(node, selection.start - charIndex);
+							foundStart = true;
+						}
+						if (foundStart && selection.end >= charIndex && selection.end <= nextCharIndex) {
+							range.setEnd(node, window.activityCaretPosition.end - charIndex);
+							stop = true;
+						}
+						charIndex = nextCharIndex;
+					} else {
+						var i = node.childNodes.length;
+						while (i--) {
+							nodeStack.push(node.childNodes[i]);
+						}
+					}
+				}
+
+				var sel = window.getSelection();
+				sel.removeAllRanges();
+				sel.addRange(range);
 			}
 		}
 	);
