@@ -30,7 +30,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 <div id="whats-new-attachments">
 
 	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
-		<div class="dropzone closed" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed media-dropzone" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 		<div class="forum-post-media-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
@@ -39,8 +39,8 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				</div>
 				<div class="dz-progress-ring-wrap">
 					<i class="bb-icon bb-icon-camera-fill"></i>
-					<svg class="dz-progress-ring" width="62" height="62">
-						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+					<svg class="dz-progress-ring" width="54" height="54">
+						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 					</svg>
 				</div>
 				<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -74,7 +74,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="dropzone closed" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed document-dropzone" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
@@ -85,9 +85,9 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				</div>
 				<div class="dz-progress-ring-wrap">
 					<i class="bb-icon bb-icon-attach-fill"></i>
-					<svg class="dz-progress-ring" width="62" height="62">
-						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
-					</svg>
+					<svg class="dz-progress-ring" width="54" height="54">
+                    <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+                </svg>
 				</div>
 				<div class="dz-error-message"><span data-dz-errormessage></span></div>
 				<div class="dz-error-mark">
@@ -104,7 +104,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0 ) ) : ?>
-		<div class="dropzone closed" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed video-dropzone" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
 		<input name="bbp_video" id="bbp_video" type="hidden" value=""/>
 		<div class="forum-post-video-template" style="display:none;">
 		<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -113,9 +113,9 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 			</div>
 			<div class="dz-progress-ring-wrap">
 				<i class="bb-icon bb-icon-video-fill"></i>
-				<svg class="dz-progress-ring" width="62" height="62">
-					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
-				</svg>
+				<svg class="dz-progress-ring" width="54" height="54">
+                    <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+                </svg>
 			</div>
 			<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
 			<div class="dz-error-message"><span data-dz-errormessage></span></div>

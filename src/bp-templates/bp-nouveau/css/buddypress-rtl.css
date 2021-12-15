@@ -1769,6 +1769,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   background-color: #fff;
   transition: bottom ease 0.3s;
   height: 0;
+  width: calc(100% - 115px);
   overflow: hidden;
   display: none;
 }
@@ -21219,14 +21220,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   padding: 0 5px;
 }
 
-#activity-post-video-uploader .dz-progress-count,
-#bp-video-dropzone-content .dz-progress-count,
-#forums-post-video-uploader .dz-progress-count,
-#messages-post-video-uploader .dz-progress-count,
-#bp-group-messages-post-video-uploader .dz-progress-count,
-#boss-video-create-album-popup .dz-progress-count,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-progress-count,
-#video-uploader.dropzone .dz-progress-count {
+.dropzone.video-dropzone .dz-progress-count {
   position: absolute;
   z-index: 12;
   bottom: 10px;
@@ -21243,25 +21237,11 @@ div.dropzone.dz-started .dz-default.dz-message {
   min-width: 140px;
 }
 
-#activity-post-video-uploader .dz-preview,
-#bp-video-dropzone-content .dz-preview,
-#forums-post-video-uploader .dz-preview,
-#messages-post-video-uploader .dz-preview,
-#bp-group-messages-post-video-uploader .dz-preview,
-#boss-video-create-album-popup .dz-preview,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview,
-#video-uploader.dropzone .dz-preview {
+.dropzone.video-dropzone .dz-preview {
   background: #f0f3f7;
 }
 
-#activity-post-video-uploader div.dz-preview.dz-file-preview .dz-remove,
-#bp-video-dropzone-content div.dz-preview.dz-file-preview .dz-remove,
-#forums-post-video-uploader div.dz-preview.dz-file-preview .dz-remove,
-#messages-post-video-uploader div.dz-preview.dz-file-preview .dz-remove,
-#bp-group-messages-post-video-uploader div.dz-preview.dz-file-preview .dz-remove,
-#boss-video-create-album-popup div.dz-preview.dz-file-preview .dz-remove,
-.ac-reply-content .ac-reply-attachments .dropzone.video div.dz-preview.dz-file-preview .dz-remove,
-#video-uploader.dropzone div.dz-preview.dz-file-preview .dz-remove {
+.dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove {
   position: absolute;
   bottom: 15px;
   top: inherit;
@@ -21275,118 +21255,47 @@ div.dropzone.dz-started .dz-default.dz-message {
   box-shadow: none;
 }
 
-#activity-post-video-uploader div.dz-preview.dz-file-preview .dz-remove:after,
-#bp-video-dropzone-content div.dz-preview.dz-file-preview .dz-remove:after,
-#forums-post-video-uploader div.dz-preview.dz-file-preview .dz-remove:after,
-#messages-post-video-uploader div.dz-preview.dz-file-preview .dz-remove:after,
-#bp-group-messages-post-video-uploader div.dz-preview.dz-file-preview .dz-remove:after,
-#boss-video-create-album-popup div.dz-preview.dz-file-preview .dz-remove:after,
-.ac-reply-content .ac-reply-attachments .dropzone.video div.dz-preview.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone div.dz-preview.dz-file-preview .dz-remove:after {
+.dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
   font-size: 26px;
   color: #fff;
   line-height: 1;
 }
 
-#activity-post-video-uploader .dz-preview .dz-progress-ring-wrap,
-#bp-video-dropzone-content .dz-preview .dz-progress-ring-wrap,
-#forums-post-video-uploader .dz-preview .dz-progress-ring-wrap,
-#messages-post-video-uploader .dz-preview .dz-progress-ring-wrap,
-#bp-group-messages-post-video-uploader .dz-preview .dz-progress-ring-wrap,
-#boss-video-create-album-popup .dz-preview .dz-progress-ring-wrap,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview .dz-progress-ring-wrap,
-#video-uploader.dropzone .dz-preview .dz-progress-ring-wrap {
-  height: 60px;
-  width: 60px;
+.dropzone.video-dropzone .dz-preview .dz-progress-ring-wrap .bb-icon {
+  font-size: 16px;
 }
 
-#activity-post-video-uploader .dz-preview .dz-filename,
-#bp-video-dropzone-content .dz-preview .dz-filename,
-#forums-post-video-uploader .dz-preview .dz-filename,
-#messages-post-video-uploader .dz-preview .dz-filename,
-#bp-group-messages-post-video-uploader .dz-preview .dz-filename,
-#boss-video-create-album-popup .dz-preview .dz-filename,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview .dz-filename,
-#video-uploader.dropzone .dz-preview .dz-filename {
+.dropzone.video-dropzone .dz-preview .dz-filename {
   opacity: 0;
   visibility: hidden;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-filename,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-filename,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-filename {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-filename {
   color: #fff;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress {
   display: none;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress-count,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-count {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-count {
   display: none;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview.dz-preview.dz-file-preview {
   background-color: #ddd;
   border-radius: 4px;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap {
   display: block;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-progress-ring-wrap .dz-progress-ring circle {
   display: none;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-remove,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-remove,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove {
   bottom: inherit;
   transform: none;
   margin: 0;
@@ -21399,14 +21308,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   line-height: inherit;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
   font-size: 17px;
   color: #9ea8b3;
   line-height: 1;
@@ -21415,38 +21317,17 @@ div.dropzone.dz-started .dz-default.dz-message {
   right: 0;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
   background-color: #fafafa !important;
   z-index: 1;
   border-radius: 4px;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-details {
   background-color: transparent;
 }
 
-#activity-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#bp-video-dropzone-content .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#forums-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#bp-group-messages-post-video-uploader .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#boss-video-create-album-popup .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename,
-#video-uploader.dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename {
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename {
   opacity: 1;
   visibility: visible;
   position: absolute;
@@ -21455,14 +21336,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   color: #828890;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-remove,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-remove,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-remove,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove {
+.dropzone.video-dropzone .dz-preview.dz-file-preview .dz-remove {
   background-color: #fd4343;
   position: absolute;
   top: 5px;
@@ -21474,14 +21348,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   transform: none;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-remove:after,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-remove:after,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-remove:after,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-remove:after,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-remove:after {
+.dropzone.video-dropzone .dz-preview.dz-file-preview .dz-remove:after {
   position: absolute;
   top: -1px;
   right: 1px;
@@ -21489,14 +21356,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   line-height: 1;
 }
 
-#activity-post-video-uploader #dropzone-video-preview,
-#bp-video-dropzone-content #dropzone-video-preview,
-#forums-post-video-uploader #dropzone-video-preview,
-#messages-post-video-uploader #dropzone-video-preview,
-#bp-group-messages-post-video-uploader #dropzone-video-preview,
-#boss-video-create-album-popup #dropzone-video-preview,
-.ac-reply-content .ac-reply-attachments .dropzone.video #dropzone-video-preview,
-#video-uploader.dropzone #dropzone-video-preview {
+.dropzone.video-dropzone #dropzone-video-preview {
   height: 100%;
   width: 100%;
   position: absolute;
@@ -21507,86 +21367,37 @@ div.dropzone.dz-started .dz-default.dz-message {
   object-fit: fill;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details {
+.dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details {
   min-height: 165px;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-size,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-size,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details .dz-size,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details .dz-size {
+.dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details .dz-size {
   display: none !important;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details .dz-filename > span,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details .dz-filename > span {
+.dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details .dz-filename > span {
   max-width: 70%;
   margin: auto;
 }
 
-#activity-post-video-uploader .dz-success-mark,
-#bp-video-dropzone-content .dz-success-mark,
-#forums-post-video-uploader .dz-success-mark,
-#messages-post-video-uploader .dz-success-mark,
-#bp-group-messages-post-video-uploader .dz-success-mark,
-#boss-video-create-album-popup .dz-success-mark,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-success-mark,
-#video-uploader.dropzone .dz-success-mark {
+.dropzone.video-dropzone .dz-success-mark {
   top: 70%;
   right: -5px;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview,
-#bp-video-dropzone-content .dz-preview.dz-file-preview,
-#forums-post-video-uploader .dz-preview.dz-file-preview,
-#messages-post-video-uploader .dz-preview.dz-file-preview,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
-#boss-video-create-album-popup .dz-preview.dz-file-preview,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
-#video-uploader.dropzone .dz-preview.dz-file-preview {
+.dropzone.video-dropzone .dz-preview.dz-file-preview {
   width: 260px;
   min-height: 165px;
 }
 
-#activity-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-video-dropzone-content .dz-preview.dz-file-preview .dz-details,
-#forums-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#bp-group-messages-post-video-uploader .dz-preview.dz-file-preview .dz-details,
-#boss-video-create-album-popup .dz-preview.dz-file-preview .dz-details,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview .dz-details,
-#video-uploader.dropzone .dz-preview.dz-file-preview .dz-details {
+.dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details {
   width: 100%;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
-#activity-post-video-uploader .dz-video-thumbnail,
-#bp-video-dropzone-content .dz-video-thumbnail,
-#forums-post-video-uploader .dz-video-thumbnail,
-#messages-post-video-uploader .dz-video-thumbnail,
-#bp-group-messages-post-video-uploader .dz-video-thumbnail,
-#boss-video-create-album-popup .dz-video-thumbnail,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-video-thumbnail,
-#video-uploader.dropzone .dz-video-thumbnail {
+.dropzone.video-dropzone .dz-video-thumbnail {
   position: absolute;
   top: 0;
   right: 0;
@@ -21597,111 +21408,48 @@ div.dropzone.dz-started .dz-default.dz-message {
   overflow: hidden;
 }
 
-#activity-post-video-uploader .dz-video-thumbnail img,
-#bp-video-dropzone-content .dz-video-thumbnail img,
-#forums-post-video-uploader .dz-video-thumbnail img,
-#messages-post-video-uploader .dz-video-thumbnail img,
-#bp-group-messages-post-video-uploader .dz-video-thumbnail img,
-#boss-video-create-album-popup .dz-video-thumbnail img,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-video-thumbnail img,
-#video-uploader.dropzone .dz-video-thumbnail img {
+.dropzone.video-dropzone .dz-video-thumbnail img {
   height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
-#activity-post-video-uploader .dz-success-mark,
-#bp-video-dropzone-content .dz-success-mark,
-#forums-post-video-uploader .dz-success-mark,
-#messages-post-video-uploader .dz-success-mark,
-#bp-group-messages-post-video-uploader .dz-success-mark,
-#boss-video-create-album-popup .dz-success-mark,
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-success-mark,
-#video-uploader.dropzone .dz-success-mark {
+.dropzone.video-dropzone .dz-success-mark {
   display: none;
 }
 
-#activity-post-video-uploader.dz-started .dz-default.dz-message,
-#bp-video-dropzone-content.dz-started .dz-default.dz-message,
-#forums-post-video-uploader.dz-started .dz-default.dz-message,
-#messages-post-video-uploader.dz-started .dz-default.dz-message,
-#bp-group-messages-post-video-uploader.dz-started .dz-default.dz-message,
-#boss-video-create-album-popup.dz-started .dz-default.dz-message,
-.ac-reply-content .ac-reply-attachments .dropzone.video.dz-started .dz-default.dz-message,
-#video-uploader.dropzone.dz-started .dz-default.dz-message {
+.dropzone.video-dropzone.dz-started .dz-default.dz-message {
   max-width: 260px !important;
   width: 260px;
   min-height: 165px !important;
 }
 
 @media screen and (max-width: 768px) {
-  #activity-post-video-uploader .dz-preview.dz-file-preview,
-  #bp-video-dropzone-content .dz-preview.dz-file-preview,
-  #forums-post-video-uploader .dz-preview.dz-file-preview,
-  #messages-post-video-uploader .dz-preview.dz-file-preview,
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
-  #boss-video-create-album-popup .dz-preview.dz-file-preview,
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
-  #video-uploader.dropzone .dz-preview.dz-file-preview {
+  .dropzone.video-dropzone .dz-preview.dz-file-preview {
     width: calc(50% - 11.5px);
     margin: 0 5px 10px;
   }
-  #activity-post-video-uploader .dz-preview.dz-file-preview:last-child,
-  #bp-video-dropzone-content .dz-preview.dz-file-preview:last-child,
-  #forums-post-video-uploader .dz-preview.dz-file-preview:last-child,
-  #messages-post-video-uploader .dz-preview.dz-file-preview:last-child,
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview:last-child,
-  #boss-video-create-album-popup .dz-preview.dz-file-preview:last-child,
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview:last-child,
-  #video-uploader.dropzone .dz-preview.dz-file-preview:last-child {
+  .dropzone.video-dropzone .dz-preview.dz-file-preview:last-child {
     margin-left: 0;
   }
-  #activity-post-video-uploader.dz-started .dz-default.dz-message,
-  #bp-video-dropzone-content.dz-started .dz-default.dz-message,
-  #forums-post-video-uploader.dz-started .dz-default.dz-message,
-  #messages-post-video-uploader.dz-started .dz-default.dz-message,
-  #bp-group-messages-post-video-uploader.dz-started .dz-default.dz-message,
-  #boss-video-create-album-popup.dz-started .dz-default.dz-message,
-  .ac-reply-content .ac-reply-attachments .dropzone.video.dz-started .dz-default.dz-message,
-  #video-uploader.dropzone.dz-started .dz-default.dz-message {
+  .dropzone.video-dropzone.dz-started .dz-default.dz-message {
     width: calc(50% - 11.5px);
     max-width: calc(50% - 11.5px) !important;
   }
 }
 
 @media screen and (max-width: 640px) {
-  #activity-post-video-uploader .dz-default.dz-message,
-  #bp-video-dropzone-content .dz-default.dz-message,
-  #forums-post-video-uploader .dz-default.dz-message,
-  #messages-post-video-uploader .dz-default.dz-message,
-  #bp-group-messages-post-video-uploader .dz-default.dz-message,
-  #boss-video-create-album-popup .dz-default.dz-message,
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-default.dz-message,
-  #video-uploader.dropzone .dz-default.dz-message {
+  .dropzone.video-dropzone .dz-default.dz-message {
     min-height: 18vh;
   }
 }
 
 @media screen and (max-width: 480px) {
-  #activity-post-video-uploader .dz-preview.dz-file-preview,
-  #bp-video-dropzone-content .dz-preview.dz-file-preview,
-  #forums-post-video-uploader .dz-preview.dz-file-preview,
-  #messages-post-video-uploader .dz-preview.dz-file-preview,
-  #bp-group-messages-post-video-uploader .dz-preview.dz-file-preview,
-  #boss-video-create-album-popup .dz-preview.dz-file-preview,
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview,
-  #video-uploader.dropzone .dz-preview.dz-file-preview {
+  .dropzone.video-dropzone .dz-preview.dz-file-preview {
     width: calc(100% - 10px);
     margin: 0 5px 10px;
   }
-  #activity-post-video-uploader.dz-started .dz-default.dz-message,
-  #bp-video-dropzone-content.dz-started .dz-default.dz-message,
-  #forums-post-video-uploader.dz-started .dz-default.dz-message,
-  #messages-post-video-uploader.dz-started .dz-default.dz-message,
-  #bp-group-messages-post-video-uploader.dz-started .dz-default.dz-message,
-  #boss-video-create-album-popup.dz-started .dz-default.dz-message,
-  .ac-reply-content .ac-reply-attachments .dropzone.video.dz-started .dz-default.dz-message,
-  #video-uploader.dropzone.dz-started .dz-default.dz-message {
+  .dropzone.video-dropzone.dz-started .dz-default.dz-message {
     width: calc(100% - 10px);
     max-width: calc(100% - 10px) !important;
   }
@@ -22343,9 +22091,7 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone.dz-started .dz-default.dz-message .dz-button {
-  background-size: 35px !important;
   font-size: 13px !important;
-  padding: 40px 5px 0 !important;
 }
 
 .dropzone.dz-max-files-reached .dz-default.dz-message {
@@ -22368,8 +22114,8 @@ body > .open-popup.video-error-popup {
   transform: translate(50%, -50%);
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  height: 60px;
-  width: 60px;
+  height: 50px;
+  width: 50px;
 }
 
 .dropzone .dz-preview .dz-progress-ring-wrap .dz-progress-ring {
@@ -22396,62 +22142,32 @@ body > .open-popup.video-error-popup {
   font-size: 18px;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
-#messages-post-document-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
-#forums-post-document-uploader.dropzone .dz-preview .dz-progress-ring-wrap,
-.activity-document-container .dropzone .dz-preview .dz-progress-ring-wrap,
-.bp-media-document-uploader .dropzone .dz-preview .dz-progress-ring-wrap,
-.dropzone.document .dz-preview .dz-progress-ring-wrap {
+.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-icon,
-#messages-post-document-uploader.dropzone .dz-preview .dz-icon,
-#forums-post-document-uploader.dropzone .dz-preview .dz-icon,
-.activity-document-container .dropzone .dz-preview .dz-icon,
-.bp-media-document-uploader .dropzone .dz-preview .dz-icon,
-.dropzone.document .dz-preview .dz-icon {
+.dropzone.document-dropzone .dz-preview .dz-icon {
   display: none;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
-#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
-#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-filename,
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-filename,
-.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-filename,
-.dropzone.document .dz-preview.dz-complete .dz-details .dz-filename {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-filename {
   position: static;
   padding-left: 0;
   margin-top: 6px;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
-#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
-#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-size,
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-size,
-.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-size,
-.dropzone.document .dz-preview.dz-complete .dz-details .dz-size {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-size {
   display: block;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon,
-#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon,
-#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon,
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon,
-.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon,
-.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon {
   display: block;
   height: 28px;
-  margin-top: 20px;
+  margin-top: 30px;
   position: relative;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
-#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
-#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
-.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon:before,
-.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon:before {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon:before {
   content: "\e98e";
   font-size: 28px;
   color: #92949d;
@@ -22465,12 +22181,7 @@ body > .open-popup.video-error-popup {
   transform: translateX(50%);
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
-#messages-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
-#forums-post-document-uploader.dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
-.activity-document-container .dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
-.bp-media-document-uploader .dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
-.dropzone.document .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"] {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"] {
   font-size: 28px;
   color: #92949d;
   right: 50%;
@@ -22480,12 +22191,7 @@ body > .open-popup.video-error-popup {
   transform: translateX(50%);
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
-#messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
-#forums-post-document-uploader.dropzone .dz-preview .dz-details .dz-filename,
-.activity-document-container .dropzone .dz-preview .dz-details .dz-filename,
-.bp-media-document-uploader .dropzone .dz-preview .dz-details .dz-filename,
-.dropzone.document .dz-preview .dz-details .dz-filename {
+.dropzone.document-dropzone .dz-preview .dz-details .dz-filename {
   position: absolute;
   bottom: 3px;
   right: 10px;
@@ -22493,12 +22199,7 @@ body > .open-popup.video-error-popup {
   padding-left: 20px;
 }
 
-#bp-group-messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-size,
-#messages-post-document-uploader.dropzone .dz-preview .dz-details .dz-size,
-#forums-post-document-uploader.dropzone .dz-preview .dz-details .dz-size,
-.activity-document-container .dropzone .dz-preview .dz-details .dz-size,
-.bp-media-document-uploader .dropzone .dz-preview .dz-details .dz-size,
-.dropzone.document .dz-preview .dz-details .dz-size {
+.dropzone.document-dropzone .dz-preview .dz-details .dz-size {
   display: none;
 }
 

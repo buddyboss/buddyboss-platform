@@ -57,7 +57,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 					<input type="hidden" id="group_message_content_hidden" name="group_message_content_hidden" value="">
 					<div id="whats-new-attachments">
 						<?php if ( bp_is_active( 'media' ) ) : ?>
-							<div class="dropzone closed" id="bp-group-messages-post-media-uploader"></div>
+							<div class="dropzone closed media-dropzone" id="bp-group-messages-post-media-uploader"></div>
 							<input name="bp_group_messages_media" id="bp_group_messages_media" type="hidden" value=""/>
 							<div class="forum-post-media-template" style="display:none;">
 								<div class="dz-preview dz-file-preview">
@@ -66,8 +66,8 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 									</div>
 									<div class="dz-progress-ring-wrap">
 										<i class="bb-icon bb-icon-camera-fill"></i>
-										<svg class="dz-progress-ring" width="62" height="62">
-											<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185"/>
+										<svg class="dz-progress-ring" width="54" height="54">
+											<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 										</svg>
 									</div>
 									<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -87,7 +87,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 						endif;
 						if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) :
 							?>
-							<div class="dropzone closed" id="bp-group-messages-post-video-uploader"></div>
+							<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 							<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
 							<div class="forum-post-video-template" style="display:none;">
 								<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -96,8 +96,8 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 									</div>
 									<div class="dz-progress-ring-wrap">
 										<i class="bb-icon bb-icon-video-fill"></i>
-										<svg class="dz-progress-ring" width="62" height="62">
-											<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182"/>
+										<svg class="dz-progress-ring" width="54" height="54">
+											<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 										</svg>
 									</div>
 									<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
@@ -128,7 +128,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 						endif;
 						if ( bp_is_active( 'media' ) ) :
 							?>
-							<div class="dropzone closed" id="bp-group-messages-post-document-uploader"></div>
+							<div class="dropzone closed document-dropzone" id="bp-group-messages-post-document-uploader"></div>
 							<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 							<div class="forum-post-document-template" style="display:none;">
 								<div class="dz-preview dz-file-preview">
@@ -139,8 +139,8 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 									</div>
 									<div class="dz-progress-ring-wrap">
 										<i class="bb-icon bb-icon-attach-fill"></i>
-										<svg class="dz-progress-ring" width="62" height="62">
-											<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185"/>
+										<svg class="dz-progress-ring" width="54" height="54">
+											<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 										</svg>
 									</div>
 									<div class="dz-error-message"><span data-dz-errormessage></span></div>
