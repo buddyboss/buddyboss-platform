@@ -2407,6 +2407,17 @@ window.bp = window.bp || {};
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
+				var default_group_ac_list_item = BP_Nouveau.activity.params.objects.group_list;
+				if ( default_group_ac_list_item ) {
+					this.collection.add( default_group_ac_list_item );
+					_.each(
+						this.collection.models,
+						function ( item ) {
+							this.addItemView( item );
+						},
+						this
+					);
+				}
 				this.collection.on( 'add', this.addItemView, this );
 				this.collection.on( 'reset', this.cleanView, this );
 			},

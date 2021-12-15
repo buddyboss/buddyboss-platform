@@ -73,6 +73,7 @@ function bp_nouveau_activity_enqueue_scripts() {
  * @return array The same array with specific strings for the Activity Post form UI if needed.
  */
 function bp_nouveau_activity_localize_scripts( $params = array() ) {
+	static $group_query_cache = array();
 	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() && ( ! isset( $_REQUEST ) && ! isset( $_REQUEST['bp_search'] ) ) ) {
 		// media popup overlay needs activity scripts.
 		return $params;
@@ -177,6 +178,21 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'priority'                 => 10,
 			);
 		}
+		$group_args = array(
+			'user_id'     => bp_loggedin_user_id(),
+			'show_hidden' => true,
+			'per_page'    => 4,
+		);
+		$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
+		if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
+			$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
+		}
+		$groups = $group_query_cache[ $cache_key ];
+
+		$activity_objects['group_list'] = array();
+		if ( isset( $groups['groups'] ) ) {
+			$activity_objects['group_list'] = array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] );
+		}
 
 		/**
 		 * Filters the activity objects to apply for localized javascript data.
@@ -222,8 +238,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	);
 
 	$params['activity'] = array(
-		'params'  => $activity_params,
-		'strings' => $activity_strings,
+		'params'     => $activity_params,
+		'strings'    => $activity_strings,
 	);
 
 	return $params;
