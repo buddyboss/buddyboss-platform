@@ -7151,8 +7151,6 @@ div.profile_completion_wrap .progress_text_wrap {
 
 .pc_detailed_progress li span.completed_staus {
   color: #fff;
-  border-radius: 8px;
-  padding: 2px;
   float: left;
   width: 50px;
   text-align: center;
