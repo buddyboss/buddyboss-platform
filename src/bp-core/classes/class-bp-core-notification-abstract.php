@@ -105,14 +105,6 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	private array $email_types = array();
 
-	/** Email Types Schema.
-	 *
-	 * @var array
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private array $email_types_schema = array();
-
 	/**
 	 * Initialize.
 	 *
@@ -206,8 +198,11 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function email_type_schema( $type_schema ) {
 
-		if ( ! empty( $this->email_types_schema ) ) {
-			$type_schema = array_merge( $type_schema, $this->email_type_schema );
+		if ( ! empty( $this->email_types ) ) {
+			$new_schema = array_column( $this->email_types, 'schema', 'email_type' );
+			if ( ! empty( $new_schema ) ) {
+				$type_schema = array_merge( $type_schema, $new_schema );
+			}
 		}
 
 		return $type_schema;
@@ -218,16 +213,21 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $email_type Type of email being sent.
-	 * @param array  $args       Email arguments.
+	 * @param string $email_type   Type of email being sent.
+	 * @param array  $args         Email arguments.
+	 * @param array  $email_schema Email schema.
 	 */
-	public function register_email_type( $email_type, $args ) {
+	public function register_email_type( $email_type, $args, $email_schema ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type' => $email_type,
 			'args'       => array(
 				'post_title'   => ( $args['post_title'] ?? '' ),
 				'post_content' => ( $args['post_content'] ?? '' ),
 				'post_excerpt' => ( $args['post_excerpt'] ?? '' ),
+			),
+			'schema'     => array(
+				'description' => ( $email_schema['description'] ?? '' ),
+				'unsubscribe' => ( $email_schema['unsubscribe'] ?? false ),
 			),
 		);
 	}
