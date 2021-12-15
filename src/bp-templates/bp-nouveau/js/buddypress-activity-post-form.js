@@ -2928,6 +2928,9 @@ window.bp = window.bp || {};
 			toggleToolbarSelector: function ( e ) {
 				e.preventDefault();
 				var medium_editor = $( e.currentTarget ).closest( '#whats-new-form' ).find( '.medium-editor-toolbar' );
+				if( !medium_editor.hasClass( 'active' ) ) { // Check only when opening toolbar
+					bp.Nouveau.mediumEditorButtonsWarp( medium_editor );
+				}
 				$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 				if ( $( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
