@@ -27,7 +27,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 					<?php if ( bp_is_active( 'media' ) ) : ?>
 
-						<div class="dropzone closed media" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
+						<div class="dropzone closed media media-dropzone" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
 						<div class="ac-reply-post-default-template" style="display:none;">
 							<div class="dz-preview dz-file-preview">
 								<div class="dz-image">
@@ -35,8 +35,8 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 								</div>
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-camera-fill"></i>
-									<svg class="dz-progress-ring" width="62" height="62">
-										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+									<svg class="dz-progress-ring" width="54" height="54">
+										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
 								</div>
 								<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -52,7 +52,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 							</div>
 						</div>
 
-						<div class="dropzone closed document" id="ac-reply-post-document-uploader-<?php bp_activity_id(); ?>"></div>
+						<div class="dropzone closed document document-dropzone" id="ac-reply-post-document-uploader-<?php bp_activity_id(); ?>"></div>
 						<div class="ac-reply-post-document-template" style="display:none;">
 							<div class="dz-preview dz-file-preview">
 								<div class="dz-details">
@@ -62,8 +62,8 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 								</div>
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-attach-fill"></i>
-									<svg class="dz-progress-ring" width="62" height="62">
-										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+									<svg class="dz-progress-ring" width="54" height="54">
+										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
 								</div>
 								<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -79,7 +79,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 							</div>
 						</div>
 
-						<div class="dropzone closed video" id="ac-reply-post-video-uploader-<?php bp_activity_id(); ?>"></div>
+						<div class="dropzone closed video video-dropzone" id="ac-reply-post-video-uploader-<?php bp_activity_id(); ?>"></div>
 						<div class="ac-reply-post-video-template" style="display:none;">
 							<div class="dz-preview dz-file-preview well" id="dz-preview-template">
 								<div class="dz-details">
@@ -87,8 +87,8 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 								</div>
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-video-fill"></i>
-									<svg class="dz-progress-ring" width="62" height="62">
-										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212" stroke-dashoffset="182" />
+									<svg class="dz-progress-ring" width="54" height="54">
+										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
 								</div>
 								<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
