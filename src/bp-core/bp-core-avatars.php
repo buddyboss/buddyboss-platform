@@ -694,7 +694,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
 
 				// Find default avatar option.
-				$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params['object'] );
+				$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params );
 
 				if ( ! $gravatar || empty( $gravatar ) ) {
 					remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
@@ -742,7 +742,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	} else {
 
 		// Find default avatar option.
-		$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params['object'] );
+		$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params );
 
 		if ( ! $gravatar || empty( $gravatar ) ) {
 			remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
@@ -1747,6 +1747,26 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 		$retval = true;
 	}
 
+	// Support WP User Avatar Plugin default avatar image.
+	$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
+	if ( 'wp_user_avatar' === $avatar_option ) {
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) ) {
+			$default_image_id = bp_get_option( 'avatar_default_wp_user_avatar', '' );
+			if ( '' !== $default_image_id ) {
+				$image_attributes = wp_get_attachment_image_src( (int) $default_image_id );
+				if ( isset( $image_attributes[0] ) && '' !== $image_attributes[0] ) {
+
+					$wp_user_avatar = apply_filters( 'bp_core_avatar_default_local_size', $image_attributes[0] );
+
+					if ( $avatar != $avatar_option ) {
+						$retval = true;
+					}
+
+				}
+			}
+		}
+	}
+
 	/**
 	 * Filters whether or not a user has an uploaded avatar.
 	 *
@@ -1944,7 +1964,7 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
 
 		if ( empty( $avatar ) ) {
 			$component = isset( $params['object'] ) ? $params['object'] : 'user';
-			$avatar    = apply_filters( 'bp_core_avatar_default_local_size', bb_attachments_get_default_profile_group_avatar_image( $component ), $size );
+			$avatar    = apply_filters( 'bp_core_avatar_default_local_size', bb_attachments_get_default_profile_group_avatar_image( $params ), $size );
 		}
 
 		// Use Gravatar's mystery person as fallback.
@@ -1992,7 +2012,7 @@ function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
 
 		// Use the local default image.
 	} elseif ( 'local' === $type ) {
-		$avatar = apply_filters( 'bp_core_avatar_default_thumb_local', bb_attachments_get_default_profile_group_avatar_image( 'user' ) );
+		$avatar = apply_filters( 'bp_core_avatar_default_thumb_local', bb_attachments_get_default_profile_group_avatar_image( $params ) );
 
 		// Use Gravatar's mystery person as fallback.
 	} else {
