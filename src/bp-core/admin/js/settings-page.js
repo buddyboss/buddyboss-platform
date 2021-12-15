@@ -1330,13 +1330,15 @@
 				'click',
 				'.bb-notification-checkbox',
 				function () {
+					var dataId = $( this ).attr( 'data-id' );
 					if ( false === $( this ).prop( 'checked' ) ) {
-						var dataId = $( this ).attr( 'data-id' );
-						$( '.' + dataId + ' .field-wrap' ).each(function( index ) {
-							$( this ).addClass( "foo" );
-							$( this ).find( 'input[type=checkbox]:checked' ).removeAttr( 'checked' );
+						$( '.' + dataId + ' .field-wrap' ).each(function() {
+							$( this ).find( 'input[type=checkbox]' ).attr( 'disabled', true );
 						});
-
+					} else {
+						$( '.' + dataId + ' .field-wrap' ).each(function() {
+							$( this ).find( 'input[type=checkbox]' ).removeAttr( 'disabled' );
+						});
 					}
 				}
 			);
