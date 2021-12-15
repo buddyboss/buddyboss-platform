@@ -230,8 +230,8 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register preference group.
 	 *
-	 * @param string $group_key Group key.
-	 * @param string $group_label Group label.
+	 * @param string $group_key         Group key.
+	 * @param string $group_label       Group label.
 	 * @param string $group_admin_label Group admin label.
 	 *
 	 * @return void
@@ -248,9 +248,9 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register preference.
 	 *
-	 * @param string $pref_key Preference key.
-	 * @param string $pref_group Preference group.
-	 * @param string $pref_label Preference label.
+	 * @param string $pref_key         Preference key.
+	 * @param string $pref_group       Preference group.
+	 * @param string $pref_label       Preference label.
 	 * @param string $pref_admin_label Preference admin label.
 	 *
 	 * @return void
