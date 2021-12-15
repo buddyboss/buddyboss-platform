@@ -2,15 +2,18 @@ jQuery( document ).ready(
 	function() {
 
 		if ( typeof window.MediumEditor !== 'undefined' ) {
+			
+			window.forums_medium_forum_editor = [];
+			window.forums_medium_reply_editor = [];
+			window.forums_medium_topic_editor = [];
 
-			  var toolbarOptions = {
+			var toolbarOptions = {
 					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
 					relativeContainer: document.getElementById('whats-new-toolbar'),
 					static: true,
 					updateOnEmptySelection: true
 			};
 			if ( jQuery( '.bbp_editor_forum_content' ).length ) {
-				window.forums_medium_forum_editor = [];
 				jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
@@ -111,7 +114,6 @@ jQuery( document ).ready(
 			} );
 
 			if ( jQuery( '.bbp_editor_reply_content' ).length ) {
-				window.forums_medium_reply_editor = [];
 				jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
@@ -212,7 +214,6 @@ jQuery( document ).ready(
 			} );
 
 			if ( jQuery( '.bbp_editor_topic_content' ).length ) {
-				window.forums_medium_topic_editor = [];
 				jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
@@ -427,7 +428,7 @@ jQuery( document ).ready(
 						});
 					}
 					if ( jQuery( '.bbp_editor_reply_content' ).length ) {
-						window.forums_medium_reply_editor = [];
+
 						jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
@@ -475,7 +476,7 @@ jQuery( document ).ready(
 						});
 					}
 					if ( jQuery( '.bbp_editor_topic_content' ).length ) {
-						window.forums_medium_topic_editor = [];
+
 						jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
