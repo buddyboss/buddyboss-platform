@@ -419,19 +419,21 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
  */
 function bp_activity_screen_notification_settings() {
 
-	$options              = bb_register_notification_preferences( buddypress()->activity->id );
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$options                  = bb_register_notification_preferences( buddypress()->activity->id );
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
 		return;
 	}
 
-	$fields_keys       = array_column( $options['fields'], 'key' );
-	$enabled_fields    = array_intersect( $fields_keys, $enabled_notification );
+	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
+	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+
 	$options['fields'] = array_filter(
 		$options['fields'],
-		function ( $var ) use ( $enabled_fields ) {
-			return ( in_array( $var['key'], $enabled_fields, true ) );
+		function ( $var ) use ( $enabled_notification ) {
+			return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
 		}
 	);
 
@@ -455,15 +457,15 @@ function bp_activity_screen_notification_settings() {
 				$app_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['key'] . '_app', true );
 
 				if ( ! $email_checked ) {
-					$email_checked = $field['default'];
+					$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
 				}
 
 				if ( ! $web_checked ) {
-					$web_checked = $field['default'];
+					$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
 				}
 
 				if ( ! $app_checked ) {
-					$app_checked = $field['default'];
+					$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
 				}
 
 				$options = apply_filters(
@@ -474,7 +476,7 @@ function bp_activity_screen_notification_settings() {
 							'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 						),
 						'web'   => array(
-							'is_checked' => ( ! $web_checked ? $field['default'] : $email_checked ),
+							'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
 							'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 						),
 						'app'   => array(
