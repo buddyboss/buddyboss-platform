@@ -185,6 +185,9 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									<a href="javascript:;" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
 									<div class="manage-defaults manage-defaults-hide">
 										<?php
+										$email_checked = '';
+										$web_checked   = '';
+										$app_checked   = '';
 										$options = apply_filters(
 											'bb_notifications_types',
 											array(

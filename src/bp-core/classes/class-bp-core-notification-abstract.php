@@ -63,6 +63,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_register_notifications', array( $this, 'register_notifications' ) );
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
+		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
 	}
 
 	/************************************ Filters ************************************/
@@ -156,6 +157,32 @@ abstract class BP_Core_Notification_Abstract {
 		return $type_schema;
 	}
 
+	/**
+	 * Register email with associated prefercence type.
+	 *
+	 * @param array $emails Registered Emails.
+	 *
+	 * @return array
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_emails( $emails ) {
+		if ( ! empty( $this->email_types ) ) {
+			$emails = array();
+			foreach ( $this->email_types as $key => $val ) {
+				if ( ! empty( $val['pref_key'] ) && isset( $emails[ $val['pref_key'] ] ) ) {
+					if ( ! in_array( $key, $emails[ $val['pref_key'] ], true ) ) {
+						$emails[ $val['pref_key'] ][] = $key;
+					}
+				} elseif ( ! empty( $val['pref_key'] ) ) {
+					$emails[ $val['pref_key'] ][] = $key;
+				}
+			}
+		}
+
+		return $emails;
+	}
+
 	/************************************ Functions ************************************/
 
 	/**
@@ -240,6 +267,7 @@ abstract class BP_Core_Notification_Abstract {
 				'description' => ( $email_schema['description'] ?? '' ),
 				'unsubscribe' => ( $email_schema['unsubscribe'] ?? false ),
 			),
+			'pref_key'   => $pref_key,
 		);
 	}
 }
