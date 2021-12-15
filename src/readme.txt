@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 Requires PHP: 5.6.20
-Stable tag: 1.7.9
+Stable tag: 1.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,58 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.3 =
+* Messages - Improved logic to send group messages by processing members and notifications in the background
+* Moderation - Improved moderation module core logic to hide content in the background batches on Report, Block, and Suspend
+* Media - Fixed video playing issue on upload in Safari browser
+* Media - Fixed Album feature option avail even when disabled in the settings
+* Coding Standards - Code refactoring to handle when PHP system function disabled
+* Coding Standards - Code refactoring to fix warnings and deprecated functions
+* Elementor - Fixed templates builder popup settings compatibility issue with Forums discussion and replies
+* REST API - Added Group messages improvements in the APIs
+* REST API - Fixed cache issue on password change to fix a critical issue
+
+= 1.8.2 =
+* Forums - Fixed Forums directory page search issue
+* Profiles - Fixed WordPress role sync issue on Members Profile type update
+* Media - Improved symlink auto-detection logic for server compatibility
+* REST API - Fixed member default avatar issue in the API
+* REST API - Fixed wrong content issue in the message thread API
+
+= 1.8.1 =
+* Groups - Added support to Send emails in Batches in the Background to Group members on details update
+* Forums - Added support to Send emails in Batches in the Background to Forum and Topics subscribers
+* Forums - Fixed Forum discussion apostrophe slash issue on validation error
+* Forums - Fixed PHBB import issues
+* Profiles - Cross-browser compatibility added for profile picture image quality
+* Profiles - Fixed Profile field apostrophe slash issue on save
+* Media - Fixed video popup unable to close the issue in profile
+* Messages - Added support to Send emails in Batches in the Background for Group and Private Messages thread
+* Moderation - Fixed background process infinite loop critical issue
+* Notifications - Fixed notification read/unread status issue when multiple group access request notifications were received and followed
+* Emails - Small compatibility fix to show avatar in Outlook
+* Elementor - Minor fix to load right size profile picture on the dashboard template
+* REST API - Added API support to Send emails in Batches in the Background
+* REST API - Fixed delete custom thumbnail API issue on selecting auto-generated video thumbnail
+* REST API - Fixed API performance issue when many profile fields data added
+
+= 1.8.0 =
+* Profiles - Fixed Cross-Site Scripting vulnerability issue on edit and view profile
+* Groups - Fixed group type roles label 'an' and 'a' prefix issue
+* Groups - Code improvements to stop direct URL access when group tab removed using hooks
+* Forums - Fixed error on forum replies listing screen in the admin when reply moved to draft
+* Forums - Fixed forum search issue with the empty string
+* Media - Fixed symlink error on plugin activation when symlink not supported on the server
+* Media - Fixed Document popup download and edit description not showing issue
+* Messages - Fixed messages members list to not show suspended members
+* LearnDash - Fixed Learndash sub-groups sync issue with Social sub-groups
+* REST API - Fixed Media Privacy and Move option permission issue in the API
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issue to show both local and offloaded media properly
+* Compatibility - Fixed media access notice in admin to not show when Media offloaded fully using 'WP Offload Media' plugin
+* Compatibility - Fixed 'GeoDirectory' plugin compatibility issue with Messages screen
+* Compatibility - Fixed 'TranslatePress' compatibility UI issue with News Feed
+* Translations - Updated German (formal) language files
 
 = 1.7.9 =
 * Profiles - Provided option to hide specific profile type members in search results
@@ -118,7 +170,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed @mention not working critical issue
 
 = 1.7.7 =
-* Profiles - Fixed wrong 'Nickname' after migrating from BuddyPress 
+* Profiles - Fixed wrong 'Nickname' after migrating from BuddyPress
 * Forums - Fixed discussion pagination issue on Forums directory
 * Forums - Fixed forum discussion invalid count to make it consistent
 * Activity - Fixed post form GIF highlight UI issue on close
@@ -363,7 +415,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed issues with the group type pages
 * Activity - Fixed activity comments read more issue
 * Activity - Fixed a bunch of issues with @mention
-* Activity - Fixed Youtube video embed issue in activity comments on edit activity 
+* Activity - Fixed Youtube video embed issue in activity comments on edit activity
 * Media - Small improvements in documents query
 * RTL - Fixed select2 library rtl issue
 * REST API - Cache improvements to fix BuddyBoss App deep linking and Web fallback bugs
@@ -750,7 +802,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed link preview image not always displaying in activity posts
 * Activity - Fixed video embeds not displaying after editing the post in admin
 * Connections - Display 'More' button on Connections widget when list is maxed out
-* Connections - Fixed inconsistent display of Connections based on profile type 
+* Connections - Fixed inconsistent display of Connections based on profile type
 * Widgets - Fixed the member counts showing incorrect in 'Who's Online' widget
 * Email Invites - Added ability to invite between 1 to 20 members at once
 * Emails - Now sending emails through the WordPress core wp_mail function
@@ -925,7 +977,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed link previews when embedding links from an AMP url
 * Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
-* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios
 * Groups - When a group member changes their Name, now updates their name in previous group activity feeds
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
@@ -1031,7 +1083,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed members without First Name displaying in messages as 'Deleted User'
 * Groups - Status button said "You're an Member" instead of "You're a Member"
 * Compatibility - Allow 'Events Manager' and other plugins to activate properly with Platform
-* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress 
+* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
@@ -1039,7 +1091,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed word-wrapping when long sentences are posted in activity
 * Activity - Fixed crop ratio for wide/landscape media images
 * Activity - Fixed media disappearing when clicking 'Read more' in activity feed
-* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh'
 * Media - Improved the image rotation script for photos uploaded in mobile browsers
 * Media - Improved experience for media migrations, and ability to re-migrate
 * Profile Types - When creating new type, fixed issue when selecting 'None' as WordPress role
