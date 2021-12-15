@@ -1323,6 +1323,14 @@
 					}
 				}
 			);
+
+			$( document ).on(
+				'change',
+				'#bp_notification_settings_automatic .field-render input[type="checkbox"]',
+				function () {
+
+				}
+			);
 		}
 	);
 

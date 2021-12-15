@@ -170,7 +170,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 		foreach ( $all_notifications as $field_group ) {
 			?>
 			<tr class="child-no-padding">
-				<th><?php echo isset( $field_group['admin_label'] ) ? $field_group['admin_label'] : ''; ?></th>
+				<th><?php echo isset( $field_group['admin_label'] ) ? esc_html( $field_group['admin_label'] ) : ''; ?></th>
 				<td class="no-padding">
 					<?php
 					if ( ! empty( $field_group['fields'] ) ) {
@@ -233,7 +233,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 											if ( $is_render ) {
 												?>
 												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
-													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $field['key'] . '[' . $key . ']' ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
 													<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
 												</div>
 												<?php
@@ -269,7 +269,7 @@ function bb_activate_notification( $field ) {
 	$label                = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
 	?>
 
-	<input id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[]" type="checkbox" value="<?php echo esc_attr( $field['key'] ); ?>" <?php checked( $checked, 1 ); ?> />
+	<input id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
