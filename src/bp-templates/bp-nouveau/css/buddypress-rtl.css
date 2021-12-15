@@ -20915,6 +20915,21 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-size: 16px;
 }
 
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-button {
+  position: relative;
+}
+
+.video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-button:before {
+  content: "\e9d3";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  position: absolute;
+  top: -10px;
+  right: 50%;
+  transform: translateX(50%);
+  font-size: 16px;
+}
+
 .video-thumbnail-content .bp-video-thumbnail-auto-generated {
   flex-basis: 100%;
   width: 100%;

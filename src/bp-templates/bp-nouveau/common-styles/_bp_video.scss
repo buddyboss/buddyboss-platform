@@ -1089,6 +1089,21 @@
 
 			}
 
+			.dz-button {
+				position: relative;
+
+				&:before {
+					content: "\e9d3";
+					font-family: "bb-icons";/* stylelint-disable-line */
+					position: absolute;
+					top: -10px;
+					left: 50%;
+					transform: translateX(-50%);
+					font-size: 16px;
+				}
+
+			}
+
 		}
 
 
