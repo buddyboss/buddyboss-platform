@@ -1330,15 +1330,10 @@
 				'click',
 				'.bb-notification-checkbox',
 				function () {
-					var dataId = $( this ).attr( 'data-id' );
 					if ( false === $( this ).prop( 'checked' ) ) {
-						$( '.' + dataId + ' .field-wrap' ).each(function() {
-							$( this ).find( 'input[type=checkbox]' ).attr( 'disabled', true );
-						});
+						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).attr( 'disabled', true );
 					} else {
-						$( '.' + dataId + ' .field-wrap' ).each(function() {
-							$( this ).find( 'input[type=checkbox]' ).removeAttr( 'disabled' );
-						});
+						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).removeAttr( 'disabled' );
 					}
 				}
 			);
