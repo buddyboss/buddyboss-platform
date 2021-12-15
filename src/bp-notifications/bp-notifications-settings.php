@@ -181,14 +181,34 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									<div class="field-render">
 										<?php bb_activate_notification( $field ); ?>
 									</div>
-									<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
+
+									<?php
+									$registered_emails = bb_register_notification_email_templates( $field['key'] );
+									$total_email_count = 0;
+									if ( ! empty( $registered_emails ) ) {
+										foreach ( $registered_emails as $email_type ) {
+											$total_count += get_terms(
+												array(
+													'taxonomy' => bp_get_email_tax_type(),
+													'slug' => $email_type,
+													'fields' => 'count',
+												)
+											);
+										}
+									}
+
+									if ( ! empty( $registered_emails ) && count( $registered_emails ) > $total_email_count ) {
+										?>
+										<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
+									<?php } ?>
+
 									<a href="javascript:;" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
 									<div class="manage-defaults manage-defaults-hide">
 										<?php
 										$email_checked = '';
 										$web_checked   = '';
 										$app_checked   = '';
-										$options = apply_filters(
+										$options       = apply_filters(
 											'bb_notifications_types',
 											array(
 												'email' => array(

@@ -6096,3 +6096,21 @@ function bp_send_notification( $component_name, $component_action, $args = array
 		);
 	}
 }
+
+/**
+ * Functions to get all/specific email templates which associates with notification preference key.
+ *
+ * @param string $pref_key Preference Key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_notification_email_templates( $pref_key = '' ) {
+
+	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+
+	if ( ! empty( $notification_emails ) && isset( $notification_emails[ $pref_key ] ) ) {
+		return $notification_emails[ $pref_key ];
+	}
+
+	return $notification_emails;
+}
