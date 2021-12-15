@@ -7160,10 +7160,6 @@ div.profile_completion_wrap .progress_text_wrap {
   color: #8a2;
 }
 
-.pc_detailed_progress li.incomplete span.section_name a {
-  color: #5087e5;
-}
-
 .pc_detailed_progress li.incomplete span.completed_staus {
   color: #b71717;
 }
