@@ -7164,7 +7164,6 @@ div.profile_completion_wrap .progress_text_wrap {
 
 .pc_detailed_progress li.incomplete span.section_name a {
   color: #5087e5;
-  text-decoration: underline;
 }
 
 .pc_detailed_progress li.incomplete span.completed_staus {
