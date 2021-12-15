@@ -1774,7 +1774,7 @@ function bp_member_type_permissions_metabox( $post ) {
 	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default
 	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default
 	?>
-	<!-- accesslint:ignore -->
+    <!-- accesslint:ignore -->
     <table class="widefat bp-postbox-table">
         <thead>
         <tr>
@@ -1811,18 +1811,18 @@ function bp_member_type_permissions_metabox( $post ) {
 					?>
                 />
 				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
-				<p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from the members directory, including the "Members" and "Recently Active Members" widgets.', 'buddyboss' ); ?></p>
+                <p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from the members directory, including the "Members" and "Recently Active Members" widgets.', 'buddyboss' ); ?></p>
             </td>
         </tr>
-		<?php if( bp_is_active( 'search' ) ) { ?> <!-- Condition to show only if network search component is enabled -->
-			<tr>
-				<td colspan="2">
+		<?php if ( bp_is_active( 'search' ) ) { ?> <!-- Condition to show only if network search component is enabled -->
+            <tr>
+                <td colspan="2">
 					<?php $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default. ?>
-					<input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
+                    <input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
 					<?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
-					<p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from network search results.', 'buddyboss' ); ?></p>
-				</td>
-			</tr>
+                    <p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from network search results.', 'buddyboss' ); ?></p>
+                </td>
+            </tr>
 		<?php } ?>
         </tbody>
     </table>
@@ -1845,7 +1845,7 @@ function bp_member_type_permissions_metabox( $post ) {
         </tr>
         </tbody>
     </table>
-	<!-- accesslint:endignore -->
+    <!-- accesslint:endignore -->
 	<?php
 	if ( bp_is_active( 'groups' ) && false === bp_restrict_group_creation() ) {
 		$get_all_registered_group_types = bp_get_active_group_types();
@@ -1853,7 +1853,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
 			// When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
 			?>
-			<!-- accesslint:ignore -->
+            <!-- accesslint:ignore -->
             <table class="widefat bp-postbox-table">
                 <thead>
                 <tr>
@@ -1958,7 +1958,7 @@ function bp_member_type_permissions_metabox( $post ) {
 					} );
 				} );
             </script>
-			<!-- accesslint:endignore -->
+            <!-- accesslint:endignore -->
 			<?php
 		}
 	}
@@ -1970,7 +1970,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
 			?>
-			<!-- accesslint:ignore -->
+            <!-- accesslint:ignore -->
             <table class="widefat bp-postbox-table">
                 <thead>
                 <tr>
@@ -2008,7 +2008,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
                 </tbody>
             </table>
-			<!-- accesslint:endignore -->
+            <!-- accesslint:endignore -->
 			<?php
 		}
 	}
@@ -2019,7 +2019,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		// Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
 		$enable_invite = isset( $meta['_bp_member_type_enable_invite'] ) ? $meta['_bp_member_type_enable_invite'][0] : 1; // enabled by default
 		?>
-		<!-- accesslint:ignore -->
+        <!-- accesslint:ignore -->
         <table class="widefat bp-postbox-table">
             <thead>
             <tr>
@@ -2058,7 +2058,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
             </tbody>
         </table>
-		<!-- accesslint:endignore -->
+        <!-- accesslint:endignore -->
 		<?php
 
 	}
