@@ -85,6 +85,7 @@ abstract class BP_Core_Notification_Abstract {
 					'key'         => $preference['pref_key'],
 					'label'       => $preference['pref_label'],
 					'admin_label' => ( isset( $preference['pref_admin_label'] ) && ! empty( $preference['pref_admin_label'] ) ? $preference['pref_admin_label'] : $preference['pref_label'] ),
+					'default'     => ( true === $preference['pref_default'] ? 'yes' : 'no' ),
 				);
 			}
 		}
@@ -210,16 +211,18 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $pref_group       Preference group.
 	 * @param string $pref_label       Preference label.
 	 * @param string $pref_admin_label Preference admin label.
+	 * @param bool   $default          Default status.
 	 *
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preference( $pref_key, $pref_group, $pref_label, $pref_admin_label ) {
+	public function register_preference( $pref_key, $pref_group, $pref_label, $pref_admin_label = '', $default = true ) {
 		$this->prefernces[] = array(
 			'pref_key'         => $pref_key,
 			'pref_group'       => $pref_group,
 			'pref_label'       => $pref_label,
 			'pref_admin_label' => $pref_admin_label,
+			'pref_default'     => $default,
 		);
 	}
 
