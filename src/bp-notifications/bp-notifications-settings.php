@@ -222,9 +222,9 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									<a href="javascript:void(0);" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
 									<div class="manage-defaults manage-defaults-hide <?php echo esc_attr( $field['key'] ); ?> " data-id="<?php echo esc_attr( $field['key'] ); ?>">
 										<?php
-										$email_checked = $field['default'];
-										$web_checked   = $field['default'];
-										$app_checked   = $field['default'];
+										$email_checked = ( $enabled_notification[ $field['key'] ]['email'] ?? $field['default'] );
+										$web_checked   = ( $enabled_notification[ $field['key'] ]['web'] ?? $field['default'] );
+										$app_checked   = ( $enabled_notification[ $field['key'] ]['app'] ?? $field['default'] );
 
 										$options = apply_filters(
 											'bb_notifications_types',
@@ -234,7 +234,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 													'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 												),
 												'web'   => array(
-													'is_checked' => ( ! $web_checked ? true : $email_checked ),
+													'is_checked' => ( ! $web_checked ? true : $web_checked ),
 													'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 												),
 												'app'   => array(
