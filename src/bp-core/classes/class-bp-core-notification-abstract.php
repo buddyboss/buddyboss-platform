@@ -105,6 +105,14 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	private array $email_types = array();
 
+	/** Email Types Schema.
+	 *
+	 * @var array
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private array $email_types_schema = array();
+
 	/**
 	 * Initialize.
 	 *
@@ -116,6 +124,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_register_notifications', array( $this, 'register_notifications' ), $this->notification_email_position );
 		add_filter( 'bb_register_notification_preferences', array( $this, 'register_notification_preferences' ), $this->notification_email_position );
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
+		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 	}
 
 	/**
@@ -184,6 +193,24 @@ abstract class BP_Core_Notification_Abstract {
 		}
 
 		return $schema;
+	}
+
+	/**
+	 * Email Type Schema.
+	 *
+	 * @param array $type_schema List of types schema.
+	 *
+	 * @return array
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function email_type_schema( $type_schema ) {
+
+		if ( ! empty( $this->email_types_schema ) ) {
+			$type_schema = array_merge( $type_schema, $this->email_type_schema );
+		}
+
+		return $type_schema;
 	}
 
 	/**
