@@ -7178,6 +7178,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 }
 
 .pc_progress_wrap {
+  text-align: center;
   margin: 0 0 30px;
 }
 
@@ -7188,7 +7189,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 }
 
 .pc_progress_wrap .pc_progress_rate {
-  stroke: url(#gradient);
+  stroke: #05d786;
 }
 
 .progress_text_wrap {

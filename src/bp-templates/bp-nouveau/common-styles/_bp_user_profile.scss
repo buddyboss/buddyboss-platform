@@ -431,6 +431,7 @@ div.profile_completion_wrap {
 }
 
 .pc_progress_wrap {
+	text-align: center;
 	margin: 0 0 30px;
 
 	svg {
@@ -440,7 +441,7 @@ div.profile_completion_wrap {
 	}
 
 	.pc_progress_rate {
-		stroke: url(#gradient);
+		stroke: #05d786;
 	}
 }
 
