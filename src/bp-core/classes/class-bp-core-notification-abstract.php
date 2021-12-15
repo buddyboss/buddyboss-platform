@@ -23,7 +23,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $notification_email_key;
+	private string $notification_email_key;
 
 	/**
 	 * Notification Email lable.
@@ -32,7 +32,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $notification_email_label;
+	private string $notification_email_label;
 
 	/**
 	 * Notification Email admin label.
@@ -41,7 +41,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $notification_email_admin_label;
+	private string $notification_email_admin_label;
 
 	/**
 	 * Notification Email Position.
@@ -59,7 +59,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public $component = '';
+	public string $component = '';
 
 	/**
 	 * Component name.
@@ -68,36 +68,42 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public $component_name = '';
+	public string $component_name = '';
 
 	/**
 	 * Notifications.
 	 *
-	 * @var string
+	 * @var array
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $notifications = array();
+	private array $notifications = array();
 
 	/**
 	 * Preferences.
 	 *
-	 * @var string
+	 * @var array
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $prefernces = array();
+	private array $prefernces = array();
 
 	/**
 	 * Preferences Group.
 	 *
-	 * @var string
+	 * @var array
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $prefernce_groups = array();
+	private array $prefernce_groups = array();
 
-	private $email_types = array();
+	/** Email Types.
+	 *
+	 * @var array
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private array $email_types = array();
 
 	/**
 	 * Initialize.
