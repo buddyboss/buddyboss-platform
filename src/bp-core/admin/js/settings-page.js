@@ -380,31 +380,33 @@
 
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
-				$( '.bp-feed-post-type-checkbox' ).each( function() {
-					var post_type = $(this).data('post_type');
+				$( '.bp-feed-post-type-checkbox' ).each(
+					function() {
+						var post_type = $( this ).data( 'post_type' );
 
-					if ( true === this.checked ) {
-						$('.bp-feed-post-type-comment-'+post_type)
-							.closest('tr')
-							.show();
+						if ( true === this.checked ) {
+							  $( '.bp-feed-post-type-comment-' + post_type )
+							 .closest( 'tr' )
+							 .show();
+						}
 					}
-				});
+				);
 
 				$( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).on(
 					'click',
 					'.bp-feed-post-type-checkbox',
 					function () {
-						var post_type = $(this).data('post_type'),
-							commentField = $('.bp-feed-post-type-comment-'+post_type);
+						var post_type    = $( this ).data( 'post_type' ),
+							commentField = $( '.bp-feed-post-type-comment-' + post_type );
 
 						if ( true === this.checked ) {
 							commentField
-								.closest('tr')
+								.closest( 'tr' )
 								.show();
 						} else {
 							commentField
 								.prop( 'checked', false )
-								.closest('tr')
+								.closest( 'tr' )
 								.hide();
 						}
 					}
@@ -1315,20 +1317,27 @@
 				'click',
 				'.notification-defaults',
 				function () {
-					var isHidden = $(this).next( '.manage-defaults' );
+					var isHidden = $( this ).next( '.manage-defaults' );
 					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
-						$(this).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
+						$( this ).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
 					} else {
-						$(this).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
+						$( this ).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
 					}
 				}
 			);
 
 			$( document ).on(
-				'change',
-				'#bp_notification_settings_automatic .field-render input[type="checkbox"]',
+				'click',
+				'.bb-notification-checkbox',
 				function () {
+					if ( false === $( this ).prop( 'checked' ) ) {
+						var dataId = $( this ).attr( 'data-id' );
+						$( '.' + dataId + ' .field-wrap' ).each(function( index ) {
+							$( this ).addClass( "foo" );
+							$( this ).find( 'input[type=checkbox]:checked' ).removeAttr( 'checked' );
+						});
 
+					}
 				}
 			);
 		}

@@ -200,10 +200,12 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									if ( ! empty( $registered_emails ) && count( $registered_emails ) > $total_email_count ) {
 										?>
 										<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
-									<?php } ?>
+										<?php
+									}
+									?>
 
-									<a href="javascript:;" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
-									<div class="manage-defaults manage-defaults-hide">
+									<a href="javascript:void(0);" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
+									<div class="manage-defaults manage-defaults-hide <?php echo esc_attr( $field['key'] ); ?> " data-id="<?php echo esc_attr( $field['key'] ); ?>">
 										<?php
 										$email_checked = $field['default'];
 										$web_checked   = $field['default'];
@@ -269,7 +271,7 @@ function bb_activate_notification( $field ) {
 	$label                = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
 	?>
 
-	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
+	<input class="bb-notification-checkbox" data-id="<?php echo esc_attr( $field['key'] ); ?>" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
