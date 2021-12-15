@@ -164,7 +164,9 @@ function bb_admin_setting_callback_on_automatic_notification_information() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_on_automatic_notification_fields() {
-	$all_notifications = bb_register_notification_preferences();
+	$all_notifications    = bb_register_notification_preferences();
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
 	if ( ! empty( $all_notifications ) ) {
 		echo '<table class="form-table"><tbody>';
 		foreach ( $all_notifications as $field_group ) {
@@ -176,10 +178,23 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 					if ( ! empty( $field_group['fields'] ) ) {
 						echo '<div class="field-set">';
 						foreach ( $field_group['fields'] as $field ) {
+							$checked = isset( $field['default'] ) && 'yes' === $field['default'] ? true : false;
 							?>
 								<div class="field-block">
 									<div class="field-render">
-										<?php bb_activate_notification( $field ); ?>
+										<?php
+										if ( array_key_exists( $field['key'], $enabled_notification ) ) {
+											$checked = false;
+											if (
+												isset( $enabled_notification[ $field['key'] ]['main'] ) &&
+												'yes' === $enabled_notification[ $field['key'] ]['main']
+											) {
+												$checked = true;
+											}
+										}
+
+										bb_activate_notification( $field, $checked );
+										?>
 									</div>
 
 									<?php
@@ -230,12 +245,13 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 										);
 
 										foreach ( $options as $key => $v ) {
-											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', false );
+											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', ! $checked );
 											$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', true );
 											if ( $is_render ) {
 												?>
 												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
-													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+													<input type="hidden" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="no" <?php disabled( $is_disabled, true ); ?> />
+													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled, true ); ?> />
 													<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
 												</div>
 												<?php
@@ -263,15 +279,15 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $field Fieldset data.
+ * @param array $field   Fieldset data.
+ * @param bool  $checked Is checked or not.
  */
-function bb_activate_notification( $field ) {
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	$checked              = in_array( esc_attr( $field['key'] ), $enabled_notification, true );
-	$label                = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
+function bb_activate_notification( $field, $checked ) {
+	$label = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
 	?>
 
-	<input class="bb-notification-checkbox" data-id="<?php echo esc_attr( $field['key'] ); ?>" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
+	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
+	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
 
 	<?php
