@@ -257,10 +257,19 @@
 
 		&#whats-new-form #whats-new-toolbar {
 			border: 0;
+			padding: 0 15px 0 25px;
+		}
+
+		.bb-model-header {
+			padding: 15px 25px;
 		}
 
 		#whats-new {
-			padding: 0 15px 10px;
+			padding: 0 25px 10px;
+		}
+
+		#activity-form-submit-wrapper {
+			padding: 0 25px 0 15px;
 		}
 
 		#whats-new-content {
@@ -298,7 +307,7 @@
 			-ms-flex-pack: end;
 			justify-content: flex-end;
 			position: relative;
-			padding: 0 15px;
+			padding: 0 25px;
 			margin: 15px 0;
 
 			.emojionearea-button:before {
@@ -612,6 +621,14 @@
 				color: #fff;
 			}
 
+		}
+
+		#user-status-huddle {
+			padding: 25px 25px 15px 25px;
+		}
+
+		#whats-new-form #whats-new-attachments {
+			padding: 0 25px;
 		}
 
 	}

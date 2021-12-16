@@ -1247,11 +1247,22 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in#whats-new-form #whats-new-toolbar,
 .activity-update-form .activity-form.focus-in#whats-new-form #whats-new-toolbar {
   border: 0;
+  padding: 0 25px 0 15px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in .bb-model-header,
+.activity-update-form .activity-form.focus-in .bb-model-header {
+  padding: 15px 25px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new,
 .activity-update-form .activity-form.focus-in #whats-new {
-  padding: 0 15px 10px;
+  padding: 0 25px 10px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
+.activity-update-form .activity-form.focus-in #activity-form-submit-wrapper {
+  padding: 0 15px 0 25px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-content,
@@ -1295,7 +1306,7 @@ a.layout-grid-view {
   -ms-flex-pack: end;
   justify-content: flex-end;
   position: relative;
-  padding: 0 15px;
+  padding: 0 25px;
   margin: 15px 0;
 }
 
@@ -1640,6 +1651,16 @@ a.layout-grid-view {
 .activity-update-form.modal-popup #activity-post-video-uploader.dropzone .dz-preview.dz-complete.dz-has-thumbnail .dz-filename,
 .activity-update-form.modal-popup #activity-post-video-uploader.dropzone .dz-preview.dz-complete.dz-has-thumbnail .dz-size {
   color: #fff;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #user-status-huddle,
+.activity-update-form.modal-popup #user-status-huddle {
+  padding: 25px 25px 15px 25px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-attachments,
+.activity-update-form.modal-popup #whats-new-form #whats-new-attachments {
+  padding: 0 25px;
 }
 
 .atwho-container .atwho-view {
