@@ -3241,19 +3241,18 @@ function bb_disable_multiple_select_situation() {
 
 	global $typenow;
 
-
 	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
 		?>
-        <script type="text/javascript">
+
+		<script type="text/javascript">
 			jQuery( document ).ready( function ( $ ) {
-				jQuery('#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input:checkbox').click(function(){
-					var group = "input:checkbox[name='"+jQuery(this).attr("name")+"']";
-					jQuery(group).attr("checked",false);
-					jQuery(this).attr("checked",true);
-				});
+				jQuery( document ).on( 'change', '#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input[type="checkbox"]', function () {
+					var group = 'input[type="checkbox"][name="' + jQuery( this ).attr( 'name' ) + '"]';
+					jQuery( group ).not( this ).prop( 'checked', false );
+				} );
 			} );
-        </script>
+		</script>
+
 		<?php
 	}
-
 }
