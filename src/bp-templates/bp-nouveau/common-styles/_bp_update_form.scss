@@ -69,6 +69,11 @@
 			content: "\e93d";
 		}
 	}
+
+	&.bp-activity-edit-group {
+		opacity: 0.5;
+		cursor: default;
+	}
 }
 
 .activity-post-user-name-container {
@@ -147,7 +152,7 @@
 		border-radius: 50%;
 		background-color: #efefef;
 		text-align: center;
-		margin: 0 20px 0 0;
+		margin: 0 15px 0 0;
 
 		&:before {
 			font-family: bb-icons;
@@ -1007,14 +1012,21 @@
 	}
 
 	.bp-activity-object {
-
-		@include center-vert();
 		padding: 5px 10px;
+
+		label {
+
+			@include center-vert();
+		}
+
+		.privacy-radio {
+			margin-left: auto;
+		}
 
 		.avatar {
 			width: 40px;
 			border-radius: 4px;
-			margin-right: 20px;
+			margin-right: 15px;
 		}
 
 		.bp-item-name {
@@ -1049,11 +1061,15 @@
 
 #bp-activity-group-ac-items {
 	min-width: 200px;
-	max-height: 290px;
-	overflow: auto;
-	padding: 10px 0;
+	max-height: 220px;
+	padding: 0;
+	margin: 10px 0 0;
 	width: 100%;
 	z-index: 11;
+
+	&.group_scrolling {
+		overflow-y: auto;
+	}
 
 	&:empty {
 		display: none;
@@ -1063,6 +1079,23 @@
 		display: block;
 		margin: 5px auto;
 	}
+}
+
+.bp-item-opt {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	width: 22px;
+	height: 22px;
+	line-height: 1;
+	background-color: #fff;
+	border: 2px solid #d6dce6;
+	border-radius: 100%;
+	margin-right: 10px;
+	margin-left: auto;
 }
 
 #whats-new-submit {

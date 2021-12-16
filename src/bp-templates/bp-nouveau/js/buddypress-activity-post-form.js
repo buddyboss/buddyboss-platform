@@ -2331,10 +2331,6 @@ window.bp = window.bp || {};
 			className: 'bp-activity-object',
 			template: bp.template( 'activity-target-item' ),
 
-			attributes: {
-				role: 'checkbox'
-			},
-
 			initialize: function () {
 				if ( this.model.get( 'selected' ) ) {
 					this.el.className += ' selected';

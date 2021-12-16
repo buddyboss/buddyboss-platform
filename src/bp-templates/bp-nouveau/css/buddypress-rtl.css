@@ -1068,6 +1068,11 @@ a.layout-grid-view {
   content: "\e93d";
 }
 
+#bp-activity-privacy-point.bp-activity-edit-group {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .activity-post-user-name-container .activity-post-user-name {
   line-height: 1;
 }
@@ -1134,7 +1139,7 @@ a.layout-grid-view {
   border-radius: 50%;
   background-color: #efefef;
   text-align: center;
-  margin: 0 0 0 20px;
+  margin: 0 0 0 15px;
 }
 
 .bp-activity-privacy__label .privacy-figure:before {
@@ -2036,6 +2041,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 #whats-new-post-in-box-items .bp-activity-object {
+  padding: 5px 10px;
+}
+
+#whats-new-post-in-box-items .bp-activity-object label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -2044,13 +2053,16 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  padding: 5px 10px;
+}
+
+#whats-new-post-in-box-items .bp-activity-object .privacy-radio {
+  margin-right: auto;
 }
 
 #whats-new-post-in-box-items .bp-activity-object .avatar {
   width: 40px;
   border-radius: 4px;
-  margin-left: 20px;
+  margin-left: 15px;
 }
 
 #whats-new-post-in-box-items .bp-activity-object .bp-item-name {
@@ -2082,11 +2094,15 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 #bp-activity-group-ac-items {
   min-width: 200px;
-  max-height: 290px;
-  overflow: auto;
-  padding: 10px 0;
+  max-height: 220px;
+  padding: 0;
+  margin: 10px 0 0;
   width: 100%;
   z-index: 11;
+}
+
+#bp-activity-group-ac-items.group_scrolling {
+  overflow-y: auto;
 }
 
 #bp-activity-group-ac-items:empty {
@@ -2096,6 +2112,23 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 #bp-activity-group-ac-items > .dashicons {
   display: block;
   margin: 5px auto;
+}
+
+.bp-item-opt {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  background-color: #fff;
+  border: 2px solid #d6dce6;
+  border-radius: 100%;
+  margin-left: 10px;
+  margin-right: auto;
 }
 
 #whats-new-submit {
