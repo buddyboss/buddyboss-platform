@@ -472,17 +472,14 @@ function bp_activity_screen_notification_settings() {
 					'bb_notifications_types',
 					array(
 						'email' => array(
-							'is_enabled' => true,
 							'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
 							'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 						),
 						'web'   => array(
-							'is_enabled' => true,
 							'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
 							'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 						),
 						'app'   => array(
-							'is_enabled' => true,
 							'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
 							'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
 						),
