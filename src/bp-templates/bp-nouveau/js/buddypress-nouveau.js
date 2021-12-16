@@ -2723,8 +2723,21 @@ window.bp = window.bp || {};
 				}
 			}
 
+			$( editorWrap ).find( '.medium-editor-action-more-button' ).on( 'click', function( event ) {
+				event.preventDefault();
+				$( this ).parent( '.medium-editor-action-more').toggleClass( 'active' );
+
+			});
+
+			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on( 'click', function( event ) {
+				event.preventDefault();
+				$( this ).closest( '.medium-editor-action-more').toggleClass( 'active' );
+			});
+
 			$( window ).one( 'resize', function() { //Attach event once only.
 				editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized
+				$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind('click');
+				$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind('click');
 			});
 
 		}
