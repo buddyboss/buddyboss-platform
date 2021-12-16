@@ -6134,7 +6134,7 @@ function bb_web_notification_enabled() {
  * @return bool
  */
 function bb_app_notification_enabled() {
-	return (bool) apply_filters( 'bb_app_notification_enabled', true );
+	return (bool) apply_filters( 'bb_app_notification_enabled', ( bp_is_active( 'notifications' ) && function_exists( 'bbapp_is_active' ) && bbapp_is_active( 'push_notification' ) ) );
 }
 
 /**
