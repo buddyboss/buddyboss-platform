@@ -64,6 +64,8 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
+
+		add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
 	}
 
 	/************************************ Filters ************************************/
@@ -184,6 +186,66 @@ abstract class BP_Core_Notification_Abstract {
 		return $emails;
 	}
 
+	/************************************ Actions ************************************/
+
+	/**
+	 * Register Email template if not exists.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_email_template() {
+
+		// Bail if this is an ajax request.
+		if ( defined( 'DOING_AJAX' ) ) {
+			return;
+		}
+
+		$defaults = array(
+			'post_status' => 'publish',
+			'post_type'   => bp_get_email_post_type(),
+		);
+
+		if ( ! empty( $this->email_types ) ) {
+			foreach ( $this->email_types as $id => $email ) {
+
+				if (
+					term_exists( $id, bp_get_email_tax_type() ) &&
+					get_terms(
+						array(
+							'taxonomy' => bp_get_email_tax_type(),
+							'slug'     => $id,
+							'fields'   => 'count',
+						)
+					) > 0
+				) {
+					continue;
+				}
+
+				// Some emails are multisite-only.
+				if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+					continue;
+				}
+
+				$post_id = wp_insert_post( bp_parse_args( $email['args'], $defaults, 'install_email_' . $id ) );
+				if ( ! $post_id ) {
+					continue;
+				}
+
+				$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+				foreach ( $tt_ids as $tt_id ) {
+					$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+					wp_update_term(
+						(int) $term->term_id,
+						bp_get_email_tax_type(),
+						array(
+							'description' => $email['schema']['description'],
+						)
+					);
+				}
+			}
+		}
+	}
+
 	/************************************ Functions ************************************/
 
 	/**
@@ -265,6 +327,7 @@ abstract class BP_Core_Notification_Abstract {
 				'post_title'   => ( $args['post_title'] ?? '' ),
 				'post_content' => ( $args['post_content'] ?? '' ),
 				'post_excerpt' => ( $args['post_excerpt'] ?? '' ),
+				'multisite'    => ( $args['multisite'] ?? '' ),
 			),
 			'schema'     => array(
 				'description' => ( $email_schema['description'] ?? '' ),
