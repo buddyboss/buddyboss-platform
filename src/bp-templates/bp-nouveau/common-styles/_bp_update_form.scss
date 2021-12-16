@@ -340,6 +340,20 @@
 			margin: 0 0 15px 0;
 		}
 
+		&.has-feedback {
+
+			.bb-model-header {
+				margin-bottom: 47px;
+			}
+
+			#message.bp-messages {
+				position: absolute;
+				top: 58px;
+				border-radius: 0;
+				padding: 2px 13px;			
+			}
+		}
+
 	}
 
 	#user-status-huddle {

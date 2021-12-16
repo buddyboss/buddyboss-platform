@@ -3577,6 +3577,7 @@ window.bp = window.bp || {};
 
 				// Remove feedback.
 				this.cleanFeedback();
+				this.$el.removeClass( 'has-feedback' );
 
 				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
@@ -3786,8 +3787,10 @@ window.bp = window.bp || {};
 			displayFeedback: function ( model ) {
 				if ( _.isUndefined( this.model.get( 'errors' ) ) ) {
 					this.cleanFeedback();
+					this.$el.removeClass( 'has-feedback' );
 				} else {
 					this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
+					this.$el.addClass( 'has-feedback' );
 				}
 			},
 
