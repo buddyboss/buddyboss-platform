@@ -1381,7 +1381,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- #whats-new-form #whats-new-toolbar,
 .activity-update-form #whats-new-form-placeholder #whats-new-toolbar,
 .activity-update-form #whats-new-form #whats-new-toolbar {
-  padding: 15px 16px 10px;
+  padding: 12px 16px;
   background-color: #eaeaea;
   border-top: 1px solid #eee;
 }
@@ -1486,11 +1486,6 @@ a.layout-grid-view {
   overflow: auto;
   width: 100%;
   overscroll-behavior: contain;
-}
-
-.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,
-.activity-update-form.modal-popup #whats-new-form #whats-new-toolbar {
-  padding-top: 10px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
@@ -1670,6 +1665,7 @@ a.layout-grid-view {
 #whats-new-messages-toolbar .post-elements-buttons-item {
   margin-right: 10px;
   position: relative;
+  line-height: 1;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar,
@@ -1769,16 +1765,79 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   background-color: #fff;
   transition: bottom ease 0.3s;
   height: 0;
-  width: calc(100% - 115px);
+  width: 100%;
+  max-width: calc(100% - 120px);
   overflow: hidden;
   display: none;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more {
+  position: relative;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more .medium-editor-action-more-button b:before {
+  content: "\e81a";
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul {
+  position: absolute;
+  width: auto;
+  top: -30px;
+  left: 10px;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #e7e9eb;
+  box-sizing: border-box;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1), 0 6px 14px rgba(0, 0, 0, 0.16);
+  border-radius: 3px;
+  display: none;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul:after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  box-sizing: border-box;
+  border: 6px solid #000;
+  border-color: transparent transparent #fff #fff;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: rotate(-45deg) translateX(-50%);
+  -ms-transform: rotate(-45deg) translateX(-50%);
+  transform: rotate(-45deg) translateX(-50%);
+  -webkit-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  z-index: 101;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul button {
+  padding: 5px !important;
+  height: auto !important;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul button b {
+  display: inline-block;
+  height: auto;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more.active > ul {
+  display: flex;
 }
 
 .activity-update-form .medium-editor-toolbar.active {
   border-radius: 0;
   z-index: 10;
   visibility: visible;
+  overflow: visible;
   height: auto;
+}
+
+.activity-update-form .medium-editor-toolbar.active .medium-editor-toolbar-actions {
+  overflow: visible;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions {

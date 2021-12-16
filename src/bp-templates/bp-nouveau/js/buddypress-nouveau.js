@@ -2675,6 +2675,70 @@ window.bp = window.bp || {};
 					return false;
 				}
 			}
+		},
+
+		/**
+		 *  Make Medium Editor buttons wrap.
+		 *  @param  {JQuery node} editorWrap The jQuery node.
+		 */
+		mediumEditorButtonsWarp: function ( editorWrap ) { //Pass jQuery $(node)
+			if( editorWrap.hasClass( 'wrappingInitialised' ) ) { // Do not go through if it is initialed already
+				return;
+			}
+			editorWrap.addClass( 'wrappingInitialised' );
+			var buttonsWidth = 0;
+			editorWrap.find( '.medium-editor-toolbar-actions > li' ).each( function() {
+				buttonsWidth += $( this ).outerWidth();
+			});
+			if( buttonsWidth > editorWrap.width() - 10 ) { //No need to calculate if space is available
+				editorWrap.data('childerWith', buttonsWidth);
+				if( buttonsWidth > editorWrap.width() ) {
+					if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length === 0 ) {
+						editorWrap.find( '.medium-editor-toolbar-actions' ).append( '<li class="medium-editor-action-more"><button class="medium-editor-action medium-editor-action-more-button"><b></b></button><ul></ul></li>' );	
+					}
+					editorWrap.find( '.medium-editor-action-more').show();
+					buttonsWidth += editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).outerWidth();
+					$( editorWrap.find('.medium-editor-action').get().reverse() ).each( function() {
+						if( $( this ).hasClass( 'medium-editor-action-more-button') ) {
+							return;
+						}
+						if( buttonsWidth > editorWrap.width() ) {
+							buttonsWidth -= $( this ).outerWidth();
+							editorWrap.find( '.medium-editor-action-more > ul').prepend( $( this ).parent() );
+						}
+						
+					});
+				}
+			} else { // If space is available then append <li> to parent again
+				if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length ) {
+					$( editorWrap.find('.medium-editor-action-more ul > li') ).each( function() {
+						if( buttonsWidth + 35 < editorWrap.width() ) {
+							buttonsWidth += $( this ).outerWidth();
+							$( this ).insertBefore( editorWrap.find( '.medium-editor-action-more') );
+						}
+					});
+					if( editorWrap.find( '.medium-editor-action-more ul > li').length === 0 ) {
+						editorWrap.find( '.medium-editor-action-more').hide();
+					}
+				}
+			}
+
+			$( editorWrap ).find( '.medium-editor-action-more-button' ).on( 'click', function( event ) {
+				event.preventDefault();
+				$( this ).parent( '.medium-editor-action-more').toggleClass( 'active' );
+			});
+
+			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on( 'click', function( event ) {
+				event.preventDefault();
+				$( this ).closest( '.medium-editor-action-more').toggleClass( 'active' );
+			});
+
+			$( window ).one( 'resize', function() { //Attach event once only.
+				editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized
+				$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind('click');
+				$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind('click');
+			});
+
 		}
 	};
 
