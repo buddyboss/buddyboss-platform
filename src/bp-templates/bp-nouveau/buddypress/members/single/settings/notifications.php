@@ -31,6 +31,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 			</div>
 		</div><!-- .notification_type -->
 
+		<?php if ( bb_is_web_notification_is_enabled() ) { ?>
 		<div class="notification_type web_notification">
 			<span class="notification_type_icon">
 				<i class="bb-icon bb-icon-monitor"></i>
@@ -41,7 +42,9 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 				<p>A notification in the corner of your screen</p>
 			</div>
 		</div><!-- .notification_type -->
+        <?php } ?>
 
+        <?php if ( bb_is_app_notification_is_enabled() ) { ?>
 		<div class="notification_type app_notification">
 			<span class="notification_type_icon">
 				<i class="bb-icon bb-icon-smartphone"></i>
@@ -52,6 +55,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 				<p>A notification pushed to your mobile device</p>
 			</div>
 		</div><!-- .notification_type -->
+        <?php } ?>
 
 	</div><!-- .notification_info -->
 
@@ -63,14 +67,20 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 					<input type="checkbox" id="main_notification_email" name="" class="bs-styled-checkbox" />
 					<label for="main_notification_email">Email</label>
 				</th>
+
+                <?php if ( bb_is_web_notification_is_enabled() ) { ?>
 				<th class="web">
 					<input type="checkbox" id="main_notification_web" name="" class="bs-styled-checkbox" />
 					<label for="main_notification_web">Web</label>
 				</th>
+                <?php } ?>
+
+                <?php if ( bb_is_app_notification_is_enabled() ) { ?>
 				<th class="app">
 					<input type="checkbox" id="main_notification_app" name="" class="bs-styled-checkbox" />
 					<label for="main_notification_app">App</label>
 				</th>
+                <?php } ?>
 			</tr>
 		</thead>
 
@@ -81,14 +91,20 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 				<td class="email notification_no_option">
 					-
 				</td>
+
+                <?php if ( bb_is_web_notification_is_enabled() ) { ?>
 				<td class="web">
 					<input type="checkbox" id="admin_notification_web" name="" class="bs-styled-checkbox" />
 					<label for="admin_notification_web">Web</label>
 				</td>
+                <?php } ?>
+
+                <?php if ( bb_is_app_notification_is_enabled() ) { ?>
 				<td class="app">
 					<input type="checkbox" id="admin_notification_app" name="" class="bs-styled-checkbox" />
 					<label for="admin_notification_app">App</label>
 				</td>
+                <?php } ?>
 			</tr>
 		</tbody>
 	</table>
