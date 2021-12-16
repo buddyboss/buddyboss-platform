@@ -2726,7 +2726,6 @@ window.bp = window.bp || {};
 			$( editorWrap ).find( '.medium-editor-action-more-button' ).on( 'click', function( event ) {
 				event.preventDefault();
 				$( this ).parent( '.medium-editor-action-more').toggleClass( 'active' );
-
 			});
 
 			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on( 'click', function( event ) {

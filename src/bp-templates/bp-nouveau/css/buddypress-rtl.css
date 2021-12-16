@@ -1797,6 +1797,27 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   display: none;
 }
 
+.activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul:after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  right: 50%;
+  width: 0;
+  height: 0;
+  box-sizing: border-box;
+  border: 6px solid #000;
+  border-color: transparent #fff #fff transparent;
+  -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: rotate(45deg) translateX(50%);
+  -ms-transform: rotate(45deg) translateX(50%);
+  transform: rotate(45deg) translateX(50%);
+  -webkit-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+  z-index: 101;
+}
+
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more > ul button {
   padding: 5px !important;
   height: auto !important;

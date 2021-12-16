@@ -766,6 +766,27 @@
 				border-radius: 3px;
 				display: none;
 
+				&:after {
+					content: "";
+					position: absolute;
+					bottom: -7px;
+					left: 50%;
+					width: 0;
+					height: 0;
+					box-sizing: border-box;
+					border: 6px solid #000;
+					border-color: transparent transparent #fff #fff;
+					-webkit-transform-origin: 0 0;
+					-ms-transform-origin: 0 0;
+					transform-origin: 0 0;
+					-webkit-transform: rotate(-45deg) translateX(-50%);
+					-ms-transform: rotate(-45deg) translateX(-50%);
+					transform: rotate(-45deg) translateX(-50%);
+					-webkit-transition: all linear 0.2s;
+					transition: all linear 0.2s;
+					z-index: 101;
+				}
+
 				button {
 					padding: 5px !important;
 					height: auto !important;
