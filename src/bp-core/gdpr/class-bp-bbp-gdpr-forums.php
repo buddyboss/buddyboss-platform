@@ -231,9 +231,11 @@ class BP_Bbp_Gdpr_Forums {
 			foreach ( (array) $forums as $forum ) {
 				$attachments = get_posts(
 					array(
-						'post_type'      => 'attachment',
-						'posts_per_page' => - 1,
-						'post_parent'    => $forum->ID,
+						'post_type'              => 'attachment',
+						'posts_per_page'         => - 1,
+						'post_parent'            => $forum->ID,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
 					)
 				);
 

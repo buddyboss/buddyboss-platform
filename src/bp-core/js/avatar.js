@@ -307,6 +307,11 @@ window.bp = window.bp || {};
 							}
 						);
 
+						if( $( '.header-aside-inner .user-link .avatar' ).length ){
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+						}
+
 						// Inject the Delete nav
 						bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
 
@@ -438,6 +443,11 @@ window.bp = window.bp || {};
 							)
 						);
 
+						if( $( '.header-aside-inner .user-link .avatar' ).length ){
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+						}
+
 				}
 			).fail(
 				function( response ) {
@@ -499,7 +509,7 @@ window.bp = window.bp || {};
 
 				// Display a message to inform about the delete tab
 				if ( 1 !== hasAvatar.get( 'hide' ) ) {
-					bp.Avatar.displayWarning( BP_Uploader.strings.has_avatar_warning );
+					bp.Avatar.displayWarning( BP_Uploader.strings.avatar_size_warning + '<br/>' + BP_Uploader.strings.has_avatar_warning );
 				}
 
 				_.each( this.collection.models, this.addNavItem, this );

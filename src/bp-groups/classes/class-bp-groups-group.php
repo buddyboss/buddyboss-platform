@@ -229,6 +229,21 @@ class BP_Groups_Group {
 			return;
 		}
 
+		/**
+		 * Pre validate the group before fetch.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param boolean $validate Whether to check the group is valid or not.
+		 * @param object  $group    Group object.
+		 */
+		$validate = apply_filters( 'bp_groups_group_pre_validate', true, $group );
+
+		if ( empty( $validate ) ) {
+			$this->id = 0;
+			return;
+		}
+
 		// Group found so setup the object variables.
 		$this->id           = (int) $group->id;
 		$this->creator_id   = (int) $group->creator_id;
@@ -401,19 +416,27 @@ class BP_Groups_Group {
 
 		$bp = buddypress();
 
-		// Finally remove the group entry from the DB.
+		// Finally, remove the group entry from the DB.
 		if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) ) {
 			return false;
 		}
 
-		// delete group avatars
+		// Delete group avatars.
 		$upload_path = bp_core_avatar_upload_path();
-		system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $upload_path . '/group-avatars/' . $this->id );
+		}
 
-		// delete group avatars
+		// Delete group avatars.
 		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
-		system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
+		}
 
 		return true;
 	}
@@ -786,18 +809,20 @@ class BP_Groups_Group {
 	public static function get_invites( $user_id, $group_id, $sent = null ) {
 		if ( 0 === $sent ) {
 			$sent_arg = 'draft';
-		} else if ( 1 === $sent ) {
+		} elseif ( 1 === $sent ) {
 			$sent_arg = 'sent';
 		} else {
 			$sent_arg = 'all';
 		}
 
-		return groups_get_invites( array(
-			'item_id'     => $group_id,
-			'inviter_id'  => $user_id,
-			'invite_sent' => $sent_arg,
-			'fields'      => 'user_ids',
-		) );
+		return groups_get_invites(
+			array(
+				'item_id'     => $group_id,
+				'inviter_id'  => $user_id,
+				'invite_sent' => $sent_arg,
+				'fields'      => 'user_ids'
+			)
+		);
 	}
 
 	/**
@@ -997,7 +1022,7 @@ class BP_Groups_Group {
 
 		return array(
 			'requests' => $requests,
-			'total' => $total
+			'total'    => $total
 		);
 	}
 
@@ -1029,6 +1054,8 @@ class BP_Groups_Group {
 	 *                                            Default: null (no limit).
 	 *     @type int          $user_id            Optional. If provided, results will be limited to groups
 	 *                                            of which the specified user is a member. Default: null.
+	 *     @type int          $creator_id         Optional. If provided, results will be limited to groups
+	 *                                            of which the created by given user. Default: null.
 	 *     @type array|string $slug               Optional. Array or comma-separated list of group slugs to limit
 	 *                                            results to.
 	 *                                            Default: false.
@@ -1102,6 +1129,7 @@ class BP_Groups_Group {
 			'per_page'           => null,
 			'page'               => null,
 			'user_id'            => 0,
+			'creator_id'         => 0,
 			'slug'               => array(),
 			'search_terms'       => false,
 			'search_columns'     => array(),
@@ -1147,15 +1175,21 @@ class BP_Groups_Group {
 		}
 
 		/**
-		 * if current page is not current user group's invite page and show_hidden is true and user is moderator and query is not for current user group
+		 * IF current page is not current user group's invite page and show_hidden is true and user is moderator and query is not for current user group,
 		 *      then hidden group should be only visible if user is member of that group
-		 * else show_hidden is true is user is guest or show_hidden is false
+		 * ELSE show_hidden is true is user is guest or show_hidden is false
 		 *      then hide hidden group
 		 */
-		if ( ! bp_is_user_groups_invites() && ! empty( $r['show_hidden'] ) && ! bp_current_user_can( 'bp_moderate' ) && is_user_logged_in() && $r['user_id'] != bp_loggedin_user_id() ){
-			// Exclude all other hidden group
-			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", bp_loggedin_user_id() );
-		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() )  ) {
+		if (
+			! bp_is_user_groups_invites() &&
+			! empty( $r['show_hidden'] ) &&
+			! bp_current_user_can( 'bp_moderate' ) &&
+			is_user_logged_in() &&
+			bp_loggedin_user_id() != $r['user_id']
+		) {
+			// Exclude all other hidden group.
+			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", ( ! empty( $r['user_id'] ) ? $r['user_id'] : bp_loggedin_user_id() ) );
+		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() ) ) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 
@@ -1235,6 +1269,10 @@ class BP_Groups_Group {
 
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $r['user_id'] );
+		}
+
+		if ( ! empty( $r['creator_id'] ) ) {
+			$where_conditions['creator'] = $wpdb->prepare( 'g.creator_id = %d', $r['creator_id'] );
 		}
 
 		if ( ! empty( $r['include'] ) ) {
@@ -1329,11 +1367,31 @@ class BP_Groups_Group {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
 
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$where_conditions = apply_filters( 'bp_groups_get_where_conditions', $where_conditions, $r );
+
 		$where = '';
 		if ( ! empty( $where_conditions ) ) {
 			$sql['where'] = implode( ' AND ', $where_conditions );
 			$where        = "WHERE {$sql['where']}";
 		}
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param array $r    Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], $r );
 
 		$paged_groups_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
@@ -1689,9 +1747,11 @@ class BP_Groups_Group {
 
 		$invites_class = new BP_Groups_Invitation_Manager();
 
-		return $invites_class->delete( array(
-			'item_id' => $group_id,
-		) );
+		return $invites_class->delete(
+			array(
+				'item_id' => $group_id
+			)
+		);
 	}
 
 	/**

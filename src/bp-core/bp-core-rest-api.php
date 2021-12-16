@@ -133,17 +133,26 @@ function bp_rest_version() {
 /**
  * Get user URL.
  *
- * @param int $user_id User ID.
+ * @param int|array $user_ids User IDs.
  *
  * @return string
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_get_user_url( $user_id ) {
+function bp_rest_get_user_url( $user_ids ) {
+	if ( is_array( $user_ids ) ) {
+		return sprintf(
+			'/%s/%s/members?include=%s',
+			bp_rest_namespace(),
+			bp_rest_version(),
+			implode( ',', $user_ids )
+		);
+	}
+
 	return sprintf(
 		'/%s/%s/members/%d',
 		bp_rest_namespace(),
 		bp_rest_version(),
-		$user_id
+		absint( $user_ids )
 	);
 }
 
@@ -388,4 +397,15 @@ function bp_rest_register_field( $component_id, $attribute, $args = array(), $ob
 
 	// Check it has been registered.
 	return isset( $registered_fields[ $attribute ] );
+}
+
+/**
+ * Function to check its BuddyBoss rest route or not.
+ *
+ * @since BuddyBoss [VERSION]
+ *
+ * @return bool
+ */
+function bb_is_rest() {
+	return ! empty( $GLOBALS['wp']->query_vars['rest_route'] );
 }

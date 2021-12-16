@@ -60,6 +60,15 @@ function bbp_get_template_part( $slug, $name = null ) {
  */
 function bbp_locate_template( $template_names, $load = false, $require_once = true ) {
 
+	/**
+	 * Filter here to update template name.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 *
+	 * @param string $template_names template name.
+	 */
+	$template_names = apply_filters( 'bbp_locate_template_names', $template_names );
+
 	// No file found yet
 	$located            = false;
 	$template_locations = bbp_get_template_stack();

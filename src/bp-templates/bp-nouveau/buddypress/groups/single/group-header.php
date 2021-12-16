@@ -6,9 +6,9 @@
  * @version 3.1.0
  */
 
-$group_link = bp_get_group_permalink();
-$admin_link = trailingslashit( $group_link . 'admin' );
-$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
+$group_link       = bp_get_group_permalink();
+$admin_link       = trailingslashit( $group_link . 'admin' );
+$group_avatar     = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 
@@ -19,7 +19,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 	<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 		<div id="item-header-avatar">
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Group Photo', 'buddyboss'); ?>">
+				<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-edit-thin"></i>
 				</a>
 			<?php } ?>
@@ -52,7 +52,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 		<?php endif; ?>
 
 		<?php bp_nouveau_group_header_buttons(); ?>
-
+		<?php bb_nouveau_group_header_bubble_buttons(); ?>
 	</div><!-- #item-header-content -->
 
 	<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>

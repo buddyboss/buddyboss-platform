@@ -399,3 +399,84 @@ function bp_core_learndash_certificates_enables() {
 
 	return $value;
 }
+
+
+/**
+ * Social Group Sync View Tutorial button.
+ *
+ * @since BuddyBoss 1.5.8
+ */
+function bb_tutorial_social_group_sync() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62877,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
+ * LearnDash Group Sync View Tutorial button.
+ *
+ * @since BuddyBoss 1.5.8
+ */
+function bb_tutorial_learndash_group_sync() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62877,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
+ * My Courses Tab View Tutorial button.
+ *
+ * @since BuddyBoss 1.5.8
+ */
+function bb_profiles_tutorial_my_courses() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 83110,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
+ * LeanDash permalink slug for profile courses.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @return string
+ */
+function bb_learndash_profile_courses_slug() {
+	return ltrim( apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) ), '/' );
+}
