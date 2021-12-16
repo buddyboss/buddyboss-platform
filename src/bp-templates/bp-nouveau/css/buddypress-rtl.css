@@ -1381,7 +1381,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- #whats-new-form #whats-new-toolbar,
 .activity-update-form #whats-new-form-placeholder #whats-new-toolbar,
 .activity-update-form #whats-new-form #whats-new-toolbar {
-  padding: 15px 16px 10px;
+  padding: 12px 16px;
   background-color: #eaeaea;
   border-top: 1px solid #eee;
 }
@@ -1486,11 +1486,6 @@ a.layout-grid-view {
   overflow: auto;
   width: 100%;
   overscroll-behavior: contain;
-}
-
-.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,
-.activity-update-form.modal-popup #whats-new-form #whats-new-toolbar {
-  padding-top: 10px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
@@ -1670,6 +1665,7 @@ a.layout-grid-view {
 #whats-new-messages-toolbar .post-elements-buttons-item {
   margin-left: 10px;
   position: relative;
+  line-height: 1;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar,

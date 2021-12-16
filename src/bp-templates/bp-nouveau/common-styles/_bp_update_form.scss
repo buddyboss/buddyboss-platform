@@ -375,7 +375,7 @@
 
 	#whats-new-form-placeholder #whats-new-toolbar,
 	#whats-new-form #whats-new-toolbar {
-		padding: 15px 16px 10px;
+		padding: 12px 16px;
 		background-color: $light-grey;
 		border-top: 1px solid $bp-border-color;
 
@@ -464,10 +464,6 @@
 			overflow: auto;
 			width: 100%;
 			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
-		}
-
-		#whats-new-form #whats-new-toolbar {
-			padding-top: 10px;
 		}
 
 		#whats-new-form {
@@ -644,6 +640,7 @@
 	.post-elements-buttons-item {
 		margin-right: 10px;
 		position: relative;
+		line-height: 1;
 	}
 }
 
