@@ -2799,7 +2799,7 @@ window.bp = window.bp || {};
 				}
 
 				// Set the item id for the selected object.
-				//this.model.set( 'item_id', model.get( 'id' ) );
+				this.model.set( 'item_id', model.get( 'id' ) );
 				if ( 'group' === this.model.get( 'object' ) ) {
 					this.views.remove('#whats-new-post-in-box-items');
 					bp.Nouveau.Activity.postForm.ActivityObjects.reset();
