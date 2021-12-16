@@ -2407,16 +2407,18 @@ window.bp = window.bp || {};
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
-				var default_group_ac_list_item = BP_Nouveau.activity.params.objects.group_list;
-				if ( default_group_ac_list_item ) {
-					this.collection.add( default_group_ac_list_item );
-					_.each(
-						this.collection.models,
-						function ( item ) {
-							this.addItemView( item );
-						},
-						this
-					);
+				if ( 'group' === this.options.type ) {
+					var default_group_ac_list_item = BP_Nouveau.activity.params.objects.group_list;
+					if ( default_group_ac_list_item ) {
+						this.collection.add( default_group_ac_list_item );
+						_.each(
+							this.collection.models,
+							function ( item ) {
+								this.addItemView( item );
+							},
+							this
+						);
+					}
 				}
 				this.collection.on( 'add', this.addItemView, this );
 				this.collection.on( 'reset', this.cleanView, this );
@@ -2797,10 +2799,23 @@ window.bp = window.bp || {};
 				}
 
 				// Set the item id for the selected object.
-				this.model.set( 'item_id', model.get( 'id' ) );
-
-				// Set the view to the selected object.
-				this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
+				//this.model.set( 'item_id', model.get( 'id' ) );
+				if ( 'group' === this.model.get( 'object' ) ) {
+					this.views.remove('#whats-new-post-in-box-items');
+					bp.Nouveau.Activity.postForm.ActivityObjects.reset();
+					bp.Nouveau.Activity.postForm.ActivityObjects.add( model );
+					this.views.add(
+						new bp.Views.AutoComplete(
+							{
+								collection: bp.Nouveau.Activity.postForm.ActivityObjects,
+								type: this.model.get( 'object' ), //model.get( 'selected' ),
+								placeholder: model.get( 'placeholder' )
+							}
+						)
+					);
+				} else {
+					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
+				}
 			},
 
 			updateDisplay: function () {
