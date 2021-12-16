@@ -235,12 +235,12 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 													'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 												),
 												'web'   => array(
-													'is_render'  => bb_is_web_notification_is_enabled(),
+													'is_render'  => bb_web_notification_enabled(),
 													'is_checked' => ( ! $web_checked ? true : $web_checked ),
 													'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 												),
 												'app'   => array(
-													'is_render'  => bb_is_app_notification_is_enabled(),
+													'is_render'  => bb_app_notification_enabled(),
 													'is_checked' => ( ! $app_checked ? true : $app_checked ),
 													'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
 												),

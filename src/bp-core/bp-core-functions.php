@@ -6122,8 +6122,8 @@ function bb_register_notification_email_templates( $pref_key = '' ) {
  *
  * @return bool
  */
-function bb_is_web_notification_is_enabled() {
-	return (bool) apply_filters( 'bb_is_web_notification_is_enabled', ( bp_is_active( 'notifications' ) && ( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) || class_exists( 'BuddyBossEngage' ) ) ) );
+function bb_web_notification_enabled() {
+	return (bool) apply_filters( 'bb_web_notification_enabled', ( bp_is_active( 'notifications' ) && ( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) || class_exists( 'BuddyBossEngage' ) ) ) );
 }
 
 /**
@@ -6133,7 +6133,60 @@ function bb_is_web_notification_is_enabled() {
  *
  * @return bool
  */
-function bb_is_app_notification_is_enabled() {
-	return (bool) apply_filters( 'bb_is_app_notification_is_enabled', true );
+function bb_app_notification_enabled() {
+	return (bool) apply_filters( 'bb_app_notification_enabled', true );
 }
 
+/**
+ * List preferences types.
+ *
+ * @param array $field   Field data.
+ * @param int   $user_id User id.
+ *
+ * @return array list of options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_notification_preferences_types( $field, $user_id = 0 ) {
+
+	$options = array();
+
+	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
+	if ( ! $email_checked ) {
+		$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
+	}
+
+	$options['email'] = array(
+		'is_render'  => true,
+		'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
+		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
+	);
+
+	if ( bb_web_notification_enabled() ) {
+		$web_checked = bp_get_user_meta( $user_id, $field['key'] . '_web', true );
+		if ( ! $web_checked ) {
+			$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
+		}
+
+		$options['web'] = array(
+			'is_render'  => true,
+			'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
+			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
+		);
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$app_checked = bp_get_user_meta( $user_id, $field['key'] . '_app', true );
+		if ( ! $app_checked ) {
+			$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
+		}
+		$options['app'] = array(
+			'is_render'  => true,
+			'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
+			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
+		);
+	}
+
+	return apply_filters( 'bb_notifications_types', $options );
+
+}

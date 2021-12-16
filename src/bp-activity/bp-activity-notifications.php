@@ -452,42 +452,9 @@ function bp_activity_screen_notification_settings() {
 
 			foreach ( $options['fields'] as $field ) {
 
-				$email_checked = bp_get_user_meta( bp_displayed_user_id(), $field['key'], true );
-				$web_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['key'] . '_web', true );
-				$app_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['key'] . '_app', true );
+				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
 
-				if ( ! $email_checked ) {
-					$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
-				}
-
-				if ( ! $web_checked ) {
-					$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
-				}
-
-				if ( ! $app_checked ) {
-					$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
-				}
-
-				$options = apply_filters(
-					'bb_notifications_types',
-					array(
-						'email' => array(
-							'is_render'  => true,
-							'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
-							'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
-						),
-						'web'   => array(
-							'is_render'  => bb_is_web_notification_is_enabled(),
-							'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
-							'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
-						),
-						'app'   => array(
-							'is_render'  => bb_is_app_notification_is_enabled(),
-							'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
-							'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
-						),
-					)
-				);
+                error_log( print_r( $options, 1 ) );
 
 				?>
 				<tr>
