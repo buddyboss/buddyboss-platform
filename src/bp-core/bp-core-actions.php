@@ -398,3 +398,18 @@ function bb_email_handle_cron_healthcheck() {
 }
 
 add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
+
+
+/**
+ * Check and reschedule the background process if queue is not empty.
+ *
+ * @since BuddyBoss 1.8.3
+ */
+function bb_handle_cron_healthcheck() {
+	global $bp_background_updater;
+	if ( $bp_background_updater->is_updating() ) {
+		$bp_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );

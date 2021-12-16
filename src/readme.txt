@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8.2
 Requires PHP: 5.6.20
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,17 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.3 =
+* Messages - Improved logic to send group messages by processing members and notifications in the background
+* Moderation - Improved moderation module core logic to hide content in the background batches on Report, Block, and Suspend
+* Media - Fixed video playing issue on upload in Safari browser
+* Media - Fixed Album feature option avail even when disabled in the settings
+* Coding Standards - Code refactoring to handle when PHP system function disabled
+* Coding Standards - Code refactoring to fix warnings and deprecated functions
+* Elementor - Fixed templates builder popup settings compatibility issue with Forums discussion and replies
+* REST API - Added Group messages improvements in the APIs
+* REST API - Fixed cache issue on password change to fix a critical issue
 
 = 1.8.2 =
 * Forums - Fixed Forums directory page search issue
