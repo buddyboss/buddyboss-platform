@@ -417,8 +417,8 @@ function bp_admin_setting_callback_profile_avatar_type() {
 	?>
 	<div class="avatar-custom-input">
 		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
-			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'wordpress' ); ?>><?php _e( 'WordPress', 'buddyboss' ); ?></option>
 			<option value="buddyboss" <?php selected( bb_get_profile_avatar_type(), 'buddyboss' ); ?>><?php _e( 'BuddyBoss', 'buddyboss' ); ?></option>
+			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'wordpress' ); ?>><?php _e( 'WordPress', 'buddyboss' ); ?></option>
 		</select>
 	</div>
 
@@ -516,22 +516,22 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 function bp_admin_setting_callback_default_profile_cover_type() {
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="none" <?php checked( bb_get_default_profile_cover_type(), 'none' ); ?> />
-		<label for="bp-default-profile-cover-none">
-			<div class="img-block">
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-none.jpg'; ?>" />
-			</div>
-			<span><?php _e( 'None', 'buddyboss' ); ?></span>
-		</label>
-	</div>
-
-	<div class="avatar-custom-input">
 		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_cover_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-cover-default">
 			<div class="img-block">
 				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg'; ?>" />
 			</div>
 			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="none" <?php checked( bb_get_default_profile_cover_type(), 'none' ); ?> />
+		<label for="bp-default-profile-cover-none">
+			<div class="img-block">
+				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-none.jpg'; ?>" />
+			</div>
+			<span><?php _e( 'None', 'buddyboss' ); ?></span>
 		</label>
 	</div>
 
@@ -721,22 +721,22 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 function bp_admin_setting_callback_default_group_cover_type() {
 	?>
 	<div class="avatar-custom-input">
-		<input id="bp-default-group-cover-none" name="bp-default-group-cover-type" type="radio" value="none" <?php checked( bb_get_default_group_cover_type(), 'none' ); ?> />
-		<label for="bp-default-group-cover-none">
-			<div class="img-block">
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-none.jpg'; ?>" />
-			</div>
-			<span><?php _e( 'None', 'buddyboss' ); ?></span>
-		</label>
-	</div>
-
-	<div class="avatar-custom-input">
 		<input id="bp-default-group-cover-default" name="bp-default-group-cover-type" type="radio" value="buddyboss" <?php checked( bb_get_default_group_cover_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-group-cover-default">
 			<div class="img-block">
 				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg'; ?>" />
 			</div>
 			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-none" name="bp-default-group-cover-type" type="radio" value="none" <?php checked( bb_get_default_group_cover_type(), 'none' ); ?> />
+		<label for="bp-default-group-cover-none">
+			<div class="img-block">
+				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-none.jpg'; ?>" />
+			</div>
+			<span><?php _e( 'None', 'buddyboss' ); ?></span>
 		</label>
 	</div>
 

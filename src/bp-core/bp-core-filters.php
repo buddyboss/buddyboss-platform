@@ -1756,7 +1756,7 @@ function bb_default_custom_profile_group_avatar_url_check( $gravatar, $params ) 
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool True if request from admin and it's for profile cover otherwise false.
+ * @return bool True if request from admin and it's for profile cover otherwise false.
  */
 function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
 	$bp_params           = array();
@@ -1933,13 +1933,13 @@ function bb_delete_default_profile_group_avatar( $args ) {
 	$item_id = ! empty( $args['item_id'] ) ? $args['item_id'] : '';
 	if ( ! empty( $item_id ) && 'custom' === $item_id ) {
 
-		// check for user avatars getting deleted
+		// check for user avatars getting deleted.
 		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
 			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 			bp_update_option( 'bp-default-custom-profile-avatar', '' );
 		}
 
-		// check for group avatars getting deleted
+		// check for group avatars getting deleted.
 		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
 			bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 			bp_update_option( 'bp-default-custom-group-avatar', '' );
@@ -1950,9 +1950,9 @@ add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_a
 
 /**
  * Delete default group cover photo attachment
- * 
+ *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
 function bb_delete_profile_group_cover_images_url( $item_id ) {
@@ -1975,12 +1975,13 @@ add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_
  * Set gravatars when Gravatars is enabled from the Profile Images and Profile Avatars is BuddyBoss.
  *
  * @since BuddyBoss [BBVERSION]
- *  
- * @param string $default_grav The avatar default.
- * @param array  $params       The avatar's data.
+ * 
+ * @param string $avatar_default The avatar default.
+ * @param array  $params         The avatar's data.
+ * @return string Set default 'mm' if upload avatars is 'BuddyBoss'.
  */
 function bb_profile_set_gravatar_default( $avatar_default, $params ) {
-	
+
 	if ( 'buddyboss' === bb_get_profile_avatar_type() ) {
 		$avatar_default = 'mm';
 	}
@@ -1988,3 +1989,122 @@ function bb_profile_set_gravatar_default( $avatar_default, $params ) {
 	return $avatar_default;
 }
 add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 );
+
+/**
+ * Reset profile cover position when update the custom profile cover
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ * @param string $option    Option name.
+ */
+function bb_reset_profile_cover_position( $old_value, $value, $option ) {
+	if ( 'bp-default-custom-profile-cover' === $option && ( $value !== $old_value || maybe_serialize( $value ) === maybe_serialize( $old_value ) ) ) {
+
+		$all_users = get_users(
+			array(
+				'fields'   => 'ids',
+				'meta_key' => 'bp_cover_position',
+			)
+		);
+
+		if ( ! empty( $all_users ) ) {
+			foreach ( $all_users as $id ) {
+				if ( empty(
+					bp_attachments_get_attachment(
+						'url',
+						array(
+							'object_dir' => 'members',
+							'item_id'    => $id,
+						)
+					)
+				) ) {
+					delete_user_meta( $id, 'bp_cover_position' );
+				}
+			}
+		}
+	}
+}
+add_action( 'update_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 3 );
+add_action( 'updated_option', 'bb_reset_profile_cover_position', 10, 3 );
+
+/**
+ * Reset group cover position when update the custom group cover
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ * @param string $option    Option name.
+ */
+function bb_reset_group_cover_position( $old_value, $value, $option ) {
+	if ( 'bp-default-custom-group-cover' === $option && ( $value !== $old_value || maybe_serialize( $value ) === maybe_serialize( $old_value ) ) ) {
+
+		$all_groups = groups_get_groups(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => 999999,
+				'orderby'     => 'last_activity',
+				'meta_query'  => array(
+					array(
+						'key'     => 'bp_cover_position',
+						'compare' => 'EXISTS',
+					),
+				),
+				'show_hidden' => true,
+			)
+		);
+
+		if ( ! empty( $all_groups ) && ! empty( $all_groups['groups'] ) ) {
+			foreach ( $all_groups['groups'] as $group_id ) {
+				if ( empty(
+					bp_attachments_get_attachment(
+						'url',
+						array(
+							'object_dir' => 'groups',
+							'item_id'    => $group_id,
+						)
+					)
+				) ) {
+					groups_delete_groupmeta( $group_id, 'bp_cover_position' );
+				}
+			}
+		}
+	}
+}
+add_action( 'update_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 3 );
+add_action( 'updated_option', 'bb_reset_group_cover_position', 10, 3 );
+
+/**
+ * Add inline css for profile and group cover background color when selected 'none' or 'BuddyBoss'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_add_default_cover_image_inline_css() {
+	$cover_type = '';
+
+	$css_rules          = '';
+	$profile_cover_type = bb_get_default_profile_cover_type();
+	$group_cover_type   = bb_get_default_group_cover_type();
+
+	if ( ! bp_disable_cover_image_uploads() && ! empty( $profile_cover_type ) && 'custom' !== $profile_cover_type ) {
+		$css_rules = '.bs-group-cover a';
+	}
+
+	if ( ! bp_disable_group_cover_image_uploads() && ! empty( $group_cover_type ) && 'custom' !== $group_cover_type ) {
+
+		if ( ! empty( $css_rules ) ) {
+			$css_rules = $css_rules . ', #buddypress #header-cover-image';
+		} else {
+			$css_rules = '#buddypress #header-cover-image';
+		}
+	}
+
+	if ( ! empty( $css_rules ) ) {
+
+		$css_rules = $css_rules . '{ background-color: #e2e9ef; }';
+		wp_add_inline_style( 'bp-nouveau', $css_rules );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
