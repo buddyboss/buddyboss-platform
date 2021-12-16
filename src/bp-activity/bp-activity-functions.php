@@ -5692,3 +5692,14 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 
 	return false;
 }
+
+/**
+ * Function will use for how many groups to display at a time in the activity post form.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int
+ */
+function bb_activity_post_form_groups_per_page() {
+	return apply_filters( 'bb_activity_post_form_groups_per_page', 4 );
+}

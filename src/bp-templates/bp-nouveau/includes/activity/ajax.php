@@ -516,7 +516,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$args                = array();
 		$args['user_id']     = bp_loggedin_user_id();
 		$args['show_hidden'] = true;
-		$args['per_page']    = 4;
+		$args['per_page']    = bb_activity_post_form_groups_per_page();
 		if ( isset( $_POST['page'] ) ) {
 			$args['page'] = $_POST['page'];
 		}
