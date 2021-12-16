@@ -491,7 +491,8 @@ window.bp = window.bp || {};
 						self.postForm.model.set( 'group_name', activity_data.group_name );
 
 						self.postForm.$el.find( 'input#group' ).prop( 'checked', true );
-						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
+						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-edit-group' );
+						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-angle-down').remove();
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
 					}
 
@@ -2419,6 +2420,22 @@ window.bp = window.bp || {};
 							this
 						);
 					}
+					
+					var group_total_page = BP_Nouveau.activity.params.objects.group_total_page;
+					if ( group_total_page > 1 ) {
+						var $this = this;
+						this.$el.find( '#bp-activity-group-ac-items' ).addClass('group_scrolling');
+						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
+						var currentPage = 1;
+						$scrollable.scroll( function () {
+							currentPage++;
+							if ( currentPage > group_total_page ) {
+								return false;
+							} else {
+								$this.loadMoreData( $this.collection, currentPage );
+							}
+						} );
+					}
 				}
 				this.collection.on( 'add', this.addItemView, this );
 				this.collection.on( 'reset', this.cleanView, this );
@@ -2475,6 +2492,28 @@ window.bp = window.bp || {};
 					this.views._views[ '' ],
 					function ( view ) {
 						view.remove();
+					}
+				);
+			},
+			
+			loadMoreData: function ( groupCollection, currentPage ) {
+				if ( ! this.$el.find( '#bp-activity-group-ac-items i.animate-spin' ).length ) {
+					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<i class="dashicons dashicons-update animate-spin"></i>' );
+				}
+				this.collection.fetch(
+					{
+						type: 'POST',
+						data: {
+							type: this.options.type,
+							nonce: BP_Nouveau.nonces.activity,
+							page: currentPage,
+							action: 'bp_nouveau_get_activity_objects'
+						},
+						success: function(collection, object, jqXHR) {
+							$( '#bp-activity-group-ac-items i.animate-spin' ).remove();
+						},
+						error: function(jqXHR, statusText, error) {
+						}
 					}
 				);
 			}
@@ -2579,6 +2618,9 @@ window.bp = window.bp || {};
 			},
 
 			privacyTarget: function ( e ) {
+				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') ) {
+					return false;
+				}
 				e.preventDefault();
 				$( '#activity-post-form-privacy' ).show();
 				$( '#whats-new-form' ).addClass( 'focus-in-privacy' );
@@ -2812,7 +2854,7 @@ window.bp = window.bp || {};
 							{
 								collection: bp.Nouveau.Activity.postForm.ActivityObjects,
 								type: this.model.get( 'object' ), //model.get( 'selected' ),
-								placeholder: model.get( 'placeholder' )
+								placeholder: BP_Nouveau.activity.params.objects.group.autocomplete_placeholder,
 							}
 						)
 					);

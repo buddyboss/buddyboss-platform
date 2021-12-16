@@ -181,7 +181,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$group_args = array(
 			'user_id'     => bp_loggedin_user_id(),
 			'show_hidden' => true,
-			'per_page'    => 4,
+			'per_page'    => bb_activity_post_form_groups_per_page(),
 			'page'        => 1,
 		);
 		$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
@@ -192,8 +192,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 
 		$activity_objects['group_list'] = array();
 		if ( isset( $groups['groups'] ) ) {
-			$activity_objects['group_list']  = array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] );
-			$activity_objects['group_count'] = $groups['total'];
+			$activity_objects['group_list']       = array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] );
+			$activity_objects['group_total_page'] = ceil( $groups['total'] / bb_activity_post_form_groups_per_page() );
 		}
 
 		/**
