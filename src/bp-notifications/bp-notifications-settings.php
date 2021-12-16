@@ -230,14 +230,17 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 											'bb_notifications_types',
 											array(
 												'email' => array(
+													'is_render'  => true,
 													'is_checked' => ( ! $email_checked ? true : $email_checked ),
 													'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 												),
 												'web'   => array(
+													'is_render'  => bb_is_web_notification_is_enabled(),
 													'is_checked' => ( ! $web_checked ? true : $web_checked ),
 													'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 												),
 												'app'   => array(
+													'is_render'  => bb_is_app_notification_is_enabled(),
 													'is_checked' => ( ! $app_checked ? true : $app_checked ),
 													'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
 												),
@@ -246,7 +249,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 
 										foreach ( $options as $key => $v ) {
 											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', ! $checked );
-											$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', true );
+											$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', $v['is_render'], $field['key'], $key );
 											if ( $is_render ) {
 												?>
 												<div class="field-wrap <?php echo esc_attr( $key ); ?>">

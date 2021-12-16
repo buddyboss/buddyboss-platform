@@ -6114,3 +6114,26 @@ function bb_register_notification_email_templates( $pref_key = '' ) {
 
 	return $notification_emails;
 }
+
+/**
+ * Function to check the web notification enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_web_notification_is_enabled() {
+	return (bool) apply_filters( 'bb_is_web_notification_is_enabled', ( bp_is_active( 'notifications' ) && ( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) || class_exists( 'BuddyBossEngage' ) ) ) );
+}
+
+/**
+ * Function to check the app push notification enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_app_notification_is_enabled() {
+	return (bool) apply_filters( 'bb_is_app_notification_is_enabled', true );
+}
+

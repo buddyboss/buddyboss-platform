@@ -822,7 +822,7 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
  * @return void
  */
 function bb_heartbeat_on_screen_notifications( $response = array(), $data = array() ) {
-	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
+	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	if ( empty( $is_on_screen_notification_enable ) ) {
 		return $response;

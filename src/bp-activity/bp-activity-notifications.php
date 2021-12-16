@@ -472,14 +472,17 @@ function bp_activity_screen_notification_settings() {
 					'bb_notifications_types',
 					array(
 						'email' => array(
+							'is_render'  => true,
 							'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
 							'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 						),
 						'web'   => array(
+							'is_render'  => bb_is_web_notification_is_enabled(),
 							'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
 							'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 						),
 						'app'   => array(
+							'is_render'  => bb_is_app_notification_is_enabled(),
 							'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
 							'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
 						),
@@ -492,9 +495,8 @@ function bp_activity_screen_notification_settings() {
 
 					<?php
 					foreach ( $options as $key => $v ) {
-
 						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', false );
-						$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', true );
+						$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', $v['is_render'], $field['key'], $key );
 						if ( $is_render ) {
 							?>
 							<td class="<?php echo esc_attr( $key ); ?>">
