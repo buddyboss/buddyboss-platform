@@ -2647,6 +2647,9 @@ window.bp = window.bp || {};
 					$( e.currentTarget ).closest( '#whats-new-privacy-stage' ).find( '#whats-new-post-in' ).val( 'group' ).trigger('change');
 					$( '#whats-new-form' ).addClass( 'focus-in-group' );
 					this.model.set( 'privacy_modal', 'group' );
+					// First time when we open group selector and select any one group and close it
+					// and then back again on the same screen then object should be group to display the same view screen
+					this.model.set( 'object', $( e.currentTarget ).val() );
 					$( '#activity-post-form-privacy' ).hide();
 				}
 			}
@@ -2813,6 +2816,8 @@ window.bp = window.bp || {};
 							}
 						)
 					);
+					// Set the object type.
+					this.model.set( 'object', this.model.get( 'object' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
