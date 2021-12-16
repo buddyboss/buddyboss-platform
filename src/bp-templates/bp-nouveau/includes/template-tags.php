@@ -1274,10 +1274,9 @@ function bp_nouveau_get_nav_link_text() {
  * @return bool
  */
 function bp_nouveau_nav_has_count() {
-	$bp_nouveau     = bp_nouveau();
-	$nav_item       = $bp_nouveau->current_nav_item;
-	$count          = false;
-	$courses_slug   = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$count      = false;
 
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
@@ -1289,10 +1288,6 @@ function bp_nouveau_nav_has_count() {
 		$count = 0 !== (int) bp_video_get_total_group_video_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_album_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && $courses_slug === $nav_item->slug ) {
-		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
-			$count = 0 !== count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
-		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = 0 !== (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
@@ -1328,10 +1323,9 @@ function bp_nouveau_nav_count() {
 	 * @return int The count attribute for the nav item.
 	 */
 function bp_nouveau_get_nav_count() {
-	$bp_nouveau     = bp_nouveau();
-	$nav_item       = $bp_nouveau->current_nav_item;
-	$count          = 0;
-	$courses_slug   = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$count      = 0;
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
@@ -1347,10 +1341,6 @@ function bp_nouveau_get_nav_count() {
 		$count = bp_media_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
 		$count = bp_video_get_total_group_video_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && $courses_slug === $nav_item->slug ) {
-		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
-			$count = count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
-		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
 		$group  = groups_get_current_group();
 		$admins = groups_get_group_admins( $group->id );
@@ -1374,9 +1364,9 @@ function bp_nouveau_get_nav_count() {
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param  int  $count  The count attribute for the nav item.
-	 * @param  object  $nav_item  The current nav item object.
-	 * @param  string  $value  The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 * @param int $count    The count attribute for the nav item.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
 	 */
 	return (int) apply_filters( 'bp_nouveau_get_nav_count', $count, $nav_item, $bp_nouveau->displayed_nav );
 }
