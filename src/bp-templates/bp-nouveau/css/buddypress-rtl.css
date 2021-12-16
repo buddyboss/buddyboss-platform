@@ -1347,7 +1347,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- #user-status-huddle,
 .activity-update-form #user-status-huddle {
   margin: 0;
-  width: 70px;
+  width: 78px;
   padding: 16px;
 }
 
@@ -1355,7 +1355,7 @@ a.layout-grid-view {
 .activity-update-form #user-status-huddle img {
   box-shadow: none;
   display: inline-block;
-  margin-left: 10px;
+  margin-left: 15px;
   vertical-align: middle;
   image-rendering: -webkit-optimize-contrast;
 }
@@ -1655,7 +1655,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #user-status-huddle,
 .activity-update-form.modal-popup #user-status-huddle {
-  padding: 25px 25px 15px 25px;
+  padding: 25px 25px 16px 25px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-attachments,
@@ -1780,14 +1780,14 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form .medium-editor-toolbar {
   top: inherit;
   bottom: -10px;
-  right: 4px;
+  right: 11px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
   transition: bottom ease 0.3s;
   height: 0;
   width: 100%;
-  max-width: calc(100% - 120px);
+  max-width: calc(100% - 130px);
   overflow: hidden;
   display: none;
 }

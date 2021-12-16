@@ -344,13 +344,13 @@
 
 	#user-status-huddle {
 		margin: 0;
-		width: 70px;
+		width: 78px;
 		padding: 16px;
 
 		img {
 			box-shadow: none;
 			display: inline-block;
-			margin-right: 10px;
+			margin-right: 15px;
 			vertical-align: middle;
 			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 		}
@@ -624,7 +624,7 @@
 		}
 
 		#user-status-huddle {
-			padding: 25px 25px 15px 25px;
+			padding: 25px 25px 16px 25px;
 		}
 
 		#whats-new-form #whats-new-attachments {
@@ -749,14 +749,14 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: -10px;
-		left: 4px;
+		left: 11px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
 		transition: bottom ease 0.3s;
 		height: 0;
 		width: 100%;
-		max-width: calc(100% - 120px);
+		max-width: calc(100% - 130px);
 		overflow: hidden;
 		display: none;
 
