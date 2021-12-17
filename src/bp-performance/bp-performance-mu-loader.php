@@ -37,26 +37,55 @@ if ( ! function_exists( 'bp_performance_loaded' ) ) {
  * @return WP_REST_Response $data
  */
 if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
-	function rest_post_dispatch_cache_callback( $data, $current_endpoint ) {
-		if ( ! is_user_logged_in() ) {
-			// Here we can not access bb core functions so that's why we use wp functions here.
-			$enable_private_rest_apis = get_option( 'bb-enable-private-rest-apis' );
-			$exclude_endpoints        = get_option( 'bb-enable-private-rest-apis-public-content' );
-			// Multisite check.
+	function rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
+		if ( 0 === (int) $user_id ) {
+
+			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+				require_once ABSPATH . '/wp-admin/includes/plugin.php';
+			}
+
+			$bb_platform_active = is_plugin_active( 'buddyboss-platform/bp-loader.php' );
+			$bb_app_active      = is_plugin_active( 'buddyboss-app/buddyboss-app.php' );
+
+			$apps_settings            = array();
+			$enable_private_rest_apis = false;
+			$exclude_endpoints        = '';
+
+			if ( $bb_app_active ) {
+				$apps_settings = get_option( 'bbapp_settings', array() );
+			}
+
+			if ( $bb_platform_active ) {
+				$enable_private_rest_apis = get_option( 'bb-enable-private-rest-apis', false );
+				$exclude_endpoints        = get_option( 'bb-enable-private-rest-apis-public-content', '' );
+			}
+
 			if ( is_multisite() ) {
-				$plugins  = get_site_option( 'active_sitewide_plugins' );
-				$basename = 'buddyboss-platform/bp-loader.php';
-				// plugin is network-activated; use main site ID instead.
-				if ( isset( $plugins[ $basename ] ) ) {
-					$current_site             = get_current_site();
-					$root_blog_id             = $current_site->blog_id;
-					$exclude_endpoints        = get_blog_option( $root_blog_id, 'bb-enable-private-rest-apis-public-content' );
-					$enable_private_rest_apis = get_blog_option( $root_blog_id, 'bb-enable-private-rest-apis' );
+				$bb_platform_active_network = is_plugin_active_for_network( 'buddyboss-platform/bp-loader.php' );
+				$bb_app_active_network      = is_plugin_active_for_network( 'buddyboss-app/buddyboss-app.php' );
+
+				if ( $bb_app_active_network ) {
+					$apps_settings = get_blog_option( get_current_network_id(), 'bbapp_settings', array() );
+				}
+
+				if ( $bb_platform_active_network ) {
+					$enable_private_rest_apis = get_blog_option( get_current_network_id(), 'bb-enable-private-rest-apis', false );
+					$exclude_endpoints        = get_blog_option( get_current_network_id(), 'bb-enable-private-rest-apis-public-content', '' );
 				}
 			}
+
 			if (
-				( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() ) ||
-				( ! function_exists( 'bbapp_is_private_app_enabled' ) && $enable_private_rest_apis )
+				! empty( trim( $exclude_endpoints ) ) &&
+				(
+					(
+						! empty( $apps_settings ) && // buddyboss-app is active.
+						! empty( $apps_settings['private_app.enabled'] ) // private app is enabled.
+					) ||
+					(
+						empty( $apps_settings ) && // buddyboss-app disabled.
+						true === (bool) $enable_private_rest_apis // BB private rest api is enabled.
+					)
+				)
 			) {
 				return bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
 			}
@@ -65,7 +94,7 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 		return $data;
 	}
 
-	add_filter( 'rest_post_dispatch_cache', 'rest_post_dispatch_cache_callback', 10, 2 );
+	add_filter( 'rest_get_cache', 'rest_post_dispatch_cache_callback', 10, 3 );
 }
 
 /**
@@ -82,15 +111,21 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
  */
 if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
-		$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', array(), $current_endpoint );
+		// Add mandatory endpoint here for app which you want to exclude from restriction.
+		// ex: /buddyboss-app/auth/v1/jwt/token.
+		$default_exclude_endpoint = array(
+			'/buddyboss/v1/signup/form',
+			'/buddyboss/v1/signup/(?P<id>[\w-]+)',
+			'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
+		);
+		$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 		// Allow some endpoints which is mandatory for app.
 		if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 			return $data;
 		}
+
 		if ( ! bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints ) ) {
-			$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
-			$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
-			$data          = rest_ensure_response( $error );
+			$data = false;
 		}
 
 		return $data;
