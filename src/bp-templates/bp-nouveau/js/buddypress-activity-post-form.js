@@ -727,6 +727,9 @@ window.bp = window.bp || {};
 			}
 		}
 	);
+	
+	// Model object, to fetch ajax data for activity group when load more
+	bp.Models.fetchData = Backbone.Model.extend( {} );
 
 	/** Collections ***********************************************************/
 
@@ -762,10 +765,8 @@ window.bp = window.bp || {};
 		}
 	);
 	
-	// Object, to fetch ajax data
-	bp.Models.fetchData = Backbone.Model.extend( {} );
-	// Pass ajax url if we use any model to fetch data.
-	bp.Models.fetchCollection = Backbone.Collection.extend( {
+	// Pass ajax url if we use any model to fetch data via load more.
+	bp.Collections.fetchCollection = Backbone.Collection.extend( {
 		model: bp.Models.fetchData,
 		url: BP_Nouveau.ajaxurl
 	} );
@@ -2368,6 +2369,17 @@ window.bp = window.bp || {};
 				if ( true === this.model.get( 'selected' ) ) {
 					this.model.clear();
 				} else {
+					var $this = this;
+					if ( $this.model.hasOwnProperty('attributes') &&
+					     $this.model.attributes.hasOwnProperty('object_type') &&
+					     'group' === $this.model.attributes.object_type ) {
+						var previousSelected = _.find( this.model.collection.models, function ( model ) {
+							return model !== $this.model && model.get( 'selected' );
+						} );
+						if ( previousSelected ) {
+							previousSelected.set( 'selected', false );
+						}
+					}
 					this.model.set( 'selected', true );
 					var model_attributes = this.model.attributes;
 
@@ -2518,7 +2530,7 @@ window.bp = window.bp || {};
 					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<i class="dashicons dashicons-update animate-spin"></i>' );
 				}
 				var checkSucessData = false;
-				var fetchGroup      = new bp.Models.fetchCollection();
+				var fetchGroup      = new bp.Collections.fetchCollection();
 				fetchGroup.fetch(
 					{
 						type: 'POST',
@@ -2871,13 +2883,11 @@ window.bp = window.bp || {};
 				this.model.set( 'item_id', model.get( 'id' ) );
 				if ( 'group' === this.model.get( 'object' ) ) {
 					this.views.remove('#whats-new-post-in-box-items');
-					bp.Nouveau.Activity.postForm.ActivityObjects.reset();
-					bp.Nouveau.Activity.postForm.ActivityObjects.add( model );
 					this.views.add(
 						new bp.Views.AutoComplete(
 							{
 								collection: bp.Nouveau.Activity.postForm.ActivityObjects,
-								type: this.model.get( 'object' ), //model.get( 'selected' ),
+								type: this.model.get( 'object' ),
 								placeholder: BP_Nouveau.activity.params.objects.group.autocomplete_placeholder,
 							}
 						)
