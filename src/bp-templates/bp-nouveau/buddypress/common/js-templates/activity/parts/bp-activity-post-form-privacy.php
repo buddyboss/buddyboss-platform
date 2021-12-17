@@ -2,7 +2,7 @@
 	<div class="bp-activity-privacy__list">
 		<?php foreach( bp_activity_get_visibility_levels() as $key => $privacy ) : ?>
 			
-			<label for="<?php echo $key; ?>" class="bp-activity-privacy__label">
+			<label for="<?php echo $key; ?>" class="bp-activity-privacy__label bp-activity-privacy__label-<?php echo $key; ?>">
 				<div class="privacy-tag-wrapper">
 					<span class="privacy-figure privacy-figure--<?php echo $key; ?>"></span>
 					<div class="privacy-tag">
@@ -27,7 +27,7 @@
 		<?php endforeach; ?>
 		
 		<?php if ( bp_is_active( 'groups' ) ) {  ?>
-		<label for="group" class="bp-activity-privacy__label">
+		<label for="group" class="bp-activity-privacy__label bp-activity-privacy__label-group">
 			<div class="privacy-tag-wrapper">
 				<span class="privacy-figure privacy-figure--group"></span>
 				<div class="privacy-tag">

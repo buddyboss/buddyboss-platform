@@ -134,6 +134,7 @@ window.bp = window.bp || {};
 
 			this.model.set( 'edit_activity', true );
 			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
+			self.postForm.$el.find('.bp-activity-privacy__label-group').remove();
 			self.postForm.$el.removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new-toolbar' ).addClass( 'hidden' );
 
