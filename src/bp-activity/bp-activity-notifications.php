@@ -453,9 +453,6 @@ function bp_activity_screen_notification_settings() {
 			foreach ( $options['fields'] as $field ) {
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
-
-                error_log( print_r( $options, 1 ) );
-
 				?>
 				<tr>
 					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
