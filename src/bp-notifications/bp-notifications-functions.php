@@ -841,3 +841,23 @@ function bb_heartbeat_on_screen_notifications( $response = array(), $data = arra
 add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
 add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
 
+/**
+ * Add only notifications which are user selected.
+ *
+ * @param string $querystring Query String.
+ * @param string $object      Object.
+ *
+ * @return mixed|string
+ */
+function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
+
+	if ( 'notifications' !== $object ) {
+		return $querystring;
+	}
+
+	$querystring            = wp_parse_args( $querystring );
+	$querystring['is_new']  = 1;
+	$querystring['user_id'] = get_current_user_id();
+
+	return http_build_query( $querystring );
+}
