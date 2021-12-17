@@ -15446,10 +15446,6 @@ a.bb-close-model {
   padding: 15px 15px 0;
 }
 
-.bb-media-info-section .activity-comments .dropzone .dz-complete .dz-remove:after {
-  top: -1px;
-}
-
 .bb-media-info-header {
   font-size: 14px;
   color: #939597;
@@ -15919,7 +15915,7 @@ ul.bb-albums-list .load-more {
     min-width: 0;
   }
   .bb-media-info-section {
-    flex: 0 0 376px;
+    flex: 0 0 380px;
     min-width: 0;
   }
 }
@@ -21536,7 +21532,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-file-preview {
-  width: 260px;
+  width: 235px;
   min-height: 165px;
 }
 
@@ -21569,8 +21565,8 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone.dz-started .dz-default.dz-message {
-  max-width: 260px !important;
-  width: 260px;
+  max-width: 235px !important;
+  width: 235px;
   min-height: 165px !important;
 }
 
@@ -21608,28 +21604,6 @@ div.dropzone.dz-started .dz-default.dz-message {
 body > .open-popup.video-error-popup {
   position: relative;
   z-index: 999999;
-}
-
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
-  width: 260px;
-  height: 165px;
-}
-
-@media screen and (max-width: 768px) {
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
-    width: calc(50% - 11.5px);
-    margin: 0 5px 10px;
-  }
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview:last-child {
-    margin-left: 0;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
-    width: calc(100% - 10px);
-    margin: 0 5px 10px;
-  }
 }
 
 @media screen and (max-width: 480px) {
