@@ -2705,6 +2705,12 @@ window.bp = window.bp || {};
 				whats_new_form.removeClass( 'focus-in-privacy focus-in-group' );
 
 				Backbone.trigger('privacy:updatestatus');
+
+				var group_item_id = this.model.attributes.item_id;
+				if ( this.model.attributes.privacy === 'group' ) {
+					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
+					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+				}
 			},
 
 			backPrivacySelector: function ( e ) {
