@@ -855,6 +855,16 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
+	$enabled_user_component_actions = array();
+
+	$preferences_keys = bb_core_get_user_notifications_preferences_value( 'web' );
+	foreach ( $preferences_keys as $key ) {
+		if ( 'yes' === $key['value'] ) {
+			$enabled_user_component_actions[] = $key['component_action'];
+		}
+
+	}
+
 	$querystring            = wp_parse_args( $querystring );
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();

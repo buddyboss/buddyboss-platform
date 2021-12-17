@@ -6049,6 +6049,38 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 }
 
 /**
+ * Get user notification preference values.
+ *
+ * @param string $pref_type Notification preference type.
+ * @param int    $user_id User id.
+ *
+ * @return array
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_get_user_notifications_preferences_value( $pref_type = 'email', $user_id = 0 ) {
+
+	$keys              = array();
+	$all_notifications = bb_register_notifications();
+	$user_id           = ( 0 === $user_id ) ? bp_loggedin_user_id() : $user_id;
+
+	foreach ( $all_notifications as $notification ) {
+		$user_meta_key = $notification['preference_key'] . '_' . $pref_type;
+		$keys[]        = array(
+			'preference_key'   => $user_meta_key,
+			'component_name'   => $notification['component'],
+			'component_action' => $notification['component_action'],
+			// @todo Optimize into single query
+			'value'            => get_user_meta( $user_id, $user_meta_key, true )
+
+		);
+	}
+
+	return $keys;
+
+}
+
+/**
  * Send notifications with email.
  *
  * @param string $component_name   Component name.
@@ -6077,6 +6109,16 @@ function bp_send_notification( $component_name, $component_action, $args = array
 		),
 		'notifications_add_notification'
 	);
+
+	if ( false === $r['email_type'] ) {
+		$all_registered_notifications = bb_register_notifications( $r['component_name'] );
+		foreach ( $all_registered_notifications as $notification ) {
+			if ( $notification['component_action'] === $r['component_action'] ) {
+				$r['email_type'] = $notification['email_type'];
+				break;
+			}
+		}
+	}
 
 	if ( ! empty( $r['email_type'] ) && ! empty( $r['user_id'] ) && bp_can_send_notification( $r['user_id'], $r['component_name'], $r['component_action'] ) ) {
 		bp_send_email( $r['email_type'], (int) $r['user_id'], $r['email_args'] );

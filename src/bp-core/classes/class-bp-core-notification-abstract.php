@@ -66,6 +66,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
 
 		add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
+
 	}
 
 	/************************************ Filters ************************************/
@@ -296,17 +297,19 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $notification_label       Notification label.
 	 * @param string $notification_admin_label Notification admin label.
 	 * @param string $pref_key                 Preference key.
+	 * @param string $email_type               Email type.
 	 *
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '' ) {
+	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '', $email_type = false ) {
 		$this->notifications[] = array(
 			'component'        => $component,
 			'component_action' => $component_action,
 			'label'            => $notification_label,
 			'admin_label'      => $notification_admin_label,
 			'preference_key'   => $pref_key,
+			'email_type'       => $email_type,
 		);
 	}
 
@@ -318,9 +321,8 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $email_type   Type of email being sent.
 	 * @param array  $args         Email arguments.
 	 * @param array  $email_schema Email schema.
-	 * @param string $pref_key     Preference key.
 	 */
-	public function register_email_type( $email_type, $args, $email_schema, $pref_key ) {
+	public function register_email_type( $email_type, $args, $email_schema ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type' => $email_type,
 			'args'       => array(
@@ -332,8 +334,7 @@ abstract class BP_Core_Notification_Abstract {
 			'schema'     => array(
 				'description' => ( $email_schema['description'] ?? '' ),
 				'unsubscribe' => ( $email_schema['unsubscribe'] ?? false ),
-			),
-			'pref_key'   => $pref_key,
+			)
 		);
 	}
 }
