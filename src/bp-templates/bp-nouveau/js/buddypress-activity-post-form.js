@@ -760,6 +760,14 @@ window.bp = window.bp || {};
 
 		}
 	);
+	
+	// Object, to fetch ajax data
+	bp.Models.fetchData = Backbone.Model.extend( {} );
+	// Pass ajax url if we use any model to fetch data.
+	bp.Models.fetchCollection = Backbone.Collection.extend( {
+		model: bp.Models.fetchData,
+		url: BP_Nouveau.ajaxurl
+	} );
 
 	/** Views *****************************************************************/
 
@@ -2428,7 +2436,7 @@ window.bp = window.bp || {};
 							if ( currentPage > group_total_page ) {
 								return false;
 							} else {
-								$this.loadMoreData( $this.collection, currentPage );
+								$this.loadMoreData( $this, currentPage );
 							}
 						} );
 					}
@@ -2492,26 +2500,33 @@ window.bp = window.bp || {};
 				);
 			},
 			
-			loadMoreData: function ( groupCollection, currentPage ) {
+			loadMoreData: function ( $this, currentPage ) {
 				if ( ! this.$el.find( '#bp-activity-group-ac-items i.animate-spin' ).length ) {
 					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<i class="dashicons dashicons-update animate-spin"></i>' );
 				}
-				this.collection.fetch(
+				var checkSucessData = false;
+				var fetchGroup      = new bp.Models.fetchCollection();
+				fetchGroup.fetch(
 					{
 						type: 'POST',
 						data: {
-							type: this.options.type,
+							type: $this.options.type,
 							nonce: BP_Nouveau.nonces.activity,
 							page: currentPage,
 							action: 'bp_nouveau_get_activity_objects'
 						},
-						success: function(collection, object, jqXHR) {
-							$( '#bp-activity-group-ac-items i.animate-spin' ).remove();
+						success: function ( collection, object, jqXHR ) {
+							if ( true === object.success ) {
+								$this.collection.add( object.data );
+								$( '#bp-activity-group-ac-items i.animate-spin' ).remove();
+								checkSucessData = true;
+							}
 						},
-						error: function(jqXHR, statusText, error) {
+						error: function ( jqXHR, statusText, error ) {
 						}
 					}
 				);
+				return checkSucessData;
 			}
 		}
 	);
