@@ -832,7 +832,7 @@ function bb_heartbeat_on_screen_notifications( $response = array(), $data = arra
 		ob_start();
 		bp_get_template_part( 'notifications/on-screen' );
 		$response['on_screen_notifications'] = ob_get_clean();
-		$response['total_notifications']  = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+		$response['total_notifications']     = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 	}
 
 	return $response;
@@ -862,12 +862,15 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		if ( 'yes' === $key['value'] ) {
 			$enabled_user_component_actions[] = $key['component_action'];
 		}
-
 	}
 
 	$querystring            = wp_parse_args( $querystring );
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();
+
+	if ( ! empty( $enabled_user_component_actions ) ) {
+		$querystring['component_action'] = $enabled_user_component_actions;
+	}
 
 	return http_build_query( $querystring );
 }
