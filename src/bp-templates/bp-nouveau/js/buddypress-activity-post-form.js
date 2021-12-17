@@ -134,7 +134,7 @@ window.bp = window.bp || {};
 
 			this.model.set( 'edit_activity', true );
 			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
-			self.postForm.$el.find('.bp-activity-privacy__label-group').hide();
+			self.postForm.$el.find( '.bp-activity-privacy__label-group' ).hide().find( 'input#group' ).attr( 'disabled', true ); // disable group visibility level.
 			self.postForm.$el.removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#whats-new-toolbar' ).addClass( 'hidden' );
 
@@ -3774,8 +3774,8 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
-				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); // remove edit class if in edit mode.
-				bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show();
+				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); 
+				bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
 				this.model.set( 'edit_activity', false );
 				bp.Nouveau.Activity.postForm.editActivityData = false;
 
