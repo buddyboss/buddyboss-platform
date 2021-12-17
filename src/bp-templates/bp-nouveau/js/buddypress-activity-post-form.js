@@ -2453,15 +2453,22 @@ window.bp = window.bp || {};
 					var group_total_page = BP_Nouveau.activity.params.objects.group_total_page;
 					if ( group_total_page > 1 ) {
 						var $this = this;
-						this.$el.find( '#bp-activity-group-ac-items' ).addClass('group_scrolling');
+						this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling' );
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
 						var currentPage = 1;
-						$scrollable.scroll( function () {
-							currentPage++;
-							if ( currentPage > group_total_page ) {
-								return false;
-							} else {
-								$this.loadMoreData( $this, currentPage );
+						var scrolling = true;
+						$scrollable.on( 'scroll', function () {
+							let div = $( this ).get( 0 );
+							if ( false !== scrolling ) {
+								if ( div.scrollTop + div.clientHeight >= div.scrollHeight ) {
+									currentPage++;
+									if ( currentPage > group_total_page ) {
+										scrolling = false;
+										return false;
+									} else {
+										$this.loadMoreData( $this, currentPage );
+									}
+								}
 							}
 						} );
 					}
