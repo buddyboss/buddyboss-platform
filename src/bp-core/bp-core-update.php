@@ -1461,6 +1461,8 @@ function bb_update_to_1_8_4() {
 			// Reset POST and FILES request.
 			$_FILES = $reset_files;
 			$_POST  = $reset_post;
+		} else {
+			bp_update_option( 'bp-default-profile-cover-type', 'none' );
 		}
 	}
 
@@ -1509,6 +1511,8 @@ function bb_update_to_1_8_4() {
 			// Reset POST and FILES request.
 			$_FILES = $reset_files;
 			$_POST  = $reset_post;
+		} else {
+			bp_update_option( 'bp-default-group-cover-type', 'none' );
 		}
 	}
 

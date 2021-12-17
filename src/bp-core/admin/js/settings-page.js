@@ -967,8 +967,12 @@
 					if ( 'custom' === defaultProfileAvatarTypeVal ) {
 						defaultProfileAvatarCustomContainer.show();
 					}
-				} else if ( 'wordpress' === profileAvatarType.val() && ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
-					profileAvatarfeedbackContainer.show();
+				} else if ( 'wordpress' === profileAvatarType.val() ) {
+					allowAvatarUploadContainer.show();
+
+					if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
+						profileAvatarfeedbackContainer.show();
+					}
 				}
 
 				$( profileAvatarType ).change(
@@ -994,8 +998,12 @@
 								}
 							}
 
-						} else if ( 'wordpress' === $( this ).val() && ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
-							profileAvatarfeedbackContainer.show();
+						} else if ( 'wordpress' === $( this ).val() ) {
+							allowAvatarUploadContainer.show();
+		
+							if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
+								profileAvatarfeedbackContainer.show();
+							}
 						}
 					}
 				);
