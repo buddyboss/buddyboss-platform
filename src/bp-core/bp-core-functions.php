@@ -6040,11 +6040,12 @@ function bb_restricate_rss_feed() {
 		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
 			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
 				// Check if current url has slash in the last if not then add because we allow to add
 				// feed url like this one - /feed/.
 				if ( substr( $current_url_explode[1], - 1 ) !== '/' ) {
-					$current_url_explode[1] = $current_url_explode[1] . '/';
+					$current_url_explode[1] = trailingslashit ($current_url_explode[1] );
 				}
 				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
 					$defaults = array(
