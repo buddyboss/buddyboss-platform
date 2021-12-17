@@ -621,7 +621,7 @@ function bp_profile_photos_tutorial() {
 /**
  * Link to Group Photos Settings tutorial
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_group_avatar_tutorial() {
 	?>
@@ -1359,8 +1359,8 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 function bp_admin_setting_callback_enable_profile_gravatar() {
 	?>
 	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
-	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile avatars', 'buddyboss' ); ?></label>
-	<p class="description"><?php _e( 'When enabled, members can use avatars from their <a href="https://en.gravatar.com/">Gravatar</a> account.', 'buddyboss' ); ?></p>
+	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use gravatars for profile avatars', 'buddyboss' ); ?></label>
+	<p class="description"><?php _e( 'When enabled, members will be able to use avatars from their <a href="https://gravatar.com/">Gravatar</a> account.', 'buddyboss' ); ?></p>
 	<?php
 }
 

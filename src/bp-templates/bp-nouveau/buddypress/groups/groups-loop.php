@@ -29,7 +29,7 @@ bp_nouveau_before_loop(); ?>
 		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 			<div class="list-wrap">
 
-				<?php if( !bp_disable_group_cover_image_uploads() ) { ?>
+				<?php if( ! bp_disable_group_cover_image_uploads() ) { ?>
 					<?php
 					$group_cover_image_url = bp_attachments_get_attachment( 'url', array(
 						'object_dir' => 'groups',
