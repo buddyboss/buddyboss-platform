@@ -1712,6 +1712,10 @@ a.layout-grid-view {
 #whats-new-messages-toolbar .post-elements-buttons-item {
   margin-right: 10px;
   position: relative;
+}
+
+#whats-new-messages-toolbar .post-elements-buttons-item,
+.activity-form #whats-new-toolbar .post-elements-buttons-item {
   line-height: 1;
 }
 
