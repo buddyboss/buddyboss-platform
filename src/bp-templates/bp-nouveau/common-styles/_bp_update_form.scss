@@ -753,7 +753,7 @@
 		}
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
-			width: 210px;
+			width: calc(100% - 80px);
 			margin-bottom: 0;
 			background-color: #fff;
 			border: 1px solid #dedfe2;
@@ -904,6 +904,7 @@
 		position: absolute;
 		bottom: -6px;
 		box-shadow: none;
+		min-width: 260px;
 	}
 
 }
