@@ -461,10 +461,11 @@ function bp_activity_screen_notification_settings() {
 					foreach ( $options as $key => $v ) {
 						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', false );
 						$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', $v['is_render'], $field['key'], $key );
+						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
 						if ( $is_render ) {
 							?>
 							<td class="<?php echo esc_attr( $key ); ?>">
-								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="notifications[<?php echo esc_attr( $field['key'] ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
 								<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
 							</td>
 							<?php
