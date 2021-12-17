@@ -6122,6 +6122,7 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
+				$endpoints = untrailingslashit( trim( $endpoints ) );
 				if ( strpos( $endpoints, 'wp-json' ) !== false ) {
 					$endpoints = str_replace( 'wp-json', '', $endpoints );
 				}
