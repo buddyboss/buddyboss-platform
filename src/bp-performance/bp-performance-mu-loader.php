@@ -113,6 +113,7 @@ if ( ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
 			$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 			if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 				foreach ( $exclude_arr_endpoints as $endpoints ) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
 					// Here we get current_endpoint like this - /wp/v2/users
 					// so we need to explode exclude endpoint with wp-json/.
 					if ( strpos( $endpoints, 'wp-json/' ) !== false ) {
