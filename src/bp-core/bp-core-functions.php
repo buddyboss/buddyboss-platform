@@ -6044,7 +6044,7 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 		$preference_key = $preference_key . '_' . $pref_type;
 	}
 
-	return (bool) 'no' !== get_user_meta( $use_id, $preference_key, true );
+	return (bool) 'no' !== get_user_meta( $user_id, $preference_key, true );
 
 }
 
