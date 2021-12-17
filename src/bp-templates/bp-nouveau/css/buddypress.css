@@ -21564,7 +21564,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   object-fit: cover;
 }
 
-.dropzone.video-dropzone .dz-success-mark {
+.dropzone.video-dropzone .dz-preview .dz-success-mark {
   display: none;
 }
 
