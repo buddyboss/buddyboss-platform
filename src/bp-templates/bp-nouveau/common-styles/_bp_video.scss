@@ -1647,7 +1647,7 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-file-preview {
-		width: 260px;
+		width: 235px;
 		min-height: 165px;
 
 		.dz-details {
@@ -1682,8 +1682,8 @@ div.dropzone.dz-started {
 	}
 
 	&.dz-started .dz-default.dz-message {
-		max-width: 260px !important;
-		width: 260px;
+		max-width: 235px !important;
+		width: 235px;
 		min-height: 165px !important;
 	}
 
@@ -1733,27 +1733,6 @@ div.dropzone.dz-started {
 body > .open-popup.video-error-popup {
 	position: relative;
 	z-index: 999999;
-}
-
-.ac-reply-content .ac-reply-attachments .dropzone.video .dz-preview.dz-file-preview {
-	width: 260px;
-	height: 165px;
-
-	@media screen and (max-width: 768px ) {
-		width: calc(50% - 11.5px);
-		margin: 0 5px 10px;
-
-		&:last-child {
-			margin-right: 0;
-		}
-
-	}
-
-	@media screen and (max-width: 480px ) {
-		width: calc(100% - 10px);
-		margin: 0 5px 10px;
-	}
-
 }
 
 @media screen and (max-width: 480px) {
