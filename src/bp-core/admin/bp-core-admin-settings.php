@@ -1625,6 +1625,20 @@ function bb_admin_setting_callback_private_rest_apis() {
 			)
 		)
 	);
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled()  ) {
+		printf(
+			'<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			sprintf(
+				__( 'BuddyBoss App is enabled. Please go to <a href="%s">settings</a> here to restrict App and REST APIs access to logged-in members only.', 'buddyboss' ),
+				add_query_arg(
+					array(
+						'page' => 'bbapp-settings',
+					),
+					admin_url( 'admin.php' )
+				)
+			)
+		);
+	}
 }
 
 /**
@@ -1642,20 +1656,6 @@ function bb_admin_setting_callback_private_rest_apis_public_content() {
 	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST API endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php disabled( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
 	<?php
-	if ( function_exists( 'bbapp_is_private_app_enabled' )  ) {
-		printf(
-			'<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			sprintf(
-				__( 'BuddyBoss App is enabled. Please go to <a href="%s">settings</a> here to restrict App and REST APIs access to logged-in members only.', 'buddyboss' ),
-				add_query_arg(
-					array(
-						'page' => 'bbapp-settings',
-					),
-					admin_url( 'admin.php' )
-				)
-			)
-		);
-	}
 }
 
 /**
