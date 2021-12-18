@@ -2740,14 +2740,25 @@ window.bp = window.bp || {};
 			},
 
 			privacySelector: function ( e ) {
+				var whats_new_form = $( '#whats-new-form' );
 				if ( $( e.currentTarget ).val() === 'group' ) {
 					$( e.currentTarget ).closest( '#whats-new-privacy-stage' ).find( '#whats-new-post-in' ).val( 'group' ).trigger('change');
-					$( '#whats-new-form' ).addClass( 'focus-in-group' );
+					whats_new_form.addClass( 'focus-in-group' );
 					this.model.set( 'privacy_modal', 'group' );
 					// First time when we open group selector and select any one group and close it
 					// and then back again on the same screen then object should be group to display the same view screen
 					this.model.set( 'object', $( e.currentTarget ).val() );
 					$( '#activity-post-form-privacy' ).hide();
+					
+					// Auto select first group item
+					if ( this.model.attributes.item_id === 0 ) {
+						group_first_ac_item = whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object:first' );
+						group_first_ac_item.addClass( 'selected' );
+						group_first_ac_item.find( '.privacy-radio' ).addClass( 'selected' );
+						group_first_ac_item.find( 'input.bp-activity-object__radio' ).prop( 'checked', true );
+						var group_id = group_first_ac_item.find( 'input.bp-activity-object__radio' ).data( 'id' );
+						this.model.set( 'item_id', group_id );
+					}
 				}
 			}
 		}
