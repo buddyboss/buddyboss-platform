@@ -1,5 +1,6 @@
 /* global bp, BP_Nouveau, _, Backbone, tinymce */
 /* @version 3.1.0 */
+/*jshint esversion: 6 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
 
@@ -2051,12 +2052,12 @@ window.bp = window.bp || {};
 					var selectedTextRange = document.selection.createRange();
 					var preSelectionTextRange = document.body.createTextRange();
 					preSelectionTextRange.moveToElementText(this.$el[0]);
-					preSelectionTextRange.setEndPoint("EndToStart", selectedTextRange);
+					preSelectionTextRange.setEndPoint('EndToStart', selectedTextRange);
 					var start = preSelectionTextRange.text.length;			
 					window.activityCaretPosition = {
 						start: start,
 						end: start + selectedTextRange.text.length
-					}
+					};
 				}
 
 			},
@@ -2440,6 +2441,7 @@ window.bp = window.bp || {};
 				).render();
 
 				this.$el.html( autocomplete.$el );
+				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' );
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
@@ -2752,7 +2754,7 @@ window.bp = window.bp || {};
 					
 					// Auto select first group item
 					if ( this.model.attributes.item_id === 0 ) {
-						group_first_ac_item = whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object:first' );
+						var group_first_ac_item = whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object:first' );
 						group_first_ac_item.addClass( 'selected' );
 						group_first_ac_item.find( '.privacy-radio' ).addClass( 'selected' );
 						group_first_ac_item.find( 'input.bp-activity-object__radio' ).prop( 'checked', true );
