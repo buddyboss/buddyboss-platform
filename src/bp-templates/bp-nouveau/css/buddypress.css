@@ -2033,8 +2033,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-autocomplete-wrapper:before {
-  content: '\e81f';
-  font-family: 'bb-icons';
+  content: "\e81f";
+  font-family: bb-icons;
   speak: none;
   display: inline-block;
   width: 1em;
