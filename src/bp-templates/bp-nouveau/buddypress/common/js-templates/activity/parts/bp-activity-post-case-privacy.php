@@ -11,7 +11,7 @@
 			<# } else if ( data.privacy === 'onlyme' ) { #>
 				<?php esc_html_e( 'Only Me', 'buddyboss' ); ?>
 			<# } else { #>
-				<?php esc_html_e( 'Group', 'buddyboss' ); ?>
+				{{data.item_name}}
 			<# } #>	
 		</span>
 		<i class="bb-icon-angle-down"></i>

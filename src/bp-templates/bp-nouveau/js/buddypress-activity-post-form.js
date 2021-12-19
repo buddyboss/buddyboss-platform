@@ -678,6 +678,7 @@ window.bp = window.bp || {};
 				id: 0,
 				user_id: 0,
 				item_id: 0,
+				item_name: '',
 				object: '',
 				content: '',
 				posting: false,
@@ -2661,6 +2662,14 @@ window.bp = window.bp || {};
 
 			render: function () {
 				this.$el.html( this.template( this.model.toJSON() ) );
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) {
+					this.model.set( 'item_name', BP_Nouveau.activity.params.item_name );
+					this.model.set( 'privacy', 'group' );
+
+					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+				}
+
 				return this;
 			},
 		
@@ -2669,7 +2678,7 @@ window.bp = window.bp || {};
 			},
 
 			privacyTarget: function ( e ) {
-				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') ) {
+				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) ) {
 					return false;
 				}
 				e.preventDefault();
