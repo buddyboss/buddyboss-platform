@@ -475,13 +475,6 @@ window.bp = window.bp || {};
 						}
 					}
 
-					// Do not allow the edit privacy if activity is belongs to any folder/album.
-					if ( ! bp.privacyEditable ) {
-						$activityPrivacySelect.parent().css( 'display', 'none' );
-					} else {
-						$activityPrivacySelect.parent().css( 'display', 'block' );
-					}
-
 					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
 					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
