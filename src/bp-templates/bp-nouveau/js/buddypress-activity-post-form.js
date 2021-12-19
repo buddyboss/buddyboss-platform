@@ -2667,6 +2667,10 @@ window.bp = window.bp || {};
 					this.model.set( 'item_name', BP_Nouveau.activity.params.item_name );
 					this.model.set( 'privacy', 'group' );
 
+					var group_name = BP_Nouveau.activity.params.item_name;
+					var whats_new_form = $( '#whats-new-form' );
+					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+
 					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
 				}
 
@@ -2718,7 +2722,7 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', 'general' );
 
-				var whats_new_form = $( '#whats-new-form' );		
+				var whats_new_form = $( '#whats-new-form' );
 				whats_new_form.removeClass( 'focus-in-privacy focus-in-group' );
 
 				Backbone.trigger('privacy:updatestatus');
