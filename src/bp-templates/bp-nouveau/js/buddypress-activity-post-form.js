@@ -2785,6 +2785,10 @@ window.bp = window.bp || {};
 					this.views.add( privacy );
 				}
 
+				if ( _.isUndefined( BP_Nouveau.activity.params.objects ) && 'user' === BP_Nouveau.activity.params.object ) {
+					this.$el.find( '.bp-activity-privacy__label-group' ).hide().find( 'input#group' ).attr( 'disabled', true ); // disable group visibility level.
+				}
+
 				// Select box for the object.
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
@@ -3823,7 +3827,11 @@ window.bp = window.bp || {};
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); 
-				bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
+					bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
+				}
+
 				this.model.set( 'edit_activity', false );
 				bp.Nouveau.Activity.postForm.editActivityData = false;
 
