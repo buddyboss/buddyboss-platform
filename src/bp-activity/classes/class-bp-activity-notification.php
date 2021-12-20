@@ -65,8 +65,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					'meta_key' => 'notification_activity_new_mention',
 					'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 				),
-			),
-			'notification_activity_new_mention'
+			)
 		);
 
 		$this->register_email_type(
@@ -85,8 +84,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					'meta_key' => 'notification_activity_new_mention',
 					'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 				),
-			),
-			'notification_activity_new_mention'
+			)
 		);
 
 		$this->register_notification(
