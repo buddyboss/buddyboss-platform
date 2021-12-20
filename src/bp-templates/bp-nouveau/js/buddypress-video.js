@@ -1114,7 +1114,7 @@ window.bp = window.bp || {};
 					success: function ( response ) {
 						if ( response.success ) {
 
-							if ( 'no' !== response.data.ffmpeg_generated && $.trim( response.data.default_images ) !== '' ) {
+							if ( 'yes' === response.data.ffmpeg_generated ) {
 								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 							}
 
