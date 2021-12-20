@@ -321,8 +321,9 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $email_type   Type of email being sent.
 	 * @param array  $args         Email arguments.
 	 * @param array  $email_schema Email schema.
+	 * @param string $pref_key     Preference key.
 	 */
-	public function register_email_type( $email_type, $args, $email_schema ) {
+	public function register_email_type( $email_type, $args, $email_schema, $pref_key ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type' => $email_type,
 			'args'       => array(
@@ -334,7 +335,8 @@ abstract class BP_Core_Notification_Abstract {
 			'schema'     => array(
 				'description' => ( $email_schema['description'] ?? '' ),
 				'unsubscribe' => ( $email_schema['unsubscribe'] ?? false ),
-			)
+			),
+			'pref_key'   => $pref_key,
 		);
 	}
 }
