@@ -1086,6 +1086,11 @@ a.layout-grid-view {
   line-height: 1;
 }
 
+.bp-nouveau-activity-form-placeholder-,
+#whats-new-form {
+  background-color: #fff;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-privacy-stage,
 .bp-nouveau-activity-form-placeholder- #bp-activity-privacy-point,
 #whats-new-form #whats-new-privacy-stage,
