@@ -493,16 +493,19 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>" style="<?php echo $hide_show_style; ?>">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview user-custom-avatar" data-default="<?php echo $placeholder_avatar_url; ?>" style="<?php echo $hide_show_style; ?>">
 			<input type="hidden" name="bp-default-custom-profile-avatar" id="bp-default-user-custom-avatar" value="<?php echo bb_get_default_custom_upload_profile_avatar(); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
 		</div>
+	</div>
+	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
+		<p id="bp-avatar-image-feedback" class="updated"></p>
 	</div>
 	<p class="description"><?php echo sprintf( __( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
 	<?php
@@ -703,11 +706,14 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-group-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
 		</div>
+	</div>
+	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
+		<p id="bp-avatar-image-feedback" class="updated"></p>
 	</div>
 	<p class="description"><?php echo sprintf( __( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
 	<?php

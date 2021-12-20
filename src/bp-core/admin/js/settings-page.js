@@ -1,5 +1,7 @@
-/* global BP_ADMIN */
-/* global BP_Confirm */
+/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp */
+
+window.bp = window.bp || {};
+
 (function() {
 	var $                             = jQuery.noConflict();
 	var BbToolsCommunityRepairActions = [];
@@ -1110,6 +1112,80 @@
 				container.find( 'p' ).removeClass( 'success error' ).addClass( type ).html( feedback );
 				container.show();
 			}
+
+			$( '.custom-profile-group-avatar' ).on(
+				'click',
+				'a.bp-delete-custom-avatar',
+				function(e) {
+					e.preventDefault();
+
+					if ( confirm( BP_Confirm.are_you_sure ) ) {
+						var avatarContainer          = $( this ).parents( 'tr' ),
+						    avatarFeedbackContainer       = avatarContainer.find( '.bb-custom-profile-group-avatar-feedback' ),
+							avatarItemID = BP_Uploader.settings.defaults.multipart_params.bp_params.item_id,
+							avatarObject = BP_Uploader.settings.defaults.multipart_params.bp_params.object;
+
+						avatarFeedbackContainer.hide();
+						avatarFeedbackContainer.find( 'p' ).removeClass( 'success error' );
+
+						// Remove the avatar !
+						bp.ajax.post(
+							'bp_avatar_delete',
+							{
+								json:          true,
+								item_id: avatarItemID,
+								object: avatarObject,
+								nonce: BP_Uploader.settings.defaults.multipart_params.bp_params.nonces.remove
+							}
+						).done(
+							function( response ) {
+								console.log('done');
+								console.log(response);
+
+								var feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ],
+									feedbackType = 'success';
+
+								// Show feedback.
+								profileGroupFileFeedback( avatarFeedbackContainer, feedback, feedbackType );
+
+								// Update each avatars of the page
+								$( '.' + avatarObject + '-' + response.item_id + '-avatar' ).each(
+									function() {
+										$( this ).prop( 'src', response.avatar );
+									}
+								);
+								
+								// Hide 'Remove' button when avatar deleted.
+								if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
+									$( '.custom-profile-group-avatar a.bb-img-remove-button' ).hide();
+								}
+
+								// Hide image preview when avatar deleted.
+								$( '.custom-profile-group-avatar .' + avatarObject + '-' + response.item_id + '-avatar' ).hide();
+
+								// Update each avatars fields of the page.
+								$( '#bp-default-' + avatarObject + '-' + response.item_id + '-avatar' ).val( '' );
+							}
+						).fail(
+							function( response ) {
+								console.log('fail');
+								console.log(response);
+								var feedback = BP_Uploader.strings.default_error,
+									feedbackType = 'error';
+
+								if ( ! _.isUndefined( response ) ) {
+									feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
+								}
+
+								// Show feedback.
+								profileGroupFileFeedback( avatarFeedbackContainer, feedback, feedbackType );
+							}
+						);
+					}
+				}
+			);
+
+			
 
 			$( document ).on(
 				'change',
