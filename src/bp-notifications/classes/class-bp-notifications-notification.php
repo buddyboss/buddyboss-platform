@@ -356,6 +356,23 @@ class BP_Notifications_Notification {
 			$where_conditions['component_action'] = "component_action IN ({$ca_in})";
 		}
 
+		// Excluded component_action.
+		if ( ! empty( $args['excluded_action'] ) ) {
+			if ( ! is_array( $args['excluded_action'] ) ) {
+				$excluded_action = explode( ',', $args['excluded_action'] );
+			} else {
+				$excluded_action = $args['excluded_action'];
+			}
+
+			$ca_clean = array();
+			foreach ( $excluded_action as $ca ) {
+				$ca_clean[] = $wpdb->prepare( '%s', $ca );
+			}
+
+			$ca_not_in                           = implode( ',', $ca_clean );
+			$where_conditions['excluded_action'] = "component_action NOT IN ({$ca_not_in})";
+		}
+
 		// If is_new.
 		if ( ! empty( $args['is_new'] ) && 'both' !== $args['is_new'] ) {
 			$where_conditions['is_new'] = 'is_new = 1';
@@ -606,6 +623,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
+				'excluded_action'   => false,
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -690,6 +708,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
@@ -778,6 +797,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],

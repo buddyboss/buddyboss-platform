@@ -162,6 +162,7 @@ class BP_Notifications_Template {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
+				'excluded_action'   => false,
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => 'date_notified',
@@ -192,13 +193,14 @@ class BP_Notifications_Template {
 		$this->search_terms = $r['search_terms'];
 		$this->order_by     = $r['order_by'];
 		$this->sort_order   = $r['sort_order'];
-		$this->query_vars   = array(
+		$this->query_vars = array(
 			'id'                => $r['id'],
 			'user_id'           => $this->user_id,
 			'item_id'           => $r['item_id'],
 			'secondary_item_id' => $r['secondary_item_id'],
 			'component_name'    => $r['component_name'],
 			'component_action'  => $r['component_action'],
+			'excluded_action'   => $r['excluded_action'],
 			'meta_query'        => $r['meta_query'],
 			'date_query'        => $r['date_query'],
 			'is_new'            => $this->is_new,
