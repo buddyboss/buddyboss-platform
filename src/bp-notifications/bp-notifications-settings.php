@@ -166,6 +166,7 @@ function bb_admin_setting_callback_on_automatic_notification_information() {
 function bb_admin_setting_callback_on_automatic_notification_fields() {
 	$all_notifications    = bb_register_notification_preferences();
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$notifications        = bb_register_notifications();
 
 	if ( ! empty( $all_notifications ) ) {
 		echo '<table class="form-table"><tbody>';
@@ -250,7 +251,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 										foreach ( $options as $key => $v ) {
 											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
 											$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-											if ( $is_render ) {
+											$is_enabled  = current( bb_core_search_array_key_value( $notifications, 'preference_key', $field['key'] ) );
+											if ( $is_render && isset( $is_enabled[ $key ] ) && true === $is_enabled[ $key ] ) {
 												?>
 												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
 													<input type="hidden" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="no" <?php disabled( $is_disabled, true ); ?> />

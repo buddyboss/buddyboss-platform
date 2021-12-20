@@ -297,19 +297,25 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $notification_label       Notification label.
 	 * @param string $notification_admin_label Notification admin label.
 	 * @param string $pref_key                 Preference key.
+	 * @param bool   $email                    Email notification type.
+	 * @param bool   $web                      Web notification type.
+	 * @param bool   $app                      App notification type.
 	 * @param string $email_type               Email type.
 	 *
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '', $email_type = '' ) {
+	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '', $email = true, $web = true, $app = true, $email_type = '' ) {
 		$this->notifications[] = array(
 			'component'        => $component,
 			'component_action' => $component_action,
 			'label'            => $notification_label,
 			'admin_label'      => $notification_admin_label,
 			'preference_key'   => $pref_key,
-			'email_type'       => $email_type,
+			'email'            => $email,
+			'web'              => $web,
+			'app'              => $app,
+			'email_type'       => $email_type
 		);
 	}
 

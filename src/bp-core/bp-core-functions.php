@@ -6232,3 +6232,30 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	return apply_filters( 'bb_notifications_types', $options );
 
 }
+
+/**
+ * Find the key value from given array.
+ *
+ * @param array  $array Given array.
+ * @param string $key   Key to find.
+ * @param string $value Value to find.
+ *
+ * @return array
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_search_array_key_value( $array, $key, $value ) {
+	$results = array();
+
+	if ( is_array( $array ) ) {
+		if ( isset( $array[ $key ] ) && $array[ $key ] == $value ) {
+			$results[] = $array;
+		}
+
+		foreach ( $array as $subarray ) {
+			$results = array_merge( $results, bb_core_search_array_key_value( $subarray, $key, $value ) );
+		}
+	}
+
+	return $results;
+}
