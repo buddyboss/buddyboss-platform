@@ -2028,6 +2028,27 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   overflow: hidden;
 }
 
+.activity-autocomplete-wrapper {
+  position: relative;
+}
+
+.activity-autocomplete-wrapper:before {
+  content: "\e81f";
+  font-family: bb-icons;
+  speak: none;
+  display: inline-block;
+  width: 1em;
+  font-size: 20px;
+  line-height: 1;
+  color: rgba(18, 43, 70, 0.4);
+  position: absolute;
+  top: 55%;
+  right: 15px;
+  transform: translate(0, -50%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 #whats-new-post-in-box-items {
   list-style: none;
   position: relative;
@@ -2037,7 +2058,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 #whats-new-post-in-box-items #activity-autocomplete {
   width: 100%;
   border-radius: 3px;
-  padding: 5px 10px;
+  padding: 5px 48px 5px 10px;
   height: 44px;
 }
 

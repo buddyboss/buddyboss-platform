@@ -230,6 +230,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			array(
 				'object'  => 'group',
 				'item_id' => bp_get_current_group_id(),
+				'item_name' => bp_get_current_group_name(),
 			)
 		);
 	}

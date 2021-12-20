@@ -1,5 +1,6 @@
 /* global bp, BP_Nouveau, _, Backbone, tinymce */
 /* @version 3.1.0 */
+/*jshint esversion: 6 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
 
@@ -474,13 +475,6 @@ window.bp = window.bp || {};
 						}
 					}
 
-					// Do not allow the edit privacy if activity is belongs to any folder/album.
-					if ( ! bp.privacyEditable ) {
-						$activityPrivacySelect.parent().css( 'display', 'none' );
-					} else {
-						$activityPrivacySelect.parent().css( 'display', 'block' );
-					}
-
 					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
 					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
@@ -677,6 +671,7 @@ window.bp = window.bp || {};
 				id: 0,
 				user_id: 0,
 				item_id: 0,
+				item_name: '',
 				object: '',
 				content: '',
 				posting: false,
@@ -2051,12 +2046,12 @@ window.bp = window.bp || {};
 					var selectedTextRange = document.selection.createRange();
 					var preSelectionTextRange = document.body.createTextRange();
 					preSelectionTextRange.moveToElementText(this.$el[0]);
-					preSelectionTextRange.setEndPoint("EndToStart", selectedTextRange);
+					preSelectionTextRange.setEndPoint('EndToStart', selectedTextRange);
 					var start = preSelectionTextRange.text.length;			
 					window.activityCaretPosition = {
 						start: start,
 						end: start + selectedTextRange.text.length
-					}
+					};
 				}
 
 			},
@@ -2440,6 +2435,7 @@ window.bp = window.bp || {};
 				).render();
 
 				this.$el.html( autocomplete.$el );
+				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' );
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
@@ -2660,6 +2656,18 @@ window.bp = window.bp || {};
 
 			render: function () {
 				this.$el.html( this.template( this.model.toJSON() ) );
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) {
+					this.model.set( 'item_name', BP_Nouveau.activity.params.item_name );
+					this.model.set( 'privacy', 'group' );
+
+					var group_name = BP_Nouveau.activity.params.item_name;
+					var whats_new_form = $( '#whats-new-form' );
+					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+
+					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+				}
+
 				return this;
 			},
 		
@@ -2668,7 +2676,7 @@ window.bp = window.bp || {};
 			},
 
 			privacyTarget: function ( e ) {
-				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') ) {
+				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) ) {
 					return false;
 				}
 				e.preventDefault();
@@ -2708,7 +2716,7 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', 'general' );
 
-				var whats_new_form = $( '#whats-new-form' );		
+				var whats_new_form = $( '#whats-new-form' );
 				whats_new_form.removeClass( 'focus-in-privacy focus-in-group' );
 
 				Backbone.trigger('privacy:updatestatus');
@@ -2753,7 +2761,7 @@ window.bp = window.bp || {};
 					
 					// Auto select first group item
 					if ( this.model.attributes.item_id === 0 ) {
-						group_first_ac_item = whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object:first' );
+						var group_first_ac_item = whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object:first' );
 						group_first_ac_item.addClass( 'selected' );
 						group_first_ac_item.find( '.privacy-radio' ).addClass( 'selected' );
 						group_first_ac_item.find( 'input.bp-activity-object__radio' ).prop( 'checked', true );
@@ -2776,6 +2784,10 @@ window.bp = window.bp || {};
 				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
 					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
 					this.views.add( privacy );
+				}
+
+				if ( _.isUndefined( BP_Nouveau.activity.params.objects ) && 'user' === BP_Nouveau.activity.params.object ) {
+					this.$el.find( '.bp-activity-privacy__label-group' ).hide().find( 'input#group' ).attr( 'disabled', true ); // disable group visibility level.
 				}
 
 				// Select box for the object.
@@ -3816,7 +3828,11 @@ window.bp = window.bp || {};
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' ); 
-				bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
+					bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
+				}
+
 				this.model.set( 'edit_activity', false );
 				bp.Nouveau.Activity.postForm.editActivityData = false;
 
