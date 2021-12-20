@@ -939,6 +939,61 @@ window.bp = window.bp || {};
 				);
 			}
 
+			var previewAvatarCover = function() {
+
+				var data,
+					avatarItemID = BP_Uploader.settings.defaults.multipart_params.bp_params.item_id,
+					avatarObject = BP_Uploader.settings.defaults.multipart_params.bp_params.object;
+
+				if ( $( '#bp-disable-cover-image-uploads' ).length ) {
+
+					data = {
+						_wpnonce: BP_ADMIN.avatar_cover_preview.nonce,
+						item_id: avatarItemID,
+						object: avatarObject,
+						object: avatarObject,
+						profile_avatar_type: $( '#bp-profile-avatar-type' ).val(),
+						disable_avatar_uploads: $( '#bp-disable-avatar-uploads' ).prop( 'checked' ),
+						default_profile_avatar_type: $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
+						disable_cover_image_uploads: $( '#bp-disable-cover-image-uploads' ).prop( 'checked' ),
+						default_profile_cover_type: $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val(),
+					};
+
+				} else if ( $( '#bp-disable-group-cover-image-uploads' ).length ) {
+					data = {
+						_wpnonce: BP_ADMIN.avatar_cover_preview.nonce,
+						item_id: avatarItemID,
+						object: avatarObject,
+						object: avatarObject,
+						profile_avatar_type: $( '#bp-profile-avatar-type' ).val(),
+						default_profile_avatar_type: $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
+					};
+				} else {
+					return false;
+				}
+
+				bp.ajax.post(
+					BP_ADMIN.avatar_cover_preview.action,
+					data
+				).done(
+					function( response ) {
+
+						var previewContainer = $( '.preview-avatar-cover-image' ),
+						webContainer         = previewContainer.find( '.web-preview-wrap' ),
+						appContainer         = previewContainer.find( '.app-preview-wrap' );
+
+						previewContainer.find( '.preview_avatar_cover' ).removeClass( 'has-avatar has-cover' ).addClass( response.avatar_class + ' ' + response.cover_class );
+						webContainer.find( '.preview-item-cover img' ).prop( 'src', response.web_cover_url );
+						webContainer.find( '.preview-item-avatar img' ).prop( 'src', response.web_avatar_url );
+						appContainer.find( '.preview-item-cover img' ).prop( 'src', response.app_cover_url );
+						appContainer.find( '.preview-item-avatar img' ).prop( 'src', response.app_avatar_url );
+					}
+				).fail(
+					function( response ) {
+					}
+				);
+			}
+
 			// Profile Avatar Settings Show/Hide.
 			var profileAvatarType                   = $( '#bp-profile-avatar-type' ),
 				allowAvatarUpload                   = $( '#bp-disable-avatar-uploads' ),
@@ -984,7 +1039,7 @@ window.bp = window.bp || {};
 						defaultProfileAvatarCustomContainer.hide();
 						profileAvatarfeedbackContainer.hide();
 						enableProfileGravatarContainer.hide();
-
+						previewAvatarCover();
 						if ( 'buddyboss' === $( this ).val() ) {
 
 							allowAvatarUploadContainer.show();
@@ -1002,7 +1057,7 @@ window.bp = window.bp || {};
 
 						} else if ( 'wordpress' === $( this ).val() ) {
 							allowAvatarUploadContainer.show();
-		
+
 							if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
 								profileAvatarfeedbackContainer.show();
 							}
@@ -1120,10 +1175,10 @@ window.bp = window.bp || {};
 					e.preventDefault();
 
 					if ( confirm( BP_Confirm.are_you_sure ) ) {
-						var avatarContainer          = $( this ).parents( 'tr' ),
-						    avatarFeedbackContainer       = avatarContainer.find( '.bb-custom-profile-group-avatar-feedback' ),
-							avatarItemID = BP_Uploader.settings.defaults.multipart_params.bp_params.item_id,
-							avatarObject = BP_Uploader.settings.defaults.multipart_params.bp_params.object;
+						var avatarContainer         = $( this ).parents( 'tr' ),
+							avatarFeedbackContainer = avatarContainer.find( '.bb-custom-profile-group-avatar-feedback' ),
+							avatarItemID            = BP_Uploader.settings.defaults.multipart_params.bp_params.item_id,
+							avatarObject            = BP_Uploader.settings.defaults.multipart_params.bp_params.object;
 
 						avatarFeedbackContainer.hide();
 						avatarFeedbackContainer.find( 'p' ).removeClass( 'success error' );
@@ -1132,17 +1187,14 @@ window.bp = window.bp || {};
 						bp.ajax.post(
 							'bp_avatar_delete',
 							{
-								json:          true,
+								json:true,
 								item_id: avatarItemID,
 								object: avatarObject,
 								nonce: BP_Uploader.settings.defaults.multipart_params.bp_params.nonces.remove
 							}
 						).done(
 							function( response ) {
-								console.log('done');
-								console.log(response);
-
-								var feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ],
+								var feedback     = BP_Uploader.strings.feedback_messages[ response.feedback_code ],
 									feedbackType = 'success';
 
 								// Show feedback.
@@ -1154,7 +1206,7 @@ window.bp = window.bp || {};
 										$( this ).prop( 'src', response.avatar );
 									}
 								);
-								
+
 								// Hide 'Remove' button when avatar deleted.
 								if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
 									$( '.custom-profile-group-avatar a.bb-img-remove-button' ).hide();
@@ -1168,9 +1220,7 @@ window.bp = window.bp || {};
 							}
 						).fail(
 							function( response ) {
-								console.log('fail');
-								console.log(response);
-								var feedback = BP_Uploader.strings.default_error,
+								var feedback     = BP_Uploader.strings.default_error,
 									feedbackType = 'error';
 
 								if ( ! _.isUndefined( response ) ) {
@@ -1184,8 +1234,6 @@ window.bp = window.bp || {};
 					}
 				}
 			);
-
-			
 
 			$( document ).on(
 				'change',

@@ -128,6 +128,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					),
+					'avatar_cover_preview'    => array(
+						'nonce'  => wp_create_nonce( 'bb-avatar-cover-live-preview' ),
+						'action' => 'bb_profile_group_get_live_preview_urls',
+					),
 					'avatar_settings'    => array(
 						'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
 						'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),

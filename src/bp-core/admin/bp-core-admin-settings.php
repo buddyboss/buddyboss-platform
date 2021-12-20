@@ -597,6 +597,46 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 }
 
 /**
+ * Preview based on profile images settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_preview_profile_avatar_cover() {
+	?>
+	<div class="preview_avatar_cover">
+
+		<div class="web-preview-wrap">
+			<div class="preview-item-cover">
+				<img src="">
+			</div>
+			<div class="preview-item-avatar">
+				<img src="" class="avatar group-2-avatar avatar-300 photo" />
+			</div>
+		</div>
+
+		<div class="app-preview-wrap">
+			<div class="preview-item-cover">
+				<img src="">
+			</div>
+			<div class="preview-item-avatar">
+				<img src="" class="avatar group-2-avatar avatar-300 photo" />
+			</div>
+		</div>
+
+	</div>
+	<p class="description">
+		<?php
+		echo sprintf(
+			__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) 100,
+			(int) 100
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
  * Link to Profile Photos tutorial
  *
  * @since BuddyBoss 1.1.1
@@ -802,6 +842,46 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 	</p>
 	<?php
 }
+
+/**
+* Preview based on profile images settings.
+*
+* @since BuddyBoss [BBVERSION]
+*/
+function bp_admin_setting_callback_preview_group_avatar_cover() {
+	?>
+	<div class="preview_avatar_cover">
+
+		<div class="web-preview-wrap">
+			<div class="preview-item-cover">
+				<img src="">
+			</div>
+			<div class="preview-item-avatar">
+				<img src="" class="avatar group-2-avatar avatar-300 photo" />
+			</div>
+		</div>
+
+		<div class="app-preview-wrap">
+			<div class="preview-item-cover">
+				<img src="">
+			</div>
+			<div class="preview-item-avatar">
+				<img src="" class="avatar group-2-avatar avatar-300 photo" />
+			</div>
+		</div>
+
+		</div>
+		<p class="description">
+		<?php
+		echo sprintf(
+			__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) 100,
+			(int) 100
+		);
+		?>
+		</p>
+	<?php
+ }
 
 /** Group Settings ************************************************************/
 

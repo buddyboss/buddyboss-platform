@@ -105,6 +105,10 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom';
 			$this->add_field( 'bp-default-custom-group-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'group-cover-options preview-avatar-cover-image';
+			$this->add_field( 'bp-preview-group-avatar-cover', __( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
 		// Group Settings.
