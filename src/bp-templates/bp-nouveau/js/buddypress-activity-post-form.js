@@ -1241,7 +1241,7 @@ window.bp = window.bp || {};
 								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
 							if ( tool_box.find( '#activity-document-button' ) ) {
-								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
+								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 							}
 						}
 					}
