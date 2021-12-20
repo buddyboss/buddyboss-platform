@@ -215,7 +215,7 @@ abstract class BP_Core_Notification_Abstract {
 						array(
 							'taxonomy' => bp_get_email_tax_type(),
 							'slug'     => $id,
-							'fields'   => 'count'
+							'fields'   => 'count',
 						)
 					) > 0
 				) {
@@ -239,7 +239,7 @@ abstract class BP_Core_Notification_Abstract {
 						(int) $term->term_id,
 						bp_get_email_tax_type(),
 						array(
-							'description' => $email['schema']['description']
+							'description' => $email['schema']['description'],
 						)
 					);
 				}
@@ -315,7 +315,7 @@ abstract class BP_Core_Notification_Abstract {
 			'email'            => $email,
 			'web'              => $web,
 			'app'              => $app,
-			'email_type'       => $email_type
+			'email_type'       => $email_type,
 		);
 	}
 
