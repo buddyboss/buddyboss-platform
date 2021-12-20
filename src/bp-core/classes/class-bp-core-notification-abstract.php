@@ -292,10 +292,10 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label ) {
+	public function register_preferences_group( string $group_key = 'other', string $group_label = '', string $group_admin_label = '' ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
-			'group_label'       => $group_label,
+			'group_label'       => ( ! empty( $group_label ) ? $group_label : esc_html__( 'Other', 'buddyboss' ) ),
 			'group_admin_label' => $group_admin_label,
 		);
 	}
