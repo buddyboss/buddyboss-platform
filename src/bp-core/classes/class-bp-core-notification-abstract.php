@@ -302,7 +302,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '', $email_type = false ) {
+	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '', $email_type = '' ) {
 		$this->notifications[] = array(
 			'component'        => $component,
 			'component_action' => $component_action,
