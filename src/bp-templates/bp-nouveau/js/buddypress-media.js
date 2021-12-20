@@ -2652,7 +2652,7 @@ window.bp = window.bp || {};
 									tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '#bp-group-messages-video-button' ) ) {
-									tool_box.find( '#bp-group-messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+									tool_box.find( '#bp-group-messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
 									tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );

@@ -1933,7 +1933,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 210px;
+  width: calc(100% - 80px);
   margin-bottom: 0;
   background-color: #fff;
   border: 1px solid #dedfe2;
