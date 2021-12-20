@@ -162,7 +162,7 @@ abstract class BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Register email with associated prefercence type.
+	 * Register email with associated preference type.
 	 *
 	 * @param array $emails Registered Emails.
 	 *
@@ -215,7 +215,7 @@ abstract class BP_Core_Notification_Abstract {
 						array(
 							'taxonomy' => bp_get_email_tax_type(),
 							'slug'     => $id,
-							'fields'   => 'count',
+							'fields'   => 'count'
 						)
 					) > 0
 				) {
@@ -239,7 +239,7 @@ abstract class BP_Core_Notification_Abstract {
 						(int) $term->term_id,
 						bp_get_email_tax_type(),
 						array(
-							'description' => $email['schema']['description'],
+							'description' => $email['schema']['description']
 						)
 					);
 				}
