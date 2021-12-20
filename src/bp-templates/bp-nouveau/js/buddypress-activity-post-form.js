@@ -2457,16 +2457,17 @@ window.bp = window.bp || {};
 					}
 					
 					var group_total_page = BP_Nouveau.activity.params.objects.group_total_page;
-					if ( group_total_page > 1 ) {
+					var group_count      = BP_Nouveau.activity.params.objects.group_count;
+					if ( group_total_page > 1 && group_count > this.collection.models.length ) {
 						var $this = this;
 						this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling' );
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
 						var currentPage = 1;
 						var scrolling = true;
 						$scrollable.on( 'scroll', function () {
-							let div = $( this ).get( 0 );
+							var scrollableDiv = $( this ).get( 0 );
 							if ( false !== scrolling ) {
-								if ( div.scrollTop + div.clientHeight >= div.scrollHeight ) {
+								if ( scrollableDiv.scrollTop + scrollableDiv.clientHeight >= scrollableDiv.scrollHeight ) {
 									currentPage++;
 									if ( currentPage > group_total_page ) {
 										scrolling = false;

@@ -193,6 +193,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$activity_objects['group_list'] = array();
 		if ( isset( $groups['groups'] ) ) {
 			$activity_objects['group_list']       = array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] );
+			$activity_objects['group_count']      = isset( $groups['total'] ) ? $groups['total'] : 0;
 			$activity_objects['group_total_page'] = ceil( $groups['total'] / bb_activity_post_form_groups_per_page() );
 		}
 
