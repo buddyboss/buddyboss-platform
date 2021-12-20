@@ -4183,7 +4183,13 @@ window.bp = window.bp || {};
 				).fail(
 					function ( response ) {
 						self.model.set( 'posting', false );
-						self.model.set( 'errors', { type: 'error', value: response.message } );
+						self.model.set(
+							'errors',
+							{
+								type: 'error',
+								value:  undefined === response.message ? BP_Nouveau.activity.params.errors.post_fail : response.message
+							}
+						);
 					}
 				);
 			},

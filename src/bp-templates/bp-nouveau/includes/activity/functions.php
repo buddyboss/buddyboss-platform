@@ -88,7 +88,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
 		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
 		'errors'           => array(
-			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )
+			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
+			'post_fail'         => __( 'An error occurred while saving your post.', 'buddyboss' ),
 		),
 	);
 
