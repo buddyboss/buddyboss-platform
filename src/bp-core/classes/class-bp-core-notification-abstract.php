@@ -80,15 +80,48 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification_preferences( $notifications ) {
+	public function register_notification_preferences( array $notifications ) {
+
+		$all_notifications = array();
+		$all_email_types   = array();
+
+		if ( ! empty( $this->notifications ) ) {
+			foreach ( $this->notifications as $data ) {
+				if ( ! empty( $data['preference_key'] ) ) {
+					$pref_key = $data['preference_key'];
+					unset( $data['preference_key'] );
+					if ( array_key_exists( $pref_key, $all_notifications ) ) {
+						$all_notifications[ $pref_key ][] = $data;
+					} else {
+						$all_notifications[ $pref_key ] = array( $data );
+					}
+				}
+			}
+		}
+
+		if ( $this->email_types ) {
+			foreach ( $this->email_types as $email ) {
+				if ( ! empty( $email ) ) {
+					$pref_key = $email['pref_key'];
+					unset( $email['pref_key'] );
+					if ( array_key_exists( $pref_key, $all_email_types ) ) {
+						$all_email_types[ $pref_key ][] = $email;
+					} else {
+						$all_email_types[ $pref_key ] = array( $email );
+					}
+				}
+			}
+		}
 
 		if ( ! empty( $this->prefernces ) ) {
 			foreach ( $this->prefernces as $preference ) {
 				$notifications[ $preference['pref_group'] ]['fields'][] = array(
-					'key'         => $preference['pref_key'],
-					'label'       => $preference['pref_label'],
-					'admin_label' => ( isset( $preference['pref_admin_label'] ) && ! empty( $preference['pref_admin_label'] ) ? $preference['pref_admin_label'] : $preference['pref_label'] ),
-					'default'     => ( true === $preference['pref_default'] ? 'yes' : 'no' ),
+					'key'           => $preference['pref_key'],
+					'label'         => $preference['pref_label'],
+					'admin_label'   => ( isset( $preference['pref_admin_label'] ) && ! empty( $preference['pref_admin_label'] ) ? $preference['pref_admin_label'] : $preference['pref_label'] ),
+					'default'       => ( true === $preference['pref_default'] ? 'yes' : 'no' ),
+					'notifications' => ( ! empty( $all_notifications ) && isset( $all_notifications[ $preference['pref_key'] ] ) ) ? $all_notifications[ $preference['pref_key'] ] : array(),
+					'email_types'   => ( ! empty( $all_email_types ) && isset( $all_email_types[ $preference['pref_key'] ] ) ) ? $all_email_types[ $preference['pref_key'] ] : array(),
 				);
 			}
 		}
@@ -111,7 +144,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return array
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notifications( $notifications ) {
+	public function register_notifications( array $notifications ) {
 
 		$notifications = array_merge( $notifications, $this->notifications );
 
@@ -128,7 +161,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function email_schema( $schema ) {
+	public function email_schema( array $schema ) {
 
 		if ( ! empty( $this->email_types ) ) {
 			$new_schema = array_column( $this->email_types, 'args', 'email_type' );
@@ -149,7 +182,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function email_type_schema( $type_schema ) {
+	public function email_type_schema( array $type_schema ) {
 
 		if ( ! empty( $this->email_types ) ) {
 			$new_schema = array_column( $this->email_types, 'schema', 'email_type' );
@@ -170,7 +203,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification_emails( $emails ) {
+	public function register_notification_emails( array $emails ) {
 		if ( ! empty( $this->email_types ) ) {
 			$emails = array();
 			foreach ( $this->email_types as $key => $val ) {
@@ -259,7 +292,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preferences_group( $group_key, $group_label, $group_admin_label ) {
+	public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
 			'group_label'       => $group_label,
@@ -279,7 +312,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preference( $pref_key, $pref_group, $pref_label, $pref_admin_label = '', $default = true ) {
+	public function register_preference( string $pref_key, string $pref_group, string $pref_label, string $pref_admin_label = '', bool $default = true ) {
 		$this->prefernces[] = array(
 			'pref_key'         => $pref_key,
 			'pref_group'       => $pref_group,
@@ -297,24 +330,18 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $notification_label       Notification label.
 	 * @param string $notification_admin_label Notification admin label.
 	 * @param string $pref_key                 Preference key.
-	 * @param bool   $email                    Email notification type.
-	 * @param bool   $web                      Web notification type.
-	 * @param bool   $app                      App notification type.
 	 * @param string $email_type               Email type.
 	 *
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification( $component, $component_action, $notification_label, $notification_admin_label, $pref_key = '', $email = true, $web = true, $app = true, $email_type = '' ) {
+	public function register_notification( string $component, string $component_action, string $notification_label, string $notification_admin_label, string $pref_key = '', string $email_type = '' ) {
 		$this->notifications[] = array(
 			'component'        => $component,
 			'component_action' => $component_action,
 			'label'            => $notification_label,
 			'admin_label'      => $notification_admin_label,
 			'preference_key'   => $pref_key,
-			'email'            => $email,
-			'web'              => $web,
-			'app'              => $app,
 			'email_type'       => $email_type,
 		);
 	}
@@ -329,7 +356,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param array  $email_schema Email schema.
 	 * @param string $pref_key     Preference key.
 	 */
-	public function register_email_type( $email_type, $args, $email_schema, $pref_key ) {
+	public function register_email_type( string $email_type, array $args, array $email_schema, string $pref_key ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type' => $email_type,
 			'args'       => array(

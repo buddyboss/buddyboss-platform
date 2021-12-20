@@ -6193,13 +6193,14 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 	$options = array();
 
+
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
 	if ( ! $email_checked ) {
 		$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
 	}
 
 	$options['email'] = array(
-		'is_render'  => true,
+		'is_render'  => bb_check_email_type_registered( $field['key'] ),
 		'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
 		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 	);
@@ -6211,7 +6212,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 		}
 
 		$options['web'] = array(
-			'is_render'  => true,
+			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
 			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 		);
@@ -6223,7 +6224,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 			$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
 		}
 		$options['app'] = array(
-			'is_render'  => true,
+			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
 			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
 		);
@@ -6258,4 +6259,64 @@ function bb_core_search_array_key_value( $array, $key, $value ) {
 	}
 
 	return $results;
+}
+
+/**
+ * Check the notification registered with preferences or not.
+ *
+ * @param string $preference_key Preference key name.
+ *
+ * @return array|mixed
+ */
+function bb_check_notification_registered( string $preference_key ) {
+	$preferences     = bb_register_notification_preferences();
+	$all_preferences = array();
+
+	if ( ! empty( $preferences ) ) {
+		$preferences = array_column( $preferences, 'fields', null );
+		foreach ( $preferences as $key => $val ) {
+			$all_preferences = array_merge( $all_preferences, $val );
+		}
+		$all_preferences = array_column( $all_preferences, 'notifications', 'key' );
+	}
+
+	if ( empty( $all_preferences ) ) {
+		return false;
+	}
+
+	if ( $preference_key && isset( $all_preferences[ $preference_key ] ) ) {
+		return ! empty( $all_preferences[ $preference_key ] );
+	}
+
+	return false;
+}
+
+/**
+ * Check the email type registered with preferences or not.
+ *
+ * @param string $preference_key Preference key name.
+ *
+ * @return array|mixed
+ */
+function bb_check_email_type_registered( string $preference_key ) {
+	$preferences     = bb_register_notification_preferences();
+	$all_preferences = array();
+
+	if ( ! empty( $preferences ) ) {
+		$preferences = array_column( $preferences, 'fields', null );
+		foreach ( $preferences as $key => $val ) {
+			$all_preferences = array_merge( $all_preferences, $val );
+		}
+		$all_preferences = array_column( $all_preferences, 'email_types', 'key' );
+	}
+
+	if ( empty( $all_preferences ) ) {
+		return false;
+	}
+
+	if ( $preference_key && isset( $all_preferences[ $preference_key ] ) ) {
+		return ! empty( $all_preferences[ $preference_key ] );
+	}
+
+	return false;
 }
