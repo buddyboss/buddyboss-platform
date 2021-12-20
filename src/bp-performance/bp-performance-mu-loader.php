@@ -114,6 +114,7 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 			'/buddyboss/v1/signup/(?P<id>[\w-]+)',
 			'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
 			'/buddyboss/v1/settings',
+			'/buddyboss/v1/signup',
 		);
 		$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 		// Allow some endpoints which is mandatory for app.
