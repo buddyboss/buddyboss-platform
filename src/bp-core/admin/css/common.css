@@ -2423,6 +2423,8 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap {
   margin-left: 15px;
+  min-width: 58px;
+  text-align: center;
 }
 
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults-hide {

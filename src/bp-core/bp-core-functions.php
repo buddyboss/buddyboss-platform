@@ -6190,9 +6190,8 @@ function bb_app_notification_enabled() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_notification_preferences_types( $field, $user_id = 0 ) {
-
-	$options = array();
-
+	$options                  = array();
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
 	if ( ! $email_checked ) {
@@ -6232,33 +6231,6 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 	return apply_filters( 'bb_notifications_types', $options );
 
-}
-
-/**
- * Find the key value from given array.
- *
- * @param array  $array Given array.
- * @param string $key   Key to find.
- * @param string $value Value to find.
- *
- * @return array
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_core_search_array_key_value( $array, $key, $value ) {
-	$results = array();
-
-	if ( is_array( $array ) ) {
-		if ( isset( $array[ $key ] ) && $array[ $key ] == $value ) {
-			$results[] = $array;
-		}
-
-		foreach ( $array as $subarray ) {
-			$results = array_merge( $results, bb_core_search_array_key_value( $subarray, $key, $value ) );
-		}
-	}
-
-	return $results;
 }
 
 /**

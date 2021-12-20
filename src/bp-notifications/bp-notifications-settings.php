@@ -223,42 +223,22 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									<a href="javascript:void(0);" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
 									<div class="manage-defaults manage-defaults-hide <?php echo esc_attr( $field['key'] ); ?> " data-id="<?php echo esc_attr( $field['key'] ); ?>">
 										<?php
-										$email_checked = ( $enabled_notification[ $field['key'] ]['email'] ?? $field['default'] );
-										$web_checked   = ( $enabled_notification[ $field['key'] ]['web'] ?? $field['default'] );
-										$app_checked   = ( $enabled_notification[ $field['key'] ]['app'] ?? $field['default'] );
-
-										$options = apply_filters(
-											'bb_notifications_types',
-											array(
-												'email' => array(
-													'is_render'  => true,
-													'is_checked' => ( ! $email_checked ? true : $email_checked ),
-													'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
-												),
-												'web'   => array(
-													'is_render'  => bb_web_notification_enabled(),
-													'is_checked' => ( ! $web_checked ? true : $web_checked ),
-													'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
-												),
-												'app'   => array(
-													'is_render'  => bb_app_notification_enabled(),
-													'is_checked' => ( ! $app_checked ? true : $app_checked ),
-													'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
-												),
-											)
-										);
+										$options = bb_notification_preferences_types( $field, 0 );
 
 										foreach ( $options as $key => $v ) {
 											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
 											$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-											$is_enabled  = current( bb_core_search_array_key_value( $notifications, 'preference_key', $field['key'] ) );
-											if ( $is_render && isset( $is_enabled[ $key ] ) && true === $is_enabled[ $key ] ) {
+											if ( $is_render ) {
 												?>
 												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
 													<input type="hidden" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="no" <?php disabled( $is_disabled, true ); ?> />
 													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled, true ); ?> />
 													<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
 												</div>
+												<?php
+											} else {
+												?>
+                                                <div class="field-wrap <?php echo esc_attr( $key ); ?>"> -- </div>
 												<?php
 											}
 										}
