@@ -459,7 +459,7 @@ function bp_activity_screen_notification_settings() {
 
 					<?php
 					foreach ( $options as $key => $v ) {
-						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', false );
+						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_'  $key . '_preference_enabled', false );
 						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
 						if ( $is_render ) {

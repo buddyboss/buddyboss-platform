@@ -248,8 +248,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 										);
 
 										foreach ( $options as $key => $v ) {
-											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_enabled', ! $checked );
-											$is_render   = apply_filters( 'bb_is_' . $field['key'] . $key . 'preference_type_render', $v['is_render'], $field['key'], $key );
+											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
+											$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 											if ( $is_render ) {
 												?>
 												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
