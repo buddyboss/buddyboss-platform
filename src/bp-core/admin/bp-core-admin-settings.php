@@ -603,7 +603,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
  */
 function bp_admin_setting_callback_preview_profile_avatar_cover() {
 	?>
-	<div class="preview_avatar_cover">
+	<div class="preview_avatar_cover has-avatar has-cover">
 
 		<div class="preview-switcher-main">
 
@@ -860,7 +860,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 */
 function bp_admin_setting_callback_preview_group_avatar_cover() {
 	?>
-	<div class="preview_avatar_cover">
+	<div class="preview_avatar_cover has-avatar has-cover">
 
 		<div class="preview-switcher-main">
 

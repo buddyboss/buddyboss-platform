@@ -2630,7 +2630,7 @@ h2.has_tutorial_btn {
 	.preview-item-cover {
 		min-height: 90px;
 		max-height: 90px;
-		border-bottom: 1px solid #fff;
+		background-color: #ccc;
 		overflow: hidden;
 	}
 
@@ -2648,6 +2648,30 @@ h2.has_tutorial_btn {
 		height: 100%;
 		object-fit: cover;
 		width: 100%;
+	}
+
+	&:not(.has-avatar) .preview-item-avatar {
+		display: none;
+	}
+
+	&:not(.has-cover) {
+
+		.preview-item-cover {
+			display: none;
+		}
+
+		.preview-item-avatar {
+			top: 0;
+			left: 50%;
+			-webkit-transform: translateX(-50%);
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+		}
+
+	}
+
+	&:not(.has-cover):not(.has-avatar) {
+		display: none;
 	}
 
 }
