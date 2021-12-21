@@ -2503,8 +2503,13 @@ window.bp = window.bp || {};
 					this.ac_req.abort();
 				}
 
-				this.$el.find( '#bp-activity-group-ac-items' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
+				if ( 'group' === this.options.type ) {
+					this.$el.find( '#bp-activity-group-ac-items' ).html( '<div class="finding_groups"><i class="dashicons dashicons-update animate-spin"></i><label class="finding_group">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</label></div>' );
+				} else {
+					this.$el.find( '#bp-activity-group-ac-items' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
+				}
 
+				var $this = this;
 				this.ac_req = this.collection.fetch(
 					{
 						data: {
@@ -2512,21 +2517,29 @@ window.bp = window.bp || {};
 							search: search,
 							nonce: BP_Nouveau.nonces.activity
 						},
-						success: _.bind( this.itemFetched, this ),
-						error: _.bind( this.itemFetched, this )
+						success: _.bind( this.itemFetched, this, $this.options.type ),
+						error: _.bind( this.itemFetched, this, $this.options.type ),
 					}
 				);
 			},
 
-			itemFetched: function ( items ) {
+			itemFetched: function ( optionType, items ) {
 				if ( ! items.length ) {
-					this.cleanView();
+					this.cleanView( optionType );
 				}
-				this.$el.find( '#bp-activity-group-ac-items' ).find( 'i.dashicons' ).remove();
+				if ( 'group' === optionType ) {
+					this.$el.find( '#bp-activity-group-ac-items' ).find( '.finding_groups' ).remove();
+				} else {
+					this.$el.find( '#bp-activity-group-ac-items' ).find( 'i.dashicons' ).remove();
+				}
 			},
 
-			cleanView: function () {
-				this.$el.find( '#bp-activity-group-ac-items' ).html( '' );
+			cleanView: function ( optionType = '' ) {
+				if ( 'group' === optionType ) {
+					this.$el.find( '#bp-activity-group-ac-items' ).html( BP_Nouveau.activity.params.objects.group.no_groups_found );
+				} else {
+					this.$el.find( '#bp-activity-group-ac-items' ).html( '' );
+				}
 				_.each(
 					this.views._views[ '' ],
 					function ( view ) {

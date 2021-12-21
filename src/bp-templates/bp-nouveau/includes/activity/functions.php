@@ -177,7 +177,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'text'                      => __( 'Post in: Group', 'buddyboss' ),
 				'autocomplete_placeholder'  => __( 'Search groups', 'buddyboss' ),
 				'priority'                  => 10,
-				'loading_group_placeholder' => __( 'Loading groups', 'buddyboss' ),
+				'loading_group_placeholder' => __( 'Loading groups...', 'buddyboss' ),
+				'finding_group_placeholder' => __( 'Finding groups...', 'buddyboss' ),
+				'no_groups_found'           => __( 'No groups found.', 'buddyboss' ),
 			);
 		}
 		$group_args = array(
