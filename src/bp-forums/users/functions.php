@@ -1565,3 +1565,13 @@ function bbp_user_maybe_convert_pass() {
 		$converter->callback_pass( $username, $_POST['pwd'] );
 	}
 }
+
+/**
+ * Show only reply count on topic
+ *
+ * @since BuddyBoss[xxx]
+ */
+function bbp_show_only_reply_count_of_topic() {
+	$show_lead = true;
+	return $show_lead;
+}
