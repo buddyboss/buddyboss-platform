@@ -3841,22 +3841,6 @@ function bp_email_get_schema() {
 				'multisite' => true,
 			),
 		),
-		'friends-request'                    => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
-		),
-		'friends-request-accepted'           => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
-		),
 		'groups-details-updated'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
@@ -4004,22 +3988,6 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
-	$friends_request = array(
-		'description' => __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_friends_friendship_request',
-			'message'  => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
-		),
-	);
-
-	$friends_request_accepted = array(
-		'description' => __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_friends_friendship_accepted',
-			'message'  => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
-		),
-	);
-
 	$groups_details_updated = array(
 		'description' => __( "A group's details were updated.", 'buddyboss' ),
 		'unsubscribe' => array(
@@ -4123,8 +4091,6 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$types = array(
 		'core-user-registration'             => $core_user_registration,
 		'core-user-registration-with-blog'   => $core_user_registration_with_blog,
-		'friends-request'                    => $friends_request,
-		'friends-request-accepted'           => $friends_request_accepted,
 		'groups-details-updated'             => $groups_details_updated,
 		'groups-invitation'                  => $groups_invitation,
 		'groups-member-promoted'             => $groups_member_promoted,
