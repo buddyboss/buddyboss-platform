@@ -2383,7 +2383,6 @@ window.bp = window.bp || {};
 					}
 					this.model.set( 'selected', true );
 					var model_attributes = this.model.attributes;
-
 					// check media is enable in groups or not.
 					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
 						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
@@ -2480,8 +2479,18 @@ window.bp = window.bp || {};
 				this.collection.on( 'reset', this.cleanView, this );
 			},
 
-			setFocus: function () {
+			setFocus: function ( optionType ) {
 				this.$el.find( '#activity-autocomplete' ).focus();
+				// After select any group it will scroll to particular selected group.
+				if ( $( '#bp-activity-group-ac-items .bp-activity-object' ).length ) {
+					$( '.bp-activity-object' ).each( function ( index ) {
+						if ( $( this ).hasClass( 'selected' ) ) {
+							$( '#bp-activity-group-ac-items' ).animate( {
+								'scrollTop': $( this ).position().top - 60
+							} );
+						}
+					} );
+				}
 			},
 
 			addItemView: function ( item ) {
