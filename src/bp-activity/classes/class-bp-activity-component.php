@@ -89,6 +89,11 @@ class BP_Activity_Component extends BP_Component {
 			$includes[] = 'admin';
 		}
 
+		// Load Activity Notifications.
+		if ( class_exists( 'BP_Activity_Notification' ) ) {
+			new BP_Activity_Notification();
+		}
+
 		parent::includes( $includes );
 	}
 
