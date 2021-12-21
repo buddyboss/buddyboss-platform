@@ -2168,7 +2168,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   margin: 5px auto;
 }
 
-#bp-activity-group-ac-items .loading-groups {
+#bp-activity-group-ac-items .groups-selection {
   position: relative;
   padding: 0 30px;
   margin: 15px 0 0;
@@ -2178,7 +2178,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   font-size: 15px;
 }
 
-#bp-activity-group-ac-items .loading-groups .animate-spin {
+#bp-activity-group-ac-items .groups-selection .animate-spin {
   margin-right: 10px;
 }
 

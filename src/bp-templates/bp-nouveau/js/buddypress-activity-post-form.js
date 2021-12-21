@@ -2516,7 +2516,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( 'group' === this.options.type ) {
-					this.$el.find( '#bp-activity-group-ac-items' ).html( '<div class="finding_groups"><i class="dashicons dashicons-update animate-spin"></i><label class="finding_group">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</label></div>' );
+					this.$el.find( '#bp-activity-group-ac-items' ).html( '<div class="groups-selection groups-selection--finding"><i class="dashicons dashicons-update animate-spin"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</span></div>' );
 				} else {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
 				}
@@ -2540,7 +2540,7 @@ window.bp = window.bp || {};
 					this.cleanView( optionType );
 				}
 				if ( 'group' === optionType ) {
-					this.$el.find( '#bp-activity-group-ac-items' ).find( '.finding_groups' ).remove();
+					this.$el.find( '#bp-activity-group-ac-items' ).find( '.groups-selection--finding' ).remove();
 				} else {
 					this.$el.find( '#bp-activity-group-ac-items' ).find( 'i.dashicons' ).remove();
 				}
@@ -2548,7 +2548,7 @@ window.bp = window.bp || {};
 
 			cleanView: function ( optionType = '' ) {
 				if ( 'group' === optionType ) {
-					this.$el.find( '#bp-activity-group-ac-items' ).html( BP_Nouveau.activity.params.objects.group.no_groups_found );
+					this.$el.find( '#bp-activity-group-ac-items' ).html( '<span class="groups-selection groups-selection--no-groups">' + BP_Nouveau.activity.params.objects.group.no_groups_found + '</span>' );
 				} else {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '' );
 				}
@@ -2561,8 +2561,8 @@ window.bp = window.bp || {};
 			},
 			
 			loadMoreData: function ( $this, currentPage ) {
-				if ( ! this.$el.find( '#bp-activity-group-ac-items .loading-groups' ).length ) {
-					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<div class="loading-groups"><i class="dashicons dashicons-update animate-spin"></i><span class="loading-groups__label">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</span></div>' );
+				if ( ! this.$el.find( '#bp-activity-group-ac-items .groups-selection--loading' ).length ) {
+					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<div class="groups-selection groups-selection--loading"><i class="dashicons dashicons-update animate-spin"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</span></div>' );
 				}
 				var checkSucessData = false;
 				var fetchGroup      = new bp.Collections.fetchCollection();
@@ -2578,7 +2578,7 @@ window.bp = window.bp || {};
 						success: function ( collection, object, jqXHR ) {
 							if ( true === object.success ) {
 								$this.collection.add( object.data );
-								$( '#bp-activity-group-ac-items .loading-groups' ).remove();
+								$( '#bp-activity-group-ac-items .groups-selection--loading' ).remove();
 								checkSucessData = true;
 							}
 						},
