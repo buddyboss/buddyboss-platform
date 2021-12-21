@@ -74,6 +74,11 @@ class BP_Messages_Component extends BP_Component {
 			$includes[] = 'admin';
 		}
 
+		// Load Messages Notifications.
+		if ( class_exists( 'BP_Messages_Notification' ) ) {
+			new BP_Messages_Notification();
+		}
+
 		parent::includes( $includes );
 	}
 

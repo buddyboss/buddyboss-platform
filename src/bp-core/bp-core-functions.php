@@ -3932,14 +3932,6 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
-	$messages_unread = array(
-		'description' => __( 'Recipient has received a private message.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_messages_new_message',
-			'message'  => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
-		),
-	);
-
 	$settings_verify_email_change = array(
 		'description' => __( 'Recipient has changed their email address.', 'buddyboss' ),
 		'unsubscribe' => false,
@@ -3979,8 +3971,6 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$types = array(
 		'core-user-registration'             => $core_user_registration,
 		'core-user-registration-with-blog'   => $core_user_registration_with_blog,
-
-		'messages-unread'                    => $messages_unread,
 		'settings-verify-email-change'       => $settings_verify_email_change,
 		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
