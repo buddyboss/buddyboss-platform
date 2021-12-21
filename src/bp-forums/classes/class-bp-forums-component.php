@@ -358,13 +358,15 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				require_once $path;
 			}
 
-			parent::rest_api_init( array(
-				'BP_REST_Forums_Endpoint',
-				'BP_REST_Topics_Endpoint',
-				'BP_REST_Topics_Actions_Endpoint',
-				'BP_REST_Reply_Endpoint',
-				'BP_REST_Reply_Actions_Endpoint',
-			) );
+			parent::rest_api_init(
+				array(
+					'BP_REST_Forums_Endpoint',
+					'BP_REST_Topics_Endpoint',
+					'BP_REST_Topics_Actions_Endpoint',
+					'BP_REST_Reply_Endpoint',
+					'BP_REST_Reply_Actions_Endpoint',
+				)
+			);
 		}
 
 		/**
@@ -377,9 +379,10 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 */
 		public function bb_group_forums_set_title_tag( $title ) {
 
+			$sep = apply_filters( 'document_title_separator', '-' );
+
 			if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) && bp_is_group() ) {
 
-				$sep   = apply_filters( 'document_title_separator', '-' );
 				$group = groups_get_current_group();
 
 				if ( ! empty( $group ) && bp_is_current_action( get_option( '_bbp_forum_slug', 'forum' ) ) && function_exists( 'bbpress' ) ) {
@@ -398,6 +401,19 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						if ( ! empty( $topics ) ) {
 							return esc_html( bbp_get_topic_title( $topics[0]->ID ) ) . ' ' . $sep . ' ' . esc_html( $group->name ) . ' ' . $sep . ' ' . bp_get_site_name();
 						}
+					}
+				}
+			} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && 'forum' == buddypress()->current_action || bbp_is_single_topic() || bp_current_action() == get_option( '_bbp_forum_slug' ) ) {
+
+				$topic = get_queried_object();
+
+				if ( bbp_is_single_topic() && ! empty( $topic ) && isset( $topic->ID ) && ! empty( $topic->ID ) ) {
+
+					$forum_id    = bbp_get_topic_forum_id( $topic->ID );
+					$forum_title = bbp_get_forum_title( $forum_id );
+
+					if ( ! empty( $forum_title ) ) {
+						return esc_html( bbp_get_topic_title( $topic->ID ) ) . ' ' . $sep . ' ' . esc_html( $forum_title ) . ' ' . $sep . ' ' . bp_get_site_name();
 					}
 				}
 			}
