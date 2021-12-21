@@ -1103,14 +1103,12 @@
 #bp-activity-group-ac-items {
 	min-width: 200px;
 	max-height: 220px;
+	overflow-y: auto;
 	padding: 0;
 	margin: 10px 0 0;
 	width: 100%;
 	z-index: 11;
-
-	&.group_scrolling {
-		overflow-y: auto;
-	}
+	padding-right: 15px;
 
 	&:empty {
 		display: none;

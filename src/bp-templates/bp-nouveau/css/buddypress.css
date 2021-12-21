@@ -2136,14 +2136,12 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 #bp-activity-group-ac-items {
   min-width: 200px;
   max-height: 220px;
+  overflow-y: auto;
   padding: 0;
   margin: 10px 0 0;
   width: 100%;
   z-index: 11;
-}
-
-#bp-activity-group-ac-items.group_scrolling {
-  overflow-y: auto;
+  padding-right: 15px;
 }
 
 #bp-activity-group-ac-items:empty {
