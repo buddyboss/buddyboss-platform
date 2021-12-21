@@ -1806,10 +1806,20 @@ function bp_core_display_name_format( $default = 'first_name' ) {
  */
 function bp_rest_enable_private_network() {
 
+	// If BB APP Private then all rest will be private.
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		return (bool) bbapp_is_private_app_enabled();
+		$retval = (bool) bbapp_is_private_app_enabled();
+
+		// If platform rest API private.
 	} else {
 		$retval = (bool) bp_enable_private_rest_apis();
+	}
+
+	if ( true === $retval ) {
+		$current_rest_url = $GLOBALS['wp']->query_vars['rest_route'];
+		if ( ! empty( $current_rest_url ) && bb_is_allowed_endpoint( $current_rest_url ) ) {
+			$retval = false;
+		}
 	}
 
 	/**
