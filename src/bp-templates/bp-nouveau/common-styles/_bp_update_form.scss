@@ -1017,6 +1017,7 @@
 
 .activity-autocomplete-wrapper {
 	position: relative;
+	display: block;
 
 	&:before {
 		content: "\e81f";
@@ -1028,9 +1029,10 @@
 		line-height: 1;
 		color: rgba(18, 43, 70, 0.4);
 		position: absolute;
-		top: 55%;
+		top: 50%;
 		left: 15px;
 		transform: translate(0, -50%);
+		z-index: 5;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
@@ -1046,6 +1048,8 @@
 		border-radius: 3px;
 		padding: 5px 10px 5px 48px;
 		height: 44px;
+		position: relative;
+		z-index: 2;
 	}
 
 	li {
@@ -1058,6 +1062,7 @@
 		label {
 
 			@include center-vert();
+			cursor: pointer;
 		}
 
 		.privacy-radio {
@@ -1074,15 +1079,14 @@
 			font-size: 16px;
 			font-weight: 500;
 			vertical-align: middle;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 		&:focus,
 		&:hover {
 			cursor: pointer;
-		}
-
-		&.selected {
-			padding: 0;
 		}
 
 		button.bp-remove-item {
@@ -1107,8 +1111,8 @@
 	padding: 0;
 	margin: 10px 0 0;
 	width: 100%;
+	width: calc(100% - 10px);
 	z-index: 11;
-	padding-right: 15px;
 
 	&:empty {
 		display: none;
@@ -1117,6 +1121,21 @@
 	> .dashicons {
 		display: block;
 		margin: 5px auto;
+	}
+
+	.loading-groups {
+		position: relative;
+		padding: 0 30px;
+		margin: 15px 0 0;
+		color: #92949d;
+		display: flex;
+		align-items: center;
+		font-size: 15px;
+
+		.animate-spin {
+			margin-right: 10px;
+
+		}
 	}
 }
 
