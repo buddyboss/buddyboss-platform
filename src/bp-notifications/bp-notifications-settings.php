@@ -24,7 +24,7 @@ function bb_notification_get_settings_sections() {
 			'page'              => 'notifications',
 			'title'             => __( 'On-screen Notifications', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
-			'notice'            => __( 'members can manage which on-screen notifications they receive in their notification  preferences by enabling or disabling the "Web" options. ', 'buddyboss' ),
+			'notice'            => __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ),
 		),
 		'bp_notification_settings_automatic' => array(
 			'page'              => 'notifications',

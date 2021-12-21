@@ -500,11 +500,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$this->bp_custom_do_settings_fields( $page, $section['id'] );
 				echo '</table>';
 
-				if( isset( $section['notice'] ) && !empty( $section['notice'] ) ) {
-					?> <div class="display-notice">
-                        <?php
-                    echo $section['notice']; ?>
-                    </div> <?php
+				if ( isset( $section['notice'] ) && ! empty( $section['notice'] ) ) {
+					?>
+					<div class="display-notice bb-bottom-notice">
+						<?php echo esc_html__( $section['notice'] ); ?>
+					</div>
+					<?php
 				}
 
 				echo '</table></div>';
