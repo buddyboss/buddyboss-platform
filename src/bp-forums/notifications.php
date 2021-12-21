@@ -427,130 +427,77 @@ function forums_notification_settings() {
 		return;
 	}
 
-	$options              = bb_register_notification_preferences( buddypress()->forums->id );
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	$options                  = bb_register_notification_preferences( buddypress()->forums->id );
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
 		return;
 	}
 
-	$fields_keys       = array_column( $options['fields'], 'key' );
-	$enabled_fields    = array_intersect( $fields_keys, $enabled_notification );
+	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
+	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+
 	$options['fields'] = array_filter(
 		$options['fields'],
-		function ( $var ) use ( $enabled_fields ) {
-			return ( in_array( $var['key'], $enabled_fields, true ) );
+		function ( $var ) use ( $enabled_notification ) {
+			return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
 		}
 	);
 
 	if ( ! empty( $options['fields'] ) ) {
 		?>
 
-		<table class="main-notification-settings">
-			<tbody>
+        <table class="main-notification-settings">
+            <tbody>
 
 			<?php if ( ! empty( $options['label'] ) ) { ?>
-				<tr class="notification_heading">
-					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
-				</tr>
+                <tr class="notification_heading">
+                    <td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+                </tr>
 				<?php
 			}
 
 			foreach ( $options['fields'] as $field ) {
-				$email_checked = bp_get_user_meta( bp_displayed_user_id(), $field['key'], true );
-				$web_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['key'] . '_web', true );
-				$app_checked   = bp_get_user_meta( bp_displayed_user_id(), $field['key'] . '_app', true );
 
-				if ( ! $email_checked ) {
-					$email_checked = $field['default'];
-				}
-
-				if ( ! $web_checked ) {
-					$web_checked = $field['default'];
-				}
-
-				if ( ! $app_checked ) {
-					$app_checked = $field['default'];
-				}
+				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
 				?>
-				<tr>
-					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
-					<td class="email">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_email' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $email_checked, 'yes' ); ?> />
-						<label for="<?php echo esc_attr( $field['key'] . '_email' ); ?>"><?php esc_html_e( 'Email', 'buddyboss' ); ?></label>
-					</td>
-					<td class="web">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_web' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] . '_web' ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $web_checked, 'yes' ); ?> />
-						<label for="<?php echo esc_attr( $field['key'] . '_web' ); ?>"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
-					</td>
-					<td class="app">
-						<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_app' ); ?>" name="notifications[<?php echo esc_attr( $field['key'] . '_app' ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $app_checked, 'yes' ); ?> />
-						<label for="<?php echo esc_attr( $field['key'] . '_app' ); ?>"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
-					</td>
-				</tr>
+                <tr>
+                    <td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
+
+					<?php
+					foreach ( $options as $key => $v ) {
+						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', false );
+						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
+						if ( $is_render ) {
+							?>
+                            <td class="<?php echo esc_attr( $key ); ?>">
+                                <input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox"
+                                       value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+                                <label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+                            </td>
+							<?php
+						} else {
+							?>
+                            <td class="<?php echo esc_attr( $key ); ?> notification_no_option">
+								<?php esc_html_e( '-', 'buddyboss' ); ?>
+                            </td>
+							<?php
+						}
+					}
+					?>
+                </tr>
 				<?php
 			}
 
 			?>
-			</tbody>
-		</table>
+            </tbody>
+        </table>
 
 		<?php
 	}
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 
-/**
- * Add Notifications for the forums.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $array Array of notifications.
- *
- * @return mixed
- */
-function bb_forums_register_notifications( $array ) {
-	$forums_notification = array(
-		'label'  => esc_html__( 'Forums', 'buddyboss' ),
-		'fields' => array(
-			array(
-				'key'         => 'notification_forums_following_reply',
-				'admin_label' => esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
-				'label'       => esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
-				'default'     => 'yes',
-				'options'     => array(
-					array(
-						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
-						'value' => 'yes',
-					),
-					array(
-						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
-						'value' => 'no',
-					),
-				),
-			),
-			array(
-				'key'         => 'notification_forums_following_topic',
-				'admin_label' => esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
-				'label'       => esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
-				'default'     => 'yes',
-				'options'     => array(
-					array(
-						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
-						'value' => 'yes',
-					),
-					array(
-						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
-						'value' => 'no',
-					),
-				),
-			),
-		),
-	);
-
-	$array['forums'] = $forums_notification;
-
-	return $array;
-}
-
-//add_filter( 'bb_register_notification_preferences', 'bb_forums_register_notifications', 13, 1 );

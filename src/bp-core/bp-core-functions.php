@@ -3849,22 +3849,6 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 		),
-		'bbp-new-forum-topic'                => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
-		),
-		'bbp-new-forum-reply'                => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
-		),
 		'invites-member-invite'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
@@ -3937,22 +3921,6 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
-	$bbp_new_forum_topic = array(
-		'description' => __( 'A member has created a new forum discussion.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_bbp_new_forum_topic',
-			'message'  => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
-		),
-	);
-
-	$bbp_new_forum_reply = array(
-		'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_bbp_new_forum_reply',
-			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
-		),
-	);
-
 	$invites_member_invite = array(
 		'description' => __( 'Recipient has been invited by a member to join the website.', 'buddyboss' ),
 		'unsubscribe' => false,
@@ -3972,8 +3940,6 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'core-user-registration'             => $core_user_registration,
 		'core-user-registration-with-blog'   => $core_user_registration_with_blog,
 		'settings-verify-email-change'       => $settings_verify_email_change,
-		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
-		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
 		'content-moderation-email'           => $content_moderation_email,
 		'user-moderation-email'              => $user_moderation_email,

@@ -74,6 +74,11 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$includes[] = 'groups.php';
 			}
 
+			// Load forums notifications.
+			if ( class_exists( 'BP_Forums_Notification' ) ) {
+				new BP_Forums_Notification();
+			}
+
 			parent::includes( $includes );
 		}
 
