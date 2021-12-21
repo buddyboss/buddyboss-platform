@@ -1126,14 +1126,19 @@ a.layout-grid-view {
 }
 
 .privacy-status-form-body {
-  padding: 15px 30px;
+  padding: 15px 0;
 }
 
 .bp-activity-privacy__label {
-  margin: 20px 0;
+  margin: 0;
+  padding: 10px 30px;
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+.bp-activity-privacy__label:hover {
+  background-color: #fbfaf9;
 }
 
 .bp-activity-privacy__label .privacy-tag-wrapper {
@@ -2045,6 +2050,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-autocomplete-wrapper {
   position: relative;
+  display: block;
 }
 
 .activity-autocomplete-wrapper:before {
@@ -2057,9 +2063,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   line-height: 1;
   color: rgba(18, 43, 70, 0.4);
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 15px;
   transform: translate(0, -50%);
+  z-index: 5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -2075,6 +2082,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   border-radius: 3px;
   padding: 5px 10px 5px 48px;
   height: 44px;
+  position: relative;
+  z-index: 2;
 }
 
 #whats-new-post-in-box-items li {
@@ -2094,6 +2103,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
+  cursor: pointer;
 }
 
 #whats-new-post-in-box-items .bp-activity-object .privacy-radio {
@@ -2110,14 +2120,13 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   font-size: 16px;
   font-weight: 500;
   vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #whats-new-post-in-box-items .bp-activity-object:focus, #whats-new-post-in-box-items .bp-activity-object:hover {
   cursor: pointer;
-}
-
-#whats-new-post-in-box-items .bp-activity-object.selected {
-  padding: 0;
 }
 
 #whats-new-post-in-box-items .bp-activity-object button.bp-remove-item {
@@ -2140,8 +2149,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   padding: 0;
   margin: 10px 0 0;
   width: 100%;
+  width: calc(100% - 10px);
   z-index: 11;
-  padding-right: 15px;
 }
 
 #bp-activity-group-ac-items:empty {
@@ -2151,6 +2160,20 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 #bp-activity-group-ac-items > .dashicons {
   display: block;
   margin: 5px auto;
+}
+
+#bp-activity-group-ac-items .loading-groups {
+  position: relative;
+  padding: 0 30px;
+  margin: 15px 0 0;
+  color: #92949d;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+}
+
+#bp-activity-group-ac-items .loading-groups .animate-spin {
+  margin-right: 10px;
 }
 
 .bp-item-opt {

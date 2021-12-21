@@ -2549,8 +2549,8 @@ window.bp = window.bp || {};
 			},
 			
 			loadMoreData: function ( $this, currentPage ) {
-				if ( ! this.$el.find( '#bp-activity-group-ac-items .loading_groups' ).length ) {
-					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<div class="loading_groups"><i class="dashicons dashicons-update animate-spin"></i><label class="loading_group">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</label></div>' );
+				if ( ! this.$el.find( '#bp-activity-group-ac-items .loading-groups' ).length ) {
+					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<div class="loading-groups"><i class="dashicons dashicons-update animate-spin"></i><span class="loading-groups__label">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</span></div>' );
 				}
 				var checkSucessData = false;
 				var fetchGroup      = new bp.Collections.fetchCollection();
@@ -2566,7 +2566,7 @@ window.bp = window.bp || {};
 						success: function ( collection, object, jqXHR ) {
 							if ( true === object.success ) {
 								$this.collection.add( object.data );
-								$( '#bp-activity-group-ac-items .loading_groups' ).remove();
+								$( '#bp-activity-group-ac-items .loading-groups' ).remove();
 								checkSucessData = true;
 							}
 						},
