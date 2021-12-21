@@ -1625,18 +1625,20 @@ function bb_admin_setting_callback_private_rest_apis() {
 			)
 		)
 	);
-	printf(
-		'<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-		sprintf(
-			__( 'BuddyBoss App is enabled. Please go to <a href="%s">settings</a> here to restrict App and REST APIs access to logged-in members only.', 'buddyboss' ),
-			add_query_arg(
-				array(
-					'page' => 'bbapp-settings',
-				),
-				admin_url( 'admin.php' )
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+		printf(
+			'<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			sprintf(
+				__( 'BuddyBoss App is enabled. Please go to <a href="%s">settings</a> here to restrict App and REST APIs access to logged-in members only.', 'buddyboss' ),
+				add_query_arg(
+					array(
+						'page' => 'bbapp-settings',
+					),
+					admin_url( 'admin.php' )
+				)
 			)
-		)
-	);
+		);
+	}
 }
 
 /**
