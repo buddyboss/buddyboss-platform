@@ -138,6 +138,11 @@ class BP_Groups_Component extends BP_Component {
 			$includes[] = 'admin';
 		}
 
+		// Load group notifications.
+		if ( class_exists( 'BP_Groups_Notification' ) ) {
+			new BP_Groups_Notification();
+		}
+
 		parent::includes( $includes );
 	}
 
