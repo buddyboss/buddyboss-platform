@@ -1126,14 +1126,19 @@ a.layout-grid-view {
 }
 
 .privacy-status-form-body {
-  padding: 15px 30px;
+  padding: 15px 0;
 }
 
 .bp-activity-privacy__label {
-  margin: 20px 0;
+  margin: 0;
+  padding: 10px 30px;
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+.bp-activity-privacy__label:hover {
+  background-color: #fbfaf9;
 }
 
 .bp-activity-privacy__label .privacy-tag-wrapper {
