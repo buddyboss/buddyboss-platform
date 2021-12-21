@@ -6051,11 +6051,12 @@ function bb_restricate_rss_feed() {
 		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
 			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
 				// Check if current url has slash in the last if not then add because we allow to add
 				// feed url like this one - /feed/.
 				if ( substr( $current_url_explode[1], - 1 ) !== '/' ) {
-					$current_url_explode[1] = $current_url_explode[1] . '/';
+					$current_url_explode[1] = trailingslashit ($current_url_explode[1] );
 				}
 				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
 					$defaults = array(
@@ -6105,6 +6106,8 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 		'/buddyboss/v1/signup/form',
 		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
 		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
+		'/buddyboss/v1/settings',
+		'/buddyboss/v1/signup',
 	);
 	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 	// Allow some endpoints which is mandatory for app.
@@ -6136,6 +6139,7 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
+				$endpoints = untrailingslashit( trim( $endpoints ) );
 				if ( strpos( $endpoints, 'wp-json' ) !== false ) {
 					$endpoints = str_replace( 'wp-json', '', $endpoints );
 				}
