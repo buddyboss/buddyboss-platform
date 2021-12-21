@@ -123,6 +123,15 @@
 	}
 }
 
+#whats-new-form.focus-in--blank-group {
+
+	#privacy-status-submit {
+		opacity: 0.6;
+		cursor: default;
+		pointer-events: none;
+	}
+}
+
 #whats-new-form:not(.focus-in-group) #privacy-status-group-back {
 	display: none !important;
 }

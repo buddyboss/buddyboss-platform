@@ -2367,9 +2367,12 @@ window.bp = window.bp || {};
 			setObject: function ( event ) {
 				event.preventDefault();
 
+				var whats_new_form = $( '#whats-new-form' );
+
 				if ( true === this.model.get( 'selected' ) ) {
-					this.model.clear();
+					return false;
 				} else {
+					whats_new_form.removeClass( 'focus-in--blank-group' );
 					var $this = this;
 					if ( $this.model.hasOwnProperty('attributes') &&
 					     $this.model.attributes.hasOwnProperty('object_type') &&
@@ -2763,11 +2766,15 @@ window.bp = window.bp || {};
 
 			backGroupSelector: function ( e ) {
 				e.preventDefault();
+				var whats_new_form = $( '#whats-new-form' );
 				this.model.set( 'privacy_modal', 'profile' );
-				$( '#whats-new-form' ).removeClass( 'focus-in-group' );
+				whats_new_form.removeClass( 'focus-in-group' );
 				var privacyStatus = this.model.get( 'privacy' );
 				this.$el.find( 'input#' + privacyStatus ).prop( 'checked', true );
 				$( '#activity-post-form-privacy' ).show();
+
+				// Enable save button
+				whats_new_form.removeClass( 'focus-in--blank-group' );
 			},
 
 			privacySelector: function ( e ) {
@@ -2781,14 +2788,9 @@ window.bp = window.bp || {};
 					this.model.set( 'object', $( e.currentTarget ).val() );
 					$( '#activity-post-form-privacy' ).hide();
 					
-					// Auto select first group item
+					// Disable save button if no group selected
 					if ( this.model.attributes.item_id === 0 ) {
-						var group_first_ac_item = whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object:first' );
-						group_first_ac_item.addClass( 'selected' );
-						group_first_ac_item.find( '.privacy-radio' ).addClass( 'selected' );
-						group_first_ac_item.find( 'input.bp-activity-object__radio' ).prop( 'checked', true );
-						var group_id = group_first_ac_item.find( 'input.bp-activity-object__radio' ).data( 'id' );
-						this.model.set( 'item_id', group_id );
+						whats_new_form.addClass( 'focus-in--blank-group' );
 					}
 				}
 			}
