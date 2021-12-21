@@ -1251,6 +1251,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .bb-model-header,
 .activity-update-form .bb-model-header {
   display: none;
+  background-color: #fff;
 }
 
 .bp-nouveau-activity-form-placeholder- .bb-model-header .bb-icon-close,
