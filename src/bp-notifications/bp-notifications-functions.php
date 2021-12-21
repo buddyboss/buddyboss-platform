@@ -844,6 +844,8 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications',
 /**
  * Add only notifications which are user selected.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $querystring Query String.
  * @param string $object      Object.
  *
@@ -855,22 +857,108 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$enabled_user_component_actions = array();
-
-	$preferences_keys = bb_core_get_user_notifications_preferences_value( 'web' );
-	foreach ( $preferences_keys as $key ) {
-		if ( 'yes' === $key['value'] ) {
-			$enabled_user_component_actions[] = $key['component_action'];
-		}
-	}
-
 	$querystring            = wp_parse_args( $querystring );
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();
 
-	if ( ! empty( $enabled_user_component_actions ) ) {
-		$querystring['component_action'] = $enabled_user_component_actions;
+	$excluded_user_component_actions = bb_disabled_notification_actions_by_user( get_current_user_id() );
+
+	if ( ! empty( $excluded_user_component_actions ) ) {
+		$querystring['excluded_action'] = $excluded_user_component_actions;
 	}
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Excluded disabled notification actions by user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id Current user id.
+ * @param string $type    Type of notification preference. email, web or app.
+ *
+ * @return array
+ */
+function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
+	if ( empty( $user_id ) ) {
+		return array();
+	}
+
+	// All preferences registered.
+	$preferences = bb_register_notification_preferences();
+
+	// Saved notification from backend default settings.
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	// Enabled default notification from preferences.
+	$all_notifications = array();
+
+	$all_actions = array();
+
+	// Enabled default notification from backend.
+	$default_by_admin = array();
+
+	if ( ! empty( $preferences ) ) {
+		$preferences = array_column( $preferences, 'fields', null );
+		foreach ( $preferences as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
+		}
+	}
+
+	$all_notifications = array_map(
+		function ( $n ) use ( $type ) {
+			if (
+				! empty( $n['notifications'] ) &&
+				in_array( $type, array( 'web', 'app' ), true )
+			) {
+				$n['key'] = $n['key'] . '_' . $type;
+
+				return $n;
+			} elseif (
+				! empty( $n['email_types'] ) &&
+				'email' === $type
+			) {
+				$n['key'] = $n['key'] . '_' . $type;
+
+				return $n;
+			}
+
+		},
+		$all_notifications
+	);
+
+	$all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
+	if ( ! empty( $all_actions ) ) {
+		foreach ( $all_actions as $key => $val ) {
+			$all_actions[ $key ] = array_column( array_filter( $val ), 'component_action' );
+		}
+	}
+
+	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
+	if ( ! empty( $enabled_all_notification ) ) {
+		foreach ( $enabled_all_notification as $key => $types ) {
+			if ( isset( $types[ $type ] ) ) {
+				$default_by_admin[ $key . '_' . $type ] = $types[ $type ];
+			}
+		}
+	}
+
+	$notifications = wp_parse_args( $default_by_admin, $all_notifications );
+
+	$excluded_actions = array();
+
+	foreach ( $notifications as $key => $val ) {
+		$user_val = get_user_meta( $user_id, $key, true );
+		if ( $user_val ) {
+			$notifications[ $key ] = $user_val;
+		}
+
+		if ( 'no' === $notifications[ $key ] && isset( $all_actions[ $key ] ) ) {
+			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
+		}
+	}
+
+	return $excluded_actions;
 }

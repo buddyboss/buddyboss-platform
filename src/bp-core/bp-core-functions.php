@@ -6236,6 +6236,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 /**
  * Check the notification registered with preferences or not.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $preference_key Preference key name.
  *
  * @return array|mixed
@@ -6265,6 +6267,8 @@ function bb_check_notification_registered( string $preference_key ) {
 
 /**
  * Check the email type registered with preferences or not.
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $preference_key Preference key name.
  *
