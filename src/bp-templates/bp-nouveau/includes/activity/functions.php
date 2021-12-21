@@ -174,9 +174,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		// the groups component is active & the current user is at least a member of 1 group
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Search groups', 'buddyboss' ),
-				'priority'                 => 10,
+				'text'                      => __( 'Post in: Group', 'buddyboss' ),
+				'autocomplete_placeholder'  => __( 'Search groups', 'buddyboss' ),
+				'priority'                  => 10,
+				'loading_group_placeholder' => __( 'Loading groups', 'buddyboss' ),
 			);
 		}
 		$group_args = array(

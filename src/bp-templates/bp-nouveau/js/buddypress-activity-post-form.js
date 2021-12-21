@@ -2455,6 +2455,7 @@ window.bp = window.bp || {};
 					var group_total_page = BP_Nouveau.activity.params.objects.group_total_page;
 					var group_count      = BP_Nouveau.activity.params.objects.group_count;
 					if ( group_total_page > 1 && group_count > this.collection.models.length ) {
+						console.log( ' if load ');
 						var $this = this;
 						this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling' );
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
@@ -2536,8 +2537,8 @@ window.bp = window.bp || {};
 			},
 			
 			loadMoreData: function ( $this, currentPage ) {
-				if ( ! this.$el.find( '#bp-activity-group-ac-items i.animate-spin' ).length ) {
-					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<i class="dashicons dashicons-update animate-spin"></i>' );
+				if ( ! this.$el.find( '#bp-activity-group-ac-items .loading_groups' ).length ) {
+					this.$el.find( '#bp-activity-group-ac-items .bp-activity-object:last' ).after( '<div class="loading_groups"><i class="dashicons dashicons-update animate-spin"></i><label class="loading_group">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</label></div>' );
 				}
 				var checkSucessData = false;
 				var fetchGroup      = new bp.Collections.fetchCollection();
@@ -2553,7 +2554,7 @@ window.bp = window.bp || {};
 						success: function ( collection, object, jqXHR ) {
 							if ( true === object.success ) {
 								$this.collection.add( object.data );
-								$( '#bp-activity-group-ac-items i.animate-spin' ).remove();
+								$( '#bp-activity-group-ac-items .loading_groups' ).remove();
 								checkSucessData = true;
 							}
 						},
