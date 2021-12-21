@@ -605,23 +605,33 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 	?>
 	<div class="preview_avatar_cover">
 
-		<div class="web-preview-wrap">
-			<div class="preview-item-cover">
-				<img src="">
-			</div>
-			<div class="preview-item-avatar">
-				<img src="" class="avatar group-2-avatar avatar-300 photo" />
-			</div>
-		</div>
+		<div class="preview-switcher-main">
 
-		<div class="app-preview-wrap">
-			<div class="preview-item-cover">
-				<img src="">
+			<div class="button-group preview-switcher">
+				<a href="#web-preview" class="button button-large button-primary">Browser</a>
+				<a href="#app-preview" class="button button-large">App</a>
 			</div>
-			<div class="preview-item-avatar">
-				<img src="" class="avatar group-2-avatar avatar-300 photo" />
+
+			<div class="web-preview-wrap preview-block active" id="web-preview">
+				<div class="preview-item-cover">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+				</div>
+				<div class="preview-item-avatar">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
+				</div>
 			</div>
+
+			<div class="app-preview-wrap preview-block" id="app-preview">
+				<div class="preview-item-cover">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+				</div>
+				<div class="preview-item-avatar">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
+				</div>
+			</div>
+
 		</div>
+		
 
 	</div>
 	<p class="description">
@@ -852,25 +862,34 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 	?>
 	<div class="preview_avatar_cover">
 
-		<div class="web-preview-wrap">
-			<div class="preview-item-cover">
-				<img src="">
+		<div class="preview-switcher-main">
+
+			<div class="button-group preview-switcher">
+				<a href="#web-preview" class="button button-large button-primary">Browser</a>
+				<a href="#app-preview" class="button button-large">App</a>
 			</div>
-			<div class="preview-item-avatar">
-				<img src="" class="avatar group-2-avatar avatar-300 photo" />
+
+			<div class="web-preview-wrap preview-block active" id="web-preview">
+				<div class="preview-item-cover">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+				</div>
+				<div class="preview-item-avatar">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
+				</div>
 			</div>
+
+			<div class="app-preview-wrap preview-block" id="app-preview">
+				<div class="preview-item-cover">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+				</div>
+				<div class="preview-item-avatar">
+					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
+				</div>
+			</div>
+
 		</div>
 
-		<div class="app-preview-wrap">
-			<div class="preview-item-cover">
-				<img src="">
-			</div>
-			<div class="preview-item-avatar">
-				<img src="" class="avatar group-2-avatar avatar-300 photo" />
-			</div>
-		</div>
-
-		</div>
+	</div>
 		<p class="description">
 		<?php
 		echo sprintf(

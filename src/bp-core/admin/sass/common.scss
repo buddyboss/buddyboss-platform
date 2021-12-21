@@ -2594,3 +2594,60 @@ h2.has_tutorial_btn {
 	}
 
 }
+
+.preview_avatar_cover {
+
+	.preview-switcher {
+		margin-bottom: 25px;
+	}
+
+	.preview-block {
+		max-width: 260px;
+		border: 2px solid #dcdddf;
+		margin-bottom: 25px;
+		display: none;
+
+		&.active {
+			display: block;
+		}
+
+	}
+
+	.app-preview-wrap {
+		max-width: 200px;
+
+		.preview-item-avatar {
+			left: 50%;
+			border-radius: 50%;
+			-webkit-transform: translateX(-50%);
+			-ms-transform: translateX(-50%);
+			transform: translateX(-50%);
+			overflow: hidden;
+		}
+
+	}
+
+	.preview-item-cover {
+		min-height: 90px;
+		max-height: 90px;
+		border-bottom: 1px solid #fff;
+		overflow: hidden;
+	}
+
+	.preview-item-avatar {
+		height: 75px;
+		width: 75px;
+		position: relative;
+		top: -35px;
+		left: 25px;
+		border: 3px solid #fff;
+	}
+
+	.preview-item-cover img,
+	.preview-item-avatar img {
+		height: 100%;
+		object-fit: cover;
+		width: 100%;
+	}
+
+}
