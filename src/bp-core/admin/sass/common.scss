@@ -2650,6 +2650,11 @@ h2.has_tutorial_btn {
 		width: 100%;
 	}
 
+	.preview-item-cover img[src=""],
+	.preview-item-avatar img[src=""] {
+		display: none;
+	}
+
 	&:not(.has-avatar) .preview-item-avatar {
 		display: none;
 	}

@@ -2489,6 +2489,11 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   width: 100%;
 }
 
+.preview_avatar_cover .preview-item-cover img[src=""],
+.preview_avatar_cover .preview-item-avatar img[src=""] {
+  display: none;
+}
+
 .preview_avatar_cover:not(.has-avatar) .preview-item-avatar {
   display: none;
 }

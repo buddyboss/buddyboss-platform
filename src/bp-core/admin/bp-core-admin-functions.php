@@ -3258,12 +3258,10 @@ function bb_profile_group_get_live_preview_urls() {
 
 	check_admin_referer( 'bb-avatar-cover-live-preview' );
 
-	$avatar_class           = '';
-	$cover_class            = '';
-	$web_preview_avatar_url = '';
-	$app_preview_avatar_url = '';
-	$web_preview_cover_url  = '';
-	$app_preview_cover_url  = '';
+	$cover_class           = '';
+	$avatar_image_url      = '';
+	$web_preview_cover_url = '';
+	$app_preview_cover_url = '';
 
 	$object = isset( $_POST['object'] ) ? sanitize_text_field( $_POST['object'] ) : 'user';
 
@@ -3285,8 +3283,10 @@ function bb_profile_group_get_live_preview_urls() {
 				'disable_avatar_uploads'      => bp_disable_avatar_uploads(),
 				'profile_avatar_type'         => bb_get_profile_avatar_type(),
 				'default_profile_avatar_type' => bb_get_default_profile_avatar_type(),
+				'default_custom_avatar'       => bb_get_default_custom_upload_profile_avatar( bb_get_buddyboss_profile_avatar( $size ), $size ),
 				'disable_cover_image_uploads' => bp_disable_cover_image_uploads(),
 				'default_profile_cover_type'  => bb_get_default_profile_cover_type(),
+				'default_custom_cover'        => bb_get_default_custom_upload_profile_cover(),
 
 			),
 			$object . '_live_preview_urls_args'
@@ -3311,7 +3311,11 @@ function bb_profile_group_get_live_preview_urls() {
 
 				// Default Profile Avatar = Custom.
 			} elseif ( 'custom' === $r['default_profile_avatar_type'] ) {
-				$avatar_image_url = bb_get_default_custom_upload_profile_avatar( bb_get_buddyboss_profile_avatar( $size ), $size );
+				$avatar_image_url = $r['default_custom_avatar'];
+
+				if ( empty( $avatar_image_url ) ) {
+					$avatar_image_url = bb_get_default_custom_upload_profile_avatar( bb_get_buddyboss_profile_avatar( $size ), $size );
+				}
 			}
 
 			/**
@@ -3320,7 +3324,7 @@ function bb_profile_group_get_live_preview_urls() {
 			 * Profile Avatars = WordPress.
 			 * Default Avatar = Blank.
 			 */
-		} elseif ( $show_avatar && ! $r['disable_avatar_uploads'] && 'WordPress' === $r['default_profile_avatar_type'] && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+		} elseif ( $show_avatar && ! $r['disable_avatar_uploads'] && 'wordpress' === $r['default_profile_avatar_type'] && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 
 			/**
@@ -3328,16 +3332,16 @@ function bb_profile_group_get_live_preview_urls() {
 			 * Profile Avatars = BuddyBoss.
 			 * Upload Avatars = unchecked.
 			 */
-		} elseif ( $show_avatar && $r['disable_avatar_uploads'] && 'buddyboss' === $r['profile_avatar_type'] ) {
+		} elseif ( $r['disable_avatar_uploads'] && 'buddyboss' === $r['profile_avatar_type'] ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 
 			/**
 			 * Avatar Display = unchecked.
 			 * Profile Avatars = WordPress.
 			 */
-		} elseif ( ! $show_avatar && 'WordPress' === $r['profile_avatar_type'] ) {
+		} elseif ( ! $show_avatar && 'wordpress' === $r['profile_avatar_type'] ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
-		} elseif ( $show_avatar && 'WordPress' === $r['profile_avatar_type'] ) {
+		} elseif ( $show_avatar && 'wordpress' === $r['profile_avatar_type'] ) {
 			$avatar_image_url = get_avatar_url(
 				'',
 				array(
@@ -3355,24 +3359,65 @@ function bb_profile_group_get_live_preview_urls() {
 			$app_preview_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg';
 		} elseif ( ! $r['disable_cover_image_uploads'] && 'custom' === $r['default_profile_cover_type'] ) {
 			$cover_class           = ' has-cover';
-			$web_preview_cover_url = bb_get_default_custom_upload_profile_cover();
+			$web_preview_cover_url = ! empty( $r['default_custom_cover'] ) ? $r['default_custom_cover'] : bb_get_default_custom_upload_profile_cover();
 
 			if ( empty( $web_preview_cover_url ) ) {
 				$web_preview_cover_url = bb_get_buddyboss_profile_cover();
 			}
 
 			$app_preview_cover_url = $web_preview_cover_url;
+		} elseif ( ! $r['disable_cover_image_uploads'] && 'none' === $r['default_profile_cover_type'] ) {
+			$cover_class = ' has-cover';
 		}
 	} elseif ( 'group' === $object ) {
 
 		$r = bp_parse_args(
 			$_POST,
 			array(
-				'object_id'        => $object_id,
-				'object_directory' => $object_directory,
+				'disable_avatar_uploads'      => bp_disable_group_avatar_uploads(),
+				'default_profile_avatar_type' => bb_get_default_group_avatar_type(),
+				'default_custom_avatar'       => bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size ),
+				'disable_cover_image_uploads' => bp_disable_group_cover_image_uploads(),
+				'default_profile_cover_type'  => bb_get_default_group_cover_type(),
+				'default_custom_cover'        => bb_get_default_custom_upload_group_cover(),
+
 			),
 			$object . '_live_preview_urls_args'
 		);
+
+		// Group avatar
+		if ( ! $r['disable_avatar_uploads'] ) {
+
+			if ( 'buddyboss' === $r['default_profile_avatar_type'] ) {
+				$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
+			} elseif ( 'legacy' === $r['default_profile_avatar_type'] ) {
+				$avatar_image_url = bb_get_legacy_group_avatar( $size );
+			} elseif ( 'custom' === $r['default_profile_avatar_type'] ) {
+				$avatar_image_url = ! empty( $r['default_custom_avatar'] ) ? $r['default_custom_avatar'] : bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
+
+				if ( empty( $avatar_image_url ) ) {
+					$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
+				}
+			}
+		}
+
+		// Group Cover
+		if ( ! $r['disable_cover_image_uploads'] && 'buddyboss' === $r['default_profile_cover_type'] ) {
+			$cover_class           = ' has-cover';
+			$web_preview_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg';
+			$app_preview_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg';
+		} elseif ( ! $r['disable_cover_image_uploads'] && 'custom' === $r['default_profile_cover_type'] ) {
+			$cover_class           = ' has-cover';
+			$web_preview_cover_url = ! empty( $r['default_custom_cover'] ) ? $r['default_custom_cover'] : bb_get_default_custom_upload_group_cover();
+
+			if ( empty( $web_preview_cover_url ) ) {
+				$web_preview_cover_url = bb_get_custom_buddyboss_group_cover();
+			}
+
+			$app_preview_cover_url = $web_preview_cover_url;
+		} elseif ( ! $r['disable_cover_image_uploads'] && 'none' === $r['default_profile_cover_type'] ) {
+			$cover_class = ' has-cover';
+		}
 	}
 
 	$response = array(

@@ -2437,3 +2437,79 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   top: 0;
   bottom: 0;
 }
+
+.preview_avatar_cover .preview-switcher {
+  margin-bottom: 25px;
+}
+
+.preview_avatar_cover .preview-block {
+  max-width: 260px;
+  border: 2px solid #dcdddf;
+  margin-bottom: 25px;
+  display: none;
+}
+
+.preview_avatar_cover .preview-block.active {
+  display: block;
+}
+
+.preview_avatar_cover .app-preview-wrap {
+  max-width: 200px;
+}
+
+.preview_avatar_cover .app-preview-wrap .preview-item-avatar {
+  right: 50%;
+  border-radius: 50%;
+  -webkit-transform: translateX(50%);
+  -ms-transform: translateX(50%);
+  transform: translateX(50%);
+  overflow: hidden;
+}
+
+.preview_avatar_cover .preview-item-cover {
+  min-height: 90px;
+  max-height: 90px;
+  background-color: #ccc;
+  overflow: hidden;
+}
+
+.preview_avatar_cover .preview-item-avatar {
+  height: 75px;
+  width: 75px;
+  position: relative;
+  top: -35px;
+  right: 25px;
+  border: 3px solid #fff;
+}
+
+.preview_avatar_cover .preview-item-cover img,
+.preview_avatar_cover .preview-item-avatar img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.preview_avatar_cover .preview-item-cover img[src=""],
+.preview_avatar_cover .preview-item-avatar img[src=""] {
+  display: none;
+}
+
+.preview_avatar_cover:not(.has-avatar) .preview-item-avatar {
+  display: none;
+}
+
+.preview_avatar_cover:not(.has-cover) .preview-item-cover {
+  display: none;
+}
+
+.preview_avatar_cover:not(.has-cover) .preview-item-avatar {
+  top: 0;
+  right: 50%;
+  -webkit-transform: translateX(50%);
+  -ms-transform: translateX(50%);
+  transform: translateX(50%);
+}
+
+.preview_avatar_cover:not(.has-cover):not(.has-avatar) {
+  display: none;
+}

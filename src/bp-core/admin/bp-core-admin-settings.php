@@ -602,47 +602,40 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_preview_profile_avatar_cover() {
+	$live_preview_settings = bb_get_settings_live_preview_default_profile_group_images();
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
 		<div class="preview-switcher-main">
 
 			<div class="button-group preview-switcher">
-				<a href="#web-preview" class="button button-large button-primary">Browser</a>
-				<a href="#app-preview" class="button button-large">App</a>
+				<a href="#web-preview" class="button button-large button-primary"><?php _e( 'Browser', 'buddyboss' ); ?></a>
+				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#app-preview" class="button button-large"><?php _e( 'App', 'buddyboss' ); ?></a>
+				<?php endif; ?>
 			</div>
-
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
+					<img src="">
 				</div>
 				<div class="preview-item-avatar">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
+					<img src="" />
 				</div>
 			</div>
-
-			<div class="app-preview-wrap preview-block" id="app-preview">
-				<div class="preview-item-cover">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+				<div class="app-preview-wrap preview-block" id="app-preview">
+					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
+						<img src="">
+					</div>
+					<div class="preview-item-avatar">
+						<img src="" />
+					</div>
 				</div>
-				<div class="preview-item-avatar">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
-				</div>
-			</div>
-
+			<?php endif; ?>
 		</div>
-		
 
 	</div>
-	<p class="description">
-		<?php
-		echo sprintf(
-			__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
-			(int) 100,
-			(int) 100
-		);
-		?>
-	</p>
+	<p class="description"> <?php echo $live_preview_settings['info']; ?> </p>
 	<?php
 }
 
@@ -859,48 +852,45 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 * @since BuddyBoss [BBVERSION]
 */
 function bp_admin_setting_callback_preview_group_avatar_cover() {
+	$live_preview_settings = bb_get_settings_live_preview_default_profile_group_images();
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
 		<div class="preview-switcher-main">
 
 			<div class="button-group preview-switcher">
-				<a href="#web-preview" class="button button-large button-primary">Browser</a>
-				<a href="#app-preview" class="button button-large">App</a>
+				<a href="#web-preview" class="button button-large button-primary"><?php _e( 'Browser', 'buddyboss' ); ?></a>
+				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#app-preview" class="button button-large"><?php _e( 'App', 'buddyboss' ); ?></a>
+				<?php endif; ?>
 			</div>
 
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color'];?>">
+					<img src="">
 				</div>
 				<div class="preview-item-avatar">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
+					<img src="" />
 				</div>
 			</div>
 
-			<div class="app-preview-wrap preview-block" id="app-preview">
-				<div class="preview-item-cover">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ?>">
+			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+				<div class="app-preview-wrap preview-block" id="app-preview">
+					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color'];?>">
+						<img src="">
+					</div>
+					<div class="preview-item-avatar">
+						<img src="" />
+					</div>
 				</div>
-				<div class="preview-item-avatar">
-					<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' ?>" />
-				</div>
-			</div>
+			<?php endif; ?>
 
 		</div>
 
 	</div>
-		<p class="description">
-		<?php
-		echo sprintf(
-			__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
-			(int) 100,
-			(int) 100
-		);
-		?>
-		</p>
+	<p class="description"> <?php echo $live_preview_settings['info']; ?> </p>
 	<?php
- }
+}
 
 /** Group Settings ************************************************************/
 

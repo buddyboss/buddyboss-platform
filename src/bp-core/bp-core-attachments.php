@@ -615,21 +615,21 @@ function bp_attachments_delete_file( $args = array() ) {
 		$upload_dir = bp_attachments_uploads_dir_get();
 
 		$cover_url = bb_get_default_custom_upload_profile_cover();
-		$subdir    = '/members/custom/cover-image';
+		$subdir    = 'members/custom/cover-image';
 		if ( 'groups' === $r['object_dir'] ) {
 			$cover_url = bb_get_default_custom_upload_group_cover();
-			$subdir    = '/groups/custom/cover-image';
+			$subdir    = 'groups/custom/cover-image';
 		}
-
-		if ( empty( $cover_url ) ) {
-			return false;
-		}
-
-		$r['file'] = basename( $cover_url );
 
 		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
 
-		if ( 0 === validate_file( $type_dir ) && is_dir( $type_dir ) ) {
+		if ( 1 === validate_file( $type_dir ) || ! is_dir( $type_dir ) ) {
+			return false;
+		}
+
+		if ( ! empty( $cover_url ) ) {
+
+			$r['file'] = basename( $cover_url );
 
 			if ( ! empty( $r['file'] ) ) {
 				if ( ! file_exists( trailingslashit( $type_dir ) . $r['file'] ) ) {
@@ -638,6 +638,26 @@ function bp_attachments_delete_file( $args = array() ) {
 
 				$attachment_path = trailingslashit( $type_dir ) . $r['file'];
 			}
+		} else {
+			$file = false;
+
+			// Open the directory and get the first file.
+			if ( $att_dir = opendir( $type_dir ) ) {
+
+				while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
+					// Look for the first file having the type in its name.
+					if ( false !== strpos( $attachment_file, $r['type'] ) && empty( $file ) ) {
+						$file = $attachment_file;
+						break;
+					}
+				}
+			}
+
+			if ( empty( $file ) ) {
+				return false;
+			}
+
+			$attachment_path = trailingslashit( $type_dir ) . $file;
 		}
 	} else {
 		$attachment_path = bp_attachments_get_attachment( 'path', $args );

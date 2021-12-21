@@ -940,34 +940,28 @@ window.bp = window.bp || {};
 			}
 
 			var previewAvatarCover = function() {
-
-				var data,
-					avatarItemID = BP_Uploader.settings.defaults.multipart_params.bp_params.item_id,
-					avatarObject = BP_Uploader.settings.defaults.multipart_params.bp_params.object;
+				var data = {
+					_wpnonce: BP_ADMIN.avatar_cover_preview.nonce,
+					item_id:  BP_Uploader.settings.defaults.multipart_params.bp_params.item_id,
+					object:   BP_Uploader.settings.defaults.multipart_params.bp_params.object,
+				};
 
 				if ( $( '#bp-disable-cover-image-uploads' ).length ) {
-
-					data = {
-						_wpnonce: BP_ADMIN.avatar_cover_preview.nonce,
-						item_id: avatarItemID,
-						object: avatarObject,
-						object: avatarObject,
-						profile_avatar_type: $( '#bp-profile-avatar-type' ).val(),
-						disable_avatar_uploads: $( '#bp-disable-avatar-uploads' ).prop( 'checked' ),
-						default_profile_avatar_type: $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
-						disable_cover_image_uploads: $( '#bp-disable-cover-image-uploads' ).prop( 'checked' ),
-						default_profile_cover_type: $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val(),
-					};
+					data.profile_avatar_type         = $( '#bp-profile-avatar-type' ).val();
+					data.disable_avatar_uploads      = $( '#bp-disable-avatar-uploads' ).prop( 'checked' );
+					data.default_profile_avatar_type = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
+					data.default_custom_avatar       = $( '#bp-default-user-custom-avatar' ).val();
+					data.disable_cover_image_uploads = $( '#bp-disable-cover-image-uploads' ).prop( 'checked' );
+					data.default_profile_cover_type  = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
+					data.default_custom_cover        = $( '#bp-default-custom-user-cover' ).val();
 
 				} else if ( $( '#bp-disable-group-cover-image-uploads' ).length ) {
-					data = {
-						_wpnonce: BP_ADMIN.avatar_cover_preview.nonce,
-						item_id: avatarItemID,
-						object: avatarObject,
-						object: avatarObject,
-						profile_avatar_type: $( '#bp-profile-avatar-type' ).val(),
-						default_profile_avatar_type: $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
-					};
+					data.disable_avatar_uploads      = $( '#bp-disable-group-avatar-uploads' ).prop( 'checked' );
+					data.default_profile_avatar_type = $( 'input[type=radio][name=bp-default-group-avatar-type]:checked' ).val();
+					data.default_custom_avatar       = $( '#bp-default-group-custom-avatar' ).val();
+					data.disable_cover_image_uploads = $( '#bp-disable-group-cover-image-uploads' ).prop( 'checked' );
+					data.default_profile_cover_type  = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
+					data.default_custom_cover        = $( '#bp-default-custom-group-cover' ).val();
 				} else {
 					return false;
 				}
@@ -989,10 +983,12 @@ window.bp = window.bp || {};
 						appContainer.find( '.preview-item-avatar img' ).prop( 'src', response.app_avatar_url );
 					}
 				).fail(
-					function( response ) {
+					function() {
 					}
 				);
-			}
+			};
+
+			previewAvatarCover();
 
 			// Profile Avatar Settings Show/Hide.
 			var profileAvatarType                   = $( '#bp-profile-avatar-type' ),
@@ -1077,6 +1073,7 @@ window.bp = window.bp || {};
 
 				$( allowAvatarUpload ).change(
 					function () {
+						previewAvatarCover();
 						if ( 'buddyboss' === profileAvatarType.val() && $( this ).prop( 'checked' ) ) {
 							defaultProfileContainer.show();
 
@@ -1104,6 +1101,7 @@ window.bp = window.bp || {};
 
 				$( defaultProfileAvatarType ).change(
 					function () {
+						previewAvatarCover();
 						if ( 'buddyboss' === profileAvatarType.val() && allowAvatarUpload.prop( 'checked' ) && 'custom' === this.value ) {
 							defaultProfileAvatarCustomContainer.show();
 						} else {
@@ -1128,6 +1126,7 @@ window.bp = window.bp || {};
 
 				$( allowCoverUpload ).change(
 					function () {
+						previewAvatarCover();
 						if ( $( this ).prop( 'checked' ) ) {
 							$( '.profile-cover-options' ).show();
 
@@ -1154,6 +1153,7 @@ window.bp = window.bp || {};
 
 				$( profileCoverType ).change(
 					function () {
+						previewAvatarCover();
 						if ( 'custom' === this.value ) {
 							$( '.default-profile-cover-custom' ).show();
 						} else {
@@ -1187,10 +1187,10 @@ window.bp = window.bp || {};
 						bp.ajax.post(
 							'bp_avatar_delete',
 							{
-								json:true,
+								json:    true,
 								item_id: avatarItemID,
-								object: avatarObject,
-								nonce: BP_Uploader.settings.defaults.multipart_params.bp_params.nonces.remove
+								object:  avatarObject,
+								nonce:   BP_Uploader.settings.defaults.multipart_params.bp_params.nonces.remove
 							}
 						).done(
 							function( response ) {
@@ -1201,7 +1201,7 @@ window.bp = window.bp || {};
 								profileGroupFileFeedback( avatarFeedbackContainer, feedback, feedbackType );
 
 								// Update each avatars of the page
-								$( '.' + avatarObject + '-' + response.item_id + '-avatar' ).each(
+								$( '.default-profile-avatar-custom .' + avatarObject + '-' + response.item_id + '-avatar' ).each(
 									function() {
 										$( this ).prop( 'src', response.avatar );
 									}
@@ -1217,6 +1217,9 @@ window.bp = window.bp || {};
 
 								// Update each avatars fields of the page.
 								$( '#bp-default-' + avatarObject + '-' + response.item_id + '-avatar' ).val( '' );
+
+								// Remove image from the live preview.
+								$( '.preview-avatar-cover-image .' + avatarObject + '-' + response.item_id + '-avatar' ).prop( 'src', '' );
 							}
 						).fail(
 							function( response ) {
@@ -1267,12 +1270,12 @@ window.bp = window.bp || {};
 
 					$.ajax(
 						{
-							url: BP_ADMIN.ajax_url, // point to server-side PHP script.
-							cache: false,
+							url:         BP_ADMIN.ajax_url, // point to server-side PHP script.
+							cache:       false,
 							contentType: false,
 							processData: false,
-							data: form_data,
-							type: 'post',
+							data:        form_data,
+							type:        'post',
 							success: function( response ){
 
 								var feedback,
@@ -1295,6 +1298,9 @@ window.bp = window.bp || {};
 									deleteBtnContainer.show();
 									feedbackType = 'success';
 									feedback     = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
+
+									// Update image for live preview.
+									$( '.preview-avatar-cover-image .preview-item-cover img' ).prop( 'src', response.data.url );
 								}
 
 								// Show feedback.
@@ -1330,11 +1336,11 @@ window.bp = window.bp || {};
 								url: BP_ADMIN.ajax_url, // point to server-side PHP script.
 								cache: false,
 								data: {
-									json: true,
-									action: BP_ADMIN.profile_group_cover.remove.action,
+									json:    true,
+									action:  BP_ADMIN.profile_group_cover.remove.action,
 									item_id: BP_ADMIN.profile_group_cover.upload.item_id,
-									object: BP_ADMIN.profile_group_cover.upload.object,
-									nonce: BP_ADMIN.profile_group_cover.remove.nonce
+									object:  BP_ADMIN.profile_group_cover.upload.object,
+									nonce:   BP_ADMIN.profile_group_cover.remove.nonce
 								},
 								type: 'post',
 								success: function( response ){
@@ -1359,6 +1365,9 @@ window.bp = window.bp || {};
 										$this.hide();
 										feedbackType = 'success';
 										feedback     = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
+
+										// Update image for live preview.
+										$( '.preview-avatar-cover-image .preview-item-cover img' ).prop( 'src', '' );
 									}
 
 									// Show feedback.
@@ -1385,6 +1394,7 @@ window.bp = window.bp || {};
 
 				$( allowGroupAvatarUpload ).change(
 					function () {
+						previewAvatarCover();
 						if ( $( this ).prop( 'checked' ) ) {
 							$( '.group-avatar-options' ).show();
 
@@ -1412,6 +1422,7 @@ window.bp = window.bp || {};
 
 				$( groupAvatarType ).change(
 					function () {
+						previewAvatarCover();
 						if ( 'custom' === this.value ) {
 							$( '.default-group-avatar-custom' ).show();
 						} else {
@@ -1436,6 +1447,7 @@ window.bp = window.bp || {};
 
 				$( allowGroupCoverUpload ).change(
 					function () {
+						previewAvatarCover();
 						if ( $( this ).prop( 'checked' ) ) {
 							$( '.group-cover-options' ).show();
 
@@ -1462,6 +1474,7 @@ window.bp = window.bp || {};
 
 				$( groupCoverType ).change(
 					function () {
+						previewAvatarCover();
 						if ( 'custom' === this.value ) {
 							$( '.default-group-cover-custom' ).show();
 						} else {
@@ -1472,14 +1485,17 @@ window.bp = window.bp || {};
 			}
 
 			// Show/hide web/app preview
-			$( '.preview-switcher .button' ).on( 'click', function( event ) {
-				event.preventDefault();
+			$( '.preview-switcher .button' ).on(
+				'click',
+				function( event ) {
+					event.preventDefault();
 
-				var tab = $(this).attr( 'href' );
-				$( this ).closest( '.preview-switcher-main' ).find( '.preview-block.active' ).removeClass( 'active' );
-				$( tab ).addClass( 'active' );
-				$( this ).addClass( 'button-primary' ).siblings().removeClass( 'button-primary' );
-			});
+					var tab = $( this ).attr( 'href' );
+					$( this ).closest( '.preview-switcher-main' ).find( '.preview-block.active' ).removeClass( 'active' );
+					$( tab ).addClass( 'active' );
+					$( this ).addClass( 'button-primary' ).siblings().removeClass( 'button-primary' );
+				}
+			);
 
 			$( document ).on(
 				'click',
