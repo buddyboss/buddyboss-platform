@@ -1471,6 +1471,16 @@ window.bp = window.bp || {};
 				);
 			}
 
+			// Show/hide web/app preview
+			$( '.preview-switcher .button' ).on( 'click', function( event ) {
+				event.preventDefault();
+
+				var tab = $(this).attr( 'href' );
+				$( this ).closest( '.preview-switcher-main' ).find( '.preview-block.active' ).removeClass( 'active' );
+				$( tab ).addClass( 'active' );
+				$( this ).addClass( 'button-primary' ).siblings().removeClass( 'button-primary' );
+			});
+
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',
