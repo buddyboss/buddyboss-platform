@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Friends_Notification class.
+ * Set up the BP_Messages_Notification class.
  *
  * @since BuddyBoss [BBVERSION]
  */
