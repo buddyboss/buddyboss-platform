@@ -269,12 +269,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '', $notice = '' ) {
 			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
-			if( !empty( $tutorial_callback ) ) {
-				$wp_settings_sections[ $this->tab_name ][ $id ][ 'tutorial_callback' ] = $tutorial_callback;
+			if ( ! empty( $tutorial_callback ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
+			}
+
+			if ( ! empty( $notice ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
 			}
 
 			return $this;
@@ -494,6 +498,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 				echo '<table class="form-table">';
 				$this->bp_custom_do_settings_fields( $page, $section['id'] );
+				echo '</table>';
+
+				if( isset( $section['notice'] ) && !empty( $section['notice'] ) ) {
+					?> <div class="display-notice">
+                        <?php
+                    echo $section['notice']; ?>
+                    </div> <?php
+				}
+
 				echo '</table></div>';
 			}
 		}
