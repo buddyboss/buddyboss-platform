@@ -2455,7 +2455,6 @@ window.bp = window.bp || {};
 					var group_total_page = BP_Nouveau.activity.params.objects.group_total_page;
 					var group_count      = BP_Nouveau.activity.params.objects.group_count;
 					if ( group_total_page > 1 && group_count > this.collection.models.length ) {
-						console.log( ' if load ');
 						var $this = this;
 						this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling' );
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
