@@ -350,7 +350,7 @@ function bp_version_updater() {
 			bb_update_to_1_8_1();
 		}
 
-		if ( $raw_db_version < 18001 ) {
+		if ( $raw_db_version < 18401 ) {
 			bb_update_to_1_8_4();
 		}
 	}

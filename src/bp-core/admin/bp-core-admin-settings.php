@@ -671,7 +671,6 @@ function bp_profile_photos_tutorial() {
  */
 function bp_group_avatar_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="<?php echo bp_get_admin_url(
 			add_query_arg(
@@ -683,7 +682,6 @@ function bp_group_avatar_tutorial() {
 			)
 		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
