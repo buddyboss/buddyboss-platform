@@ -26,17 +26,20 @@
 			</label>
 		<?php endforeach; ?>
 		
-		<?php if ( bp_is_active( 'groups' ) ) {  ?>
-		<label for="group" class="bp-activity-privacy__label bp-activity-privacy__label-group">
-			<div class="privacy-tag-wrapper">
-				<span class="privacy-figure privacy-figure--group"></span>
-				<div class="privacy-tag">
-					<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss' ); ?><i class="bb-icon-chevron-right"></i></div>
-					<span class="privacy-sub-label"><?php esc_html_e( 'Visible to members of a group', 'buddyboss' ); ?></span>
-				</div>
-			</div>
-			<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="group"><span></span></span>
-		</label>
-		<?php }	?>
+		<?php if ( bp_is_active( 'groups' ) ) {
+			if ( 0 !== (int) groups_total_groups_for_user( bp_loggedin_user_id() ) ) {
+				?>
+				<label for="group" class="bp-activity-privacy__label bp-activity-privacy__label-group">
+					<div class="privacy-tag-wrapper">
+						<span class="privacy-figure privacy-figure--group"></span>
+						<div class="privacy-tag">
+							<div class="privacy-label"><?php esc_html_e( 'Post in Group', 'buddyboss' ); ?><i class="bb-icon-chevron-right"></i></div>
+							<span class="privacy-sub-label"><?php esc_html_e( 'Visible to members of a group', 'buddyboss' ); ?></span>
+						</div>
+					</div>
+					<span class="privacy-radio"><input type="radio" id="group" class="bp-activity-privacy__input" name="privacy" value="group" data-title="group"><span></span></span>
+				</label>
+			<?php }
+		} ?>
 	</div>
 </script>
