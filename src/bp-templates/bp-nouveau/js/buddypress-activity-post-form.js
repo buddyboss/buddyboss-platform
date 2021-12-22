@@ -2706,7 +2706,7 @@ window.bp = window.bp || {};
 				}
 				e.preventDefault();
 				$( '#activity-post-form-privacy' ).show();
-				$( '#whats-new-form' ).addClass( 'focus-in-privacy' );
+				$( '#whats-new-form' ).addClass( 'focus-in--privacy' );
 				Backbone.trigger('privacy:headerupdate');
 				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
 					this.model.set( 'privacy', this.$el.closest( '#whats-new-form' ).find( '.bp-activity-privacy__input:checked' ).val() );
@@ -2742,7 +2742,7 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy_modal', 'general' );
 
 				var whats_new_form = $( '#whats-new-form' );
-				whats_new_form.removeClass( 'focus-in-privacy focus-in-group' );
+				whats_new_form.removeClass( 'focus-in--privacy focus-in--group' );
 
 				Backbone.trigger('privacy:updatestatus');
 
@@ -2756,7 +2756,7 @@ window.bp = window.bp || {};
 			backPrivacySelector: function ( e ) {
 				e.preventDefault();
 				var privacyStatus = this.model.get( 'privacy' );
-				$( '#whats-new-form' ).removeClass( 'focus-in-privacy focus-in-group' );
+				$( '#whats-new-form' ).removeClass( 'focus-in--privacy focus-in--group' );
 				this.model.set( 'privacy_modal', 'general' );
 				this.$el.find( 'input#' + privacyStatus ).prop( 'checked', true );
 				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
@@ -2768,7 +2768,7 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				var whats_new_form = $( '#whats-new-form' );
 				this.model.set( 'privacy_modal', 'profile' );
-				whats_new_form.removeClass( 'focus-in-group' );
+				whats_new_form.removeClass( 'focus-in--group' );
 				var privacyStatus = this.model.get( 'privacy' );
 				this.$el.find( 'input#' + privacyStatus ).prop( 'checked', true );
 				$( '#activity-post-form-privacy' ).show();
@@ -2781,7 +2781,7 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 				if ( $( e.currentTarget ).val() === 'group' ) {
 					$( e.currentTarget ).closest( '#whats-new-privacy-stage' ).find( '#whats-new-post-in' ).val( 'group' ).trigger('change');
-					whats_new_form.addClass( 'focus-in-group' );
+					whats_new_form.addClass( 'focus-in--group' );
 					this.model.set( 'privacy_modal', 'group' );
 					// First time when we open group selector and select any one group and close it
 					// and then back again on the same screen then object should be group to display the same view screen
@@ -3814,7 +3814,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#whats-new-form' ).removeClass( 'focus-in focus-in-privacy focus-in-group' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
+				$( '#whats-new-form' ).removeClass( 'focus-in focus-in--privacy focus-in--group' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
 
 				//Hide placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();

@@ -113,7 +113,7 @@
 	}
 }
 
-#whats-new-form.focus-in-privacy {
+#whats-new-form.focus-in--privacy {
 
 	#whats-new-privacy-stage {
 		display: block;
@@ -136,15 +136,15 @@
 	}
 }
 
-#whats-new-form:not(.focus-in-group) #privacy-status-group-back {
+#whats-new-form:not(.focus-in--group) #privacy-status-group-back {
 	display: none !important;
 }
 
-#whats-new-form.focus-in-privacy.focus-in-group #privacy-status-back {
+#whats-new-form.focus-in--privacy.focus-in--group #privacy-status-back {
 	display: none;
 }
 
-#whats-new-form:not(.focus-in-group) #whats-new-post-in-box-items {
+#whats-new-form:not(.focus-in--group) #whats-new-post-in-box-items {
 	display: none;
 }
 
