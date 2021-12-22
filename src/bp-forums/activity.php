@@ -416,6 +416,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @return array
 		 */
 		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
+
 			// Get activity post data.
 			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
