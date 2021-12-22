@@ -461,7 +461,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-avatar-custom.jpg'; ?>" />
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-custom.jpg' ); ?>" />
 			</div>
 			<span><?php _e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
