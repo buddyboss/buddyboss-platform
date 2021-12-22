@@ -2414,7 +2414,7 @@ window.bp = window.bp || {};
 				).render();
 
 				this.$el.html( autocomplete.$el );
-				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' );
+				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icon-close-circle"></i></span>' );
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
@@ -2484,7 +2484,14 @@ window.bp = window.bp || {};
 				
 				if ( 0 === parseInt( search.length ) ) {
 					this.autoCompleteCollectionData( $this, search );
-					$this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'load_more_data' )
+					$this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'load_more_data' );
+					$this.$el.removeClass( 'activity-is-autocomplete' );
+				} else {
+					$this.$el.addClass( 'activity-is-autocomplete' );
+
+					$( '#whats-new-post-in-box-items .activity-autocomplete-clear' ).on( 'click', function () {
+						$( '#activity-autocomplete' ).val('').keyup();
+					});
 				}
 				
 				if ( 2 > search.length ) {

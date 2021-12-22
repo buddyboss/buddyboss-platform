@@ -1054,6 +1054,32 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
+
+	.activity-autocomplete-clear {
+		display: none;
+		position: absolute;
+		top: 50%;
+		right: 12px;
+		transform: translate(0, -50%);
+		z-index: 6;
+		width: 20px;
+		height: 20px;
+		cursor: pointer;
+
+		i {
+			font-size: 20px;
+			color: rgba(18, 43, 70, 0.4);
+	
+		}
+	}
+}
+
+.activity-is-autocomplete {
+	.activity-autocomplete-wrapper {
+		.activity-autocomplete-clear {
+			display: inline-block;
+		}
+	}
 }
 
 #whats-new-post-in-box-items {
@@ -1064,7 +1090,7 @@
 	#activity-autocomplete {
 		width: 100%;
 		border-radius: 3px;
-		padding: 5px 10px 5px 48px;
+		padding: 5px 35px 5px 48px;
 		height: 44px;
 		position: relative;
 		z-index: 2;
