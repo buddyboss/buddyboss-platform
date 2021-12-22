@@ -498,7 +498,7 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" style="<?php echo $hide_show_style; ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
