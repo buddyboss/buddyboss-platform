@@ -2484,16 +2484,23 @@ window.bp = window.bp || {};
 			autoComplete: function () {
 				var $this  = this;
 				var search = $( '#activity-autocomplete' ).val();
+				var whats_new_form = $this.$el.closest( '#whats-new-form' );
 				
 				if ( 0 === parseInt( search.length ) ) {
 					this.autoCompleteCollectionData( $this, search );
 					$this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'load_more_data' );
 					$this.$el.removeClass( 'activity-is-autocomplete' );
+
+					// Disable privacy status submit button if groups search filter is cleared
+					whats_new_form.addClass( 'focus-in--blank-group' );
 				} else {
 					$this.$el.addClass( 'activity-is-autocomplete' );
 
 					$( '#whats-new-post-in-box-items .activity-autocomplete-clear' ).on( 'click', function () {
 						$( '#activity-autocomplete' ).val('').keyup();
+						
+						// Disable privacy status submit button if groups search filter is cleared
+						whats_new_form.addClass( 'focus-in--blank-group' );
 					});
 				}
 				
