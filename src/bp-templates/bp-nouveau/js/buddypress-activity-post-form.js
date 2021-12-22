@@ -547,7 +547,7 @@ window.bp = window.bp || {};
 			);
 
 			// Now Show the Modal.
-			$activityForm.addClass( 'modal-popup' );
+			$activityForm.addClass( 'modal-popup' ).closest('body').addClass( 'activity-modal-open' );
 
 			$activityFormPlaceholder.show();
 
@@ -599,7 +599,7 @@ window.bp = window.bp || {};
 			bp.group_id        = 0;
 			bp.privacy         = 'public';
 
-			$( '.activity-update-form.modal-popup' ).removeClass( 'modal-popup group-activity' );
+			$( '.activity-update-form.modal-popup' ).removeClass( 'modal-popup group-activity' ).closest( 'body' ).removeClass( 'activity-modal-open' );
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap  = $( '#bp-nouveau-single-activity-edit-form-wrap' );
@@ -3581,7 +3581,7 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			id: 'activity-form-submit-wrapper',
 			initialize: function () {
-				$( '#whats-new-form' ).addClass( 'focus-in' ).parent().addClass( 'modal-popup' ); // add some class to form so that DOM knows about focus.
+				$( '#whats-new-form' ).addClass( 'focus-in' ).parent().addClass( 'modal-popup' ).closest( 'body' ).addClass( 'activity-modal-open' ); // add some class to form so that DOM knows about focus.
 
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
@@ -3799,7 +3799,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#whats-new-form' ).removeClass( 'focus-in focus-in-privacy focus-in-group' ).parent().removeClass( 'modal-popup' ); // remove class when reset.
+				$( '#whats-new-form' ).removeClass( 'focus-in focus-in-privacy focus-in-group' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
 
 				//Hide placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
