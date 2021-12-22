@@ -3136,10 +3136,14 @@ window.bp = window.bp || {};
 					range.collapse(true);
 					range.setStart(editor[0], 0);
 					var precedingChar = range.toString().slice(-1);
-					if( precedingChar.trim() === '') { // Check if there's space or add one
-						document.execCommand('insertText', false, '@');
-					} else {
-						document.execCommand('insertText', false, ' @');
+					if( !$( range.endContainer.parentElement ).hasClass( 'atwho-inserted' ) ) { // Do nothing if mention '@' is already inserted
+
+						if( precedingChar.trim() === '') { // Check if there's space or add one
+							document.execCommand('insertText', false, '@');
+						} else if( precedingChar !== '@' ){
+							document.execCommand('insertText', false, ' @');
+						}
+
 					}
 					editor.trigger( 'keyup' );
 					setTimeout( function () {
