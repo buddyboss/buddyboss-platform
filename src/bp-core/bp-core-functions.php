@@ -5755,18 +5755,63 @@ function bb_check_server_disabled_symlink() {
  *
  * @param int    $user_id User ID.
  * @param string $key     Notification key.
+ * @param string $type    Type of notification.
  *
  * @return bool
  */
-function bb_is_notification_enabled( $user_id, $key ) {
+function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
 	if ( empty( $user_id ) || empty( $key ) ) {
 		return false;
 	}
 
+	// All preferences registered.
+	$preferences = bb_register_notification_preferences();
+
+	// Saved notification from backend default settings.
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$all_notifications    = array();
+	$default_by_admin     = array();
+
+	if ( ! empty( $preferences ) ) {
+		$preferences = array_column( $preferences, 'fields', null );
+		foreach ( $preferences as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
+		}
+	}
+
+	$all_notifications = array_map(
+		function ( $n ) use ( $type ) {
+			if (
+				in_array( $type, array( 'web', 'app' ), true )
+			) {
+				$n['key'] = $n['key'] . '_' . $type;
+
+				return $n;
+			} elseif (
+				'email' === $type
+			) {
+				return $n;
+			}
+
+		},
+		$all_notifications
+	);
+
+	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
+	if ( ! empty( $enabled_notification ) ) {
+		foreach ( $enabled_notification as $key => $types ) {
+			if ( isset( $types[ $type ] ) ) {
+				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
+				$default_by_admin[ $key_type ] = $types[ $type ];
+			}
+		}
+	}
+
+	$notifications = wp_parse_args( $default_by_admin, $all_notifications );
 
 	if (
-		in_array( $key, $enabled_notification, true )
+		in_array( $key, $notifications, true )
 		&& 'no' !== bp_get_user_meta( $user_id, $key, true )
 	) {
 		return true;
