@@ -1970,7 +1970,7 @@ function bb_get_buddyboss_profile_avatar( $size = 'full' ) {
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
-	return apply_filters( 'bb_get_buddyboss_profile_avatar', buddypress()->plugin_url . 'bp-core/images/' . $bb_avatar_filename, $size );
+	return apply_filters( 'bb_get_buddyboss_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_avatar_filename ), $size );
 }
 
 /**
@@ -1995,7 +1995,7 @@ function bb_get_legacy_profile_avatar( $size = 'full' ) {
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
-	return apply_filters( 'bb_get_legacy_profile_avatar', buddypress()->plugin_url . 'bp-core/images/' . $legacy_avatar_filename, $size );
+	return apply_filters( 'bb_get_legacy_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $legacy_avatar_filename ), $size );
 }
 
 /**
@@ -2020,7 +2020,7 @@ function bb_get_blank_profile_avatar( $size = 'full' ) {
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
-	return apply_filters( 'bb_get_blank_profile_avatar', buddypress()->plugin_url . 'bp-core/images/' . $blank_avatar_filename, $size );
+	return apply_filters( 'bb_get_blank_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $blank_avatar_filename ), $size );
 }
 
 /**
@@ -2153,7 +2153,7 @@ function bb_get_buddyboss_profile_cover() {
 	 *
 	 * @param string $value Default BuddyBoss profile cover URL.
 	 */
-	return apply_filters( 'bb_get_buddyboss_profile_cover', buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
+	return apply_filters( 'bb_get_buddyboss_profile_cover', esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ) );
 }
 
 /**
@@ -2220,7 +2220,7 @@ function bb_get_buddyboss_group_avatar( $size = 'full' ) {
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
-	return apply_filters( 'bb_get_buddyboss_group_avatar', buddypress()->plugin_url . 'bp-core/images/' . $bb_group_avatar_filename, $size );
+	return apply_filters( 'bb_get_buddyboss_group_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_group_avatar_filename ), $size );
 }
 
 /**
@@ -2245,7 +2245,7 @@ function bb_get_legacy_group_avatar( $size = 'full' ) {
 	 * @param string $value Default legacy group avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
 	 */
-	return apply_filters( 'bb_get_legacy_group_avatar', buddypress()->plugin_url . 'bp-core/images/' . $legacy_group_avatar_filename, $size );
+	return apply_filters( 'bb_get_legacy_group_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $legacy_group_avatar_filename ), $size );
 }
 
 /**
@@ -2338,7 +2338,7 @@ function bb_get_custom_buddyboss_group_cover() {
 	 *
 	 * @param string $value Default BuddyBoss group cover URL.
 	 */
-	return apply_filters( 'bb_get_custom_buddyboss_group_cover', buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
+	return apply_filters( 'bb_get_custom_buddyboss_group_cover', esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ) );
 }
 
 /**
@@ -2578,7 +2578,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 	$is_buddyboss_app_plugin_active = class_exists( 'bbapp' ) ? true : false;
 	$is_buddyboss_theme_active      = function_exists( 'buddyboss_theme' ) ? true : false;
 
-	$info_text                  = __( 'On the web, the Cover Image Background color can be changed with custom CSS.', 'buddyboss' );
+	$info_text                  = __( 'On the web, the <b>Cover Image Background</b> color can be changed with custom CSS.', 'buddyboss' );
 	$web_cover_background_color = '#e2e9ef';
 	$app_cover_background_color = '#EDEEF2';
 

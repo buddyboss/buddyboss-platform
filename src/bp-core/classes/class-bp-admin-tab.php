@@ -138,17 +138,17 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'wordpress_avatar_types'   => array( 'mystery', 'blank', 'gravatar_default', 'identicon', 'wavatar', 'monsterid', 'retro' ),
 					),
 					'profile_group_cover' => array(
-						'select_file'       => esc_js( __( 'No file was uploaded.', 'buddyboss' ) ),
-						'file_upload_error' => esc_js( __( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
+						'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
+						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 						'feedback_messages' => array(
 							0 => sprintf(
-								__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+								esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 								(int) $cover_dimensions['width'],
 								(int) $cover_dimensions['height']
 							),
-							1 => __( 'Cover photo was uploaded successfully.', 'buddyboss' ),
-							2 => __( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
-							3 => __( 'Cover photo was deleted successfully.', 'buddyboss' ),
+							1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss' ),
+							2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
+							3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss' ),
 						),
 						'upload'            => array(
 							'nonce'           => wp_create_nonce( 'bp-uploader' ),

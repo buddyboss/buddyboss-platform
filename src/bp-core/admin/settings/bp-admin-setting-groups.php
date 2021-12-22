@@ -81,45 +81,45 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	// Register setting fields
 	public function register_fields() {
 		// Group avatar and cover.
-		$this->add_section( 'bp_groups_avatar_settings', __( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
+		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
 		// Allow group avatars.
-		$this->add_field( 'bp-disable-group-avatar-uploads', __( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
+		$this->add_field( 'bp-disable-group-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
 
 		$args          = array();
 		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type';
-		$this->add_field( 'bp-default-group-avatar-type', __( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'string', $args );
+		$this->add_field( 'bp-default-group-avatar-type', esc_html__( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'string', $args );
 
 		$args          = array();
 		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom';
-		$this->add_field( 'bp-default-custom-group-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
+		$this->add_field( 'bp-default-custom-group-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
 
 		// Allow group cover photos.
 		if ( bp_is_active( 'groups', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
+			$this->add_field( 'bp-disable-group-cover-image-uploads', esc_html__( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-type';
-			$this->add_field( 'bp-default-group-cover-type', __( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
+			$this->add_field( 'bp-default-group-cover-type', esc_html__( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom';
-			$this->add_field( 'bp-default-custom-group-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
+			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options preview-avatar-cover-image';
-			$this->add_field( 'bp-preview-group-avatar-cover', __( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
+			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
 		// Group Settings.
-		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
+		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
 
 		// Allow subscriptions setting.
-		$this->add_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
+		$this->add_field( 'bp_restrict_group_creation', esc_html__( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
 
 		// Allow Group Message.
 		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
-			$this->add_field( 'bp-disable-group-messages', __( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
+			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
 		// Register Group Types sections.

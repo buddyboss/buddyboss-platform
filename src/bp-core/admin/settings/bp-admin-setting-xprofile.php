@@ -188,41 +188,41 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Profile Avatar type
 		$args          = array();
 		$args['class'] = 'profile-avatars-field';
-		$this->add_field( 'bp-profile-avatar-type', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_profile_avatar_type', 'string', $args );
+		$this->add_field( 'bp-profile-avatar-type', esc_html__( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_profile_avatar_type', 'string', $args );
 
 		// Avatars.
 		$args          = array();
 		$args['class'] = 'upload-avatars-field';
-		$this->add_field( 'bp-disable-avatar-uploads', __( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval', $args );
+		$this->add_field( 'bp-disable-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval', $args );
 
 		$args          = array();
 		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type';
-		$this->add_field( 'bp-default-profile-avatar-type', __( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'string', $args );
+		$this->add_field( 'bp-default-profile-avatar-type', esc_html__( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'string', $args );
 
 		$args          = array();
 		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom';
-		$this->add_field( 'bp-default-custom-profile-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
+		$this->add_field( 'bp-default-custom-profile-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
 
 		// Gravatars.
 		$args          = array();
 		$args['class'] = 'enable-profile-gravatar-field';
-		$this->add_field( 'bp-enable-profile-gravatar', __( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
+		$this->add_field( 'bp-enable-profile-gravatar', esc_html__( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'string' );
+			$this->add_field( 'bp-disable-cover-image-uploads', esc_html__( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'string' );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type';
-			$this->add_field( 'bp-default-profile-cover-type', __( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
+			$this->add_field( 'bp-default-profile-cover-type', esc_html__( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom';
-			$this->add_field( 'bp-default-custom-profile-cover', __( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
+			$this->add_field( 'bp-default-custom-profile-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options preview-avatar-cover-image';
-			$this->add_field( 'bp-preview-profile-avatar-cover', __( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_profile_avatar_cover', 'string', $args );
+			$this->add_field( 'bp-preview-profile-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_profile_avatar_cover', 'string', $args );
 		}
 
 		// @todo will use this later on

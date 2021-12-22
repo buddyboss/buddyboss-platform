@@ -1676,10 +1676,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => __( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
-			2 => __( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
-			3 => __( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
-			4 => __( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
+			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
+			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
+			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
 		);
 	}
 
@@ -1696,10 +1696,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => __( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
-			2 => __( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
-			3 => __( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
-			4 => __( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
+			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
+			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
+			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
 		);
 	}
 
@@ -1745,7 +1745,7 @@ function bb_default_custom_profile_group_avatar_url_check( $gravatar, $params ) 
 	$object  = $params['object'];
 
 	if ( is_admin() && ( 'custom' === $item_id && in_array( $object, $profile_group_types, true ) ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
-		return buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
+		return esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
 	}
 
 	return $gravatar;
