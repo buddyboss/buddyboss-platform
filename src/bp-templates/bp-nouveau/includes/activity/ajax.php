@@ -520,6 +520,8 @@ function bp_nouveau_ajax_get_activity_objects() {
 		if ( isset( $_POST['page'] ) ) {
 			$args['page'] = $_POST['page'];
 		}
+		$args['orderby'] = 'title';
+		$args['order']   = 'ASC';
 		if ( isset( $_POST['search'] ) ) {
 			$args['search_terms'] = $_POST['search'];
 			$args['exclude']      = $exclude_groups;
