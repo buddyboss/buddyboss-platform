@@ -2502,33 +2502,45 @@ window.bp = window.bp || {};
 			},
 
 			autoComplete: function () {
+				var $this  = this;
 				var search = $( '#activity-autocomplete' ).val();
-
+				
+				if ( 0 === parseInt( search.length ) ) {
+					this.autoCompleteCollectionData( $this, search );
+				}
+				
 				if ( 2 > search.length ) {
 					return;
 				}
-
+				
+				this.autoCompleteCollectionData( $this, search );
+			},
+			
+			autoCompleteCollectionData: function ( $this, search ) {
 				// Reset the collection before starting a new search.
 				this.collection.reset();
-
+				
 				if ( this.ac_req ) {
 					this.ac_req.abort();
 				}
-
+				
 				if ( 'group' === this.options.type ) {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<div class="groups-selection groups-selection--finding"><i class="dashicons dashicons-update animate-spin"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</span></div>' );
 				} else {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
 				}
-
-				var $this = this;
+				
+				var data = {
+					type: this.options.type,
+					nonce: BP_Nouveau.nonces.activity
+				};
+				if ( '' !== search ) {
+					data['search'] = search;
+				}
+				
 				this.ac_req = this.collection.fetch(
 					{
-						data: {
-							type: this.options.type,
-							search: search,
-							nonce: BP_Nouveau.nonces.activity
-						},
+						data,
 						success: _.bind( this.itemFetched, this, $this.options.type ),
 						error: _.bind( this.itemFetched, this, $this.options.type ),
 					}
