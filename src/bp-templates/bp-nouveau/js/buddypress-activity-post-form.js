@@ -2458,17 +2458,17 @@ window.bp = window.bp || {};
 					var group_count      = BP_Nouveau.activity.params.objects.group_count;
 					if ( group_total_page > 1 && group_count > this.collection.models.length ) {
 						var $this = this;
-						this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling' );
+						this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling load_more_data' );
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
 						var currentPage = 1;
-						var scrolling = true;
 						$scrollable.on( 'scroll', function () {
 							var scrollableDiv = $( this ).get( 0 );
-							if ( false !== scrolling ) {
+							if ( $this.$el.find( '#bp-activity-group-ac-items' ).hasClass('load_more_data') ) {
 								if ( scrollableDiv.scrollTop + scrollableDiv.clientHeight >= scrollableDiv.scrollHeight ) {
 									currentPage++;
 									if ( currentPage > group_total_page ) {
-										scrolling = false;
+										$this.$el.find( '#bp-activity-group-ac-items' ).removeClass( 'load_more_data' );
+										currentPage = 1;
 										return false;
 									} else {
 										$this.loadMoreData( $this, currentPage );
@@ -2507,6 +2507,7 @@ window.bp = window.bp || {};
 				
 				if ( 0 === parseInt( search.length ) ) {
 					this.autoCompleteCollectionData( $this, search );
+					$this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'load_more_data' )
 				}
 				
 				if ( 2 > search.length ) {
