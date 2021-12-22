@@ -451,7 +451,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		<input id="bp-default-profile-avatar-legacy" name="bp-default-profile-avatar-type" type="radio" value="legacy" <?php checked( bb_get_default_profile_avatar_type(), 'legacy' ); ?> />
 		<label for="bp-default-profile-avatar-legacy">
 			<div class="img-block">
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg'; ?>" />
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' ); ?>" />
 			</div>
 			<span><?php _e( 'Legacy', 'buddyboss' ); ?></span>
 		</label>
