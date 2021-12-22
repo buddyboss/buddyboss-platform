@@ -517,11 +517,11 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$args['user_id']     = bp_loggedin_user_id();
 		$args['show_hidden'] = true;
 		$args['per_page']    = bb_activity_post_form_groups_per_page();
+		$args['orderby']     = 'name';
+		$args['order']       = 'ASC';
 		if ( isset( $_POST['page'] ) ) {
 			$args['page'] = $_POST['page'];
 		}
-		$args['orderby'] = 'title';
-		$args['order']   = 'ASC';
 		if ( isset( $_POST['search'] ) ) {
 			$args['search_terms'] = $_POST['search'];
 			$args['exclude']      = $exclude_groups;

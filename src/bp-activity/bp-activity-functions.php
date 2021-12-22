@@ -5701,5 +5701,5 @@ function bb_acivity_is_topic_comment( $activity_id ) {
  * @return int
  */
 function bb_activity_post_form_groups_per_page() {
-	return apply_filters( 'bb_activity_post_form_groups_per_page', 4 );
+	return apply_filters( 'bb_activity_post_form_groups_per_page', 10 );
 }

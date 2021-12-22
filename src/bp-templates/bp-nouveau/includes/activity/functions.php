@@ -186,9 +186,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			'user_id'     => bp_loggedin_user_id(),
 			'show_hidden' => true,
 			'per_page'    => bb_activity_post_form_groups_per_page(),
+			'orderby'     => 'name',
+			'order'       => 'ASC',
 			'page'        => 1,
-			'orderby'     => 'title',
-			'order'	      => 'ASC'
 		);
 		$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 		if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
