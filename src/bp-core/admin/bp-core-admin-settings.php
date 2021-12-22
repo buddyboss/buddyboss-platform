@@ -441,7 +441,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_avatar_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-avatar-buddyboss">
 			<div class="img-block">	
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg'; ?>" />
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
 			</div>
 			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
 		</label>
