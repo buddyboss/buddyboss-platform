@@ -522,7 +522,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_cover_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-cover-default">
 			<div class="img-block">
-				<img src="<?php echo buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg'; ?>" />
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
 			</div>
 			<span><?php _e( 'BuddyBoss', 'buddyboss' ); ?></span>
 		</label>
