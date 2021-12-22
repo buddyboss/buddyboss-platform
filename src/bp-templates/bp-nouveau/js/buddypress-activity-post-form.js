@@ -2462,11 +2462,11 @@ window.bp = window.bp || {};
 				this.collection.on( 'reset', this.cleanView, this );
 			},
 
-			setFocus: function ( optionType ) {
+			setFocus: function () {
 				this.$el.find( '#activity-autocomplete' ).focus();
 				// After select any group it will scroll to particular selected group.
 				if ( $( '#bp-activity-group-ac-items .bp-activity-object' ).length ) {
-					$( '.bp-activity-object' ).each( function ( index ) {
+					$( '.bp-activity-object' ).each( function () {
 						if ( $( this ).hasClass( 'selected' ) ) {
 							$( '#bp-activity-group-ac-items' ).animate( {
 								'scrollTop': $( this ).position().top - 60
@@ -2525,17 +2525,17 @@ window.bp = window.bp || {};
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
 				}
 				
-				var data = {
+				var attrData = {
 					type: this.options.type,
 					nonce: BP_Nouveau.nonces.activity
 				};
 				if ( '' !== search ) {
-					data['search'] = search;
+					attrData.search = search;
 				}
 				
 				this.ac_req = this.collection.fetch(
 					{
-						data,
+						data: attrData,
 						success: _.bind( this.itemFetched, this, $this.options.type ),
 						error: _.bind( this.itemFetched, this, $this.options.type ),
 					}
@@ -2553,7 +2553,7 @@ window.bp = window.bp || {};
 				}
 			},
 
-			cleanView: function ( optionType = '' ) {
+			cleanView: function ( optionType ) {
 				if ( 'group' === optionType ) {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<span class="groups-selection groups-selection--no-groups">' + BP_Nouveau.activity.params.objects.group.no_groups_found + '</span>' );
 				} else {
@@ -2582,15 +2582,13 @@ window.bp = window.bp || {};
 							page: currentPage,
 							action: 'bp_nouveau_get_activity_objects'
 						},
-						success: function ( collection, object, jqXHR ) {
+						success: function ( collection, object ) {
 							if ( true === object.success ) {
 								$this.collection.add( object.data );
 								$( '#bp-activity-group-ac-items .groups-selection--loading' ).remove();
 								checkSucessData = true;
 							}
 						},
-						error: function ( jqXHR, statusText, error ) {
-						}
 					}
 				);
 				return checkSucessData;
