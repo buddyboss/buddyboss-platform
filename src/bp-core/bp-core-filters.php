@@ -1895,7 +1895,7 @@ function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 }
 
 /**
- * Set profile avatar type 'BuddyBoss' if disabled 'Show Avatar' option disabled and 'WordPress' option is enabled in Default Profile Avatar.
+ * Set profile avatar type 'BuddyBoss' if 'Show Avatar' option is disabled and 'WordPress' option is enabled in Default Profile Avatar.
  *
  * @since BuddyBoss [BBVERSION]
  *

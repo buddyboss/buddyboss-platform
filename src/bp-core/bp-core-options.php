@@ -1568,7 +1568,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) ) );
 }
 
 /**
@@ -2437,7 +2437,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			 * Profile Avatars = BuddyBoss.
 			 * Upload Avatars = unchecked.
 			 */
-		} elseif ( $show_avatar && $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
+		} elseif ( $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 
 			/**

@@ -203,12 +203,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom';
 		$this->add_field( 'bp-default-custom-profile-avatar', __( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
 
-		if ( bp_get_option( 'show_avatars' ) ) {
-			// Gravatars.
-			$args          = array();
-			$args['class'] = 'enable-profile-gravatar-field';
-			$this->add_field( 'bp-enable-profile-gravatar', __( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
-		}
+		// Gravatars.
+		$args          = array();
+		$args['class'] = 'enable-profile-gravatar-field';
+		$this->add_field( 'bp-enable-profile-gravatar', __( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
