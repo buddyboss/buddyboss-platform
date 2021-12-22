@@ -2442,9 +2442,7 @@ window.bp = window.bp || {};
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
 						var currentPage = 1;
 						$scrollable.on( 'scroll', function () {
-							var scrollableDiv = $( this ).get( 0 );
 							if ( $this.$el.find( '#bp-activity-group-ac-items' ).hasClass('load_more_data') ) {
-								if ( scrollableDiv.scrollTop + scrollableDiv.clientHeight >= scrollableDiv.scrollHeight ) {
 									currentPage++;
 									if ( currentPage > group_total_page ) {
 										$this.$el.find( '#bp-activity-group-ac-items' ).removeClass( 'load_more_data' );
@@ -2453,7 +2451,6 @@ window.bp = window.bp || {};
 									} else {
 										$this.loadMoreData( $this, currentPage );
 									}
-								}
 							}
 						} );
 					}
