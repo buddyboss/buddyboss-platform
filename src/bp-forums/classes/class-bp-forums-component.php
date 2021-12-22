@@ -372,7 +372,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		/**
 		 * Setup title tag for the group forum discussion page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.3
 		 *
 		 * @param string $title Page title.
 		 * @return mixed
