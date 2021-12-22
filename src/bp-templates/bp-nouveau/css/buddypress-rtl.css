@@ -1579,8 +1579,16 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown .gif-search-results,
 .activity-update-form.modal-popup .gif-media-search-dropdown .gif-search-results {
-  min-height: 210px;
-  max-height: 210px;
+  min-height: 320px;
+  max-height: 320px;
+}
+
+@media screen and (max-height: 540px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown .gif-search-results,
+  .activity-update-form.modal-popup .gif-media-search-dropdown .gif-search-results {
+    min-height: 190px;
+    max-height: 190px;
+  }
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,

@@ -550,8 +550,13 @@
 			}
 
 			.gif-search-results {
-				min-height: 210px;
-				max-height: 210px;
+				min-height: 320px;
+				max-height: 320px;
+
+				@media screen and (max-height: 540px) {
+					min-height: 190px;
+					max-height: 190px;
+				}
 			}
 
 		}
