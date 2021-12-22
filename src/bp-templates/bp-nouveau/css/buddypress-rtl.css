@@ -2081,6 +2081,27 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   -moz-osx-font-smoothing: grayscale;
 }
 
+.activity-autocomplete-wrapper .activity-autocomplete-clear {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translate(0, -50%);
+  z-index: 6;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.activity-autocomplete-wrapper .activity-autocomplete-clear i {
+  font-size: 20px;
+  color: rgba(18, 43, 70, 0.4);
+}
+
+.activity-is-autocomplete .activity-autocomplete-wrapper .activity-autocomplete-clear {
+  display: inline-block;
+}
+
 #whats-new-post-in-box-items {
   list-style: none;
   position: relative;
@@ -2090,7 +2111,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 #whats-new-post-in-box-items #activity-autocomplete {
   width: 100%;
   border-radius: 3px;
-  padding: 5px 48px 5px 10px;
+  padding: 5px 48px 5px 35px;
   height: 44px;
   position: relative;
   z-index: 2;
@@ -5457,6 +5478,11 @@ form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
 form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
   margin-left: 10px;
   position: relative;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item > .emojionearea.ac-input {
+  border: 0;
+  padding: 0;
 }
 
 form.ac-form .ac-reply-content .ac-textarea .gif-search-results-list {

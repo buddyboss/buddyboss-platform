@@ -5480,6 +5480,11 @@ form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-but
   position: relative;
 }
 
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item > .emojionearea.ac-input {
+  border: 0;
+  padding: 0;
+}
+
 form.ac-form .ac-reply-content .ac-textarea .gif-search-results-list {
   margin: 0;
   padding: 0;
