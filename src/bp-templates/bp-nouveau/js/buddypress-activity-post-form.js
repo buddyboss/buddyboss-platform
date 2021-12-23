@@ -819,6 +819,10 @@ window.bp = window.bp || {};
 				
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
+
+				// Post activity hide modal
+				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+				$singleActivityFormWrap.hide();
 			},
 		}
 	);
