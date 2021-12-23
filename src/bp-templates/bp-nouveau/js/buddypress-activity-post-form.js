@@ -495,8 +495,8 @@ window.bp = window.bp || {};
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-edit-group' );
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-angle-down').remove();
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
-						// display group avtar when edit any feed.
-						self.postForm.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + activity_data.group_avtar + '" alt=""/>' );
+						// display group avatar when edit any feed.
+						self.postForm.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + activity_data.group_avatar + '" alt=""/>' );
 					}
 
 					Backbone.trigger('editactivity');
@@ -2716,13 +2716,13 @@ window.bp = window.bp || {};
 					var group_name = BP_Nouveau.activity.params.item_name;
 					var whats_new_form = $( '#whats-new-form' );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
-
+					
 					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
-					this.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + BP_Nouveau.activity.params.group_avtar  + '" alt=""/>' );
+					this.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + BP_Nouveau.activity.params.group_avatar  + '" alt=""/>' );
 				}
 				//display image of the group.
 				if ( 'group' === this.model.get('object') ) {
-					this.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + this.model.get('link_images') + '" alt=""/>' );
+					this.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass( 'privacy-point-icon--group' ).html( '<img src="' + this.model.get('link_images') + '" alt=""/>' );
 				}
 				return this;
 			},

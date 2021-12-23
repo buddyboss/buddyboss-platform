@@ -1061,6 +1061,10 @@ a.layout-grid-view {
   display: none;
 }
 
+#bp-activity-privacy-point.group.bp-activity-focus-group-active .privacy-point-icon--group:before {
+  display: none;
+}
+
 #bp-activity-privacy-point.public .privacy-point-icon:before {
   content: "\e819";
 }
@@ -1108,6 +1112,10 @@ a.layout-grid-view {
 .privacy-point-icon--group img {
   max-width: 16px;
   border-radius: 2px;
+}
+
+.bp-activity-focus-group-active .privacy-point-icon--group {
+  margin-right: 4px;
 }
 
 .activity-update-form #user-status-huddle .privacy-point-icon--group img,

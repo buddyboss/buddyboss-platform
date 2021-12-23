@@ -55,6 +55,13 @@
 		}
 	}
 
+	&.group.bp-activity-focus-group-active {
+
+		.privacy-point-icon--group:before {
+			display: none;
+		}
+	}
+
 	&.public {
 
 		.privacy-point-icon:before {
@@ -121,6 +128,10 @@
 		max-width: 16px;
 		border-radius: 2px;
 	}
+}
+
+.bp-activity-focus-group-active .privacy-point-icon--group {
+	margin-right: 4px;
 }
 
 .activity-update-form #user-status-huddle .privacy-point-icon--group,
