@@ -1313,6 +1313,7 @@ a.layout-grid-view {
 .activity-update-form .activity-form.focus-in #whats-new {
   display: block;
   padding: 0 25px 10px;
+  min-height: 95px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
@@ -1617,18 +1618,18 @@ a.layout-grid-view {
   right: 30px;
   bottom: -25px;
   margin-bottom: 10px;
-  height: 210px;
+  height: 230px;
   z-index: 999;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
-  height: 210px;
+  height: 230px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 125px;
+  height: 145px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,

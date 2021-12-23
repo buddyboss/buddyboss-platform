@@ -320,6 +320,7 @@
 		#whats-new {
 			display: block;
 			padding: 0 25px 10px;
+			min-height: 95px;
 		}
 
 		#activity-form-submit-wrapper {
@@ -586,14 +587,14 @@
 			right: 30px;
 			bottom: -25px;
 			margin-bottom: 10px;
-			height: 210px;
+			height: 230px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 210px;
+				height: 230px;
 
 				.emojionearea-scroll-area {
-					height: 125px;
+					height: 145px;
 				}
 
 				&:after {
