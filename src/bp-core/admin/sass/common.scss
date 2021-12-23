@@ -2595,6 +2595,14 @@ h2.has_tutorial_btn {
 
 }
 
+.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-uploader-progress div.error {
+	margin: 5px 0 2px;
+}
+
+.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-progress {
+	margin-right: 0;
+}
+
 .preview_avatar_cover {
 
 	.preview-switcher {
@@ -2683,16 +2691,16 @@ h2.has_tutorial_btn {
 
 .buddyboss_page_bp-settings.modal-open {
 
-    #TB_window {
-        overflow: auto;
+	#TB_window {
+		overflow: auto;
 
-        .bp-avatar #avatar-to-crop {
-            margin-bottom: 15px;
-        }
-    }
+		.bp-avatar #avatar-to-crop {
+			margin-bottom: 15px;
+		}
+	}
 
-    #TB_ajaxContent {
-        height: auto !important;
-        width: auto !important;
-    }
+	#TB_ajaxContent {
+		height: auto !important;
+		width: auto !important;
+	}
 }

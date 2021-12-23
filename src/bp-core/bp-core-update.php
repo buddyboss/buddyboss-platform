@@ -1399,6 +1399,13 @@ function bb_update_to_1_8_1() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_1_8_4() {
+	global $buddyboss_theme_options;
+
+	/* Check if options are set */
+	if ( ! isset( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
 	$reset_files = $_FILES;
 	$reset_post  = $_POST;
 
@@ -1456,6 +1463,13 @@ function bb_update_to_1_8_4() {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 				$fileSystemDirect = new WP_Filesystem_Direct( false );
 				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+
+				// Delete option after migration.
+				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
+
+				if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
+					unset( $buddyboss_theme_options['buddyboss_profile_cover_default'] );
+				}
 			}
 
 			// Reset POST and FILES request.
@@ -1506,6 +1520,13 @@ function bb_update_to_1_8_4() {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 				$fileSystemDirect = new WP_Filesystem_Direct( false );
 				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+
+				// Delete option after migration.
+				bp_delete_option( 'buddyboss_group_cover_default_migration' );
+
+				if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
+					unset( $buddyboss_theme_options['buddyboss_group_cover_default'] );
+				}
 			}
 
 			// Reset POST and FILES request.
@@ -1516,6 +1537,9 @@ function bb_update_to_1_8_4() {
 		}
 	}
 
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		update_option( 'buddyboss_theme_options', $buddyboss_theme_options );
+	}
 }
 
 /**
@@ -1566,10 +1590,6 @@ function bb_to_1_8_4_upload_temp_cover_file( $cover_type ) {
 
 		if ( ! file_exists( $data['path'] ) ) {
 			if ( copy( $default_cover_path, $data['path'] ) ) {
-
-				// Delete option after migration.
-				bp_delete_option( $cover_type . '_migration' );
-
 				// Return copied file information.
 				return $data;
 			}

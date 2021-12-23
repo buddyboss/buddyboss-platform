@@ -2438,6 +2438,14 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   bottom: 0;
 }
 
+.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-uploader-progress div.error {
+  margin: 5px 0 2px;
+}
+
+.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-progress {
+  margin-left: 0;
+}
+
 .preview_avatar_cover .preview-switcher {
   margin-bottom: 25px;
 }

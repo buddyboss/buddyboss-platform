@@ -101,6 +101,12 @@ window.bp = window.bp || {};
 			} else if ( $( '#bp_xprofile_user_admin_avatar a.bp-xprofile-avatar-user-admin' ).length ) {
 				$( '#bp_xprofile_user_admin_avatar a.bp-xprofile-avatar-user-admin' ).remove();
 			}
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				$( '.bb-custom-profile-group-avatar-feedback' ).hide();
+				$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).html( '' );
+			}
+			
 		},
 
 		setView: function( view ) {
@@ -216,6 +222,11 @@ window.bp = window.bp || {};
 		},
 
 		uploadProgress: function() {
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).show();
+			}
+			
 			// Create the Uploader status view
 			var avatarStatus = new bp.Views.uploaderStatus( { collection: bp.Uploader.filesQueue } );
 
@@ -267,6 +278,10 @@ window.bp = window.bp || {};
 				this.views.remove( { id: 'crop', view: crop } );
 			}
 
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).show();
+			}
+
 			// Set the avatar !
 			bp.ajax.post(
 				'bp_avatar_set',
@@ -284,87 +299,102 @@ window.bp = window.bp || {};
 				}
 			).done(
 				function( response ) {
-						var avatarStatus = new bp.Views.AvatarStatus(
-							{
-								value : BP_Uploader.strings.feedback_messages[ response.feedback_code ],
-								type : 'success'
-							}
-						);
 
-						self.views.add(
-							{
-								id   : 'status',
-								view : avatarStatus
-							}
-						);
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).hide();
+						$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
+						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'success' ).html( BP_Uploader.strings.feedback_messages[ response.feedback_code ] );
+						$( '.bb-custom-profile-group-avatar-feedback' ).show();
+					}
 
-						avatarStatus.inject( '.bp-avatar-status' );
-
-						// Update each avatars of the page
-						$( '.' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
-							function() {
-								$( this ).prop( 'src', response.avatar );
-							}
-						);
-
-						if( $( '.header-aside-inner .user-link .avatar' ).length ){
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					var avatarStatus = new bp.Views.AvatarStatus(
+						{
+							value : BP_Uploader.strings.feedback_messages[ response.feedback_code ],
+							type : 'success'
 						}
+					);
 
-						// Inject the Delete nav
-						bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
-
-						/**
-						 * Set the Attachment object
-						 *
-						 * You can run extra actions once the avatar is set using:
-						 * bp.Avatar.Attachment.on( 'change:url', function( data ) { your code } );
-						 *
-						 * In this case data.attributes will include the url to the newly
-						 * uploaded avatar, the object and the item_id concerned.
-						 */
-						self.Attachment.set(
-							_.extend(
-								_.pick( avatar.attributes, ['object', 'item_id'] ),
-								{ url: response.avatar, action: 'uploaded' }
-							)
-						);
-						
-						// Show 'Remove' button when upload a new avatar.
-						if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
-							$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
+					self.views.add(
+						{
+							id   : 'status',
+							view : avatarStatus
 						}
+					);
 
-						// Show image preview when avatar deleted.
-						$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).show();
+					avatarStatus.inject( '.bp-avatar-status' );
 
-						// Update each avatars fields of the page
-						$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( response.avatar );
+					// Update each avatars of the page
+					$( '.' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
+						function() {
+							$( this ).prop( 'src', response.avatar );
+						}
+					);
+
+					if( $( '.header-aside-inner .user-link .avatar' ).length ){
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					}
+
+					// Inject the Delete nav
+					bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
+
+					/**
+					 * Set the Attachment object
+					 *
+					 * You can run extra actions once the avatar is set using:
+					 * bp.Avatar.Attachment.on( 'change:url', function( data ) { your code } );
+					 *
+					 * In this case data.attributes will include the url to the newly
+					 * uploaded avatar, the object and the item_id concerned.
+					 */
+					self.Attachment.set(
+						_.extend(
+							_.pick( avatar.attributes, ['object', 'item_id'] ),
+							{ url: response.avatar, action: 'uploaded' }
+						)
+					);
+					
+					// Show 'Remove' button when upload a new avatar.
+					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
+						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
+					}
+
+					// Show image preview when avatar deleted.
+					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).show();
+
+					// Update each avatars fields of the page
+					$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( response.avatar );
 
 				}
 			).fail(
 				function( response ) {
-						var feedback = BP_Uploader.strings.default_error;
+					var feedback = BP_Uploader.strings.default_error;
 					if ( ! _.isUndefined( response ) ) {
-						  feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
+						feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
 					}
 
-						var avatarStatus = new bp.Views.AvatarStatus(
-							{
-								value : feedback,
-								type : 'error'
-							}
-						);
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).hide();
+						$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
+						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'error' ).html( feedback );
+						$( '.bb-custom-profile-group-avatar-feedback' ).show();
+					}
 
-						self.views.add(
-							{
-								id   : 'status',
-								view : avatarStatus
-							}
-						);
+					var avatarStatus = new bp.Views.AvatarStatus(
+						{
+							value : feedback,
+							type : 'error'
+						}
+					);
 
-						avatarStatus.inject( '.bp-avatar-status' );
+					self.views.add(
+						{
+							id   : 'status',
+							view : avatarStatus
+						}
+					);
+
+					avatarStatus.inject( '.bp-avatar-status' );
 				}
 			);
 		},

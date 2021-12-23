@@ -2087,23 +2087,23 @@ function bb_add_default_cover_image_inline_css() {
 	$css_rules          = '';
 	$profile_cover_type = bb_get_default_profile_cover_type();
 	$group_cover_type   = bb_get_default_group_cover_type();
+	$background_color   = function_exists( 'buddyboss_theme_get_option' ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : '#e2e9ef';
+
+	if ( empty( $background_color ) ) {
+		// Set default color.
+		$background_color = '#e2e9ef';
+	}
 
 	if ( ! bp_disable_cover_image_uploads() && ! empty( $profile_cover_type ) && 'custom' !== $profile_cover_type ) {
 		$css_rules = '.bs-group-cover a';
 	}
 
 	if ( ! bp_disable_group_cover_image_uploads() && ! empty( $group_cover_type ) && 'custom' !== $group_cover_type ) {
-
-		if ( ! empty( $css_rules ) ) {
-			$css_rules = $css_rules . ', #buddypress #header-cover-image';
-		} else {
-			$css_rules = '#buddypress #header-cover-image';
-		}
+		$css_rules = ( ! empty( $css_rules ) ) ? $css_rules . ', #buddypress #header-cover-image' : '#buddypress #header-cover-image';
 	}
 
 	if ( ! empty( $css_rules ) ) {
-
-		$css_rules = $css_rules . '{ background-color: #e2e9ef; }';
+		$css_rules = $css_rules . '{ background-color: ' . $background_color . '; }';
 		wp_add_inline_style( 'bp-nouveau', $css_rules );
 	}
 }
