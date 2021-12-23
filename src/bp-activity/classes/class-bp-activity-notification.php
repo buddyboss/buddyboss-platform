@@ -44,7 +44,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			sprintf(
 			/* translators: %s: users mention name. */
 				__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
-				bp_activity_get_user_mentionname( bp_loggedin_user_id() )
+				bp_activity_get_user_mentionname( get_current_user_id() )
 			),
 			esc_html__( 'A member is mentioned in another member\'s update', 'buddyboss' )
 		);
