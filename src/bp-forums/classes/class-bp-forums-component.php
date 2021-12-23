@@ -411,7 +411,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 					$forum_id = bbp_get_topic_forum_id( $topic->ID );
 
-					if ( $forum_id && ! empty( $forum_id ) && $topic->ID !== $forum_id ) {
+					if ( ! empty( $forum_id ) && $topic->ID !== $forum_id ) {
 
 						$forum_title = bbp_get_forum_title( $forum_id );
 
