@@ -224,7 +224,7 @@ document = window.document || {};
 			},
 			search            : true,
 			placeholder       : null,
-			emojiPlaceholder  : ":smiley:",
+			emojiPlaceholder  : "",
 			searchPlaceholder : bp_emojionearea.searchPlaceholder,
 			container         : null,
 			hideSource        : true,
