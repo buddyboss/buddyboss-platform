@@ -2718,6 +2718,7 @@ window.bp = window.bp || {};
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
 
 					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + BP_Nouveau.activity.params.group_avtar  + '" alt=""/>' );
 				}
 				//display image of the group.
 				if ( 'group' === this.model.get('object') ) {
