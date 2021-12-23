@@ -283,75 +283,61 @@ add_action( 'bp_messages_thread_after_delete', 'bp_messages_message_delete_notif
  */
 function messages_screen_notification_settings() {
 
-	$options                  = bb_register_notification_preferences( buddypress()->messages->id );
-	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-
-	if ( empty( $options['fields'] ) ) {
-		return;
-	}
-
-	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
-	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
-
-	$options['fields'] = array_filter(
-		$options['fields'],
-		function ( $var ) use ( $enabled_notification ) {
-			return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
+	if ( ! bb_enabled_legacy_email_preferce() ) {
+		bb_render_notification( buddypress()->messages->id );
+	} else {
+		if ( bp_action_variables() ) {
+			bp_do_404();
+			return;
 		}
-	);
 
-	if ( ! empty( $options['fields'] ) ) {
-		?>
+		if ( ! $new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
+			$new_messages = 'yes';
+		} ?>
 
-        <table class="main-notification-settings">
-            <tbody>
+		<table class="notification-settings" id="messages-notification-settings">
+			<thead>
+			<tr>
+				<th class="icon"></th>
+				<th class="title"><?php _e( 'Messages', 'buddyboss' ); ?></th>
+				<th class="yes"><?php _e( 'Yes', 'buddyboss' ); ?></th>
+				<th class="no"><?php _e( 'No', 'buddyboss' ); ?></th>
+			</tr>
+			</thead>
 
-			<?php if ( ! empty( $options['label'] ) ) { ?>
-                <tr class="notification_heading">
-                    <td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
-                </tr>
-				<?php
-			}
+			<tbody>
+			<tr id="messages-notification-settings-new-message">
+				<td></td>
+				<td><?php _e( 'A member sends you a new message', 'buddyboss' ); ?></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $new_messages, 'yes', true ); ?> />
+						<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $new_messages, 'no', true ); ?> />
+						<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+			</tr>
 
-			foreach ( $options['fields'] as $field ) {
+			<?php
 
-				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
-				?>
-                <tr>
-                    <td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
-
-					<?php
-					foreach ( $options as $key => $v ) {
-						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', false );
-						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
-						if ( $is_render ) {
-							?>
-                            <td class="<?php echo esc_attr( $key ); ?>">
-                                <input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
-                                <label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
-                            </td>
-							<?php
-						} else {
-							?>
-                            <td class="<?php echo esc_attr( $key ); ?> notification_no_option">
-								<?php esc_html_e( '-', 'buddyboss' ); ?>
-                            </td>
-							<?php
-						}
-					}
-					?>
-                </tr>
-				<?php
-			}
-
+			/**
+			 * Fires inside the closing </tbody> tag for messages screen notification settings.
+			 *
+			 * @since BuddyPress 1.0.0
+			 */
+			do_action( 'messages_screen_notification_settings' );
 			?>
-            </tbody>
-        </table>
+			</tbody>
+		</table>
 
 		<?php
 	}
+
 }
 add_action( 'bp_notification_settings', 'messages_screen_notification_settings', 2 );
 
