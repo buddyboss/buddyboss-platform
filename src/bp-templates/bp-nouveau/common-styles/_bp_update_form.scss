@@ -104,6 +104,22 @@
 	}
 }
 
+.group-privacy-point-icon {
+
+	img {
+		max-width: 16px;
+		border-radius: 2px;
+	}
+}
+
+.activity-update-form #user-status-huddle .group-privacy-point-icon,
+#user-status-huddle .group-privacy-point-icon {
+
+	img {
+		margin-right: 5px;
+	}
+}
+
 .activity-post-user-name-container {
 
 	.activity-post-user-name {
