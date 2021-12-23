@@ -5450,6 +5450,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	 *
 	 * @param string $activity_data The Activity edit data.
 	 */
+	//error_log( print_r( bp_get_group_avatar_url( $group ), 1)  );
 	return apply_filters(
 		'bp_activity_get_edit_data',
 		array(
@@ -5463,6 +5464,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'item_id'          => $activity->item_id,
 			'object'           => $activity->component,
 			'privacy'          => $activity->privacy,
+			'group_avtar'      => bp_get_group_avatar_url( groups_get_group( $group_id ) ), // Add group avtar in get activity data object.
 		)
 	);
 }

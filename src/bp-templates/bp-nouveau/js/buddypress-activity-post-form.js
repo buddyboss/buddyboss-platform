@@ -489,6 +489,8 @@ window.bp = window.bp || {};
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-edit-group' );
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-angle-down').remove();
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
+						// display group avtar when edit any feed.
+						self.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + activity_data.group_avtar + '" alt=""/>' );
 					}
 
 					Backbone.trigger('editactivity');
@@ -2694,7 +2696,10 @@ window.bp = window.bp || {};
 
 					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
 				}
-
+				//display image of the group.
+				if ( 'group' === this.model.get('object') ) {
+					this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + this.model.get('link_images') + '" alt=""/>' );
+				}
 				return this;
 			},
 		
@@ -2963,6 +2968,7 @@ window.bp = window.bp || {};
 					);
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
+					this.model.set( 'link_images', model.get( 'avatar_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
