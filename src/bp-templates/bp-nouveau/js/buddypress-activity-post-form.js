@@ -496,7 +496,7 @@ window.bp = window.bp || {};
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-angle-down').remove();
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
 						// display group avtar when edit any feed.
-						self.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + activity_data.group_avtar + '" alt=""/>' );
+						self.postForm.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + activity_data.group_avtar + '" alt=""/>' );
 					}
 
 					Backbone.trigger('editactivity');
@@ -2718,11 +2718,11 @@ window.bp = window.bp || {};
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
 
 					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
-					this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + BP_Nouveau.activity.params.group_avtar  + '" alt=""/>' );
+					this.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + BP_Nouveau.activity.params.group_avtar  + '" alt=""/>' );
 				}
 				//display image of the group.
 				if ( 'group' === this.model.get('object') ) {
-					this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + this.model.get('link_images') + '" alt=""/>' );
+					this.$el.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + this.model.get('link_images') + '" alt=""/>' );
 				}
 				return this;
 			},
@@ -2781,8 +2781,9 @@ window.bp = window.bp || {};
 				if ( this.model.attributes.privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+					whats_new_form.find( '#bp-activity-privacy-point .privacy-point-icon' ).addClass('privacy-point-icon--group').html( '<img src="' + this.model.get('link_images') + '" alt=""/>' );
 				} else {
-					whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon--group').find( 'img' ).remove();
+					whats_new_form.find( '#bp-activity-privacy-point .privacy-point-icon' ).removeClass('privacy-point-icon--group').find( 'img' ).remove();
 				}
 			},
 
