@@ -2513,3 +2513,16 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 .preview_avatar_cover:not(.has-cover):not(.has-avatar) {
   display: none;
 }
+
+.buddyboss_page_bp-settings.modal-open #TB_window {
+  overflow: auto;
+}
+
+.buddyboss_page_bp-settings.modal-open #TB_window .bp-avatar #avatar-to-crop {
+  margin-bottom: 15px;
+}
+
+.buddyboss_page_bp-settings.modal-open #TB_ajaxContent {
+  height: auto !important;
+  width: auto !important;
+}

@@ -2680,3 +2680,19 @@ h2.has_tutorial_btn {
 	}
 
 }
+
+.buddyboss_page_bp-settings.modal-open {
+
+    #TB_window {
+        overflow: auto;
+
+        .bp-avatar #avatar-to-crop {
+            margin-bottom: 15px;
+        }
+    }
+
+    #TB_ajaxContent {
+        height: auto !important;
+        width: auto !important;
+    }
+}
