@@ -2781,6 +2781,8 @@ window.bp = window.bp || {};
 				if ( this.model.attributes.privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+				} else {
+					whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon--group').find( 'img' ).remove();
 				}
 			},
 
