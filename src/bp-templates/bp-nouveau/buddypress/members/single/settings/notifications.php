@@ -15,7 +15,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 
 <p class="bp-help-text email-notifications-info">
 	<?php
-	if ( bb_enabled_legacy_email_preferce() ) {
+	if ( true === bb_enabled_legacy_email_preferce() ) {
 		esc_html_e( 'Choose your email notification preferences.', 'buddyboss' );
 	} else {
 		esc_html_e( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
@@ -25,7 +25,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
 
-	<?php if ( ! bb_enabled_legacy_email_preferce() ) { ?>
+	<?php if ( false === bb_enabled_legacy_email_preferce() ) { ?>
 	<div class="notification_info">
 
 		<div class="notification_type email_notification">

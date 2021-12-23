@@ -6154,7 +6154,7 @@ function bb_check_email_type_registered( string $preference_key ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preferce() {
-	return (bool) apply_filters( 'bb_enabled_legacy_email_preferce', '__return_false' );
+	return (bool) apply_filters( 'bb_enabled_legacy_email_preferce', false );
 }
 
 /**
