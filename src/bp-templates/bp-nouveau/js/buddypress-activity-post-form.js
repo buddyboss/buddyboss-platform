@@ -3761,6 +3761,14 @@ window.bp = window.bp || {};
 							events: {
 								emojibtn_click: function () {
 									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
+									if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
+										var sel = window.getSelection && window.getSelection();
+										if (sel && sel.rangeCount > 0) {
+											window.activityCaretPosition = sel.getRangeAt(0);
+										}
+									} else {
+										window.activityCaretPosition = document.selection.createRange();
+									}
 								},
 							}
 						}
