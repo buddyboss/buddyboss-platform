@@ -403,7 +403,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						}
 					}
 				}
-			} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && get_option( '_bbp_forum_slug', 'forum' ) == buddypress()->current_action || bbp_is_single_topic() || bp_current_action() == get_option( '_bbp_forum_slug' ) ) {
+			} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && get_option( '_bbp_forum_slug', 'forum' ) === buddypress()->current_action || bbp_is_single_topic() || bp_current_action() === get_option( '_bbp_forum_slug' ) ) {
 
 				$topic = get_queried_object();
 
