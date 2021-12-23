@@ -369,15 +369,25 @@ window.bp = window.bp || {};
 					self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 					self.postForm.$el.removeClass( 'loading' );
 
+					// Update privacy status label.
+					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
+					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
+					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
+
 					// Make selected current privacy.
 					var $activityPrivacySelect = self.postForm.$el.find( '.bp-activity-privacy__input:checked' );
 
 					$activityPrivacySelect.val( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy__input#' + activity_data.privacy ).prop( 'checked', true );
-
+					
+					// Update privacy status.
 					var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
+					var privacy_edit_label = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).text();
 					if ( ! _.isUndefined( privacy ) ) {
 						$activityPrivacySelect.val( privacy );
+						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
+						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_edit_label );
+						self.postForm.$el.find( '.bp-activity-privacy__input#' + privacy ).prop( 'checked', true );
 					}
 
 					if ( ! _.isUndefined( activity_data ) ) {
@@ -474,10 +484,6 @@ window.bp = window.bp || {};
 							
 						}
 					}
-
-					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
-					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
-					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
 					// set object of activity and item id when group activity.
 					if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
@@ -815,6 +821,10 @@ window.bp = window.bp || {};
 				
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
+
+				// Post activity hide modal
+				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+				$singleActivityFormWrap.hide();
 			},
 		}
 	);
@@ -2035,7 +2045,14 @@ window.bp = window.bp || {};
 			},
 
 			saveCaretPosition: function () {
-				window.activityCaretPosition = $(this.$el).caret('pos');
+				if (window.getSelection && document.createRange) {
+					var sel = window.getSelection && window.getSelection();
+					if (sel && sel.rangeCount > 0) {
+						window.activityCaretPosition = sel.getRangeAt(0);
+					}
+				} else {
+					window.activityCaretPosition = document.selection.createRange();
+				}
 			},
 
 			scrapURL: function ( urlText ) {
@@ -2607,6 +2624,12 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
 
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+				setTimeout( 
+					function () {
+						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+					}, 
+					1000 
+				);
 			},
 		}
 	);
@@ -3128,12 +3151,34 @@ window.bp = window.bp || {};
 
 				setTimeout( function () {
 					editor.focus();
-					editor.caret('pos', window.activityCaretPosition);
-					var range = window.getSelection().getRangeAt(0).cloneRange();
-					range.collapse(true);
-					range.setStart(editor[0], 0);
-					var precedingChar = range.toString().slice(-1);
-					if( !$( range.endContainer.parentElement ).hasClass( 'atwho-inserted' ) ) { // Do nothing if mention '@' is already inserted
+
+					//Restore caret position start
+					if( window.activityCaretPosition ) {
+						if (window.getSelection && document.createRange) {
+							var range = document.createRange();
+							range.setStart(window.activityCaretPosition.startContainer, window.activityCaretPosition.startOffset);
+							range.setEnd(window.activityCaretPosition.endContainer, window.activityCaretPosition.endOffset);
+							var sel = window.getSelection();
+							sel.removeAllRanges();
+							sel.addRange(range);
+						} else {
+							var textRange = document.body.createTextRange();
+							textRange.moveToElementText(editor[0]);
+							textRange.setStart(window.activityCaretPosition.startContainer, window.activityCaretPosition.startOffset);
+							textRange.setEnd(window.activityCaretPosition.endContainer, window.activityCaretPosition.endOffset);
+							textRange.select();
+						}
+					}
+					//Restore caret position end
+
+					// Get character before cursor start
+					var currentRange = window.getSelection().getRangeAt(0).cloneRange();
+					currentRange.collapse(true);
+					currentRange.setStart(editor[0], 0);
+					var precedingChar = currentRange.toString().slice(-1);
+					// Get character before cursor end
+
+					if( !$( currentRange.endContainer.parentElement ).hasClass( 'atwho-inserted' ) ) { // Do nothing if mention '@' is already inserted
 
 						if( precedingChar.trim() === '') { // Check if there's space or add one
 							document.execCommand('insertText', false, '@');
@@ -3149,7 +3194,8 @@ window.bp = window.bp || {};
 					},0);
 				},0);
 
-			},
+			}
+
 		}
 	);
 
@@ -3737,6 +3783,14 @@ window.bp = window.bp || {};
 							events: {
 								emojibtn_click: function () {
 									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
+									if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
+										var sel = window.getSelection && window.getSelection();
+										if (sel && sel.rangeCount > 0) {
+											window.activityCaretPosition = sel.getRangeAt(0);
+										}
+									} else {
+										window.activityCaretPosition = document.selection.createRange();
+									}
 								},
 							}
 						}

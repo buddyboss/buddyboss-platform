@@ -303,6 +303,16 @@ window.bp = window.bp || {};
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bp-suggestions' ).bp_mentions( bp.mentions.users );
+				$( '#whats-new' ).on( 'inserted.atwho', function () { //Get caret position when user adds mention
+					if (window.getSelection && document.createRange) {
+						var sel = window.getSelection && window.getSelection();
+						if (sel && sel.rangeCount > 0) {
+							window.activityCaretPosition = sel.getRangeAt(0);
+						}
+					} else {
+						window.activityCaretPosition = document.selection.createRange();
+					}
+				});
 			}
 		},
 		/**

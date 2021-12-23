@@ -20,10 +20,19 @@
 	display: none;
 }
 
+.activity-post-name-status {
+	max-width: 60%;
+}
+
 #bp-activity-privacy-point {
 	display: flex;
 	align-items: center;
 	cursor: pointer;
+	margin-top: 5px;
+
+	.privacy-point-icon {
+		margin-right: 4px;
+	}
 
 	.privacy-point-icon:before {
 		font-family: bb-icons;
@@ -83,6 +92,16 @@
 			display: none;
 		}
 	}
+
+	.bp-activity-privacy-status {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.bb-icon-angle-down {
+		margin-left: 2px;
+	}
 }
 
 .activity-post-user-name-container {
@@ -109,7 +128,7 @@
 #whats-new-form.focus-in {
 
 	#bp-activity-privacy-point {
-		display: inline-block;
+		display: flex;
 	}
 }
 
@@ -301,6 +320,7 @@
 		#whats-new {
 			display: block;
 			padding: 0 25px 10px;
+			min-height: 95px;
 		}
 
 		#activity-form-submit-wrapper {
@@ -567,14 +587,14 @@
 			right: 30px;
 			bottom: -25px;
 			margin-bottom: 10px;
-			height: 210px;
+			height: 230px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 210px;
+				height: 230px;
 
 				.emojionearea-scroll-area {
-					height: 125px;
+					height: 145px;
 				}
 
 				&:after {
@@ -1074,17 +1094,13 @@
 		i {
 			font-size: 20px;
 			color: rgba(18, 43, 70, 0.4);
-	
+
 		}
 	}
 }
 
-.activity-is-autocomplete {
-	.activity-autocomplete-wrapper {
-		.activity-autocomplete-clear {
-			display: inline-block;
-		}
-	}
+.activity-is-autocomplete .activity-autocomplete-wrapper .activity-autocomplete-clear {
+	display: inline-block;
 }
 
 #whats-new-post-in-box-items {

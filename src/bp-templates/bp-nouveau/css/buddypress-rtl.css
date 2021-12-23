@@ -1032,10 +1032,19 @@ a.layout-grid-view {
   display: none;
 }
 
+.activity-post-name-status {
+  max-width: 60%;
+}
+
 #bp-activity-privacy-point {
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-top: 5px;
+}
+
+#bp-activity-privacy-point .privacy-point-icon {
+  margin-left: 4px;
 }
 
 #bp-activity-privacy-point .privacy-point-icon:before {
@@ -1082,6 +1091,16 @@ a.layout-grid-view {
   display: none;
 }
 
+#bp-activity-privacy-point .bp-activity-privacy-status {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#bp-activity-privacy-point .bb-icon-angle-down {
+  margin-right: 2px;
+}
+
 .activity-post-user-name-container .activity-post-user-name {
   line-height: 1;
 }
@@ -1103,17 +1122,17 @@ a.layout-grid-view {
 }
 
 #whats-new-form.focus-in #bp-activity-privacy-point {
-  display: inline-block;
+  display: flex;
 }
 
-#whats-new-form.focus-in-privacy #whats-new-privacy-stage {
+#whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;
 }
 
-#whats-new-form.focus-in-privacy .whats-new-form-header,
-#whats-new-form.focus-in-privacy #editor-toolbar,
-#whats-new-form.focus-in-privacy #whats-new-attachments,
-#whats-new-form.focus-in-privacy .whats-new-form-footer {
+#whats-new-form.focus-in--privacy .whats-new-form-header,
+#whats-new-form.focus-in--privacy #editor-toolbar,
+#whats-new-form.focus-in--privacy #whats-new-attachments,
+#whats-new-form.focus-in--privacy .whats-new-form-footer {
   display: none;
 }
 
@@ -1123,15 +1142,15 @@ a.layout-grid-view {
   pointer-events: none;
 }
 
-#whats-new-form:not(.focus-in-group) #privacy-status-group-back {
+#whats-new-form:not(.focus-in--group) #privacy-status-group-back {
   display: none !important;
 }
 
-#whats-new-form.focus-in-privacy.focus-in-group #privacy-status-back {
+#whats-new-form.focus-in--privacy.focus-in--group #privacy-status-back {
   display: none;
 }
 
-#whats-new-form:not(.focus-in-group) #whats-new-post-in-box-items {
+#whats-new-form:not(.focus-in--group) #whats-new-post-in-box-items {
   display: none;
 }
 
@@ -1294,6 +1313,7 @@ a.layout-grid-view {
 .activity-update-form .activity-form.focus-in #whats-new {
   display: block;
   padding: 0 25px 10px;
+  min-height: 95px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
@@ -1598,18 +1618,18 @@ a.layout-grid-view {
   left: 30px;
   bottom: -25px;
   margin-bottom: 10px;
-  height: 210px;
+  height: 230px;
   z-index: 999;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
-  height: 210px;
+  height: 230px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 125px;
+  height: 145px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
@@ -8468,7 +8488,7 @@ input#send-to-input {
   border-radius: 0;
   z-index: 112;
   visibility: visible;
-  bottom: -3px;
+  bottom: -7px;
   height: 40px;
 }
 
