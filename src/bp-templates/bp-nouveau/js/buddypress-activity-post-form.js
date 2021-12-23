@@ -385,7 +385,6 @@ window.bp = window.bp || {};
 					var privacy_edit_label = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).text();
 					if ( ! _.isUndefined( privacy ) ) {
 						$activityPrivacySelect.val( privacy );
-						self.postForm.$el.addClass( privacy );
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_edit_label );
 						self.postForm.$el.find( '.bp-activity-privacy__input#' + privacy ).prop( 'checked', true );
@@ -2619,6 +2618,12 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
 
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+				setTimeout( 
+					function () {
+						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+					}, 
+					1000 
+				);
 			},
 		}
 	);
