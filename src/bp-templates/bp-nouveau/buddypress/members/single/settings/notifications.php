@@ -25,7 +25,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
 
-    <?php if ( bb_enabled_legacy_email_preferce() ) { ?>
+	<?php if ( ! bb_enabled_legacy_email_preferce() ) { ?>
 	<div class="notification_info">
 
 		<div class="notification_type email_notification">
@@ -116,7 +116,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 			</tr>
 		</tbody>
 	</table>
-    <?php } ?>
+	<?php } ?>
 
 	<?php bp_nouveau_member_email_notice_settings(); ?>
 
