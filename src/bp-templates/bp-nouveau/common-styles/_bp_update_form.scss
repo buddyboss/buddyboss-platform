@@ -44,6 +44,17 @@
 		-moz-osx-font-smoothing: grayscale;
 	}
 
+	&.public,
+	&.loggedin,
+	&.friends,
+	&.onlyme,
+	&.group {
+
+		.privacy-point-icon.privacy-point-icon--group:before {
+			display: none;
+		}
+	}
+
 	&.public {
 
 		.privacy-point-icon:before {
@@ -104,7 +115,7 @@
 	}
 }
 
-.group-privacy-point-icon {
+.privacy-point-icon--group {
 
 	img {
 		max-width: 16px;
@@ -112,11 +123,11 @@
 	}
 }
 
-.activity-update-form #user-status-huddle .group-privacy-point-icon,
-#user-status-huddle .group-privacy-point-icon {
+.activity-update-form #user-status-huddle .privacy-point-icon--group,
+#user-status-huddle .privacy-point-icon--group {
 
 	img {
-		margin-right: 5px;
+		margin-right: 1px;
 	}
 }
 
