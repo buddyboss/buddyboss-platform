@@ -3822,7 +3822,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 function bp_email_get_schema() {
 
 	$schema = array(
-		'core-user-registration'             => array(
+		'core-user-registration'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3830,7 +3830,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
 		),
-		'core-user-registration-with-blog'   => array(
+		'core-user-registration-with-blog' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3841,7 +3841,7 @@ function bp_email_get_schema() {
 				'multisite' => true,
 			),
 		),
-		'settings-verify-email-change'       => array(
+		'settings-verify-email-change'     => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3849,7 +3849,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 		),
-		'invites-member-invite'              => array(
+		'invites-member-invite'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3857,7 +3857,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
-		'content-moderation-email'           => array(
+		'content-moderation-email'         => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3865,7 +3865,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
 		),
-		'user-moderation-email'              => array(
+		'user-moderation-email'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3937,12 +3937,12 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$types = array(
-		'core-user-registration'             => $core_user_registration,
-		'core-user-registration-with-blog'   => $core_user_registration_with_blog,
-		'settings-verify-email-change'       => $settings_verify_email_change,
-		'invites-member-invite'              => $invites_member_invite,
-		'content-moderation-email'           => $content_moderation_email,
-		'user-moderation-email'              => $user_moderation_email,
+		'core-user-registration'           => $core_user_registration,
+		'core-user-registration-with-blog' => $core_user_registration_with_blog,
+		'settings-verify-email-change'     => $settings_verify_email_change,
+		'invites-member-invite'            => $invites_member_invite,
+		'content-moderation-email'         => $content_moderation_email,
+		'user-moderation-email'            => $user_moderation_email,
 	);
 
 	/**
@@ -5920,7 +5920,7 @@ function bb_core_get_user_notifications_preferences_value( $pref_type = 'email',
 			'component_name'   => $notification['component'],
 			'component_action' => $notification['component_action'],
 			// @todo Optimize into single query
-			'value'            => get_user_meta( $user_id, $user_meta_key, true )
+			'value'            => get_user_meta( $user_id, $user_meta_key, true ),
 
 		);
 	}
@@ -6144,4 +6144,99 @@ function bb_check_email_type_registered( string $preference_key ) {
 	}
 
 	return false;
+}
+
+/**
+ * Enabled legacy email preferences.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_enabled_legacy_email_preferce() {
+	return (bool) apply_filters( 'bb_enabled_legacy_email_preferce', '__return_false' );
+}
+
+/**
+ * Render the notification settings on the front end.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $preference_group Preference group name.
+ */
+function bb_render_notification( $preference_group ) {
+
+	if ( empty( $preference_group ) ) {
+		return;
+	}
+
+	$options                  = bb_register_notification_preferences( $preference_group );
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	if ( empty( $options['fields'] ) ) {
+		return;
+	}
+
+	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
+	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+
+	$options['fields'] = array_filter(
+		$options['fields'],
+		function ( $var ) use ( $enabled_notification ) {
+			return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
+		}
+	);
+
+	if ( ! empty( $options['fields'] ) ) {
+		?>
+
+		<table class="main-notification-settings">
+			<tbody>
+
+			<?php if ( ! empty( $options['label'] ) ) { ?>
+				<tr class="notification_heading">
+					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+				</tr>
+				<?php
+			}
+
+			foreach ( $options['fields'] as $field ) {
+
+				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+				?>
+				<tr>
+					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
+
+					<?php
+					foreach ( $options as $key => $v ) {
+						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', false );
+						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
+						if ( $is_render ) {
+							?>
+							<td class="<?php echo esc_attr( $key ); ?>">
+								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+								<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+							</td>
+							<?php
+						} else {
+							?>
+							<td class="<?php echo esc_attr( $key ); ?> notification_no_option">
+								<?php esc_html_e( '-', 'buddyboss' ); ?>
+							</td>
+							<?php
+						}
+					}
+					?>
+				</tr>
+				<?php
+			}
+
+			?>
+			</tbody>
+		</table>
+
+		<?php
+	}
 }

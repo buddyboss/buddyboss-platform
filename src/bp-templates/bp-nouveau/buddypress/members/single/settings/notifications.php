@@ -6,18 +6,26 @@
  * @version 3.0.0
  */
 
-bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
+bp_nouveau_member_hook( 'before', 'settings_template' );
+?>
 
 <h2 class="screen-heading email-settings-screen">
 	<?php _e( 'Notification Preferences', 'buddyboss' ); ?>
 </h2>
 
 <p class="bp-help-text email-notifications-info">
-	<?php esc_html_e( 'Choose which notifications to receive across all your devices.', 'buddyboss' ); ?>
+	<?php
+	if ( bb_enabled_legacy_email_preferce() ) {
+		esc_html_e( 'Choose your email notification preferences.', 'buddyboss' );
+	} else {
+		esc_html_e( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
+	}
+	?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
 
+    <?php if ( bb_enabled_legacy_email_preferce() ) { ?>
 	<div class="notification_info">
 
 		<div class="notification_type email_notification">
@@ -26,8 +34,8 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 			</span>
 
 			<div class="notification_type_info">
-				<h3>Email</h3>
-				<p>A notification sent to your inbox</p>
+				<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
+				<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
 			</div>
 		</div><!-- .notification_type -->
 
@@ -38,49 +46,49 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 			</span>
 
 			<div class="notification_type_info">
-				<h3>Web</h3>
-				<p>A notification in the corner of your screen</p>
+				<h3><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
+				<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss' ); ?></p>
 			</div>
 		</div><!-- .notification_type -->
-        <?php } ?>
+		<?php } ?>
 
-        <?php if ( bb_app_notification_enabled() ) { ?>
+		<?php if ( bb_app_notification_enabled() ) { ?>
 		<div class="notification_type app_notification">
 			<span class="notification_type_icon">
 				<i class="bb-icon bb-icon-smartphone"></i>
 			</span>
 
 			<div class="notification_type_info">
-				<h3>App</h3>
-				<p>A notification pushed to your mobile device</p>
+				<h3><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
+				<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss' ); ?></p>
 			</div>
 		</div><!-- .notification_type -->
-        <?php } ?>
+		<?php } ?>
 
 	</div><!-- .notification_info -->
 
 	<table class="main-notification-settings">
 		<thead>
 			<tr>
-				<th class="title">Enable notifications</th>
+				<th class="title"><?php esc_html_e( 'Enable notifications', 'buddyboss' ); ?></th>
 				<th class="email">
 					<input type="checkbox" id="main_notification_email" name="" class="bs-styled-checkbox" />
-					<label for="main_notification_email">Email</label>
+					<label for="main_notification_email"><?php esc_html_e( 'Email', 'buddyboss' ); ?></label>
 				</th>
 
-                <?php if ( bb_web_notification_enabled() ) { ?>
+				<?php if ( bb_web_notification_enabled() ) { ?>
 				<th class="web">
 					<input type="checkbox" id="main_notification_web" name="" class="bs-styled-checkbox" />
-					<label for="main_notification_web">Web</label>
+					<label for="main_notification_web"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
 				</th>
-                <?php } ?>
+				<?php } ?>
 
-                <?php if ( bb_app_notification_enabled() ) { ?>
+				<?php if ( bb_app_notification_enabled() ) { ?>
 				<th class="app">
 					<input type="checkbox" id="main_notification_app" name="" class="bs-styled-checkbox" />
-					<label for="main_notification_app">App</label>
+					<label for="main_notification_app"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
 				</th>
-                <?php } ?>
+				<?php } ?>
 			</tr>
 		</thead>
 
@@ -92,22 +100,23 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 					-
 				</td>
 
-                <?php if ( bb_web_notification_enabled() ) { ?>
+				<?php if ( bb_web_notification_enabled() ) { ?>
 				<td class="web">
 					<input type="checkbox" id="admin_notification_web" name="" class="bs-styled-checkbox" />
 					<label for="admin_notification_web">Web</label>
 				</td>
-                <?php } ?>
+				<?php } ?>
 
-                <?php if ( bb_app_notification_enabled() ) { ?>
+				<?php if ( bb_app_notification_enabled() ) { ?>
 				<td class="app">
 					<input type="checkbox" id="admin_notification_app" name="" class="bs-styled-checkbox" />
 					<label for="admin_notification_app">App</label>
 				</td>
-                <?php } ?>
+				<?php } ?>
 			</tr>
 		</tbody>
 	</table>
+    <?php } ?>
 
 	<?php bp_nouveau_member_email_notice_settings(); ?>
 
