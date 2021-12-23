@@ -364,7 +364,7 @@
 			padding: 0 25px;
 			margin: 15px 0;
 
-			.post-emoji > span:before {
+			.emojionearea-button:before {
 				content: "\E821";
 				color: rgba(18, 43, 70, 0.4);
 				font: normal 400 normal 24px/1 bb-icons;
@@ -379,7 +379,7 @@
 				margin-right: 10px;
 			}
 
-			.post-emoji.active span:before,
+			.emojionearea .emojionearea-button.active:before,
 			.toolbar-button.active .bb-icon:before {
 				color: #122b46;
 			}
@@ -535,31 +535,6 @@
 		max-height: 100%;
 		overflow: auto;
 
-		.emoji-wrapper {
-			position: fixed;
-			margin: -30px 0 0 320px;
-
-			.emojionearea-button.active + .emojionearea-picker {
-				opacity: 1;
-				visibility: visible;
-				display: block;
-			}
-
-			.emojionearea-button {
-				display: none;
-			}
-
-			@media screen and ( max-width: 1260px ) {
-				margin: -30px 0 0 70px;
-
-				.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-					left: inherit;
-					right: 20px;
-				}
-			}
-
-		}
-
 		.activity-update-form-overlay {
 			position: fixed;
 			left: 0;
@@ -611,33 +586,62 @@
 			right: 30px;
 			bottom: -25px;
 			margin-bottom: 10px;
-			height: 270px;
+			height: 210px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 270px;
+				height: 210px;
 
 				.emojionearea-scroll-area {
-					height: 190px;
+					height: 125px;
 				}
 
 				&:after {
-					bottom: -10px;
+					bottom: 22px;
 					top: inherit;
-					right: initial;
-					left: 12px;
-					transform: rotate(180deg);
+					left: initial;
+					right: -14px;
+					transform: rotate(90deg);
 				}
 			}
 
 			@media screen and (max-width: 390px) {
-				right: 10px;
-				bottom: -30px;
+				height: 150px;
+				width: 270px;
+				right: -10px;
+				bottom: 25px;
 
-				.emojionearea-wrapper:after {
-					right: 38px;
+				.emojionearea-search {
+					width: 120px;
 				}
 
+				.emojionearea-filters .emojionearea-filter {
+					width: 30px;
+
+					img.emojioneemoji {
+						height: 20px !important;
+						width: 20px !important;
+					}
+
+				}
+
+				.emojionearea-wrapper {
+					width: 270px;
+					height: 150px;
+
+					.emojionearea-scroll-area {
+						height: 65px;
+					}
+
+					&:after {
+						bottom: -10px;
+						top: inherit;
+						left: initial;
+						right: 14px;
+						transform: rotate(181deg);
+					}
+
+				}
 			}
 		}
 
