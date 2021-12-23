@@ -5760,7 +5760,8 @@ function bb_check_server_disabled_symlink() {
  * @return bool
  */
 function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
-	if ( empty( $user_id ) || empty( $key ) ) {
+
+    if ( empty( $user_id ) || empty( $key ) ) {
 		return false;
 	}
 
@@ -5798,7 +5799,6 @@ function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
 	);
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
-
 	if ( ! empty( $enabled_notification ) ) {
 		foreach ( $enabled_notification as $key => $types ) {
 			if ( isset( $types[ $type ] ) ) {
@@ -5808,15 +5808,14 @@ function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
 		}
 	}
 
-	$notifications = wp_parse_args( $default_by_admin, $all_notifications );
+	$notifications = wp_parse_args( $all_notifications, $default_by_admin );
 
 	if (
-		in_array( $key, $notifications, true )
+		array_key_exists( $key, $notifications )
 		&& 'no' !== bp_get_user_meta( $user_id, $key, true )
 	) {
 		return true;
 	}
-
 	return false;
 }
 
