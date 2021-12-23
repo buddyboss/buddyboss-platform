@@ -30,10 +30,6 @@
 	cursor: pointer;
 	margin-top: 5px;
 
-	.privacy-point-icon {
-		margin-right: 4px;
-	}
-
 	.privacy-point-icon:before {
 		font-family: bb-icons;
 		speak: none;
@@ -42,6 +38,7 @@
 		text-transform: none;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+		margin-right: 4px;
 	}
 
 	&.public,
@@ -130,15 +127,16 @@
 	}
 }
 
+.privacy-point-icon--group,
 .bp-activity-focus-group-active .privacy-point-icon--group {
-	margin-right: 4px;
+	margin-right: 5px;
 }
 
 .activity-update-form #user-status-huddle .privacy-point-icon--group,
 #user-status-huddle .privacy-point-icon--group {
 
 	img {
-		margin-right: 1px;
+		margin-right: 0;
 	}
 }
 
