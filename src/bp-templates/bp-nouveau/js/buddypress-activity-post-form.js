@@ -369,15 +369,26 @@ window.bp = window.bp || {};
 					self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 					self.postForm.$el.removeClass( 'loading' );
 
+					// Update privacy status label.
+					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
+					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
+					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
+
 					// Make selected current privacy.
 					var $activityPrivacySelect = self.postForm.$el.find( '.bp-activity-privacy__input:checked' );
 
 					$activityPrivacySelect.val( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy__input#' + activity_data.privacy ).prop( 'checked', true );
-
+					
+					// Update privacy status.
 					var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
+					var privacy_edit_label = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).text();
 					if ( ! _.isUndefined( privacy ) ) {
 						$activityPrivacySelect.val( privacy );
+						self.postForm.$el.addClass( privacy );
+						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
+						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_edit_label );
+						self.postForm.$el.find( '.bp-activity-privacy__input#' + privacy ).prop( 'checked', true );
 					}
 
 					if ( ! _.isUndefined( activity_data ) ) {
@@ -474,10 +485,6 @@ window.bp = window.bp || {};
 							
 						}
 					}
-
-					var privacy_label = self.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
-					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
-					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
 					// set object of activity and item id when group activity.
 					if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
