@@ -345,7 +345,7 @@
 			padding: 0 25px;
 			margin: 15px 0;
 
-			.emojionearea-button:before {
+			.post-emoji > span:before {
 				content: "\E821";
 				color: rgba(18, 43, 70, 0.4);
 				font: normal 400 normal 24px/1 bb-icons;
@@ -360,7 +360,7 @@
 				margin-right: 10px;
 			}
 
-			.emojionearea .emojionearea-button.active:before,
+			.post-emoji.active span:before,
 			.toolbar-button.active .bb-icon:before {
 				color: #122b46;
 			}
@@ -516,6 +516,31 @@
 		max-height: 100%;
 		overflow: auto;
 
+		.emoji-wrapper {
+			position: fixed;
+			margin: -30px 0 0 320px;
+
+			.emojionearea-button.active + .emojionearea-picker {
+				opacity: 1;
+				visibility: visible;
+				display: block;
+			}
+
+			.emojionearea-button {
+				display: none;
+			}
+
+			@media screen and ( max-width: 1260px ) {
+				margin: -30px 0 0 70px;
+
+				.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+					left: inherit;
+					right: 20px;
+				}
+			}
+
+		}
+
 		.activity-update-form-overlay {
 			position: fixed;
 			left: 0;
@@ -567,62 +592,33 @@
 			right: 30px;
 			bottom: -25px;
 			margin-bottom: 10px;
-			height: 210px;
+			height: 270px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
-				height: 210px;
+				height: 270px;
 
 				.emojionearea-scroll-area {
-					height: 125px;
+					height: 190px;
 				}
 
 				&:after {
-					bottom: 22px;
+					bottom: -10px;
 					top: inherit;
-					left: initial;
-					right: -14px;
-					transform: rotate(90deg);
+					right: initial;
+					left: 12px;
+					transform: rotate(180deg);
 				}
 			}
 
 			@media screen and (max-width: 390px) {
-				height: 150px;
-				width: 270px;
-				right: -10px;
-				bottom: 25px;
+				right: 10px;
+				bottom: -30px;
 
-				.emojionearea-search {
-					width: 120px;
+				.emojionearea-wrapper:after {
+					right: 38px;
 				}
 
-				.emojionearea-filters .emojionearea-filter {
-					width: 30px;
-
-					img.emojioneemoji {
-						height: 20px !important;
-						width: 20px !important;
-					}
-
-				}
-
-				.emojionearea-wrapper {
-					width: 270px;
-					height: 150px;
-
-					.emojionearea-scroll-area {
-						height: 65px;
-					}
-
-					&:after {
-						bottom: -10px;
-						top: inherit;
-						left: initial;
-						right: 14px;
-						transform: rotate(181deg);
-					}
-
-				}
 			}
 		}
 
@@ -1074,17 +1070,12 @@
 		i {
 			font-size: 20px;
 			color: rgba(18, 43, 70, 0.4);
-	
 		}
 	}
 }
 
-.activity-is-autocomplete {
-	.activity-autocomplete-wrapper {
-		.activity-autocomplete-clear {
-			display: inline-block;
-		}
-	}
+.activity-is-autocomplete .activity-autocomplete-wrapper .activity-autocomplete-clear {
+	display: inline-block;
 }
 
 #whats-new-post-in-box-items {

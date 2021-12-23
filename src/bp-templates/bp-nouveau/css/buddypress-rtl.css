@@ -1106,14 +1106,14 @@ a.layout-grid-view {
   display: inline-block;
 }
 
-#whats-new-form.focus-in-privacy #whats-new-privacy-stage {
+#whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;
 }
 
-#whats-new-form.focus-in-privacy .whats-new-form-header,
-#whats-new-form.focus-in-privacy #editor-toolbar,
-#whats-new-form.focus-in-privacy #whats-new-attachments,
-#whats-new-form.focus-in-privacy .whats-new-form-footer {
+#whats-new-form.focus-in--privacy .whats-new-form-header,
+#whats-new-form.focus-in--privacy #editor-toolbar,
+#whats-new-form.focus-in--privacy #whats-new-attachments,
+#whats-new-form.focus-in--privacy .whats-new-form-footer {
   display: none;
 }
 
@@ -1123,15 +1123,15 @@ a.layout-grid-view {
   pointer-events: none;
 }
 
-#whats-new-form:not(.focus-in-group) #privacy-status-group-back {
+#whats-new-form:not(.focus-in--group) #privacy-status-group-back {
   display: none !important;
 }
 
-#whats-new-form.focus-in-privacy.focus-in-group #privacy-status-back {
+#whats-new-form.focus-in--privacy.focus-in--group #privacy-status-back {
   display: none;
 }
 
-#whats-new-form:not(.focus-in-group) #whats-new-post-in-box-items {
+#whats-new-form:not(.focus-in--group) #whats-new-post-in-box-items {
   display: none;
 }
 
@@ -1346,8 +1346,8 @@ a.layout-grid-view {
   margin: 15px 0;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea-button:before {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-emoji > span:before,
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-emoji > span:before {
   content: "\E821";
   color: rgba(18, 43, 70, 0.4);
   font: normal 400 normal 24px/1 bb-icons;
@@ -1363,9 +1363,9 @@ a.layout-grid-view {
   margin-left: 10px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea .emojionearea-button.active:before,
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-emoji.active span:before,
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .toolbar-button.active .bb-icon:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea .emojionearea-button.active:before,
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-emoji.active span:before,
 .activity-update-form .activity-form.focus-in #editor-toolbar .toolbar-button.active .bb-icon:before {
   color: #122b46;
 }
@@ -1538,6 +1538,36 @@ a.layout-grid-view {
   overflow: auto;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .emoji-wrapper,
+.activity-update-form.modal-popup .emoji-wrapper {
+  position: fixed;
+  margin: -30px 320px 0 0;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .emoji-wrapper .emojionearea-button.active + .emojionearea-picker,
+.activity-update-form.modal-popup .emoji-wrapper .emojionearea-button.active + .emojionearea-picker {
+  opacity: 1;
+  visibility: visible;
+  display: block;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .emoji-wrapper .emojionearea-button,
+.activity-update-form.modal-popup .emoji-wrapper .emojionearea-button {
+  display: none;
+}
+
+@media screen and (max-width: 1260px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emoji-wrapper,
+  .activity-update-form.modal-popup .emoji-wrapper {
+    margin: -30px 70px 0 0;
+  }
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emoji-wrapper .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+  .activity-update-form.modal-popup .emoji-wrapper .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+    right: inherit;
+    left: 20px;
+  }
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup .activity-update-form-overlay,
 .activity-update-form.modal-popup .activity-update-form-overlay {
   position: fixed;
@@ -1598,66 +1628,38 @@ a.layout-grid-view {
   left: 30px;
   bottom: -25px;
   margin-bottom: 10px;
-  height: 210px;
+  height: 270px;
   z-index: 999;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
-  height: 210px;
+  height: 270px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 125px;
+  height: 190px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-  bottom: 22px;
+  bottom: -10px;
   top: inherit;
-  right: initial;
-  left: -14px;
-  transform: rotate(-90deg);
+  left: initial;
+  right: 12px;
+  transform: rotate(-180deg);
 }
 
 @media screen and (max-width: 390px) {
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
-    height: 150px;
-    width: 270px;
-    left: -10px;
-    bottom: 25px;
-  }
-  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-search,
-  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-search {
-    width: 120px;
-  }
-  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter,
-  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter {
-    width: 30px;
-  }
-  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter img.emojioneemoji,
-  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter img.emojioneemoji {
-    height: 20px !important;
-    width: 20px !important;
-  }
-  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
-  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
-    width: 270px;
-    height: 150px;
-  }
-  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
-  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-    height: 65px;
+    left: 10px;
+    bottom: -30px;
   }
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-    bottom: -10px;
-    top: inherit;
-    right: initial;
-    left: 14px;
-    transform: rotate(-181deg);
+    left: 38px;
   }
 }
 

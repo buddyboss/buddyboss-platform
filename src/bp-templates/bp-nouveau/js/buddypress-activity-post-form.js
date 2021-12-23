@@ -2033,7 +2033,14 @@ window.bp = window.bp || {};
 			},
 
 			saveCaretPosition: function () {
-				window.activityCaretPosition = $(this.$el).caret('pos');
+				if (window.getSelection && document.createRange) {
+					var sel = window.getSelection && window.getSelection();
+					if (sel && sel.rangeCount > 0) {
+						window.activityCaretPosition = sel.getRangeAt(0);
+					}
+				} else {
+					window.activityCaretPosition = document.selection.createRange();
+				}
 			},
 
 			scrapURL: function ( urlText ) {
@@ -3087,6 +3094,7 @@ window.bp = window.bp || {};
 			template: bp.template( 'editor-toolbar' ),
 			events: {
 				'click .show-toolbar': 'toggleToolbarSelector',
+				'click .post-emoji': 'toggleEmoji',
 				'click .post-mention': 'triggerMention'
 			},
 
@@ -3122,12 +3130,34 @@ window.bp = window.bp || {};
 
 				setTimeout( function () {
 					editor.focus();
-					editor.caret('pos', window.activityCaretPosition);
-					var range = window.getSelection().getRangeAt(0).cloneRange();
-					range.collapse(true);
-					range.setStart(editor[0], 0);
-					var precedingChar = range.toString().slice(-1);
-					if( !$( range.endContainer.parentElement ).hasClass( 'atwho-inserted' ) ) { // Do nothing if mention '@' is already inserted
+
+					//Restore caret position start
+					if( window.activityCaretPosition ) {
+						if (window.getSelection && document.createRange) {
+							var range = document.createRange();
+							range.setStart(window.activityCaretPosition.startContainer, window.activityCaretPosition.startOffset);
+							range.setEnd(window.activityCaretPosition.endContainer, window.activityCaretPosition.endOffset);
+							var sel = window.getSelection();
+							sel.removeAllRanges();
+							sel.addRange(range);
+						} else {
+							var textRange = document.body.createTextRange();
+							textRange.moveToElementText(editor[0]);
+							textRange.setStart(window.activityCaretPosition.startContainer, window.activityCaretPosition.startOffset);
+							textRange.setEnd(window.activityCaretPosition.endContainer, window.activityCaretPosition.endOffset);
+							textRange.select();
+						}
+					}
+					//Restore caret position end
+
+					// Get character before cursor start
+					var currentRange = window.getSelection().getRangeAt(0).cloneRange();
+					currentRange.collapse(true);
+					currentRange.setStart(editor[0], 0);
+					var precedingChar = currentRange.toString().slice(-1);
+					// Get character before cursor end
+
+					if( !$( currentRange.endContainer.parentElement ).hasClass( 'atwho-inserted' ) ) { // Do nothing if mention '@' is already inserted
 
 						if( precedingChar.trim() === '') { // Check if there's space or add one
 							document.execCommand('insertText', false, '@');
@@ -3144,6 +3174,35 @@ window.bp = window.bp || {};
 				},0);
 
 			},
+
+			toggleEmoji: function ( e ) {
+				e.preventDefault();
+				this.$el.toggleClass( 'active' ).find( '.post-emoji' ).toggleClass( 'active' );
+				this.$el.closest( '.activity-update-form' ).find( '.emoji-wrapper .emojionearea-button' ).toggleClass( 'active' ).parent().find( '.emojionearea-scroll-area' ).scroll();
+				var editor = this.$el.closest( '.activity-update-form' ).find( '#whats-new' );
+				editor.focus();
+				//Restore caret position start
+				if( window.activityCaretPosition ) {
+					if (window.getSelection && document.createRange) {
+						var range = document.createRange();
+						range.setStart(window.activityCaretPosition.startContainer, window.activityCaretPosition.startOffset);
+						range.setEnd(window.activityCaretPosition.endContainer, window.activityCaretPosition.endOffset);
+						var sel = window.getSelection();
+						sel.removeAllRanges();
+						sel.addRange(range);
+					} else {
+						var textRange = document.body.createTextRange();
+						textRange.moveToElementText(editor[0]);
+						textRange.setStart(window.activityCaretPosition.startContainer, window.activityCaretPosition.startOffset);
+						textRange.setEnd(window.activityCaretPosition.endContainer, window.activityCaretPosition.endOffset);
+						textRange.select();
+					}
+				}
+				//Restore caret position end
+				var emojiPosition = this.$el.find( '.post-emoji' )[0].getBoundingClientRect();
+				this.$el.closest( '.activity-update-form' ).find( '.emoji-wrapper' ).css( { left:emojiPosition.x, top: emojiPosition.y } );
+			}
+
 		}
 	);
 
@@ -3719,11 +3778,22 @@ window.bp = window.bp || {};
 					)
 				) {
 
+					var $this = this.$el;
+					if( !$this.find( '.emoji-wrapper' ).length ) {
+						$this.append( '<div class="emoji-wrapper"></div>' );
+
+						$( document ).on( 'click', function( event ) {
+							if( !$( event.target ).hasClass('post-emoji') && !$( event.target ).closest( '.post-emoji' ).length ) {
+								$this.find( '.emoji-wrapper .emojionearea-button' ).removeClass( 'active' );
+								$this.closest( '.activity-form' ).find( '#editor-toolbar .post-emoji' ).removeClass( 'active' );
+							}
+						});
+					}
 					$( '#whats-new' ).emojioneArea(
 						{
 							standalone: true,
 							hideSource: false,
-							container: '#editor-toolbar > .post-emoji',
+							container: '.emoji-wrapper',
 							autocomplete: false,
 							pickerPosition: 'bottom',
 							hidePickerOnBlur: true,
@@ -3746,6 +3816,8 @@ window.bp = window.bp || {};
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
 					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
 						$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+						$('.activity-form.focus-in .emoji-wrapper .emojionearea-button' ).removeClass( 'active' );
+						$( '.activity-form.focus-in #editor-toolbar .post-emoji' ).removeClass( 'active' );
 					});
 				}
 
@@ -3862,7 +3934,7 @@ window.bp = window.bp || {};
 				this.$el.find( '.whats-new-form-footer' ).remove();
 
 				//Destroy Emoji Picker
-				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
+				this.$el.find('.emoji-wrapper' ).html('');
 
 				this.updateMultiMediaOptions();
 			},
