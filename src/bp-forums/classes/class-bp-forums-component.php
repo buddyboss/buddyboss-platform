@@ -403,17 +403,21 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						}
 					}
 				}
-			} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && 'forum' == buddypress()->current_action || bbp_is_single_topic() || bp_current_action() == get_option( '_bbp_forum_slug' ) ) {
+			} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && get_option( '_bbp_forum_slug', 'forum' ) == buddypress()->current_action || bbp_is_single_topic() || bp_current_action() == get_option( '_bbp_forum_slug' ) ) {
 
 				$topic = get_queried_object();
 
 				if ( bbp_is_single_topic() && ! empty( $topic ) && isset( $topic->ID ) && ! empty( $topic->ID ) ) {
 
-					$forum_id    = bbp_get_topic_forum_id( $topic->ID );
-					$forum_title = bbp_get_forum_title( $forum_id );
+					$forum_id = bbp_get_topic_forum_id( $topic->ID );
 
-					if ( ! empty( $forum_title ) ) {
-						return esc_html( bbp_get_topic_title( $topic->ID ) ) . ' ' . $sep . ' ' . esc_html( $forum_title ) . ' ' . $sep . ' ' . bp_get_site_name();
+					if ( $forum_id && ! empty( $forum_id ) && $topic->ID !== $forum_id ) {
+
+						$forum_title = bbp_get_forum_title( $forum_id );
+
+						if ( ! empty( $forum_title ) ) {
+							return esc_html( bbp_get_topic_title( $topic->ID ) ) . ' ' . $sep . ' ' . esc_html( $forum_title ) . ' ' . $sep . ' ' . bp_get_site_name();
+						}
 					}
 				}
 			}
