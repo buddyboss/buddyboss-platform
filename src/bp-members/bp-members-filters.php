@@ -552,19 +552,19 @@ function bp_core_prime_mentions_results() {
 		return;
 	}
 
-	$friends_query = array(
+	$members_query = array(
 		'count_total'     => '', // Prevents total count.
 		'populate_extras' => false,
 		'per_page'        => 10,
 		'page'            => 1,
 		'type'            => 'active',
-		'user_id'         => get_current_user_id(),
+		'exclude'         => array( get_current_user_id() ),
 	);
 
-	$friends_query = new BP_User_Query( $friends_query );
+	$members_query = new BP_User_Query( $members_query );
 	$members       = array();
 
-	foreach ( $friends_query->results as $user ) {
+	foreach ( $members_query->results as $user ) {
 		$result        = new stdClass();
 		$result->ID    = $user->user_nicename;
 		$result->image = bp_core_fetch_avatar(
