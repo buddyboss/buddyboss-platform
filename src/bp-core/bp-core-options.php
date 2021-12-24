@@ -69,11 +69,26 @@ function bp_get_default_options() {
 		// Avatar uploads.
 		'bp-disable-avatar-uploads'                  => false,
 
+		// Avatar type.
+		'bp-profile-avatar-type'                     => 'buddyboss',
+
+		// Default Avatar type.
+		'bp-default-profile-avatar-type'             => 'buddyboss',
+
+		// Cover type.
+		'bp-default-profile-cover-type'              => 'buddyboss',
+
 		// cover photo uploads.
 		'bp-disable-cover-image-uploads'             => false,
 
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
+
+		// Group Photos Type.
+		'bp-default-group-avatar-type'               => 'buddyboss',
+
+		// Group Cover Type.
+		'bp-default-group-cover-type'                => 'buddyboss',
 
 		// Group cover photo uploads.
 		'bp-disable-group-cover-image-uploads'       => false,
@@ -834,8 +849,8 @@ function bp_disable_blogforum_comments( $default = false ) {
 	if ( empty( $activities_template->activity ) ) {
 		return $default;
 	}
-	
-	if ( empty(  $activities_template->activity->component ) ) {
+
+	if ( empty( $activities_template->activity->component ) ) {
 		return $default;
 	}
 
@@ -1008,7 +1023,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
  * @return bool True if Edit is enabled, otherwise false.
  */
 
-function bp_is_relevant_feed_enabled( $default = false ){
+function bp_is_relevant_feed_enabled( $default = false ) {
 
 	/**
 	 * Filters whether or not relevant feed is enabled.
@@ -1028,18 +1043,32 @@ function bp_is_relevant_feed_enabled( $default = false ){
  *
  * @return mixed|void
  * @since BuddyBoss 1.5.0
- *
  */
 function bp_activity_edit_times( $time = null ) {
 
 	$times = apply_filters(
 		'bp_activity_edit_times',
 		array(
-			'thirty_days' => array( 'value' => ( 60 * 60 * 24 * 30 ), 'label' => __( '30 Days', 'buddyboss' ) ),
-			'seven_days'  => array( 'value' => ( 60 * 60 * 24 * 7 ), 'label' => __( '7 Days', 'buddyboss' ) ),
-			'one_day'     => array( 'value' => ( 60 * 60 * 24 ), 'label' => __( '1 Day', 'buddyboss' ) ),
-			'one_hour'    => array( 'value' => ( 60 * 60 ), 'label' => __( '1 Hour', 'buddyboss' ) ),
-			'ten_minutes' => array( 'value' => ( 60 * 10 ), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+			'thirty_days' => array(
+				'value' => ( 60 * 60 * 24 * 30 ),
+				'label' => __( '30 Days', 'buddyboss' ),
+			),
+			'seven_days'  => array(
+				'value' => ( 60 * 60 * 24 * 7 ),
+				'label' => __( '7 Days', 'buddyboss' ),
+			),
+			'one_day'     => array(
+				'value' => ( 60 * 60 * 24 ),
+				'label' => __( '1 Day', 'buddyboss' ),
+			),
+			'one_hour'    => array(
+				'value' => ( 60 * 60 ),
+				'label' => __( '1 Hour', 'buddyboss' ),
+			),
+			'ten_minutes' => array(
+				'value' => ( 60 * 10 ),
+				'label' => __( '10 Minutes', 'buddyboss' ),
+			),
 		)
 	);
 
@@ -1327,8 +1356,8 @@ function bp_disable_invite_member_type( $default = false ) {
  * @since BuddyBoss 1.0.0
  *
  * @param string $post_type Post Type
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
@@ -1372,8 +1401,8 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  * @since BuddyBoss 1.0.0
  *
  * @param string $activity_type Activity Type
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
@@ -1439,8 +1468,8 @@ function bp_member_type_default_on_registration( $default = '' ) {
  * @since BuddyBoss 1.0.0
  *
  * @param string $member_type Member type
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: true.
  *
  * @return bool Is member type send invites enabled or not
  */
@@ -1539,7 +1568,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) ) );
 }
 
 /**
@@ -2024,4 +2053,683 @@ function bb_enable_private_rss_feeds_public_content( $default = '' ) {
 	 * @param bool $value Private REST APIs public content.
 	 */
 	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bp_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
+}
+
+/** Profile Avatar ************************************************************/
+/**
+ * Get default BuddyBoss profile avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default BuddyBoss profile avatar URL.
+ */
+function bb_get_buddyboss_profile_avatar( $size = 'full' ) {
+
+	$bb_avatar_filename = 'profile-avatar-buddyboss.png';
+	if ( 'full' !== $size ) {
+		$bb_avatar_filename = 'profile-avatar-buddyboss-50.png';
+	}
+	/**
+	 * Filters default BuddyBoss avatar image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_buddyboss_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_avatar_filename ), $size );
+}
+
+/**
+ * Get default legacy profile avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default legacy profile avatar URL.
+ */
+function bb_get_legacy_profile_avatar( $size = 'full' ) {
+
+	$legacy_avatar_filename = 'profile-avatar-legacy.png';
+	if ( 'full' !== $size ) {
+		$legacy_avatar_filename = 'profile-avatar-legacy-50.png';
+	}
+	/**
+	 * Filters default legacy avatar image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_legacy_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $legacy_avatar_filename ), $size );
+}
+
+/**
+ * Get default blank profile avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default blank profile avatar URL.
+ */
+function bb_get_blank_profile_avatar( $size = 'full' ) {
+
+	$blank_avatar_filename = 'profile-avatar-blank.png';
+	if ( 'full' !== $size ) {
+		$blank_avatar_filename = 'profile-avatar-blank-50.png';
+	}
+	/**
+	 * Filters default blank avatar image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_blank_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $blank_avatar_filename ), $size );
+}
+
+/**
+ * Which type of profile avatar configured?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile avatar type.
+ */
+function bb_get_profile_avatar_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters profile avatar type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Profile avatar type.
+	 */
+	return apply_filters( 'bb_get_profile_avatar_type', bp_get_option( 'bp-profile-avatar-type', $default ) );
+}
+
+/**
+ * Which type of default profile avatar selected?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile avatar type.
+ */
+function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default profile avatar type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default profile avatar type.
+	 */
+	return apply_filters( 'bb_get_default_profile_avatar_type', bp_get_option( 'bp-default-profile-avatar-type', $default ) );
+}
+
+/**
+ * Has default custom upload avatar?.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if found the custom profile avatar otherwise false.
+ */
+function bb_has_default_custom_upload_profile_avatar() {
+	/**
+	 * Filters has custom upload avatar image?
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value True if found the custom profile avatar otherwise false.
+	 */
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bp_get_user_has_avatar( 'custom' ) );
+}
+
+/**
+ * Get default custom upload avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @param string $size    This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default custom upload avatar URL.
+ */
+function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'full' ) {
+	$custom_avatar_url = bp_get_option( 'bp-default-custom-profile-avatar', $default );
+
+	if ( ! empty( $custom_avatar_url ) && 'full' !== $size ) {
+		$custom_avatar_url = bp_core_fetch_avatar(
+			array(
+				'item_id' => 'custom',
+				'html'    => false,
+			)
+		);
+	}
+
+	/**
+	 * Filters to change default custom upload avatar image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $custom_upload_profile_avatar Default custom upload avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_profile_avatar', $custom_avatar_url, $size );
+}
+
+/** Profile Cover ************************************************************/
+/**
+ * Get default custom cover photo Width and Height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
+ * @return array|bool An associative array containing the advised width and height for the cover photo. False if settings are empty.
+ */
+function bp_attachments_get_default_custom_cover_image_dimensions( $component = 'xprofile' ) {
+	$cover_dimensions = bp_attachments_get_cover_image_dimensions( $component );
+
+	if ( ! $cover_dimensions ) {
+		$cover_dimensions = array(
+			'width'  => 1950,
+			'height' => 450,
+		);
+	}
+
+	return $cover_dimensions;
+}
+
+/**
+ * Get default BuddyBoss profile cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return default BuddyBoss profile cover URL.
+ */
+function bb_get_buddyboss_profile_cover() {
+	/**
+	 * Filters default cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss profile cover URL.
+	 */
+	return apply_filters( 'bb_get_buddyboss_profile_cover', esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ) );
+}
+
+/**
+ * Which type of profile cover selected?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile cover type.
+ */
+function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default profile cover type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default profile cover type.
+	 */
+	return apply_filters( 'bb_get_default_profile_cover_type', bp_get_option( 'bp-default-profile-cover-type', $default ) );
+}
+
+/**
+ * Get default custom upload profile cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: null.
+ * @return string Return default custom upload profile cover URL.
+ */
+function bb_get_default_custom_upload_profile_cover() {
+	/**
+	 * Filters to change default custom upload cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default custom upload profile cover URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_profile_cover', bp_get_option( 'bp-default-custom-profile-cover' ) );
+}
+
+/** Group Avatar ************************************************************/
+/**
+ * Get default BuddyBoss group avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default BuddyBoss group avatar URL.
+ */
+function bb_get_buddyboss_group_avatar( $size = 'full' ) {
+
+	$bb_group_avatar_filename = 'group-avatar-buddyboss.png';
+	if ( 'full' !== $size ) {
+		$bb_group_avatar_filename = 'group-avatar-buddyboss-50.png';
+	}
+	/**
+	 * Filters to change default BuddyBoss avatar image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_buddyboss_group_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_group_avatar_filename ), $size );
+}
+
+/**
+ * Get default legacy group avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default legacy group avatar URL.
+ */
+function bb_get_legacy_group_avatar( $size = 'full' ) {
+
+	$legacy_group_avatar_filename = 'group-avatar-legacy.png';
+	if ( 'full' !== $size ) {
+		$legacy_group_avatar_filename = 'group-avatar-legacy-50.png';
+	}
+	/**
+	 * Filters to change default legacy avatar image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default legacy group avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_legacy_group_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $legacy_group_avatar_filename ), $size );
+}
+
+/**
+ * Which type of group avatar selected?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default group avatar type.
+ */
+function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default group avatar type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default group avatar type.
+	 */
+	return apply_filters( 'bb_get_default_group_avatar_type', bp_get_option( 'bp-default-group-avatar-type', $default ) );
+}
+
+/**
+ * Get default custom upload avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @param string $size    This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default custom upload avatar URL.
+ */
+function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full' ) {
+	$custom_group_avatar_url = bp_get_option( 'bp-default-custom-group-avatar', $default );
+
+	if ( ! empty( $custom_group_avatar_url ) && 'full' !== $size ) {
+		$custom_group_avatar_url = bp_core_fetch_avatar(
+			array(
+				'object'  => 'group',
+				'item_id' => 'custom',
+				'html'    => false,
+			)
+		);
+	}
+	
+	/**
+	 * Filters to change default custom upload avatar image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $custom_upload_group_avatar Default custom upload avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_group_avatar', $custom_group_avatar_url, $size );
+}
+
+/**
+ * Has default custom upload group avatar?.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if found the custom group avatar otherwise false.
+ */
+function bb_has_default_custom_upload_group_avatar() {
+	/**
+	 * Filters has custom upload group avatar image?
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value True if found the custom group avatar otherwise false.
+	 */
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bb_get_default_custom_upload_group_avatar() );
+}
+
+/** Group Cover ************************************************************/
+
+/**
+ * Get default BuddyBoss group cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return default BuddyBoss group cover URL.
+ */
+function bb_get_custom_buddyboss_group_cover() {
+	/**
+	 * Filters default BuddyBoss group cover image.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss group cover URL.
+	 */
+	return apply_filters( 'bb_get_custom_buddyboss_group_cover', esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ) );
+}
+
+/**
+ * Which type of group cover selected?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default group cover type.
+ */
+function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default group cover type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default group cover type.
+	 */
+	return apply_filters( 'bb_get_default_group_cover_type', bp_get_option( 'bp-default-group-cover-type', $default ) );
+}
+
+/**
+ * Get default custom upload group cover URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: null.
+ * @return string Return default custom upload group cover URL.
+ */
+function bb_get_default_custom_upload_group_cover() {
+	/**
+	 * Filters default custom upload cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default custom upload group cover URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
+}
+
+/**
+ * Get default avatar image URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $params Parameters passed to bp_core_fetch_avatar().
+ * @return false|string The avatar photo URL, false on failure.
+ */
+function bb_attachments_get_default_profile_group_avatar_image( $params ) {
+
+	$object = isset( $params['object'] ) ? $params['object'] : 'user';
+	$size   = isset( $params['type'] ) ? $params['type'] : 'full';
+
+	$avatar_image_url       = false;
+	$disable_avatar_uploads = ( 'user' === $object ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
+
+	if ( 'user' === $object ) {
+
+		$show_avatar                 = bp_get_option( 'show_avatars' );
+		$profile_avatar_type         = bb_get_profile_avatar_type();
+		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
+
+		/**
+		 * Profile Avatars = BuddyBoss.
+		 * Upload Avatars = checked.
+		 */
+		if ( 'buddyboss' === $profile_avatar_type && ! $disable_avatar_uploads ) {
+
+			// Default Profile Avatar = BuddyBoss.
+			if ( 'buddyboss' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_buddyboss_profile_avatar( $size );
+
+				// Default Profile Avatar = Legacy.
+			} elseif ( 'legacy' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_legacy_profile_avatar( $size );
+
+				// Default Profile Avatar = Custom.
+			} elseif ( 'custom' === $default_profile_avatar_type ) {
+				$avatar_image_url   = bb_get_default_custom_upload_profile_avatar( bb_get_buddyboss_profile_avatar( $size ), $size );
+			}
+
+			/**
+			 * Avatar Display = checked.
+			 * Upload Avatars = checked.
+			 * Profile Avatars = WordPress.
+			 * Default Avatar = Blank.
+			 */
+		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'wordpress' === $default_profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = bb_get_blank_profile_avatar( $size );
+
+			/**
+			 * Avatar Display = unchecked.
+			 * Profile Avatars = BuddyBoss.
+			 * Upload Avatars = unchecked.
+			 */
+		} elseif ( $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_blank_profile_avatar( $size );
+
+			/**
+			 * Avatar Display = unchecked.
+			 * Profile Avatars = WordPress.
+			 */
+		} elseif ( ! $show_avatar && 'wordpress' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_blank_profile_avatar( $size );
+		}
+	} elseif ( ! $disable_avatar_uploads && 'group' === $object ) {
+
+		$group_avatar_type = bb_get_default_group_avatar_type();
+
+		if ( 'buddyboss' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
+		} elseif ( 'legacy' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_legacy_group_avatar( $size );
+		} elseif ( 'custom' === $group_avatar_type ) {
+			$avatar_image_url   = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
+		}
+	}
+
+	/**
+	 * Filters default avatar image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
+	 * @param array       $params           Parameters passed to bp_core_fetch_avatar().
+	 */
+	return apply_filters( 'bb_attachments_get_default_profile_group_avatar_image', $avatar_image_url, $params );
+}
+
+/**
+ * Get default cover image URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component The component to get the settings for ("members" or "xprofile" for user or "groups").
+ * @return false|array The cover photo settings in array, false on failure.
+ */
+function bb_attachments_get_default_profile_group_cover_image( $component ) {
+
+	if ( 'xprofile' === $component ) {
+		$component = 'members';
+	}
+
+	$cover_image_url        = false;
+	$disable_avatar_uploads = ( 'members' === $component ) ? bp_disable_cover_image_uploads() : bp_disable_group_cover_image_uploads();
+
+	if ( 'members' === $component ) {
+		$profile_cover_type = bb_get_default_profile_cover_type();
+
+		if ( ! $disable_avatar_uploads && 'buddyboss' === $profile_cover_type ) {
+			$cover_image_url = bb_get_buddyboss_profile_cover();
+		} elseif ( ! $disable_avatar_uploads && 'custom' === $profile_cover_type ) {
+			$cover_image_url = bb_get_default_custom_upload_profile_cover();
+
+			if ( empty( $cover_image_url ) ) {
+				$cover_image_url = bb_get_buddyboss_profile_cover();
+			}
+		}
+	} elseif ( 'groups' === $component ) {
+		$group_cover_type = bb_get_default_group_cover_type();
+
+		if ( ! $disable_avatar_uploads && 'buddyboss' === $group_cover_type ) {
+			$cover_image_url = bb_get_custom_buddyboss_group_cover();
+		} elseif ( ! $disable_avatar_uploads && 'custom' === $group_cover_type ) {
+			$cover_image_url = bb_get_default_custom_upload_group_cover();
+
+			if ( empty( $cover_image_url ) ) {
+				$cover_image_url = bb_get_custom_buddyboss_group_cover();
+			}
+		}
+	}
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+	 * @param string $component The component to get the settings for ("members" for user or "groups").
+	 */
+	return apply_filters( 'bb_attachments_get_default_profile_group_cover_image', $cover_image_url, $component );
+}
+
+/**
+ * Get default cover image URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $data whether to get the url or the path.
+ * @param array  $args {
+ *     @type string $object_dir  The object dir (eg: members/groups). Defaults to members.
+ *     @type int    $item_id     The object id (eg: a user or a group id). Defaults to current user.
+ *     @type string $type        The type of the attachment which is also the subdir where files are saved.
+ *                               Defaults to 'cover-image'
+ *     @type string $file        The name of the file.
+ * }
+ * @return string|bool The url or the path to the attachment, false otherwise.
+ */
+function bb_get_default_profile_group_cover( $data, $args ) {
+
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) ) {
+		return false;
+	}
+
+	$cover_image_url = bb_attachments_get_default_profile_group_cover_image( $args['object_dir'] );
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+	 * @param string $data whether to get the url or the path.
+	 * @param array $r {
+	 *     @type string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 *     @type int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 *     @type string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                              Defaults to 'cover-image'
+	 *     @type string $file       The name of the file.
+	 * }
+	 */
+	return apply_filters( 'bb_get_default_profile_group_cover', $cover_image_url, $data, $args );
+}
+
+/**
+ * Get settings for live preview default profile and group images.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Array contains information text and background colors.
+ */
+function bb_get_settings_live_preview_default_profile_group_images() {
+
+	$is_buddyboss_app_plugin_active = class_exists( 'bbapp' ) ? true : false;
+	$is_buddyboss_theme_active      = function_exists( 'buddyboss_theme' ) ? true : false;
+
+	$info_text                  = __( 'On the web, the <b>Cover Image Background</b> color can be changed with custom CSS.', 'buddyboss' );
+	$web_cover_background_color = '#e2e9ef';
+	$app_cover_background_color = '#EDEEF2';
+
+	if ( $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
+
+		$web_cover_background_color = ( function_exists( 'buddyboss_theme_get_option' ) ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : $web_cover_background_color;
+
+		$bbapp_styling = (array) get_option( 'bbapp_styling', array() );
+		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) ) {
+			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBackground'];
+		}
+
+		$info_text = sprintf(
+			__( 'On the web, the <b>Cover Image Background</b> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss' ),
+			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' ),
+			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
+		);
+	} elseif ( $is_buddyboss_theme_active && ! $is_buddyboss_app_plugin_active ) {
+
+		$web_cover_background_color = ( function_exists( 'buddyboss_theme_get_option' ) ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : $web_cover_background_color;
+
+		$info_text = sprintf(
+			__( 'On the web, the <b>Cover Image Background</b> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
+			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' )
+		);
+	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
+
+		$bbapp_styling = (array) get_option( 'bbapp_styling', array() );
+		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) ) {
+			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBackground'];
+		}
+
+		$info_text = sprintf(
+			__( 'On the web, the <b>Cover Image Background</b> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss' ),
+			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
+		);
+	}
+
+	return array(
+		'info'                           => $info_text,
+		'app_background_color'           => $app_cover_background_color,
+		'web_background_color'           => $web_cover_background_color,
+		'is_buddyboss_theme_active'      => $is_buddyboss_theme_active,
+		'is_buddyboss_app_plugin_active' => $is_buddyboss_app_plugin_active,
+	);
 }

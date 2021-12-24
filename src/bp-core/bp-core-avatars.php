@@ -682,7 +682,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		}
 
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
-			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', bb_get_blank_profile_avatar() );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
 			$key      = base64_encode( 'https://www.gravatar.com/avatar/' . md5( strtolower( $params['email'] ) ) . '?d=404' );
 			$response = get_transient( $key );
@@ -692,7 +692,26 @@ function bp_core_fetch_avatar( $args = '' ) {
 				set_transient( $key, $response, DAY_IN_SECONDS );
 			}
 			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
-				$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+
+				// Find default avatar option.
+				$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params );
+
+				if ( ! $gravatar || empty( $gravatar ) ) {
+					remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
+					$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', get_avatar_url( $params['email'], array( 'force_default' => true ) ) );
+					add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
+				}
+
+				/**
+				 * Filters a default avatar URL.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $avatar_url URL for a default avatar.
+				 * @param array  $params     Array of parameters for the request.
+				 */
+				$gravatar = apply_filters( 'bb_default_fetch_avatar_url_' . $params['object'], $gravatar, $params );
+
 			} else {
 
 				// Set up the Gravatar URL.
@@ -722,6 +741,25 @@ function bp_core_fetch_avatar( $args = '' ) {
 		// No avatar was found, and we've been told not to use a gravatar.
 	} else {
 
+		// Find default avatar option.
+		$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params );
+
+		if ( ! $gravatar || empty( $gravatar ) ) {
+			remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
+			$gravatar = get_avatar_url( $params['email'], array( 'force_default' => true ) );
+			add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
+		}
+
+		/**
+		 * Filters a default avatar URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $avatar_url URL for a default avatar.
+		 * @param array  $params     Array of parameters for the request.
+		 */
+		$gravatar = apply_filters( 'bb_default_fetch_avatar_url_' . $params['object'], $gravatar, $params );
+
 		/**
 		 * Filters the avatar default when Gravatar is not used.
 		 *
@@ -732,7 +770,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		 * @param string $value  Default avatar for non-gravatar requests.
 		 * @param array  $params Array of parameters for the avatar request.
 		 */
-		$gravatar = apply_filters( 'bp_core_default_avatar_' . $params['object'], bp_core_avatar_default( 'local', $params ), $params );
+		$gravatar = apply_filters( 'bp_core_default_avatar_' . $params['object'], $gravatar, $params );
 	}
 
 	/**
@@ -1696,15 +1734,37 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 	}
 
 	$retval = false;
-	if ( bp_core_fetch_avatar(
+	$avatar = bp_core_fetch_avatar(
 		array(
 			'item_id' => $user_id,
 			'no_grav' => true,
 			'html'    => false,
 			'type'    => 'full',
 		)
-	) != bp_core_avatar_default( 'local' ) ) {
+	);
+
+	if ( false !== strpos( $avatar, '/' . $user_id . '/' ) ) {
 		$retval = true;
+	}
+
+	// Support WP User Avatar Plugin default avatar image.
+	$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
+	if ( 'wp_user_avatar' === $avatar_option ) {
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) ) {
+			$default_image_id = bp_get_option( 'avatar_default_wp_user_avatar', '' );
+			if ( '' !== $default_image_id ) {
+				$image_attributes = wp_get_attachment_image_src( (int) $default_image_id );
+				if ( isset( $image_attributes[0] ) && '' !== $image_attributes[0] ) {
+
+					$wp_user_avatar = apply_filters( 'bp_core_avatar_default_local_size', $image_attributes[0] );
+
+					if ( $avatar != $avatar_option ) {
+						$retval = true;
+					}
+
+				}
+			}
+		}
 	}
 
 	/**
@@ -1888,6 +1948,7 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
 		}
 
 		// Support WP User Avatar Plugin default avatar image.
+		$avatar = '';
 		$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
 		if ( 'wp_user_avatar' === $avatar_option ) {
 			if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) ) {
@@ -1896,17 +1957,14 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
 					$image_attributes = wp_get_attachment_image_src( (int) $default_image_id );
 					if ( isset( $image_attributes[0] ) && '' !== $image_attributes[0] ) {
 						$avatar = apply_filters( 'bp_core_avatar_default_local_size', $image_attributes[0], $size );
-					} else {
-						$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
 					}
-				} else {
-					$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
 				}
-			} else {
-				$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
 			}
-		} else {
-			$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
+		}
+
+		if ( empty( $avatar ) ) {
+			$component = isset( $params['object'] ) ? $params['object'] : 'user';
+			$avatar    = apply_filters( 'bp_core_avatar_default_local_size', bb_attachments_get_default_profile_group_avatar_image( $params ), $size );
 		}
 
 		// Use Gravatar's mystery person as fallback.
@@ -1954,7 +2012,7 @@ function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
 
 		// Use the local default image.
 	} elseif ( 'local' === $type ) {
-		$avatar = apply_filters( 'bp_core_avatar_default_thumb_local', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+		$avatar = apply_filters( 'bp_core_avatar_default_thumb_local', bb_attachments_get_default_profile_group_avatar_image( $params ) );
 
 		// Use Gravatar's mystery person as fallback.
 	} else {
@@ -2139,7 +2197,7 @@ function bp_avatar_template_check() {
  */
 function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
 
-	if ( isset( $args['force_default'] ) && true === $args['force_default'] ){
+	if ( isset( $args['force_default'] ) && true === $args['force_default'] ) {
 		return $data;
 	}
 
@@ -2236,7 +2294,7 @@ function bb_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	global $pagenow;
 	if ( 'options-discussion.php' === $pagenow ) {
 		if ( true === $args['force_default'] && 'mm' === $args['default'] ) {
-			return apply_filters( 'bp_set_wp_backend_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+			return $retval;
 		} elseif ( true === $args['force_default'] ) {
 			return $retval;
 		}

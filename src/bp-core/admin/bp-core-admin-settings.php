@@ -389,7 +389,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 	?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload photos for profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload photos a profile avatars', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -402,7 +402,260 @@ function bp_admin_setting_callback_avatar_uploads() {
 function bp_admin_setting_callback_cover_image_uploads() {
 	?>
 	<input id="bp-disable-cover-image-uploads" name="bp-disable-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_cover_image_uploads() ); ?> />
-	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow members to upload cover images', 'buddyboss' ); ?></label>
+	<label for="bp-disable-cover-image-uploads"><?php esc_html_e( 'Enable cover images for member profiles', 'buddyboss' ); ?></label>
+
+	<p class="description"><?php esc_html_e( 'When enabled, members will be able to upload cover images in their profile settings.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Which type of avatar needs to display.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_profile_avatar_type() {
+	?>
+	<div class="avatar-custom-input">
+		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
+			<option value="buddyboss" <?php selected( bb_get_profile_avatar_type(), 'buddyboss' ); ?>><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></option>
+			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'wordpress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
+		</select>
+	</div>
+
+	<p class="description"><?php echo sprintf( __( 'Select whether to use the BuddyBoss or WordPress avatar systems. You can manage WordPress avatars in the <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+
+	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display: none;">
+		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php echo sprintf( __( 'Please enable "Avatar display" in your WordPress <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to set default profile avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_avatar_type() {
+	?>
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_avatar_type(), 'buddyboss' ); ?> />
+		<label for="bp-default-profile-avatar-buddyboss">
+			<div class="img-block">	
+				<img class="buddyboss-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-legacy" name="bp-default-profile-avatar-type" type="radio" value="legacy" <?php checked( bb_get_default_profile_avatar_type(), 'legacy' ); ?> />
+		<label for="bp-default-profile-avatar-legacy">
+			<div class="img-block">
+				<img class="legacy-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-legacy.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Legacy', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
+		<label for="bp-default-profile-avatar-custom">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-custom.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
+
+	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display:none;">
+		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' );?></p>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to upload custom default profile avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_custom_avatar() {
+	$hide_show_style        = '';
+	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
+	$custom_avatar_url      = bb_get_default_custom_upload_profile_avatar();
+
+	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
+		$custom_avatar_url = $placeholder_avatar_url;
+		$hide_show_style   = 'display:none';
+	}
+	?>
+
+	<div class="bb-default-custom-upload-file custom-profile-avatar custom-profile-group-avatar">
+		<div class="bb-upload-container">
+			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview user-custom-avatar" data-default="<?php echo esc_url( $placeholder_avatar_url ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>">
+			<input type="hidden" name="bp-default-custom-profile-avatar" id="bp-default-user-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_profile_avatar() ); ?>">
+		</div>
+		<div class="bb-img-button-wrap">
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<div id="bp-xprofile-avatar-editor" style="display:none;">
+				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
+			</div>
+		</div>
+	</div>
+	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
+		<p id="bp-avatar-image-feedback" class="updated"></p>
+	</div>
+	<p class="description"><?php echo sprintf( esc_html__( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
+	<?php
+}
+
+/**
+ * Allow admin to set default profile cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_cover_type() {
+	?>
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-cover-default" name="bp-default-profile-cover-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_cover_type(), 'buddyboss' ); ?> />
+		<label for="bp-default-profile-cover-default">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-cover-none" name="bp-default-profile-cover-type" type="radio" value="none" <?php checked( bb_get_default_profile_cover_type(), 'none' ); ?> />
+		<label for="bp-default-profile-cover-none">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-none.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'None', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-profile-cover-custom" name="bp-default-profile-cover-type" type="radio" value="custom" <?php checked( bb_get_default_profile_cover_type(), 'custom' ); ?> />
+		<label for="bp-default-profile-cover-custom">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-custom.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile cover image.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow admin to upload custom default profile cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_custom_cover() {
+	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+
+	$hide_show_style       = '';
+	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
+	$profile_cover_image   = bb_get_default_custom_upload_profile_cover();
+
+	if ( empty( $profile_cover_image ) ) {
+		$profile_cover_image = $placeholder_cover_url;
+		$hide_show_style     = 'display:none';
+	}
+	?>
+	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader custom-profile-group-cover">
+		<div class="bb-upload-container">
+			<img src="<?php echo $profile_cover_image; ?>" data-default="<?php echo $placeholder_cover_url;?>" class="bb-upload-preview" style="<?php echo esc_attr( $hide_show_style ); ?>">
+			<input type="hidden" name="bp-default-custom-profile-cover" id="bp-default-custom-user-cover" value="<?php echo bb_get_default_custom_upload_profile_cover();?>">
+		</div>
+		<div class="bb-img-button-wrap">
+			<label class="cover-uploader-label">
+				<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
+				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+			</label>
+			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo esc_attr( $hide_show_style ); ?>">Remove</a>
+		</div>
+		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
+			<p id="bp-cover-image-feedback" class="updated"></p>
+		</div>
+	</div>
+	<p class="description">
+		<?php
+		echo sprintf(
+			esc_html__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) $cover_dimensions['width'],
+			(int) $cover_dimensions['height']
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Preview based on profile images settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_preview_profile_avatar_cover() {
+	$live_preview_settings = bb_get_settings_live_preview_default_profile_group_images();
+	$avatar                = bb_attachments_get_default_profile_group_avatar_image(
+		array(
+			'object' => 'user',
+		)
+	);
+
+	$cover = bb_attachments_get_default_profile_group_cover_image( 'members' );
+
+	// If Profile Avatar is 'WordPress'.
+	$wordpress_avatar_url = bb_get_blank_profile_avatar();
+	if ( bp_get_option( 'show_avatars' ) ) {
+		$wordpress_avatar_url = get_avatar_url(
+			'',
+			array(
+				'size'          => 64,
+				'default'       => bp_get_option( 'avatar_default', 'mystery' ),
+				'force_default' => true,
+			)
+		);
+	}
+	?>
+	<div class="preview_avatar_cover has-avatar has-cover">
+
+		<div class="preview-switcher-main">
+
+			<div class="button-group preview-switcher">
+				<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
+				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
+				<?php endif; ?>
+			</div>
+			<div class="web-preview-wrap preview-block active" id="web-preview">
+				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
+					<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
+				</div>
+				<div class="preview-item-avatar">
+					<img src="<?php echo $avatar; ?>" alt="" class="user-custom-avatar" wordpress-avatar="<?php echo $wordpress_avatar_url; ?>" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+				</div>
+			</div>
+			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+				<div class="app-preview-wrap preview-block" id="app-preview">
+					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
+						<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
+					</div>
+					<div class="preview-item-avatar">
+						<img src="<?php echo $avatar; ?>" alt="" class="user-custom-avatar" wordpress-avatar="<?php echo $wordpress_avatar_url; ?>" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>
+
+	</div>
+	<p class="description"> <?php echo $live_preview_settings['info']; ?> </p>
 	<?php
 }
 
@@ -423,9 +676,244 @@ function bp_profile_photos_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		); ?>"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
+	<?php
+}
+
+/** Group Photos ************************************************************/
+
+/**
+ * Link to Group Photos Settings tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_group_avatar_tutorial() {
+	?>
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62811,
+				),
+				'admin.php'
+			)
+		); ?>"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Allow admin to set default group avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_avatar_type() {
+	?>
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-buddyboss" name="bp-default-group-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_group_avatar_type(), 'buddyboss' ); ?> />
+		<label for="bp-default-group-avatar-buddyboss">
+			<div class="img-block">	
+				<img class="buddyboss-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-legacy" name="bp-default-group-avatar-type" type="radio" value="legacy" <?php checked( bb_get_default_group_avatar_type(), 'legacy' ); ?> />
+		<label for="bp-default-group-avatar-legacy">
+			<div class="img-block">
+				<img class="legacy-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-legacy.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Legacy', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_group_avatar_type(), 'custom' ); ?> />
+		<label for="bp-default-group-avatar-custom">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-custom.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to upload custom default group avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_custom_avatar() {
+	$hide_show_style        = '';
+	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
+	$custom_avatar_url      = bb_get_default_custom_upload_group_avatar();
+
+	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
+		$custom_avatar_url = $placeholder_avatar_url;
+		$hide_show_style   = 'display:none';
+	}
+	?>
+
+	<div class="bb-default-custom-upload-file custom-group-avatar custom-profile-group-avatar">
+		<div class="bb-upload-container">
+			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>" style="<?php echo esc_attr( $hide_show_style ); ?>">
+			<input type="hidden" name="bp-default-custom-group-avatar" id="bp-default-group-custom-avatar" value="<?php echo bb_get_default_custom_upload_group_avatar(); ?>">
+		</div>
+		<div class="bb-img-button-wrap">
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<div id="bp-xprofile-avatar-editor" style="display:none;">
+				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
+			</div>
+		</div>
+	</div>
+	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
+		<p id="bp-avatar-image-feedback" class="updated"></p>
+	</div>
+	<p class="description"><?php echo sprintf( __( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
+	<?php
+}
+
+/**
+ * Allow admin to set default group cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_cover_type() {
+	?>
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-default" name="bp-default-group-cover-type" type="radio" value="buddyboss" <?php checked( bb_get_default_group_cover_type(), 'buddyboss' ); ?> />
+		<label for="bp-default-group-cover-default">
+			<div class="img-block">
+				<img class="buddyboss-group-cover" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-none" name="bp-default-group-cover-type" type="radio" value="none" <?php checked( bb_get_default_group_cover_type(), 'none' ); ?> />
+		<label for="bp-default-group-cover-none">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-none.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'None', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
+		<input id="bp-default-group-cover-custom" name="bp-default-group-cover-type" type="radio" value="custom" <?php checked( bb_get_default_group_cover_type(), 'custom' ); ?> />
+		<label for="bp-default-group-cover-custom">
+			<div class="img-block">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-custom.jpg' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to upload custom default group cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_custom_cover() {
+	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+
+	$hide_show_style       = '';
+	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
+	$group_cover_image     = bb_get_default_custom_upload_group_cover();
+
+	if ( empty( $group_cover_image ) ) {
+		$group_cover_image = $placeholder_cover_url;
+		$hide_show_style   = 'display:none';
+	}
+	?>
+	<div class="bb-default-custom-upload-file custom-group-avatar cover-uploader custom-profile-group-cover">
+		<div class="bb-upload-container">
+			<img src="<?php echo $group_cover_image; ?>" data-default="<?php echo $placeholder_cover_url; ?>" class="bb-upload-preview" style="<?php echo esc_attr( $hide_show_style ); ?>">
+			<input type="hidden" name="bp-default-custom-group-cover" id="bp-default-custom-group-cover" value="<?php echo bb_get_default_custom_upload_group_cover(); ?>">
+		</div>
+		<div class="bb-img-button-wrap">
+			<label class="cover-uploader-label">
+				<input type="file" name="default-group-cover-file" id="default-group-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
+				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+			</label>
+			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo esc_attr( $hide_show_style ); ?>">Remove</a>
+		</div>
+		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
+			<p id="bp-cover-image-feedback" class="updated"></p>
+		</div>
+	</div>
+	<p class="description">
+		<?php
+		echo sprintf(
+			__( 'Upload an image to be used as the default group cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) $cover_dimensions['width'],
+			(int) $cover_dimensions['height']
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Preview based on profile images settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_preview_group_avatar_cover() {
+	$live_preview_settings = bb_get_settings_live_preview_default_profile_group_images();
+	$avatar                = bb_attachments_get_default_profile_group_avatar_image(
+		array(
+			'object' => 'group',
+		)
+	);
+
+	$cover = bb_attachments_get_default_profile_group_cover_image( 'groups' );
+	?>
+	<div class="preview_avatar_cover has-avatar has-cover">
+
+		<div class="preview-switcher-main">
+
+			<div class="button-group preview-switcher">
+				<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
+				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
+				<?php endif; ?>
+			</div>
+
+			<div class="web-preview-wrap preview-block active" id="web-preview">
+				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
+					<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
+				</div>
+				<div class="preview-item-avatar">
+					<img src="<?php echo $avatar; ?>" alt="" class="group-custom-avatar" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+				</div>
+			</div>
+
+			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+				<div class="app-preview-wrap preview-block" id="app-preview">
+					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
+						<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
+					</div>
+					<div class="preview-item-avatar">
+						<img src="<?php echo $avatar; ?>" alt="" class="group-custom-avatar" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+					</div>
+				</div>
+			<?php endif; ?>
+
+		</div>
+
+	</div>
+	<p class="description"> <?php echo $live_preview_settings['info']; ?> </p>
 	<?php
 }
 
@@ -454,7 +942,7 @@ function bp_admin_setting_callback_group_creation() {
 function bp_admin_setting_callback_group_avatar_uploads() {
 	?>
 	<input id="bp-disable-group-avatar-uploads" name="bp-disable-group-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_avatar_uploads() ); ?> />
-	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow group organizers to upload an avatar', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow group organizers to upload a group avatar', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -466,7 +954,8 @@ function bp_admin_setting_callback_group_avatar_uploads() {
 function bp_admin_setting_callback_group_cover_image_uploads() {
 	?>
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
-	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow group organizers to upload cover photos', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Enable cover images for groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bp_group_creation_description"><?php _e( 'When enabled, group organizers will be able to upload cover images in the group\'s settings', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -661,7 +1150,16 @@ function bp_core_admin_settings() {
 				<?php bp_core_settings_admin_tabs(); ?>
 			</ul>
 		</div>
-		<form action="<?php echo esc_url( $form_action ); ?>" method="post">
+		<form action="<?php echo esc_url( $form_action ); ?>" method="post"
+		<?php
+		/**
+		 * Fires inside the option page form tag.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_admin_settings_form_tag' );
+		?>
+		>
 			<?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
 	</div>
@@ -981,7 +1479,8 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 function bp_admin_setting_callback_enable_profile_gravatar() {
 	?>
 	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
-	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use gravatars for profile avatars', 'buddyboss' ); ?></label>
+	<p class="description"><?php _e( 'When enabled, members will be able to use avatars from their <a href="https://gravatar.com/">Gravatar</a> account.', 'buddyboss' ); ?></p>
 	<?php
 }
 

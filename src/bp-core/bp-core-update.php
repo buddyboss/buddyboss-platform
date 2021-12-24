@@ -349,6 +349,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 17951 ) {
 			bb_update_to_1_8_1();
 		}
+
+		if ( $raw_db_version < 18401 ) {
+			bb_update_to_1_8_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1387,4 +1391,264 @@ function bb_update_to_1_8_1() {
 		// Install email queue table.
 		bb_email_queue()::create_db_table();
 	}
+}
+
+/**
+ * update routine.
+ * Migrate default cover images from theme option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_1_8_4() {
+	global $buddyboss_theme_options;
+
+	/* Check if options are set */
+	if ( ! isset( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
+	$reset_files = $_FILES;
+	$reset_post  = $_POST;
+
+	// Set Profile Avatar.
+	$show_profile_avatar = bp_get_option( 'show_avatars' );
+	$default_avatar      = bp_get_option( 'avatar_default', 'mystery' );
+
+	if ( $show_profile_avatar && 'mystery' === $default_avatar ) {
+		bp_update_option( 'bp-profile-avatar-type', 'buddyboss' );
+		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	} else {
+		bp_update_option( 'bp-profile-avatar-type', 'wordpress' );
+	}
+
+	// Set Group Avatar.
+	bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+
+	// Profile Cover.
+	bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
+
+	if ( ! bp_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
+		
+		$temp_profile_cover = bb_to_1_8_4_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
+
+		if ( isset( $temp_profile_cover['filename'], $temp_profile_cover['path'], $temp_profile_cover['url'] ) && ! empty( $temp_profile_cover['filename'] ) && ! empty( $temp_profile_cover['path'] ) && ! empty( $temp_profile_cover['url'] ) ) {
+
+			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_4_allow_extension', 10, 2 );
+			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_4_change_overrides' );
+			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_4_image_upload_dir', 99 );
+
+			// Upload the file.
+			$cover_image_attachment                        = new BP_Attachment_Cover_Image();
+			$_POST['action']                               = $cover_image_attachment->action;
+			$_POST['profile_cover_upload']                 = true;
+			$_FILES[ $cover_image_attachment->file_input ] = array(
+				'tmp_name' => $temp_profile_cover['path'],
+				'name'     => basename( $temp_profile_cover['path'] ),
+				'type'     => wp_check_filetype( $temp_profile_cover['url'] )['type'],
+				'error'    => 0,
+				'size'     => filesize( $temp_profile_cover['path'] ),
+			);
+
+			// No error.
+			$profile_cover_image = $cover_image_attachment->upload( $_FILES );
+
+			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_4_allow_extension' );
+			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_4_change_overrides' );
+			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_4_image_upload_dir' );
+
+			if ( ! empty( $profile_cover_image ) && isset( $profile_cover_image['url'] ) ) {
+				bp_update_option( 'bp-default-profile-cover-type', 'custom' );
+				bp_update_option( 'bp-default-custom-profile-cover', $profile_cover_image['url'] );
+
+				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				$fileSystemDirect = new WP_Filesystem_Direct( false );
+				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+
+				// Delete option after migration.
+				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
+
+				if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
+					unset( $buddyboss_theme_options['buddyboss_profile_cover_default'] );
+				}
+			}
+
+			// Reset POST and FILES request.
+			$_FILES = $reset_files;
+			$_POST  = $reset_post;
+		} else {
+			bp_update_option( 'bp-default-profile-cover-type', 'none' );
+		}
+	}
+
+	// Group Cover.
+	bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+
+	if ( ! bp_disable_group_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
+
+		$temp_group_cover = bb_to_1_8_4_upload_temp_cover_file( 'buddyboss_group_cover_default' );
+
+		if ( isset( $temp_group_cover['filename'], $temp_group_cover['path'], $temp_group_cover['url'] ) && ! empty( $temp_group_cover['filename'] ) && ! empty( $temp_group_cover['path'] ) && ! empty( $temp_group_cover['url'] ) ) {
+
+			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_4_allow_extension', 10, 2 );
+			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_4_change_overrides' );
+			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_4_image_upload_dir', 99 );
+
+			// Upload the file.
+			$group_cover_image_attachment                        = new BP_Attachment_Cover_Image();
+			$_POST['action']                                     = $group_cover_image_attachment->action;
+			$_POST['group_cover_upload']                         = true;
+			$_FILES[ $group_cover_image_attachment->file_input ] = array(
+				'tmp_name' => $temp_group_cover['path'],
+				'name'     => basename( $temp_group_cover['path'] ),
+				'type'     => wp_check_filetype( $temp_group_cover['url'] )['type'],
+				'error'    => 0,
+				'size'     => filesize( $temp_group_cover['path'] ),
+			);
+
+			// No error.
+			$group_cover_image = $group_cover_image_attachment->upload( $_FILES );
+
+			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_4_allow_extension' );
+			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_4_change_overrides' );
+			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_4_image_upload_dir' );
+
+			if ( ! empty( $group_cover_image ) && isset( $group_cover_image['url'] ) ) {
+				bp_update_option( 'bp-default-group-cover-type', 'custom' );
+				bp_update_option( 'bp-default-custom-group-cover', $group_cover_image['url'] );
+
+				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				$fileSystemDirect = new WP_Filesystem_Direct( false );
+				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+
+				// Delete option after migration.
+				bp_delete_option( 'buddyboss_group_cover_default_migration' );
+
+				if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
+					unset( $buddyboss_theme_options['buddyboss_group_cover_default'] );
+				}
+			}
+
+			// Reset POST and FILES request.
+			$_FILES = $reset_files;
+			$_POST  = $reset_post;
+		} else {
+			bp_update_option( 'bp-default-group-cover-type', 'none' );
+		}
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		update_option( 'buddyboss_theme_options', $buddyboss_theme_options );
+	}
+}
+
+/**
+ * Upload default cover image to temp directory.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $cover_type The option name of cover. 'buddyboss_profile_cover_default' or 'buddyboss_group_cover_default'.
+ * @return array Array containing the path, URL, and file name.
+ */
+function bb_to_1_8_4_upload_temp_cover_file( $cover_type ) {
+	$data = array(
+		'filename' => '',
+		'path'     => '',
+		'url'      => '',
+	);
+
+	$default_cover_url = buddyboss_theme_get_option( $cover_type, 'url' );
+
+	if ( empty( $default_cover_url ) ) {
+		$bb_default_cover_url = bp_get_option( $cover_type . '_migration', array() );
+
+		if ( ! empty( $bb_default_cover_url ) && isset( $bb_default_cover_url['url'] ) ) {
+			$default_cover_url = $bb_default_cover_url['url'];
+		}
+	}
+
+	if ( ! empty( $default_cover_url ) ) {
+
+		$default_cover_path = str_replace( trailingslashit( get_site_url() ), ABSPATH, $default_cover_url );
+		$upload_dir         = wp_upload_dir();
+		$upload_dir         = $upload_dir['basedir'];
+
+		// Create temp folder.
+		$upload_dir = $upload_dir . '/bb-cover';
+
+		// If folder not exists then create.
+		if ( ! is_dir( $upload_dir ) ) {
+
+			// Create temp folder.
+			wp_mkdir_p( $upload_dir );
+			chmod( $upload_dir, 0777 );
+		}
+
+		$data['filename'] = basename( $default_cover_path );
+		$data['path']     = trailingslashit( $upload_dir ) . $data['filename'];
+		$data['url']      = str_replace( ABSPATH, trailingslashit( get_site_url() ), $data['path'] );
+
+		if ( ! file_exists( $data['path'] ) ) {
+			if ( copy( $default_cover_path, $data['path'] ) ) {
+				// Return copied file information.
+				return $data;
+			}
+		}
+	}
+
+	return $data;
+}
+
+/**
+ * Allow 'webp' extension to migrate cover images.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $exts List of allowed extensions.
+ * @param string $type The requested file type.
+ * @return array List of allowed extensions.
+ */
+function bb_to_1_8_4_allow_extension( $exts, $type ) {
+	$exts[] = 'webp';
+	return $exts;
+}
+
+/**
+ * Disallow to check 'action' param when migrate cover images.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $overrides The wp_handle_upload overrides.
+ * @return array The wp_handle_upload overrides.
+ */
+function bb_to_1_8_4_change_overrides( $overrides ) {
+	$overrides['test_form'] = false;
+	return $overrides;
+}
+
+/**
+ * Gets the upload dir array for cover photos.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array See wp_upload_dir().
+ */
+function bb_to_1_8_4_image_upload_dir( $args ) {
+	// Set the subdir.
+	$subdir = '/members/custom/cover-image';
+	if ( isset( $_POST['group_cover_upload'] ) ) {
+		$subdir = '/groups/custom/cover-image';
+	}
+
+	$upload_dir = bp_attachments_uploads_dir_get();
+
+	return array(
+		'path'    => $upload_dir['basedir'] . $subdir,
+		'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
+		'subdir'  => $subdir,
+		'basedir' => $upload_dir['basedir'],
+		'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
+		'error'   => false,
+	);
 }

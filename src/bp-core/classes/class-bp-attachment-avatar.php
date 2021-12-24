@@ -214,13 +214,24 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$avatar_dir = sanitize_key( $args['object'] ) . '-avatars';
 		}
 
-		$args['item_id'] = (int) $args['item_id'];
+		/**
+		 * Filters the args contains for image crop.
+		 *
+		 * @param int    $item_id ID of the avatar item being requested.
+		 * @param array $args {
+		 *     @type string     $original_file The source file (absolute path) for the Attachment.
+		 *     @type string     $object        Avatar type being requested.
+		 *     @type int|string $item_id       ID of the avatar item being requested.
+		 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
+		 * }
+		 */
+		$args['item_id'] = apply_filters( 'bb_core_avatar_crop_item_id_args', (int) $args['item_id'], $args );
 
 		/**
 		 * Original file is a relative path to the image
 		 * eg: /avatars/1/avatar.jpg
 		 */
-		$relative_path = sprintf( '/%s/%s/%s', $avatar_dir, $args['item_id'], basename( $args['original_file'] ) );
+		$relative_path = apply_filters( 'bb_core_avatar_relative_path', sprintf( '/%s/%s/%s', $avatar_dir, $args['item_id'], basename( $args['original_file'] ) ), $args['item_id'], $args['object'], $args['avatar_dir'] );
 		$absolute_path = $this->upload_path . $relative_path;
 
 		// Bail if the avatar is not available.
