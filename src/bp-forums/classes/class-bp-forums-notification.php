@@ -42,8 +42,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$this->register_preference(
-			'notification_forums_following_reply',
 			buddypress()->forums->id,
+			'notification_forums_following_reply',
 			esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' )
 		);
 
@@ -62,7 +62,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'unsubscribe' => array(
 					'meta_key' => 'notification_bbp_new_forum_reply',
 					'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
-				)
+				),
 			),
 			'notification_forums_following_reply'
 		);
@@ -70,16 +70,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			buddypress()->groups->id,
 			'bbp_new_reply',
-			'',
-			'',
 			'notification_forums_following_reply'
 		);
 
 		$this->register_notification(
 			buddypress()->groups->id,
 			'bbp_new_at_mention',
-			'',
-			'',
 			'notification_forums_following_reply'
 		);
 	}
@@ -89,8 +85,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$this->register_preference(
-			'notification_forums_following_topic',
 			buddypress()->forums->id,
+			'notification_forums_following_topic',
 			esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' )
 		);
 
@@ -117,8 +113,6 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			buddypress()->groups->id,
 			'bbp_new_at_mention',
-			'',
-			'',
 			'notification_forums_following_topic'
 		);
 	}
