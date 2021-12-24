@@ -613,7 +613,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 
 	// If Profile Avatar is 'WordPress'.
 	$wordpress_avatar_url = bb_get_blank_profile_avatar();
-	if ( bp_get_option( 'show_avatars' ) ) {
+	if ( bp_get_option( 'show_avatars' ) && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
 		$wordpress_avatar_url = get_avatar_url(
 			'',
 			array(

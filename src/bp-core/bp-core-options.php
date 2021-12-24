@@ -2425,11 +2425,10 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 
 			/**
 			 * Avatar Display = checked.
-			 * Upload Avatars = checked.
 			 * Profile Avatars = WordPress.
 			 * Default Avatar = Blank.
 			 */
-		} elseif ( $show_avatar && ! $disable_avatar_uploads && 'wordpress' === $default_profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+		} elseif ( $show_avatar && 'wordpress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 
 			/**
