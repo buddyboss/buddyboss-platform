@@ -5812,6 +5812,11 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 
 	if (
+		bb_enabled_legacy_email_preference() &&
+		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+	) {
+		return true;
+	} else if (
 		array_key_exists( $notification_type, $notifications )
 		&& 'no' !== bp_get_user_meta( $user_id, $notification_type, true )
 	) {
