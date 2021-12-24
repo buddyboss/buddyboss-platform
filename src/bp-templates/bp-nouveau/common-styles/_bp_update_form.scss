@@ -30,10 +30,6 @@
 	cursor: pointer;
 	margin-top: 5px;
 
-	.privacy-point-icon {
-		margin-right: 4px;
-	}
-
 	.privacy-point-icon:before {
 		font-family: bb-icons;
 		speak: none;
@@ -42,6 +38,25 @@
 		text-transform: none;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+		margin-right: 4px;
+	}
+
+	&.public,
+	&.loggedin,
+	&.friends,
+	&.onlyme,
+	&.group {
+
+		.privacy-point-icon.privacy-point-icon--group:before {
+			display: none;
+		}
+	}
+
+	&.group.bp-activity-focus-group-active {
+
+		.privacy-point-icon--group:before {
+			display: none;
+		}
 	}
 
 	&.public {
@@ -104,7 +119,7 @@
 	}
 }
 
-.group-privacy-point-icon {
+.privacy-point-icon--group {
 
 	img {
 		max-width: 16px;
@@ -112,11 +127,16 @@
 	}
 }
 
-.activity-update-form #user-status-huddle .group-privacy-point-icon,
-#user-status-huddle .group-privacy-point-icon {
+.privacy-point-icon--group,
+.bp-activity-focus-group-active .privacy-point-icon--group {
+	margin-right: 5px;
+}
+
+.activity-update-form #user-status-huddle .privacy-point-icon--group,
+#user-status-huddle .privacy-point-icon--group {
 
 	img {
-		margin-right: 5px;
+		margin-right: 0;
 	}
 }
 

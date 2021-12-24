@@ -5464,7 +5464,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'item_id'          => $activity->item_id,
 			'object'           => $activity->component,
 			'privacy'          => $activity->privacy,
-			'group_avtar'      => bp_get_group_avatar_url( groups_get_group( $group_id ) ), // Add group avtar in get activity data object.
+			'group_avatar'      => bp_get_group_avatar_url( groups_get_group( $group_id ) ), // Add group avatar in get activity data object.
 		)
 	);
 }
