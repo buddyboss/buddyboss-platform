@@ -24,7 +24,7 @@ function bb_notification_get_settings_sections() {
 			'page'              => 'notifications',
 			'title'             => __( 'On-screen Notifications', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
-			'notice'            => __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ),
+			'notice'            => ( ! bb_enabled_legacy_email_preference() ) ? __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ) : '',
 		),
 		'bp_notification_settings_automatic' => array(
 			'page'              => 'notifications',
@@ -32,6 +32,10 @@ function bb_notification_get_settings_sections() {
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
 		),
 	);
+
+	if ( bb_enabled_legacy_email_preference() ) {
+		unset( $settings['bp_notification_settings_automatic'] );
+	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_sections', $settings );
 }
@@ -239,7 +243,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 												<?php
 											} else {
 												?>
-                                                <div class="field-wrap <?php echo esc_attr( $key ); ?>"> -- </div>
+												<div class="field-wrap <?php echo esc_attr( $key ); ?>"> -- </div>
 												<?php
 											}
 										}

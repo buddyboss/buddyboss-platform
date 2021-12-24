@@ -283,7 +283,7 @@ add_action( 'bp_messages_thread_after_delete', 'bp_messages_message_delete_notif
  */
 function messages_screen_notification_settings() {
 
-	if ( ! bb_enabled_legacy_email_preferce() ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		bb_render_notification( buddypress()->messages->id );
 	} else {
 		if ( bp_action_variables() ) {

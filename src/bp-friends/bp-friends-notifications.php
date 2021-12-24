@@ -246,7 +246,7 @@ add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1
  */
 function friends_screen_notification_settings() {
 
-	if ( ! bb_enabled_legacy_email_preferce() ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		bb_render_notification( buddypress()->friends->id );
 	} else {
 		if ( ! $send_requests = bp_get_user_meta( bp_displayed_user_id(), 'notification_friends_friendship_request', true ) ) {

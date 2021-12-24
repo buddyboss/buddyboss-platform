@@ -1212,7 +1212,7 @@ add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notif
  */
 function groups_screen_notification_settings() {
 
-	if ( ! bb_enabled_legacy_email_preferce() ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		bb_render_notification( buddypress()->groups->id );
 	} else {
 		if ( ! $group_invite = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_invite', true ) ) {

@@ -419,7 +419,7 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
  */
 function bp_activity_screen_notification_settings() {
 
-	if ( ! bb_enabled_legacy_email_preferce() ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		bb_render_notification( buddypress()->activity->id );
 	} else {
 

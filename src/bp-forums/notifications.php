@@ -427,7 +427,7 @@ function forums_notification_settings() {
 		return;
 	}
 
-	if ( ! bb_enabled_legacy_email_preferce() ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		bb_render_notification( buddypress()->forums->id );
 	} else {
 		$notification_forums_following_reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_reply', true );
