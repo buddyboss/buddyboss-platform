@@ -5816,7 +5816,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
 	) {
 		return true;
-	} else if (
+	} elseif (
 		array_key_exists( $notification_type, $notifications )
 		&& 'no' !== bp_get_user_meta( $user_id, $notification_type, true )
 	) {
