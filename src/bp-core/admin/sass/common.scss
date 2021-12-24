@@ -2687,6 +2687,10 @@ h2.has_tutorial_btn {
 		display: none;
 	}
 
+	.button-group > .button:last-child:first-child {
+		border-radius: 3px;
+	}
+
 }
 
 .buddyboss_page_bp-settings.modal-open {
