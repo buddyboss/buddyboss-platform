@@ -5753,15 +5753,15 @@ function bb_check_server_disabled_symlink() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $user_id User ID.
- * @param string $key     Notification key.
- * @param string $type    Type of notification.
+ * @param int    $user_id           User ID.
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
  *
  * @return bool
  */
-function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
+function bb_is_notification_enabled( $user_id, $notification_type, $type = 'email' ) {
 
-	if ( empty( $user_id ) || empty( $key ) ) {
+	if ( empty( $user_id ) || empty( $notification_type ) ) {
 		return false;
 	}
 
@@ -5808,14 +5808,16 @@ function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
 		}
 	}
 
-	$notifications = wp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
+	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 
 	if (
-		array_key_exists( $key, $notifications )
-		&& 'no' !== bp_get_user_meta( $user_id, $key, true )
+		array_key_exists( $notification_type, $notifications )
+		&& 'no' !== bp_get_user_meta( $user_id, $notification_type, true )
 	) {
 		return true;
 	}
+
 	return false;
 }
 
@@ -5861,7 +5863,7 @@ function bb_register_notification_preferences( $component = '' ) {
  * @param int    $user_id          User id.
  * @param string $component_name   Component Name.
  * @param string $component_action Component Action.
- * @param string $pref_type        Prefrence type.
+ * @param string $pref_type        Preference type.
  *
  * @return bool
  *
@@ -5888,38 +5890,32 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 
 	$notification_type = current( $notification_type );
 
-	if ( 'email' !== $pref_type ) {
-		$notification_type = $notification_type . '_' . $pref_type;
-	}
-
-	return (bool) 'no' !== get_user_meta( $user_id, $notification_type, true );
+	return (bool) bb_is_notification_enabled( $user_id, $notification_type, $pref_type );
 }
 
 /**
  * Get user notification preference values.
  *
+ * @param int    $user_id   User id.
  * @param string $pref_type Notification preference type.
- * @param int    $user_id User id.
  *
  * @return array
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_core_get_user_notifications_preferences_value( $pref_type = 'email', $user_id = 0 ) {
+function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_type = 'email' ) {
 
 	$keys              = array();
 	$all_notifications = bb_register_notifications();
 	$user_id           = ( 0 === $user_id ) ? bp_loggedin_user_id() : $user_id;
 
 	foreach ( $all_notifications as $notification ) {
-		$user_meta_key = $notification['notification_type'] . '_' . $pref_type;
+		$user_meta_key = $notification['notification_type'] . ( ( 'email' !== $pref_type ) ? '_' . $pref_type : '' );
 		$keys[]        = array(
 			'notification_type' => $user_meta_key,
 			'component_name'    => $notification['component'],
 			'component_action'  => $notification['component_action'],
-			// @todo Optimize into single query
-			'value'             => get_user_meta( $user_id, $user_meta_key, true ),
-
+			'value'             => bb_is_notification_enabled( $user_id, $notification['notification_type'], $pref_type ),
 		);
 	}
 
