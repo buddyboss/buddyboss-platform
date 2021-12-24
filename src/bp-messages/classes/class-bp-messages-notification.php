@@ -38,8 +38,8 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_new_message() {
 		$this->register_preference(
-			'notification_messages_new_message',
 			buddypress()->messages->id,
+			'notification_messages_new_message',
 			esc_html__( 'A member sends you a new message', 'buddyboss' ),
 			esc_html__( 'A member receives a new message', 'buddyboss' )
 		);
@@ -67,8 +67,6 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			buddypress()->messages->id,
 			'new_message',
-			'',
-			'',
 			'notification_messages_new_message'
 		);
 	}
