@@ -77,8 +77,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_accept() {
 		$this->register_preference(
-			'notification_friends_friendship_accepted',
 			buddypress()->friends->id,
+			'notification_friends_friendship_accepted',
 			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
 		);
@@ -106,8 +106,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			buddypress()->friends->id,
 			'friendship_accepted',
-			'',
-			'',
 			'notification_friends_friendship_accepted'
 		);
 	}
