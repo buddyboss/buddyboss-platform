@@ -39,8 +39,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_mentions() {
 		$this->register_preference(
-			'notification_activity_new_mention',
 			buddypress()->activity->id,
+			'notification_activity_new_mention',
 			sprintf(
 			/* translators: %s: users mention name. */
 				__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
@@ -92,8 +92,6 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			buddypress()->activity->id,
 			'new_at_mention',
-			'',
-			'',
 			'notification_activity_new_mention'
 		);
 	}
@@ -103,8 +101,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_reply() {
 		$this->register_preference(
-			'notification_activity_new_reply',
 			buddypress()->activity->id,
+			'notification_activity_new_reply',
 			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
 		);
@@ -152,16 +150,12 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			buddypress()->activity->id,
 			'update_reply',
-			'',
-			'',
 			'notification_activity_new_reply'
 		);
 
 		$this->register_notification(
 			buddypress()->activity->id,
 			'comment_reply',
-			'',
-			'',
 			'notification_activity_new_reply'
 		);
 	}
