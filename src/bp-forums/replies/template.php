@@ -2635,6 +2635,40 @@ function bbp_get_topic_pagination_count() {
 }
 
 /**
+ * Output the topic pagination page count
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @uses  bbp_get_topic_pagination_page_count() To get the topic pagination page count
+ */
+function bbp_topic_pagination_page_count() {
+	echo bbp_get_topic_pagination_page_count();
+}
+
+/**
+ * Return the topic pagination page count
+ *
+ * @since 				BuddyBoss [BBVERSION]
+ *
+ * @return string 		Topic pagination page count
+ * @uses                apply_filters() Calls 'bbp_get_topic_pagination_page_count' with the
+ *                      pagination page count
+ */
+function bbp_get_topic_pagination_page_count() {
+	$bbp = bbpress();
+
+	// Define local variable(s)
+	$retstr       = '';
+	$current_page = $bbp->reply_query->paged; // current_page
+	$total_pages  = $bbp->reply_query->total_pages; // total_pages
+
+	$retstr = sprintf( __('Page %1$s of %2$s'), $current_page, $total_pages );
+
+	// Filter and return
+	return apply_filters( 'bbp_get_topic_pagination_page_count', esc_html( $retstr ) );
+}
+
+/**
  * Output topic pagination links
  *
  * @since bbPress (r2519)
