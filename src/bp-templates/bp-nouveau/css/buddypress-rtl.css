@@ -1054,6 +1054,12 @@ a.layout-grid-view {
   margin-left: 4px;
 }
 
+#bp-activity-privacy-point .group-privacy-point-icon img {
+  max-height: 24px;
+  margin: -2px -5px -2px 0;
+  border-radius: 3px;
+}
+
 #bp-activity-privacy-point.public .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.loggedin .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.friends .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.onlyme .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.group .privacy-point-icon.privacy-point-icon--group:before {
   display: none;
 }

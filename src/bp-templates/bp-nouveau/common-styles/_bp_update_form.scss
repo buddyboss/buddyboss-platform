@@ -41,6 +41,12 @@
 		margin-right: 4px;
 	}
 
+	.group-privacy-point-icon img {
+		max-height: 24px;
+		margin: -2px 0 -2px -5px;
+		border-radius: 3px;
+	}
+
 	&.public,
 	&.loggedin,
 	&.friends,
