@@ -2102,6 +2102,10 @@ function bb_add_default_cover_image_inline_css() {
 		$css_rules .= '.list-wrap .bs-group-cover a{ background-color: ' . $background_color . '; }';
 	}
 
+	if ( ! function_exists( 'buddyboss_theme' ) ) {
+		$css_rules .= '.list-wrap .bs-group-cover a{ position: relative;width: 100%;height: 100%;display: flex; }';
+	}
+
 	wp_add_inline_style( 'bp-nouveau', $css_rules );
 }
 add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
