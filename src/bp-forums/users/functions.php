@@ -1566,12 +1566,3 @@ function bbp_user_maybe_convert_pass() {
 	}
 }
 
-/**
- * Show only reply count on topic
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bbp_show_only_reply_count_of_topic() {
-	$show_lead = true;
-	return $show_lead;
-}
