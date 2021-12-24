@@ -5871,29 +5871,28 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 
 	$all_notifications = bb_register_notifications();
 
-	$preference_key = array_filter(
+	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
 				if ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
-					  return $n['preference_key'];
+					return $n['notification_type'];
 				}
 			},
 			$all_notifications
 		)
 	);
 
-	if ( empty( $preference_key ) ) {
+	if ( empty( $notification_type ) ) {
 		return false;
 	}
 
-	$preference_key = current( $preference_key );
+	$notification_type = current( $notification_type );
 
 	if ( 'email' !== $pref_type ) {
-		$preference_key = $preference_key . '_' . $pref_type;
+		$notification_type = $notification_type . '_' . $pref_type;
 	}
 
-	return (bool) 'no' !== get_user_meta( $user_id, $preference_key, true );
-
+	return (bool) 'no' !== get_user_meta( $user_id, $notification_type, true );
 }
 
 /**
@@ -5913,93 +5912,33 @@ function bb_core_get_user_notifications_preferences_value( $pref_type = 'email',
 	$user_id           = ( 0 === $user_id ) ? bp_loggedin_user_id() : $user_id;
 
 	foreach ( $all_notifications as $notification ) {
-		$user_meta_key = $notification['preference_key'] . '_' . $pref_type;
+		$user_meta_key = $notification['notification_type'] . '_' . $pref_type;
 		$keys[]        = array(
-			'preference_key'   => $user_meta_key,
-			'component_name'   => $notification['component'],
-			'component_action' => $notification['component_action'],
+			'notification_type' => $user_meta_key,
+			'component_name'    => $notification['component'],
+			'component_action'  => $notification['component_action'],
 			// @todo Optimize into single query
-			'value'            => get_user_meta( $user_id, $user_meta_key, true ),
+			'value'             => get_user_meta( $user_id, $user_meta_key, true ),
 
 		);
 	}
 
 	return $keys;
-
 }
 
 /**
- * Send notifications with email.
+ * Functions to get all/specific email templates which associates with notification type.
  *
- * @param string $component_name   Component name.
- * @param string $component_action Component actions.
- * @param array  $args             Arguments.
- *
- * @return void
+ * @param string $notification_type Notification type.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_send_notification( $component_name, $component_action, $args = array() ) {
-
-	$r = bp_parse_args(
-		$args,
-		array(
-			'user_id'           => 0,
-			'item_id'           => 0,
-			'secondary_item_id' => 0,
-			'component_name'    => $component_name,
-			'component_action'  => $component_action,
-			'date_notified'     => bp_core_current_time(),
-			'is_new'            => 1,
-			'allow_duplicate'   => false,
-			'email_type'        => false,
-			'email_args'        => array(),
-		),
-		'notifications_add_notification'
-	);
-
-	if ( false === $r['email_type'] ) {
-		$all_registered_notifications = bb_register_notifications( $r['component_name'] );
-		foreach ( $all_registered_notifications as $notification ) {
-			if ( $notification['component_action'] === $r['component_action'] ) {
-				$r['email_type'] = $notification['email_type'];
-				break;
-			}
-		}
-	}
-
-	if ( ! empty( $r['email_type'] ) && ! empty( $r['user_id'] ) && bp_can_send_notification( $r['user_id'], $r['component_name'], $r['component_action'] ) ) {
-		bp_send_email( $r['email_type'], (int) $r['user_id'], $r['email_args'] );
-	}
-
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_add_notification(
-			array(
-				'user_id'           => $r['user_id'],
-				'item_id'           => $r['item_id'],
-				'secondary_item_id' => $r['secondary_item_id'],
-				'component_name'    => $r['component_name'],
-				'component_action'  => $r['component_action'],
-				'date_notified'     => bp_core_current_time(),
-				'is_new'            => 1,
-			)
-		);
-	}
-}
-
-/**
- * Functions to get all/specific email templates which associates with notification preference key.
- *
- * @param string $pref_key Preference Key.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_register_notification_email_templates( $pref_key = '' ) {
+function bb_register_notification_email_templates( $notification_type = '' ) {
 
 	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
 
-	if ( ! empty( $notification_emails ) && isset( $notification_emails[ $pref_key ] ) ) {
-		return $notification_emails[ $pref_key ];
+	if ( ! empty( $notification_emails ) && isset( $notification_emails[ $notification_type ] ) ) {
+		return $notification_emails[ $notification_type ];
 	}
 
 	return $notification_emails;
@@ -6086,28 +6025,28 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $preference_key Preference key name.
+ * @param string $notification_type Notification Type.
  *
  * @return array|mixed
  */
-function bb_check_notification_registered( string $preference_key ) {
-	$preferences     = bb_register_notification_preferences();
-	$all_preferences = array();
+function bb_check_notification_registered( string $notification_type ) {
+	$notifications     = bb_register_notification_preferences();
+	$all_notifications = array();
 
-	if ( ! empty( $preferences ) ) {
-		$preferences = array_column( $preferences, 'fields', null );
-		foreach ( $preferences as $key => $val ) {
-			$all_preferences = array_merge( $all_preferences, $val );
+	if ( ! empty( $notifications ) ) {
+		$notifications = array_column( $notifications, 'fields', null );
+		foreach ( $notifications as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
 		}
-		$all_preferences = array_column( $all_preferences, 'notifications', 'key' );
+		$all_notifications = array_column( $all_notifications, 'notifications', 'key' );
 	}
 
-	if ( empty( $all_preferences ) ) {
+	if ( empty( $all_notifications ) ) {
 		return false;
 	}
 
-	if ( $preference_key && isset( $all_preferences[ $preference_key ] ) ) {
-		return ! empty( $all_preferences[ $preference_key ] );
+	if ( $notification_type && isset( $all_notifications[ $notification_type ] ) ) {
+		return ! empty( $all_notifications[ $notification_type ] );
 	}
 
 	return false;
@@ -6118,28 +6057,28 @@ function bb_check_notification_registered( string $preference_key ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $preference_key Preference key name.
+ * @param string $notification_type Notification Type.
  *
  * @return array|mixed
  */
-function bb_check_email_type_registered( string $preference_key ) {
-	$preferences     = bb_register_notification_preferences();
-	$all_preferences = array();
+function bb_check_email_type_registered( string $notification_type ) {
+	$notifications     = bb_register_notification_preferences();
+	$all_notifications = array();
 
-	if ( ! empty( $preferences ) ) {
-		$preferences = array_column( $preferences, 'fields', null );
-		foreach ( $preferences as $key => $val ) {
-			$all_preferences = array_merge( $all_preferences, $val );
+	if ( ! empty( $notifications ) ) {
+		$notifications = array_column( $notifications, 'fields', null );
+		foreach ( $notifications as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
 		}
-		$all_preferences = array_column( $all_preferences, 'email_types', 'key' );
+		$all_notifications = array_column( $all_notifications, 'email_types', 'key' );
 	}
 
-	if ( empty( $all_preferences ) ) {
+	if ( empty( $all_notifications ) ) {
 		return false;
 	}
 
-	if ( $preference_key && isset( $all_preferences[ $preference_key ] ) ) {
-		return ! empty( $all_preferences[ $preference_key ] );
+	if ( $notification_type && isset( $all_notifications[ $notification_type ] ) ) {
+		return ! empty( $all_notifications[ $notification_type ] );
 	}
 
 	return false;
@@ -6161,15 +6100,15 @@ function bb_enabled_legacy_email_preference() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $preference_group Preference group name.
+ * @param string $notification_group Notification group name.
  */
-function bb_render_notification( $preference_group ) {
+function bb_render_notification( $notification_group ) {
 
-	if ( empty( $preference_group ) ) {
+	if ( empty( $notification_group ) ) {
 		return;
 	}
 
-	$options                  = bb_register_notification_preferences( $preference_group );
+	$options                  = bb_register_notification_preferences( $notification_group );
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
@@ -6209,7 +6148,6 @@ function bb_render_notification( $preference_group ) {
 
 					<?php
 					foreach ( $options as $key => $v ) {
-						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', false );
 						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
 						if ( $is_render ) {
