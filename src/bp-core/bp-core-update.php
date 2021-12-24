@@ -1415,7 +1415,7 @@ function bb_update_to_1_8_5() {
 
 	if ( $show_profile_avatar && 'mystery' === $default_avatar ) {
 		bp_update_option( 'bp-profile-avatar-type', 'buddyboss' );
-		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+		bp_update_option( 'bp-default-profile-avatar-type', 'legacy' );
 	} else {
 		bp_update_option( 'bp-profile-avatar-type', 'wordpress' );
 	}
