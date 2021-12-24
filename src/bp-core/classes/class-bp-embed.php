@@ -348,7 +348,7 @@ class BP_Embed extends WP_Embed {
 	/**
 	 * Add oembed to content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.3
 	 *
 	 * @param string $content The content to be searched.
 	 *
