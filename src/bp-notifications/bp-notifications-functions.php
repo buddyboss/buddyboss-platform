@@ -861,6 +861,10 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 	$querystring['is_new']  = 1;
 	$querystring['user_id'] = get_current_user_id();
 
+	if ( bb_enabled_legacy_email_preference() ) {
+		return http_build_query( $querystring );
+	}
+
 	$excluded_user_component_actions = bb_disabled_notification_actions_by_user( get_current_user_id() );
 
 	if ( ! empty( $excluded_user_component_actions ) ) {
