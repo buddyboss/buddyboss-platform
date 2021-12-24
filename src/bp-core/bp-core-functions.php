@@ -5761,7 +5761,7 @@ function bb_check_server_disabled_symlink() {
  */
 function bb_is_notification_enabled( $user_id, $key, $type = 'email' ) {
 
-    if ( empty( $user_id ) || empty( $key ) ) {
+	if ( empty( $user_id ) || empty( $key ) ) {
 		return false;
 	}
 
@@ -6021,7 +6021,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 }
 
 /**
- * Check the notification registered with preferences or not.
+ * Check the notification registered with specific notification type.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6053,7 +6053,7 @@ function bb_check_notification_registered( string $notification_type ) {
 }
 
 /**
- * Check the email type registered with preferences or not.
+ * Check the email type registered with specific notification type.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -6148,8 +6148,8 @@ function bb_render_notification( $notification_group ) {
 
 					<?php
 					foreach ( $options as $key => $v ) {
-						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
+						$is_render = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+						$name      = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
 						if ( $is_render ) {
 							?>
 							<td class="<?php echo esc_attr( $key ); ?>">
