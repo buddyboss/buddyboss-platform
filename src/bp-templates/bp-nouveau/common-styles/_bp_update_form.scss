@@ -51,24 +51,6 @@
 
 	}
 
-	&.public,
-	&.loggedin,
-	&.friends,
-	&.onlyme,
-	&.group {
-
-		.privacy-point-icon.privacy-point-icon--group:before {
-			display: none;
-		}
-	}
-
-	&.group.bp-activity-focus-group-active {
-
-		.privacy-point-icon--group:before {
-			display: none;
-		}
-	}
-
 	&.public {
 
 		.privacy-point-icon:before {
@@ -126,27 +108,6 @@
 
 	.bb-icon-angle-down {
 		margin-left: 2px;
-	}
-}
-
-.privacy-point-icon--group {
-
-	img {
-		max-width: 16px;
-		border-radius: 2px;
-	}
-}
-
-.privacy-point-icon--group,
-.bp-activity-focus-group-active .privacy-point-icon--group {
-	margin-right: 5px;
-}
-
-.activity-update-form #user-status-huddle .privacy-point-icon--group,
-#user-status-huddle .privacy-point-icon--group {
-
-	img {
-		margin-right: 0;
 	}
 }
 

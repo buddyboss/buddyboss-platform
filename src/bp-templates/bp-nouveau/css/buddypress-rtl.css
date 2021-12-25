@@ -1060,14 +1060,6 @@ a.layout-grid-view {
   border-radius: 3px;
 }
 
-#bp-activity-privacy-point.public .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.loggedin .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.friends .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.onlyme .privacy-point-icon.privacy-point-icon--group:before, #bp-activity-privacy-point.group .privacy-point-icon.privacy-point-icon--group:before {
-  display: none;
-}
-
-#bp-activity-privacy-point.group.bp-activity-focus-group-active .privacy-point-icon--group:before {
-  display: none;
-}
-
 #bp-activity-privacy-point.public .privacy-point-icon:before {
   content: "\e819";
 }
@@ -1110,21 +1102,6 @@ a.layout-grid-view {
 
 #bp-activity-privacy-point .bb-icon-angle-down {
   margin-right: 2px;
-}
-
-.privacy-point-icon--group img {
-  max-width: 16px;
-  border-radius: 2px;
-}
-
-.privacy-point-icon--group,
-.bp-activity-focus-group-active .privacy-point-icon--group {
-  margin-left: 5px;
-}
-
-.activity-update-form #user-status-huddle .privacy-point-icon--group img,
-#user-status-huddle .privacy-point-icon--group img {
-  margin-left: 0;
 }
 
 .activity-post-user-name-container .activity-post-user-name {
