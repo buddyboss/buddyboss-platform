@@ -496,8 +496,8 @@ window.bp = window.bp || {};
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-angle-down').remove();
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
 						// display group avtar when edit any feed.
-						if ( activity_data.group_avtar && false === activity_data.group_avtar.includes('mystery-group') ) {
-							self.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + activity_data.group_avtar + '" alt=""/>' );
+						if ( activity_data.group_avatar && false === activity_data.group_avatar.includes('mystery-group') ) {
+							self.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + activity_data.group_avatar + '" alt=""/>' );
 						}
 					}
 
@@ -2721,8 +2721,8 @@ window.bp = window.bp || {};
 
 					this.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
 					//display image of the group.
-					if ( BP_Nouveau.activity.params.group_avtar && false === BP_Nouveau.activity.params.group_avtar.includes('mystery-group') ) {
-						this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + BP_Nouveau.activity.params.group_avtar  + '" alt=""/>' );
+					if ( BP_Nouveau.activity.params.group_avatar && false === BP_Nouveau.activity.params.group_avatar.includes('mystery-group') ) {
+						this.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass('privacy-point-icon').addClass('group-privacy-point-icon').html( '<img src="' + BP_Nouveau.activity.params.group_avatar  + '" alt=""/>' );
 					} else {
 						this.$el.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
 						this.$el.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass('group-privacy-point-icon').addClass('privacy-point-icon');
