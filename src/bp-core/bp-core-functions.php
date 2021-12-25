@@ -6037,11 +6037,11 @@ function bb_restricate_rss_feed() {
 		strpos( $actual_link, 'wp-json' ) === false
 	) {
 		$check_feed = '';
-		if ( substr( $actual_link, - 1 ) !== '?' ) {
+		if ( strpos( $actual_link, '?' ) !== false ) { // if permalink has ? then need to check with feed=.
 			$current_url_explode = array_filter( explode( '?', $actual_link ) );
 			if ( isset( $current_url_explode[1] ) ) {
 				$check_feed = $current_url_explode[1];
-				if ( substr( $current_url_explode[1], - 1 ) !== '&' ) {
+				if ( strpos( $current_url_explode[1], '&' ) !== false ) {
 					$current_url_explode = array_filter( explode( '&', $current_url_explode[1] ) );
 					if ( isset( $current_url_explode[1] ) ) {
 						$check_feed = $current_url_explode[1];
