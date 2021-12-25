@@ -1037,7 +1037,7 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   cursor: pointer;
   margin-top: 5px;
@@ -1148,7 +1148,7 @@ a.layout-grid-view {
 }
 
 #whats-new-form.focus-in #bp-activity-privacy-point {
-  display: flex;
+  display: inline-flex;
 }
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
