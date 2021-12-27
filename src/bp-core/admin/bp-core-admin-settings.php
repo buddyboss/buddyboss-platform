@@ -436,7 +436,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 	<div class="avatar-custom-input">
 		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
 			<option value="buddyboss" <?php selected( bb_get_profile_avatar_type(), 'buddyboss' ); ?>><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></option>
-			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'WordPress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
+			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'wordpress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
 		</select>
 	</div>
 
@@ -641,7 +641,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		);
 	}
 
-	if ( 'WordPress' === bb_get_profile_avatar_type() ) {
+	if ( 'wordpress' === bb_get_profile_avatar_type() ) {
 		$avatar = $wordpress_avatar_url;
 	}
 
