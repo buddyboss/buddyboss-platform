@@ -997,7 +997,7 @@ window.bp = window.bp || {};
 
 							allowAvatarUploadContainer.show();
 							enableProfileGravatarContainer.show();
-							profileAvatarURL = webAvatarPreviewContainer.attr( 'wordpress-avatar' );
+							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
 
 							if ( allowAvatarUpload.prop( 'checked' ) ) {
 								defaultProfileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
@@ -1011,11 +1011,11 @@ window.bp = window.bp || {};
 
 									profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
 									if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
-										profileAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+										profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 									}
 								}
 							} else {
-								profileAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+								profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 
 						} else if ( 'wordpress' === $( this ).val() ) {
@@ -1024,7 +1024,7 @@ window.bp = window.bp || {};
 							if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
 								profileAvatarfeedbackContainer.show();
 							}
-							profileAvatarURL = webAvatarPreviewContainer.attr( 'wordpress-avatar' );
+							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
 						}
 
 						if ( typeof profileAvatarURL.length !== 'undefined' && 0 < profileAvatarURL.length ) {
@@ -1063,7 +1063,7 @@ window.bp = window.bp || {};
 
 								profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
 								if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
-									profileAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+									profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 								}
 
 								if ( 'custom' !== defaultProfileAvatarTypeVal ) {
@@ -1073,12 +1073,12 @@ window.bp = window.bp || {};
 
 							} else {
 								defaultProfileContainer.hide();
-								profileAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+								profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 
 						} else {
 							defaultProfileContainer.hide();
-							profileAvatarURL = webAvatarPreviewContainer.attr( 'wordpress-avatar' );
+							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
 						}
 
 						if ( typeof profileAvatarURL.length !== 'undefined' && 0 < profileAvatarURL.length ) {
@@ -1112,7 +1112,7 @@ window.bp = window.bp || {};
 
 							profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
 							if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
-								profileAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+								profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 						} else {
 							profileAvatarURL = $( '.' + this.value + '-profile-avatar' ).prop( 'src' );
@@ -1159,8 +1159,8 @@ window.bp = window.bp || {};
 								$( '.default-profile-cover-custom' ).hide();
 
 								if ( 'buddyboss' === profileCoverTypeVal ) {
-									webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'buddyboss-cover' ) );
-									appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'buddyboss-cover' ) );
+									webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
+									appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
 								}
 							}
 						} else {
@@ -1202,8 +1202,8 @@ window.bp = window.bp || {};
 							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
 
 							if ( 'buddyboss' === profileCoverTypeVal ) {
-								webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'buddyboss-cover' ) );
-								appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'buddyboss-cover' ) );
+								webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
+								appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
 							}
 
 						}
@@ -1457,7 +1457,7 @@ window.bp = window.bp || {};
 
 							groupAvatarURL = $( '#bp-default-group-custom-avatar' ).val();
 							if ( 0 == groupAvatarURL.length ) {
-								groupAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+								groupAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 
 							if ( 'custom' !== groupAvatarTypeVal ) {
@@ -1503,7 +1503,7 @@ window.bp = window.bp || {};
 
 							groupAvatarURL = $( '#bp-default-group-custom-avatar' ).val();
 							if ( 0 == groupAvatarURL.length ) {
-								groupAvatarURL = webAvatarPreviewContainer.attr( 'blank-avatar' );
+								groupAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 
 						} else {
@@ -1552,8 +1552,8 @@ window.bp = window.bp || {};
 								$( '.default-group-cover-custom' ).hide();
 
 								if ( 'buddyboss' === profileCoverTypeVal ) {
-									webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'buddyboss-cover' ) );
-									appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'buddyboss-cover' ) );
+									webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
+									appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
 								}
 							}
 						} else {
@@ -1594,8 +1594,8 @@ window.bp = window.bp || {};
 							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
 
 							if ( 'buddyboss' === profileCoverTypeVal ) {
-								webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'buddyboss-cover' ) );
-								appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'buddyboss-cover' ) );
+								webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
+								appCoverPreviewContainer.prop( 'src', appCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
 							}
 						}
 					}
