@@ -79,10 +79,19 @@ add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 add_action( 'init', 'bp_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
-	$avatar = bp_enable_profile_gravatar();
+	$avatar       = bp_enable_profile_gravatar();
+	$show_avatars = bp_get_option( 'show_avatars' );
 
-	if ( false === $avatar ) {
-		// Avatars
+	if ( $show_avatars && 'wordpress' === bb_get_profile_avatar_type() ) {
+
+		/**
+		 * Enable gravatars fallback for member avatars when 'Profile Avatars' is 'WordPress'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_false' );
+	} elseif ( false === $avatar ) {
+
 		/**
 		 * Disable gravatars fallback for member avatars.
 		 *
@@ -1966,7 +1975,7 @@ add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_
  * Set gravatars when Gravatars is enabled from the Profile Images and Profile Avatars is BuddyBoss.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param string $avatar_default The avatar default.
  * @param array  $params         The avatar's data.
  * @return string Set default 'mm' if upload avatars is 'BuddyBoss'.

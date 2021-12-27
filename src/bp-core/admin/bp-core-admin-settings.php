@@ -406,7 +406,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 	?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload photos a profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload a profile avatars', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -532,8 +532,8 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 			<input type="hidden" name="bp-default-custom-profile-avatar" id="bp-default-user-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_profile_avatar() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
-			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
@@ -611,9 +611,9 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 		<div class="bb-img-button-wrap">
 			<label class="cover-uploader-label">
 				<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
-				<button type="button" class="button button-large bb-img-upload-button"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></button>
+				<a href="#" class="button button-large bb-img-upload-button" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 			</label>
-			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
 		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
 			<p id="bp-cover-image-feedback" class="updated"></p>
@@ -820,8 +820,8 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 			<input type="hidden" name="bp-default-custom-group-avatar" id="bp-default-group-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_group_avatar() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
-			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
@@ -907,9 +907,9 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 		<div class="bb-img-button-wrap">
 			<label class="cover-uploader-label">
 				<input type="file" name="default-group-cover-file" id="default-group-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
-				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+				<a href="#" class="button button-large bb-img-upload-button" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 			</label>
-			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo esc_attr( $hide_show_style ); ?>">Remove</a>
+			<a href="#" class="delete button button-large bb-img-remove-button" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
 		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
 			<p id="bp-cover-image-feedback" class="updated"></p>

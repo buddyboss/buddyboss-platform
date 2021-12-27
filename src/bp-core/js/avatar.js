@@ -106,7 +106,7 @@ window.bp = window.bp || {};
 				$( '.bb-custom-profile-group-avatar-feedback' ).hide();
 				$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).html( '' );
 			}
-			
+
 		},
 
 		setView: function( view ) {
@@ -162,6 +162,10 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				this.removeWarning();
+			}
 		},
 
 		setupNav: function() {
@@ -223,10 +227,6 @@ window.bp = window.bp || {};
 
 		uploadProgress: function() {
 
-			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-				$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).show();
-			}
-			
 			// Create the Uploader status view
 			var avatarStatus = new bp.Views.uploaderStatus( { collection: bp.Uploader.filesQueue } );
 
@@ -260,6 +260,10 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'crop', view: avatar } );
 
 			avatar.inject( '.bp-avatar' );
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				this.removeWarning();
+			}
 		},
 
 		setAvatar: function( avatar ) {
@@ -279,7 +283,8 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-				$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).show();
+				$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
+				$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'uploading' ) );
 			}
 
 			// Set the avatar !
@@ -301,10 +306,7 @@ window.bp = window.bp || {};
 				function( response ) {
 
 					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).hide();
-						$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
-						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'success' ).html( BP_Uploader.strings.feedback_messages[ response.feedback_code ] );
-						$( '.bb-custom-profile-group-avatar-feedback' ).show();
+						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
 					}
 
 					var avatarStatus = new bp.Views.AvatarStatus(
@@ -330,7 +332,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if( $( '.header-aside-inner .user-link .avatar' ).length ){
+					if ( $( '.header-aside-inner .user-link .avatar' ).length ) {
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
 					}
@@ -353,7 +355,7 @@ window.bp = window.bp || {};
 							{ url: response.avatar, action: 'uploaded' }
 						)
 					);
-					
+
 					// Show 'Remove' button when upload a new avatar.
 					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
 						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
@@ -368,14 +370,17 @@ window.bp = window.bp || {};
 				}
 			).fail(
 				function( response ) {
+
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
+					}
+
 					var feedback = BP_Uploader.strings.default_error;
 					if ( ! _.isUndefined( response ) ) {
 						feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
 					}
 
 					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).hide();
-						$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
 						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'error' ).html( feedback );
 						$( '.bb-custom-profile-group-avatar-feedback' ).show();
 					}
@@ -484,10 +489,10 @@ window.bp = window.bp || {};
 							)
 						);
 
-						if( $( '.header-aside-inner .user-link .avatar' ).length ){
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
-						}
+					if ( $( '.header-aside-inner .user-link .avatar' ).length ) {
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					}
 				}
 			).fail(
 				function( response ) {

@@ -2406,7 +2406,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 		 * Profile Avatars = BuddyBoss.
 		 * Upload Avatars = checked.
 		 */
-		if ( 'buddyboss' === $profile_avatar_type && ! $disable_avatar_uploads ) {
+		if ( 'buddyboss' === $profile_avatar_type ) {
 
 			// Default Profile Avatar = BuddyBoss.
 			if ( 'buddyboss' === $default_profile_avatar_type ) {
@@ -2427,14 +2427,6 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			 * Default Avatar = Blank.
 			 */
 		} elseif ( $show_avatar && 'wordpress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
-			$avatar_image_url = bb_get_blank_profile_avatar( $size );
-
-			/**
-			 * Avatar Display = unchecked.
-			 * Profile Avatars = BuddyBoss.
-			 * Upload Avatars = unchecked.
-			 */
-		} elseif ( $disable_avatar_uploads && 'buddyboss' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 
 			/**
