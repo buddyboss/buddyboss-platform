@@ -609,11 +609,9 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		)
 	);
 
-	$cover = bb_attachments_get_default_profile_group_cover_image( 'members' );
-
 	// If Profile Avatar is 'WordPress'.
 	$wordpress_avatar_url = bb_get_blank_profile_avatar();
-	if ( bp_get_option( 'show_avatars' ) ) {
+	if ( bp_get_option( 'show_avatars' ) && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
 		$wordpress_avatar_url = get_avatar_url(
 			'',
 			array(
@@ -622,6 +620,18 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 				'force_default' => true,
 			)
 		);
+	}
+
+	if ( 'wordpress' === bb_get_profile_avatar_type() ) {
+		$avatar = $wordpress_avatar_url;
+	}
+
+	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' );
+	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' );
+
+	if ( 'buddyboss' !== bb_get_default_profile_cover_type() ) {
+		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
+		$app_cover_preview = $web_cover_preview;
 	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
@@ -636,7 +646,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 			</div>
 			<div class="web-preview-wrap preview-block active" id="web-preview">
 				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
-					<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
+					<img src="<?php echo $web_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
 					<img src="<?php echo $avatar; ?>" alt="" class="user-custom-avatar" wordpress-avatar="<?php echo $wordpress_avatar_url; ?>" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
@@ -645,7 +655,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
 				<div class="app-preview-wrap preview-block" id="app-preview">
 					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
-						<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
+						<img src="<?php echo $app_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
 					</div>
 					<div class="preview-item-avatar">
 						<img src="<?php echo $avatar; ?>" alt="" class="user-custom-avatar" wordpress-avatar="<?php echo $wordpress_avatar_url; ?>" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
@@ -877,7 +887,13 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		)
 	);
 
-	$cover = bb_attachments_get_default_profile_group_cover_image( 'groups' );
+	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' );
+	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' );
+
+	if ( 'buddyboss' !== bb_get_default_group_cover_type() ) {
+		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'groups' );
+		$app_cover_preview = $web_cover_preview;
+	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
@@ -892,7 +908,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 			<div class="web-preview-wrap preview-block active" id="web-preview">
 				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
-					<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
+					<img src="<?php echo $web_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
 					<img src="<?php echo $avatar; ?>" alt="" class="group-custom-avatar" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
@@ -902,7 +918,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
 				<div class="app-preview-wrap preview-block" id="app-preview">
 					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
-						<img src="<?php echo $cover; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
+						<img src="<?php echo $app_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
 					</div>
 					<div class="preview-item-avatar">
 						<img src="<?php echo $avatar; ?>" alt="" class="group-custom-avatar" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">

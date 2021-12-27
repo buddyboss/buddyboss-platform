@@ -2496,6 +2496,10 @@ h2.has_tutorial_btn {
 		content: "\e855";
 	}
 
+	.button-group > .button:last-child:first-child {
+		border-radius: 3px;
+	}
+
 }
 
 table tbody td .bb-description {
