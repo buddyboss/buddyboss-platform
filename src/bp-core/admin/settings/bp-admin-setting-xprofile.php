@@ -195,6 +195,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', '', 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
+		// Profile Avatar.
+		$avatar_type         = bb_get_profile_avatar_type();
+		$default_avatar_type = bb_get_default_profile_avatar_type();
+
+		// Profile Cover.
+		$is_disabled_cover  = bp_disable_cover_image_uploads();
+		$default_cover_type = bb_get_default_profile_cover_type();
+
 		// Section for Profile Photos.
 		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Images', 'buddyboss' ), '', 'bp_profile_photos_tutorial' );
 
@@ -209,16 +217,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-disable-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval', $args );
 
 		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type';
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type' . ( 'wordpress' === $avatar_type ? ' bp-hide' : '' );
 		$this->add_field( 'bp-default-profile-avatar-type', esc_html__( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'string', $args );
 
 		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom';
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom' . ( 'buddyboss' === $avatar_type && 'custom' === $default_avatar_type ? '' : ' bp-hide' );
 		$this->add_field( 'bp-default-custom-profile-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
 
 		// Gravatars.
 		$args          = array();
-		$args['class'] = 'enable-profile-gravatar-field';
+		$args['class'] = 'enable-profile-gravatar-field' . ( 'wordpress' === $avatar_type ? ' bp-hide' : '' );
 		$this->add_field( 'bp-enable-profile-gravatar', esc_html__( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
 
 		// cover photos.
@@ -226,15 +234,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', esc_html__( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'string' );
 
 			$args          = array();
-			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type';
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-default-profile-cover-type', esc_html__( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
 
 			$args          = array();
-			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom';
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom' . ( ( ! $is_disabled_cover && 'custom' === $default_cover_type ) ? '' : ' bp-hide' );
 			$this->add_field( 'bp-default-custom-profile-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
 
 			$args          = array();
-			$args['class'] = 'profile-cover-options preview-avatar-cover-image';
+			$args['class'] = 'profile-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-preview-profile-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_profile_avatar_cover', 'string', $args );
 		}
 

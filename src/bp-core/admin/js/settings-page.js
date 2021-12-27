@@ -944,7 +944,6 @@ window.bp = window.bp || {};
 				allowAvatarUpload                   = $( '#bp-disable-avatar-uploads' ),
 				defaultProfileAvatarType            = $( 'input[type=radio][name=bp-default-profile-avatar-type]' ),
 				defaultProfileAvatarTypeVal         = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
-				allowAvatarUploadContainer          = $( '.upload-avatars-field' ),
 				defaultProfileAvatarTypeContainer   = $( '.default-profile-avatar-type' ),
 				defaultProfileAvatarCustomContainer = $( '.default-profile-avatar-custom' ),
 				enableProfileGravatarContainer      = $( '.enable-profile-gravatar-field' ),
@@ -955,37 +954,12 @@ window.bp = window.bp || {};
 
 			// Show/Hide Profile Avatars.
 			if ( profileAvatarType.length ) {
-
-				allowAvatarUploadContainer.hide();
-				defaultProfileAvatarTypeContainer.hide();
-				defaultProfileAvatarCustomContainer.hide();
-				profileAvatarfeedbackContainer.hide();
-				enableProfileGravatarContainer.hide();
-
-				if ( 'buddyboss' === profileAvatarType.val() ) {
-
-					allowAvatarUploadContainer.show();
-					defaultProfileAvatarTypeContainer.show();
-					enableProfileGravatarContainer.show();
-
-					if ( 'custom' === defaultProfileAvatarTypeVal ) {
-						defaultProfileAvatarCustomContainer.show();
-					}
-				} else if ( 'wordpress' === profileAvatarType.val() ) {
-					allowAvatarUploadContainer.show();
-
-					if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
-						profileAvatarfeedbackContainer.show();
-					}
-				}
-
 				$( profileAvatarType ).change(
 					function () {
-						allowAvatarUploadContainer.hide();
-						defaultProfileAvatarTypeContainer.hide();
-						defaultProfileAvatarCustomContainer.hide();
-						profileAvatarfeedbackContainer.hide();
-						enableProfileGravatarContainer.hide();
+						defaultProfileAvatarTypeContainer.addClass( 'bp-hide' );
+						defaultProfileAvatarCustomContainer.addClass( 'bp-hide' );
+						profileAvatarfeedbackContainer.addClass( 'bp-hide' );
+						enableProfileGravatarContainer.addClass( 'bp-hide' );
 
 						var profileAvatarURL          = '',
 							webAvatarPreviewContainer = webPreviewContainer.find( '.preview-item-avatar img' );
@@ -994,19 +968,18 @@ window.bp = window.bp || {};
 
 						if ( 'buddyboss' === $( this ).val() ) {
 
-							allowAvatarUploadContainer.show();
-							enableProfileGravatarContainer.show();
+							enableProfileGravatarContainer.removeClass( 'bp-hide' );
 							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
 
 							if ( allowAvatarUpload.prop( 'checked' ) ) {
 								defaultProfileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
 
-								defaultProfileAvatarTypeContainer.show();
+								defaultProfileAvatarTypeContainer.removeClass( 'bp-hide' );
 
 								profileAvatarURL = $( '.' + defaultProfileAvatarTypeVal + '-profile-avatar' ).prop( 'src' );
 
 								if ( 'custom' === defaultProfileAvatarTypeVal ) {
-									defaultProfileAvatarCustomContainer.show();
+									defaultProfileAvatarCustomContainer.removeClass( 'bp-hide' );
 
 									profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
 									if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
@@ -1018,10 +991,9 @@ window.bp = window.bp || {};
 							}
 
 						} else if ( 'wordpress' === $( this ).val() ) {
-							allowAvatarUploadContainer.show();
 
 							if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
-								profileAvatarfeedbackContainer.show();
+								profileAvatarfeedbackContainer.removeClass( 'bp-hide' );
 							}
 							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
 						}
@@ -1038,12 +1010,6 @@ window.bp = window.bp || {};
 			// Show/Hide Upload Custom Avatar.
 			if ( defaultProfileAvatarType.length ) {
 
-				if ( 'buddyboss' === profileAvatarType.val() && 'custom' === defaultProfileAvatarTypeVal ) {
-					defaultProfileAvatarCustomContainer.show();
-				} else {
-					defaultProfileAvatarCustomContainer.hide();
-				}
-
 				$( defaultProfileAvatarType ).change(
 					function () {
 
@@ -1053,7 +1019,7 @@ window.bp = window.bp || {};
 							webAvatarPreviewContainer = webPreviewContainer.find( '.preview-item-avatar img' );
 
 						if ( 'buddyboss' === profileAvatarType.val() && 'custom' === this.value ) {
-							defaultProfileAvatarCustomContainer.show();
+							defaultProfileAvatarCustomContainer.removeClass( 'bp-hide' );
 
 							profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
 							if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
@@ -1061,7 +1027,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							profileAvatarURL = $( '.' + this.value + '-profile-avatar' ).prop( 'src' );
-							defaultProfileAvatarCustomContainer.hide();
+							defaultProfileAvatarCustomContainer.addClass( 'bp-hide' );
 						}
 
 						if ( typeof profileAvatarURL.length !== 'undefined' && 0 < profileAvatarURL.length ) {
@@ -1080,12 +1046,6 @@ window.bp = window.bp || {};
 
 			if ( allowCoverUpload.length ) {
 
-				if ( allowCoverUpload.prop( 'checked' ) ) {
-					$( '.profile-cover-options' ).show();
-				} else {
-					$( '.profile-cover-options' ).hide();
-				}
-
 				$( allowCoverUpload ).change(
 					function () {
 
@@ -1095,13 +1055,13 @@ window.bp = window.bp || {};
 							appCoverPreviewContainer = appPreviewContainer.find( '.preview-item-cover img' );
 
 						if ( $( this ).prop( 'checked' ) ) {
-							$( '.profile-cover-options' ).show();
+							$( '.profile-cover-options' ).removeClass( 'bp-hide' );
 
 							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
 							previewContainer.find( '.preview_avatar_cover' ).addClass( 'has-cover' );
 
 							if ( 'custom' !== profileCoverTypeVal ) {
-								$( '.default-profile-cover-custom' ).hide();
+								$( '.default-profile-cover-custom' ).addClass( 'bp-hide' );
 
 								if ( 'buddyboss' === profileCoverTypeVal ) {
 									webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
@@ -1109,7 +1069,7 @@ window.bp = window.bp || {};
 								}
 							}
 						} else {
-							$( '.profile-cover-options' ).hide();
+							$( '.profile-cover-options' ).addClass( 'bp-hide' );
 						}
 					}
 				);
@@ -1117,12 +1077,6 @@ window.bp = window.bp || {};
 
 			// Upload Custom Cover Settings Show/Hide.
 			if ( profileCoverType.length ) {
-
-				if ( allowCoverUpload.prop( 'checked' ) && 'custom' === profileCoverTypeVal ) {
-					$( '.default-profile-cover-custom' ).show();
-				} else {
-					$( '.default-profile-cover-custom' ).hide();
-				}
 
 				$( profileCoverType ).change(
 					function () {
@@ -1136,13 +1090,13 @@ window.bp = window.bp || {};
 						appCoverPreviewContainer.prop( 'src', '' );
 
 						if ( 'custom' === this.value ) {
-							$( '.default-profile-cover-custom' ).show();
+							$( '.default-profile-cover-custom' ).removeClass( 'bp-hide' );
 
 							webCoverPreviewContainer.prop( 'src', $( '#bp-default-custom-user-cover' ).val() );
 							appCoverPreviewContainer.prop( 'src', $( '#bp-default-custom-user-cover' ).val() );
 
 						} else {
-							$( '.default-profile-cover-custom' ).hide();
+							$( '.default-profile-cover-custom' ).addClass( 'bp-hide' );
 
 							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-profile-cover-type]:checked' ).val();
 
@@ -1388,12 +1342,6 @@ window.bp = window.bp || {};
 
 			if ( allowGroupAvatarUpload.length ) {
 
-				if ( allowGroupAvatarUpload.prop( 'checked' ) ) {
-					$( '.group-avatar-options' ).show();
-				} else {
-					$( '.group-avatar-options' ).hide();
-				}
-
 				$( allowGroupAvatarUpload ).change(
 					function () {
 
@@ -1405,7 +1353,7 @@ window.bp = window.bp || {};
 						appPreviewContainer.find( '.preview-item-avatar img' ).prop( 'src', '' );
 
 						if ( $( this ).prop( 'checked' ) ) {
-							$( '.group-avatar-options' ).show();
+							$( '.group-avatar-options' ).removeClass( 'bp-hide' );
 
 							groupAvatarTypeVal = $( 'input[type=radio][name=bp-default-group-avatar-type]:checked' ).val();
 
@@ -1415,7 +1363,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( 'custom' !== groupAvatarTypeVal ) {
-								$( '.default-group-avatar-custom' ).hide();
+								$( '.default-group-avatar-custom' ).addClass( 'bp-hide' );
 								groupAvatarURL = $( '.' + groupAvatarTypeVal + '-group-avatar' ).prop( 'src' );
 							}
 
@@ -1427,7 +1375,7 @@ window.bp = window.bp || {};
 							appPreviewContainer.find( '.preview-item-avatar img' ).prop( 'src', groupAvatarURL );
 
 						} else {
-							$( '.group-avatar-options' ).hide();
+							$( '.group-avatar-options' ).addClass( 'bp-hide' );
 						}
 					}
 				);
@@ -1435,12 +1383,6 @@ window.bp = window.bp || {};
 
 			// Upload Custom Group Settings Show/Hide.
 			if ( groupAvatarType.length ) {
-
-				if ( allowGroupAvatarUpload.prop( 'checked' ) && 'custom' === groupAvatarTypeVal ) {
-					$( '.default-group-avatar-custom' ).show();
-				} else {
-					$( '.default-group-avatar-custom' ).hide();
-				}
 
 				$( groupAvatarType ).change(
 					function () {
@@ -1453,7 +1395,7 @@ window.bp = window.bp || {};
 						appPreviewContainer.find( '.preview-item-avatar img' ).prop( 'src', '' );
 
 						if ( 'custom' === this.value ) {
-							$( '.default-group-avatar-custom' ).show();
+							$( '.default-group-avatar-custom' ).removeClass( 'bp-hide' );
 
 							groupAvatarURL = $( '#bp-default-group-custom-avatar' ).val();
 							if ( 0 == groupAvatarURL.length ) {
@@ -1461,7 +1403,7 @@ window.bp = window.bp || {};
 							}
 
 						} else {
-							$( '.default-group-avatar-custom' ).hide();
+							$( '.default-group-avatar-custom' ).addClass( 'bp-hide' );
 							groupAvatarURL = $( '.' + this.value + '-group-avatar' ).prop( 'src' );
 						}
 
@@ -1482,12 +1424,6 @@ window.bp = window.bp || {};
 
 			if ( allowGroupCoverUpload.length ) {
 
-				if ( allowGroupCoverUpload.prop( 'checked' ) ) {
-					$( '.group-cover-options' ).show();
-				} else {
-					$( '.group-cover-options' ).hide();
-				}
-
 				$( allowGroupCoverUpload ).change(
 					function () {
 
@@ -1497,13 +1433,13 @@ window.bp = window.bp || {};
 							appCoverPreviewContainer = appPreviewContainer.find( '.preview-item-cover img' );
 
 						if ( $( this ).prop( 'checked' ) ) {
-							$( '.group-cover-options' ).show();
+							$( '.group-cover-options' ).removeClass( 'bp-hide' );
 
 							groupCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
 							previewContainer.find( '.preview_avatar_cover' ).addClass( 'has-cover' );
 
 							if ( 'custom' !== groupCoverTypeVal ) {
-								$( '.default-group-cover-custom' ).hide();
+								$( '.default-group-cover-custom' ).addClass( 'bp-hide' );
 
 								if ( 'buddyboss' === profileCoverTypeVal ) {
 									webCoverPreviewContainer.prop( 'src', webCoverPreviewContainer.attr( 'data-buddyboss-cover' ) );
@@ -1511,7 +1447,7 @@ window.bp = window.bp || {};
 								}
 							}
 						} else {
-							$( '.group-cover-options' ).hide();
+							$( '.group-cover-options' ).addClass( 'bp-hide' );
 						}
 					}
 				);
@@ -1519,12 +1455,6 @@ window.bp = window.bp || {};
 
 			// Upload Custom Group Cover Settings Show/Hide.
 			if ( groupCoverType.length ) {
-
-				if ( allowGroupCoverUpload.prop( 'checked' ) && 'custom' === groupCoverTypeVal ) {
-					$( '.default-group-cover-custom' ).show();
-				} else {
-					$( '.default-group-cover-custom' ).hide();
-				}
 
 				$( groupCoverType ).change(
 					function () {
@@ -1538,12 +1468,12 @@ window.bp = window.bp || {};
 						appCoverPreviewContainer.prop( 'src', '' );
 
 						if ( 'custom' === this.value ) {
-							$( '.default-group-cover-custom' ).show();
+							$( '.default-group-cover-custom' ).removeClass( 'bp-hide' );
 
 							webCoverPreviewContainer.prop( 'src', $( '#bp-default-custom-group-cover' ).val() );
 							appCoverPreviewContainer.prop( 'src', $( '#bp-default-custom-group-cover' ).val() );
 						} else {
-							$( '.default-group-cover-custom' ).hide();
+							$( '.default-group-cover-custom' ).addClass( 'bp-hide' );
 
 							profileCoverTypeVal = $( 'input[type=radio][name=bp-default-group-cover-type]:checked' ).val();
 

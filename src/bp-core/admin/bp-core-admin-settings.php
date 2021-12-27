@@ -450,7 +450,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 		?>
 	</p>
 
-	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display: none;">
+	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning <?php echo ( bp_get_option( 'show_avatars' ) ? 'bp-hide' : '' ); ?>">
 		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning">
 			<?php
 			$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
@@ -516,24 +516,24 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_custom_avatar() {
-	$hide_show_style        = '';
+	$hide_show_style        = 'inline-block';
 	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
 	$custom_avatar_url      = bb_get_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
 		$custom_avatar_url = $placeholder_avatar_url;
-		$hide_show_style   = 'display:none';
+		$hide_show_style   = 'none';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview user-custom-avatar" data-default="<?php echo esc_url( $placeholder_avatar_url ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>">
+			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview user-custom-avatar" data-default="<?php echo esc_url( $placeholder_avatar_url ); ?>" style="display: <?php echo esc_attr( $hide_show_style ); ?>;">
 			<input type="hidden" name="bp-default-custom-profile-avatar" id="bp-default-user-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_profile_avatar() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="display: <?php echo esc_attr( $hide_show_style ); ?>;"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
@@ -804,24 +804,24 @@ function bp_admin_setting_callback_default_group_avatar_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_group_custom_avatar() {
-	$hide_show_style        = '';
+	$hide_show_style        = 'inline-block';
 	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
 	$custom_avatar_url      = bb_get_default_custom_upload_group_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
 		$custom_avatar_url = $placeholder_avatar_url;
-		$hide_show_style   = 'display:none';
+		$hide_show_style   = 'none';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-group-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo esc_url( $placeholder_avatar_url ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>">
+			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo esc_url( $placeholder_avatar_url ); ?>" style="display: <?php echo esc_attr( $hide_show_style ); ?>;">
 			<input type="hidden" name="bp-default-custom-group-avatar" id="bp-default-group-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_group_avatar() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>" style="display: <?php echo esc_attr( $hide_show_style ); ?>;"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>

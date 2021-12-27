@@ -90,6 +90,14 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	 * Register setting fields.
 	 */
 	public function register_fields() {
+		// Group Avatar.
+		$is_disabled_avatar  = bp_disable_group_avatar_uploads();
+		$default_avatar_type = bb_get_default_group_avatar_type();
+
+		// Group Cover.
+		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
+		$default_cover_type = bb_get_default_group_cover_type();
+
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
@@ -97,11 +105,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-disable-group-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
 
 		$args          = array();
-		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type';
+		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type' . ( $is_disabled_avatar ? ' bp-hide' : '' );
 		$this->add_field( 'bp-default-group-avatar-type', esc_html__( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'string', $args );
 
 		$args          = array();
-		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom';
+		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom' . ( ! $is_disabled_avatar && 'custom' === $default_avatar_type ? '' : ' bp-hide' );
 		$this->add_field( 'bp-default-custom-group-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
 
 		// Allow group cover photos.
@@ -109,15 +117,15 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-cover-image-uploads', esc_html__( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 
 			$args          = array();
-			$args['class'] = 'group-cover-options avatar-options default-group-cover-type';
+			$args['class'] = 'group-cover-options avatar-options default-group-cover-type' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-default-group-cover-type', esc_html__( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
 
 			$args          = array();
-			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom';
+			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom' . ( ! $is_disabled_cover && 'custom' === $default_cover_type ? '' : ' bp-hide' );
 			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
 
 			$args          = array();
-			$args['class'] = 'group-cover-options preview-avatar-cover-image';
+			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
