@@ -2182,8 +2182,6 @@ function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string|null $default Optional. Fallback value if not found in the database.
- *                             Default: null.
  * @return string Return default custom upload profile cover URL.
  */
 function bb_get_default_custom_upload_profile_cover() {

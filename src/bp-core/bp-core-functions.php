@@ -5765,7 +5765,7 @@ function bb_core_upload_dummy_attachment() {
  */
 function bb_core_get_browser() {
 
-	$u_agent  = $_SERVER['HTTP_USER_AGENT'];
+	$u_agent  = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	$bname    = 'Unknown';
 	$platform = 'Unknown';
 	$version  = '';
