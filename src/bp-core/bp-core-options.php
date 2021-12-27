@@ -2577,7 +2577,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 	$is_buddyboss_app_plugin_active = class_exists( 'bbapp' ) ? true : false;
 	$is_buddyboss_theme_active      = function_exists( 'buddyboss_theme' ) ? true : false;
 
-	$info_text                  = __( 'On the web, the <b>Cover Image Background</b> color can be changed with custom CSS.', 'buddyboss' );
+	$info_text                  = __( 'On the web, the <strong>Cover Image Background</strong> color can be changed with custom CSS.', 'buddyboss' );
 	$web_cover_background_color = '#e2e9ef';
 	$app_cover_background_color = '#EDEEF2';
 
@@ -2591,7 +2591,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		}
 
 		$info_text = sprintf(
-			__( 'On the web, the <b>Cover Image Background</b> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss' ),
+			__( 'On the web, the <strong>Cover Image Background</strong> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' ),
 			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
 		);
@@ -2600,7 +2600,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		$web_cover_background_color = ( function_exists( 'buddyboss_theme_get_option' ) ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : $web_cover_background_color;
 
 		$info_text = sprintf(
-			__( 'On the web, the <b>Cover Image Background</b> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
+			__( 'On the web, the <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' )
 		);
 	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
@@ -2611,7 +2611,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		}
 
 		$info_text = sprintf(
-			__( 'On the web, the <b>Cover Image Background</b> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss' ),
+			__( 'On the web, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss' ),
 			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
 		);
 	}
