@@ -527,8 +527,8 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	 *                           Defaults to 'cover-image'
 	 */
 	$type_subdir = apply_filters( 'bp_attachments_get_attachment_sub_dir', $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'], $r['object_dir'], $r['item_id'], $r['type'] );
-	
-	$type_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $type_subdir;
+
+	$type_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $type_subdir;
 
 	/**
 	 * Filters BuddyPress image attachment directory.
@@ -660,6 +660,18 @@ function bp_attachments_delete_file( $args = array() ) {
 			$attachment_path = trailingslashit( $type_dir ) . $file;
 		}
 	} else {
+
+		$has_cover = true;
+		if ( 'members' === $r['object_dir'] ) {
+			$has_cover = bp_attachments_get_user_has_cover_image( $r['item_id'] );
+		} elseif ( 'groups' === $r['object_dir'] ) {
+			$has_cover = bp_attachments_get_group_has_cover_image( $r['item_id'] );
+		}
+
+		if ( ! $has_cover ) {
+			return false;
+		}
+
 		$attachment_path = bp_attachments_get_attachment( 'path', $args );
 	}
 
@@ -1565,7 +1577,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 */
 	$cover_subdir = apply_filters( 'bp_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
 
-	$cover_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
+	$cover_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
 
 	/**
 	 * Filters BuddyPress image attachment directory.
@@ -1578,7 +1590,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_dir    = apply_filters( 'bp_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_dir = apply_filters( 'bp_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
