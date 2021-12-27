@@ -69,7 +69,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$bp_nouveau_appearance['user_front_page_redirect'] = isset( $_POST['bp-enable-member-dashboard-redirect'] ) ? $_POST['bp-enable-member-dashboard-redirect'] : 0;
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
-        $bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
+		$bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
 
 		// Set requirement for last name based on display format.
 		if ( isset( $bb_display_name_format ) ) {
