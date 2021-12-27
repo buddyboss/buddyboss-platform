@@ -224,6 +224,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		 *     @type int|string $item_id       ID of the avatar item being requested.
 		 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
 		 * }
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		$args['item_id'] = apply_filters( 'bb_core_avatar_crop_item_id_args', (int) $args['item_id'], $args );
 
