@@ -1041,6 +1041,8 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#activity-media-button' ) ) {
 								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
+
+							self.model.unset( 'media' );
 						}
 					}
 				);
@@ -1260,6 +1262,8 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#activity-document-button' ) ) {
 								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 							}
+
+							self.model.unset( 'document' );
 						}
 					}
 				);
@@ -1493,6 +1497,8 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#activity-document-button' ) ) {
 								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
+
+							self.model.unset( 'video' );
 						}
 					}
 				);
@@ -3682,10 +3688,12 @@ window.bp = window.bp || {};
 
 			events: {
 				'focus #whats-new': 'displayFull',
+				'keyup #whats-new': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',
-				'click #whats-new-toolbar': 'triggerDisplayFull'
+				'click #whats-new-toolbar': 'triggerDisplayFull',
+				'change .medium-editor-toolbar-input': 'mediumLink'
 			},
 
 			initialize: function () {
@@ -3723,7 +3731,29 @@ window.bp = window.bp || {};
 				this.model.on( 'change:errors', this.displayFeedback, this );
 			},
 
+			postValidate: function () {
+				var $whatsNew = this.$el.find( '#whats-new' );
+				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+				content     = content.replace( /&nbsp;/g, ' ' );
+				
+				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
+					this.$el.removeClass( 'focus-in--empty' );
+				} else {
+					this.$el.addClass( 'focus-in--empty' );
+				}
+			},
+
+			mediumLink: function () {
+				var value = $( '.medium-editor-toolbar-input' ).val();
+
+				if ( value !== '' ) {
+					$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+				}
+			},
+
 			displayFull: function ( event ) {
+
+				this.model.on('change:video change:document change:media change:gif_data', this.postValidate, this);
 
 				// Remove feedback.
 				this.cleanFeedback();
@@ -3803,6 +3833,9 @@ window.bp = window.bp || {};
 									} else {
 										window.activityCaretPosition = document.selection.createRange();
 									}
+
+									// Enable post submit button
+									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
 								},
 							}
 						}
