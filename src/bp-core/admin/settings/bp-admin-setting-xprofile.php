@@ -69,9 +69,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$bp_nouveau_appearance['user_front_page_redirect'] = isset( $_POST['bp-enable-member-dashboard-redirect'] ) ? $_POST['bp-enable-member-dashboard-redirect'] : 0;
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
+        $bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
+
 		// Set requirement for last name based on display format.
-		if ( isset( $_POST['bp-display-name-format'] ) ) {
-			if ( $_POST['bp-display-name-format'] == 'first_last_name' ) {
+		if ( isset( $bb_display_name_format ) ) {
+			if ( 'first_last_name' === $bb_display_name_format ) {
 				$lastname_field_id = bp_xprofile_lastname_field_id();
 				bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
 
@@ -83,7 +85,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$field              = xprofile_get_field( $firstname_field_id );
 				$field->is_required = true;
 				$field->save();
-			} elseif ( $_POST['bp-display-name-format'] == 'first_name' ) {
+			} elseif ( 'first_name' === $bb_display_name_format ) {
 				$firstname_field_id = bp_xprofile_firstname_field_id();
 				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
@@ -92,19 +94,23 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$field              = xprofile_get_field( $firstname_field_id );
 				$field->is_required = true;
 				$field->save();
-			} elseif ( $_POST['bp-display-name-format'] == 'nickname' ) {
+			} elseif ( 'nickname' === $bb_display_name_format ) {
 				$nickname_field_id = bp_xprofile_nickname_field_id();
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
 		}
 
+		$bb_profile_avatar_type           = filter_input( INPUT_POST, 'bp-profile-avatar-type', FILTER_SANITIZE_STRING );
+		$bb_default_custom_profile_avatar = filter_input( INPUT_POST, 'bp-default-custom-profile-avatar', FILTER_SANITIZE_STRING );
+		$bb_default_custom_profile_cover  = filter_input( INPUT_POST, 'bp-default-custom-profile-cover', FILTER_SANITIZE_STRING );
+
 		/**
-		 * Enable Gravatars set disable if Profile Avatars is WordPress.
+		 * Enable Gravatar's set disable if Profile Avatars is WordPress.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		if ( isset( $_POST['bp-profile-avatar-type'] ) && 'wordpress' === sanitize_text_field( $_POST['bp-profile-avatar-type'] ) ) {
+		if ( isset( $bb_profile_avatar_type ) && 'wordpress' === sanitize_text_field( $bb_profile_avatar_type ) ) {
 			bp_update_option( 'bp-enable-profile-gravatar', '' );
 		}
 
@@ -113,7 +119,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		if ( ! isset( $_POST['bp-default-custom-profile-avatar'] ) || ( isset( $_POST['bp-default-custom-profile-avatar'] ) && empty( $_POST['bp-default-custom-profile-avatar'] ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
+		if ( ! isset( $bb_default_custom_profile_avatar ) || ( empty( $bb_default_custom_profile_avatar ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
 
 			if ( 'wordpress' === $profile_avatar_type_before_saving ) {
 
@@ -121,7 +127,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$default_profile_avatar_type_before_saving = 'buddyboss';
 				$bp_enable_profile_gravatar_before_saving  = '';
 
-			} else if ( 'custom' === $default_profile_avatar_type_before_saving ) {
+			} elseif ( 'custom' === $default_profile_avatar_type_before_saving ) {
 				$default_profile_avatar_type_before_saving = 'buddyboss';
 			}
 
@@ -131,7 +137,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
 		}
 
-		if ( ! isset( $_POST['bp-default-custom-profile-cover'] ) || ( isset( $_POST['bp-default-custom-profile-cover'] ) && empty( $_POST['bp-default-custom-profile-cover'] ) && 'custom' === $profile_cover_type_after_saving ) ) {
+		if ( ! isset( $bb_default_custom_profile_cover ) || ( isset( $bb_default_custom_profile_cover ) && empty( $bb_default_custom_profile_cover ) && 'custom' === $profile_cover_type_after_saving ) ) {
 
 			if ( 'custom' === $profile_cover_type_before_saving ) {
 				$profile_cover_type_before_saving = 'buddyboss';
