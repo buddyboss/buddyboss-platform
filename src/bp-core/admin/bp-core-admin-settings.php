@@ -445,7 +445,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 		echo sprintf(
 			/* translators: %s: Admin discussion link */
 			__( 'Select whether to use the BuddyBoss or WordPress avatar systems. You can manage WordPress avatars in the %s settings.', 'buddyboss' ),
-			wp_kses( $link )
+			wp_kses_post( $link )
 		);
 		?>
 	</p>
@@ -457,7 +457,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 			echo sprintf(
 				/* translators: %s: Admin discussion link */
 				__( 'Please enable "Avatar display" in your WordPress %s settings.', 'buddyboss' ),
-				wp_kses( $link )
+				wp_kses_post( $link )
 			);
 			?>
 		</p>
@@ -701,7 +701,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		</div>
 
 	</div>
-	<p class="description"><?php echo wp_kses( $live_preview_settings['info'] ); ?></p>
+	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
 	<?php
 }
 
