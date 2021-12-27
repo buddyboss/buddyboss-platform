@@ -18,7 +18,9 @@ defined( 'ABSPATH' ) || exit;
 
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
-	// Initialize class
+	/**
+	 * Initialize class.
+	 */
 	public function initialize() {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
@@ -38,6 +40,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		add_filter( 'bp_attachments_get_attachment_sub_dir', 'bp_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 	}
 
+	/**
+	 * Save options.
+	 */
 	public function settings_save() {
 		$group_avatar_type_before_saving = bb_get_default_group_avatar_type();
 		$group_cover_type_before_saving  = bb_get_default_group_cover_type();
@@ -71,12 +76,18 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 	}
 
-	// Check if groups are enabled
+	/**
+	 * Check if groups are enabled.
+	 *
+	 * @return bool
+	 */
 	public function is_active() {
 		return bp_is_active( 'groups' );
 	}
 
-	// Register setting fields
+	/**
+	 * Register setting fields.
+	 */
 	public function register_fields() {
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
@@ -150,14 +161,14 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Section for group list.
 		$this->add_section( 'bp_group_list_settings', __( 'Group Directories', 'buddyboss' ), '', 'bp_group_directories_tutorial' );
 
-		// Admin Settings for Settings > Groups > Group Directories > Enabled Views
+		// Admin Settings for Settings > Groups > Group Directories > Enabled Views.
 		$this->add_field(
 			'bp-group-layout-format',
 			__( 'Enabled View(s)', 'buddyboss' ),
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
-		// Admin Settings for Settings > Groups > Group Directories > Default View
+		// Admin Settings for Settings > Groups > Group Directories > Default View.
 		$args          = array();
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
