@@ -24,20 +24,23 @@ bp_nouveau_before_loop(); ?>
 	<?php
 	while ( bp_groups() ) :
 		bp_the_group();
-	?>
+		?>
 
 		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 			<div class="list-wrap group-list">
 
 				<div class="group-list-header">
-					<?php if( !bp_disable_group_cover_image_uploads() ) { ?>
+					<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
 						<?php
-						$group_cover_image_url = bp_attachments_get_attachment( 'url', array(
-							'object_dir' => 'groups',
-							'item_id'    => bp_get_group_id(),
-						) );
+						$group_cover_image_url = bp_attachments_get_attachment(
+							'url',
+							array(
+								'object_dir' => 'groups',
+								'item_id'    => bp_get_group_id(),
+							)
+						);
 						?>
-						<div class="bs-group-cover only-grid-view"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo $group_cover_image_url; ?>"></a></div>
+						<div class="bs-group-cover only-grid-view"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 					<?php } ?>
 
 					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
