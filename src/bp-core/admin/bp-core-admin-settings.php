@@ -983,7 +983,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		</div>
 
 	</div>
-	<p class="description"><?php echo wp_kses( $live_preview_settings['info'] ); ?></p>
+	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
 	<?php
 }
 
