@@ -1868,6 +1868,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   font-weight: 500;
 }
 
+.activity-update-form .activity-link-preview-container {
+  margin-bottom: 20px;
+}
+
 .activity-update-form .medium-editor-toolbar {
   top: inherit;
   bottom: -10px;
