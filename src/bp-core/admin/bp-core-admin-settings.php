@@ -1223,16 +1223,7 @@ function bp_core_admin_settings() {
 				<?php bp_core_settings_admin_tabs(); ?>
 			</ul>
 		</div>
-		<form action="<?php echo esc_url( $form_action ); ?>" method="post"
-		<?php
-		/**
-		 * Fires inside the option page form tag.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		do_action( 'bb_admin_settings_form_tag' );
-		?>
-		>
+		<form action="<?php echo esc_url( $form_action ); ?>" method="post" enctype="multipart/form-data">
 			<?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
 	</div>

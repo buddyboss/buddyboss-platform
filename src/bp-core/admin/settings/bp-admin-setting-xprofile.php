@@ -24,8 +24,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		$this->active_tab = bp_core_get_admin_active_tab();
 
-		add_action( 'bb_admin_settings_form_tag', 'bb_admin_setting_form_add_enctype' );
-
 		// Profile Avatar.
 		add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
 		add_filter( 'xprofile_avatar_upload_dir', array( $this, 'bb_xprofile_default_custom_profile_avatar_upload_dir' ), 10, 1 );

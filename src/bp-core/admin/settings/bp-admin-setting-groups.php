@@ -26,8 +26,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		$this->active_tab = bp_core_get_admin_active_tab();
 
-		add_action( 'bb_admin_settings_form_tag', 'bb_admin_setting_form_add_enctype' );
-
 		// Group Avatar.
 		add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
 		add_filter( 'groups_avatar_upload_dir', array( $this, 'bb_group_default_custom_group_avatar_upload_dir' ), 10, 1 );

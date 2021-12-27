@@ -1645,15 +1645,6 @@ function bb_rest_decode_default_avatar_url( $gravatar ) {
 add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
 
 /**
- * Add data encoding type for file uploading
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_admin_setting_form_add_enctype() {
-	echo ' enctype="multipart/form-data"';
-}
-
-/**
  * The custom profile and group avatar script data.
  *
  * @since BuddyBoss [BBVERSION]
