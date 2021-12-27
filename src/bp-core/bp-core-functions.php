@@ -5769,6 +5769,7 @@ function bb_core_get_browser() {
 	$bname    = 'Unknown';
 	$platform = 'Unknown';
 	$version  = '';
+	$ub       = '';
 
 	// First get the platform?
 	if ( preg_match( '/linux/i', $u_agent ) ) {
