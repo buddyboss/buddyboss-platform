@@ -2636,10 +2636,17 @@ h2.has_tutorial_btn {
 	}
 
 	.preview-item-cover {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: stretch;
+		-ms-flex-align: stretch;
+		align-items: stretch;
 		min-height: 90px;
 		max-height: 90px;
 		background-color: #ccc;
 		overflow: hidden;
+		margin: -2px;
 	}
 
 	.preview-item-avatar {
@@ -2653,7 +2660,6 @@ h2.has_tutorial_btn {
 
 	.preview-item-cover img,
 	.preview-item-avatar img {
-		height: 100%;
 		object-fit: cover;
 		width: 100%;
 	}
@@ -2696,6 +2702,10 @@ h2.has_tutorial_btn {
 .buddyboss_page_bp-settings.modal-open {
 
 	#TB_window {
+		height: auto !important;
+		top: 50% !important;
+		transform: translateY(-50%);
+		max-height: 90%;
 		overflow: auto;
 
 		.bp-avatar #avatar-to-crop {
@@ -2706,5 +2716,6 @@ h2.has_tutorial_btn {
 	#TB_ajaxContent {
 		height: auto !important;
 		width: auto !important;
+		padding: 15px;
 	}
 }
