@@ -649,6 +649,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		);
 	}
 
+	if ( 'wordpress' === bb_get_profile_avatar_type() ) {
 		$avatar = $wordpress_avatar_url;
 	}
 
