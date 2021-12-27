@@ -1108,6 +1108,11 @@ a.layout-grid-view {
   line-height: 1;
 }
 
+#whats-new-form .bb-model-header {
+  box-shadow: none;
+  border-bottom: 1px solid #d2d4d6;
+}
+
 .bp-nouveau-activity-form-placeholder-,
 #whats-new-form {
   background-color: #fff;
@@ -2232,7 +2237,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   position: relative;
   padding: 0 30px;
   margin: 15px 0 0;
-  color: #92949d;
   display: flex;
   align-items: center;
   font-size: 15px;

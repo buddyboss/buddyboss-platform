@@ -118,6 +118,14 @@
 	}
 }
 
+#whats-new-form {
+
+	.bb-model-header {
+		box-shadow: none;
+		border-bottom: 1px solid #d2d4d6;
+	}
+}
+
 .bp-nouveau-activity-form-placeholder-,
 #whats-new-form {
 	background-color: #fff;
@@ -1204,7 +1212,6 @@
 		position: relative;
 		padding: 0 30px;
 		margin: 15px 0 0;
-		color: #92949d;
 		display: flex;
 		align-items: center;
 		font-size: 15px;
