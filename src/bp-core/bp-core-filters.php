@@ -79,18 +79,9 @@ add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 add_action( 'init', 'bp_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
-	$avatar       = bp_enable_profile_gravatar();
-	$show_avatars = bp_get_option( 'show_avatars' );
+	$avatar = bp_enable_profile_gravatar();
 
-	if ( $show_avatars && 'wordpress' === bb_get_profile_avatar_type() ) {
-
-		/**
-		 * Enable gravatars fallback for member avatars when 'Profile Avatars' is 'WordPress'.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_false' );
-	} elseif ( false === $avatar ) {
+	if ( false === $avatar ) {
 
 		/**
 		 * Disable gravatars fallback for member avatars.
@@ -2109,3 +2100,29 @@ function bb_add_default_cover_image_inline_css() {
 	wp_add_inline_style( 'bp-nouveau', $css_rules );
 }
 add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
+
+/**
+ * Enable gravatars for members when Profile Avatars is WordPress.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool  $no_grav Whether or not to skip Gravatar.
+ * @param array $params Array of parameters for the avatar request.
+ * @return bool.
+ */
+function bb_member_enabled_gravatar( $no_grav, $params ) {
+
+	if ( ! isset( $params['object'] ) ) {
+		return $no_grav;
+	}
+
+	// By default, Gravatar is pinged for members when WordPress is enabled.
+	$show_avatars = bp_get_option( 'show_avatars' );
+
+	if ( 'user' === $params['object'] && $show_avatars && 'wordpress' === bb_get_profile_avatar_type() ) {
+		$no_grav = false;
+	}
+
+	return $no_grav;
+}
+add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 );
