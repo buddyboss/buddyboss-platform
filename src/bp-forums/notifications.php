@@ -500,3 +500,16 @@ function forums_notification_settings() {
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 
+/**
+ * Register the forum notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return void
+ */
+function bb_load_forums_notifications() {
+	// Load forums notifications.
+	if ( class_exists( 'BP_Forums_Notification' ) ) {
+		BP_Forums_Notification::instance();
+	}
+}
+add_action( 'bp_forums_includes', 'bb_load_forums_notifications' );

@@ -95,6 +95,9 @@ add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
 add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
+
+add_action( 'bp_messages_includes', 'bb_load_messages_notifications', 20 );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -737,4 +740,17 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 function bp_core_get_js_strings_callback(  $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	return $params;
+}
+
+/**
+ * Register the messages notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return void
+ */
+function bb_load_messages_notifications() {
+	// Load Messages Notifications.
+	if ( class_exists( 'BP_Messages_Notification' ) ) {
+		BP_Messages_Notification::instance();
+	}
 }

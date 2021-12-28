@@ -17,6 +17,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 
 	/**
+	 * Instance of this class.
+	 *
+	 * @var object
+	 */
+	private static $_instance = null;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -31,6 +38,21 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_for_new_message();
 
 		$this->start();
+	}
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return Controller|null
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+
+		return self::$_instance;
 	}
 
 	/**

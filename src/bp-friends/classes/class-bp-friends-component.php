@@ -60,11 +60,6 @@ class BP_Friends_Component extends BP_Component {
 			$includes[] = 'notifications';
 		}
 
-		// Load Activity Notifications.
-		if ( class_exists( 'BP_Friends_Notification' ) ) {
-			new BP_Friends_Notification();
-		}
-
 		parent::includes( $includes );
 	}
 

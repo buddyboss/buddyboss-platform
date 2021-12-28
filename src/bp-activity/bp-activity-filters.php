@@ -160,6 +160,8 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2042,19 +2044,19 @@ function bp_activity_document_add( $document ) {
 					}
 				}
 			}
-			
+
 			// Check when new activity coment is empty then set privacy comment - 2121.
 			if ( ! empty( $bp_new_activity_comment ) ) {
 				$activity_id        = $bp_new_activity_comment;
 				$document->privacy  = 'comment';
 				$document->album_id = 0;
 			} else {
-				
+
 				$args = array(
 					'hide_sitewide' => true,
 					'privacy'       => 'document',
 				);
-				
+
 				// Create activity only if not created previously.
 				if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
 					$args['item_id'] = $document->group_id;
@@ -2086,20 +2088,20 @@ function bp_activity_document_add( $document ) {
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( $parent_activity_id ) {
-					
+
 					// If new activity comment is empty - 2121.
 					if ( empty( $bp_new_activity_comment ) ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $parent_activity_id;
 						$document_activity->save();
 					}
-					
+
 					// save parent activity id in attachment meta.
 					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 				}
 			}
 		} else {
-			
+
 			if ( $parent_activity_id ) {
 
 				// If the document posted in activity comment then set the activity id to comment id.- 2121.
@@ -2107,7 +2109,7 @@ function bp_activity_document_add( $document ) {
 					$parent_activity_id = $bp_new_activity_comment;
 					$document->privacy  = 'comment';
 				}
-				
+
 				// save document activity id in document.
 				$document->activity_id = $parent_activity_id;
 				$document->save();
@@ -2523,7 +2525,7 @@ function bb_activity_has_comment_access( $retval ) {
  *
  * @return boolean
  */
-function bb_activity_has_comment_reply_access( $can_comment, $comment ) { 
+function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	if ( empty( $comment ) ) {
 		return $can_comment;
 	}
@@ -2964,7 +2966,7 @@ function bp_activity_edit_update_video( $video_ids ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
- * 
+ *
  * @since BuddyBoss 1.7.8
  */
 function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
@@ -2996,4 +2998,19 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Register the activity notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return void
+ */
+function bb_load_activity_notifications() {
+
+	// Load Activity Notifications.
+	if ( class_exists( 'BP_Activity_Notification' ) ) {
+		BP_Activity_Notification::instance();
+	}
+
 }
