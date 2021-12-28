@@ -3453,6 +3453,11 @@ window.bp = window.bp || {};
 			activityVideo: null,
 			className: 'empty',
 			initialize: function () {
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+					this.activityLinkPreview = new bp.Views.ActivityLinkPreview( { model: this.model } );
+					this.views.add( this.activityLinkPreview );
+				}
+
 				if ( ! _.isUndefined( window.Dropzone ) ) {
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
@@ -3462,11 +3467,6 @@ window.bp = window.bp || {};
 
 					this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
 					this.views.add( this.activityVideo );
-				}
-
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
-					this.activityLinkPreview = new bp.Views.ActivityLinkPreview( { model: this.model } );
-					this.views.add( this.activityLinkPreview );
 				}
 
 				this.activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: this.model } );
