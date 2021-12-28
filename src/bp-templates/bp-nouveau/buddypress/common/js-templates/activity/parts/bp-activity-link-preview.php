@@ -4,6 +4,7 @@
 	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
+	<a title="<?php _e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion">Remove Preview</i></a>
 	<div class="activity-link-preview-container">
 
 		<# if ( data.link_success && ! data.link_error ) { #>
@@ -37,7 +38,6 @@
 		<# if ( data.link_error && ! data.link_success ) { #>
 		<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
 		<# } #>
-		<a title="<?php _e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><i class="bb-icons bb-icon-close"></i></a>
 	</div>
 	<# } #>
 	<# } #>

@@ -1108,6 +1108,11 @@ a.layout-grid-view {
   line-height: 1;
 }
 
+#whats-new-form .bb-model-header {
+  box-shadow: none;
+  border-bottom: 1px solid #d2d4d6;
+}
+
 .bp-nouveau-activity-form-placeholder-,
 #whats-new-form {
   background-color: #fff;
@@ -1140,6 +1145,12 @@ a.layout-grid-view {
 }
 
 #whats-new-form.focus-in--blank-group #privacy-status-submit {
+  opacity: 0.6;
+  cursor: default;
+  pointer-events: none;
+}
+
+#whats-new-form.focus-in--empty #aw-whats-new-submit {
   opacity: 0.6;
   cursor: default;
   pointer-events: none;
@@ -2232,7 +2243,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   position: relative;
   padding: 0 30px;
   margin: 15px 0 0;
-  color: #92949d;
   display: flex;
   align-items: center;
   font-size: 15px;
@@ -3425,6 +3435,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   border: 1px solid #e5e5e5;
   border-radius: 3px;
   position: relative;
+  width: 100%;
   overflow: auto;
   zoom: 1;
 }
@@ -3449,8 +3460,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .activity-link-preview-image {
   float: right;
   max-width: 160px;
-  margin-left: 20px;
-  margin-bottom: 20px;
   position: relative;
 }
 
@@ -3458,10 +3467,43 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   width: 100%;
   height: auto;
   border: none;
+  border-radius: 4px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper-img-holder {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  max-width: 160px;
+  margin-left: 20px;
+  float: right;
 }
 
 .activity-url-scrapper-container .activity-link-preview-image {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 799px) {
+  .activity-url-scrapper-container #activity-url-scrapper-img-holder {
+    max-width: inherit;
+    width: 100%;
+    margin-left: 0;
+    float: none;
+    margin-bottom: 25px;
+  }
+  .activity-link-preview-image {
+    max-width: inherit;
+  }
+  .activity-link-preview-image img {
+    display: block;
+    margin: auto;
+    width: auto;
+    max-width: 100%;
+  }
 }
 
 .activity-video-preview {
@@ -3502,25 +3544,34 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 }
 
 .activity-url-thumb-nav {
-  position: absolute;
-  bottom: 3px;
-  right: 0;
-  left: 0;
   margin: auto;
   text-align: center;
+  display: inline-block;
+  position: relative;
 }
 
 #buddypress .activity-url-thumb-nav button {
   cursor: pointer;
   width: auto;
-  padding: 0 6px;
+  color: #92949d;
+  background-color: #fbfaf9;
   margin: 0 3px;
+  padding: 0;
+  border: 0;
   height: auto;
   min-height: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#buddypress .activity-url-thumb-nav button#activity-url-nextPicButton {
+  right: inherit;
+  left: 0;
 }
 
 .activity-url-thumb-nav .bb-icons {
-  font-size: 23px;
+  font-size: 20px;
   line-height: 1;
   position: relative;
   height: 20px;
@@ -3531,7 +3582,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #activity-url-scrapper-img-count {
   font-size: 12px;
   color: #7f7f7f;
-  margin-top: 5px;
+  margin: 0 30px;
 }
 
 .activity-url-error {
@@ -3545,16 +3596,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 #activity-close-link-suggestion {
   border: 0;
-  color: rgba(0, 0, 0, 0.4);
-  font-size: 16px;
-  position: absolute;
-  right: 3px;
-  top: 8px;
+  color: #8d8f97;
+  font-size: 12px;
+  float: left;
   text-decoration: none;
-}
-
-#activity-close-link-suggestion .bb-icons.bb-icon-close {
-  font-size: 20px;
 }
 
 .activity-post-form-link-wp-embed #activity-close-link-suggestion {
@@ -3576,11 +3621,14 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 #activity-link-preview-close-image {
   border: 0;
-  color: #fff;
+  color: #92949D;
+  background-color: #FBFAF9;
   font-size: 16px;
-  right: 3px;
+  line-height: 1;
   position: absolute;
-  top: 3px;
+  left: 5px;
+  top: 8px;
+  border-radius: 50%;
   text-decoration: none;
 }
 
