@@ -543,7 +543,14 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 		<p id="bp-avatar-image-feedback" class="updated"></p>
 	</div>
 	<p class="description">
-		<?php echo sprintf( esc_html__( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), (int) bp_core_avatar_full_width(), (int) bp_core_avatar_full_height() ); ?>
+		<?php
+		echo sprintf(
+		/* translators: 1: Profile avatar width. 2: Profile avatar height */
+			esc_html__( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) bp_core_avatar_full_width(),
+			(int) bp_core_avatar_full_height()
+		);
+		?>
 	</p>
 	<?php
 }
