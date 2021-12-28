@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-28 06:08:00+00:00\n"
+"POT-Creation-Date: 2021-12-28 09:52:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -949,7 +949,7 @@ msgstr[1] ""
 #: bp-groups/bp-groups-template.php:3110 bp-groups/bp-groups-template.php:3140
 #: bp-groups/bp-groups-template.php:3224 bp-groups/bp-groups-template.php:3254
 #: bp-groups/bp-groups-template.php:4819 bp-groups/bp-groups-template.php:4861
-#: bp-groups/bp-groups-template.php:4905 bp-groups/bp-groups-template.php:6700
+#: bp-groups/bp-groups-template.php:4905 bp-groups/bp-groups-template.php:6699
 #: bp-groups/classes/class-bp-groups-component.php:1120
 #: bp-groups/classes/class-bp-groups-invite-template.php:249
 #: bp-groups/classes/class-bp-groups-invite-template.php:262
@@ -3033,7 +3033,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:42
 #: bp-core/admin/bp-core-admin-pages.php:46
 #: bp-core/classes/class-bp-admin-tab.php:297
-#: bp-core/classes/class-bp-admin-tab.php:314 bp-forums/groups.php:347
+#: bp-core/classes/class-bp-admin-tab.php:318 bp-forums/groups.php:347
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:35
 msgid "Save Settings"
 msgstr ""
@@ -3127,7 +3127,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:517
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:573
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:655
-#: bp-core/classes/class-bp-admin-tab.php:306
+#: bp-core/classes/class-bp-admin-tab.php:310
 #: bp-integrations/learndash/bp-learndash-functions.php:421
 #: bp-integrations/learndash/bp-learndash-functions.php:444
 #: bp-integrations/learndash/bp-learndash-functions.php:467
@@ -5331,7 +5331,7 @@ msgstr ""
 msgid "Customize the appearance of emails sent by BuddyBoss."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:28 bp-core/bp-core-filters.php:1228
+#: bp-core/bp-core-customizer-email.php:28 bp-core/bp-core-filters.php:1219
 #: bp-templates/bp-nouveau/includes/customizer.php:54
 msgid "BuddyBoss Emails"
 msgstr ""
@@ -5429,74 +5429,74 @@ msgstr ""
 msgid "Footer Text Size"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:459 bp-core/bp-core-filters.php:493
+#: bp-core/bp-core-filters.php:450 bp-core/bp-core-filters.php:484
 msgid "[User Set]"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:638
+#: bp-core/bp-core-filters.php:629
 msgid "Page %s"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:883
+#: bp-core/bp-core-filters.php:874
 msgid "BuddyBoss (logged-in)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:888
+#: bp-core/bp-core-filters.php:879
 msgid "BuddyBoss (logged-out)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1487
+#: bp-core/bp-core-filters.php:1478
 msgid ""
 "Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with "
 "BuddyBoss Platform. Some icons in your theme will look wrong until you "
 "update."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1600
+#: bp-core/bp-core-filters.php:1591
 msgid "Every minute"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1604
+#: bp-core/bp-core-filters.php:1595
 msgid "Once in 5 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1608
+#: bp-core/bp-core-filters.php:1599
 msgid "Once in 10 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1612
+#: bp-core/bp-core-filters.php:1603
 msgid "Once in 30 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1679
+#: bp-core/bp-core-filters.php:1670
 msgid "There was a problem cropping custom profile avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1680
+#: bp-core/bp-core-filters.php:1671
 msgid "The custom profile avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1681
+#: bp-core/bp-core-filters.php:1672
 msgid "There was a problem deleting custom profile avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1682
+#: bp-core/bp-core-filters.php:1673
 msgid "The custom profile avatar was deleted successfully!"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1699
+#: bp-core/bp-core-filters.php:1690
 msgid "There was a problem cropping custom group avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1700
+#: bp-core/bp-core-filters.php:1691
 msgid "The custom group avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1701
+#: bp-core/bp-core-filters.php:1692
 msgid "There was a problem deleting custom group avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1702
+#: bp-core/bp-core-filters.php:1693
 msgid "The custom group avatar was deleted successfully!"
 msgstr ""
 
@@ -16979,37 +16979,37 @@ msgstr ""
 msgid "Group avatar"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6824
+#: bp-groups/bp-groups-template.php:6823
 msgid "requested %s"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6896
+#: bp-groups/bp-groups-template.php:6895
 msgid "Viewing 1 request"
 msgid_plural "Viewing %1$s - %2$s of %3$s requests"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-groups/bp-groups-template.php:7189
+#: bp-groups/bp-groups-template.php:7188
 msgid "Viewing 1 invitation"
 msgid_plural "Viewing %1$s - %2$s of %3$s invitations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-groups/bp-groups-template.php:7210
+#: bp-groups/bp-groups-template.php:7209
 msgid "Group Activity RSS Feed"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:7495
+#: bp-groups/bp-groups-template.php:7494
 msgid "%s group"
 msgid_plural "%s groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-groups/bp-groups-template.php:7598 bp-groups/bp-groups-template.php:7602
+#: bp-groups/bp-groups-template.php:7597 bp-groups/bp-groups-template.php:7601
 msgid "a"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:7602
+#: bp-groups/bp-groups-template.php:7601
 msgid "an"
 msgstr ""
 

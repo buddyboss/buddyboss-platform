@@ -450,8 +450,8 @@ function bp_admin_setting_callback_profile_avatar_type() {
 		?>
 	</p>
 
-	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning <?php echo ( bp_get_option( 'show_avatars' ) ? 'bp-hide' : '' ); ?>">
-		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning">
+	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning <?php echo ( bp_get_option( 'show_avatars' ) ? 'bp-hide' : '' ); ?>">
+		<p id="bb-wordpress-profile-gravatar-feedback" class="updated warning">
 			<?php
 			$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
 			echo sprintf(
@@ -504,8 +504,8 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 
 	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
-	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display:none;">
-		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' ); ?></p>
+	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning" style="display:none;">
+		<p id="bb-wordpress-profile-gravatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' ); ?></p>
 	</div>
 	<?php
 }
