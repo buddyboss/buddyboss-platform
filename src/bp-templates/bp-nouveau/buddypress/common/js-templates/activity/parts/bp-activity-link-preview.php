@@ -1,7 +1,7 @@
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>
-	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
+	<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-icon-loader animate-spin"></i><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
 	<a title="<?php _e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion">Remove Preview</i></a>

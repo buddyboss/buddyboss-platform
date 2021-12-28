@@ -3427,6 +3427,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin: 12px 0 10px;
 }
 
+.activity-url-scrapper-loading .bb-icon-loader {
+  font-size: 18px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
 .activity-link-preview-container {
   padding: 25px;
   line-height: 1.5;
@@ -3483,6 +3489,11 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   float: left;
 }
 
+.activity-url-scrapper-container .activity-link-preview-excerpt {
+  width: calc(100% - 180px);
+  float: right;
+}
+
 .activity-url-scrapper-container .activity-link-preview-image {
   margin-bottom: 10px;
 }
@@ -3494,6 +3505,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
     margin-right: 0;
     float: none;
     margin-bottom: 25px;
+  }
+  .activity-url-scrapper-container .activity-link-preview-excerpt {
+    width: 100%;
+    float: none;
   }
   .activity-link-preview-image {
     max-width: inherit;
@@ -3621,8 +3636,8 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 #activity-link-preview-close-image {
   border: 0;
-  color: #92949D;
-  background-color: #FBFAF9;
+  color: #92949d;
+  background-color: #fbfaf9;
   font-size: 16px;
   line-height: 1;
   position: absolute;
