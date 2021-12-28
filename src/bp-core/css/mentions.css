@@ -31,7 +31,7 @@
 }
 
 .atwho-view ul::-webkit-scrollbar {
-	width: 5px;
+	width: 6px;
 }
   
 .atwho-view ul::-webkit-scrollbar-thumb {
