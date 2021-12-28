@@ -1144,6 +1144,11 @@ a.layout-grid-view {
   display: none;
 }
 
+#whats-new-form.focus-in--attm #editor-toolbar,
+#whats-new-form.focus-in--scroll #editor-toolbar {
+  border-top: 1px solid #eee;
+}
+
 #whats-new-form.focus-in--blank-group #privacy-status-submit {
   opacity: 0.6;
   cursor: default;
@@ -1378,7 +1383,7 @@ a.layout-grid-view {
   position: relative;
   padding: 13px 25px 10px;
   margin: 15px 0 0;
-  border-top: 1px solid #eee;
+  border-top: 0;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
@@ -1650,7 +1655,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-  bottom: 22px;
+  bottom: -12px;
   top: inherit;
   left: initial;
   right: -14px;

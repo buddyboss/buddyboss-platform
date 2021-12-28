@@ -161,6 +161,14 @@
 	}
 }
 
+#whats-new-form.focus-in--attm,
+#whats-new-form.focus-in--scroll {
+
+	#editor-toolbar {
+		border-top: 1px solid #eee;
+	}
+}
+
 #whats-new-form.focus-in--blank-group {
 
 	#privacy-status-submit {
@@ -388,7 +396,7 @@
 			position: relative;
 			padding: 13px 25px 10px;
 			margin: 15px 0 0;
-			border-top: 1px solid #eee;
+			border-top: 0;
 
 			.emojionearea-button:before {
 				content: "\E821";
@@ -624,7 +632,7 @@
 				}
 
 				&:after {
-					bottom: 22px;
+					bottom: -12px;
 					top: inherit;
 					left: initial;
 					right: -14px;
