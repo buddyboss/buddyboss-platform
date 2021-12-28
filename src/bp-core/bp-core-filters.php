@@ -1900,7 +1900,6 @@ function bb_set_profile_avatar_type_on_update_show_avatars( $old_value, $value, 
 	}
 }
 add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_show_avatars', 10, 3 );
-add_action( 'updated_option', 'bb_set_profile_avatar_type_on_update_show_avatars', 10, 3 );
 
 /**
  * Delete default avatar of group and user
@@ -1991,7 +1990,7 @@ add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 )
  * @param string $option    Option name.
  */
 function bb_reset_profile_cover_position( $old_value, $value, $option ) {
-	if ( 'bp-default-custom-profile-cover' === $option && ( $value !== $old_value || maybe_serialize( $value ) === maybe_serialize( $old_value ) ) ) {
+	if ( 'bp-default-custom-profile-cover' === $option && $value !== $old_value ) {
 
 		$all_users = get_users(
 			array(
@@ -2018,7 +2017,7 @@ function bb_reset_profile_cover_position( $old_value, $value, $option ) {
 	}
 }
 add_action( 'update_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 3 );
-add_action( 'updated_option', 'bb_reset_profile_cover_position', 10, 3 );
+add_action( 'add_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 3 );
 
 /**
  * Reset group cover position when update the custom group cover
@@ -2030,12 +2029,12 @@ add_action( 'updated_option', 'bb_reset_profile_cover_position', 10, 3 );
  * @param string $option    Option name.
  */
 function bb_reset_group_cover_position( $old_value, $value, $option ) {
-	if ( 'bp-default-custom-group-cover' === $option && ( $value !== $old_value || maybe_serialize( $value ) === maybe_serialize( $old_value ) ) ) {
+	if ( 'bp-default-custom-group-cover' === $option && $value !== $old_value ) {
 
 		$all_groups = groups_get_groups(
 			array(
 				'fields'      => 'ids',
-				'per_page'    => 999999,
+				'per_page'    => -1,
 				'orderby'     => 'last_activity',
 				'meta_query'  => array(
 					array(
@@ -2065,7 +2064,7 @@ function bb_reset_group_cover_position( $old_value, $value, $option ) {
 	}
 }
 add_action( 'update_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 3 );
-add_action( 'updated_option', 'bb_reset_group_cover_position', 10, 3 );
+add_action( 'add_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 3 );
 
 /**
  * Add inline css for profile and group cover background color when selected 'none' or 'BuddyBoss'.

@@ -1459,8 +1459,10 @@ function bb_update_to_1_8_5() {
 				bp_update_option( 'bp-default-profile-cover-type', 'custom' );
 				bp_update_option( 'bp-default-custom-profile-cover', $profile_cover_image['url'] );
 
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				}
 				$fileSystemDirect = new WP_Filesystem_Direct( false );
 				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
@@ -1468,6 +1470,7 @@ function bb_update_to_1_8_5() {
 				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
 
 				if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
+					add_option( 'bb_platform_profile_cover_default_migration', $buddyboss_theme_options['buddyboss_profile_cover_default'] );
 					unset( $buddyboss_theme_options['buddyboss_profile_cover_default'] );
 				}
 			}
@@ -1516,8 +1519,10 @@ function bb_update_to_1_8_5() {
 				bp_update_option( 'bp-default-group-cover-type', 'custom' );
 				bp_update_option( 'bp-default-custom-group-cover', $group_cover_image['url'] );
 
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				}
 				$fileSystemDirect = new WP_Filesystem_Direct( false );
 				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
@@ -1525,6 +1530,7 @@ function bb_update_to_1_8_5() {
 				bp_delete_option( 'buddyboss_group_cover_default_migration' );
 
 				if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
+					add_option( 'bb_platform_cover_default_migration', $buddyboss_theme_options['buddyboss_group_cover_default'] );
 					unset( $buddyboss_theme_options['buddyboss_group_cover_default'] );
 				}
 			}
