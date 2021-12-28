@@ -3869,9 +3869,13 @@ window.bp = window.bp || {};
 
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
 					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
+					$( '.whats-new-scroll-view' ).append( '<span class="scroll-fade"></span>' );
 				} else {
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
+					$( '.whats-new-scroll-view' ).append( '<span class="scroll-fade"></span>' );
 					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
+						var scrollPostion = $( this ).scrollTop();
+						$( this ).find( '.scroll-fade' ).css({ bottom: -scrollPostion });
 						$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
 					});
 				}

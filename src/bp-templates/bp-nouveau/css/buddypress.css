@@ -1642,6 +1642,15 @@ a.layout-grid-view {
   z-index: 999;
 }
 
+@media screen and (min-width: 1200px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
+    left: unset;
+    right: -138px;
+    bottom: 30px;
+  }
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
   height: 230px;
@@ -1660,6 +1669,15 @@ a.layout-grid-view {
   left: initial;
   right: -14px;
   transform: rotate(90deg);
+}
+
+@media screen and (min-width: 1200px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+    bottom: -69px;
+    right: 142px;
+    transform: rotate(180deg);
+  }
 }
 
 @media screen and (max-width: 390px) {

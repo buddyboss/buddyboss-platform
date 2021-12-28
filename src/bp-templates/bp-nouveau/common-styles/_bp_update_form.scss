@@ -623,6 +623,12 @@
 			height: 290px;
 			z-index: 999;
 
+			@media screen and (min-width: 1200px) {
+				left: unset;
+				right: -138px;
+				bottom: 30px;
+			}
+
 			.emojionearea-wrapper {
 				height: 230px;
 
@@ -637,6 +643,12 @@
 					left: initial;
 					right: -14px;
 					transform: rotate(90deg);
+
+					@media screen and (min-width: 1200px) {
+						bottom: -69px;
+						right: 142px;
+						transform: rotate(180deg);
+					}
 				}
 			}
 
