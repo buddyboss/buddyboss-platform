@@ -1452,7 +1452,15 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 
 	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
 		?>
-			<p class="description <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"><?php printf( esc_html__( 'Comments are not supported for %s', 'buddyboss' ), esc_html( $post_type ) ); ?></p>
+			<p class="description <?php echo esc_attr( 'bp-feed-post-type-comment-' . $post_type ); ?>">
+				<?php
+				printf(
+				/* translators: %s: comment post type */
+					esc_html__( 'Comments are not supported for %s', 'buddyboss' ),
+					esc_html( $post_type )
+				);
+				?>
+			</p>
 		<?php
 		return;
 	}
