@@ -358,11 +358,11 @@ window.bp = window.bp || {};
 
 					// Show 'Remove' button when upload a new avatar.
 					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
-						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
+						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).removeClass( 'bp-hide' );
 					}
 
 					// Show image preview when avatar deleted.
-					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).show();
+					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).removeClass( 'bp-hide' );
 
 					// Update each avatars fields of the page
 					$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( response.avatar );

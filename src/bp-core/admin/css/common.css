@@ -2417,6 +2417,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-left: 5px;
 }
 
+.avatar-options .bb-default-custom-upload-file .button.delete.bp-hide {
+  display: none;
+}
+
 .avatar-options .bb-default-custom-upload-file.cover-uploader .bb-upload-container img {
   max-width: 300px;
   width: 100%;

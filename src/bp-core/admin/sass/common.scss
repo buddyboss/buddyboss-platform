@@ -2568,6 +2568,10 @@ h2.has_tutorial_btn {
 			border-color: #d33;
 			color: #3c434a;
 			margin-left: 5px;
+
+			&.bp-hide {
+				display: none;
+			}
 		}
 
 		&.cover-uploader .bb-upload-container img {

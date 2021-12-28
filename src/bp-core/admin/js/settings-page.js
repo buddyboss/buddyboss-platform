@@ -1154,11 +1154,11 @@ window.bp = window.bp || {};
 
 								// Hide 'Remove' button when avatar deleted.
 								if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
-									$( '.custom-profile-group-avatar a.bb-img-remove-button' ).hide();
+									$( '.custom-profile-group-avatar a.bb-img-remove-button' ).addClass( 'bp-hide' );
 								}
 
 								// Hide image preview when avatar deleted.
-								$( '.custom-profile-group-avatar .' + avatarObject + '-' + response.item_id + '-avatar' ).hide();
+								$( '.custom-profile-group-avatar .' + avatarObject + '-' + response.item_id + '-avatar' ).addClass( 'bp-hide' );
 
 								// Update each avatars fields of the page.
 								$( '#bp-default-' + avatarObject + '-' + response.item_id + '-avatar' ).val( '' );
@@ -1248,9 +1248,9 @@ window.bp = window.bp || {};
 									profileGroupFileFeedback( feedbackContainer, feedback, feedbackType );
 								} else {
 
-									imageContainer.prop( 'src', response.data.url ).show();
+									imageContainer.prop( 'src', response.data.url ).removeClass( 'bp-hide' );
 									imageFieldContainer.val( response.data.url );
-									deleteBtnContainer.show();
+									deleteBtnContainer.removeClass( 'bp-hide' );
 									feedbackType = 'success';
 									feedback     = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
 
@@ -1319,9 +1319,9 @@ window.bp = window.bp || {};
 										profileGroupFileFeedback( feedbackContainer, feedback, feedbackType );
 									} else {
 
-										imageContainer.prop( 'src', defaultImageplaceholder ).hide();
+										imageContainer.prop( 'src', defaultImageplaceholder ).addClass( 'bp-hide' );
 										imageFieldContainer.val( '' );
-										$this.hide();
+										$this.addClass( 'bp-hide' );
 										feedbackType = 'success';
 										feedback     = BP_ADMIN.profile_group_cover.feedback_messages[response.data.feedback_code];
 
