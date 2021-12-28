@@ -67,7 +67,7 @@ window.bp = window.bp || {};
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
 			// Wrap Avatar and Content section into header.
-			$( '.activity-update-form #user-status-huddle, .activity-update-form #whats-new-content, .activity-update-form #editor-toolbar, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
+			$( '.activity-update-form #user-status-huddle, .activity-update-form #whats-new-content, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
 			$( document ).on( 'click', '.activity-update-form.modal-popup:not(.bp-activity-edit) .activity-update-form-overlay', function() {
 				setTimeout( function() {

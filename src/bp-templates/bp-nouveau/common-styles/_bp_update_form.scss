@@ -386,8 +386,9 @@
 			-ms-flex-pack: end;
 			justify-content: flex-end;
 			position: relative;
-			padding: 0 25px;
-			margin: 15px 0;
+			padding: 13px 25px 10px;
+			margin: 15px 0 0;
+			border-top: 1px solid #eee;
 
 			.emojionearea-button:before {
 				content: "\E821";
@@ -569,7 +570,7 @@
 		}
 
 		.whats-new-scroll-view {
-			max-height: calc(100vh - 140px);
+			max-height: calc(100vh - 200px);
 			overflow: auto;
 			width: 100%;
 			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
@@ -609,16 +610,17 @@
 			top: inherit;
 			left: initial;
 			right: 30px;
-			bottom: -25px;
+			bottom: -50px;
 			margin-bottom: 10px;
-			height: 230px;
+			height: 290px;
 			z-index: 999;
 
 			.emojionearea-wrapper {
 				height: 230px;
 
 				.emojionearea-scroll-area {
-					height: 145px;
+					height: 205px;
+					bottom: -60px;
 				}
 
 				&:after {
@@ -875,7 +877,7 @@
 
 	.medium-editor-toolbar {
 		top: inherit;
-		bottom: -10px;
+		bottom: 0;
 		left: 11px;
 		visibility: hidden;
 		z-index: 99;
@@ -1000,7 +1002,7 @@
 
 	.medium-editor-toolbar .medium-editor-toolbar-form-active {
 		position: absolute;
-		bottom: -6px;
+		bottom: 6px;
 		box-shadow: none;
 		min-width: 260px;
 	}
