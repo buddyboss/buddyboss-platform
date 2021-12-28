@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-25 10:43:04+00:00\n"
+"POT-Creation-Date: 2021-12-28 12:12:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1075,7 +1075,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:4122
 #: bp-activity/bp-activity-template.php:4128
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:966
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:968
 #: bp-templates/bp-nouveau/includes/activity/functions.php:357
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
@@ -1141,7 +1141,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1279 bp-groups/bp-groups-admin.php:1291
 #: bp-media/classes/class-bp-media-component.php:170
 #: bp-media/classes/class-bp-media-privacy.php:54
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:721
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:723
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:8
 #: bp-templates/bp-nouveau/includes/groups/functions.php:133
 #: bp-templates/bp-nouveau/includes/members/functions.php:27
@@ -1160,7 +1160,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:275
 #: bp-media/classes/class-bp-media-component.php:174
 #: bp-media/classes/class-bp-media-privacy.php:55
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1051
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1053
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:10
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
 #: bp-templates/bp-nouveau/includes/groups/functions.php:154
@@ -1199,7 +1199,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:415
 #: bp-activity/classes/class-bp-rest-activity-details-endpoint.php:282
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:957
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:959
 #: bp-templates/bp-nouveau/includes/activity/functions.php:343
 msgid "Mentions"
 msgstr ""
@@ -8946,7 +8946,7 @@ msgid "Collapsible Form"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:129
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:27
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:221
 msgid "of"
 msgstr ""
@@ -9062,7 +9062,7 @@ msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1968
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:27
 #: bp-video/bp-video-functions.php:2509
 msgid "Image"
 msgstr ""
@@ -14632,10 +14632,10 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-reply.php:146
 #: bp-forums/templates/default/bbpress/form-topic.php:203
 #: bp-moderation/bp-moderation-functions.php:1097
-#: bp-moderation/classes/class-bp-moderation-activity.php:485
-#: bp-moderation/classes/class-bp-moderation-activity.php:502
-#: bp-moderation/classes/class-bp-moderation-activity.php:516
-#: bp-moderation/classes/class-bp-moderation-activity.php:530
+#: bp-moderation/classes/class-bp-moderation-activity.php:486
+#: bp-moderation/classes/class-bp-moderation-activity.php:503
+#: bp-moderation/classes/class-bp-moderation-activity.php:517
+#: bp-moderation/classes/class-bp-moderation-activity.php:531
 #: bp-templates/bp-nouveau/includes/activity/functions.php:220
 #: bp-templates/bp-nouveau/includes/functions.php:1531
 msgid "Post"
@@ -24096,7 +24096,7 @@ msgstr ""
 msgid "Loading preview..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:40
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:7
 msgid "Cancel Preview"
 msgstr ""
 

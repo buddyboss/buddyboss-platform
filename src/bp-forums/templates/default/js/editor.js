@@ -314,6 +314,18 @@ jQuery( document ).ready(
 				jQuery( window.forums_medium_topic_editor[ key ].elements[ 0 ] ).focus();
 				medium_editor.toggleClass( 'active' );
 			} );
+
+			$( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
+
+				var URL = event.target.value;
+				
+				if ( bp.Nouveau.isURL( URL ) ) {
+					$( event.target ).removeClass('isNotValid').addClass('isValid');
+				} else {
+					$( event.target ).removeClass('isValid').addClass('isNotValid');
+				}
+
+			});
 		}
 
 			/* Use backticks instead of <code> for the Code button in the editor */

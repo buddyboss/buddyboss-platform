@@ -1865,13 +1865,21 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   width: calc(100% - 80px);
   margin-bottom: 0;
   background-color: #fff;
-  border: 1px solid #dedfe2;
-  color: #4d5c6d;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
   color: #4d5c6d;
+}
+
+.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
+  color: #ef3e46 !important;
+  border-color: #f5858a !important;
+}
+
+.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid ~ a {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .activity-update-form #activity-header h3 {
@@ -1998,8 +2006,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   width: calc(100% - 80px);
   margin-bottom: 0;
   background-color: #fff;
-  border: 1px solid #dedfe2;
-  color: #4d5c6d;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {

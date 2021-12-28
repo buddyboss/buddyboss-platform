@@ -2749,7 +2749,18 @@ window.bp = window.bp || {};
 				$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind('click');
 			});
 
+		},
+
+		/**
+		 *  Check if string is a valid URL
+		 *  @param  {String} URL The URL to check.
+		 *  @return {Boolean} Return true if it's URL or false if not.
+		 */
+		isURL: function ( URL ) {
+			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+			return regexp.test( $.trim( URL ) );
 		}
+
 	};
 
 	// Launch BP Nouveau.
