@@ -1584,14 +1584,16 @@ function bb_to_1_8_5_upload_temp_cover_file( $cover_type ) {
 			chmod( $upload_dir, 0777 );
 		}
 
-		$data['filename'] = basename( $default_cover_path );
-		$data['path']     = trailingslashit( $upload_dir ) . $data['filename'];
-		$data['url']      = str_replace( ABSPATH, trailingslashit( get_site_url() ), $data['path'] );
+		if ( is_dir( $upload_dir ) ) {
+			$data['filename'] = basename( $default_cover_path );
+			$data['path']     = trailingslashit( $upload_dir ) . $data['filename'];
+			$data['url']      = str_replace( ABSPATH, trailingslashit( get_site_url() ), $data['path'] );
 
-		if ( ! file_exists( $data['path'] ) ) {
-			if ( copy( $default_cover_path, $data['path'] ) ) {
-				// Return copied file information.
-				return $data;
+			if ( ! file_exists( $data['path'] ) ) {
+				if ( copy( $default_cover_path, $data['path'] ) ) {
+					// Return copied file information.
+					return $data;
+				}
 			}
 		}
 	}
