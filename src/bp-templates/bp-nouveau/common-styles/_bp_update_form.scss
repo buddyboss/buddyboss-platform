@@ -621,7 +621,7 @@
 			right: 30px;
 			bottom: -50px;
 			margin-bottom: 10px;
-			height: 290px;
+			height: 305px;
 			z-index: 999;
 
 			@media screen and (min-width: 1200px) {
@@ -634,8 +634,8 @@
 				height: 230px;
 
 				.emojionearea-scroll-area {
-					height: 205px;
-					bottom: -60px;
+					height: 220px;
+					bottom: -75px;
 				}
 
 				&:after {
@@ -646,7 +646,7 @@
 					transform: rotate(90deg);
 
 					@media screen and (min-width: 1200px) {
-						bottom: -69px;
+						bottom: -85px;
 						right: 142px;
 						transform: rotate(180deg);
 					}

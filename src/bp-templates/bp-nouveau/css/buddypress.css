@@ -1642,7 +1642,7 @@ a.layout-grid-view {
   right: 30px;
   bottom: -50px;
   margin-bottom: 10px;
-  height: 290px;
+  height: 305px;
   z-index: 999;
 }
 
@@ -1662,8 +1662,8 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 205px;
-  bottom: -60px;
+  height: 220px;
+  bottom: -75px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
@@ -1678,7 +1678,7 @@ a.layout-grid-view {
 @media screen and (min-width: 1200px) {
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-    bottom: -69px;
+    bottom: -85px;
     right: 142px;
     transform: rotate(180deg);
   }
