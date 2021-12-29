@@ -1972,6 +1972,7 @@ window.bp = window.bp || {};
 				placeholder: BP_Nouveau.activity.strings.whatsnewPlaceholder,
 				'aria-label': BP_Nouveau.activity.strings.whatsnewLabel,
 				contenteditable: true,
+				autocorrect: 'off',
 				'data-suggestions-group-id': ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ? BP_Nouveau.activity.params.item_id : false,
 			},
 			loadURLAjax: null,
