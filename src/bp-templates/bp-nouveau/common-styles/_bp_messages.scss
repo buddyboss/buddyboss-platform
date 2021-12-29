@@ -756,7 +756,7 @@ input#send-to-input {
 		}
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
-			width: 220px;
+			width: calc(100% - 80px);
 		}
 
 	}
@@ -1127,11 +1127,6 @@ body .bp-messages-user-threads {
 			.medium-editor-toolbar-actions button {
 				padding: 10px 0;
 				min-width: 30px;
-			}
-
-			.medium-editor-toolbar-form .medium-editor-toolbar-input {
-				max-width: calc(100% - 90px);
-				width: auto;
 			}
 
 		}

@@ -1144,6 +1144,11 @@ a.layout-grid-view {
   display: none;
 }
 
+#whats-new-form.focus-in--attm #editor-toolbar,
+#whats-new-form.focus-in--scroll #editor-toolbar {
+  border-top: 1px solid #eee;
+}
+
 #whats-new-form.focus-in--blank-group #privacy-status-submit {
   opacity: 0.6;
   cursor: default;
@@ -1376,8 +1381,9 @@ a.layout-grid-view {
   -ms-flex-pack: end;
   justify-content: flex-end;
   position: relative;
-  padding: 0 25px;
-  margin: 15px 0;
+  padding: 13px 25px 10px;
+  margin: 10px 0 0;
+  border-top: 0;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
@@ -1583,7 +1589,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .whats-new-scroll-view,
 .activity-update-form.modal-popup .whats-new-scroll-view {
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 200px);
   overflow: auto;
   width: 100%;
   overscroll-behavior: contain;
@@ -1630,10 +1636,19 @@ a.layout-grid-view {
   top: inherit;
   right: initial;
   left: 30px;
-  bottom: -25px;
+  bottom: -50px;
   margin-bottom: 10px;
-  height: 230px;
+  height: 290px;
   z-index: 999;
+}
+
+@media screen and (min-width: 1200px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
+    right: unset;
+    left: -138px;
+    bottom: 30px;
+  }
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
@@ -1643,16 +1658,26 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 145px;
+  height: 205px;
+  bottom: -60px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
 .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-  bottom: 22px;
+  bottom: -12px;
   top: inherit;
   right: initial;
   left: -14px;
   transform: rotate(-90deg);
+}
+
+@media screen and (min-width: 1200px) {
+  .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+  .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+    bottom: -69px;
+    left: 142px;
+    transform: rotate(-180deg);
+  }
 }
 
 @media screen and (max-width: 390px) {
@@ -1684,6 +1709,7 @@ a.layout-grid-view {
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
     height: 65px;
+    bottom: 0;
   }
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
@@ -1893,7 +1919,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar {
   top: inherit;
-  bottom: -10px;
+  bottom: 0;
   right: 11px;
   visibility: hidden;
   z-index: 99;
@@ -2014,9 +2040,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form-active {
   position: absolute;
-  bottom: -6px;
+  bottom: 6px;
   box-shadow: none;
-  min-width: 260px;
+  width: calc(800px - 25px);
+  max-width: calc(100vw - 40px - 10%);
+  padding: 0 !important;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
@@ -2687,10 +2715,6 @@ input.search-query-input {
 @media screen and (max-width: 560px) {
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
-  }
-  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-    max-width: calc(100% - 90px);
-    width: auto;
   }
 }
 
@@ -8597,7 +8621,7 @@ input#send-to-input {
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 220px;
+  width: calc(100% - 80px);
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
@@ -8930,10 +8954,6 @@ body .bp-messages-user-threads {
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
     min-width: 30px;
-  }
-  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-    max-width: calc(100% - 90px);
-    width: auto;
   }
   .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
     right: 10px;
@@ -23181,7 +23201,7 @@ span.icons:before {
 }
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 220px;
+  width: calc(100% - 80px);
 }
 
 #group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar {
@@ -23739,13 +23759,6 @@ span.icons:before {
   }
   #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
     padding-right: 5px !important;
-  }
-}
-
-@media screen and (max-width: 560px) {
-  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-    max-width: calc(100% - 90px);
-    width: auto;
   }
 }
 

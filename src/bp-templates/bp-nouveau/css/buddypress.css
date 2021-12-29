@@ -2042,7 +2042,9 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   position: absolute;
   bottom: 6px;
   box-shadow: none;
-  min-width: 260px;
+  width: calc(800px - 25px);
+  max-width: calc(100vw - 40px - 10%);
+  padding: 0 !important;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
@@ -2713,10 +2715,6 @@ input.search-query-input {
 @media screen and (max-width: 560px) {
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
-  }
-  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-    max-width: calc(100% - 90px);
-    width: auto;
   }
 }
 
@@ -8623,7 +8621,7 @@ input#send-to-input {
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 220px;
+  width: calc(100% - 80px);
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
@@ -8956,10 +8954,6 @@ body .bp-messages-user-threads {
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
     min-width: 30px;
-  }
-  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-    max-width: calc(100% - 90px);
-    width: auto;
   }
   .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
     left: 10px;
@@ -23207,7 +23201,7 @@ span.icons:before {
 }
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 220px;
+  width: calc(100% - 80px);
 }
 
 #group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar {
@@ -23765,13 +23759,6 @@ span.icons:before {
   }
   #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
     padding-left: 5px !important;
-  }
-}
-
-@media screen and (max-width: 560px) {
-  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-    max-width: calc(100% - 90px);
-    width: auto;
   }
 }
 
