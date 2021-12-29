@@ -2528,6 +2528,7 @@ h2.has_tutorial_btn {
 
 			&:checked + label .img-block img {
 				border-color: #2271b1;
+				box-shadow: 0 0 0 1px #2271b1;
 			}
 		}
 
@@ -2540,7 +2541,7 @@ h2.has_tutorial_btn {
 		img {
 			width: 80px;
 			height: 80px;
-			border: 2px solid transparent;
+			border: 1px solid #ccd0d4;
 			border-radius: 5px;
 			object-fit: cover;
 		}
@@ -2611,6 +2612,10 @@ h2.has_tutorial_btn {
 
 	.preview-switcher {
 		margin-bottom: 25px;
+
+		.button:focus {
+			box-shadow: none;
+		}
 	}
 
 	.preview-block {

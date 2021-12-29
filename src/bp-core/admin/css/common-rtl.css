@@ -2391,7 +2391,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 .avatar-options .avatar-custom-input img {
   width: 80px;
   height: 80px;
-  border: 2px solid transparent;
+  border: 2px solid #ccd0d4;
   border-radius: 5px;
   object-fit: cover;
 }
@@ -2452,6 +2452,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .preview_avatar_cover .preview-switcher {
   margin-bottom: 25px;
+}
+
+.preview_avatar_cover .preview-switcher .button:focus {
+  box-shadow: none;
 }
 
 .preview_avatar_cover .preview-block {
