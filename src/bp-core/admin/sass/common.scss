@@ -2660,10 +2660,6 @@ h2.has_tutorial_btn {
 		max-height: 90px;
 		background-color: #ccc;
 		overflow: hidden;
-
-		img {
-			background-color: #f9f9f9;
-		}
 	}
 
 	.preview-item-avatar {
@@ -2674,6 +2670,11 @@ h2.has_tutorial_btn {
 		left: 25px;
 		border: 3px solid #fff;
 		border-radius: 5px;
+
+		img {
+			background-color: #f9f9f9;
+		}
+
 	}
 
 	.preview-item-cover img,
