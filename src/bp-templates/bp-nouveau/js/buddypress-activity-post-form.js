@@ -3878,6 +3878,10 @@ window.bp = window.bp || {};
 						$( this ).find( '.scroll-fade' ).css({ bottom: -scrollPostion });
 						$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
 					});
+					//Hide mention dropdown while window resized
+					$( window ).on( 'resize', function() {
+						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+					});
 				}
 
 				this.updateMultiMediaOptions();
