@@ -6176,5 +6176,27 @@ function bb_render_notification( $notification_group ) {
 		</table>
 
 		<?php
+		if ( 'activity' === $notification_group ) {
+			$action_key = 'bp_' . $notification_group . '_screen_notification_settings';
+		} else {
+			$action_key = $notification_group . '_screen_notification_settings';
+		}
+
+		if ( has_action( $action_key ) ) {
+			?>
+			<table class="notification-settings">
+				<thead>
+				<?php
+				/**
+				 * Fires inside the closing </tbody> tag for activity screen notification settings.
+				 *
+				 * @since BuddyPress 1.2.0
+				 */
+				do_action( $action_key );
+				?>
+				</thead>
+			</table>
+			<?php
+		}
 	}
 }
