@@ -29,8 +29,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Profile Avatar.
 		add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
-		add_filter( 'xprofile_avatar_upload_dir', array( $this, 'bb_xprofile_default_custom_profile_avatar_upload_dir' ), 10, 1 );
-		add_filter( 'bb_core_avatar_crop_item_id_args', 'bb_default_custom_profile_group_avatar_crop_item_id_args', 10, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', 'bb_default_custom_profile_group_avatar_url_check', 10, 2 );
 
 		// Profile Cover.

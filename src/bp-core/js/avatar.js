@@ -298,6 +298,7 @@ window.bp = window.bp || {};
 					crop_x:        avatar.get( 'x' ),
 					crop_y:        avatar.get( 'y' ),
 					item_id:       avatar.get( 'item_id' ),
+					item_type:     avatar.get( 'item_type' ),
 					object:        avatar.get( 'object' ),
 					type:          _.isUndefined( avatar.get( 'type' ) ) ? 'crop' : avatar.get( 'type' ),
 					nonce:         avatar.get( 'nonces' ).set
@@ -365,8 +366,9 @@ window.bp = window.bp || {};
 					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).removeClass( 'bp-hide' );
 
 					// Update each avatars fields of the page
-					$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( response.avatar );
-
+					$( '.custom-profile-group-avatar .bb-upload-container .bb-default-custom-avatar-field' ).val( response.avatar );
+					$( '.custom-profile-group-avatar .bb-upload-container img' ).prop( 'src', response.avatar ).removeClass( 'bp-hide' );
+					$( '.preview_avatar_cover .preview-item-avatar img' ).prop( 'src', response.avatar );
 				}
 			).fail(
 				function( response ) {
@@ -661,12 +663,16 @@ window.bp = window.bp || {};
 
 			addItemView: function( item ) {
 				// Defaults to 150
-				var full_d = { full_h: 150, full_w: 150 };
+				var full_d = { full_h: 150, full_w: 150, item_type: '' };
 
 				// Make sure to take in account bp_core_avatar_full_height or bp_core_avatar_full_width php filters
 				if ( ! _.isUndefined( BP_Uploader.settings.crop.full_h ) && ! _.isUndefined( BP_Uploader.settings.crop.full_w ) ) {
 					full_d.full_h = BP_Uploader.settings.crop.full_h;
 					full_d.full_w = BP_Uploader.settings.crop.full_w;
+				}
+
+				if ( ! _.isUndefined( BP_Uploader.settings.defaults.multipart_params.bp_params.item_type ) ) {
+					full_d.item_type = BP_Uploader.settings.defaults.multipart_params.bp_params.item_type;
 				}
 
 				// Set the avatar model

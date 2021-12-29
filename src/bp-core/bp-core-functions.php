@@ -6118,14 +6118,50 @@ function bb_get_blank_profile_avatar( $size = 'full' ) {
  * @return bool True if found the custom profile avatar otherwise false.
  */
 function bb_has_default_custom_upload_profile_avatar() {
+	$item_id = 0;
+	$retval  = false;
+	$avatar  = bp_core_fetch_avatar(
+		array(
+			'item_id'   => $item_id,
+			'item_type' => null,
+			'no_grav'   => true,
+			'html'      => false,
+			'type'      => 'full',
+		)
+	);
+
+	if ( false !== strpos( $avatar, '/' . $item_id . '/' ) ) {
+		$retval = true;
+	}
+
+	// Support WP User Avatar Plugin default avatar image.
+	$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
+	if ( 'wp_user_avatar' === $avatar_option ) {
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) ) {
+			$default_image_id = bp_get_option( 'avatar_default_wp_user_avatar', '' );
+			if ( '' !== $default_image_id ) {
+				$image_attributes = wp_get_attachment_image_src( (int) $default_image_id );
+				if ( isset( $image_attributes[0] ) && '' !== $image_attributes[0] ) {
+
+					$wp_user_avatar = apply_filters( 'bp_core_avatar_default_local_size', $image_attributes[0] );
+
+					if ( $avatar != $avatar_option ) {
+						$retval = true;
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Filters has custom upload avatar image?
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $value True if found the custom profile avatar otherwise false.
+	 * @param bool $retval  Whether or not a user has an uploaded avatar.
+	 * @param int  $item_id ID of the user being checked.
 	 */
-	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bp_get_user_has_avatar( 'custom' ) );
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', $retval, $item_id );
 }
 
 /**
@@ -6232,7 +6268,7 @@ function bb_has_default_custom_upload_group_avatar() {
 	 *
 	 * @param bool $value True if found the custom group avatar otherwise false.
 	 */
-	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', (bool) bb_get_default_custom_upload_group_avatar() );
+	return apply_filters( 'bb_has_default_custom_upload_group_avatar', (bool) bb_get_default_custom_upload_group_avatar() );
 }
 
 /**

@@ -2006,8 +2006,9 @@ function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'fu
 	if ( ! empty( $custom_avatar_url ) && 'full' !== $size ) {
 		$custom_avatar_url = bp_core_fetch_avatar(
 			array(
-				'item_id' => 'custom',
-				'html'    => false,
+				'item_id'   => 0,
+				'item_type' => 'default',
+				'html'      => false,
 			)
 		);
 	}
@@ -2101,13 +2102,14 @@ function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full
 	if ( ! empty( $custom_group_avatar_url ) && 'full' !== $size ) {
 		$custom_group_avatar_url = bp_core_fetch_avatar(
 			array(
-				'object'  => 'group',
-				'item_id' => 'custom',
-				'html'    => false,
+				'object'    => 'group',
+				'item_id'   => 0,
+				'item_type' => 'default',
+				'html'      => false,
 			)
 		);
 	}
-	
+
 	/**
 	 * Filters to change default custom upload avatar image.
 	 *

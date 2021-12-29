@@ -1657,7 +1657,8 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 	if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'user',
-			'item_id'    => 'custom',
+			'item_id'    => 0,
+			'item_type'  => 'default',
 			'has_avatar' => bb_has_default_custom_upload_profile_avatar(),
 			'nonces'     => array(
 				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
@@ -1677,7 +1678,8 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 	if ( 'bp-groups' === bp_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'group',
-			'item_id'    => 'custom',
+			'item_id'    => 0,
+			'item_type'  => 'default',
 			'has_avatar' => bb_has_default_custom_upload_group_avatar(),
 			'nonces'     => array(
 				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
@@ -1698,30 +1700,6 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 }
 
 /**
- * Set item ID for profile and group image crop.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int|string $item_id ID of the avatar item being requested.
- * @param array      $args {
- *     @type string     $original_file The source file (absolute path) for the Attachment.
- *     @type string     $object        Avatar type being requested.
- *     @type int|string $item_id       ID of the avatar item being requested.
- *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
- * }
- * @return int|string Actual item ID for upload custom avatar.
- */
-function bb_default_custom_profile_group_avatar_crop_item_id_args( $item_id = 0, $args ) {
-	$profile_group_types = array( 'user', 'group' );
-
-	if ( is_admin() && ( empty( $item_id ) || 0 == $item_id ) && in_array( $args['object'], $profile_group_types, true ) ) {
-		return 'custom';
-	}
-
-	return $item_id;
-}
-
-/**
  * Modify a gravatar avatar URL for custom uploaded profile and group avatar.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1735,7 +1713,7 @@ function bb_default_custom_profile_group_avatar_url_check( $gravatar, $params ) 
 	$item_id = $params['item_id'];
 	$object  = $params['object'];
 
-	if ( is_admin() && ( 'custom' === $item_id && in_array( $object, $profile_group_types, true ) ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, 'custom' ) ) {
+	if ( is_admin() && ( 0 === $item_id && in_array( $object, $profile_group_types, true ) ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, '/0/' ) ) {
 		return esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
 	}
 
@@ -1920,8 +1898,10 @@ add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_
  * }
  */
 function bb_delete_default_profile_group_avatar( $args ) {
-	$item_id = ! empty( $args['item_id'] ) ? $args['item_id'] : '';
-	if ( ! empty( $item_id ) && 'custom' === $item_id ) {
+	$item_id   = ! empty( $args['item_id'] ) ? $args['item_id'] : '';
+	$item_type = ! empty( $args['item_type'] ) ? $args['item_type'] : null;
+
+	if ( empty( $item_id ) && 'default' === $item_type ) {
 
 		// check for user avatars getting deleted.
 		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {

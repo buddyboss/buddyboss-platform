@@ -1136,10 +1136,11 @@ window.bp = window.bp || {};
 						bp.ajax.post(
 							'bp_avatar_delete',
 							{
-								json:    true,
-								item_id: avatarItemID,
-								object:  avatarObject,
-								nonce:   BP_Uploader.settings.defaults.multipart_params.bp_params.nonces.remove
+								json:      true,
+								item_id:   avatarItemID,
+								item_type: BP_Uploader.settings.defaults.multipart_params.bp_params.item_type,
+								object:    avatarObject,
+								nonce:     BP_Uploader.settings.defaults.multipart_params.bp_params.nonces.remove
 							}
 						).done(
 							function( response ) {
@@ -1158,13 +1159,13 @@ window.bp = window.bp || {};
 								}
 
 								// Hide image preview when avatar deleted.
-								$( '.custom-profile-group-avatar .' + avatarObject + '-' + response.item_id + '-avatar' ).addClass( 'bp-hide' );
+								$( '.custom-profile-group-avatar .bb-upload-container img' ).prop( 'src', response.avatar ).addClass( 'bp-hide' );
 
 								// Update each avatars fields of the page.
-								$( '#bp-default-' + avatarObject + '-' + response.item_id + '-avatar' ).val( '' );
+								$( '.custom-profile-group-avatar .bb-upload-container .bb-default-custom-avatar-field' ).val( '' );
 
 								// Remove image from the live preview.
-								$( '.preview-avatar-cover-image .' + avatarObject + '-' + response.item_id + '-avatar' ).prop( 'src', '' );
+								$( '.preview_avatar_cover .preview-item-avatar img' ).prop( 'src', '' );
 							}
 						).fail(
 							function( response ) {
