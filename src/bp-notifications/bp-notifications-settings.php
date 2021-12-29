@@ -170,11 +170,7 @@ function bb_admin_setting_callback_on_automatic_notification_information() {
  */
 function bb_admin_setting_callback_on_automatic_notification_fields() {
 	$all_notifications    = bb_register_notification_preferences();
-
-	error_log( print_r( $all_notifications, 1 ) );
-
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	$notifications        = bb_register_notifications();
 
 	if ( ! empty( $all_notifications ) ) {
 		echo '<table class="form-table"><tbody>';
