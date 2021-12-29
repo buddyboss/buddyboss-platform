@@ -2632,28 +2632,50 @@ function bp_core_admin_create_background_page() {
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );
 
 /**
- * Adds CSS to remove the Default Avatar settings from /wp-admin/options-discussion.php page.
- * These settings cannot be used with BuddyBoss, as we load custom avatars instead of gravatar.
+ * Add notice in Show Avatar section in Discussion page.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
  */
-function bp_remove_avatar_settings_from_options_discussion_page() {
+function bb_discussion_page_show_notice_in_avatar_section() {
 	global $pagenow;
 
-	if ( 'options-discussion.php' === $pagenow ) {
+	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'buddyboss' === bb_get_profile_avatar_type() ) {
 
+		$avatar_notice = sprintf(
+			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss' ),
+			add_query_arg(
+				array(
+					'page' => 'bp-settings',
+					'tab'  => 'bp-xprofile',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+
+		$avatar_notice_html          = '<div class="bp-messages-feedback admin-notice">';
+			$avatar_notice_html     .= '<div class="bp-feedback warning">';
+				$avatar_notice_html .= '<span class="bp-icon" aria-hidden="true"></span>';
+				$avatar_notice_html .= '<p id="bp-cover-image-feedback">' . $avatar_notice . '</p>';
+			$avatar_notice_html     .= '</div>';
+		$avatar_notice_html         .= '</div>';
 		?>
-        <style>
-            body.options-discussion-php #wpbody-content .wrap form table:nth-last-child(2) tbody tr:last-child {
-                display: none !important;
-            }
+		
+		<script>
+			( function ( $ ) {
+				$( window ).on(
+					'load',
+					function () {
 
-            body.options-discussion-php #wpbody-content .wrap h2.title, body.options-discussion-php #wpbody-content .wrap h2.title + p, body.options-discussion-php #wpbody-content .wrap h2.title + p + table {
-                display: none !important;
-            }
-        </style>
+						var discussion_avatar_tbl = $( 'body.options-discussion-php #wpbody-content .wrap form table:eq(1)' );
+
+						if ( discussion_avatar_tbl.find( 'tr:eq(1)' ).hasClass( 'avatar-settings' ) ) {
+							discussion_avatar_tbl.prev().after( '<?php echo $avatar_notice_html; ?>' )
+						}
+					}
+				);
+			} )( jQuery );
+		</script>
 		<?php
-
 	}
 }
 
