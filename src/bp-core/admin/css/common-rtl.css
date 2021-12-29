@@ -2326,16 +2326,19 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
+.admin-notice .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
+.admin-notice .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
+.admin-notice .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
@@ -2496,6 +2499,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   max-height: 90px;
   background-color: #ccc;
   overflow: hidden;
+}
+
+.preview_avatar_cover .preview-item-cover img {
+  background-color: #f9f9f9;
 }
 
 .preview_avatar_cover .preview-item-avatar {

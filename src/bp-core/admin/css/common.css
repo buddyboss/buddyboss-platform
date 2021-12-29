@@ -2501,6 +2501,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   overflow: hidden;
 }
 
+.preview_avatar_cover .preview-item-cover img {
+  background-color: #f9f9f9;
+}
+
 .preview_avatar_cover .preview-item-avatar {
   height: 75px;
   width: 75px;
