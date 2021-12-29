@@ -70,7 +70,7 @@ class BP_REST_Theme_Settings_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 */
-	public function get_social_icons( $request ) {
+	public function get_icons( $request ) {
         $icon = false;
         $header_menu_icons = array();
         if ( function_exists( 'bp_is_active' ) && has_nav_menu( 'header-my-account' ) ) {
@@ -179,18 +179,29 @@ class BP_REST_Theme_Settings_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 */
 	public function get_social_icons( $request ) {
-        $footer_socials = buddyboss_theme_get_option( 'boss_footer_social_links' );
         $response = array();
-        if( !empty( $footer_socials ) ){
-            foreach( $footer_socials as $network => $url ){
-                if( !empty( $url ) ){
-                    $response[$network] = array(
-                        'icon' => 'bb-icon-rounded-' . $network,
-                        'url'  => $url,
-                    );
+        if( function_exists( 'buddyboss_theme_get_option' ) ){
+            $footer_socials = buddyboss_theme_get_option( 'boss_footer_social_links' );
+            if( !empty( $footer_socials ) ){
+                foreach( $footer_socials as $network => $url ){
+                    if( !empty( $url ) ){
+                        $response[$network] = array(
+                            'icon' => 'bb-icon-rounded-' . $network,
+                            'url'  => $url,
+                        );
+                    }
                 }
+                $response = rest_ensure_response( $response );
             }
-            $response = rest_ensure_response( $response );
+        }
+        else{
+            $response = new WP_Error(
+                'bb_theme_activation_required',
+                __( 'Sorry, you are not allowed to see the theme settings.', 'buddyboss' ),
+                array(
+                    'status' => rest_authorization_required_code(),
+                )
+            );
         }
         /**
          * Fires after social icon are fetched via the REST API.
