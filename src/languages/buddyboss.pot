@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.8.3\n"
+"Project-Id-Version: BuddyBoss Platform 1.8.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-15 10:09:08+00:00\n"
+"POT-Creation-Date: 2021-12-29 12:29:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1641,8 +1641,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:182
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:606
-#: bp-templates/bp-nouveau/includes/media/functions.php:236
-#: bp-templates/bp-nouveau/includes/video/functions.php:211
+#: bp-templates/bp-nouveau/includes/media/functions.php:238
+#: bp-templates/bp-nouveau/includes/video/functions.php:212
 msgid "My Groups"
 msgstr ""
 
@@ -2665,8 +2665,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:62
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:36
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:39
-#: bp-templates/bp-nouveau/includes/media/functions.php:184
-#: bp-templates/bp-nouveau/includes/video/functions.php:148
+#: bp-templates/bp-nouveau/includes/media/functions.php:186
+#: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "Select All"
 msgstr ""
 
@@ -3236,8 +3236,6 @@ msgid "Restrict site access to only logged-in members"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:106
-#: bp-core/admin/bp-core-admin-settings.php:1619
-#: bp-core/admin/bp-core-admin-settings.php:1675
 msgid ""
 "Login and <a href=\"%s\">Registration</a> content will remain publicly "
 "visible."
@@ -3618,24 +3616,28 @@ msgstr ""
 msgid "Restrict REST APIs access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1642
-msgid ""
-"Enter REST endpoints URLs or URI fragments (e.g. "
-"wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
-"one URL or URI per line. "
+#: bp-core/admin/bp-core-admin-settings.php:1619
+msgid "Login and <a href=\"%s\">Registration</a> APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1649
+#: bp-core/admin/bp-core-admin-settings.php:1632
 msgid ""
 "BuddyBoss App is enabled. Please go to <a href=\"%s\">settings</a> here to "
 "restrict App and REST APIs access to logged-in members only."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1656
+msgid ""
+"Enter REST API endpoints URLs or URI fragments (e.g. "
+"wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
+"one URL or URI per line. "
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1670
 msgid "Restrict RSS Feeds access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1694
+#: bp-core/admin/bp-core-admin-settings.php:1682
 msgid ""
 "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
 "publicly visible always. Enter one endpoint URL or URI per line. "
@@ -4230,6 +4232,8 @@ msgid "Private Website"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:86
+#: bp-core/admin/settings/bp-admin-setting-general.php:106
+#: bp-core/admin/settings/bp-admin-setting-general.php:112
 msgid "Public Content"
 msgstr ""
 
@@ -4996,8 +5000,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:16
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:18
-#: bp-templates/bp-nouveau/includes/media/functions.php:187
-#: bp-templates/bp-nouveau/includes/video/functions.php:151
+#: bp-templates/bp-nouveau/includes/media/functions.php:189
+#: bp-templates/bp-nouveau/includes/video/functions.php:152
 msgid "Upload"
 msgstr ""
 
@@ -5079,8 +5083,8 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1263 bp-core/bp-core-functions.php:6065
-#: bp-core/bp-core-functions.php:6079
+#: bp-core/bp-core-catchuri.php:1263 bp-core/bp-core-functions.php:6066
+#: bp-core/bp-core-functions.php:6080
 msgid "Please login to access this website."
 msgstr ""
 
@@ -5167,6 +5171,8 @@ msgid "Upload canceled."
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:301
+#: bp-templates/bp-nouveau/includes/media/functions.php:150
+#: bp-templates/bp-nouveau/includes/video/functions.php:135
 msgid "Are you sure you want to cancel this upload?"
 msgstr ""
 
@@ -5643,12 +5649,12 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:343
 #: bp-media/classes/class-bp-media-component.php:374
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1195
-#: bp-templates/bp-nouveau/includes/media/functions.php:224
+#: bp-templates/bp-nouveau/includes/media/functions.php:226
 msgid "My Photos"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2946
-#: bp-templates/bp-nouveau/includes/video/functions.php:199
+#: bp-templates/bp-nouveau/includes/video/functions.php:200
 #: bp-video/classes/class-bp-video-component.php:287
 #: bp-video/classes/class-bp-video-component.php:307
 msgid "My Videos"
@@ -6569,8 +6575,7 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6116
-#: bp-performance/bp-performance-mu-loader.php:91
+#: bp-core/bp-core-functions.php:6119
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
@@ -6753,22 +6758,22 @@ msgid "Site-Wide Activity"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1249
-#: bp-templates/bp-nouveau/includes/video/functions.php:299
+#: bp-templates/bp-nouveau/includes/video/functions.php:300
 msgid "MP4"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1257
-#: bp-templates/bp-nouveau/includes/video/functions.php:307
+#: bp-templates/bp-nouveau/includes/video/functions.php:308
 msgid "WebM"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1265
-#: bp-templates/bp-nouveau/includes/video/functions.php:315
+#: bp-templates/bp-nouveau/includes/video/functions.php:316
 msgid "Ogg"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1273
-#: bp-templates/bp-nouveau/includes/video/functions.php:323
+#: bp-templates/bp-nouveau/includes/video/functions.php:324
 msgid "Quicktime"
 msgstr ""
 
@@ -11265,7 +11270,7 @@ msgid "Ready to go."
 msgstr ""
 
 #: bp-forums/admin/settings.php:1497
-#: bp-templates/bp-nouveau/includes/video/functions.php:161
+#: bp-templates/bp-nouveau/includes/video/functions.php:162
 msgid "Pause"
 msgstr ""
 
@@ -13652,7 +13657,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5478
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2177
+#: bp-templates/bp-nouveau/includes/template-tags.php:2187
 msgid "Order By:"
 msgstr ""
 
@@ -21375,22 +21380,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2418
+#: bp-templates/bp-nouveau/includes/template-tags.php:2428
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2600
+#: bp-templates/bp-nouveau/includes/template-tags.php:2610
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2632
-#: bp-templates/bp-nouveau/includes/template-tags.php:2656
+#: bp-templates/bp-nouveau/includes/template-tags.php:2642
+#: bp-templates/bp-nouveau/includes/template-tags.php:2666
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -21836,9 +21841,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:116
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:199
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:105
-#: bp-templates/bp-nouveau/includes/media/functions.php:182
+#: bp-templates/bp-nouveau/includes/media/functions.php:184
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1446
-#: bp-templates/bp-nouveau/includes/video/functions.php:146
+#: bp-templates/bp-nouveau/includes/video/functions.php:147
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -23341,10 +23346,10 @@ msgstr ""
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:144
-#: bp-templates/bp-nouveau/includes/template-tags.php:2614
-#: bp-templates/bp-nouveau/includes/template-tags.php:2622
-#: bp-templates/bp-nouveau/includes/template-tags.php:2646
-#: bp-templates/bp-nouveau/includes/template-tags.php:2671
+#: bp-templates/bp-nouveau/includes/template-tags.php:2624
+#: bp-templates/bp-nouveau/includes/template-tags.php:2632
+#: bp-templates/bp-nouveau/includes/template-tags.php:2656
+#: bp-templates/bp-nouveau/includes/template-tags.php:2681
 msgid "Close (Esc)"
 msgstr ""
 
@@ -24491,6 +24496,10 @@ msgstr ""
 msgid "Following special characters are not supported: \\ / ? % * : | \" < >"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:15
+msgid "Folder Title"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:26
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:25
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:25
@@ -24948,6 +24957,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:45
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:49
 #: bp-templates/bp-nouveau/buddypress/video/index.php:51
+#: bp-templates/bp-nouveau/includes/media/functions.php:149
 msgid "Create Album"
 msgstr ""
 
@@ -24964,7 +24974,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:51
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1737
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1738
-#: bp-templates/bp-nouveau/includes/video/functions.php:152
+#: bp-templates/bp-nouveau/includes/video/functions.php:153
 msgid "Change Thumbnail"
 msgstr ""
 
@@ -26999,50 +27009,50 @@ msgstr ""
 msgid "You are allowed to upload only %s photos at a time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:183
-#: bp-templates/bp-nouveau/includes/video/functions.php:147
+#: bp-templates/bp-nouveau/includes/media/functions.php:185
+#: bp-templates/bp-nouveau/includes/video/functions.php:148
 msgid "Unselect"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:185
-#: bp-templates/bp-nouveau/includes/video/functions.php:149
+#: bp-templates/bp-nouveau/includes/media/functions.php:187
+#: bp-templates/bp-nouveau/includes/video/functions.php:150
 msgid "Unselect All"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:186
+#: bp-templates/bp-nouveau/includes/media/functions.php:188
 msgid "Sorry, no photos & videos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:186
+#: bp-templates/bp-nouveau/includes/media/functions.php:188
 msgid "Sorry, no photos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:188
-#: bp-templates/bp-nouveau/includes/video/functions.php:153
+#: bp-templates/bp-nouveau/includes/media/functions.php:190
+#: bp-templates/bp-nouveau/includes/video/functions.php:154
 msgid "Uploading"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:189
-#: bp-templates/bp-nouveau/includes/video/functions.php:154
+#: bp-templates/bp-nouveau/includes/media/functions.php:191
+#: bp-templates/bp-nouveau/includes/video/functions.php:155
 msgid "%1$d out of %2$d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:190
+#: bp-templates/bp-nouveau/includes/media/functions.php:192
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:191
-#: bp-templates/bp-nouveau/includes/video/functions.php:156
+#: bp-templates/bp-nouveau/includes/media/functions.php:193
+#: bp-templates/bp-nouveau/includes/video/functions.php:157
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:192
+#: bp-templates/bp-nouveau/includes/media/functions.php:194
 msgid "Are you sure you want to delete this media?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:213
+#: bp-templates/bp-nouveau/includes/media/functions.php:215
 msgid "All Photos"
 msgstr ""
 
@@ -27279,29 +27289,29 @@ msgstr ""
 msgid "Loading Suggestions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2180
+#: bp-templates/bp-nouveau/includes/template-tags.php:2190
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2399
+#: bp-templates/bp-nouveau/includes/template-tags.php:2409
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2605
+#: bp-templates/bp-nouveau/includes/template-tags.php:2615
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2614
-#: bp-templates/bp-nouveau/includes/template-tags.php:2622
-#: bp-templates/bp-nouveau/includes/template-tags.php:2646
-#: bp-templates/bp-nouveau/includes/template-tags.php:2671
+#: bp-templates/bp-nouveau/includes/template-tags.php:2624
+#: bp-templates/bp-nouveau/includes/template-tags.php:2632
+#: bp-templates/bp-nouveau/includes/template-tags.php:2656
+#: bp-templates/bp-nouveau/includes/template-tags.php:2681
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2637
-#: bp-templates/bp-nouveau/includes/template-tags.php:2661
+#: bp-templates/bp-nouveau/includes/template-tags.php:2647
+#: bp-templates/bp-nouveau/includes/template-tags.php:2671
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
@@ -27378,57 +27388,57 @@ msgstr ""
 msgid "You are allowed to upload only 1 thumb at a time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:150
+#: bp-templates/bp-nouveau/includes/video/functions.php:151
 msgid "Sorry, no videos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:155
+#: bp-templates/bp-nouveau/includes/video/functions.php:156
 msgid ""
 "Are you sure you want to delete this album? Videos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:157
+#: bp-templates/bp-nouveau/includes/video/functions.php:158
 msgid "Are you sure you want to delete this video?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:158
+#: bp-templates/bp-nouveau/includes/video/functions.php:159
 msgid "Enlarge"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:159
+#: bp-templates/bp-nouveau/includes/video/functions.php:160
 msgid "Enter fullscreen"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:160
+#: bp-templates/bp-nouveau/includes/video/functions.php:161
 msgid "Play"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:162
+#: bp-templates/bp-nouveau/includes/video/functions.php:163
 msgid "Uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:163
+#: bp-templates/bp-nouveau/includes/video/functions.php:164
 msgid "Volume"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:164
+#: bp-templates/bp-nouveau/includes/video/functions.php:165
 msgid "Miniplayer"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:165
+#: bp-templates/bp-nouveau/includes/video/functions.php:166
 msgid "Speed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:166
+#: bp-templates/bp-nouveau/includes/video/functions.php:167
 msgid "Step Back (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:167
+#: bp-templates/bp-nouveau/includes/video/functions.php:168
 msgid "Step Forward (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:188
+#: bp-templates/bp-nouveau/includes/video/functions.php:189
 msgid "All Videos"
 msgstr ""
 
