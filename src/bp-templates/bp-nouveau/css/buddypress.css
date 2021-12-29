@@ -1386,7 +1386,7 @@ a.layout-grid-view {
   justify-content: flex-end;
   position: relative;
   padding: 13px 25px 10px;
-  margin: 10px 0 0;
+  margin: 0;
   border-top: 0;
 }
 
@@ -1597,6 +1597,7 @@ a.layout-grid-view {
   overflow: auto;
   width: 100%;
   overscroll-behavior: contain;
+  padding-bottom: 10px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
@@ -1827,7 +1828,7 @@ a.layout-grid-view {
   left: 39px;
   visibility: hidden;
   z-index: 99;
-  background-color: #fff;
+  background-color: transparent;
   opacity: 0;
   transition: all ease 0.3s;
   height: 0;

@@ -396,7 +396,7 @@
 			justify-content: flex-end;
 			position: relative;
 			padding: 13px 25px 10px;
-			margin: 10px 0 0;
+			margin: 0;
 			border-top: 0;
 
 			.emojionearea-button:before {
@@ -583,6 +583,7 @@
 			overflow: auto;
 			width: 100%;
 			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
+			padding-bottom: 10px;
 		}
 
 		#whats-new-form {
@@ -806,7 +807,7 @@
 		left: 39px;
 		visibility: hidden;
 		z-index: 99;
-		background-color: #fff;
+		background-color: transparent;
 		opacity: 0;
 		transition: all ease 0.3s;
 		height: 0;
