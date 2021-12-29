@@ -1108,6 +1108,10 @@ a.layout-grid-view {
   line-height: 1;
 }
 
+#whats-new-form {
+  border: 1px solid #d2d4d6;
+}
+
 #whats-new-form .bb-model-header {
   box-shadow: none;
   border-bottom: 1px solid #d2d4d6;
@@ -1600,7 +1604,6 @@ a.layout-grid-view {
   width: 800px;
   max-width: 90%;
   margin: auto;
-  border: 1px solid #d2d4d6;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 }
 
