@@ -32,7 +32,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 		$this->register_preferences_group(
 			buddypress()->friends->id,
 			esc_html__( 'Connections', 'buddyboss' ),
-			esc_html__( 'Connections Notifications', 'buddyboss' )
+			esc_html__( 'Connections Notifications', 'buddyboss' ),
+			50
 		);
 
 		$this->register_notification_for_friendship_request();

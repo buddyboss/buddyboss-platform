@@ -32,7 +32,8 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		$this->register_preferences_group(
 			buddypress()->messages->id,
 			esc_html__( 'Messages', 'buddyboss' ),
-			esc_html__( 'Private Messaging', 'buddyboss' )
+			esc_html__( 'Private Messaging', 'buddyboss' ),
+			20
 		);
 
 		$this->register_notification_for_new_message();

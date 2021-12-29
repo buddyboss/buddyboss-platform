@@ -32,7 +32,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_preferences_group(
 			buddypress()->groups->id,
 			esc_html__( 'Social Groups', 'buddyboss' ),
-			esc_html__( 'Social Groups Notifications', 'buddyboss' )
+			esc_html__( 'Social Groups Notifications', 'buddyboss' ),
+			30
 		);
 
 		// Group user invites.

@@ -130,8 +130,13 @@ abstract class BP_Core_Notification_Abstract {
 			foreach ( $this->prefernce_groups as $group ) {
 				$notifications[ $group['group_key'] ]['label']       = $group['group_label'];
 				$notifications[ $group['group_key'] ]['admin_label'] = ( isset( $group['group_admin_label'] ) && ! empty( $group['group_admin_label'] ) ? $group['group_admin_label'] : $group['group_label'] );
+				$notifications[ $group['group_key'] ]['priority']    = $group['priority'];
 			}
 		}
+
+		$priority  = array_column( $notifications, 'priority' );
+
+		array_multisort( $priority, SORT_ASC, $notifications );
 
 		return $notifications;
 	}
@@ -292,11 +297,12 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preferences_group( string $group_key = 'other', string $group_label = '', string $group_admin_label = '' ) {
+	public function register_preferences_group( string $group_key = 'other', string $group_label = '', string $group_admin_label = '', $priority = 10 ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
 			'group_label'       => ( ! empty( $group_label ) ? $group_label : esc_html__( 'Other', 'buddyboss' ) ),
 			'group_admin_label' => $group_admin_label,
+			'priority'          => $priority,
 		);
 	}
 
