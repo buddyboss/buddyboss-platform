@@ -1959,6 +1959,24 @@ img.emojioneemoji {
 	height: 24px !important;
 }
 
+.emojionearea-filters {
+
+	img.emoji,
+	img.emojioneemoji {
+		max-width: 20px !important;
+		max-height: 20px !important;
+		width: 20px !important;
+		height: auto !important;
+	}
+
+	.emojionearea-filter-flags {
+
+		img.emojioneemoji {
+			max-width: 14px !important;
+		}
+	}
+}
+
 .bb-media-only-privacy {
 	position: absolute;
 	top: 20px;

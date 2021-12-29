@@ -627,7 +627,7 @@
 			@media screen and (min-width: 1200px) {
 				left: unset;
 				right: -138px;
-				bottom: 30px;
+				bottom: 25px;
 			}
 
 			.emojionearea-wrapper {
@@ -644,6 +644,7 @@
 					left: initial;
 					right: -14px;
 					transform: rotate(90deg);
+					display: none; // Hide emoji area marker
 
 					@media screen and (min-width: 1200px) {
 						bottom: -85px;
