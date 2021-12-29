@@ -110,7 +110,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
 		// Allow group avatars.
-		$this->add_field( 'bp-disable-group-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
+		$this->add_field( 'bp-disable-group-avatar-uploads', esc_html__( 'Group Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
 
 		$args          = array();
 		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type' . ( $is_disabled_avatar ? ' bp-hide' : '' );

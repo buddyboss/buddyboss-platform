@@ -1021,7 +1021,8 @@ function bp_admin_setting_callback_group_creation() {
 function bp_admin_setting_callback_group_avatar_uploads() {
 	?>
 	<input id="bp-disable-group-avatar-uploads" name="bp-disable-group-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_avatar_uploads() ); ?> />
-	<label for="bp-disable-group-avatar-uploads"><?php esc_html_e( 'Allow group organizers to upload a group avatar', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-avatar-uploads"><?php esc_html_e( 'Enable avatars for groups', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'When enabled, group organizers will be able to upload avatars in the group\'s settings', 'buddyboss' ); ?></p>
 	<?php
 }
 
