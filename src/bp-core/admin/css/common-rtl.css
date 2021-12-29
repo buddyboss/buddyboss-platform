@@ -2380,6 +2380,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .avatar-options .avatar-custom-input input[type="radio"]:checked + label .img-block img {
   border-color: #2271b1;
+  box-shadow: 0 0 0 1px #2271b1;
 }
 
 .avatar-options .avatar-custom-input .img-block {
@@ -2391,7 +2392,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 .avatar-options .avatar-custom-input img {
   width: 80px;
   height: 80px;
-  border: 2px solid #ccd0d4;
+  border: 1px solid #ccd0d4;
   border-radius: 5px;
   object-fit: cover;
 }
@@ -2460,7 +2461,9 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .preview_avatar_cover .preview-block {
   max-width: 260px;
-  border: 2px solid #dcdddf;
+  border: 1px solid #ccd0d4;
+  border-radius: 5px;
+  overflow: hidden;
   margin-bottom: 25px;
   display: none;
 }
@@ -2493,7 +2496,6 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   max-height: 90px;
   background-color: #ccc;
   overflow: hidden;
-  margin: -2px;
 }
 
 .preview_avatar_cover .preview-item-avatar {
@@ -2503,6 +2505,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   top: -35px;
   right: 25px;
   border: 3px solid #fff;
+  border-radius: 5px;
 }
 
 .preview_avatar_cover .preview-item-cover img,
