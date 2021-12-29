@@ -957,8 +957,10 @@ function bp_avatar_ajax_delete() {
 			'object'    => $avatar_data['object'],
 		)
 	) ) {
-		$return = array(
-			'avatar'        => esc_url(
+
+		$avatar = '';
+		if ( ! empty( $avatar_data['item_id'] ) || empty( $avatar_data['item_type'] ) ) {
+			$avatar = esc_url(
 				bp_core_fetch_avatar(
 					array(
 						'object'    => $avatar_data['object'],
@@ -968,7 +970,11 @@ function bp_avatar_ajax_delete() {
 						'type'      => 'full',
 					)
 				)
-			),
+			);
+		}
+		
+		$return = array(
+			'avatar'        => $avatar,
 			'feedback_code' => 4,
 			'item_id'       => $avatar_data['item_id'],
 		);

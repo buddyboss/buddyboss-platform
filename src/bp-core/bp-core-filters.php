@@ -1700,27 +1700,6 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 }
 
 /**
- * Modify a gravatar avatar URL for custom uploaded profile and group avatar.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $gravatar URL for a gravatar.
- * @param array  $params   Array of parameters for the request.
- */
-function bb_default_custom_profile_group_avatar_url_check( $gravatar, $params ) {
-	$profile_group_types = array( 'user', 'group' );
-
-	$item_id = $params['item_id'];
-	$object  = $params['object'];
-
-	if ( is_admin() && ( 0 === $item_id && in_array( $object, $profile_group_types, true ) ) && ( isset( $_REQUEST['action'] ) && 'bp_avatar_delete' === $_REQUEST['action'] ) && false === strpos( $gravatar, '/0/' ) ) {
-		return esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
-	}
-
-	return $gravatar;
-}
-
-/**
  * Check ajax request is it for custom profile or group cover?
  *
  * @since BuddyBoss [BBVERSION]
@@ -1776,9 +1755,9 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
 	$object = sanitize_text_field( $_POST['bp_params']['object'] );
 
 	// Set the subdir.
-	$subdir = '/members/custom/cover-image';
+	$subdir = '/members/0/cover-image';
 	if ( 'group' === $object ) {
-		$subdir = '/groups/custom/cover-image';
+		$subdir = '/groups/0/cover-image';
 	}
 
 	$upload_dir = bp_attachments_uploads_dir_get();
@@ -1818,7 +1797,6 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
  * @return string Actual custom uploaded cover relative path.
  */
 function bp_attachments_get_profile_group_attachment_dir( $cover_dir, $object_dir, $item_id, $type ) {
-
 	// Validate ajax request for upload custom profile cover.
 	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
 
@@ -1831,9 +1809,9 @@ function bp_attachments_get_profile_group_attachment_dir( $cover_dir, $object_di
 	$upload_dir = bp_attachments_uploads_dir_get();
 
 	// Set the subdir.
-	$subdir = '/members/custom/cover-image';
+	$subdir = '/members/0/cover-image';
 	if ( 'group' === $object ) {
-		$subdir = '/groups/custom/cover-image';
+		$subdir = '/groups/0/cover-image';
 	}
 
 	return $upload_dir['basedir'] . $subdir;
@@ -1852,7 +1830,6 @@ function bp_attachments_get_profile_group_attachment_dir( $cover_dir, $object_di
  * @return string Actual custom uploaded cover relative sub path.
  */
 function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
-
 	// Validate ajax request for upload custom profile cover.
 	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
 
@@ -1860,7 +1837,7 @@ function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 		return $cover_sub_dir;
 	}
 
-	return $object_dir . '/custom/' . $type;
+	return $object_dir . '/0/' . $type;
 }
 
 /**

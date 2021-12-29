@@ -30,7 +30,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		// Group Avatar.
 		add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
-		add_filter( 'bp_core_fetch_gravatar_url_check', 'bb_default_custom_profile_group_avatar_url_check', 10, 2 );
 
 		// Group Cover.
 		add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );

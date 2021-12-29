@@ -91,18 +91,27 @@ function bp_attachments_uploads_dir_get( $data = '' ) {
  * @return array See wp_upload_dir().
  */
 function bp_attachments_cover_image_upload_dir( $args = array() ) {
-	// Default values are for profiles.
-	$object_id = bp_displayed_user_id();
+	$object_id           = 0;
+	$object_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : '';
+	$args['object_type'] = $object_type;
 
-	if ( empty( $object_id ) ) {
-		$object_id = bp_loggedin_user_id();
+	// Default values are for profiles.
+	if ( empty( $object_type ) ) {
+		$object_id = bp_displayed_user_id();
+
+		if ( empty( $object_id ) ) {
+			$object_id = bp_loggedin_user_id();
+		}
 	}
 
 	$object_directory = 'members';
 
 	// We're in a group, edit default values.
 	if ( bp_is_group() || bp_is_group_create() ) {
-		$object_id        = bp_get_current_group_id();
+		if ( empty( $object_type ) ) {
+			$object_id = bp_get_current_group_id();
+		}
+
 		$object_directory = 'groups';
 	}
 
@@ -110,6 +119,7 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 		$args,
 		array(
 			'object_id'        => $object_id,
+			'object_type'      => $object_type,
 			'object_directory' => $object_directory,
 		),
 		'cover_image_upload_dir'
@@ -1301,7 +1311,7 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 		)
 	);
 
-	if ( false !== strpos( $cover_src, '/custom/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
+	if ( false !== strpos( $cover_src, '/0/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
 		$cover_src = '';
 	}
 
@@ -1329,7 +1339,7 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 		)
 	);
 
-	if ( false !== strpos( $cover_src, '/custom/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
+	if ( false !== strpos( $cover_src, '/0/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
 		$cover_src = '';
 	}
 
@@ -1444,8 +1454,9 @@ function bp_attachments_cover_image_ajax_upload() {
 	$bp_params = bp_parse_args(
 		$_POST['bp_params'],
 		array(
-			'object'  => 'user',
-			'item_id' => bp_loggedin_user_id(),
+			'object'    => 'user',
+			'item_id'   => bp_loggedin_user_id(),
+			'item_type' => null,
 		),
 		'attachments_cover_image_ajax_upload'
 	);
@@ -1473,7 +1484,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			'component' => 'xprofile',
 		);
 
-		if ( ! bp_displayed_user_id() && ! empty( $bp_params['item_id'] ) ) {
+		if ( ! bp_displayed_user_id() && ( ! empty( $bp_params['item_id'] ) || ( empty( $bp_params['item_id'] ) && ! empty( $bp_params['item_type'] ) ) ) ) {
 			$needs_reset            = array(
 				'key'   => 'displayed_user',
 				'value' => $bp->displayed_user,
@@ -1488,7 +1499,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			'component' => 'groups',
 		);
 
-		if ( ! bp_get_current_group_id() && ! empty( $bp_params['item_id'] ) ) {
+		if ( ! bp_get_current_group_id() && ( ! empty( $bp_params['item_id'] ) || ( empty( $bp_params['item_id'] ) && ! empty( $bp_params['item_type'] ) ) ) ) {
 			$needs_reset               = array(
 				'component' => 'groups',
 				'key'       => 'current_group',

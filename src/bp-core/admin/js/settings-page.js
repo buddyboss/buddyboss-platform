@@ -1215,6 +1215,7 @@ window.bp = window.bp || {};
 					form_data.append( 'action', BP_ADMIN.profile_group_cover.upload.action );
 					form_data.append( 'bp_params[object]', BP_ADMIN.profile_group_cover.upload.object );
 					form_data.append( 'bp_params[item_id]', BP_ADMIN.profile_group_cover.upload.item_id );
+					form_data.append( 'bp_params[item_type]', BP_ADMIN.profile_group_cover.upload.item_type );
 					form_data.append( 'bp_params[has_cover_image]', BP_ADMIN.profile_group_cover.upload.has_cover_image );
 					form_data.append( 'bp_params[nonces][remove]', BP_ADMIN.profile_group_cover.remove.nonce );
 

@@ -6254,6 +6254,85 @@ function bb_get_legacy_group_avatar( $size = 'full' ) {
 }
 
 /**
+ * Get default custom avatars for Profile and Group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $object The object to get the settings for ("user" for user or "group").
+ * @param string $size   This parameter specifies whether you'd like the 'full' or smaller 'thumb' avatar. Default: 'thumb'.
+ * @return string Return avatar URL if found the custom default avatar otherwise false.
+ */
+function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
+	$avatar_dir = 'avatars';
+	if ( 'group' === $object ) {
+		$avatar_dir = 'group-avatars';
+	}
+
+	$item_id          = 0;
+	$scheme           = null;
+	$avatar_loc       = new stdClass();
+	$avatar_loc->path = trailingslashit( bp_core_avatar_upload_path() );
+	$avatar_loc->url  = trailingslashit( bp_core_avatar_url() );
+	$avatar_loc->dir  = trailingslashit( $avatar_dir );
+
+	$avatar_folder_url = $avatar_loc->url . $avatar_loc->dir . $item_id;
+	$avatar_folder_dir = $avatar_loc->path . $avatar_loc->dir . $item_id;
+	$avatar_size       = ( 'thumb' == $size ) ? '-bpthumb' : '-bpfull';
+
+	$avatar_url = '';
+
+	error_log( print_r( "avatar_folder_dir ===>", 1 ) );
+	error_log( print_r( $avatar_folder_dir, 1 ) );
+
+	if ( file_exists( $avatar_folder_dir ) ) {
+
+		// Open directory.
+		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+			// Stash files in an array once to check for one that matches.
+			$avatar_files = array();
+			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+				// Only add files to the array (skip directories).
+				if ( 2 < strlen( $avatar_file ) ) {
+					$avatar_files[] = $avatar_file;
+				}
+			}
+
+			// Check for array.
+			if ( 0 < count( $avatar_files ) ) {
+
+				// Check for current avatar.
+				foreach ( $avatar_files as $key => $value ) {
+					if ( strpos( $value, $avatar_size ) !== false ) {
+						$avatar_url = $avatar_folder_url . '/' . $avatar_files[ $key ];
+					}
+				}
+			}
+		}
+
+		// Close the avatar directory.
+		closedir( $av_dir );
+
+		// If we found a locally uploaded avatar.
+		if ( isset( $avatar_url ) && ! empty( $avatar_url ) ) {
+			// Support custom scheme.
+			$avatar_url = set_url_scheme( $avatar_url, $scheme );
+		}
+	}
+
+	/**
+	 * Filters get default custom avatars for Profile and Group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $avatar_url The avatar URL if found the custom default avatar otherwise false.
+	 * @param string $object     The object to get the settings for ("user" for user or "group").
+	 * @param string $size       This parameter specifies whether you'd like the 'full' or smaller 'thumb' avatar. Default: 'thumb'.
+	 */
+	return apply_filters( 'bb_get_default_custom_avatar', $avatar_url, $object, $size );
+}
+
+/**
  * Has default custom upload group avatar?.
  *
  * @since BuddyBoss [BBVERSION]

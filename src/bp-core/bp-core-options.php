@@ -2004,13 +2004,7 @@ function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'fu
 	$custom_avatar_url = bp_get_option( 'bp-default-custom-profile-avatar', $default );
 
 	if ( ! empty( $custom_avatar_url ) && 'full' !== $size ) {
-		$custom_avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id'   => 0,
-				'item_type' => 'default',
-				'html'      => false,
-			)
-		);
+		$custom_avatar_url = bb_get_default_custom_avatar();
 	}
 
 	/**
@@ -2100,14 +2094,7 @@ function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full
 	$custom_group_avatar_url = bp_get_option( 'bp-default-custom-group-avatar', $default );
 
 	if ( ! empty( $custom_group_avatar_url ) && 'full' !== $size ) {
-		$custom_group_avatar_url = bp_core_fetch_avatar(
-			array(
-				'object'    => 'group',
-				'item_id'   => 0,
-				'item_type' => 'default',
-				'html'      => false,
-			)
-		);
+		$custom_group_avatar_url = bb_get_default_custom_avatar( 'group' );
 	}
 
 	/**

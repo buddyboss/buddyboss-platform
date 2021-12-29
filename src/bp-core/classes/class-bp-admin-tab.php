@@ -154,7 +154,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'nonce'           => wp_create_nonce( 'bp-uploader' ),
 							'action'          => 'bp_cover_image_upload',
 							'object'          => ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
-							'item_id'         => 'custom',
+							'item_id'         => 0,
+							'item_type'       => 'default',
 							'has_cover_image' => false,
 						),
 						'remove'            => array(
