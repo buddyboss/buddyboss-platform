@@ -746,7 +746,6 @@ function bp_core_get_js_strings_callback(  $params ) {
  * Register the messages notifications.
  *
  * @since BuddyBoss [BBVERSION]
- * @return void
  */
 function bb_load_messages_notifications() {
 	// Load Messages Notifications.
