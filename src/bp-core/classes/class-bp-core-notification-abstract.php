@@ -293,6 +293,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $group_key         Group key.
 	 * @param string $group_label       Group label.
 	 * @param string $group_admin_label Group admin label.
+	 * @param int    $priority          Priority of the group.
 	 *
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
