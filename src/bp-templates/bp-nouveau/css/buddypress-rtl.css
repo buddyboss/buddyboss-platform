@@ -1108,6 +1108,10 @@ a.layout-grid-view {
   line-height: 1;
 }
 
+#whats-new-form {
+  border: 1px solid #d2d4d6;
+}
+
 #whats-new-form .bb-model-header {
   box-shadow: none;
   border-bottom: 1px solid #d2d4d6;
@@ -1600,7 +1604,6 @@ a.layout-grid-view {
   width: 800px;
   max-width: 90%;
   margin: auto;
-  border: 1px solid #d2d4d6;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 }
 
@@ -1683,7 +1686,7 @@ a.layout-grid-view {
 @media screen and (max-width: 390px) {
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
-    height: 150px;
+    height: 190px;
     width: 270px;
     left: -10px;
     bottom: 25px;
@@ -1704,11 +1707,11 @@ a.layout-grid-view {
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
     width: 270px;
-    height: 150px;
+    height: 190px;
   }
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-    height: 65px;
+    height: 105px;
     bottom: 0;
   }
   .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
