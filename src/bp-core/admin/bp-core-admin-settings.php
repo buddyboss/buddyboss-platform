@@ -624,9 +624,15 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 			</label>
 			<a href="#" class="delete button button-large bb-img-remove-button <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
-		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
-			<p id="bp-cover-image-feedback" class="updated"></p>
+		
+		<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display: none;">
+			<div class="bp-feedback">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p id="bp-cover-image-feedback"></p>
+			</div>
 		</div>
+
+
 	</div>
 	<p class="description">
 		<?php
@@ -920,8 +926,11 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 			</label>
 			<a href="#" class="delete button button-large bb-img-remove-button <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
-		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
-			<p id="bp-cover-image-feedback" class="updated"></p>
+		<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display: none;">
+			<div class="bp-feedback">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p id="bp-cover-image-feedback"></p>
+			</div>
 		</div>
 	</div>
 	<p class="description">

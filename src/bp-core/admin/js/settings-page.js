@@ -1111,7 +1111,7 @@ window.bp = window.bp || {};
 			}
 
 			function profileGroupFileFeedback( container, feedback, type ) {
-				container.find( 'p' ).removeClass( 'success error' ).addClass( type ).html( feedback );
+				container.find( '.bp-feedback' ).removeClass( 'success error' ).addClass( type ).find('p').html( feedback );
 				container.show();
 			}
 
@@ -1201,7 +1201,7 @@ window.bp = window.bp || {};
 
 					coverUploadBtnContainer.html( coverUploadBtnContainer.data( 'uploading' ) );
 					feedbackContainer.hide();
-					feedbackContainer.find( 'p' ).removeClass( 'success error' );
+					feedbackContainer.find( '.bp-feedback' ).removeClass( 'success error' );
 
 					if ( 'undefined' === typeof fileData ) {
 						profileGroupFileFeedback( feedbackContainer, BP_ADMIN.profile_group_cover.select_file, 'error' );
@@ -1284,7 +1284,7 @@ window.bp = window.bp || {};
 
 						$this.html( $this.data( 'removing' ) );
 						feedbackContainer.hide();
-						feedbackContainer.find( 'p' ).removeClass( 'success error' );
+						feedbackContainer.find( '.bp-feedback' ).removeClass( 'success error' );
 
 						$.ajax(
 							{
