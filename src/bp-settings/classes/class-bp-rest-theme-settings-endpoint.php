@@ -70,7 +70,7 @@ class BP_REST_Theme_Settings_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 */
-	public function get_icons( $request ) {
+	public function get_social_icons( $request ) {
         $icon = false;
         $header_menu_icons = array();
         if ( function_exists( 'bp_is_active' ) && has_nav_menu( 'header-my-account' ) ) {
