@@ -315,14 +315,14 @@ jQuery( document ).ready(
 				medium_editor.toggleClass( 'active' );
 			} );
 
-			$( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
+			jQuery( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
 
 				var URL = event.target.value;
 				
 				if ( bp.Nouveau.isURL( URL ) ) {
-					$( event.target ).removeClass('isNotValid').addClass('isValid');
+					jQuery( event.target ).removeClass('isNotValid').addClass('isValid');
 				} else {
-					$( event.target ).removeClass('isValid').addClass('isNotValid');
+					jQuery( event.target ).removeClass('isValid').addClass('isNotValid');
 				}
 
 			});
