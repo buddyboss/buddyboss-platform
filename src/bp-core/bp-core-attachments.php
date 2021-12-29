@@ -625,10 +625,10 @@ function bp_attachments_delete_file( $args = array() ) {
 		$upload_dir = bp_attachments_uploads_dir_get();
 
 		$cover_url = bb_get_default_custom_upload_profile_cover();
-		$subdir    = 'members/custom/cover-image';
+		$subdir    = 'members/0/cover-image';
 		if ( 'groups' === $r['object_dir'] ) {
 			$cover_url = bb_get_default_custom_upload_group_cover();
-			$subdir    = 'groups/custom/cover-image';
+			$subdir    = 'groups/0/cover-image';
 		}
 
 		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
@@ -1707,7 +1707,9 @@ function bp_attachments_cover_image_ajax_delete() {
 		wp_send_json_error();
 	}
 
-	if ( empty( $_POST['object'] ) || empty( $_POST['item_id'] ) ) {
+	$item_type = isset( $_POST['item_type'] ) ? $_POST['item_type'] : '';
+
+	if ( empty( $_POST['object'] ) || ( empty( $_POST['item_id'] ) && empty( $item_type ) ) ) {
 		wp_send_json_error();
 	}
 
@@ -1760,8 +1762,11 @@ function bp_attachments_cover_image_ajax_delete() {
 			'feedback_code' => 3,
 		);
 
-		// Get cover photo settings in case there's a default header.
-		$cover_params = bp_attachments_get_cover_image_settings( $component );
+		$cover_params = array();
+		if ( ! empty( $args['item_id'] ) ) {
+			// Get cover photo settings in case there's a default header.
+			$cover_params = bp_attachments_get_cover_image_settings( $component );
+		}
 
 		// Check if there's a default cover.
 		if ( ! empty( $cover_params['default_cover'] ) ) {

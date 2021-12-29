@@ -1520,6 +1520,8 @@ function bp_avatar_ajax_set() {
 			'item_id'       => $avatar_data['item_id'],
 		);
 
+		$r['avatar'] = $return['avatar'];
+
 		if ( 'user' === $avatar_data['object'] ) {
 			/** This action is documented in bp-core/bp-core-avatars.php */
 			do_action( 'xprofile_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );

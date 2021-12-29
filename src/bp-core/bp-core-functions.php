@@ -6281,9 +6281,6 @@ function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
 
 	$avatar_url = '';
 
-	error_log( print_r( "avatar_folder_dir ===>", 1 ) );
-	error_log( print_r( $avatar_folder_dir, 1 ) );
-
 	if ( file_exists( $avatar_folder_dir ) ) {
 
 		// Open directory.

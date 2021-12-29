@@ -95,6 +95,17 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
 		$default_cover_type = bb_get_default_group_cover_type();
 
+		// Group Settings.
+		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
+
+		// Allow subscriptions setting.
+		$this->add_field( 'bp_restrict_group_creation', esc_html__( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
+
+		// Allow Group Message.
+		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
+			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
+		}
+
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
@@ -124,17 +135,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$args          = array();
 			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
-		}
-
-		// Group Settings.
-		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
-
-		// Allow subscriptions setting.
-		$this->add_field( 'bp_restrict_group_creation', esc_html__( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
-
-		// Allow Group Message.
-		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
-			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
 		// Register Group Types sections.

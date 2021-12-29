@@ -1857,7 +1857,40 @@ function bb_set_profile_avatar_type_on_update_show_avatars( $old_value, $value, 
 add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_show_avatars', 10, 3 );
 
 /**
- * Delete default avatar of group and user
+ * Save default profile and group avatar option on upload custom avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $item_id     Inform about the user id the avatar was set for.
+ * @param string $type        Inform about the way the avatar was set ('camera').
+ * @param array  $avatar_data Array of parameters passed to the avatar handler.
+ */
+function bb_save_profile_group_options_on_upload_custom_avatar( $item_id, $type, $avatar_data = array() ) {
+	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+
+	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
+
+		$avatar = isset( $avatar_data['avatar'] ) ? $avatar_data['avatar'] : '';
+
+		if ( ! empty( $avatar ) ) {
+			if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
+				bp_update_option( 'bp-profile-avatar-type', 'buddyboss' );
+				bp_update_option( 'bp-default-profile-avatar-type', 'custom' );
+				bp_update_option( 'bp-default-custom-profile-avatar', $avatar );
+			} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
+				bp_update_option( 'bp-disable-group-avatar-uploads', '' );
+				bp_update_option( 'bp-default-group-avatar-type', 'custom' );
+				bp_update_option( 'bp-default-custom-group-avatar', $avatar );
+			}
+		}
+	}
+}
+add_action( 'xprofile_avatar_uploaded', 'bb_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
+add_action( 'groups_avatar_uploaded', 'bb_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
+
+/**
+ * Save default profile and group avatar option on delete custom avatar.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1875,10 +1908,10 @@ add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_
  * }
  */
 function bb_delete_default_profile_group_avatar( $args ) {
-	$item_id   = ! empty( $args['item_id'] ) ? $args['item_id'] : '';
-	$item_type = ! empty( $args['item_type'] ) ? $args['item_type'] : null;
+	$item_id   = ! empty( $args['item_id'] ) ? (int) $args['item_id'] : '';
+	$item_type = ! empty( $args['item_type'] ) ? sanitize_text_field( $args['item_type'] ) : null;
 
-	if ( empty( $item_id ) && 'default' === $item_type ) {
+	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
 		// check for user avatars getting deleted.
 		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
@@ -1896,15 +1929,44 @@ function bb_delete_default_profile_group_avatar( $args ) {
 add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_avatar', 10, 1 );
 
 /**
- * Delete default group cover photo attachment
+ * Save default profile and group cover options on upload custom cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $item_id Inform about the item id the cover photo was deleted for.
+ */
+function bb_save_profile_group_cover_options_on_upload_custom_cover( $item_id, $name, $cover_url, $feedback_code ) {
+
+	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+	$object      = sanitize_text_field( $_POST['bp_params']['object'] );
+
+	if ( $is_validate && ! empty( $cover_url ) ) {
+		if ( 'user' === $object ) {
+			bp_update_option( 'bp-disable-cover-image-uploads', '' );
+			bp_update_option( 'bp-default-profile-cover-type', 'custom' );
+			bp_update_option( 'bp-default-custom-profile-cover', $cover_url );
+		} elseif ( 'group' === $object ) {
+			bp_update_option( 'bp-disable-group-cover-image-uploads', '' );
+			bp_update_option( 'bp-default-group-cover-type', 'custom' );
+			bp_update_option( 'bp-default-custom-group-cover', $cover_url );
+		}
+	}
+}
+add_action( 'xprofile_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
+add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
+
+/**
+ * Save default profile and group cover options on delete custom cover.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
 function bb_delete_profile_group_cover_images_url( $item_id ) {
+	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
 
-	if ( isset( $_POST['action'], $_POST['item_id'], $_POST['object'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) && 'custom' === sanitize_text_field( $_POST['item_id'] ) && 0 === $item_id ) {
+	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
 
 		if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
 			bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );

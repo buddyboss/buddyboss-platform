@@ -1291,11 +1291,12 @@ window.bp = window.bp || {};
 								url: BP_ADMIN.ajax_url, // point to server-side PHP script.
 								cache: false,
 								data: {
-									json:    true,
-									action:  BP_ADMIN.profile_group_cover.remove.action,
-									item_id: BP_ADMIN.profile_group_cover.upload.item_id,
-									object:  BP_ADMIN.profile_group_cover.upload.object,
-									nonce:   BP_ADMIN.profile_group_cover.remove.nonce
+									json:      true,
+									action:    BP_ADMIN.profile_group_cover.remove.action,
+									item_id:   BP_ADMIN.profile_group_cover.upload.item_id,
+									item_type: BP_ADMIN.profile_group_cover.upload.item_type,
+									object:    BP_ADMIN.profile_group_cover.upload.object,
+									nonce:     BP_ADMIN.profile_group_cover.remove.nonce
 								},
 								type: 'post',
 								success: function( response ){
