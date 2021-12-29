@@ -364,12 +364,11 @@ add_filter( 'bp_document_set_folder_friends_scope_args', 'bp_friends_filter_fold
  * Register the friends notifications.
  *
  * @since BuddyBoss [BBVERSION]
- * @return void
  */
 function bb_load_friends_notifications() {
-	// Load friends Notifications.
 	if ( class_exists( 'BP_Friends_Notification' ) ) {
 		BP_Friends_Notification::instance();
 	}
 }
+// Load Group Notifications.
 add_action( 'bp_friends_includes', 'bb_load_friends_notifications' );

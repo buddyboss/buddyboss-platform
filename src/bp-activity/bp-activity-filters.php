@@ -160,6 +160,7 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+// Load Activity Notifications.
 add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 
 /** Functions *****************************************************************/
@@ -3004,13 +3005,9 @@ function bb_activity_delete_link_review_attachment( $activities ) {
  * Register the activity notifications.
  *
  * @since BuddyBoss [BBVERSION]
- * @return void
  */
 function bb_load_activity_notifications() {
-
-	// Load Activity Notifications.
 	if ( class_exists( 'BP_Activity_Notification' ) ) {
 		BP_Activity_Notification::instance();
 	}
-
 }

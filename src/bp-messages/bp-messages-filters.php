@@ -96,6 +96,7 @@ add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
 add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 
+// Load Messages Notifications.
 add_action( 'bp_messages_includes', 'bb_load_messages_notifications', 20 );
 
 /**
@@ -748,7 +749,6 @@ function bp_core_get_js_strings_callback(  $params ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_load_messages_notifications() {
-	// Load Messages Notifications.
 	if ( class_exists( 'BP_Messages_Notification' ) ) {
 		BP_Messages_Notification::instance();
 	}
