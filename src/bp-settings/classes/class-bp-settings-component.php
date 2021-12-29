@@ -310,6 +310,7 @@ class BP_Settings_Component extends BP_Component {
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array(
 			'BP_REST_Account_Settings_Endpoint',
+			'BP_REST_Theme_Settings_Endpoint',
 			'BP_REST_Account_Settings_Options_Endpoint',
 		) );
 	}
