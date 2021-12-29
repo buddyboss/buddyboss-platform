@@ -10,8 +10,8 @@
 
 		<span class="bp-item-name">{{data.name}}</span>
 		
-		<span class="privacy-radio <# if ( data.selected ) { #>selected<# } #>">
-			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>>
+		<span class="bb-radio-style privacy-radio <# if ( data.selected ) { #>selected<# } #>">
+			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
 		</span>
 	</label>
 </script>
