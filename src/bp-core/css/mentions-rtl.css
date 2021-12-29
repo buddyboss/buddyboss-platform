@@ -51,6 +51,7 @@
 }
 
 .atwho-view ul li .username {
+	display: inline-block;
 	color: #92949d;
 	max-width: 100px;
     white-space: nowrap;
