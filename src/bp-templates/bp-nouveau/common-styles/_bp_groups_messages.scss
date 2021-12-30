@@ -534,6 +534,11 @@ div#bp-group-message-content {
 	align-items: center;
 	border-radius: 0;
 	width: 100%;
+
+	.item-avatar img {
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+	}
+
 }
 
 #group-messages-container .bb-groups-messages-left .list-title {
