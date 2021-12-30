@@ -6575,7 +6575,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		$web_cover_background_color = ( function_exists( 'buddyboss_theme_get_option' ) ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : $web_cover_background_color;
 
 		$info_text = sprintf(
-			__( 'On the web, the <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
+			__( 'The <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' )
 		);
 	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {

@@ -690,8 +690,8 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		<div class="preview-switcher-main">
 
 			<div class="button-group preview-switcher">
-				<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 			</div>
@@ -972,8 +972,8 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		<div class="preview-switcher-main">
 
 			<div class="button-group preview-switcher">
-				<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 			</div>
