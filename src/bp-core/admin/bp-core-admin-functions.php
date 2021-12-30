@@ -102,9 +102,9 @@ function bp_core_admin_backpat_page() {
 	$settings_url = add_query_arg( 'page', 'bp-components', $url ); ?>
 
 	<div class="wrap">
-		<h2><?php _e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
+		<h2><?php esc_html_e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
 
-		<p><?php _e( "Don't worry! We've moved the BuddyPress options into more convenient and easier to find locations. You're seeing this page because you are running a legacy BuddyPress plugin which has not been updated.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss' ); ?></p>
 		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%2$s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'admin.php?page=bp-profile-setup' ) ); ?></p>
 	</div>
 
@@ -2666,14 +2666,14 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 			)
 		);
 
-		$avatar_notice_html          = '<div class="bp-messages-feedback admin-notice">';
-			$avatar_notice_html     .= '<div class="bp-feedback warning">';
-				$avatar_notice_html .= '<span class="bp-icon" aria-hidden="true"></span>';
-				$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
-			$avatar_notice_html     .= '</div>';
-		$avatar_notice_html         .= '</div>';
+		$avatar_notice_html  = '<div class="bp-messages-feedback admin-notice">';
+		$avatar_notice_html .= '<div class="bp-feedback warning">';
+		$avatar_notice_html .= '<span class="bp-icon" aria-hidden="true"></span>';
+		$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
+		$avatar_notice_html .= '</div>';
+		$avatar_notice_html .= '</div>';
 		?>
-		
+
 		<script type="text/javascript">
 			( function ( $ ) {
 				jQuery( document ).ready( function() {
