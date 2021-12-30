@@ -552,7 +552,10 @@ window.bp = window.bp || {};
 						static: true,
 						updateOnEmptySelection: true
 					},
-					imageDragging: false
+					imageDragging: false,
+					anchor: {
+						linkValidation: true
+					}
 				}
 			);
 
@@ -2288,7 +2291,10 @@ window.bp = window.bp || {};
 											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 											unwrapTags: [ 'ul', 'ol', 'li' ]
 										},
-										imageDragging: false
+										imageDragging: false,
+										anchor: {
+											linkValidation: true
+										}
 									}
 								);
 							}
