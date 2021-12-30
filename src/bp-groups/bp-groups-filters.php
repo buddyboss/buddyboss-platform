@@ -990,7 +990,7 @@ add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_gro
  * When there is My gorups menu available on the website,
  * use this filter to fix the current user's gorups link.
  *
- * @since Buddyboss x.x.x
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $sorted_menu_objects Array of menu objects.
  * @param array $args                Array of arguments.
