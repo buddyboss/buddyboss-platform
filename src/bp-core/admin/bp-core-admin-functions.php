@@ -2669,7 +2669,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 		$avatar_notice_html          = '<div class="bp-messages-feedback admin-notice">';
 			$avatar_notice_html     .= '<div class="bp-feedback warning">';
 				$avatar_notice_html .= '<span class="bp-icon" aria-hidden="true"></span>';
-				$avatar_notice_html .= '<p id="bp-cover-image-feedback">' . $avatar_notice . '</p>';
+				$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
 			$avatar_notice_html     .= '</div>';
 		$avatar_notice_html         .= '</div>';
 		?>
@@ -2679,7 +2679,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 				jQuery( document ).ready( function() {
 					var discussion_avatar_tbl = $( 'body.options-discussion-php #wpbody-content .wrap form table:eq(1)' );
 					if ( discussion_avatar_tbl.find( 'tr:eq(1)' ).hasClass( 'avatar-settings' ) ) {
-						discussion_avatar_tbl.prev().after( '<?php echo $avatar_notice_html; ?>' );
+						discussion_avatar_tbl.prev().after( '<?php echo wp_kses_post( $avatar_notice_html ); ?>' );
 					}
 				} );
 			} )( jQuery );
