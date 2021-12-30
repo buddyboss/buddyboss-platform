@@ -2417,7 +2417,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .avatar-options .bb-default-custom-upload-file .button.delete {
   border-color: #d33;
-  color: #3c434a;
+  color: #d33;
   margin-right: 5px;
 }
 
@@ -2550,18 +2550,23 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   border-radius: 3px;
 }
 
+body.users_page_bp-profile-edit.modal-open #TB_window,
 .buddyboss_page_bp-settings.modal-open #TB_window {
   height: auto !important;
+  width: 820px !important;
+  max-width: 90%;
   top: 50% !important;
   transform: translateY(-50%);
   max-height: 90%;
   overflow: auto;
 }
 
+body.users_page_bp-profile-edit.modal-open #TB_window .bp-avatar #avatar-to-crop,
 .buddyboss_page_bp-settings.modal-open #TB_window .bp-avatar #avatar-to-crop {
   margin-bottom: 15px;
 }
 
+body.users_page_bp-profile-edit.modal-open #TB_ajaxContent,
 .buddyboss_page_bp-settings.modal-open #TB_ajaxContent {
   height: auto !important;
   width: auto !important;

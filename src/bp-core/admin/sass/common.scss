@@ -2570,7 +2570,7 @@ h2.has_tutorial_btn {
 
 		.button.delete {
 			border-color: #d33;
-			color: #3c434a;
+			color: #d33;
 			margin-left: 5px;
 
 			&.bp-hide {
@@ -2718,10 +2718,13 @@ h2.has_tutorial_btn {
 
 }
 
+body.users_page_bp-profile-edit.modal-open,
 .buddyboss_page_bp-settings.modal-open {
 
 	#TB_window {
 		height: auto !important;
+		width: 820px !important;
+		max-width: 90%;
 		top: 50% !important;
 		transform: translateY(-50%);
 		max-height: 90%;
