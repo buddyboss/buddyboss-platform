@@ -106,7 +106,7 @@ window.bp = window.bp || {};
 				$( '.bb-custom-profile-group-avatar-feedback' ).hide();
 				$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).html( '' );
 			}
-			
+
 		},
 
 		setView: function( view ) {
@@ -162,6 +162,11 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				this.removeWarning();
+				$( '.bb-custom-profile-group-avatar-feedback' ).hide().find( '.bp-feedback' ).removeClass( 'success error' ).find( 'p' ).html( '' );
+			}
 		},
 
 		setupNav: function() {
@@ -223,10 +228,6 @@ window.bp = window.bp || {};
 
 		uploadProgress: function() {
 
-			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-				$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).show();
-			}
-			
 			// Create the Uploader status view
 			var avatarStatus = new bp.Views.uploaderStatus( { collection: bp.Uploader.filesQueue } );
 
@@ -260,6 +261,10 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'crop', view: avatar } );
 
 			avatar.inject( '.bp-avatar' );
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				this.removeWarning();
+			}
 		},
 
 		setAvatar: function( avatar ) {
@@ -279,7 +284,8 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-				$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).show();
+				$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
+				$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'uploading' ) );
 			}
 
 			// Set the avatar !
@@ -293,6 +299,7 @@ window.bp = window.bp || {};
 					crop_x:        avatar.get( 'x' ),
 					crop_y:        avatar.get( 'y' ),
 					item_id:       avatar.get( 'item_id' ),
+					item_type:     avatar.get( 'item_type' ),
 					object:        avatar.get( 'object' ),
 					type:          _.isUndefined( avatar.get( 'type' ) ) ? 'crop' : avatar.get( 'type' ),
 					nonce:         avatar.get( 'nonces' ).set
@@ -301,10 +308,7 @@ window.bp = window.bp || {};
 				function( response ) {
 
 					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).hide();
-						$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
-						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'success' ).html( BP_Uploader.strings.feedback_messages[ response.feedback_code ] );
-						$( '.bb-custom-profile-group-avatar-feedback' ).show();
+						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
 					}
 
 					var avatarStatus = new bp.Views.AvatarStatus(
@@ -330,7 +334,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if( $( '.header-aside-inner .user-link .avatar' ).length ){
+					if ( $( '.header-aside-inner .user-link .avatar' ).length ) {
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
 					}
@@ -353,29 +357,33 @@ window.bp = window.bp || {};
 							{ url: response.avatar, action: 'uploaded' }
 						)
 					);
-					
+
 					// Show 'Remove' button when upload a new avatar.
 					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
-						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).show();
+						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).removeClass( 'bp-hide' );
 					}
 
 					// Show image preview when avatar deleted.
-					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).show();
+					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).removeClass( 'bp-hide' );
 
 					// Update each avatars fields of the page
-					$( '#bp-default-' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).val( response.avatar );
-
+					$( '.custom-profile-group-avatar .bb-upload-container .bb-default-custom-avatar-field' ).val( response.avatar );
+					$( '.custom-profile-group-avatar .bb-upload-container img' ).prop( 'src', response.avatar ).removeClass( 'bp-hide' );
+					$( '.preview_avatar_cover .preview-item-avatar img' ).prop( 'src', response.avatar );
 				}
 			).fail(
 				function( response ) {
+
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
+					}
+
 					var feedback = BP_Uploader.strings.default_error;
 					if ( ! _.isUndefined( response ) ) {
 						feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
 					}
 
 					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status' ).hide();
-						$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
 						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'error' ).html( feedback );
 						$( '.bb-custom-profile-group-avatar-feedback' ).show();
 					}
@@ -484,10 +492,10 @@ window.bp = window.bp || {};
 							)
 						);
 
-						if( $( '.header-aside-inner .user-link .avatar' ).length ){
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
-						}
+					if ( $( '.header-aside-inner .user-link .avatar' ).length ) {
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					}
 				}
 			).fail(
 				function( response ) {
@@ -656,12 +664,16 @@ window.bp = window.bp || {};
 
 			addItemView: function( item ) {
 				// Defaults to 150
-				var full_d = { full_h: 150, full_w: 150 };
+				var full_d = { full_h: 150, full_w: 150, item_type: '' };
 
 				// Make sure to take in account bp_core_avatar_full_height or bp_core_avatar_full_width php filters
 				if ( ! _.isUndefined( BP_Uploader.settings.crop.full_h ) && ! _.isUndefined( BP_Uploader.settings.crop.full_w ) ) {
 					full_d.full_h = BP_Uploader.settings.crop.full_h;
 					full_d.full_w = BP_Uploader.settings.crop.full_w;
+				}
+
+				if ( ! _.isUndefined( BP_Uploader.settings.defaults.multipart_params.bp_params.item_type ) ) {
+					full_d.item_type = BP_Uploader.settings.defaults.multipart_params.bp_params.item_type;
 				}
 
 				// Set the avatar model
@@ -789,7 +801,7 @@ window.bp = window.bp || {};
 							height: Math.round( ry * this.model.get( 'height' ) ) + 'px',
 							marginLeft: '-' + Math.round( rx * this.model.get( 'x' ) ) + 'px',
 							marginTop: '-' + Math.round( ry * this.model.get( 'y' ) ) + 'px'
-							}
+						}
 					);
 				}
 			}

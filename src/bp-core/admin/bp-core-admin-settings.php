@@ -18,7 +18,7 @@ function bp_admin_setting_callback_admin_bar() {
 	?>
 
 	<input id="hide-loggedout-adminbar" name="hide-loggedout-adminbar" type="checkbox" value="1" <?php checked( ! bp_hide_loggedout_adminbar( false ) ); ?> />
-	<label for="hide-loggedout-adminbar"><?php _e( 'Show the Toolbar for logged out users', 'buddyboss' ); ?></label>
+	<label for="hide-loggedout-adminbar"><?php esc_html_e( 'Show the Toolbar for logged out users', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -32,7 +32,7 @@ function bp_admin_setting_callback_account_deletion() {
 	?>
 
 	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( ! bp_disable_account_deletion( false ) ); ?> />
-	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
+	<label for="bp-disable-account-deletion"><?php esc_html_e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -47,7 +47,7 @@ function bp_admin_setting_callback_login_admin_bar() {
 	?>
 
 	<input id="show-login-adminbar" name="show-login-adminbar" type="checkbox" value="1" <?php checked( bp_show_login_adminbar( true ) ); ?> />
-	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for logged-in members (non-admins)', 'buddyboss' ); ?></label>
+	<label for="show-login-adminbar"><?php esc_html_e( 'Show the Toolbar for logged-in members (non-admins)', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -61,7 +61,7 @@ function bp_admin_setting_callback_admin_admin_bar() {
 	?>
 
 	<input id="show-admin-adminbar" name="show-admin-adminbar" type="checkbox" value="1" <?php checked( bp_show_admin_adminbar( true ) ); ?> />
-	<label for="show-admin-adminbar"><?php _e( 'Show the Toolbar for logged-in admins', 'buddyboss' ); ?></label>
+	<label for="show-admin-adminbar"><?php esc_html_e( 'Show the Toolbar for logged-in admins', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -75,7 +75,9 @@ function bp_admin_setting_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -83,7 +85,9 @@ function bp_admin_setting_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -98,7 +102,7 @@ function bp_admin_setting_callback_private_network() {
 	?>
 
 	<input id="bp-enable-private-network" name="bp-enable-private-network" type="checkbox" value="1" <?php checked( ! bp_enable_private_network( false ) ); ?> />
-	<label for="bp-enable-private-network"><?php _e( 'Restrict site access to only logged-in members', 'buddyboss' ); ?></label>
+	<label for="bp-enable-private-network"><?php esc_html_e( 'Restrict site access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 	printf(
 		'<p class="description">%s</p>',
@@ -122,7 +126,7 @@ function bp_admin_setting_callback_private_network() {
 function bp_admin_setting_callback_private_network_public_content() {
 	?>
 
-	<label for="bp-enable-private-network-public-content"><?php _e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
+	<label for="bp-enable-private-network-public-content"><?php esc_html_e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
 	<?php
 }
@@ -136,7 +140,9 @@ function bp_privacy_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -144,7 +150,9 @@ function bp_privacy_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -161,7 +169,7 @@ function bp_admin_setting_callback_activity_akismet() {
 	?>
 
 	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
-	<label for="_bp_enable_akismet"><?php _e( 'Enable Akismet spam protection for activity feed', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_akismet"><?php esc_html_e( 'Enable Akismet spam protection for activity feed', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -175,7 +183,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 	?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php esc_html_e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -189,7 +197,9 @@ function bp_posts_in_activity_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -197,7 +207,9 @@ function bp_posts_in_activity_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -222,7 +234,7 @@ function bp_admin_setting_callback_heartbeat() {
 		echo 'disabled="disabled"'; }
 	?>
 	 />
-	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_heartbeat_refresh"><?php esc_html_e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
 	<?php if ( '1' == $heartbeat_disabled ) { ?>
 		<p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
 	<?php } ?>
@@ -238,7 +250,7 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 	?>
 
 	<input id="_bp_enable_activity_autoload" name="_bp_enable_activity_autoload" type="checkbox" value="1" <?php checked( bp_is_activity_autoload_active( false ) ); ?> />
-	<label for="_bp_enable_activity_autoload"><?php _e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -254,15 +266,17 @@ function bp_admin_setting_callback_enable_activity_edit() {
 	?>
 
 	<input id="_bp_enable_activity_edit" name="_bp_enable_activity_edit" type="checkbox" value="1" <?php checked( bp_is_activity_edit_enabled( false ) ); ?> />
-	<label for="_bp_enable_activity_edit"><?php _e( 'Allow members to edit their activity posts for a duration of', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_edit"><?php esc_html_e( 'Allow members to edit their activity posts for a duration of', 'buddyboss' ); ?></label>
 
 	<select name="_bp_activity_edit_time">
-		<option value="-1"><?php _e('Forever', 'buddyboss'); ?></option>
-		<?php foreach ( $edit_times as $time ) {
+		<option value="-1"><?php esc_html_e( 'Forever', 'buddyboss' ); ?></option>
+		<?php
+		foreach ( $edit_times as $time ) {
 			$value      = isset( $time['value'] ) ? $time['value'] : 0;
 			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
 			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
-		} ?>
+		}
+		?>
 	</select>
 
 	<?php
@@ -275,8 +289,7 @@ function bp_admin_setting_callback_enable_activity_edit() {
  */
 function bp_admin_setting_callback_enable_relevant_feed() {
 	?>
-	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox"
-		   value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
+	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox" value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
 	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Restrict the Activity Feed directory to only posts that are relevant to the logged-in member', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'While logged in, members will only see activity posts from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></p>
 	<?php
@@ -292,7 +305,7 @@ function bp_admin_setting_callback_enable_activity_tabs() {
 	?>
 
 	<input id="_bp_enable_activity_tabs" name="_bp_enable_activity_tabs" type="checkbox" value="1" <?php checked( bp_is_activity_tabs_active( false ) ); ?> />
-	<label for="_bp_enable_activity_tabs"><?php _e( 'Display activity in separate tabs based on activity type', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_tabs"><?php esc_html_e( 'Display activity in separate tabs based on activity type', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -306,7 +319,7 @@ function bp_admin_setting_callback_enable_activity_follow() {
 	?>
 
 	<input id="_bp_enable_activity_follow" name="_bp_enable_activity_follow" type="checkbox" value="1" <?php checked( bp_is_activity_follow_active( false ) ); ?> />
-	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_follow"><?php esc_html_e( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -320,7 +333,7 @@ function bp_admin_setting_callback_enable_activity_like() {
 	?>
 
 	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php _e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -335,7 +348,7 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 	?>
 
 	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bp_is_activity_link_preview_active( false ) ); ?> />
-	<label for="_bp_enable_activity_link_preview"><?php _e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_link_preview"><?php esc_html_e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -349,7 +362,9 @@ function bp_activity_settings_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -357,7 +372,9 @@ function bp_activity_settings_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -389,7 +406,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 	?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload photos a profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload a profile avatars', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -417,15 +434,33 @@ function bp_admin_setting_callback_profile_avatar_type() {
 	?>
 	<div class="avatar-custom-input">
 		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
-			<option value="buddyboss" <?php selected( bb_get_profile_avatar_type(), 'buddyboss' ); ?>><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></option>
-			<option value="wordpress" <?php selected( bb_get_profile_avatar_type(), 'wordpress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
+			<option value="BuddyBoss" <?php selected( bb_get_profile_avatar_type(), 'BuddyBoss' ); ?>><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></option>
+			<option value="WordPress" <?php selected( bb_get_profile_avatar_type(), 'WordPress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
 		</select>
 	</div>
 
-	<p class="description"><?php echo sprintf( __( 'Select whether to use the BuddyBoss or WordPress avatar systems. You can manage WordPress avatars in the <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+	<p class="description">
+		<?php
+		$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
+		echo sprintf(
+			/* translators: %s: Admin discussion link */
+			__( 'Select whether to use the BuddyBoss or WordPress avatar systems. You can manage WordPress avatars in the %s settings.', 'buddyboss' ),
+			wp_kses_post( $link )
+		);
+		?>
+	</p>
 
-	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display: none;">
-		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php echo sprintf( __( 'Please enable "Avatar display" in your WordPress <a href="%1$s">Discussion</a> settings.', 'buddyboss' ), esc_url( admin_url( 'options-discussion.php' ) ) ); ?></p>
+	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning <?php echo ( bp_get_option( 'show_avatars' ) ? 'bp-hide' : '' ); ?>">
+		<p id="bb-wordpress-profile-gravatar-feedback" class="updated warning">
+			<?php
+			$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
+			echo sprintf(
+				/* translators: %s: Admin discussion link */
+				__( 'Please enable "Avatar display" in your WordPress %s settings.', 'buddyboss' ),
+				wp_kses_post( $link )
+			);
+			?>
+		</p>
 	</div>
 	<?php
 }
@@ -440,7 +475,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_avatar_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-avatar-buddyboss">
-			<div class="img-block">	
+			<div class="img-block">
 				<img class="buddyboss-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
 			</div>
 			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
@@ -469,8 +504,8 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 
 	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
-	<div class="bp-cover-image-status bb-wordpress-profile-gavatar-warning" style="display:none;">
-		<p id="bb-wordpress-profile-gavatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' );?></p>
+	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning" style="display:none;">
+		<p id="bb-wordpress-profile-gravatar-feedback" class="updated warning"><?php _e( 'Please enable <strong>Profile Gravatars</strong> below in order to use one of WordPress\' generated default avatars.', 'buddyboss' ); ?></p>
 	</div>
 	<?php
 }
@@ -481,33 +516,45 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_custom_avatar() {
-	$hide_show_style        = '';
+	$hide_show_style        = 'bp-inline-block';
 	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
 	$custom_avatar_url      = bb_get_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
 		$custom_avatar_url = $placeholder_avatar_url;
-		$hide_show_style   = 'display:none';
+		$hide_show_style   = 'bp-hide';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-profile-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview user-custom-avatar" data-default="<?php echo esc_url( $placeholder_avatar_url ); ?>" style="<?php echo esc_attr( $hide_show_style ); ?>">
-			<input type="hidden" name="bp-default-custom-profile-avatar" id="bp-default-user-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_profile_avatar() ); ?>">
+			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview user-custom-avatar <?php echo esc_attr( $hide_show_style ); ?>" data-default="<?php echo esc_url( $placeholder_avatar_url ); ?>">
+			<input type="hidden" name="bp-default-custom-profile-avatar" class="bb-default-custom-avatar-field" id="bp-default-user-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_profile_avatar() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
-			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-profile-avatar <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
 		</div>
 	</div>
-	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
-		<p id="bp-avatar-image-feedback" class="updated"></p>
+	<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display: none;">
+		<div class="bp-feedback">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p id="bp-avatar-image-feedback"></p>
+		</div>
 	</div>
-	<p class="description"><?php echo sprintf( esc_html__( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
+	<p class="description">
+		<?php
+		echo sprintf(
+		/* translators: 1: Profile avatar width. 2: Profile avatar height */
+			esc_html__( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			(int) bp_core_avatar_full_width(),
+			(int) bp_core_avatar_full_height()
+		);
+		?>
+	</p>
 	<?php
 }
 
@@ -565,28 +612,35 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 
 	if ( empty( $profile_cover_image ) ) {
 		$profile_cover_image = $placeholder_cover_url;
-		$hide_show_style     = 'display:none';
+		$hide_show_style     = 'bp-hide';
 	}
 	?>
 	<div class="bb-default-custom-upload-file custom-profile-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
-			<img src="<?php echo $profile_cover_image; ?>" data-default="<?php echo $placeholder_cover_url;?>" class="bb-upload-preview" style="<?php echo esc_attr( $hide_show_style ); ?>">
-			<input type="hidden" name="bp-default-custom-profile-cover" id="bp-default-custom-user-cover" value="<?php echo bb_get_default_custom_upload_profile_cover();?>">
+			<img src="<?php echo esc_url( $profile_cover_image ); ?>" data-default="<?php echo esc_url( $placeholder_cover_url ); ?>" class="bb-upload-preview <?php echo esc_attr( $hide_show_style ); ?>">
+			<input type="hidden" name="bp-default-custom-profile-cover" id="bp-default-custom-user-cover" value="<?php echo esc_url( bb_get_default_custom_upload_profile_cover() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<label class="cover-uploader-label">
 				<input type="file" name="default-profile-cover-file" id="default-profile-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
-				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+				<a href="#" class="button button-large bb-img-upload-button" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 			</label>
-			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo esc_attr( $hide_show_style ); ?>">Remove</a>
+			<a href="#" class="delete button button-large bb-img-remove-button <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
-		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
-			<p id="bp-cover-image-feedback" class="updated"></p>
+		
+		<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display: none;">
+			<div class="bp-feedback">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p id="bp-cover-image-feedback"></p>
+			</div>
 		</div>
+
+
 	</div>
 	<p class="description">
 		<?php
 		echo sprintf(
+			/* translators: 1: Profile cover width. 2: Profile cover height */
 			esc_html__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
 			(int) $cover_dimensions['width'],
 			(int) $cover_dimensions['height']
@@ -622,12 +676,12 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		);
 	}
 
-	if ( 'wordpress' === bb_get_profile_avatar_type() ) {
+	if ( 'WordPress' === bb_get_profile_avatar_type() ) {
 		$avatar = $wordpress_avatar_url;
 	}
 
-	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' );
-	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' );
+	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.png' );
+	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.png' );
 
 	if ( 'buddyboss' !== bb_get_default_profile_cover_type() ) {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
@@ -639,33 +693,33 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		<div class="preview-switcher-main">
 
 			<div class="button-group preview-switcher">
-				<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 			</div>
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
-					<img src="<?php echo $web_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
+				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
-					<img src="<?php echo $avatar; ?>" alt="" class="user-custom-avatar" wordpress-avatar="<?php echo $wordpress_avatar_url; ?>" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="user-custom-avatar" data-wordpress-avatar="<?php echo esc_url( $wordpress_avatar_url ); ?>" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
 			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
 				<div class="app-preview-wrap preview-block" id="app-preview">
-					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
-						<img src="<?php echo $app_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
+					<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['app_background_color'] ); ?>">
+						<img src="<?php echo esc_url( $app_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.png' ); ?>">
 					</div>
 					<div class="preview-item-avatar">
-						<img src="<?php echo $avatar; ?>" alt="" class="user-custom-avatar" wordpress-avatar="<?php echo $wordpress_avatar_url; ?>" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+						<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="user-custom-avatar" data-wordpress-avatar="<?php echo esc_url( $wordpress_avatar_url ); ?>" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 					</div>
 				</div>
 			<?php endif; ?>
 		</div>
 
 	</div>
-	<p class="description"> <?php echo $live_preview_settings['info']; ?> </p>
+	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
 	<?php
 }
 
@@ -678,7 +732,9 @@ function bp_profile_photos_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -686,7 +742,9 @@ function bp_profile_photos_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -702,7 +760,9 @@ function bp_profile_photos_tutorial() {
 function bp_group_avatar_tutorial() {
 	?>
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -710,7 +770,9 @@ function bp_group_avatar_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 	<?php
 }
@@ -725,7 +787,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	<div class="avatar-custom-input">
 		<input id="bp-default-group-avatar-buddyboss" name="bp-default-group-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_group_avatar_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-group-avatar-buddyboss">
-			<div class="img-block">	
+			<div class="img-block">
 				<img class="buddyboss-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
 			</div>
 			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
@@ -760,33 +822,45 @@ function bp_admin_setting_callback_default_group_avatar_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_group_custom_avatar() {
-	$hide_show_style        = '';
+	$hide_show_style        = 'bp-inline-block';
 	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
 	$custom_avatar_url      = bb_get_default_custom_upload_group_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
 		$custom_avatar_url = $placeholder_avatar_url;
-		$hide_show_style   = 'display:none';
+		$hide_show_style   = 'bp-hide';
 	}
 	?>
 
 	<div class="bb-default-custom-upload-file custom-group-avatar custom-profile-group-avatar">
 		<div class="bb-upload-container">
-			<img src="<?php echo $custom_avatar_url; ?>" class="bb-upload-preview group-custom-avatar" data-placeholder="<?php echo $placeholder_avatar_url; ?>" style="<?php echo esc_attr( $hide_show_style ); ?>">
-			<input type="hidden" name="bp-default-custom-group-avatar" id="bp-default-group-custom-avatar" value="<?php echo bb_get_default_custom_upload_group_avatar(); ?>">
+			<img src="<?php echo esc_url( $custom_avatar_url ); ?>" class="bb-upload-preview group-custom-avatar <?php echo esc_attr( $hide_show_style ); ?>" data-placeholder="<?php echo esc_url( $placeholder_avatar_url ); ?>">
+			<input type="hidden" name="bp-default-custom-group-avatar" class="bb-default-custom-avatar-field" id="bp-default-group-custom-avatar" value="<?php echo esc_url( bb_get_default_custom_upload_group_avatar() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
-			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
-			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar" style="<?php echo esc_attr( $hide_show_style ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
+			<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="button button-large thickbox bp-xprofile-avatar-user-edit" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+			<a href="#" class="delete button button-large bb-img-remove-button bp-delete-custom-avatar bp-delete-custom-group-avatar <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 			<div id="bp-xprofile-avatar-editor" style="display:none;">
 				<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 			</div>
 		</div>
 	</div>
-	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
-		<p id="bp-avatar-image-feedback" class="updated"></p>
+	<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display: none;">
+		<div class="bp-feedback">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p id="bp-avatar-image-feedback"></p>
+		</div>
 	</div>
-	<p class="description"><?php echo sprintf( __( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ); ?></p>
+	<p class="description">
+		<?php
+		echo sprintf(
+			/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
+			esc_html__( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			absint( bp_core_avatar_full_width() ),
+			absint( bp_core_avatar_full_height() )
+		);
+		?>
+	</p>
 	<?php
 }
 
@@ -843,29 +917,33 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 
 	if ( empty( $group_cover_image ) ) {
 		$group_cover_image = $placeholder_cover_url;
-		$hide_show_style   = 'display:none';
+		$hide_show_style   = 'bp-hide';
 	}
 	?>
 	<div class="bb-default-custom-upload-file custom-group-avatar cover-uploader custom-profile-group-cover">
 		<div class="bb-upload-container">
-			<img src="<?php echo $group_cover_image; ?>" data-default="<?php echo $placeholder_cover_url; ?>" class="bb-upload-preview" style="<?php echo esc_attr( $hide_show_style ); ?>">
-			<input type="hidden" name="bp-default-custom-group-cover" id="bp-default-custom-group-cover" value="<?php echo bb_get_default_custom_upload_group_cover(); ?>">
+			<img src="<?php echo esc_url( $group_cover_image ); ?>" data-default="<?php echo esc_url( $placeholder_cover_url ); ?>" class="bb-upload-preview <?php echo esc_attr( $hide_show_style ); ?>">
+			<input type="hidden" name="bp-default-custom-group-cover" id="bp-default-custom-group-cover" value="<?php echo esc_url( bb_get_default_custom_upload_group_cover() ); ?>">
 		</div>
 		<div class="bb-img-button-wrap">
 			<label class="cover-uploader-label">
 				<input type="file" name="default-group-cover-file" id="default-group-cover-file" class="bb-setting-profile button cover-uploader-hide" accept="image/*">
-				<button type="button" class="button button-large bb-img-upload-button">Upload</button>
+				<a href="#" class="button button-large bb-img-upload-button" data-uploading="<?php esc_html_e( 'Uploading...', 'buddyboss' ); ?>" data-upload="<?php esc_html_e( 'Upload', 'buddyboss' ); ?>"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 			</label>
-			<a href="#" class="delete button button-large bb-img-remove-button" style="<?php echo esc_attr( $hide_show_style ); ?>">Remove</a>
+			<a href="#" class="delete button button-large bb-img-remove-button <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
-		<div class="bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display:none;">
-			<p id="bp-cover-image-feedback" class="updated"></p>
+		<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display: none;">
+			<div class="bp-feedback">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p id="bp-cover-image-feedback"></p>
+			</div>
 		</div>
 	</div>
 	<p class="description">
 		<?php
 		echo sprintf(
-			__( 'Upload an image to be used as the default group cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
+			/* translators: 1: Cover image width in pixels. 2: Cover image height in pixels */
+			esc_html__( 'Upload an image to be used as the default group cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
 			(int) $cover_dimensions['width'],
 			(int) $cover_dimensions['height']
 		);
@@ -887,8 +965,8 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		)
 	);
 
-	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' );
-	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' );
+	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.png' );
+	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.png' );
 
 	if ( 'buddyboss' !== bb_get_default_group_cover_type() ) {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'groups' );
@@ -900,28 +978,28 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		<div class="preview-switcher-main">
 
 			<div class="button-group preview-switcher">
-				<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
+					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
 					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 			</div>
 
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['web_background_color']; ?>">
-					<img src="<?php echo $web_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.jpg' ); ?>">
+				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-web.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
-					<img src="<?php echo $avatar; ?>" alt="" class="group-custom-avatar" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
 
 			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
 				<div class="app-preview-wrap preview-block" id="app-preview">
-					<div class="preview-item-cover" style="background-color: <?php echo $live_preview_settings['app_background_color']; ?>">
-						<img src="<?php echo $app_cover_preview; ?>" alt="" buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.jpg' ); ?>">
+					<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['app_background_color'] ); ?>">
+						<img src="<?php echo esc_url( $app_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss-app.png' ); ?>">
 					</div>
 					<div class="preview-item-avatar">
-						<img src="<?php echo $avatar; ?>" alt="" class="group-custom-avatar" blank-avatar="<?php echo bb_get_blank_profile_avatar(); ?>">
+						<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 					</div>
 				</div>
 			<?php endif; ?>
@@ -929,7 +1007,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		</div>
 
 	</div>
-	<p class="description"> <?php echo $live_preview_settings['info']; ?> </p>
+	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
 	<?php
 }
 
@@ -944,8 +1022,8 @@ function bp_admin_setting_callback_group_creation() {
 	?>
 
 	<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( ! bp_restrict_group_creation( false ) ); ?> />
-	<label for="bp_restrict_group_creation"><?php _e( 'Enable social group creation by all members', 'buddyboss' ); ?></label>
-	<p class="description" id="bp_group_creation_description"><?php _e( 'Administrators can always create groups, regardless of this setting.', 'buddyboss' ); ?></p>
+	<label for="bp_restrict_group_creation"><?php esc_html_e( 'Enable social group creation by all members', 'buddyboss' ); ?></label>
+	<p class="description" id="bp_group_creation_description"><?php esc_html_e( 'Administrators can always create groups, regardless of this setting.', 'buddyboss' ); ?></p>
 
 	<?php
 }
@@ -958,7 +1036,8 @@ function bp_admin_setting_callback_group_creation() {
 function bp_admin_setting_callback_group_avatar_uploads() {
 	?>
 	<input id="bp-disable-group-avatar-uploads" name="bp-disable-group-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_avatar_uploads() ); ?> />
-	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow group organizers to upload a group avatar', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-avatar-uploads"><?php esc_html_e( 'Enable avatars for groups', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'When enabled, group organizers will be able to upload avatars in the group\'s settings', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -970,8 +1049,8 @@ function bp_admin_setting_callback_group_avatar_uploads() {
 function bp_admin_setting_callback_group_cover_image_uploads() {
 	?>
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
-	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Enable cover images for groups', 'buddyboss' ); ?></label>
-	<p class="description" id="bp_group_creation_description"><?php _e( 'When enabled, group organizers will be able to upload cover images in the group\'s settings', 'buddyboss' ); ?></p>
+	<label for="bp-disable-group-cover-image-uploads"><?php esc_html_e( 'Enable cover images for groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bp_group_creation_description"><?php esc_html_e( 'When enabled, group organizers will be able to upload cover images in the group\'s settings', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -984,7 +1063,9 @@ function bp_group_setting_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -992,7 +1073,9 @@ function bp_group_setting_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1024,7 +1107,7 @@ function bp_admin_setting_callback_group_type_creation() {
 		);
 	} else {
 		?>
-		<label for="bp-disable-group-type-creation"><?php _e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
+		<label for="bp-disable-group-type-creation"><?php esc_html_e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
 		<?php
 	}
 
@@ -1054,11 +1137,11 @@ function bp_admin_setting_callback_group_auto_join() {
 		);
 	} else {
 		?>
-		<label for="bp-enable-group-auto-join"><?php _e( 'Allow selected profile types to automatically join groups', 'buddyboss' ); ?></label>
+		<label for="bp-enable-group-auto-join"><?php esc_html_e( 'Allow selected profile types to automatically join groups', 'buddyboss' ); ?></label>
 		<?php
 	}
 	?>
-	<p class="description"><?php _e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1071,7 +1154,9 @@ function bp_group_types_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1079,7 +1164,9 @@ function bp_group_types_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1095,7 +1182,7 @@ function bp_group_types_tutorial() {
 function bp_admin_setting_callback_group_hierarchies() {
 	?>
 	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
-	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have subgroups', 'buddyboss' ); ?></label>
+	<label for="bp-enable-group-hierarchies"><?php esc_html_e( 'Allow groups to have subgroups', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -1106,8 +1193,8 @@ function bp_admin_setting_callback_group_hierarchies() {
  */
 function bp_admin_setting_callback_group_hide_subgroups() {
 	?>
-    <input id="bp-enable-group-hide-subgroups" name="bp-enable-group-hide-subgroups" type="checkbox" value="1" <?php checked( bp_enable_group_hide_subgroups() ); ?> />
-    <label for="bp-enable-group-hide-subgroups"><?php _e( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ); ?></label>
+	<input id="bp-enable-group-hide-subgroups" name="bp-enable-group-hide-subgroups" type="checkbox" value="1" <?php checked( bp_enable_group_hide_subgroups() ); ?> />
+	<label for="bp-enable-group-hide-subgroups"><?php esc_html_e( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -1119,8 +1206,8 @@ function bp_admin_setting_callback_group_hide_subgroups() {
 function bp_admin_setting_callback_group_restrict_invites() {
 	?>
 	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
-	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ); ?></label>
-	<p class="description"><?php _e( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ); ?></p>
+	<label for="bp-enable-group-restrict-invites"><?php esc_html_e( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1133,7 +1220,9 @@ function bp_group_hierarchies_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1141,7 +1230,9 @@ function bp_group_hierarchies_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1166,16 +1257,7 @@ function bp_core_admin_settings() {
 				<?php bp_core_settings_admin_tabs(); ?>
 			</ul>
 		</div>
-		<form action="<?php echo esc_url( $form_action ); ?>" method="post"
-		<?php
-		/**
-		 * Fires inside the option page form tag.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		do_action( 'bb_admin_settings_form_tag' );
-		?>
-		>
+		<form action="<?php echo esc_url( $form_action ); ?>" method="post" enctype="multipart/form-data">
 			<?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
 	</div>
@@ -1291,7 +1373,7 @@ function bp_get_form_option( $option, $default = '', $slug = false ) {
 function bp_admin_setting_callback_member_invite_email_subject() {
 	?>
 	<input id="bp-disable-invite-member-email-subject" name="bp-disable-invite-member-email-subject" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_subject() ); ?> />
-	<label for="bp-disable-invite-member-email-subject"><?php _e( 'Allow members to customize the email subject', 'buddyboss' ); ?></label>
+	<label for="bp-disable-invite-member-email-subject"><?php esc_html_e( 'Allow members to customize the email subject', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -1303,7 +1385,7 @@ function bp_admin_setting_callback_member_invite_email_subject() {
 function bp_admin_setting_callback_member_invite_email_content() {
 	?>
 	<input id="bp-disable-invite-member-email-content" name="bp-disable-invite-member-email-content" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_content() ); ?> />
-	<label for="bp-disable-invite-member-email-content"><?php _e( 'Allow members to customize the email body content', 'buddyboss' ); ?></label>
+	<label for="bp-disable-invite-member-email-content"><?php esc_html_e( 'Allow members to customize the email body content', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -1315,7 +1397,7 @@ function bp_admin_setting_callback_member_invite_email_content() {
 function bp_admin_setting_callback_member_invite_member_type() {
 	?>
 	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
-	<label for="bp-disable-invite-member-type"><?php _e( 'Allow members to select profile type of invitee', 'buddyboss' ); ?></label>
+	<label for="bp-disable-invite-member-type"><?php esc_html_e( 'Allow members to select profile type of invitee', 'buddyboss' ); ?></label>
 	<?php
 		printf(
 			'<p class="description">%s</p>',
@@ -1341,7 +1423,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	$option_name   = bb_post_type_feed_option_name( $post_type );
 	$post_type_obj = get_post_type_object( $post_type );
 
-	// Description for the last option of CPT
+	// Description for the last option of CPT.
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
 		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
@@ -1386,7 +1468,15 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 
 	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
 		?>
-			<p class="description <?php echo 'bp-feed-post-type-comment-' . esc_attr( $post_type ); ?>"><?php printf( esc_html__( 'Comments are not supported for %s', 'buddyboss' ), esc_html( $post_type  ) ); ?></p>
+			<p class="description <?php echo esc_attr( 'bp-feed-post-type-comment-' . $post_type ); ?>">
+				<?php
+				printf(
+				/* translators: %s: comment post type */
+					esc_html__( 'Comments are not supported for %s', 'buddyboss' ),
+					esc_html( $post_type )
+				);
+				?>
+			</p>
 		<?php
 		return;
 	}
@@ -1441,7 +1531,7 @@ function bp_admin_setting_callback_register() {
 	?>
 
 	<input id="bp-enable-site-registration" name="bp-enable-site-registration" type="checkbox" value="1" <?php checked( bp_enable_site_registration() ); ?> />
-	<label for="bp-enable-site-registration"><?php _e( 'Allow non-members to register new accounts', 'buddyboss' ); ?></label>
+	<label for="bp-enable-site-registration"><?php esc_html_e( 'Allow non-members to register new accounts', 'buddyboss' ); ?></label>
 	<?php
 	if ( false === bp_enable_site_registration() && bp_is_active( 'invites' ) ) {
 		printf(
@@ -1478,9 +1568,10 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 
 	if ( true === $args['description'] ) {
 		?>
-		<p class="description"><?php _e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
 		<?php
-	} ?>
+	}
+	?>
 	<input name="<?php echo esc_attr( 'bp-enable-send-invite-member-type-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false ) ); ?>/>
 	<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['member_type_name'] ); ?></label>
 	<?php
@@ -1495,7 +1586,7 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 function bp_admin_setting_callback_enable_profile_gravatar() {
 	?>
 	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
-	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use gravatars for profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-enable-profile-gravatar"><?php esc_html_e( 'Allow members to use gravatars for profile avatars', 'buddyboss' ); ?></label>
 	<p class="description"><?php _e( 'When enabled, members will be able to use avatars from their <a href="https://gravatar.com/">Gravatar</a> account.', 'buddyboss' ); ?></p>
 	<?php
 }
@@ -1509,7 +1600,9 @@ function bp_email_invites_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1517,7 +1610,9 @@ function bp_email_invites_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1532,21 +1627,21 @@ function bp_admin_setting_display_name_first_name() {
 	?>
 
 	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
-	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-first-name"><?php esc_html_e( 'First Name', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
 	<input id="bp-hide-last-name" name="bp-hide-last-name" type="checkbox" value="1" <?php checked( bp_hide_last_name( true ) ); ?> />
-	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></span></label>
+	<label for="bp-hide-last-name"><?php esc_html_e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php esc_html_e( '(can be disabled)', 'buddyboss' ); ?></span></label>
 
 	<br /><br />
 
 	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
-	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+	<label for="bp-hide-nickname"><?php esc_html_e( 'Nickname', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
-	<p class="description"><?php _e( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ); ?></p>
 
 	<?php
 }
@@ -1560,21 +1655,21 @@ function bp_admin_setting_display_name_first_last_name() {
 	?>
 
 	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
-	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-first-name"><?php esc_html_e( 'First Name', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
 	<input id="bp-hide-last-name" type="checkbox" disabled="disabled" checked="checked" />
-	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-last-name"><?php esc_html_e( 'Last Name', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
 	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
-	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+	<label for="bp-hide-nickname"><?php esc_html_e( 'Nickname', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
-	<p class="description"><?php _e( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ); ?></p>
 
 	<?php
 }
@@ -1588,7 +1683,7 @@ function bp_admin_setting_callback_nickname_hide_first_name() {
 	?>
 	<div class="bb-nickname-hide-first-name">
 		<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
-		<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+		<label for="bp-hide-nickname-first-name"><?php esc_html_e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php esc_html_e( '(can be disabled)', 'buddyboss' ); ?></label>
 	</div>
 	<?php
 }
@@ -1602,16 +1697,16 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
 	?>
 	<div class="bb-nickname-hide-last-name">
 		<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
-		<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+		<label for="bp-hide-nickname-last-name"><?php esc_html_e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php esc_html_e( '(can be disabled)', 'buddyboss' ); ?></label>
 
 		<br /><br />
 
 		<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
-		<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+		<label for="bp-hide-nickname"><?php esc_html_e( 'Nickname', 'buddyboss' ); ?></label>
 
 		<br /><br />
 
-		<p class="description"><?php _e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
+		<p class="description"><?php esc_html_e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
 	</div>
 	<?php
 }
@@ -1625,7 +1720,9 @@ function bp_profile_names_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1633,7 +1730,9 @@ function bp_profile_names_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1693,7 +1792,7 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
 
 	<input id="register-confirm-email" name="register-confirm-email" type="checkbox" value="1" <?php checked( bp_register_confirm_email( false ) ); ?> />
-	<label for="register-confirm-email"><?php _e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
+	<label for="register-confirm-email"><?php esc_html_e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -1708,11 +1807,11 @@ function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
 
 	<input id="register-legal-agreement" name="register-legal-agreement" type="checkbox" value="1" <?php checked( bb_register_legal_agreement( false ) ); ?> />
-	<label for="register-legal-agreement"><?php _e( 'Add Legal Agreement checkbox to register form', 'buddyboss' ); ?></label>
+	<label for="register-legal-agreement"><?php esc_html_e( 'Add Legal Agreement checkbox to register form', 'buddyboss' ); ?></label>
 	<?php
 		printf(
 			'<p class="description">%s</p>',
-			__( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' )
+			esc_html__( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' )
 		);
 }
 
@@ -1725,7 +1824,7 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 	?>
 
 	<input id="register-confirm-password" name="register-confirm-password" type="checkbox" value="1" <?php checked( bp_register_confirm_password( false ) ); ?> />
-	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
+	<label for="register-confirm-password"><?php esc_html_e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -1736,11 +1835,11 @@ function bp_admin_setting_callback_register_show_confirm_password() {
  * @since BuddyBoss 1.2.0
  */
 function bp_admin_setting_callback_group_layout_type_format() {
-	$options = [
+	$options = array(
 		'list_grid' => __( 'Grid and List', 'buddyboss' ),
 		'grid'      => __( 'Grid', 'buddyboss' ),
 		'list'      => __( 'List', 'buddyboss' ),
-	];
+	);
 
 	$current_value = bp_get_option( 'bp-group-layout-format' );
 
@@ -1749,14 +1848,14 @@ function bp_admin_setting_callback_group_layout_type_format() {
 		printf(
 			'<option value="%s" %s>%s</option>',
 			$key,
-			$key == $current_value? 'selected' : '',
+			$key == $current_value ? 'selected' : '',
 			$value
 		);
 	}
 	printf( '</select>' );
 
 	?>
-	<p class="description"><?php _e( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1768,10 +1867,10 @@ function bp_admin_setting_callback_group_layout_type_format() {
 function bp_admin_setting_group_layout_default_option() {
 	$selected = bp_group_layout_default_format( 'grid' );
 
-	$options = [
-		'grid'      => __( 'Grid', 'buddyboss' ),
-		'list'      => __( 'List', 'buddyboss' ),
-	];
+	$options = array(
+		'grid' => __( 'Grid', 'buddyboss' ),
+		'list' => __( 'List', 'buddyboss' ),
+	);
 
 	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-default-format' );
 	foreach ( $options as $key => $value ) {
@@ -1795,7 +1894,9 @@ function bp_group_directories_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1803,7 +1904,9 @@ function bp_group_directories_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1820,20 +1923,28 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 	$allow_custom_registration = bp_allow_custom_registration();
 	?>
 
-    <select name="allow-custom-registration" id="allow-custom-registration">
-	    <option value="0" <?php selected( 0, $allow_custom_registration ); ?>><?php _e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
-	    <option value="1" <?php selected( 1, $allow_custom_registration ); ?>><?php _e( 'Custom URL', 'buddyboss' ); ?></option>
-    </select>
+	<select name="allow-custom-registration" id="allow-custom-registration">
+		<option value="0" <?php selected( 0, $allow_custom_registration ); ?>><?php esc_html_e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
+		<option value="1" <?php selected( 1, $allow_custom_registration ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+	</select>
 	<?php
-    if ( ! $allow_custom_registration ) {
-	    printf( '<p class="description">%s</p>',
-		    sprintf( __( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
-			    'buddyboss' ),
-			    add_query_arg( array(
-				    'page' => 'bp-pages'
-			    ),
-				    admin_url( 'admin.php' ) ) ) );
-    }
+	if ( ! $allow_custom_registration ) {
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__(
+					'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
+					'buddyboss'
+				),
+				add_query_arg(
+					array(
+						'page' => 'bp-pages',
+					),
+					admin_url( 'admin.php' )
+				)
+			)
+		);
+	}
 }
 
 /*
@@ -1844,10 +1955,11 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 */
 function bp_admin_setting_callback_register_page_url() {
 	?>
-    <input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
+	<input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
 	<?php
 	printf(
-		'<p class="description">%s</p>', sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+		'<p class="description">%s</p>',
+		sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
 	);
 }
 
@@ -1859,8 +1971,10 @@ function bp_admin_setting_callback_register_page_url() {
 function bp_admin_registration_setting_tutorial() {
 	?>
 
-    <p>
-        <a class="button" href="<?php echo bp_get_admin_url(
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1868,8 +1982,10 @@ function bp_admin_registration_setting_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-    </p>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
 
 	<?php
 }
@@ -1882,7 +1998,7 @@ function bp_admin_registration_setting_tutorial() {
 function bp_admin_setting_callback_group_messages() {
 	?>
 	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
-	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-messages"><?php esc_html_e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -1896,8 +2012,10 @@ function bp_admin_setting_callback_group_messages() {
 function bp_admin_moderation_block_setting_tutorial() {
 	?>
 
-    <p>
-        <a class="button" href="<?php echo bp_get_admin_url(
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1905,8 +2023,10 @@ function bp_admin_moderation_block_setting_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-    </p>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
 
 	<?php
 }
@@ -1919,8 +2039,10 @@ function bp_admin_moderation_block_setting_tutorial() {
 function bp_admin_moderation_report_setting_tutorial() {
 	?>
 
-    <p>
-        <a class="button" href="<?php echo bp_get_admin_url(
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -1928,8 +2050,10 @@ function bp_admin_moderation_report_setting_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-    </p>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
 
 	<?php
 }
@@ -1943,8 +2067,7 @@ function bp_admin_moderation_report_setting_tutorial() {
  */
 function bb_admin_setting_callback_on_screen_notifications_enable() {
 	?>
-	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox"
-		   value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ); ?> />
+	<input id="_bp_on_screen_notifications_enable" name="_bp_on_screen_notifications_enable" type="checkbox" value="1" <?php checked( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ); ?> />
 	<label for="_bp_on_screen_notifications_enable"><?php esc_html_e( 'Enable on-screen notifications', 'buddyboss' ); ?></label>
 	<p class="description"><?php esc_html_e( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ); ?></p>
 	<?php
@@ -2057,8 +2180,10 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
 function bp_admin_on_screen_notification_setting_tutorial() {
 	?>
 
-    <p>
-        <a class="button" href="<?php echo bp_get_admin_url(
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -2066,8 +2191,10 @@ function bp_admin_on_screen_notification_setting_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-    </p>
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
 
 	<?php
 }
@@ -2077,7 +2204,6 @@ function bp_admin_on_screen_notification_setting_tutorial() {
  * @since BuddyBoss 1.7.2
  *
  * @param string $tab_name  Settings tab name.
- * @param object $class_obj Tab property.
  *
  * @uses bb_feed_post_types()                    Get all post type name.
  * @uses bb_post_type_feed_option_name()         Settings option name for post type.

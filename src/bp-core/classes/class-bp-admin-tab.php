@@ -124,20 +124,20 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 						),
 					),
-					'moderation'          => array(
+					'moderation'           => array(
 						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					),
-					'avatar_cover_preview'    => array(
+					'avatar_cover_preview' => array(
 						'nonce'  => wp_create_nonce( 'bb-avatar-cover-live-preview' ),
 						'action' => 'bb_profile_group_get_live_preview_urls',
 					),
-					'avatar_settings'    => array(
+					'avatar_settings'      => array(
 						'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
 						'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
 						'wordpress_avatar_types'   => array( 'mystery', 'blank', 'gravatar_default', 'identicon', 'wavatar', 'monsterid', 'retro' ),
 					),
-					'profile_group_cover' => array(
+					'profile_group_cover'  => array(
 						'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
 						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 						'feedback_messages' => array(
@@ -153,8 +153,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'upload'            => array(
 							'nonce'           => wp_create_nonce( 'bp-uploader' ),
 							'action'          => 'bp_cover_image_upload',
-							'object'          => ( "bp-xprofile" === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
-							'item_id'         => 'custom',
+							'object'          => ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
+							'item_id'         => 0,
+							'item_type'       => 'default',
 							'has_cover_image' => false,
 						),
 						'remove'            => array(
@@ -166,13 +167,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				)
 			);
 
-			$active_tab  = bp_core_get_admin_active_tab();
+			$active_tab = bp_core_get_admin_active_tab();
 
 			if ( 'bp-xprofile' === $active_tab || 'bp-groups' === $active_tab ) {
-	
+
 				wp_enqueue_style( 'thickbox' );
 				wp_enqueue_script( 'media-upload' );
-	
+
 				// Get Avatar Uploader.
 				bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
 			}
@@ -292,10 +293,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
-			?>
+				?>
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" href="<?php echo bp_get_admin_url(
+				<a class="button" href="
+				<?php
+				echo bp_get_admin_url(
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
@@ -303,15 +306,17 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						),
 						'admin.php'
 					)
-				); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+				);
+				?>
+				"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 			</p>
-			<?php
+				<?php
 			} else {
 				printf(
-						'<p class="submit">
+					'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-						esc_attr__( 'Save Settings', 'buddyboss' )
+					esc_attr__( 'Save Settings', 'buddyboss' )
 				);
 			}
 		}
@@ -325,8 +330,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
-			if( !empty( $tutorial_callback ) ) {
-				$wp_settings_sections[ $this->tab_name ][ $id ][ 'tutorial_callback' ] = $tutorial_callback;
+			if ( ! empty( $tutorial_callback ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
 
 			return $this;

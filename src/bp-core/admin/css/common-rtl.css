@@ -2326,16 +2326,19 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
+.admin-notice .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
+.admin-notice .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
   border-radius: 0 4px 4px 0;
   margin: 0;
 }
 
+.admin-notice .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
@@ -2380,6 +2383,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .avatar-options .avatar-custom-input input[type="radio"]:checked + label .img-block img {
   border-color: #2271b1;
+  box-shadow: 0 0 0 1px #2271b1;
 }
 
 .avatar-options .avatar-custom-input .img-block {
@@ -2391,7 +2395,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 .avatar-options .avatar-custom-input img {
   width: 80px;
   height: 80px;
-  border: 2px solid transparent;
+  border: 1px solid #ccd0d4;
   border-radius: 5px;
   object-fit: cover;
 }
@@ -2413,8 +2417,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .avatar-options .bb-default-custom-upload-file .button.delete {
   border-color: #d33;
-  color: #3c434a;
+  color: #d33;
   margin-right: 5px;
+}
+
+.avatar-options .bb-default-custom-upload-file .button.delete.bp-hide {
+  display: none;
 }
 
 .avatar-options .bb-default-custom-upload-file.cover-uploader .bb-upload-container img {
@@ -2450,9 +2458,15 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin-bottom: 25px;
 }
 
+.preview_avatar_cover .preview-switcher .button:focus {
+  box-shadow: none;
+}
+
 .preview_avatar_cover .preview-block {
   max-width: 260px;
-  border: 2px solid #dcdddf;
+  border: 1px solid #ccd0d4;
+  border-radius: 5px;
+  overflow: hidden;
   margin-bottom: 25px;
   display: none;
 }
@@ -2475,6 +2489,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 .preview_avatar_cover .preview-item-cover {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
   min-height: 90px;
   max-height: 90px;
   background-color: #ccc;
@@ -2488,11 +2508,15 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   top: -35px;
   right: 25px;
   border: 3px solid #fff;
+  border-radius: 5px;
+}
+
+.preview_avatar_cover .preview-item-avatar img {
+  background-color: #f9f9f9;
 }
 
 .preview_avatar_cover .preview-item-cover img,
 .preview_avatar_cover .preview-item-avatar img {
-  height: 100%;
   object-fit: cover;
   width: 100%;
 }
@@ -2526,15 +2550,25 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   border-radius: 3px;
 }
 
+body.users_page_bp-profile-edit.modal-open #TB_window,
 .buddyboss_page_bp-settings.modal-open #TB_window {
+  height: auto !important;
+  width: 820px !important;
+  max-width: 90%;
+  top: 50% !important;
+  transform: translateY(-50%);
+  max-height: 90%;
   overflow: auto;
 }
 
+body.users_page_bp-profile-edit.modal-open #TB_window .bp-avatar #avatar-to-crop,
 .buddyboss_page_bp-settings.modal-open #TB_window .bp-avatar #avatar-to-crop {
   margin-bottom: 15px;
 }
 
+body.users_page_bp-profile-edit.modal-open #TB_ajaxContent,
 .buddyboss_page_bp-settings.modal-open #TB_ajaxContent {
   height: auto !important;
   width: auto !important;
+  padding: 15px;
 }
