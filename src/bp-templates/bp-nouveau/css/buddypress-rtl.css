@@ -1651,7 +1651,7 @@ a.layout-grid-view {
   .activity-update-form.modal-popup .emojionearea .emojionearea-picker {
     right: unset;
     left: -138px;
-    bottom: 30px;
+    bottom: 25px;
   }
 }
 
@@ -1673,6 +1673,7 @@ a.layout-grid-view {
   right: initial;
   left: -14px;
   transform: rotate(-90deg);
+  display: none;
 }
 
 @media screen and (min-width: 1200px) {
@@ -2007,6 +2008,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
+  padding: 0;
+  height: 44px;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
@@ -3421,7 +3424,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #whats-new-toolbar .post-elements-buttons-item.disable.active .bb-icon,
 #whats-new-messages-toolbar .post-elements-buttons-item.disable .bb-icon,
 #whats-new-messages-toolbar .post-elements-buttons-item.disable.active .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
+  color: rgba(18, 43, 70, 0.7);
 }
 
 .ac-reply-toolbar .post-elements-buttons-item.no-click,
@@ -16548,6 +16551,18 @@ img.emojioneemoji {
   margin: 3px;
   width: 24px !important;
   height: 24px !important;
+}
+
+.emojionearea-filters img.emoji,
+.emojionearea-filters img.emojioneemoji {
+  max-width: 20px !important;
+  max-height: 20px !important;
+  width: 20px !important;
+  height: auto !important;
+}
+
+.emojionearea-filters .emojionearea-filter-flags img.emojioneemoji {
+  max-width: 14px !important;
 }
 
 .bb-media-only-privacy {

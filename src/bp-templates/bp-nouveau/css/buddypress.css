@@ -2008,6 +2008,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
+  padding: 0;
+  height: 44px;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
