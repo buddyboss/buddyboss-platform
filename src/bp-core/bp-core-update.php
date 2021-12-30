@@ -1643,9 +1643,9 @@ function bb_to_1_8_5_change_overrides( $overrides ) {
  */
 function bb_to_1_8_5_image_upload_dir( $args ) {
 	// Set the subdir.
-	$subdir = '/members/custom/cover-image';
+	$subdir = '/members/0/cover-image';
 	if ( isset( $_POST['group_cover_upload'] ) ) {
-		$subdir = '/groups/custom/cover-image';
+		$subdir = '/groups/0/cover-image';
 	}
 
 	$upload_dir = bp_attachments_uploads_dir_get();

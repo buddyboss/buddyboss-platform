@@ -49,6 +49,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$group_avatar_type_after_saving = bb_get_default_group_avatar_type();
 		$group_cover_type_after_saving  = bb_get_default_group_cover_type();
 		$bb_default_custom_group_avatar = filter_input( INPUT_POST, 'bp-default-custom-group-avatar', FILTER_SANITIZE_STRING );
+		$bb_default_custom_group_cover  = filter_input( INPUT_POST, 'bp-default-custom-group-cover', FILTER_SANITIZE_STRING );
 
 		/**
 		 * Validate custom option for group avatar and cover.
@@ -64,7 +65,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			bp_update_option( 'bp-default-group-avatar-type', $group_avatar_type_before_saving );
 		}
 
-		if ( ! isset( $bb_default_custom_group_avatar ) || ( isset( $bb_default_custom_group_avatar ) && empty( $bb_default_custom_group_avatar ) && 'custom' === $group_cover_type_after_saving ) ) {
+		if ( ! isset( $bb_default_custom_group_cover ) || ( isset( $bb_default_custom_group_cover ) && empty( $bb_default_custom_group_cover ) && 'custom' === $group_cover_type_after_saving ) ) {
 
 			if ( 'custom' === $group_cover_type_before_saving ) {
 				$group_cover_type_before_saving = 'buddyboss';

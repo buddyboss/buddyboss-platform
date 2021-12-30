@@ -1111,7 +1111,7 @@ window.bp = window.bp || {};
 			}
 
 			function profileGroupFileFeedback( container, feedback, type ) {
-				container.find( '.bp-feedback' ).removeClass( 'success error' ).addClass( type ).find('p').html( feedback );
+				container.find( '.bp-feedback' ).removeClass( 'success error' ).addClass( type ).find( 'p' ).html( feedback );
 				container.show();
 			}
 
@@ -1130,7 +1130,7 @@ window.bp = window.bp || {};
 
 						$this.html( $this.data( 'removing' ) );
 						avatarFeedbackContainer.hide();
-						avatarFeedbackContainer.find( 'p' ).removeClass( 'success error' );
+						avatarFeedbackContainer.find( '.bp-feedback' ).removeClass( 'success error' );
 
 						// Remove the avatar !
 						bp.ajax.post(

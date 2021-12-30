@@ -539,8 +539,11 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 			</div>
 		</div>
 	</div>
-	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
-		<p id="bp-avatar-image-feedback" class="updated"></p>
+	<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display: none;">
+		<div class="bp-feedback">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p id="bp-avatar-image-feedback"></p>
+		</div>
 	</div>
 	<p class="description">
 		<?php
@@ -842,8 +845,11 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 			</div>
 		</div>
 	</div>
-	<div class="bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display:none;">
-		<p id="bp-avatar-image-feedback" class="updated"></p>
+	<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-avatar-feedback" style="display: none;">
+		<div class="bp-feedback">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p id="bp-avatar-image-feedback"></p>
+		</div>
 	</div>
 	<p class="description">
 		<?php

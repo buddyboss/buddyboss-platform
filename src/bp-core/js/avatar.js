@@ -165,6 +165,7 @@ window.bp = window.bp || {};
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
 				this.removeWarning();
+				$( '.bb-custom-profile-group-avatar-feedback' ).hide().find( '.bp-feedback' ).removeClass( 'success error' ).find( 'p' ).html( '' );
 			}
 		},
 
@@ -800,7 +801,7 @@ window.bp = window.bp || {};
 							height: Math.round( ry * this.model.get( 'height' ) ) + 'px',
 							marginLeft: '-' + Math.round( rx * this.model.get( 'x' ) ) + 'px',
 							marginTop: '-' + Math.round( ry * this.model.get( 'y' ) ) + 'px'
-							}
+						}
 					);
 				}
 			}
