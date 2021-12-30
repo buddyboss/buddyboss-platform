@@ -1986,10 +1986,6 @@ window.bp = window.bp || {};
 				this.on( 'ready', this.activateTinyMce, this );
 				this.options.activity.on( 'change:content', this.resetContent, this );
 				this.linkTimeout = null;
-
-				if ( _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
-					this.$el.off( 'keyup' );
-				}
 			},
 
 			adjustContent: function () {
@@ -2036,17 +2032,21 @@ window.bp = window.bp || {};
 
 			handleKeyUp: function () {
 				var self = this;
-				if ( this.linkTimeout != null ) {
-					clearTimeout( this.linkTimeout );
-				}
+				
 
-				this.linkTimeout = setTimeout(
-					function () {
-						this.linkTimeout = null;
-						self.scrapURL( window.activity_editor.getContent() );
-					},
-					500
-				);
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+					if ( this.linkTimeout != null ) {
+						clearTimeout( this.linkTimeout );
+					}
+
+					this.linkTimeout = setTimeout(
+						function () {
+							this.linkTimeout = null;
+							self.scrapURL( window.activity_editor.getContent() );
+						},
+						500
+					);
+				}
 
 				this.saveCaretPosition();
 
