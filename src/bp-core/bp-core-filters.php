@@ -1841,22 +1841,6 @@ function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 }
 
 /**
- * Set profile avatar type 'BuddyBoss' if 'Show Avatar' option is disabled and 'WordPress' option is enabled in Default Profile Avatar.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed  $old_value The old option value.
- * @param mixed  $value     The new option value.
- * @param string $option    Option name.
- */
-function bb_set_profile_avatar_type_on_update_show_avatars( $old_value, $value, $option ) {
-	if ( 'show_avatars' === $option && ! $value && 'WordPress' === bb_get_default_profile_avatar_type() ) {
-		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
-	}
-}
-//add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_show_avatars', 10, 3 );
-
-/**
  * Save default profile and group avatar option on upload custom avatar.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1938,9 +1922,11 @@ add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_a
 function bb_save_profile_group_cover_options_on_upload_custom_cover( $item_id, $name, $cover_url, $feedback_code ) {
 
 	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
-	$object      = sanitize_text_field( $_POST['bp_params']['object'] );
 
 	if ( $is_validate && ! empty( $cover_url ) ) {
+
+		$object = sanitize_text_field( $_POST['bp_params']['object'] );
+
 		if ( 'user' === $object ) {
 			bp_update_option( 'bp-disable-cover-image-uploads', '' );
 			bp_update_option( 'bp-default-profile-cover-type', 'custom' );

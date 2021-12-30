@@ -214,19 +214,8 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$avatar_dir = sanitize_key( $args['object'] ) . '-avatars';
 		}
 
-		/**
-		 * Filters the args contains for image crop.
-		 *
-		 * @param int    $item_id ID of the avatar item being requested.
-		 * @param array $args {
-		 *     @type string     $original_file The source file (absolute path) for the Attachment.
-		 *     @type string     $object        Avatar type being requested.
-		 *     @type int|string $item_id       ID of the avatar item being requested.
-		 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
-		 * }
-		 * @since BuddyBoss [BBVERSION]
-		 */
 		$args['item_id'] = (int) $args['item_id'];
+		$item_type       = isset( $args['item_type'] ) ? $args['item_type'] : null;
 
 		/**
 		 * Original file is a relative path to the image
@@ -260,7 +249,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			array(
 				'object'    => $args['object'],
 				'item_id'   => $args['item_id'],
-				'item_type' => $args['item_type'],
+				'item_type' => $item_type,
 				'html'      => false,
 			)
 		);
@@ -274,7 +263,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 				array(
 					'object'      => $args['object'],
 					'item_id'     => $args['item_id'],
-					'item_type'   => $args['item_type'],
+					'item_type'   => $item_type,
 					'avatar_path' => $avatar_folder_dir,
 				)
 			);
