@@ -65,8 +65,6 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 		)
 	);
 
-	$settings = array_merge( array_fill_keys( array_values( $registered_notification_settings ), 'no' ), $settings );
-
 	foreach ( (array) $settings as $key => $value ) {
 		// Skip if not a registered setting.
 		if ( ! in_array( $key, $registered_notification_settings, true ) ) {
