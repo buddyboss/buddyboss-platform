@@ -966,7 +966,7 @@ window.bp = window.bp || {};
 
 						previewContainer.find( '.preview_avatar_cover' ).removeClass( 'has-avatar' );
 
-						if ( 'buddyboss' === $( this ).val() ) {
+						if ( 'BuddyBoss' === $( this ).val() ) {
 
 							enableProfileGravatarContainer.removeClass( 'bp-hide' );
 							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
@@ -990,7 +990,7 @@ window.bp = window.bp || {};
 								profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 
-						} else if ( 'wordpress' === $( this ).val() ) {
+						} else if ( 'WordPress' === $( this ).val() ) {
 
 							if ( ! BP_ADMIN.avatar_settings.wordpress_show_avatar ) {
 								profileAvatarfeedbackContainer.removeClass( 'bp-hide' );
@@ -1018,7 +1018,7 @@ window.bp = window.bp || {};
 						var profileAvatarURL          = '',
 							webAvatarPreviewContainer = webPreviewContainer.find( '.preview-item-avatar img' );
 
-						if ( 'buddyboss' === profileAvatarType.val() && 'custom' === this.value ) {
+						if ( 'BuddyBoss' === profileAvatarType.val() && 'custom' === this.value ) {
 							defaultProfileAvatarCustomContainer.removeClass( 'bp-hide' );
 
 							profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();

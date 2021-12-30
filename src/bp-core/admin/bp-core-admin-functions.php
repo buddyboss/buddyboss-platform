@@ -2653,7 +2653,7 @@ add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_creat
 function bb_discussion_page_show_notice_in_avatar_section() {
 	global $pagenow;
 
-	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'buddyboss' === bb_get_profile_avatar_type() ) {
+	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'BuddyBoss' === bb_get_profile_avatar_type() ) {
 
 		$avatar_notice = sprintf(
 			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss' ),

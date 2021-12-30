@@ -70,7 +70,7 @@ function bp_get_default_options() {
 		'bp-disable-avatar-uploads'                  => false,
 
 		// Avatar type.
-		'bp-profile-avatar-type'                     => 'buddyboss',
+		'bp-profile-avatar-type'                     => 'BuddyBoss',
 
 		// Default Avatar type.
 		'bp-default-profile-avatar-type'             => 'buddyboss',
@@ -1954,10 +1954,10 @@ function bb_feed_not_allowed_comment_post_types() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
- *                          Default: 'buddyboss'.
+ *                          Default: 'BuddyBoss'.
  * @return string Return the default profile avatar type.
  */
-function bb_get_profile_avatar_type( $default = 'buddyboss' ) {
+function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
 
 	/**
 	 * Filters profile avatar type.

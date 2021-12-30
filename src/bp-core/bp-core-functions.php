@@ -6391,7 +6391,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 		 * Profile Avatars = BuddyBoss.
 		 * Upload Avatars = checked.
 		 */
-		if ( 'buddyboss' === $profile_avatar_type ) {
+		if ( 'BuddyBoss' === $profile_avatar_type ) {
 
 			// Default Profile Avatar = BuddyBoss.
 			if ( 'buddyboss' === $default_profile_avatar_type ) {
@@ -6411,14 +6411,14 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			 * Profile Avatars = WordPress.
 			 * Default Avatar = Blank.
 			 */
-		} elseif ( $show_avatar && 'wordpress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+		} elseif ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 
 			/**
 			 * Avatar Display = unchecked.
 			 * Profile Avatars = WordPress.
 			 */
-		} elseif ( ! $show_avatar && 'wordpress' === $profile_avatar_type ) {
+		} elseif ( ! $show_avatar && 'WordPress' === $profile_avatar_type ) {
 			$avatar_image_url = bb_get_blank_profile_avatar( $size );
 		}
 	} elseif ( ! $disable_avatar_uploads && 'group' === $object ) {
@@ -6561,8 +6561,8 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		$web_cover_background_color = ( function_exists( 'buddyboss_theme_get_option' ) ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : $web_cover_background_color;
 
 		$bbapp_styling = (array) get_option( 'bbapp_styling', array() );
-		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) ) {
-			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBackground'];
+		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBg'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBg'] ) ) {
+			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBg'];
 		}
 
 		$info_text = sprintf(
@@ -6581,8 +6581,8 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
 
 		$bbapp_styling = (array) get_option( 'bbapp_styling', array() );
-		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBackground'] ) ) {
-			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBackground'];
+		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBg'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBg'] ) ) {
+			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBg'];
 		}
 
 		$info_text = sprintf(

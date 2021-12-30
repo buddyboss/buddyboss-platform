@@ -107,7 +107,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		if ( isset( $bb_profile_avatar_type ) && 'wordpress' === sanitize_text_field( $bb_profile_avatar_type ) ) {
+		if ( isset( $bb_profile_avatar_type ) && 'WordPress' === sanitize_text_field( $bb_profile_avatar_type ) ) {
 			bp_update_option( 'bp-enable-profile-gravatar', '' );
 		}
 
@@ -118,12 +118,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 */
 		if ( ! isset( $bb_default_custom_profile_avatar ) || ( empty( $bb_default_custom_profile_avatar ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
 
-			if ( 'wordpress' === $profile_avatar_type_before_saving ) {
+			$bp_disable_avatar_uploads_before_saving   = $bp_disable_avatar_uploads_after_saving;
+			$bp_enable_profile_gravatar_before_saving  = $bp_enable_profile_gravatar_after_saving;
 
+			if ( 'WordPress' === $profile_avatar_type_before_saving ) {
 				$bp_disable_avatar_uploads_before_saving   = '1';
 				$default_profile_avatar_type_before_saving = 'buddyboss';
 				$bp_enable_profile_gravatar_before_saving  = '';
-
 			} elseif ( 'custom' === $default_profile_avatar_type_before_saving ) {
 				$default_profile_avatar_type_before_saving = 'buddyboss';
 			}
@@ -214,16 +215,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-disable-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval', $args );
 
 		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type' . ( 'wordpress' === $avatar_type ? ' bp-hide' : '' );
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type' . ( 'WordPress' === $avatar_type ? ' bp-hide' : '' );
 		$this->add_field( 'bp-default-profile-avatar-type', esc_html__( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'string', $args );
 
 		$args          = array();
-		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom' . ( 'buddyboss' === $avatar_type && 'custom' === $default_avatar_type ? '' : ' bp-hide' );
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom' . ( 'BuddyBoss' === $avatar_type && 'custom' === $default_avatar_type ? '' : ' bp-hide' );
 		$this->add_field( 'bp-default-custom-profile-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
 
 		// Gravatars.
 		$args          = array();
-		$args['class'] = 'enable-profile-gravatar-field' . ( 'wordpress' === $avatar_type ? ' bp-hide' : '' );
+		$args['class'] = 'enable-profile-gravatar-field' . ( 'WordPress' === $avatar_type ? ' bp-hide' : '' );
 		$this->add_field( 'bp-enable-profile-gravatar', esc_html__( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
 
 		// cover photos.

@@ -1850,11 +1850,11 @@ function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
  * @param string $option    Option name.
  */
 function bb_set_profile_avatar_type_on_update_show_avatars( $old_value, $value, $option ) {
-	if ( 'show_avatars' === $option && ! $value && 'wordpress' === bb_get_default_profile_avatar_type() ) {
+	if ( 'show_avatars' === $option && ! $value && 'WordPress' === bb_get_default_profile_avatar_type() ) {
 		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	}
 }
-add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_show_avatars', 10, 3 );
+//add_action( 'update_option_show_avatars', 'bb_set_profile_avatar_type_on_update_show_avatars', 10, 3 );
 
 /**
  * Save default profile and group avatar option on upload custom avatar.
@@ -1875,7 +1875,7 @@ function bb_save_profile_group_options_on_upload_custom_avatar( $item_id, $type,
 
 		if ( ! empty( $avatar ) ) {
 			if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
-				bp_update_option( 'bp-profile-avatar-type', 'buddyboss' );
+				bp_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
 				bp_update_option( 'bp-default-profile-avatar-type', 'custom' );
 				bp_update_option( 'bp-default-custom-profile-avatar', $avatar );
 			} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
@@ -1991,7 +1991,7 @@ add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_
  */
 function bb_profile_set_gravatar_default( $avatar_default, $params ) {
 
-	if ( 'buddyboss' === bb_get_profile_avatar_type() ) {
+	if ( 'BuddyBoss' === bb_get_profile_avatar_type() ) {
 		$avatar_default = 'mm';
 	}
 
@@ -2008,8 +2008,8 @@ add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 )
  * @param mixed  $value     The new option value.
  * @param string $option    Option name.
  */
-function bb_reset_profile_cover_position( $old_value, $value, $option ) {
-	if ( 'bp-default-custom-profile-cover' === $option && $value !== $old_value ) {
+function bb_reset_profile_cover_position( $old_value = '', $value = '' ) {
+	if ( $value !== $old_value ) {
 
 		$all_users = get_users(
 			array(
@@ -2035,8 +2035,8 @@ function bb_reset_profile_cover_position( $old_value, $value, $option ) {
 		}
 	}
 }
-add_action( 'update_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 3 );
-add_action( 'add_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 3 );
+add_action( 'update_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 2 );
+add_action( 'add_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 2 );
 
 /**
  * Reset group cover position when update the custom group cover
@@ -2047,8 +2047,8 @@ add_action( 'add_option_bp-default-custom-profile-cover', 'bb_reset_profile_cove
  * @param mixed  $value     The new option value.
  * @param string $option    Option name.
  */
-function bb_reset_group_cover_position( $old_value, $value, $option ) {
-	if ( 'bp-default-custom-group-cover' === $option && $value !== $old_value ) {
+function bb_reset_group_cover_position( $old_value = '', $value = '' ) {
+	if ( $value !== $old_value ) {
 
 		$all_groups = groups_get_groups(
 			array(
@@ -2082,8 +2082,8 @@ function bb_reset_group_cover_position( $old_value, $value, $option ) {
 		}
 	}
 }
-add_action( 'update_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 3 );
-add_action( 'add_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 3 );
+add_action( 'update_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 2 );
+add_action( 'add_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 2 );
 
 /**
  * Add inline css for profile and group cover background color when selected 'none' or 'BuddyBoss'.
@@ -2137,7 +2137,7 @@ function bb_member_enabled_gravatar( $no_grav, $params ) {
 	// By default, Gravatar is pinged for members when WordPress is enabled.
 	$show_avatars = bp_get_option( 'show_avatars' );
 
-	if ( 'user' === $params['object'] && $show_avatars && 'wordpress' === bb_get_profile_avatar_type() ) {
+	if ( 'user' === $params['object'] && $show_avatars && 'WordPress' === bb_get_profile_avatar_type() ) {
 		$no_grav = false;
 	}
 
