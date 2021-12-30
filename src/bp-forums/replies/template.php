@@ -2586,7 +2586,9 @@ function bbp_get_topic_pagination_count() {
 	$curr_page   = $bbp->reply_query->paged; // thread_reply
 	$total_pages = $bbp->reply_query->total_pages; // total_pages
 
-	$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
+	if( (int) $total_pages > 1 ) {
+		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
+	}
 
 	// Filter and return
 	return apply_filters( 'bbp_get_topic_pagination_count', esc_html( $retstr ) );
