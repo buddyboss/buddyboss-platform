@@ -5953,18 +5953,19 @@ function bb_register_notification_email_templates( $notification_type = '' ) {
  * @return bool
  */
 function bb_web_notification_enabled() {
-	return (bool) apply_filters( 'bb_web_notification_enabled', ( bp_is_active( 'notifications' ) && ( bp_get_option( '_bp_on_screen_notifications_enable', 0 ) || class_exists( 'BuddyBossEngage' ) ) ) );
+	return (bool) apply_filters( 'bb_web_notification_enabled', ( bp_is_active( 'notifications' ) && bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ) );
 }
 
 /**
  * Function to check the app push notification enabled or not.
+ * - enabled from app plugin.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return bool
  */
 function bb_app_notification_enabled() {
-	return (bool) apply_filters( 'bb_app_notification_enabled', ( bp_is_active( 'notifications' ) && function_exists( 'bbapp_is_active' ) && bbapp_is_active( 'push_notification' ) ) );
+	return (bool) apply_filters( 'bb_app_notification_enabled', false );
 }
 
 /**
