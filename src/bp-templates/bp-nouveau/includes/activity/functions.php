@@ -249,8 +249,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	);
 
 	$params['activity'] = array(
-		'params'     => $activity_params,
-		'strings'    => $activity_strings,
+		'params'  => $activity_params,
+		'strings' => $activity_strings,
 	);
 
 	return $params;
