@@ -1766,7 +1766,7 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
  */
 function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
 
-	if ( true === bp_force_friendship_to_message() ) {
+	if ( true === bp_force_friendship_to_message() && function_exists( 'friends_check_friendship_status' ) ) {
 		$new_users = array();
 		foreach ( $results as $user ) {
 			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );
