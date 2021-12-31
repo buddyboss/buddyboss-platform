@@ -1811,6 +1811,15 @@ function bp_member_type_permissions_metabox( $post ) {
 					?>
                 />
 				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+				<p class="description" style="color: #999; margin-top: 6px; margin-bottom: 0px; " >Enabling this option hides all members with this profile type from the members directory, including the "Members" and "Recently Active Members" widgets.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+		        <?php $enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default. ?>
+                <input type='checkbox' name='bp-member-type[enable_search_remove]' value='1' <?php checked( $enable_search_remove, 1 ); ?> />
+		        <?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
+				<p class="description" style="color: #999; margin-top: 6px; margin-bottom: 0px; " >Enabling this option hides all members with this profile type from network search results.</p>
             </td>
         </tr>
         </tbody>
@@ -2186,6 +2195,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$enable_filter        = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive
 	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
+	$enable_search_remove = isset( $data['enable_search_remove'] ) ? absint( $data['enable_search_remove'] ) : 0; // default inactive
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active
 
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array
@@ -2210,6 +2220,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_member_type_enable_search_remove', $enable_search_remove );
 	update_post_meta( $post_id, '_bp_member_type_enable_profile_field', $enable_profile_field );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $enable_group_type_create );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
@@ -3064,10 +3075,15 @@ add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
  *
  * @since BuddyBoss 1.3.5
  *
- * @param array  $categories Array of block categories.
- * @param object $post       Post being loaded.
+ * @param array          $categories Array of block categories.
+ * @param string|WP_Post $post       Post being loaded.
  */
 function bp_block_category( $categories = array(), $post = null ) {
+
+	if ( class_exists( 'WP_Block_Editor_Context' ) && $post instanceof WP_Block_Editor_Context && ! empty( $post->post ) ) {
+		$post = $post->post;
+	}
+
 	if ( ! ( $post instanceof WP_Post ) ) {
 		return $categories;
 	}
@@ -3104,7 +3120,20 @@ function bp_block_category( $categories = array(), $post = null ) {
 	);
 }
 
-add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+/**
+ * Select the `block_categories` filter according to WP version.
+ *
+ * @since BuddyBoss 1.8.3
+ */
+function bb_block_init_category_filter() {
+	if ( function_exists( 'get_default_block_categories' ) ) {
+		add_filter( 'block_categories_all', 'bp_block_category', 30, 2 );
+	} else {
+		add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+	}
+}
+
+add_action( 'bp_init', 'bb_block_init_category_filter' );
 
 function bp_document_ajax_check_file_mime_type() {
 	$response = array();

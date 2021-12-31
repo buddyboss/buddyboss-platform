@@ -319,7 +319,7 @@ class BP_Embed extends WP_Embed {
 			}
 
 			// Find URLs in their own paragraph.
-			$content = preg_replace_callback( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', array( $this, 'autoembed_callback' ), $content );
+			$content = $this->bb_get_content_autoembed_callback( $content );
 		}
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
@@ -343,5 +343,50 @@ class BP_Embed extends WP_Embed {
 
 		// Put the line breaks back.
 		return apply_filters( 'bp_autoembed', $content );
+	}
+
+	/**
+	 * Add oembed to content.
+	 *
+	 * @since BuddyBoss 1.8.3
+	 *
+	 * @param string $content The content to be searched.
+	 *
+	 * @return string
+	 */
+	public function bb_get_content_autoembed_callback( $content ) {
+		if ( false !== strpos( $content, '<iframe' ) ) {
+			return $content;
+		}
+
+		$embed_urls = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = $this->shortcode( array(), $url );
+				if ( false !== strpos( $embed, '<iframe' ) ) {
+					$is_embed = strpos( $content, $url );
+
+					if ( false !== $is_embed ) {
+						$flag    = false;
+						$content = substr_replace( $content, $embed, $is_embed, strlen( $url ) );
+					}
+				}
+			}
+		}
+
+		return $content;
 	}
 }
