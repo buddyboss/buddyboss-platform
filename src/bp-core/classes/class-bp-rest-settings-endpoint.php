@@ -396,14 +396,21 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp-feed-platform-group_details_updated'] = bp_platform_is_feed_enable( 'bp-feed-platform-group_details_updated' );
 			$results['bp-feed-platform-bbp_topic_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_topic_create' );
 			$results['bp-feed-platform-bbp_reply_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_reply_create' );
-			$results['bp-disable-blogforum-comments']          = bp_disable_blogforum_comments();
 
-			$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
-			if ( ! empty( $custom_post_types ) ) {
-				foreach ( $custom_post_types as $single_post ) {
+			if ( function_exists( 'bb_feed_post_types' ) ) {
+				foreach ( bb_feed_post_types() as $single_post ) {
 					// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
-					$enabled                                               = bp_is_post_type_feed_enable( $single_post );
-					$results[ 'bp-feed-custom-post-type-' . $single_post ] = $enabled;
+					$results[ 'bp-feed-custom-post-type-' . $single_post ]               = (bool) bp_is_post_type_feed_enable( $single_post );
+					$results[ 'bp-feed-custom-post-type-' . $single_post . '-comments' ] = (bool) bb_is_post_type_feed_comment_enable( $single_post );
+				}
+			} else {
+				$results['bp-disable-blogforum-comments'] = bp_disable_blogforum_comments();
+				$custom_post_types                        = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
+				if ( ! empty( $custom_post_types ) ) {
+					foreach ( $custom_post_types as $single_post ) {
+						// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
+						$results[ 'bp-feed-custom-post-type-' . $single_post ] = (bool) bp_is_post_type_feed_enable( $single_post );
+					}
 				}
 			}
 		}
@@ -470,7 +477,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$member_types = bp_get_active_member_types();
 			if ( isset( $member_types ) && ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type_id ) {
-					$option_name                                                    = bp_get_member_type_key( $member_type_id );
+					$option_name = bp_get_member_type_key( $member_type_id );
 					$results[ 'bp-enable-send-invite-member-type-' . $option_name ] = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false );
 				}
 			}
@@ -495,6 +502,43 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results['bp_page_privacy']               = $privacy;
 		$results['bp_page_terms']                 = $terms;
 		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
+
+		$results['bp-pages'] = array();
+
+		$component_pages = array(
+			'members'  => 'xprofile',
+			'video'    => 'video',
+			'media'    => 'media',
+			'document' => 'document',
+			'groups'   => 'groups',
+			'activity' => 'activity',
+			'register' => 'xprofile',
+			'terms'    => 'xprofile',
+			'privacy'  => 'xprofile',
+			'activate' => 'xprofile',
+		);
+
+		foreach ( $component_pages as $key => $component ) {
+			if ( bp_is_active( $component ) ) {
+				$id = (int) ( isset( $bp_pages[ $key ] ) ? $bp_pages[ $key ] : 0 );
+
+				$results['bp-pages'][ $key ] = array(
+					'id'    => $id,
+					'slug'  => ( 0 !== $id ? get_post_field( 'post_name', $id ) : '' ),
+					'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
+				);
+			}
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+
+			$results['bp-pages']['forums'] = array(
+				'id'    => $id,
+				'slug'  => ( 0 !== $id ? get_post_field( 'post_name', $id ) : '' ),
+				'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
+			);
+		}
 
 		return $results;
 	}

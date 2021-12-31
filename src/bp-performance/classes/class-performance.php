@@ -246,13 +246,14 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			}
 
 			$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
-	            id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	            id bigint(20) NOT NULL AUTO_INCREMENT,
 	            user_id bigint(20) NOT NULL DEFAULT 0,
 	            blog_id bigint(20) NOT NULL DEFAULT 0,
 	            cache_name varchar(1000) NOT NULL,
 	            cache_group varchar(200) NOT NULL,
 	            cache_value mediumtext DEFAULT NULL,
 	            cache_expire datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+	            PRIMARY KEY  (id),
 	            KEY cache_name (cache_name),
 	            KEY cache_group (cache_group),
 	            KEY cache_expire (cache_expire)

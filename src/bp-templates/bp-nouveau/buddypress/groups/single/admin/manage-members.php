@@ -17,7 +17,7 @@
 
 	<dt class="admin-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), 'buddyboss' ); ?></dt>
 
-	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() ) ) : ?>
+	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() . '&member_type__not_in=false' ) ) : ?>
 		<dd class="admin-listing">
 
 			<p><?php printf( __( '%s have total control over the contents and settings of a group. That includes all the abilities of %s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %s, and delete the group.', 'buddyboss' ), get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ) ); ?></p>
@@ -55,7 +55,7 @@
 
 			<p><?php printf( __( 'When a group member is promoted to be a %s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %s.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
 
-			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() ) ) : ?>
+			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() . '&member_type__not_in=false' ) ) : ?>
 				<ul id="mods-list" class="item-list single-line">
 
 					<?php while ( bp_members() ) : bp_the_member(); ?>

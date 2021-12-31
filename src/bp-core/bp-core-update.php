@@ -324,8 +324,30 @@ function bp_version_updater() {
 			bb_update_to_1_5_6();
 		}
 
+		// Version 1.7.0.
 		if ( $raw_db_version < 16601 ) {
 			bp_update_to_1_7_0();
+		}
+
+		// Version 1.7.2.
+		if ( $raw_db_version < 16901 ) {
+			bb_update_to_1_7_2();
+		}
+
+		if ( $raw_db_version < 17401 ) {
+			bb_update_to_1_7_5();
+		}
+
+		if ( $raw_db_version < 17701 ) {
+			bb_update_to_1_7_7();
+		}
+
+		if ( $raw_db_version < 17901 ) {
+			bb_update_to_1_7_8();
+		}
+
+		if ( $raw_db_version < 17951 ) {
+			bb_update_to_1_8_1();
 		}
 	}
 
@@ -674,7 +696,67 @@ function bp_update_to_1_5_1() {
  */
 function bp_update_to_1_7_0() {
 	bp_core_install_media();
-	bb_core_enable_default_symlink_support();
+	bp_update_option( 'bp_media_symlink_support', 1 );
+}
+
+/**
+ * Flush rewrite rule after update.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_update_to_1_7_2() {
+	flush_rewrite_rules();
+	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
+}
+
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_update_to_1_7_5() {
+	global $bp_background_updater;
+
+	$bp_background_updater->push_to_queue(
+		array(
+			'callback' => 'bb_moderation_bg_update_moderation_data',
+			'args'     => array(),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+}
+
+/**
+ * Function to update data
+ * - Updated .htaccess file for bb files protection.
+ *
+ * @since BuddyBoss 1.7.7
+ */
+function bb_update_to_1_7_7() {
+	$upload_dir        = wp_get_upload_dir();
+	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
+	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
+	$video_htaccess    = $upload_dir['basedir'] . '/bb_videos/.htaccess';
+
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	if ( file_exists( $media_htaccess ) ) {
+		$wp_files_system->delete( $media_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $document_htaccess ) ) {
+		$wp_files_system->delete( $document_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $video_htaccess ) ) {
+		$wp_files_system->delete( $video_htaccess, false, 'f' );
+	}
 }
 
 function bp_update_default_doc_extensions() {
@@ -1200,3 +1282,108 @@ add_filter(
 		return $extensions;
 	}
 );
+
+/**
+ * Migration for activity setting feed comments.
+ * Enable all custom post type comments when the default post type comments are enable.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @uses bb_feed_post_types()                    Get all post types.
+ * @uses bb_post_type_feed_option_name()         Option key for individual post type.
+ * @uses bb_post_type_feed_comment_option_name() Option key for individual post type comment.
+ * @uses bp_is_post_type_feed_enable()           Checks if post type feed is enabled.
+ *
+ * @return void
+ */
+function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
+	$custom_post_types = bb_feed_post_types();
+
+	// Run over all custom post type.
+	foreach ( $custom_post_types as $post_type ) {
+		// Post type option name.
+		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
+
+		// Post type comment option name.
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+
+		if ( bp_is_post_type_feed_enable( $post_type ) ) {
+			bp_update_option( $ptc_opt_name, 1 );
+		}
+	}
+}
+
+/**
+ * 1.7.8 update routine.
+ * Update forum meta with its associated group id.
+ *
+ * @since BuddyBoss 1.7.8
+ *
+ * @return void
+ */
+function bb_update_to_1_7_8() {
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Get all forum associated groups.
+	$group_data = groups_get_groups(
+		array(
+			'per_page'   => -1,
+			'fields'     => 'ids',
+			'status'     => array( 'public', 'private', 'hidden' ),
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'forum_id',
+					'value'   => 'a:0:{}',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'forum_id',
+					'value'   => '',
+					'compare' => '!=',
+				),
+			),
+		)
+	);
+
+	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
+
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group_id ) {
+			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+
+			if ( empty( $forum_ids ) ) {
+				continue;
+			}
+
+			// Group never contains multiple forums.
+			$forum_id  = current( $forum_ids );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = empty( $group_ids ) ? array() : $group_ids;
+
+			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+				continue;
+			}
+
+			$group_ids[] = $group_id;
+
+			bbp_update_forum_group_ids( $forum_id, $group_ids );
+		}
+	}
+}
+
+/**
+ * update routine.
+ * Created new table for bp email queue.
+ *
+ * @since BuddyBoss 1.8.1
+ */
+function bb_update_to_1_8_1() {
+	if ( function_exists( 'bb_email_queue' ) ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+}
