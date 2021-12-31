@@ -29,9 +29,14 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 						<div class="dropzone closed media media-dropzone" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
 						<div class="ac-reply-post-default-template" style="display:none;">
-							<div class="dz-preview dz-file-preview">
+							<div class="dz-preview">
 								<div class="dz-image">
 									<img data-dz-thumbnail/>
+								</div>
+								<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+								<div class="dz-details">
+									<div class="dz-filename"><span data-dz-name></span></div>
+									<div class="dz-size" data-dz-size></div>
 								</div>
 								<div class="dz-progress-ring-wrap">
 									<i class="bb-icon bb-icon-camera-fill"></i>

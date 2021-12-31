@@ -16689,6 +16689,10 @@ img.emojioneemoji {
   padding-top: 0;
 }
 
+.dropzone .dz-error-title {
+  display: none;
+}
+
 .dropzone .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
@@ -16729,6 +16733,73 @@ img.emojioneemoji {
 
 .dropzone .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0;
+}
+
+.dropzone.media-dropzone .dz-error .dz-image {
+  border-color: #ef3e46;
+}
+
+.dropzone.media-dropzone .dz-error .dz-image img {
+  display: none;
+}
+
+.dropzone.media-dropzone .dz-error .dz-error-title {
+  display: block;
+  font-size: 12px;
+  color: #ef3e46;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.dropzone.media-dropzone .dz-error .dz-details {
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  text-align: center;
+}
+
+.dropzone.media-dropzone .dz-error .dz-details:before {
+  content: '\e9d3';
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  height: 50px;
+  width: 50px;
+  display: inline-block;
+  background-color: #F1F2F3;
+  border-radius: 50%;
+  line-height: 50px;
+  color: #92949D;
+}
+
+.dropzone.media-dropzone .dz-error .dz-details .dz-size {
+  display: none;
+}
+
+.dropzone.media-dropzone .dz-error .dz-details .dz-filename {
+  font-size: 13px;
+  color: #828890;
+}
+
+.dropzone.media-dropzone .dz-error .dz-details .dz-filename span {
+  margin-top: 3px;
+}
+
+.dropzone.media-dropzone .dz-error .dz-error-mark {
+  display: none;
+}
+
+.dropzone.media-dropzone .dz-error .dz-error-message {
+  top: 96%;
+  left: inherit;
+  right: inherit;
+  max-width: 350px;
+  width: auto;
 }
 
 #buddypress .bp-media-document-uploader .media-uploader-wrapper {
@@ -22124,12 +22195,12 @@ body > .open-popup.video-error-popup {
 
 .dropzone .dz-preview.dz-error .dz-error-message {
   display: block;
+  line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
   opacity: 1;
   pointer-events: auto;
-  line-height: 1.35;
 }
 
 .dropzone .dz-preview .dz-error-message {

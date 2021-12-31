@@ -260,12 +260,12 @@
 
 .dropzone .dz-preview.dz-error .dz-error-message {
 	display: block;
+	line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
 	opacity: 1;
 	pointer-events: auto;
-	line-height: 1.35;
 }
 
 .dropzone .dz-preview .dz-error-message {

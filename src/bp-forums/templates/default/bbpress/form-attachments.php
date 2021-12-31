@@ -33,9 +33,14 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<div class="dropzone closed media-dropzone" id="forums-post-media-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 		<div class="forum-post-media-template" style="display:none;">
-			<div class="dz-preview dz-file-preview">
+			<div class="dz-preview">
 				<div class="dz-image">
 					<img data-dz-thumbnail />
+				</div>
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+				<div class="dz-details">
+					<div class="dz-filename"><span data-dz-name></span></div>
+					<div class="dz-size" data-dz-size></div>
 				</div>
 				<div class="dz-progress-ring-wrap">
 					<i class="bb-icon bb-icon-camera-fill"></i>
