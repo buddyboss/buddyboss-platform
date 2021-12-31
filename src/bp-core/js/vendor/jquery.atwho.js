@@ -710,6 +710,9 @@ EditableController = (function(superClass) {
     if (!range.collapsed) {
       return;
     }
+    if (e === undefined || e === null) {
+      return;
+    }
     if (e.which === KEY_CODE.ENTER) {
       ($query = $(range.startContainer).closest('.atwho-query')).contents().unwrap();
       if ($query.is(':empty')) {
