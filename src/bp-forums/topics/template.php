@@ -4112,15 +4112,13 @@ function bbp_form_topic_title() {
  */
 function bbp_get_form_topic_title() {
 
-	// Get _POST data
+	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = $_POST['bbp_topic_title'];
-
-		// Get edit data
+		$topic_title = wp_unslash( $_POST['bbp_topic_title'] );
+		// Get edit data.
 	} elseif ( bbp_is_topic_edit() ) {
 		$topic_title = bbp_get_global_post_field( 'post_title', 'raw' );
-
-		// No data
+		// No data.
 	} else {
 		$topic_title = '';
 	}

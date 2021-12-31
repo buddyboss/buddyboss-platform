@@ -2017,7 +2017,7 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 
 		// Add our meta query to existing
 		$meta_query[] = $forum_ids;
-
+		
 		// Set the meta_query var
 		$posts_query->set( 'meta_query', $meta_query );
 	}

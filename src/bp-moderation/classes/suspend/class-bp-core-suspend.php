@@ -418,6 +418,32 @@ class BP_Core_Suspend {
 	}
 
 	/**
+	 * Function to check whether content is added for moderation or not.
+	 *
+	 * @since BuddyBoss 1.8.1
+	 *
+	 * @param int    $item_id   Item id.
+	 * @param string $item_type Item type.
+	 * @param int    $user_id   User ID.
+	 * @param bool   $force     Force cache.
+	 *
+	 * @return bool
+	 */
+	public static function check_blocked_user_content( $item_id, $item_type, $user_id, $force = false ) {
+		global $wpdb;
+		$bp        = buddypress();
+		$cache_key = 'bb_check_blocked_user_content_' . $user_id . '_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
+
+		if ( false === $result || true === $force ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s  ) WHERE `user_id` = %d limit 1", (int) $item_id, $item_type, $user_id ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
+
+		return ! empty( $result );
+	}
+
+	/**
 	 * Function to check whether content is hide as suspend user's content or not.
 	 *
 	 * @since BuddyBoss 1.5.6

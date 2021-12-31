@@ -843,9 +843,10 @@ function bp_nouveau_ajax_video_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$video_id = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
+	$post_id       = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id      = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$video_id      = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
+	$reset_comment = filter_input( INPUT_POST, 'reset_comment', FILTER_SANITIZE_STRING );
 
 	// check activity is video or not.
 	$video_activity = bp_activity_get_meta( $post_id, 'bp_video_activity', true );
@@ -909,13 +910,23 @@ function bp_nouveau_ajax_video_get_activity() {
 	remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99 );
 	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_video_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_video_activity_entry' );
-
+	
+	// This will call only when we close video popup.
+	if ( 'true' === $reset_comment ) {
+		ob_start();
+		bp_activity_comments();
+		bp_nouveau_activity_comment_form();
+		$activity = ob_get_contents();
+		ob_end_clean();
+	}
+	
 	wp_send_json_success(
 		array(
 			'activity'   => $activity,
 			'video_data' => $video_data,
 		)
 	);
+	
 }
 
 /**
