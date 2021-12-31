@@ -107,7 +107,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 			wp_localize_script(
 				'bp-admin',
