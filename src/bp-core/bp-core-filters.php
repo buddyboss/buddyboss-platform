@@ -1796,7 +1796,7 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
  *                               Defaults to 'cover-image'.
  * @return string Actual custom uploaded cover relative path.
  */
-function bp_attachments_get_profile_group_attachment_dir( $cover_dir, $object_dir, $item_id, $type ) {
+function bb_attachments_get_profile_group_attachment_dir( $cover_dir, $object_dir, $item_id, $type ) {
 	// Validate ajax request for upload custom profile cover.
 	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
 
@@ -1829,7 +1829,7 @@ function bp_attachments_get_profile_group_attachment_dir( $cover_dir, $object_di
  *                                  Defaults to 'cover-image'.
  * @return string Actual custom uploaded cover relative sub path.
  */
-function bp_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
+function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
 	// Validate ajax request for upload custom profile cover.
 	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
 

@@ -476,7 +476,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		<input id="bp-default-profile-avatar-buddyboss" name="bp-default-profile-avatar-type" type="radio" value="buddyboss" <?php checked( bb_get_default_profile_avatar_type(), 'buddyboss' ); ?> />
 		<label for="bp-default-profile-avatar-buddyboss">
 			<div class="img-block">
-				<img class="buddyboss-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
+				<img class="buddyboss-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-buddyboss.jpg' ); ?>" />
 			</div>
 			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
 		</label>
@@ -604,7 +604,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_custom_cover() {
-	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 	$hide_show_style       = '';
 	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
@@ -909,7 +909,7 @@ function bp_admin_setting_callback_default_group_cover_type() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_group_custom_cover() {
-	$cover_dimensions = bp_attachments_get_default_custom_cover_image_dimensions();
+	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 	$hide_show_style       = '';
 	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );

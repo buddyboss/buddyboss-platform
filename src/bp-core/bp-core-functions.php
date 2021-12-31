@@ -6172,7 +6172,7 @@ function bb_has_default_custom_upload_profile_avatar() {
  * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
  * @return array|bool An associative array containing the advised width and height for the cover photo. False if settings are empty.
  */
-function bp_attachments_get_default_custom_cover_image_dimensions( $component = 'xprofile' ) {
+function bb_attachments_get_default_custom_cover_image_dimensions( $component = 'xprofile' ) {
 	$cover_dimensions = bp_attachments_get_cover_image_dimensions( $component );
 
 	if ( ! $cover_dimensions ) {
@@ -6330,7 +6330,7 @@ function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
 }
 
 /**
- * Has default custom upload group avatar?.
+ * Has default custom upload group avatar?
  *
  * @since BuddyBoss [BBVERSION]
  *
