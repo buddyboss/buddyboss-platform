@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
  */
 
 ?>
@@ -21,7 +21,7 @@
 
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_attr_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>" />
+						<input id="bb-album-title" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>"/>
 					</div>
 
 					<footer class="bb-model-footer">
@@ -37,8 +37,19 @@
 									?>
 								</select>
 							</div>
-						<?php endif; ?>
-						<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
+							<?php
+						endif;
+
+						if ( bp_is_group() && bp_is_group_albums_support_enabled() ) {
+							?>
+							<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
+							<?php
+						} elseif ( bp_is_profile_albums_support_enabled() ) {
+							?>
+							<a class="button" id="bp-video-create-album-submit" href="#"><?php esc_attr_e( 'Create Album', 'buddyboss' ); ?></a>
+							<?php
+						}
+						?>
 					</footer>
 				</div>
 			</div>
