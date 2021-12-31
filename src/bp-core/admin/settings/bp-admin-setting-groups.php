@@ -18,7 +18,9 @@ defined( 'ABSPATH' ) || exit;
 
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
-	// Initialize class
+	/**
+	 * Initialize class.
+	 */
 	public function initialize() {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
@@ -26,20 +28,18 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		$this->active_tab = bp_core_get_admin_active_tab();
 
-		add_action( 'bb_admin_settings_form_tag', 'bb_admin_setting_form_add_enctype' );
-
 		// Group Avatar.
 		add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
-		add_filter( 'groups_avatar_upload_dir', array( $this, 'bb_group_default_custom_group_avatar_upload_dir' ), 10, 1 );
-		add_filter( 'bb_core_avatar_crop_item_id_args', 'bb_default_custom_profile_group_avatar_crop_item_id_args', 10, 2 );
-		add_filter( 'bp_core_fetch_gravatar_url_check', 'bb_default_custom_profile_group_avatar_url_check', 10, 2 );
 
 		// Group Cover.
 		add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
-		add_filter( 'bp_attachments_get_attachment_dir', 'bp_attachments_get_profile_group_attachment_dir', 10, 4 );
-		add_filter( 'bp_attachments_get_attachment_sub_dir', 'bp_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
+		add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+		add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 	}
 
+	/**
+	 * Save options.
+	 */
 	public function settings_save() {
 		$group_avatar_type_before_saving = bb_get_default_group_avatar_type();
 		$group_cover_type_before_saving  = bb_get_default_group_cover_type();
@@ -48,13 +48,15 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		$group_avatar_type_after_saving = bb_get_default_group_avatar_type();
 		$group_cover_type_after_saving  = bb_get_default_group_cover_type();
+		$bb_default_custom_group_avatar = filter_input( INPUT_POST, 'bp-default-custom-group-avatar', FILTER_SANITIZE_STRING );
+		$bb_default_custom_group_cover  = filter_input( INPUT_POST, 'bp-default-custom-group-cover', FILTER_SANITIZE_STRING );
 
 		/**
 		 * Validate custom option for group avatar and cover.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		if ( ! isset( $_POST['bp-default-custom-group-avatar'] ) || ( isset( $_POST['bp-default-custom-group-avatar'] ) && empty( $_POST['bp-default-custom-group-avatar'] ) && 'custom' === $group_avatar_type_after_saving ) ) {
+		if ( ! isset( $bb_default_custom_group_avatar ) || ( isset( $bb_default_custom_group_avatar ) && empty( $bb_default_custom_group_avatar ) && 'custom' === $group_avatar_type_after_saving ) ) {
 
 			if ( 'custom' === $group_avatar_type_before_saving ) {
 				$group_avatar_type_before_saving = 'buddyboss';
@@ -63,7 +65,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			bp_update_option( 'bp-default-group-avatar-type', $group_avatar_type_before_saving );
 		}
 
-		if ( ! isset( $_POST['bp-default-custom-group-cover'] ) || ( isset( $_POST['bp-default-custom-group-cover'] ) && empty( $_POST['bp-default-custom-group-cover'] ) && 'custom' === $group_cover_type_after_saving ) ) {
+		if ( ! isset( $bb_default_custom_group_cover ) || ( isset( $bb_default_custom_group_cover ) && empty( $bb_default_custom_group_cover ) && 'custom' === $group_cover_type_after_saving ) ) {
 
 			if ( 'custom' === $group_cover_type_before_saving ) {
 				$group_cover_type_before_saving = 'buddyboss';
@@ -73,43 +75,26 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 	}
 
-	// Check if groups are enabled
+	/**
+	 * Check if groups are enabled.
+	 *
+	 * @return bool
+	 */
 	public function is_active() {
 		return bp_is_active( 'groups' );
 	}
 
-	// Register setting fields
+	/**
+	 * Register setting fields.
+	 */
 	public function register_fields() {
-		// Group avatar and cover.
-		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
+		// Group Avatar.
+		$is_disabled_avatar  = bp_disable_group_avatar_uploads();
+		$default_avatar_type = bb_get_default_group_avatar_type();
 
-		// Allow group avatars.
-		$this->add_field( 'bp-disable-group-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
-
-		$args          = array();
-		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type';
-		$this->add_field( 'bp-default-group-avatar-type', esc_html__( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'string', $args );
-
-		$args          = array();
-		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom';
-		$this->add_field( 'bp-default-custom-group-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
-
-		// Allow group cover photos.
-		if ( bp_is_active( 'groups', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-group-cover-image-uploads', esc_html__( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
-
-			$args          = array();
-			$args['class'] = 'group-cover-options avatar-options default-group-cover-type';
-			$this->add_field( 'bp-default-group-cover-type', esc_html__( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
-
-			$args          = array();
-			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom';
-			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
-
-			$args          = array();
-			$args['class'] = 'group-cover-options preview-avatar-cover-image';
-			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
-		}
+		// Group Cover.
+		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
+		$default_cover_type = bb_get_default_group_cover_type();
 
 		// Group Settings.
 		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
@@ -120,6 +105,37 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Allow Group Message.
 		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
 			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
+		}
+
+		// Group avatar and cover.
+		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
+
+		// Allow group avatars.
+		$this->add_field( 'bp-disable-group-avatar-uploads', esc_html__( 'Group Avatars', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
+
+		$args          = array();
+		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-type' . ( $is_disabled_avatar ? ' bp-hide' : '' );
+		$this->add_field( 'bp-default-group-avatar-type', esc_html__( 'Default Group Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_avatar_type', 'string', $args );
+
+		$args          = array();
+		$args['class'] = 'group-avatar-options avatar-options default-group-avatar-custom' . ( ! $is_disabled_avatar && 'custom' === $default_avatar_type ? '' : ' bp-hide' );
+		$this->add_field( 'bp-default-custom-group-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_avatar', 'string', $args );
+
+		// Allow group cover photos.
+		if ( bp_is_active( 'groups', 'cover_image' ) ) {
+			$this->add_field( 'bp-disable-group-cover-image-uploads', esc_html__( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
+
+			$args          = array();
+			$args['class'] = 'group-cover-options avatar-options default-group-cover-type' . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bp-default-group-cover-type', esc_html__( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom' . ( ! $is_disabled_cover && 'custom' === $default_cover_type ? '' : ' bp-hide' );
+			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
 		// Register Group Types sections.
@@ -152,14 +168,14 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Section for group list.
 		$this->add_section( 'bp_group_list_settings', __( 'Group Directories', 'buddyboss' ), '', 'bp_group_directories_tutorial' );
 
-		// Admin Settings for Settings > Groups > Group Directories > Enabled Views
+		// Admin Settings for Settings > Groups > Group Directories > Enabled Views.
 		$this->add_field(
 			'bp-group-layout-format',
 			__( 'Enabled View(s)', 'buddyboss' ),
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
-		// Admin Settings for Settings > Groups > Group Directories > Default View
+		// Admin Settings for Settings > Groups > Group Directories > Default View.
 		$args          = array();
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );

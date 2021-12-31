@@ -214,24 +214,14 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$avatar_dir = sanitize_key( $args['object'] ) . '-avatars';
 		}
 
-		/**
-		 * Filters the args contains for image crop.
-		 *
-		 * @param int    $item_id ID of the avatar item being requested.
-		 * @param array $args {
-		 *     @type string     $original_file The source file (absolute path) for the Attachment.
-		 *     @type string     $object        Avatar type being requested.
-		 *     @type int|string $item_id       ID of the avatar item being requested.
-		 *     @type string     $avatar_dir    Subdirectory where the requested avatar should be found.
-		 * }
-		 */
-		$args['item_id'] = apply_filters( 'bb_core_avatar_crop_item_id_args', (int) $args['item_id'], $args );
+		$args['item_id'] = (int) $args['item_id'];
+		$item_type       = isset( $args['item_type'] ) ? $args['item_type'] : null;
 
 		/**
 		 * Original file is a relative path to the image
 		 * eg: /avatars/1/avatar.jpg
 		 */
-		$relative_path = apply_filters( 'bb_core_avatar_relative_path', sprintf( '/%s/%s/%s', $avatar_dir, $args['item_id'], basename( $args['original_file'] ) ), $args['item_id'], $args['object'], $args['avatar_dir'] );
+		$relative_path = sprintf( '/%s/%s/%s', $avatar_dir, $args['item_id'], basename( $args['original_file'] ) );
 		$absolute_path = $this->upload_path . $relative_path;
 
 		// Bail if the avatar is not available.
@@ -257,9 +247,10 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		// Delete the existing avatar files for the object.
 		$existing_avatar = bp_core_fetch_avatar(
 			array(
-				'object'  => $args['object'],
-				'item_id' => $args['item_id'],
-				'html'    => false,
+				'object'    => $args['object'],
+				'item_id'   => $args['item_id'],
+				'item_type' => $item_type,
+				'html'      => false,
 			)
 		);
 
@@ -272,6 +263,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 				array(
 					'object'      => $args['object'],
 					'item_id'     => $args['item_id'],
+					'item_type'   => $item_type,
 					'avatar_path' => $avatar_folder_dir,
 				)
 			);

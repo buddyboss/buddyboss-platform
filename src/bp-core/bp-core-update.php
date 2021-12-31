@@ -765,39 +765,39 @@ function bb_update_to_1_7_7() {
 
 function bp_update_default_doc_extensions() {
 
-	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
+	$get_extensions = bp_get_option( 'bp_document_extensions_support', array() );
 
-	//	$changed_array = array(
-	//		'bb_doc_52'   => array(
-	//			'description' => '7z Archive XYZ',
-	//		)
-	//	);
+	// $changed_array = array(
+	// 'bb_doc_52'   => array(
+	// 'description' => '7z Archive XYZ',
+	// )
+	// );
 	//
 	//
-	//	if ( !empty( $changed_array ) ) {
-	//		foreach ( $changed_array as $k => $v ) {
-	//			if ( array_key_exists( $k, $get_extensions ) ) {
-	//				$extension = $get_extensions[$k];
-	//				$get_extensions[$k] = array_replace( $extension, $v );
-	//			} else {
-	//				// For newly add key.
-	//				$get_extensions[$k] = $v;
-	//			}
-	//		}
-	//	}
+	// if ( !empty( $changed_array ) ) {
+	// foreach ( $changed_array as $k => $v ) {
+	// if ( array_key_exists( $k, $get_extensions ) ) {
+	// $extension = $get_extensions[$k];
+	// $get_extensions[$k] = array_replace( $extension, $v );
+	// } else {
+	// For newly add key.
+	// $get_extensions[$k] = $v;
+	// }
+	// }
+	// }
 	//
-	//	$removed_array = array(
-	//		'bb_doc_51'
-	//	);
+	// $removed_array = array(
+	// 'bb_doc_51'
+	// );
 	//
-	//	if ( !empty( $removed_array ) ) {
-	//		foreach (  $removed_array as $key ) {
-	//			unset( $get_extensions[$key] );
-	//		}
+	// if ( !empty( $removed_array ) ) {
+	// foreach (  $removed_array as $key ) {
+	// unset( $get_extensions[$key] );
+	// }
 	//
-	//	}
+	// }
 
-	//bp_update_option( 'bp_document_extensions_support', $get_extensions );
+	// bp_update_option( 'bp_document_extensions_support', $get_extensions );
 }
 
 
@@ -993,7 +993,7 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug    = get_page_uri( $page_id );
+				$slug = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
 				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
@@ -1204,7 +1204,6 @@ function bp_update_to_1_3_0() {
  *
  * - Create the invitations table.
  * - Migrate requests and invitations to the new table.
- *
  */
 function bb_update_to_1_3_5() {
 	bp_core_install_invitations();
@@ -1402,8 +1401,8 @@ function bb_update_to_1_8_1() {
 function bb_update_to_1_8_5() {
 	global $buddyboss_theme_options;
 
-	/* Check if options are set */
-	if ( ! isset( $buddyboss_theme_options ) ) {
+	/* Check if options are empty */
+	if ( empty( $buddyboss_theme_options ) ) {
 		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
 	}
 
@@ -1415,10 +1414,10 @@ function bb_update_to_1_8_5() {
 	$default_avatar      = bp_get_option( 'avatar_default', 'mystery' );
 
 	if ( $show_profile_avatar && 'mystery' === $default_avatar ) {
-		bp_update_option( 'bp-profile-avatar-type', 'buddyboss' );
+		bp_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
 		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	} else {
-		bp_update_option( 'bp-profile-avatar-type', 'wordpress' );
+		bp_update_option( 'bp-profile-avatar-type', 'WordPress' );
 	}
 
 	// Set Group Avatar.
@@ -1428,7 +1427,7 @@ function bb_update_to_1_8_5() {
 	bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 
 	if ( ! bp_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
-		
+
 		$temp_profile_cover = bb_to_1_8_5_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
 
 		if ( isset( $temp_profile_cover['filename'], $temp_profile_cover['path'], $temp_profile_cover['url'] ) && ! empty( $temp_profile_cover['filename'] ) && ! empty( $temp_profile_cover['path'] ) && ! empty( $temp_profile_cover['url'] ) ) {
@@ -1460,8 +1459,10 @@ function bb_update_to_1_8_5() {
 				bp_update_option( 'bp-default-profile-cover-type', 'custom' );
 				bp_update_option( 'bp-default-custom-profile-cover', $profile_cover_image['url'] );
 
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				}
 				$fileSystemDirect = new WP_Filesystem_Direct( false );
 				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
@@ -1469,6 +1470,7 @@ function bb_update_to_1_8_5() {
 				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
 
 				if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
+					add_option( 'bb_platform_profile_cover_default_migration', $buddyboss_theme_options['buddyboss_profile_cover_default'] );
 					unset( $buddyboss_theme_options['buddyboss_profile_cover_default'] );
 				}
 			}
@@ -1517,8 +1519,10 @@ function bb_update_to_1_8_5() {
 				bp_update_option( 'bp-default-group-cover-type', 'custom' );
 				bp_update_option( 'bp-default-custom-group-cover', $group_cover_image['url'] );
 
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-				require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				}
 				$fileSystemDirect = new WP_Filesystem_Direct( false );
 				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
@@ -1526,6 +1530,7 @@ function bb_update_to_1_8_5() {
 				bp_delete_option( 'buddyboss_group_cover_default_migration' );
 
 				if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
+					add_option( 'bb_platform_cover_default_migration', $buddyboss_theme_options['buddyboss_group_cover_default'] );
 					unset( $buddyboss_theme_options['buddyboss_group_cover_default'] );
 				}
 			}
@@ -1585,14 +1590,16 @@ function bb_to_1_8_5_upload_temp_cover_file( $cover_type ) {
 			chmod( $upload_dir, 0777 );
 		}
 
-		$data['filename'] = basename( $default_cover_path );
-		$data['path']     = trailingslashit( $upload_dir ) . $data['filename'];
-		$data['url']      = str_replace( ABSPATH, trailingslashit( get_site_url() ), $data['path'] );
+		if ( is_dir( $upload_dir ) ) {
+			$data['filename'] = basename( $default_cover_path );
+			$data['path']     = trailingslashit( $upload_dir ) . $data['filename'];
+			$data['url']      = str_replace( ABSPATH, trailingslashit( get_site_url() ), $data['path'] );
 
-		if ( ! file_exists( $data['path'] ) ) {
-			if ( copy( $default_cover_path, $data['path'] ) ) {
-				// Return copied file information.
-				return $data;
+			if ( ! file_exists( $data['path'] ) ) {
+				if ( copy( $default_cover_path, $data['path'] ) ) {
+					// Return copied file information.
+					return $data;
+				}
 			}
 		}
 	}
@@ -1636,9 +1643,9 @@ function bb_to_1_8_5_change_overrides( $overrides ) {
  */
 function bb_to_1_8_5_image_upload_dir( $args ) {
 	// Set the subdir.
-	$subdir = '/members/custom/cover-image';
+	$subdir = '/members/0/cover-image';
 	if ( isset( $_POST['group_cover_upload'] ) ) {
-		$subdir = '/groups/custom/cover-image';
+		$subdir = '/groups/0/cover-image';
 	}
 
 	$upload_dir = bp_attachments_uploads_dir_get();

@@ -6516,7 +6516,6 @@ function bp_get_group_has_avatar( $group_id = false ) {
 		$group_id = bp_get_current_group_id();
 	}
 
-	$retval       = false;
 	$group_avatar = bp_core_fetch_avatar(
 		array(
 			'item_id' => $group_id,
@@ -6528,10 +6527,10 @@ function bp_get_group_has_avatar( $group_id = false ) {
 	);
 
 	if ( false !== strpos( $group_avatar, '/' . $group_id . '/' ) ) {
-		$retval = true;
+		return true;
 	}
 
-	return $retval;
+	return false;
 }
 
 /**

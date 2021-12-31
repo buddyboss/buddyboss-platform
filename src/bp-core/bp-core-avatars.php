@@ -130,6 +130,8 @@ add_action( 'bp_setup_globals', 'bp_core_set_avatar_globals' );
  *                                   'group' and on a group page, to the current group ID; if 'blog',
  *                                   to the current blog's ID. If no 'item_id' can be determined in
  *                                   this way, the function returns false. Default: false.
+ *     @type string     $item_type   This param is use for find the type of avatar. If upload default then
+ *                                   $item_type is 'default' otherwise null.  Default: null.
  *     @type string      $object     The kind of object for which you're getting an
  *                                   avatar. BuddyPress natively supports three options: 'user',
  *                                   'group', 'blog'; a plugin may register more.  Default: 'user'.
@@ -210,6 +212,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		$args,
 		array(
 			'item_id'       => false,
+			'item_type'     => null,
 			'object'        => 'user',
 			'type'          => 'thumb',
 			'avatar_dir'    => false,
@@ -231,7 +234,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 	/* Set item_id ***********************************************************/
 
-	if ( empty( $params['item_id'] ) ) {
+	if ( empty( $params['item_id'] ) && ( ! is_admin() && ! empty( $params['item_type'] ) ) ) {
 
 		switch ( $params['object'] ) {
 
@@ -816,6 +819,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 
 	$defaults = array(
 		'item_id'    => false,
+		'item_type'  => null,
 		'object'     => 'user', // User OR group OR blog OR custom type (if you use filters).
 		'avatar_dir' => false,
 	);
@@ -848,7 +852,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		return true;
 	}
 
-	if ( empty( $item_id ) ) {
+	if ( empty( $item_id ) && empty( $args['item_type'] ) ) {
 		if ( 'user' == $object ) {
 			$item_id = bp_displayed_user_id();
 		} elseif ( 'group' == $object ) {
@@ -925,9 +929,10 @@ function bp_avatar_ajax_delete() {
 		wp_send_json_error();
 	}
 
-	$avatar_data = $_POST;
+	$avatar_data              = $_POST;
+	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
 
-	if ( empty( $avatar_data['object'] ) || empty( $avatar_data['item_id'] ) ) {
+	if ( empty( $avatar_data['object'] ) || ( empty( $avatar_data['item_id'] ) && empty( $avatar_data['item_type'] ) ) ) {
 		wp_send_json_error();
 	}
 
@@ -947,21 +952,29 @@ function bp_avatar_ajax_delete() {
 	// Handle delete.
 	if ( bp_core_delete_existing_avatar(
 		array(
-			'item_id' => $avatar_data['item_id'],
-			'object'  => $avatar_data['object'],
+			'item_id'   => $avatar_data['item_id'],
+			'item_type' => $avatar_data['item_type'],
+			'object'    => $avatar_data['object'],
 		)
 	) ) {
-		$return = array(
-			'avatar'        => esc_url(
+
+		$avatar = '';
+		if ( ! empty( $avatar_data['item_id'] ) || empty( $avatar_data['item_type'] ) ) {
+			$avatar = esc_url(
 				bp_core_fetch_avatar(
 					array(
-						'object'  => $avatar_data['object'],
-						'item_id' => $avatar_data['item_id'],
-						'html'    => false,
-						'type'    => 'full',
+						'object'    => $avatar_data['object'],
+						'item_id'   => $avatar_data['item_id'],
+						'item_type' => $avatar_data['item_type'],
+						'html'      => false,
+						'type'      => 'full',
 					)
 				)
-			),
+			);
+		}
+		
+		$return = array(
+			'avatar'        => $avatar,
 			'feedback_code' => 4,
 			'item_id'       => $avatar_data['item_id'],
 		);
@@ -1240,7 +1253,9 @@ add_action( 'wp_ajax_bp_avatar_upload', 'bp_avatar_ajax_upload' );
  * @return bool True on success, false on failure.
  */
 function bp_avatar_handle_capture( $data = '', $item_id = 0 ) {
-	if ( empty( $data ) || empty( $item_id ) ) {
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+
+	if ( empty( $data ) || ( empty( $item_id ) && empty( $item_type ) ) ) {
 		return false;
 	}
 
@@ -1295,6 +1310,7 @@ function bp_avatar_handle_capture( $data = '', $item_id = 0 ) {
 		// Crop to default values.
 		$crop_args = array(
 			'item_id'       => $item_id,
+			'item_type'     => $item_type,
 			'original_file' => $avatar_to_crop,
 			'crop_x'        => 0,
 			'crop_y'        => 0,
@@ -1338,6 +1354,7 @@ function bp_core_avatar_handle_crop( $args = '' ) {
 			'object'        => 'user',
 			'avatar_dir'    => 'avatars',
 			'item_id'       => false,
+			'item_type'     => null,
 			'original_file' => false,
 			'crop_w'        => bp_core_avatar_full_width(),
 			'crop_h'        => bp_core_avatar_full_height(),
@@ -1398,7 +1415,9 @@ function bp_avatar_ajax_set() {
 		)
 	);
 
-	if ( empty( $avatar_data['object'] ) || empty( $avatar_data['item_id'] ) || empty( $avatar_data['original_file'] ) ) {
+	$avatar_data['item_type'] = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+
+	if ( empty( $avatar_data['object'] ) || ( empty( $avatar_data['item_id'] ) && empty( $avatar_data['item_type'] ) ) || empty( $avatar_data['original_file'] ) ) {
 		wp_send_json_error();
 	}
 
@@ -1473,6 +1492,7 @@ function bp_avatar_ajax_set() {
 	// Crop args.
 	$r = array(
 		'item_id'       => $avatar_data['item_id'],
+		'item_type'     => $avatar_data['item_type'],
 		'object'        => $avatar_data['object'],
 		'avatar_dir'    => $avatar_dir,
 		'original_file' => $original_file,
@@ -1488,16 +1508,19 @@ function bp_avatar_ajax_set() {
 			'avatar'        => esc_url(
 				bp_core_fetch_avatar(
 					array(
-						'object'  => $avatar_data['object'],
-						'item_id' => $avatar_data['item_id'],
-						'html'    => false,
-						'type'    => 'full',
+						'object'    => $avatar_data['object'],
+						'item_id'   => $avatar_data['item_id'],
+						'item_type' => $avatar_data['item_type'],
+						'html'      => false,
+						'type'      => 'full',
 					)
 				)
 			),
 			'feedback_code' => 2,
 			'item_id'       => $avatar_data['item_id'],
 		);
+
+		$r['avatar'] = $return['avatar'];
 
 		if ( 'user' === $avatar_data['object'] ) {
 			/** This action is documented in bp-core/bp-core-avatars.php */
@@ -1736,10 +1759,11 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 	$retval = false;
 	$avatar = bp_core_fetch_avatar(
 		array(
-			'item_id' => $user_id,
-			'no_grav' => true,
-			'html'    => false,
-			'type'    => 'full',
+			'item_id'   => $user_id,
+			'item_type' => null,
+			'no_grav'   => true,
+			'html'      => false,
+			'type'      => 'full',
 		)
 	);
 
@@ -1761,7 +1785,6 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 					if ( $avatar != $avatar_option ) {
 						$retval = true;
 					}
-
 				}
 			}
 		}
@@ -1948,7 +1971,7 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
 		}
 
 		// Support WP User Avatar Plugin default avatar image.
-		$avatar = '';
+		$avatar        = '';
 		$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
 		if ( 'wp_user_avatar' === $avatar_option ) {
 			if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) ) {
