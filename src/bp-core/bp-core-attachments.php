@@ -536,7 +536,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$type_subdir = apply_filters( 'bp_attachments_get_attachment_sub_dir', $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'], $r['object_dir'], $r['item_id'], $r['type'] );
+	$type_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'], $r['object_dir'], $r['item_id'], $r['type'] );
 
 	$type_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $type_subdir;
 
@@ -551,7 +551,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$type_dir = apply_filters( 'bp_attachments_get_attachment_dir', $type_dir, $r['object_dir'], $r['item_id'], $r['type'] );
+	$type_dir = apply_filters( 'bb_attachments_get_attachment_dir', $type_dir, $r['object_dir'], $r['item_id'], $r['type'] );
 
 	if ( 1 === validate_file( $type_dir ) || ! is_dir( $type_dir ) ) {
 		return bb_get_default_profile_group_cover( $data, $r );
@@ -1586,7 +1586,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_subdir = apply_filters( 'bp_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
 
 	$cover_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
 
@@ -1601,7 +1601,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_dir = apply_filters( 'bp_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_dir = apply_filters( 'bb_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
