@@ -180,28 +180,17 @@ class BP_REST_Theme_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_social_icons( $request ) {
         $response = array();
-        if( function_exists( 'buddyboss_theme_get_option' ) ){
-            $footer_socials = buddyboss_theme_get_option( 'boss_footer_social_links' );
-            if( !empty( $footer_socials ) ){
-                foreach( $footer_socials as $network => $url ){
-                    if( !empty( $url ) ){
-                        $response[$network] = array(
-                            'icon' => 'bb-icon-rounded-' . $network,
-                            'url'  => $url,
-                        );
-                    }
+        $footer_socials = get_option( 'bbapp_social_links', false );
+        if( !empty( $footer_socials ) ){
+            foreach( $footer_socials as $network => $url ){
+                if( !empty( $url ) ){
+                    $response[$network] = array(
+                        'icon' => 'bb-icon-rounded-' . $network,
+                        'url'  => $url,
+                    );
                 }
-                $response = rest_ensure_response( $response );
             }
-        }
-        else{
-            $response = new WP_Error(
-                'bb_theme_activation_required',
-                __( 'Sorry, you are not allowed to see the theme settings.', 'buddyboss' ),
-                array(
-                    'status' => rest_authorization_required_code(),
-                )
-            );
+            $response = rest_ensure_response( $response );
         }
         /**
          * Fires after social icon are fetched via the REST API.
