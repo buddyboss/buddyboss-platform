@@ -6080,9 +6080,7 @@ function bb_restricate_rss_feed() {
 					if ( substr( $check_feed, - 1 ) !== '/' ) {
 						$check_feed = trailingslashit( $check_feed );
 					}
-					error_log( ' 1 ' . $check_feed );
 					if ( ! in_array( $check_feed, $exclude_arr_rss_feeds, true ) ) {
-						error_log( ' 2 ' . $check_feed );
 						$defaults = array(
 							'mode'     => 2,
 							'redirect' => $actual_link,
