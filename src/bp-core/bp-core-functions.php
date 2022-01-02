@@ -6041,6 +6041,10 @@ function bb_check_server_disabled_symlink() {
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	if ( strpos( $actual_link, '/feed/' ) === false &&
+	     strpos( $actual_link, 'feed=' ) === false ) { // if permalink has ? then need to check with feed=.
+		return;
+	}
 	if (
 		strpos( $actual_link, 'wp-cron.php' ) === false &&
 		strpos( $actual_link, 'wp-login.php' ) === false &&
@@ -6089,10 +6093,6 @@ function bb_restricate_rss_feed() {
 				}
 			}
 		} else {
-			if ( strpos( $actual_link, '/feed/' ) === false &&
-			     strpos( $actual_link, 'feed=' ) === false ) { // if permalink has ? then need to check with feed=.
-				return;
-			}
 			$defaults = array(
 				'mode'     => 2,
 				'redirect' => $actual_link,
