@@ -6043,13 +6043,34 @@ function bb_check_server_disabled_symlink() {
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	if ( strpos( $actual_link, '/feed/' ) === false &&
+	     strpos( $actual_link, 'feed=' ) === false ) { // if permalink has ? then need to check with feed=.
+		return;
+	}
 	if (
 		strpos( $actual_link, 'wp-cron.php' ) === false &&
 		strpos( $actual_link, 'wp-login.php' ) === false &&
 		strpos( $actual_link, 'admin-ajax.php' ) === false &&
 		strpos( $actual_link, 'wp-json' ) === false
 	) {
-		$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
+		$check_feed = '';
+		if ( strpos( $actual_link, '?feed' ) !== false ) { // if permalink has ? then need to check with feed=.
+			$current_url_explode = array_filter( explode( '?', $actual_link ) );
+			if ( isset( $current_url_explode[1] ) ) {
+				$check_feed = $current_url_explode[1];
+				if ( strpos( $current_url_explode[1], '&' ) !== false ) {
+					$current_url_explode = array_filter( explode( '&', $current_url_explode[1] ) );
+					if ( isset( $current_url_explode[1] ) ) {
+						$check_feed = $current_url_explode[1];
+					}
+				}
+			}
+		} else {
+			$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
+			if ( isset( $current_url_explode[1] ) ) {
+				$check_feed = $current_url_explode[1];
+			}
+		}
 		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
@@ -6057,24 +6078,23 @@ function bb_restricate_rss_feed() {
 			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
 				// Check if current url has slash in the last if not then add because we allow to add
 				// feed url like this one - /feed/.
-				if ( substr( $current_url_explode[1], - 1 ) !== '/' ) {
-					$current_url_explode[1] = trailingslashit ($current_url_explode[1] );
-				}
-				if ( ! in_array( $current_url_explode[1], $exclude_arr_rss_feeds, true ) ) {
-					$defaults = array(
-						'mode'     => 2,
-						'redirect' => $actual_link,
-						'root'     => bp_get_root_domain(),
-						'message'  => __( 'Please login to access this website.', 'buddyboss' ),
-					);
-					bp_core_no_access( $defaults );
-					exit();
+				if ( isset( $check_feed ) ) {
+					if ( substr( $check_feed, - 1 ) !== '/' ) {
+						$check_feed = trailingslashit( $check_feed );
+					}
+					if ( ! in_array( $check_feed, $exclude_arr_rss_feeds, true ) ) {
+						$defaults = array(
+							'mode'     => 2,
+							'redirect' => $actual_link,
+							'root'     => bp_get_root_domain(),
+							'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+						);
+						bp_core_no_access( $defaults );
+						exit();
+					}
 				}
 			}
 		} else {
-			if ( strpos( $actual_link, '/feed/' ) === false ) {
-				return;
-			}
 			$defaults = array(
 				'mode'     => 2,
 				'redirect' => $actual_link,
