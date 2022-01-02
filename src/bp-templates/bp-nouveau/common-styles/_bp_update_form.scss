@@ -722,37 +722,6 @@
 			display: none;
 		}
 
-
-		#activity-post-video-uploader.dropzone .dz-preview.dz-complete {
-
-			.dz-filename {
-				color: #4d5c6d;
-			}
-
-			&.dz-file-preview {
-				background-color: #f0f3f7;
-			}
-
-			.dz-details {
-				min-height: 120px;
-
-				.dz-size {
-					display: block !important;
-				}
-
-			}
-
-		}
-
-		#activity-post-video-uploader.dropzone .dz-preview.dz-complete.dz-has-thumbnail {
-
-			.dz-filename,
-			.dz-size {
-				color: #fff;
-			}
-
-		}
-
 		#user-status-huddle {
 			padding: 25px 25px 16px 25px;
 		}

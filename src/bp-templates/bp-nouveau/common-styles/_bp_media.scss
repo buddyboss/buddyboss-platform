@@ -2210,7 +2210,7 @@ img.emojioneemoji {
 		left: inherit;
 		right: inherit;
 		max-width: 350px;
-		width: auto;
+		min-width: 100%;
 	}
 
 }
@@ -2260,6 +2260,52 @@ img.emojioneemoji {
 			margin-top: 10px;
 		}
 
+	}
+
+}
+
+//Video Dropzone when error
+.dropzone.video-dropzone .dz-preview.dz-error {
+	
+	&.dz-complete.dz-file-preview {
+		background-color: #f8f8f8;
+	}
+
+	&.dz-preview .dz-details {
+		border-color: #ef3e46;
+		background-color: transparent;
+
+		.dz-size,
+		.dz-icon {
+			display: none;
+		}
+
+		&:before {
+			content: '\e9d4';
+			font-size: 16px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.dz-filename {
+			font-size: 13px;
+			color: #828890;
+			line-height: 1;
+			opacity: 1;
+			visibility: visible;
+			position: absolute;
+			bottom: 15px;
+			left: 10px;
+			right: 10px;
+			width: auto;
+		}
+
+	}
+
+	.dz-video-thumbnail {
+		display: none;
 	}
 
 }

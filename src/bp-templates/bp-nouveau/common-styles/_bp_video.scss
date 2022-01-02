@@ -1521,6 +1521,8 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-complete.dz-file-preview {
+		background-color: #ddd;
+		border-radius: 4px;
 
 		.dz-filename {
 			color: #fff;
@@ -1532,11 +1534,6 @@ div.dropzone.dz-started {
 
 		.dz-progress-count {
 			display: none;
-		}
-
-		&.dz-preview.dz-file-preview {
-			background-color: #ddd;
-			border-radius: 4px;
 		}
 
 		.dz-progress-ring-wrap {
@@ -1572,7 +1569,7 @@ div.dropzone.dz-started {
 	}
 
 	.dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
-		background-color: #fafafa !important;
+		background-color: #f8f8f8 !important;
 		z-index: 1;
 		border-radius: 4px;
 
@@ -1581,12 +1578,14 @@ div.dropzone.dz-started {
 		}
 
 		.dz-filename {
+			font-size: 13px;
+			color: #828890;
+			line-height: 1;
 			opacity: 1;
 			visibility: visible;
 			position: absolute;
 			left: 0;
 			bottom: 15px;
-			color: #828890;
 		}
 
 	}
