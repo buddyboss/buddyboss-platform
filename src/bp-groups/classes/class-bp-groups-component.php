@@ -638,14 +638,13 @@ class BP_Groups_Component extends BP_Component {
 				'groups'
 			);
 
-			$group_link 		= bp_get_group_permalink( $this->current_group );
-			$group_member_link 	= $group_link . 'members/all-members/';
+			$group_link = bp_get_group_permalink( $this->current_group );
 
 			// Add the "Members" subnav item, as this will always be present.
 			$sub_nav[] = array(
 				'name'            => sprintf( apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . __( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
 				'slug'            => 'members',
-				'parent_url'      => $group_member_link,
+				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
 				'screen_function' => 'groups_screen_group_members',
 				'user_has_access' => $this->current_group->user_has_access,

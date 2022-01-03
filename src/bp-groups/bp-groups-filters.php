@@ -85,6 +85,9 @@ add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_video_scope', 10
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
 
+// Group nav menu.
+add_filter( 'bp_nouveau_get_nav_link', 'bb_groups_set_member_nav_link', 10, 3 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -983,3 +986,47 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
 add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+
+/**
+ * Filters change the member tab link in the group detail page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $link     The URL for the nav item.
+ * @param object $nav_item The current nav item object.
+ * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+ */
+function bb_groups_set_member_nav_link( $link, $nav_item, $displayed_nav ) {
+	
+	if ( empty( $nav_item ) || ( ! empty( $nav_item ) && ! isset( $nav_item->slug ) ) ) {
+		return $link;
+	}
+
+	// Get default selected tab.
+	$customizer_option = 'group_default_tab';
+	$default_tab       = '';
+
+	if ( function_exists( 'bp_nouveau_get_temporary_setting' ) && function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+		$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+	}
+
+	if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab || 'videos' === $default_tab ) {
+		$default_tab = bp_is_active( 'media' ) ? $default_tab : 'members';
+	} else {
+		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
+	}
+
+	$default_tab       = ( '' === $default_tab ) ? 'members' : $default_tab;
+	$default_extension = defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : $default_tab;
+
+	// Check the current menu is 'groups' and nav slug is 'members'.
+	if ( 'members' === $nav_item->slug && 'groups' === $displayed_nav ) {
+		if ( 'members' === $default_extension ) {
+			$link = esc_url( trailingslashit( $link ) . 'members/all-members/' );
+		} else {
+			$link = esc_url( trailingslashit( $link ) . 'all-members/' );
+		}
+	}
+
+	return $link;
+}
