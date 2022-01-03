@@ -73,15 +73,15 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 					$exclude_endpoints        = get_blog_option( get_current_network_id(), 'bb-enable-private-rest-apis-public-content', '' );
 				}
 			}
-
-			if ( (
-				     ! empty( $apps_settings ) && // buddyboss-app is active.
-				     ! empty( $apps_settings['private_app.enabled'] ) // private app is enabled.
-			     ) ||
-			     (
-				     empty( $apps_settings ) && // buddyboss-app disabled.
-				     true === (bool) $enable_private_rest_apis // BB private rest api is enabled.
-			     )
+			if (
+				(
+					! empty( $apps_settings ) && // buddyboss-app is active.
+					! empty( $apps_settings['private_app.enabled'] ) // private app is enabled.
+				) ||
+				(
+					empty( $apps_settings ) && // buddyboss-app disabled.
+					true === (bool) $enable_private_rest_apis // BB private rest api is enabled.
+				)
 			) {
 				return bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
 			}
@@ -118,7 +118,7 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 		);
 		$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 		// Allow some endpoints which is mandatory for app.
-		if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+		if ( ! empty( $exclude_required_endpoints ) && in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 			return $data;
 		}
 
@@ -149,7 +149,7 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
  */
 if ( ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
 	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
-		$exploded_endpoint = explode( 'wp-json', $current_endpoint );
+		$exploded_endpoint = (array) explode( 'wp-json', $current_endpoint );
 		if ( '' !== $exclude_endpoints ) {
 			$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 			if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
