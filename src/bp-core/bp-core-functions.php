@@ -6069,7 +6069,7 @@ function bb_restricate_rss_feed() {
 				$check_feed = $current_url_explode[1];
 			}
 		}
-		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
+		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
