@@ -122,7 +122,13 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 			return $data;
 		}
 
-		if ( ! bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints ) ) {
+		$get_site_url = get_site_url();
+		if ( is_multisite() ) {
+			$get_site_url = get_site_url( get_current_network_id() );
+		}
+		$current_endpoint = trailingslashit( $get_site_url ) . 'wp-json' . $current_endpoint;
+
+		if ( ! bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) ) {
 			$data = false;
 		}
 
@@ -137,24 +143,36 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
  *
  * @param string $current_endpoint  Current endpoint.
  * @param string $exclude_endpoints List of endpoints which need to excluded
+ * @param string $get_site_url      Current site url
  *
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 if ( ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
-	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints ) {
+	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
+		$exploded_endpoint = explode( 'wp-json', $current_endpoint );
 		if ( '' !== $exclude_endpoints ) {
 			$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 			if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 				foreach ( $exclude_arr_endpoints as $endpoints ) {
-					$endpoints = untrailingslashit( trim( $endpoints ) );
-					// Here we get current_endpoint like this - /wp/v2/users
-					// so we need to explode exclude endpoint with wp-json/.
-					if ( strpos( $endpoints, 'wp-json/' ) !== false ) {
-						$endpoints = str_replace( 'wp-json/', '', $endpoints );
-					}
-					$current_endpoint_allowed = preg_match( '@^' . $endpoints . '$@i', $current_endpoint, $matches );
-					if ( $current_endpoint_allowed ) {
-						return true;
+					if ( ! empty( $endpoints ) ) {
+						$endpoints = untrailingslashit( trim( $endpoints ) );
+						if ( strpos( $current_endpoint, $endpoints ) !== false ) {
+							return true;
+						} else {
+							if ( strpos( $endpoints, $get_site_url ) !== false ) {
+								$endpoints = str_replace( trailingslashit( $get_site_url ), '', $endpoints );
+							}
+							if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+								$endpoints = str_replace( 'wp-json', '', $endpoints );
+							}
+							$endpoints                = str_replace( '//', '/', $endpoints );
+							$endpoints                = str_replace( '///', '/', $endpoints );
+							$endpoints                = '/' . ltrim( $endpoints, '/' );
+							$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+							if ( $current_endpoint_allowed ) {
+								return true;
+							}
+						}
 					}
 				}
 			}

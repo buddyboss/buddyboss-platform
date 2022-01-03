@@ -6120,7 +6120,6 @@ function bb_restricate_rss_feed() {
 function bb_restricate_rest_api( $response, $handler, $request ) {
 	// Get current route.
 	$current_endpoint = $request->get_route();
-	$current_endpoint = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
 	// ex: /buddyboss-app/auth/v1/jwt/token.
 	$default_exclude_endpoint = array(
@@ -6135,6 +6134,8 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
+
+	$current_endpoint = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
 
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
@@ -6161,22 +6162,24 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
-				$endpoints = untrailingslashit( trim( $endpoints ) );
-				if ( strpos( $current_endpoint, $endpoints ) !== false ) {
-					return true;
-				} else {
-					if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
-						$endpoints = str_replace( trailingslashit( bp_get_root_domain() ), '', $endpoints );
-					}
-					if ( strpos( $endpoints, 'wp-json' ) !== false ) {
-						$endpoints = str_replace( 'wp-json', '', $endpoints );
-					}
-					$endpoints = str_replace( '//', '/', $endpoints );
-					$endpoints = str_replace( '///', '/', $endpoints );
-					$endpoints = '/' . ltrim( $endpoints, '/' );
-					$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
-					if ( $current_endpoint_allowed ) {
+				if ( ! empty( $endpoints ) ) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
+					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
 						return true;
+					} else {
+						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
+							$endpoints = str_replace( trailingslashit( bp_get_root_domain() ), '', $endpoints );
+						}
+						if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+							$endpoints = str_replace( 'wp-json', '', $endpoints );
+						}
+						$endpoints                = str_replace( '//', '/', $endpoints );
+						$endpoints                = str_replace( '///', '/', $endpoints );
+						$endpoints                = '/' . ltrim( $endpoints, '/' );
+						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						if ( $current_endpoint_allowed ) {
+							return true;
+						}
 					}
 				}
 			}
