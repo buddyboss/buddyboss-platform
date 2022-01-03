@@ -6127,7 +6127,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	);
 	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 	// Allow some endpoints which is mandatory for app.
-	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+	if ( ! empty( $exclude_required_endpoints ) && in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
 
