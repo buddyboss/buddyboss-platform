@@ -315,7 +315,7 @@ class BP_Document_Folder {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "f.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
