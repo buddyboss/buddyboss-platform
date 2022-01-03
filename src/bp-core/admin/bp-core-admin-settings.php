@@ -450,7 +450,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 		?>
 	</p>
 
-	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning <?php echo ( bp_get_option( 'show_avatars' ) ? 'bp-hide' : '' ); ?>">
+	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning <?php echo ( ( ! get_option( 'show_avatars' ) && 'WordPress' === bb_get_profile_avatar_type() ) ? '' : 'bp-hide' ); ?>">
 		<p id="bb-wordpress-profile-gravatar-feedback" class="updated warning">
 			<?php
 			$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
