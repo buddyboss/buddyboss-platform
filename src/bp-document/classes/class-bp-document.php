@@ -347,7 +347,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "d.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "d.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -937,8 +937,8 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
-			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
+			$where_conditions_document['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions_folder['group']   = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
