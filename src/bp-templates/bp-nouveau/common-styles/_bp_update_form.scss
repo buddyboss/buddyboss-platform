@@ -440,6 +440,15 @@
 				top: 58px;
 				border-radius: 0;
 				padding: 2px 13px;
+
+				p:empty,
+				div:empty {
+					display: none;
+				}
+
+				> div {
+					padding: 10px 20px 10px 5px;
+				}
 			}
 		}
 

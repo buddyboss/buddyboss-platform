@@ -1437,6 +1437,18 @@ a.layout-grid-view {
   padding: 2px 13px;
 }
 
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages p:empty,
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages div:empty,
+.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages p:empty,
+.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages div:empty {
+  display: none;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages > div,
+.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages > div {
+  padding: 10px 20px 10px 5px;
+}
+
 .bp-nouveau-activity-form-placeholder- #user-status-huddle,
 .activity-update-form #user-status-huddle {
   margin: 0;

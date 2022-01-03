@@ -991,7 +991,7 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							Backbone.trigger( 'onError', ( BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback ) );
+							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback + '</div>' ) );
 							this.removeFile( file );
 						}
 					}
@@ -1005,7 +1005,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							Backbone.trigger( 'onError', ( BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) ) );
+							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
 							this.removeFile( file );
 						}
 					}
@@ -1224,7 +1224,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							Backbone.trigger( 'onError', ( BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) ) );
+							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) + '<div>' ) );
 							this.removeFile( file );
 						}
 					}
@@ -1460,7 +1460,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							Backbone.trigger( 'onError', ( BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) ) );
+							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) + '<div>' ) );
 							this.removeFile( file );
 						}
 					}
