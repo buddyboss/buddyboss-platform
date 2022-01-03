@@ -388,6 +388,7 @@ class BP_Document_Component extends BP_Component {
 			'BP_REST_Document_Endpoint',
 			'BP_REST_Document_Folder_Endpoint',
 			'BP_REST_Document_Details_Endpoint',
+			'BP_REST_Document_Settings_Endpoint',
 		) );
 	}
 }

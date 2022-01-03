@@ -724,6 +724,7 @@ class BuddyPress {
 			'BP_REST_Document_Endpoint'                    => 'document',
 			'BP_REST_Document_Folder_Endpoint'             => 'document',
 			'BP_REST_Document_Details_Endpoint'            => 'document',
+			'BP_REST_Document_Settings_Endpoint'		   => 'document',
 			'BP_REST_Activity_Endpoint'                    => 'activity',
 			'BP_REST_Activity_Comment_Endpoint'            => 'activity',
 			'BP_REST_Activity_Details_Endpoint'            => 'activity',

@@ -30,6 +30,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base = 'members';
+		add_filter('bp_rest_members_get_profile_dropdown_items', array( $this, 'bp_add_icons_to_profile_dropdown_items' ), 10, 2 );
 	}
 
 	/**
@@ -451,6 +452,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				);
 			}
 		}
+
+		/**
+		 * Filter to apply patches to include the menu icons via the REST API.
+		 *
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		$retval = apply_filters( 'bp_rest_members_get_profile_dropdown_items', $retval, $request );
 
 		$response = rest_ensure_response( $retval );
 
@@ -1335,5 +1346,99 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		return $menu_args;
 	}
+
+	public function bp_add_icons_to_profile_dropdown_items( $response, $request ){
+		$icon = false;
+        if ( function_exists( 'bp_is_active' ) && has_nav_menu( 'header-my-account' ) ) {
+            $menu_name = 'header-my-account';
+            if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $menu_name ] ) ) {
+                $menu = wp_get_nav_menu_object( $locations[ $menu_name ] );
+                $menu_items = wp_get_nav_menu_items( $menu->term_id );
+                if(!empty($menu_items)){
+                    foreach( $menu_items as $item ) {
+						$response_item = str_replace( array('bp-', '-nav'), '', $item->classes[1] );
+
+						if( $response_item == 'profile' ){
+							$response_item = 'xprofile';
+						}
+						$key = array_search( $response_item, array_column( $response, 'id' ) );
+                        if ( class_exists( 'Menu_Icons' ) || class_exists( 'Buddyboss_Menu_Icons' ) ) {
+                            $meta = Menu_Icons_Meta::get( $item->ID );
+                            if ( ! class_exists( 'Menu_Icons_Front_End' ) ) {
+                                $path = ABSPATH . 'wp-content/themes/buddyboss-theme/inc/plugins/buddyboss-menu-icons/includes/front.php';
+                                if ( file_exists( $path ) ) {
+                                    require_once $path;
+                                    Menu_Icons_Front_End::init();
+                                    $icon = Menu_Icons_Front_End::get_icon( $meta );
+                                }
+                            } else {
+                                $icon = Menu_Icons_Front_End::get_icon( $meta );
+                            }
+                        }
+        
+                        if ( ! $icon && in_array( 'bp-menu', $item->classes ) ) {
+							if( $key ){
+								if ( 'xprofile' === $response_item ) {
+									$icon = 'bb-icon-user-alt';
+								} else{
+									$icon = 'bb-icon-not-found';
+								}
+							}
+                        }
+                        $response[$key]['icon'] = $icon;
+                    }
+                }
+				else{
+					if( !empty($response) ){
+						foreach( $response as $key => $val ){
+							$response[$key]['icon'] = $this->bp_rest_default_menu_icon($val['id']);
+						}
+					}
+				}
+            }
+        }
+        return $response;
+	}
+
+
+	protected function bp_rest_default_menu_icon( $menu ) {
+
+		if ( $menu == 'xprofile' ) {
+            $icon = 'bb-icon-user-alt';
+		}
+		elseif ( $menu == 'settings' ) {
+            $icon = 'bb-icon-settings';
+		}
+		elseif ( $menu == 'activities' ) {
+            $icon = 'bb-icon-activity';
+		}
+		elseif ( $menu == 'notifications' ) {
+            $icon = 'bb-icon-bell-small';
+		}
+		elseif ( $menu == 'messages' ) {
+            $icon = 'bb-icon-inbox-small';
+		}
+		elseif ( $menu == 'friends' ) {
+            $icon = 'bb-icon-users';
+		}
+		elseif ( $menu == 'groups' ) {
+            $icon = 'bb-icon-groups';
+		}
+		elseif ( $menu == 'forums' ) {
+            $icon = 'bb-icon-discussion';
+		}
+		elseif (  $menu == 'photos' ) {
+            $icon = 'bb-icon-image-square';
+		}
+		elseif ( $menu == 'document' ){
+            $icon = 'bb-icon-folder-stacked';
+		}
+		elseif (  $menu == 'invites' ) {
+            $icon = 'bb-icon-mail';
+		}
+
+		return $icon;
+	}
+
 
 }
