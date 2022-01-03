@@ -109,6 +109,21 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
+			$custom_upload_alert = '';
+			if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
+				$custom_upload_alert = sprintf(
+					esc_html__( 'Changing Member Profiles setting will reset all members cover photo position. %1$s %2$s Are you sure?', 'buddyboss' ),
+					"\n",
+					"\n"
+				);
+			} elseif ( 'bp-groups' === bp_core_get_admin_active_tab() ) {
+				$custom_upload_alert = sprintf(
+					esc_html__( 'Changing Social Groups setting will reset all groups cover photo position. %1$s %2$s Are you sure?', 'buddyboss' ),
+					"\n",
+					"\n"
+				);
+			}
+
 			wp_localize_script(
 				'bp-admin',
 				'BP_ADMIN',
@@ -138,6 +153,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'wordpress_avatar_types'   => array( 'mystery', 'blank', 'gravatar_default', 'identicon', 'wavatar', 'monsterid', 'retro' ),
 					),
 					'profile_group_cover'  => array(
+						'upload_alert'      => $custom_upload_alert,
 						'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
 						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 						'feedback_messages' => array(
