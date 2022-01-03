@@ -77,14 +77,14 @@ function messages_new_message( $args = '' ) {
 
 	/**
 	 * Filter to validate message content.
-	 * 
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param bool   $validated_content True if message is valid, false otherwise.
 	 * @param string $content           Content of the message.
 	 * @param array  $_POST             POST Request Object.
 	 *
-	 * @return bool True if message is not valid, false otherwise.
+	 * @return bool True if message is valid, false otherwise.
 	 */
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $r['content'] ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $r['content'] ) ) ) ), $r['content'], $_POST );
 
