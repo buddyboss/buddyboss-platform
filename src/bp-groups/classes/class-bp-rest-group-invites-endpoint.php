@@ -968,6 +968,10 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'href'       => rest_url( bp_rest_get_user_url( $invite->inviter_id ) ),
 				'embeddable' => true,
 			),
+			'group'      => array(
+				'href'       => rest_url( $this->namespace . '/' . buddypress()->groups->id . '/' . $invite->item_id ),
+				'embeddable' => true,
+			),
 		);
 
 		/**
