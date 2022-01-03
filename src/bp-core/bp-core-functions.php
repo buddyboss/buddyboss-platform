@@ -6052,57 +6052,53 @@ function bb_restricate_rss_feed() {
 		strpos( $actual_link, 'admin-ajax.php' ) === false &&
 		strpos( $actual_link, 'wp-json' ) === false
 	) {
-		$check_feed = '';
-		if ( strpos( $actual_link, '?feed' ) !== false ) { // if permalink has ? then need to check with feed=.
-			$current_url_explode = array_filter( explode( '?', $actual_link ) );
-			if ( isset( $current_url_explode[1] ) ) {
-				$check_feed = $current_url_explode[1];
-				if ( strpos( $current_url_explode[1], '&' ) !== false ) {
-					$current_url_explode = array_filter( explode( '&', $current_url_explode[1] ) );
-					if ( isset( $current_url_explode[1] ) ) {
-						$check_feed = $current_url_explode[1];
-					}
-				}
-			}
-		} else {
-			$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
-			if ( isset( $current_url_explode[1] ) ) {
-				$check_feed = $current_url_explode[1];
-			}
-		}
-		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
+		$request_url = untrailingslashit( $actual_link );
+		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
 			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
 				// Check if current url has slash in the last if not then add because we allow to add
 				// feed url like this one - /feed/.
-				if ( isset( $check_feed ) ) {
-					if ( substr( $check_feed, - 1 ) !== '/' ) {
-						$check_feed = trailingslashit( $check_feed );
-					}
-					if ( ! in_array( $check_feed, $exclude_arr_rss_feeds, true ) ) {
-						$defaults = array(
-							'mode'     => 2,
-							'redirect' => $actual_link,
-							'root'     => bp_get_root_domain(),
-							'message'  => __( 'Please login to access this website.', 'buddyboss' ),
-						);
-						bp_core_no_access( $defaults );
-						exit();
+				foreach ( $exclude_arr_rss_feeds as $url ) {
+					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+					$un_trailing_slash_it_url = untrailingslashit( $url );
+					// Check if strict match
+					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						return;
+					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url );
+						// Allow to view if fragment matched.
+						foreach ( $fragments as $fragment ) {
+							if ( $fragment === trim( $url, '/' ) ) {
+								return;
+							}
+						}
+						// Allow to view if fragment matched with the trailing slash.
+						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						if ( $is_matched_fragment === $url ) {
+							return;
+						}
+						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
+						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+							return;
+						}
+						// Check URL is fully matched without remove trailing slash.
+					} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
+						return;
 					}
 				}
 			}
-		} else {
-			$defaults = array(
-				'mode'     => 2,
-				'redirect' => $actual_link,
-				'root'     => bp_get_root_domain(),
-				'message'  => __( 'Please login to access this website.', 'buddyboss' ),
-			);
-			bp_core_no_access( $defaults );
-			exit();
 		}
+
+		$defaults = array(
+			'mode'     => 2,
+			'redirect' => $actual_link,
+			'root'     => bp_get_root_domain(),
+			'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+		);
+		bp_core_no_access( $defaults );
+		exit();
 	}
 }
 
@@ -6132,9 +6128,11 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	);
 	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 	// Allow some endpoints which is mandatory for app.
-	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+	if ( ! empty( $exclude_required_endpoints ) && in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
+
+	$current_endpoint = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
 
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
@@ -6155,18 +6153,31 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
+	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
 	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
-				$endpoints = untrailingslashit( trim( $endpoints ) );
-				if ( strpos( $endpoints, 'wp-json' ) !== false ) {
-					$endpoints = str_replace( 'wp-json', '', $endpoints );
-				}
-				$current_endpoint_allowed = preg_match( '@^' . $endpoints . '$@i', $current_endpoint, $matches );
-				if ( $current_endpoint_allowed ) {
-					return true;
+				if ( ! empty( $endpoints ) ) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
+					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
+						return true;
+					} else {
+						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
+							$endpoints = str_replace( trailingslashit( bp_get_root_domain() ), '', $endpoints );
+						}
+						if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+							$endpoints = str_replace( 'wp-json', '', $endpoints );
+						}
+						$endpoints                = str_replace( '//', '/', $endpoints );
+						$endpoints                = str_replace( '///', '/', $endpoints );
+						$endpoints                = '/' . ltrim( $endpoints, '/' );
+						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						if ( $current_endpoint_allowed ) {
+							return true;
+						}
+					}
 				}
 			}
 		}
