@@ -991,9 +991,7 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							if ( ! jQuery( '.activity-media-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
-							}
+							Backbone.trigger( 'onError', ( BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback ) );
 							this.removeFile( file );
 						}
 					}
@@ -1007,9 +1005,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							if ( ! jQuery( '.activity-media-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup activity-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							}
+							Backbone.trigger( 'onError', ( BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) ) );
 							this.removeFile( file );
 						}
 					}
@@ -1228,9 +1224,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							if ( ! jQuery( '.document-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							}
+							Backbone.trigger( 'onError', ( BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) ) );
 							this.removeFile( file );
 						}
 					}
@@ -1466,9 +1460,7 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							if ( ! jQuery( '.video-error-popup' ).length) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							}
+							Backbone.trigger( 'onError', ( BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) ) );
 							this.removeFile( file );
 						}
 					}
@@ -3735,6 +3727,8 @@ window.bp = window.bp || {};
 
 				this.listenTo(Backbone, 'mediaprivacy', this.updateMultiMediaOptions);
 
+				this.listenTo(Backbone, 'onError', this.onError);
+
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
 						this.$el.addClass( 'bp-hide' );
@@ -4424,6 +4418,16 @@ window.bp = window.bp || {};
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				}
+			},
+
+			onError: function ( error ) {
+				this.model.set(
+					'errors',
+					{
+						type: 'error',
+						value: error
+					}
+				);
 			}
 		}
 	);
