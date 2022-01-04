@@ -1064,7 +1064,7 @@ window.bp = window.bp || {};
 		 * Set title tag in notification data attribute.
 		 */
 		setTitle: function() {
-			var title = $('html').find( 'title' ).text();
+			var title = $('html head').find( 'title' ).text();
 			$('.bb-onscreen-notification').attr( 'data-title-tag', title );
 		},
 
@@ -2171,7 +2171,7 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
-			if ( $( '.report-content, .block-member, .mass-block-member' ).length > 0 ) {
+			if ( $( '.report-content, .block-member' ).length > 0 ) {
 				var _this = this;
 				$( '.report-content, .block-member' ).magnificPopup(
 					{
@@ -2191,29 +2191,6 @@ window.bp = window.bp || {};
 									$( document ).find( '.bp-report-form-err' ).empty();
 									_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
 								}
-							}
-						}
-					}
-				);
-
-				$( '.mass-block-member' ).magnificPopup(
-					{
-						type: 'inline',
-						midClick: true,
-						callbacks: {
-							change: function () {
-								var _self = this;
-								setTimeout(
-									function () {
-										var contentId   = _self.currItem.el.data( 'bp-content-id' );
-										var contentType = _self.currItem.el.data( 'bp-content-type' );
-										var nonce       = _self.currItem.el.data( 'bp-nonce' );
-										if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
-											_this.setFormValues( { contentId: contentId, contentType: contentType, nonce: nonce } );
-										}
-									},
-									1
-								);
 							}
 						}
 					}
