@@ -1629,13 +1629,6 @@ a.layout-grid-view {
   bottom: 30px;
 }
 
-.bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown:before,
-.activity-update-form.modal-popup .gif-media-search-dropdown:before {
-  top: initial;
-  bottom: -11px;
-  border-color: transparent transparent #fff #fff;
-}
-
 .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown .gif-search-results,
 .activity-update-form.modal-popup .gif-media-search-dropdown .gif-search-results {
   min-height: 320px;
@@ -2607,25 +2600,6 @@ div[class*="attached-gif-container"] .gif-icon {
   width: 300px;
 }
 
-.gif-media-search-dropdown:before {
-  content: " ";
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 1px;
-  margin: 0 auto;
-  left: 20px;
-  box-sizing: border-box;
-  border: 6px solid #000;
-  border-color: #fff #fff transparent transparent;
-  -webkit-transform-origin: 0 0;
-  transform-origin: 0 0;
-  transform: rotate(-45deg);
-  box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
-  transition: all linear 0.2s;
-  z-index: 101;
-}
-
 @media screen and (min-width: 768px) {
   .gif-media-search-dropdown.open {
     width: 360px;
@@ -2636,12 +2610,17 @@ div[class*="attached-gif-container"] .gif-icon {
   background-color: #fff;
   border-radius: 4px 4px 0 0;
   position: relative;
-  padding: 10px;
+  padding: 5px 10px;
   margin: 0;
+  border-bottom: 1px solid #e7e9ec;
+}
+
+.gif-search-query input[type="search"] {
+  border: 0;
 }
 
 .gif-search-content .gif-search-results {
-  padding: 0 10px;
+  padding: 10px 10px 0;
   overflow: auto;
   min-height: 280px;
   max-height: 380px;
