@@ -6131,8 +6131,6 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 		return $response;
 	}
 
-	$current_endpoint = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
-
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
@@ -6152,6 +6150,8 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
+	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+
 	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
 	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
