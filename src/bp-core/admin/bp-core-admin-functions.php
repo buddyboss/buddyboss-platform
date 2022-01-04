@@ -3075,10 +3075,15 @@ add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
  *
  * @since BuddyBoss 1.3.5
  *
- * @param array  $categories Array of block categories.
- * @param object $post       Post being loaded.
+ * @param array          $categories Array of block categories.
+ * @param string|WP_Post $post       Post being loaded.
  */
 function bp_block_category( $categories = array(), $post = null ) {
+
+	if ( class_exists( 'WP_Block_Editor_Context' ) && $post instanceof WP_Block_Editor_Context && ! empty( $post->post ) ) {
+		$post = $post->post;
+	}
+
 	if ( ! ( $post instanceof WP_Post ) ) {
 		return $categories;
 	}
@@ -3115,7 +3120,20 @@ function bp_block_category( $categories = array(), $post = null ) {
 	);
 }
 
-add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+/**
+ * Select the `block_categories` filter according to WP version.
+ *
+ * @since BuddyBoss 1.8.3
+ */
+function bb_block_init_category_filter() {
+	if ( function_exists( 'get_default_block_categories' ) ) {
+		add_filter( 'block_categories_all', 'bp_block_category', 30, 2 );
+	} else {
+		add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+	}
+}
+
+add_action( 'bp_init', 'bb_block_init_category_filter' );
 
 function bp_document_ajax_check_file_mime_type() {
 	$response = array();
