@@ -1888,6 +1888,31 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			$( document ).on(
+				'click',
+				'.notification-defaults',
+				function () {
+					var isHidden = $( this ).next( '.manage-defaults' );
+					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
+						$( this ).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
+					} else {
+						$( this ).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
+					}
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.bb-notification-checkbox',
+				function () {
+					if ( false === $( this ).prop( 'checked' ) ) {
+						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).attr( 'disabled', true );
+					} else {
+						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).removeAttr( 'disabled' );
+					}
+				}
+			);
 		}
 	);
 

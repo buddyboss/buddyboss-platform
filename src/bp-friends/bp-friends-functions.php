@@ -869,7 +869,7 @@ add_action( 'bbp_forums_mentions_prime_results', 'bp_friends_prime_mentions_resu
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_new_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( 'no' == bp_get_user_meta( (int) $friend_id, 'notification_friends_friendship_request', true ) ) {
+	if ( false === bb_is_notification_enabled( (int) $friend_id, 'notification_friends_friendship_request' ) ) {
 		return;
 	}
 
@@ -906,7 +906,7 @@ add_action( 'friends_friendship_requested', 'friends_notification_new_request', 
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_accepted_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( 'no' == bp_get_user_meta( (int) $initiator_id, 'notification_friends_friendship_accepted', true ) ) {
+	if ( false === bb_is_notification_enabled( (int) $initiator_id, 'notification_friends_friendship_accepted' ) ) {
 		return;
 	}
 

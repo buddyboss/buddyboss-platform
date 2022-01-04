@@ -359,3 +359,16 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 	return $args;
 }
 add_filter( 'bp_document_set_folder_friends_scope_args', 'bp_friends_filter_folder_scope', 10, 2 );
+
+/**
+ * Register the friends notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_friends_notifications() {
+	if ( class_exists( 'BP_Friends_Notification' ) ) {
+		BP_Friends_Notification::instance();
+	}
+}
+// Load Group Notifications.
+add_action( 'bp_friends_includes', 'bb_load_friends_notifications' );

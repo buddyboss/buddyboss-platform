@@ -45,7 +45,6 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 
 			if ( ! empty( $secondary_item_id ) ) {
 
-
 				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
 
 					$group         = bp_messages_get_meta( $item_id, 'group_id', true ); // group id
@@ -57,21 +56,19 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 					if ( empty( $message_from ) ) {
 						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
-						$text = sprintf( __( '%s sent you a new private message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%s sent you a new group message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf( __( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%s sent you a new private message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
-						$text = sprintf( __( '%s sent you a new private message from the group: %s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 					} else {
 						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 					}
-
 				} else {
 					$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 				}
-
 			} else {
 				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ), bp_core_number_format( $total_items ) );
 			}
@@ -286,39 +283,42 @@ add_action( 'bp_messages_thread_after_delete', 'bp_messages_message_delete_notif
  */
 function messages_screen_notification_settings() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
-		return;
-	}
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		bb_render_notification( buddypress()->messages->id );
+	} else {
+		if ( bp_action_variables() ) {
+			bp_do_404();
+			return;
+		}
 
-	if ( ! $new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
-		$new_messages = 'yes';
-	} ?>
+		if ( ! $new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
+			$new_messages = 'yes';
+		} ?>
 
-	<table class="notification-settings" id="messages-notification-settings">
-		<thead>
+		<table class="notification-settings" id="messages-notification-settings">
+			<thead>
 			<tr>
 				<th class="icon"></th>
-				<th class="title"><?php _e( 'Messages', 'buddyboss' ); ?></th>
-				<th class="yes"><?php _e( 'Yes', 'buddyboss' ); ?></th>
-				<th class="no"><?php _e( 'No', 'buddyboss' ); ?></th>
+				<th class="title"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></th>
+				<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+				<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
 			</tr>
-		</thead>
+			</thead>
 
-		<tbody>
+			<tbody>
 			<tr id="messages-notification-settings-new-message">
 				<td></td>
-				<td><?php _e( 'A member sends you a new message', 'buddyboss' ); ?></td>
+				<td><?php esc_html_e( 'A member sends you a new message', 'buddyboss' ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $new_messages, 'yes', true ); ?> />
-						<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+						<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 					</div>
 				</td>
 				<td class="no">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $new_messages, 'no', true ); ?> />
-						<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+						<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
 					</div>
 				</td>
 			</tr>
@@ -332,9 +332,50 @@ function messages_screen_notification_settings() {
 			 */
 			do_action( 'messages_screen_notification_settings' );
 			?>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
 
-	<?php
+		<?php
+	}
+
 }
 add_action( 'bp_notification_settings', 'messages_screen_notification_settings', 2 );
+
+/**
+ * Add Notifications for the messages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $array Array of notifications.
+ *
+ * @return mixed
+ */
+function bb_message_register_notifications( $array ) {
+	$messages_notification = array(
+		'label'  => esc_html__( 'Messages', 'buddyboss' ),
+		'fields' => array(
+			array(
+				'key'         => 'notification_messages_new_message',
+				'label'       => esc_html__( 'A member sends you a new message', 'buddyboss' ),
+				'admin_label' => esc_html__( 'A member sends you a new message', 'buddyboss' ),
+				'default'     => 'yes',
+				'options'     => array(
+					array(
+						'name'  => esc_html__( 'Yes, send email', 'buddyboss' ),
+						'value' => 'yes',
+					),
+					array(
+						'name'  => esc_html__( 'No, do not send email', 'buddyboss' ),
+						'value' => 'no',
+					),
+				),
+			),
+		),
+	);
+
+	$array['messages'] = $messages_notification;
+
+	return $array;
+}
+
+// add_filter( 'bb_register_notification_preferences', 'bb_message_register_notifications', 11, 1 );

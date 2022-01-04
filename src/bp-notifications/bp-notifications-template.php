@@ -1049,7 +1049,7 @@ function bp_notifications_bulk_management_dropdown() {
  * @return void
  */
 function bb_on_screen_notification_template() {
-	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
+	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	if ( empty( $is_on_screen_notification_enable ) ) {
 		return;

@@ -325,7 +325,7 @@ function bp_get_member_invitation_subject() {
 	);
 	$query = new WP_Query( $args );
 
-	$title = bp_get_member_invites_wildcard_replace( $query->posts[0]->post_title );
+	$title = bp_get_member_invites_wildcard_replace( ( $query->posts ? $query->posts[0]->post_title : '' ) );
 
 	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $title ) );
 }
@@ -375,10 +375,14 @@ function bp_get_member_invitation_message() {
 
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
-	if ( $must_use_wpmail ) {
-		$text = $query->posts[0]->post_excerpt;
-	} else {
-		$text = $query->posts[0]->post_content;
+	$text = '';
+
+	if ( $query->posts ) {
+		if ( $must_use_wpmail ) {
+			$text = $query->posts[0]->post_excerpt;
+		} else {
+			$text = $query->posts[0]->post_content;
+		}
 	}
 
 	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );

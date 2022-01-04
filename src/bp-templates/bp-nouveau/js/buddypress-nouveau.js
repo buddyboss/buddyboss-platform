@@ -67,6 +67,9 @@ window.bp = window.bp || {};
 			// Legal agreement enable/disabled submit button.
 			this.enableSubmitOnLegalAgreement();
 
+			// Profile Notification setting
+			this.profileNotificationSetting();
+
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -2690,6 +2693,32 @@ window.bp = window.bp || {};
 					$( '[data-bp-scope="' + hash_text + '"] a' ).trigger( 'click' );
 					return false;
 				}
+			}
+		},
+
+		/**
+		 *  handle profile notification setting events
+		 */
+		 profileNotificationSetting: function () {
+			this.profileNotificationSettingInputs(['.email', '.web', '.app'] );
+		},
+		/**
+		 *  Enable Disable profile notification setting inputs
+		 */
+		profileNotificationSettingInputs: function ( node ) {
+			for(var i = 0; i < node.length; i++){
+				/* jshint ignore:start */
+				(function (_i) {
+					$( document ).on( 'click', '.main-notification-settings th' + node[_i] + ' input[type="checkbox"]', function() {
+						if( $( this ).is( ':checked' ) ) {
+							$( this ).closest( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' );
+						} else {
+							$( this ).closest( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' );
+							
+						}
+					});
+				})(i);
+				/* jshint ignore:end */
 			}
 		}
 	};
