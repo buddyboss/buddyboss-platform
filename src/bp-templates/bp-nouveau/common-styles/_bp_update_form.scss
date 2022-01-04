@@ -1557,6 +1557,7 @@ div[class*="attached-gif-container"] {
 	border-radius: 4px;
 	box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 	padding-bottom: 10px;
+	border: 1px solid #e7e9ec;
 
 	&.open {
 		display: block;
@@ -1576,7 +1577,7 @@ div[class*="attached-gif-container"] {
 	background-color: #fff;
 	border-radius: 4px 4px 0 0;
 	position: relative;
-	padding: 5px 10px;
+	padding: 5px 10px 3px;
 	margin: 0;
 	border-bottom: 1px solid #e7e9ec;
 
