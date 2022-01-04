@@ -1,14 +1,14 @@
-# Copyright (C) 2021 BuddyBoss
+# Copyright (C) 2022 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-27 11:24:32+00:00\n"
+"POT-Creation-Date: 2022-01-04 09:21:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -170,10 +170,10 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:241 bp-activity/bp-activity-admin.php:297
-#: bp-core/admin/bp-core-admin-functions.php:935
-#: bp-core/admin/bp-core-admin-functions.php:954
-#: bp-core/admin/bp-core-admin-functions.php:973
-#: bp-core/admin/bp-core-admin-functions.php:992 bp-forums/admin/forums.php:151
+#: bp-core/admin/bp-core-admin-functions.php:934
+#: bp-core/admin/bp-core-admin-functions.php:953
+#: bp-core/admin/bp-core-admin-functions.php:972
+#: bp-core/admin/bp-core-admin-functions.php:991 bp-forums/admin/forums.php:151
 #: bp-forums/admin/replies.php:133 bp-forums/admin/settings.php:1539
 #: bp-forums/admin/topics.php:134 bp-groups/bp-groups-admin.php:151
 #: bp-groups/bp-groups-admin.php:217
@@ -233,10 +233,10 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:262 bp-activity/bp-activity-admin.php:317
-#: bp-core/admin/bp-core-admin-functions.php:942
-#: bp-core/admin/bp-core-admin-functions.php:961
-#: bp-core/admin/bp-core-admin-functions.php:980
-#: bp-core/admin/bp-core-admin-functions.php:999 bp-forums/admin/forums.php:200
+#: bp-core/admin/bp-core-admin-functions.php:941
+#: bp-core/admin/bp-core-admin-functions.php:960
+#: bp-core/admin/bp-core-admin-functions.php:979
+#: bp-core/admin/bp-core-admin-functions.php:998 bp-forums/admin/forums.php:200
 #: bp-forums/admin/forums.php:269 bp-forums/admin/replies.php:185
 #: bp-forums/admin/replies.php:252 bp-forums/admin/settings.php:1592
 #: bp-forums/admin/topics.php:187 bp-forums/admin/topics.php:252
@@ -250,15 +250,14 @@ msgid "For more information:"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:263 bp-activity/bp-activity-admin.php:318
-#: bp-core/admin/bp-core-admin-functions.php:943
-#: bp-core/admin/bp-core-admin-functions.php:962
-#: bp-core/admin/bp-core-admin-functions.php:981
-#: bp-core/admin/bp-core-admin-functions.php:1000
-#: bp-forums/admin/forums.php:201 bp-forums/admin/forums.php:270
-#: bp-forums/admin/replies.php:186 bp-forums/admin/replies.php:253
-#: bp-forums/admin/settings.php:1593 bp-forums/admin/topics.php:188
-#: bp-forums/admin/topics.php:253 bp-groups/bp-groups-admin.php:161
-#: bp-groups/bp-groups-admin.php:237
+#: bp-core/admin/bp-core-admin-functions.php:942
+#: bp-core/admin/bp-core-admin-functions.php:961
+#: bp-core/admin/bp-core-admin-functions.php:980
+#: bp-core/admin/bp-core-admin-functions.php:999 bp-forums/admin/forums.php:201
+#: bp-forums/admin/forums.php:270 bp-forums/admin/replies.php:186
+#: bp-forums/admin/replies.php:253 bp-forums/admin/settings.php:1593
+#: bp-forums/admin/topics.php:188 bp-forums/admin/topics.php:253
+#: bp-groups/bp-groups-admin.php:161 bp-groups/bp-groups-admin.php:237
 #: bp-members/classes/class-bp-members-admin.php:937
 #: bp-members/classes/class-bp-members-admin.php:1846
 msgid "<a href=\"https://www.buddyboss.com/resources/\">Documentation</a>"
@@ -386,7 +385,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:678
 #: bp-activity/classes/class-bp-akismet.php:211
 #: bp-activity/classes/class-bp-akismet.php:242
-#: bp-core/admin/bp-core-admin-functions.php:1536
+#: bp-core/admin/bp-core-admin-functions.php:1543
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
 #: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2332
 #: bp-forums/topics/template.php:3232
@@ -678,7 +677,7 @@ msgstr ""
 #: bp-activity/bp-activity-functions.php:1162
 #: bp-activity/bp-activity-functions.php:1173
 #: bp-activity/bp-activity-functions.php:1186
-#: bp-activity/bp-activity-functions.php:1194 bp-core/bp-core-catchuri.php:1528
+#: bp-activity/bp-activity-functions.php:1194 bp-core/bp-core-catchuri.php:1529
 msgid "and"
 msgstr ""
 
@@ -708,7 +707,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1264
 #: bp-core/admin/bp-core-admin-functions.php:685
-#: bp-core/admin/bp-core-admin-functions.php:2435
+#: bp-core/admin/bp-core-admin-functions.php:2456
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:222
 #: bp-core/admin/bp-core-admin-tools.php:863
@@ -1040,7 +1039,7 @@ msgid "Delete"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2896 bp-blogs/bp-blogs-filters.php:161
-#: bp-core/admin/bp-core-admin-functions.php:1567
+#: bp-core/admin/bp-core-admin-functions.php:1582
 #: bp-core/admin/bp-core-admin-pages.php:348
 #: bp-core/admin/bp-core-admin-pages.php:382
 #: bp-core/deprecated/buddyboss/1.0.php:75
@@ -1261,7 +1260,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:381
 #: bp-activity/classes/class-bp-activity-list-table.php:676
-#: bp-core/admin/bp-core-admin-functions.php:1533
+#: bp-core/admin/bp-core-admin-functions.php:1540
 msgid "Not Spam"
 msgstr ""
 
@@ -1636,8 +1635,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:182
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:606
-#: bp-templates/bp-nouveau/includes/media/functions.php:236
-#: bp-templates/bp-nouveau/includes/video/functions.php:211
+#: bp-templates/bp-nouveau/includes/media/functions.php:238
+#: bp-templates/bp-nouveau/includes/video/functions.php:212
 msgid "My Groups"
 msgstr ""
 
@@ -1811,9 +1810,9 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1844
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:479
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1436
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1438
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:298
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1191
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1192
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2159
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:981
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
@@ -1826,9 +1825,9 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1852
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:487
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1444
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1446
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:306
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1199
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1200
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2166
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:989
 #. translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in
@@ -1850,7 +1849,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1885
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:599
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1211
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1288
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1296
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:824
 msgid "Ensure result set excludes specific IDs."
 msgstr ""
@@ -1859,7 +1858,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:531
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1202
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1789
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1279
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1287
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1492
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:833
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1491
@@ -1869,7 +1868,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1903
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1683
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1131
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1497
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1513
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:622
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1153
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1713
@@ -1896,8 +1895,8 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1936
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1122
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1596
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1320
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1612
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1328
 msgid "Limit result set to items with a specific scope."
 msgstr ""
 
@@ -2056,7 +2055,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-widget.php:159
 #: bp-members/bp-members-template.php:1016
 #: bp-members/bp-members-template.php:1690
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1467
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1475
 #: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:54
 #. translators: last active format.
 #. translators: %s = last activity timestamp (e.g. "active 1 hour ago")
@@ -2064,7 +2063,7 @@ msgid "active %s"
 msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:659 bp-members/bp-members-template.php:1034
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1485
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1493
 msgid "Never active"
 msgstr ""
 
@@ -2598,7 +2597,7 @@ msgstr ""
 msgid "Credits"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1025
+#: bp-core/admin/bp-core-admin-functions.php:1024
 msgid ""
 "By default, several BuddyBoss components are enabled. You can selectively "
 "enable or disable any of the components by using the form below. Your "
@@ -2607,26 +2606,26 @@ msgid ""
 "site."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1029
+#: bp-core/admin/bp-core-admin-functions.php:1028
 msgid ""
 "BuddyBoss Components use WordPress Pages for their root directory/archive "
 "pages. You can change the page associations for each active component by "
 "using the form below."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1033
+#: bp-core/admin/bp-core-admin-functions.php:1032
 msgid ""
 "Extra configuration settings are provided and activated. You can "
 "selectively enable or disable any setting by using the form on this screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1037
+#: bp-core/admin/bp-core-admin-functions.php:1036
 msgid ""
 "Your users will distinguish themselves through their profile page. Create "
 "relevant profile fields that will show on each users profile."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1037
+#: bp-core/admin/bp-core-admin-functions.php:1036
 msgid "Note: Any fields in the first group will appear on the signup page."
 msgstr ""
 
@@ -2634,71 +2633,71 @@ msgstr ""
 msgid "BuddyBoss"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1232
-#: bp-core/admin/bp-core-admin-functions.php:1241
+#: bp-core/admin/bp-core-admin-functions.php:1234
+#: bp-core/admin/bp-core-admin-functions.php:1243
 msgid "Logged-In"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1235
-#: bp-core/admin/bp-core-admin-functions.php:1250
+#: bp-core/admin/bp-core-admin-functions.php:1237
+#: bp-core/admin/bp-core-admin-functions.php:1252
 msgid "Logged-Out"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1242
+#: bp-core/admin/bp-core-admin-functions.php:1244
 msgid ""
 "<em>Logged-In</em> links are relative to the current user, and are not "
 "visible to visitors who are not logged in."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1251
+#: bp-core/admin/bp-core-admin-functions.php:1253
 msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1284
+#: bp-core/admin/bp-core-admin-functions.php:1286
 #: bp-search/bp-search-settings.php:486 bp-search/bp-search-settings.php:500
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:14
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:62
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:36
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:39
-#: bp-templates/bp-nouveau/includes/media/functions.php:184
-#: bp-templates/bp-nouveau/includes/video/functions.php:148
+#: bp-templates/bp-nouveau/includes/media/functions.php:186
+#: bp-templates/bp-nouveau/includes/video/functions.php:149
 msgid "Select All"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1294
+#: bp-core/admin/bp-core-admin-functions.php:1296
 msgid "Add to Menu"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1324
+#: bp-core/admin/bp-core-admin-functions.php:1326
 msgid ""
 "Are these emails not written in your site's language? Go to <a "
 "href=\"%s\">BuddyBoss Tools and try the \"reinstall emails\"</a> tool."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1349
+#: bp-core/admin/bp-core-admin-functions.php:1356
 msgid ""
 "Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a "
 "href=\"%s\">Learn about email tokens</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1410
+#: bp-core/admin/bp-core-admin-functions.php:1417
 msgid "Choose when this email will be sent."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1423
-#: bp-core/admin/bp-core-admin-functions.php:1443
+#: bp-core/admin/bp-core-admin-functions.php:1430
+#: bp-core/admin/bp-core-admin-functions.php:1450
 #. translators: accessibility text
 msgid "Plain text email content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1449
+#: bp-core/admin/bp-core-admin-functions.php:1456
 msgid ""
 "Most email clients support HTML email. However, some people prefer to "
 "receive plain text email. Enter a plain text alternative version of your "
 "email here."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1548
+#: bp-core/admin/bp-core-admin-functions.php:1558
 #: bp-moderation/bp-moderation-admin.php:49
 #: bp-moderation/classes/class-bp-moderation-list-table.php:407
 #: bp-moderation/classes/class-bp-moderation-list-table.php:412
@@ -2707,7 +2706,7 @@ msgstr ""
 msgid "Unsuspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1560
+#: bp-core/admin/bp-core-admin-functions.php:1574
 #: bp-members/classes/class-bp-members-admin.php:1251
 #: bp-moderation/bp-moderation-admin.php:48
 #: bp-moderation/classes/class-bp-moderation-list-table.php:409
@@ -2717,34 +2716,34 @@ msgstr ""
 msgid "Suspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1622
+#: bp-core/admin/bp-core-admin-functions.php:1637
 msgid "Member suspended."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1624
+#: bp-core/admin/bp-core-admin-functions.php:1639
 msgid "Member unsuspended."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1697
+#: bp-core/admin/bp-core-admin-functions.php:1712
 #: bp-groups/bp-groups-admin.php:1953
 msgid "Labels"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1698
+#: bp-core/admin/bp-core-admin-functions.php:1713
 #: bp-groups/bp-groups-admin.php:1954
 msgid "Permissions"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1699
+#: bp-core/admin/bp-core-admin-functions.php:1714
 msgid "WordPress Role"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1701
+#: bp-core/admin/bp-core-admin-functions.php:1716
 #: bp-groups/bp-groups-admin.php:1956
 msgid "Shortcode"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1728
+#: bp-core/admin/bp-core-admin-functions.php:1743
 #: bp-members/bp-members-functions.php:3072
 #: bp-members/bp-members-functions.php:3577
 #: bp-members/classes/class-bp-members-admin.php:989
@@ -2754,80 +2753,93 @@ msgstr ""
 msgid "Profile Type"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1735
+#: bp-core/admin/bp-core-admin-functions.php:1750
 #: bp-groups/bp-groups-admin.php:1988 bp-groups/bp-groups-admin.php:2033
 #: bp-groups/bp-groups-admin.php:2061 bp-groups/bp-groups-admin.php:2089
 msgid "Plural Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1739
+#: bp-core/admin/bp-core-admin-functions.php:1754
 msgid "e.g. Students"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1745
+#: bp-core/admin/bp-core-admin-functions.php:1760
 #: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-admin.php:2041
 #: bp-groups/bp-groups-admin.php:2069 bp-groups/bp-groups-admin.php:2097
 msgid "Singular Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1749
+#: bp-core/admin/bp-core-admin-functions.php:1764
 msgid "e.g. Student"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1782
+#: bp-core/admin/bp-core-admin-functions.php:1794
 #: bp-members/bp-members-functions.php:3580
 msgid "Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1797
+#: bp-core/admin/bp-core-admin-functions.php:1809
 msgid "Display this profile type in \"Types\" filter in Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1813
+#: bp-core/admin/bp-core-admin-functions.php:1825
 msgid "Hide all members of this type from Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1821
+#: bp-core/admin/bp-core-admin-functions.php:1826
+msgid ""
+"Enabling this option hides all members with this profile type from the "
+"members directory, including the \"Members\" and \"Recently Active "
+"Members\" widgets."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:1840
 msgid "Hide all members of this type from Network Search results"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1832
+#: bp-core/admin/bp-core-admin-functions.php:1841
+msgid ""
+"Enabling this option hides all members with this profile type from network "
+"search results."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:1854
 msgid "Profile Field"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1841
+#: bp-core/admin/bp-core-admin-functions.php:1863
 #: bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php:397
 msgid ""
 "Allow users to self-select as this profile type from the \"Profile Type\" "
 "profile field dropdown."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1859
+#: bp-core/admin/bp-core-admin-functions.php:1881
 msgid "Group Type Creation"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1867
+#: bp-core/admin/bp-core-admin-functions.php:1889
 msgid ""
 "Select which group types this profile type is allowed to create. (Leave all "
 "unchecked to allow creation of any group type.)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1899
+#: bp-core/admin/bp-core-admin-functions.php:1921
 msgid "(None - hide group type option)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1976
+#: bp-core/admin/bp-core-admin-functions.php:1998
 msgid "Group Type Membership Approval"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1983
+#: bp-core/admin/bp-core-admin-functions.php:2005
 msgid ""
 "Automatically add members of this profile type to the following group "
 "types, after they have registerd and activated their account. This setting "
 "does not apply to hidden groups."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2025
+#: bp-core/admin/bp-core-admin-functions.php:2047
 #: bp-core/bp-core-functions.php:2644 bp-invites/bp-invites-functions.php:59
 #: bp-invites/classes/class-bp-invites-component.php:216
 #: bp-invites/classes/class-bp-invites-component.php:283
@@ -2835,35 +2847,35 @@ msgstr ""
 msgid "Email Invites"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2033
+#: bp-core/admin/bp-core-admin-functions.php:2055
 msgid ""
 "Allow members to select the profile type that the invited recipient will be "
 "automatically assigned to on registration. If checked, select which of the "
 "below profile types can be assigned to the recipient:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2078
+#: bp-core/admin/bp-core-admin-functions.php:2100
 msgid ""
 "To display all users with this profile type on a dedicated page, add the "
 "below shortcode to any WordPress page."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2081
+#: bp-core/admin/bp-core-admin-functions.php:2103
 #: bp-groups/bp-groups-admin.php:2294 bp-members/bp-members-functions.php:3831
 msgid "Copy to clipboard"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2109
+#: bp-core/admin/bp-core-admin-functions.php:2131
 msgid ""
 "Users of this profile type will be auto-assigned to the following WordPress "
 "roles (includes existing users):"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2117
+#: bp-core/admin/bp-core-admin-functions.php:2139
 msgid "(None)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2263
+#: bp-core/admin/bp-core-admin-functions.php:2284
 msgid ""
 "As your profile is currently assigned to this profile type, you cannot "
 "change its associated WordPress role. Changing this setting would remove "
@@ -2873,36 +2885,36 @@ msgid ""
 "WordPress role."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2349
-#: bp-core/admin/bp-core-admin-functions.php:2351
+#: bp-core/admin/bp-core-admin-functions.php:2370
+#: bp-core/admin/bp-core-admin-functions.php:2372
 msgid "Profile type updated."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2353
+#: bp-core/admin/bp-core-admin-functions.php:2374
 msgid "Profile type published. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2355
+#: bp-core/admin/bp-core-admin-functions.php:2376
 msgid "Profile type saved."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2410
-#: bp-core/admin/bp-core-admin-functions.php:2411
-#: bp-core/admin/bp-core-admin-functions.php:2973
-#: bp-core/admin/bp-core-admin-functions.php:2991
-#: bp-core/admin/bp-core-admin-functions.php:2992
+#: bp-core/admin/bp-core-admin-functions.php:2431
+#: bp-core/admin/bp-core-admin-functions.php:2432
+#: bp-core/admin/bp-core-admin-functions.php:3006
+#: bp-core/admin/bp-core-admin-functions.php:3024
+#: bp-core/admin/bp-core-admin-functions.php:3025
 #: bp-core/admin/bp-core-admin-tools.php:232
 msgid "Repair Community"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2447
-#: bp-core/admin/bp-core-admin-functions.php:2956
-#: bp-core/admin/bp-core-admin-functions.php:3000
-#: bp-core/admin/bp-core-admin-functions.php:3001
+#: bp-core/admin/bp-core-admin-functions.php:2468
+#: bp-core/admin/bp-core-admin-functions.php:2985
+#: bp-core/admin/bp-core-admin-functions.php:3033
+#: bp-core/admin/bp-core-admin-functions.php:3034
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2451
+#: bp-core/admin/bp-core-admin-functions.php:2472
 msgid ""
 "Import your existing <a href=\"%s\">profile types</a> (or \"member types\" "
 "in BuddyPress). You may have created these types <strong>manually via "
@@ -2911,25 +2923,25 @@ msgid ""
 "Then you can remove the old code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2461
+#: bp-core/admin/bp-core-admin-functions.php:2482
 #: bp-media/bp-media-filters.php:1456
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2493
+#: bp-core/admin/bp-core-admin-functions.php:2514
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2525
+#: bp-core/admin/bp-core-admin-functions.php:2546
 msgid "Successfully Imported"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2618
+#: bp-core/admin/bp-core-admin-functions.php:2639
 msgid "Added successfully"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2671
-#: bp-core/admin/bp-core-admin-functions.php:2844
+#: bp-core/admin/bp-core-admin-functions.php:2692
+#: bp-core/admin/bp-core-admin-functions.php:2865
 #: bp-core/bp-core-functions.php:3278 bp-core/classes/class-bp-admin.php:646
 #: bp-core/classes/class-bp-admin.php:647
 #: bp-core/classes/class-bp-admin.php:657
@@ -2939,14 +2951,14 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2752
+#: bp-core/admin/bp-core-admin-functions.php:2773
 #: bp-groups/bp-groups-admin.php:610
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:532
 #: bp-templates/bp-nouveau/includes/groups/functions.php:577
 msgid "All Groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2766
+#: bp-core/admin/bp-core-admin-functions.php:2787
 #: bp-core/admin/settings/bp-admin-setting-groups.php:54
 #: bp-core/admin/settings/bp-admin-setting-groups.php:57
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
@@ -2956,41 +2968,41 @@ msgstr ""
 msgid "Group Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2776
+#: bp-core/admin/bp-core-admin-functions.php:2797
 #: bp-templates/bp-nouveau/includes/groups/functions.php:775
 msgid "Group Navigation"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2850
+#: bp-core/admin/bp-core-admin-functions.php:2871
 msgid "Customize Layout"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2933
+#: bp-core/admin/bp-core-admin-functions.php:2958
 #: bp-core/admin/bp-core-admin-tools.php:44
 msgid "Default Data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3010 bp-forums/admin/admin.php:208
+#: bp-core/admin/bp-core-admin-functions.php:3043 bp-forums/admin/admin.php:208
 #: bp-forums/admin/functions.php:239 bp-forums/admin/functions.php:271
 #: bp-forums/admin/tools.php:40
 msgid "Repair Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3011 bp-forums/admin/admin.php:209
+#: bp-core/admin/bp-core-admin-functions.php:3044 bp-forums/admin/admin.php:209
 msgid "Forum Repair"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3019 bp-forums/admin/admin.php:219
+#: bp-core/admin/bp-core-admin-functions.php:3052 bp-forums/admin/admin.php:219
 #: bp-forums/admin/converter.php:146 bp-forums/admin/functions.php:243
 #: bp-forums/admin/functions.php:293
 msgid "Import Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3020 bp-forums/admin/admin.php:220
+#: bp-core/admin/bp-core-admin-functions.php:3053 bp-forums/admin/admin.php:220
 msgid "Forum Import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3214
+#: bp-core/admin/bp-core-admin-functions.php:3251
 #: bp-moderation/bp-moderation-admin.php:384
 #: bp-moderation/bp-moderation-admin.php:460
 #: bp-settings/classes/class-bp-settings-component.php:187
@@ -2999,7 +3011,7 @@ msgstr ""
 msgid "Blocked Members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3226
+#: bp-core/admin/bp-core-admin-functions.php:3263
 #: bp-moderation/bp-moderation-admin.php:382
 #: bp-moderation/bp-moderation-admin.php:458
 #: bp-moderation/screens/single/admin/report-single.php:24
@@ -3007,7 +3019,7 @@ msgstr ""
 msgid "Reported Content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3235
+#: bp-core/admin/bp-core-admin-functions.php:3277
 #: bp-moderation/bp-moderation-admin.php:573
 #: bp-moderation/bp-moderation-settings.php:104
 #: bp-moderation/classes/class-bp-moderation-component.php:180
@@ -3226,7 +3238,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:125
 msgid ""
 "Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible "
-"always. Enter one URL or URI per line. "
+"always. Enter one URL or URI per line."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:164
@@ -3612,7 +3624,7 @@ msgstr ""
 msgid ""
 "Enter REST API endpoints URLs or URI fragments (e.g. "
 "wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
-"one URL or URI per line. "
+"one URL or URI per line."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1670
@@ -4982,8 +4994,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:16
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:18
-#: bp-templates/bp-nouveau/includes/media/functions.php:187
-#: bp-templates/bp-nouveau/includes/video/functions.php:151
+#: bp-templates/bp-nouveau/includes/media/functions.php:189
+#: bp-templates/bp-nouveau/includes/video/functions.php:152
 msgid "Upload"
 msgstr ""
 
@@ -5065,8 +5077,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1263 bp-core/bp-core-functions.php:6084
-#: bp-core/bp-core-functions.php:6100
+#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:6097
 msgid "Please login to access this website."
 msgstr ""
 
@@ -5074,9 +5085,9 @@ msgstr ""
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1279 bp-core/bp-core-catchuri.php:1295
-#: bp-core/bp-core-catchuri.php:1315 bp-core/bp-core-catchuri.php:1332
-#: bp-core/bp-core-catchuri.php:1354 bp-core/bp-core-catchuri.php:1374
+#: bp-core/bp-core-catchuri.php:1280 bp-core/bp-core-catchuri.php:1296
+#: bp-core/bp-core-catchuri.php:1316 bp-core/bp-core-catchuri.php:1333
+#: bp-core/bp-core-catchuri.php:1355 bp-core/bp-core-catchuri.php:1375
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -5153,6 +5164,8 @@ msgid "Upload canceled."
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:301
+#: bp-templates/bp-nouveau/includes/media/functions.php:150
+#: bp-templates/bp-nouveau/includes/video/functions.php:135
 msgid "Are you sure you want to cancel this upload?"
 msgstr ""
 
@@ -5397,7 +5410,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-core/bp-core-functions.php:1642
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1475
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1483
 msgid "Not recently active"
 msgstr ""
 
@@ -5629,12 +5642,12 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:343
 #: bp-media/classes/class-bp-media-component.php:374
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1195
-#: bp-templates/bp-nouveau/includes/media/functions.php:224
+#: bp-templates/bp-nouveau/includes/media/functions.php:226
 msgid "My Photos"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2946
-#: bp-templates/bp-nouveau/includes/video/functions.php:199
+#: bp-templates/bp-nouveau/includes/video/functions.php:200
 #: bp-video/classes/class-bp-video-component.php:287
 #: bp-video/classes/class-bp-video-component.php:307
 msgid "My Videos"
@@ -6555,7 +6568,7 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6139
+#: bp-core/bp-core-functions.php:6135
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
@@ -6738,22 +6751,22 @@ msgid "Site-Wide Activity"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1249
-#: bp-templates/bp-nouveau/includes/video/functions.php:299
+#: bp-templates/bp-nouveau/includes/video/functions.php:300
 msgid "MP4"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1257
-#: bp-templates/bp-nouveau/includes/video/functions.php:307
+#: bp-templates/bp-nouveau/includes/video/functions.php:308
 msgid "WebM"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1265
-#: bp-templates/bp-nouveau/includes/video/functions.php:315
+#: bp-templates/bp-nouveau/includes/video/functions.php:316
 msgid "Ogg"
 msgstr ""
 
 #: bp-core/bp-core-update.php:1273
-#: bp-templates/bp-nouveau/includes/video/functions.php:323
+#: bp-templates/bp-nouveau/includes/video/functions.php:324
 msgid "Quicktime"
 msgstr ""
 
@@ -7693,7 +7706,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:744 bp-groups/bp-groups-template.php:749
 #: bp-groups/bp-groups-template.php:754 bp-groups/bp-groups-template.php:757
 #: bp-groups/bp-groups-template.php:768 bp-groups/bp-groups-template.php:857
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1847
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1863
 #: bp-moderation/classes/class-bp-moderation-groups.php:234
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:61
 msgid "Group"
@@ -7805,7 +7818,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php:70
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:225
 #: bp-members/classes/class-bp-rest-members-endpoint.php:85
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1048
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1049
 msgid "A unique numeric ID for the Member."
 msgstr ""
 
@@ -7853,38 +7866,38 @@ msgstr ""
 msgid "Description of the setting."
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:276
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:281
 #: bp-moderation/screens/block-member-form.php:33
 msgid "See blocked member's posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:279
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:284
 #: bp-moderation/screens/block-member-form.php:39
 msgid "Mention this member in posts"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:282
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:287
 #: bp-moderation/screens/block-member-form.php:45
 msgid "Invite this member to groups"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:286
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:291
 #: bp-moderation/screens/block-member-form.php:52
 msgid "Message this member"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:290
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:295
 #: bp-moderation/screens/block-member-form.php:59
 msgid "Add this member as a connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:295
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:300
 msgid ""
 "This action will also remove this member from your connections and send a "
 "report to the site admin. "
 msgstr ""
 
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:298
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:303
 #: bp-moderation/screens/block-member-form.php:71
 msgid "Please allow a few minutes for this process to complete."
 msgstr ""
@@ -9385,8 +9398,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:381
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:62
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:60
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1157
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1199
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1159
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1201
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:938
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1062
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1186
@@ -11248,7 +11261,7 @@ msgid "Ready to go."
 msgstr ""
 
 #: bp-forums/admin/settings.php:1497
-#: bp-templates/bp-nouveau/includes/video/functions.php:161
+#: bp-templates/bp-nouveau/includes/video/functions.php:162
 msgid "Pause"
 msgstr ""
 
@@ -15796,7 +15809,7 @@ msgid "Whether to force friendship acceptance."
 msgstr ""
 
 #: bp-friends/classes/class-bp-rest-friends-endpoint.php:868
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1165
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1166
 msgid "A unique numeric ID for the friendship."
 msgstr ""
 
@@ -17329,7 +17342,7 @@ msgid ""
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1033
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1381
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1383
 msgid "Current member's role label in the group."
 msgstr ""
 
@@ -17762,194 +17775,202 @@ msgstr ""
 msgid "Sorry, you are not allowed to delete this group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1115
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1117
 msgid "Set type(s) for a group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1131
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1133
 msgid "Append type(s) for a group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1143
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1145
 msgid "Remove type(s) for a group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1165
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1167
 msgid "Delete the Group forum if exist."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1205
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1207
 msgid "The ID of the user who created the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1211
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1213
 msgid "The name of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1220
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1222
 msgid "The URL-friendly slug for the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1229
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1231
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2192
 msgid "The permalink to the Group on the site."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1236
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1238
 msgid "The description of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1247
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1249
 msgid "Content for the description of the Group, as it exists in the database."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1252
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1254
 msgid "HTML content for the description of the Group, transformed for display."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1261
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1263
 msgid "The status of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1271
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1580
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1273
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1596
 msgid "Whether the Group has a forum enabled or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1276
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1278
 msgid "ID of the parent Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1281
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1283
 msgid "The date the Group was created, in the site's timezone."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1288
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1290
 msgid "The type(s) of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1298
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1300
 msgid "Name of the group type."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1304
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1306
 msgid "Sub Groups id if having a sub groups."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1313
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1315
 msgid "Group administrators."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1322
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1324
 msgid "Group moderators."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1331
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1333
 msgid "Count of all Group members."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1337
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1339
 msgid "The date the Group was last active, in the site's timezone."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1345
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1347
 msgid "The current user is member of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1351
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1353
 msgid "Return's invite ID if current user is invited for a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1357
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1359
 msgid "Return's request ID if invitation is pending for a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1363
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1365
 msgid "The current user is admin of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1369
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1371
 msgid "The current user is moderator of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1375
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1377
 msgid "Members count of the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1387
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1389
 msgid "Current member's role label in the plural form in the group"
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1393
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1395
 msgid "Check current user can join or request access."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1399
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1401
 msgid "Check current user can post activity or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1405
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1407
 msgid "Forum id of the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1411
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1413
 msgid "Whether the user has permission to upload media to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1417
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1419
 msgid "Whether the user has permission to upload video to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1423
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1425
 msgid "Whether the user has permission to upload document to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1451
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1453
+msgid "Whether to check group has default avatar or not."
+msgstr ""
+
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1460
 msgid "Avatar URLs for the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1461
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1470
 msgid "Cover Image URLs for the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1488
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1253
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1478
+msgid "Whether to check the default cover image or not."
+msgstr ""
+
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1504
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1261
 msgid "Shorthand for certain orderby/order combinations."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1506
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1522
 msgid "Order Groups by which attribute."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1515
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1531
 msgid "Group statuses to limit results to."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1527
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1543
 msgid "Pass a user_id to limit to only Groups that this user is a member of."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1535
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1551
 msgid "Get Groups that are children of the specified Group(s) IDs."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1545
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1561
 msgid "Get Groups based on their meta data information."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1553
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1569
 msgid "Ensure result set includes Groups with specific IDs."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1562
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1578
 msgid "Ensure result set excludes Groups with specific IDs"
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1571
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1587
 msgid "Limit results set to a certain Group type."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1588
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1604
 msgid "Whether results should include hidden Groups."
 msgstr ""
 
@@ -20017,7 +20038,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1178
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1731
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1262
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1270
 msgid "Limit results to friends of a user."
 msgstr ""
 
@@ -21048,52 +21069,52 @@ msgid "Object of member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:231
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1054
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1055
 msgid "Display name for the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:239
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1062
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1063
 msgid "The name used for that user in @-mentions."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:247
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1070
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1071
 msgid "Profile URL of the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:254
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1077
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1078
 msgid "An alphanumeric identifier for the Member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:263
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1086
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1087
 msgid "Member types associated with the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:269
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1140
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1141
 msgid "Member XProfile groups and its fields."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:275
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1158
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1159
 msgid "Friendship relation with, current, logged in user."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:282
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1177
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1178
 msgid "Check if a user is following or not."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:313
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1212
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1213
 msgid "Avatar URLs for the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:322
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1221
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1222
 msgid "Cover images URL for the member."
 msgstr ""
 
@@ -21211,79 +21232,83 @@ msgstr ""
 msgid "'%s' Transport method not implemented."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:918
+#: bp-members/classes/class-bp-rest-members-endpoint.php:919
 msgid "No extended profile data available as the component is inactive"
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:959
+#: bp-members/classes/class-bp-rest-members-endpoint.php:960
 msgid "The data for the user was not found."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:983
+#: bp-members/classes/class-bp-rest-members-endpoint.php:984
 msgid "Set type(s) for a member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1002
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1003
 msgid "The email address for the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1092
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1093
 msgid "Registration date for the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1099
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1100
 msgid "Password for the member (never included)."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1108
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1109
 msgid "Roles assigned to the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1116
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1117
 msgid "All capabilities assigned to the user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1122
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1123
 msgid "Any extra capabilities assigned to the user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1128
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1129
 msgid "Display name for the member based on the privacy setting."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1134
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1135
 msgid "Last Active time for the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1146
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1147
 msgid "Followers counts for the current user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1152
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1153
 msgid "Followings counts for the current user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1171
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1172
 msgid "Logged in user can create friendship with current user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1206
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1207
 msgid "Whether the member has a default avatar or not."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1270
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1229
+msgid "Whether to check member has default cover image or not."
+msgstr ""
+
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1278
 msgid "Pass IDs of users to limit result set."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1297
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1305
 msgid "Limit results set to certain type(s)."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1306
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1314
 msgid "Limit results set to a certain xProfile field."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1314
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1322
 msgid "Profile Search form field data(s)."
 msgstr ""
 
@@ -21819,9 +21844,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:116
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:199
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:105
-#: bp-templates/bp-nouveau/includes/media/functions.php:182
+#: bp-templates/bp-nouveau/includes/media/functions.php:184
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1446
-#: bp-templates/bp-nouveau/includes/video/functions.php:146
+#: bp-templates/bp-nouveau/includes/video/functions.php:147
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -23685,7 +23710,7 @@ msgstr ""
 msgid "Cache Purge Successfully"
 msgstr ""
 
-#: bp-performance/classes/integrations/class-integration-abstract.php:431
+#: bp-performance/classes/integrations/class-integration-abstract.php:432
 msgid "Sorry, something went wrong. Please try again later."
 msgstr ""
 
@@ -24474,6 +24499,10 @@ msgstr ""
 msgid "Following special characters are not supported: \\ / ? % * : | \" < >"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:15
+msgid "Folder Title"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:26
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:25
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:25
@@ -24931,6 +24960,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:45
 #: bp-templates/bp-nouveau/buddypress/video/create-album.php:49
 #: bp-templates/bp-nouveau/buddypress/video/index.php:51
+#: bp-templates/bp-nouveau/includes/media/functions.php:149
 msgid "Create Album"
 msgstr ""
 
@@ -24947,7 +24977,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:51
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1737
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1738
-#: bp-templates/bp-nouveau/includes/video/functions.php:152
+#: bp-templates/bp-nouveau/includes/video/functions.php:153
 msgid "Change Thumbnail"
 msgstr ""
 
@@ -26970,50 +27000,50 @@ msgstr ""
 msgid "You are allowed to upload only %s photos at a time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:183
-#: bp-templates/bp-nouveau/includes/video/functions.php:147
+#: bp-templates/bp-nouveau/includes/media/functions.php:185
+#: bp-templates/bp-nouveau/includes/video/functions.php:148
 msgid "Unselect"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:185
-#: bp-templates/bp-nouveau/includes/video/functions.php:149
+#: bp-templates/bp-nouveau/includes/media/functions.php:187
+#: bp-templates/bp-nouveau/includes/video/functions.php:150
 msgid "Unselect All"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:186
+#: bp-templates/bp-nouveau/includes/media/functions.php:188
 msgid "Sorry, no photos & videos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:186
+#: bp-templates/bp-nouveau/includes/media/functions.php:188
 msgid "Sorry, no photos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:188
-#: bp-templates/bp-nouveau/includes/video/functions.php:153
+#: bp-templates/bp-nouveau/includes/media/functions.php:190
+#: bp-templates/bp-nouveau/includes/video/functions.php:154
 msgid "Uploading"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:189
-#: bp-templates/bp-nouveau/includes/video/functions.php:154
+#: bp-templates/bp-nouveau/includes/media/functions.php:191
+#: bp-templates/bp-nouveau/includes/video/functions.php:155
 msgid "%1$d out of %2$d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:190
+#: bp-templates/bp-nouveau/includes/media/functions.php:192
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:191
-#: bp-templates/bp-nouveau/includes/video/functions.php:156
+#: bp-templates/bp-nouveau/includes/media/functions.php:193
+#: bp-templates/bp-nouveau/includes/video/functions.php:157
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:192
+#: bp-templates/bp-nouveau/includes/media/functions.php:194
 msgid "Are you sure you want to delete this media?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:213
+#: bp-templates/bp-nouveau/includes/media/functions.php:215
 msgid "All Photos"
 msgstr ""
 
@@ -27349,57 +27379,57 @@ msgstr ""
 msgid "You are allowed to upload only 1 thumb at a time."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:150
+#: bp-templates/bp-nouveau/includes/video/functions.php:151
 msgid "Sorry, no videos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:155
+#: bp-templates/bp-nouveau/includes/video/functions.php:156
 msgid ""
 "Are you sure you want to delete this album? Videos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:157
+#: bp-templates/bp-nouveau/includes/video/functions.php:158
 msgid "Are you sure you want to delete this video?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:158
+#: bp-templates/bp-nouveau/includes/video/functions.php:159
 msgid "Enlarge"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:159
+#: bp-templates/bp-nouveau/includes/video/functions.php:160
 msgid "Enter fullscreen"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:160
+#: bp-templates/bp-nouveau/includes/video/functions.php:161
 msgid "Play"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:162
+#: bp-templates/bp-nouveau/includes/video/functions.php:163
 msgid "Uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:163
+#: bp-templates/bp-nouveau/includes/video/functions.php:164
 msgid "Volume"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:164
+#: bp-templates/bp-nouveau/includes/video/functions.php:165
 msgid "Miniplayer"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:165
+#: bp-templates/bp-nouveau/includes/video/functions.php:166
 msgid "Speed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:166
+#: bp-templates/bp-nouveau/includes/video/functions.php:167
 msgid "Step Back (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:167
+#: bp-templates/bp-nouveau/includes/video/functions.php:168
 msgid "Step Forward (5)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/functions.php:188
+#: bp-templates/bp-nouveau/includes/video/functions.php:189
 msgid "All Videos"
 msgstr ""
 

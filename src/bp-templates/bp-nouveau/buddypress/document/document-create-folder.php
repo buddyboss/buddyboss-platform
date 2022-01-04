@@ -12,7 +12,7 @@
 <div class="create-popup-folder-wrap popup-on-fly-create-folder" style="display: none;">
 
 	<div class="bb-field-wrap">
-		<label for="new_folder_name_input" class="bb-label">Folder Title</label>
+		<label for="new_folder_name_input" class="bb-label"><?php esc_html_e( 'Folder Title', 'buddyboss' ); ?></label>
 		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>">
 		<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 	</div>
