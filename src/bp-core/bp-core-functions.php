@@ -6151,6 +6151,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
 	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+
 	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
 	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
