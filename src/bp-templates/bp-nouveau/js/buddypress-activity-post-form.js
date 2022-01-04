@@ -417,14 +417,7 @@ window.bp = window.bp || {};
 								$( '#whats-new-toolbar .post-video.video-support' ).show();
 							}
 
-							// check gif is enable in groups or not.
-							if ( ! _.isUndefined( BP_Nouveau.media.gif.groups ) && BP_Nouveau.media.gif.groups === false ) {
-								$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-								var gifCloseEvent = new Event( 'activity_gif_close' );
-								document.dispatchEvent( gifCloseEvent );
-							} else {
-								$( '#whats-new-toolbar .post-gif' ).show();
-							}
+							bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 
 							// check emoji is enable in groups or not.
 							if ( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups === false ) {
@@ -465,14 +458,7 @@ window.bp = window.bp || {};
 								$( '#whats-new-toolbar .post-video.video-support' ).show();
 							}
 
-							// check gif is enable in profile or not.
-							if ( ! _.isUndefined( BP_Nouveau.media.gif.profile ) && BP_Nouveau.media.gif.profile === false ) {
-								$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-								var gifProfileCloseEvent = new Event( 'activity_gif_close' );
-								document.dispatchEvent( gifProfileCloseEvent );
-							} else {
-								$( '#whats-new-toolbar .post-gif' ).show();
-							}
+							bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
 
 							// check emoji is enable in profile or not.
 							if ( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile === false ) {
@@ -2803,6 +2789,8 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', 'general' );
 
+				bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+
 				var whats_new_form = $( '#whats-new-form' );
 				whats_new_form.removeClass( 'focus-in--privacy focus-in--group' );
 
@@ -2819,6 +2807,8 @@ window.bp = window.bp || {};
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass( 'group-privacy-point-icon' ).addClass( 'privacy-point-icon' );
 					}
+
+					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 				}
 			},
 
@@ -3080,14 +3070,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 
-						// check gif is enable in groups or not.
-						if ( BP_Nouveau.media.gif.groups === false ) {							
-							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-							var gifCloseEvent = new Event( 'activity_gif_close' );
-							document.dispatchEvent( gifCloseEvent );
-						} else {
-							$( '#whats-new-toolbar .post-gif' ).show();
-						}
+						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 
 						// check emoji is enable in groups or not.
 						if ( BP_Nouveau.media.emoji.groups === false ) {
@@ -3125,14 +3108,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 
-						// check gif is enable in profile or not.
-						if ( BP_Nouveau.media.gif.profile === false ) {
-							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-							var gifCloseEvent2 = new Event( 'activity_gif_close' );
-							document.dispatchEvent( gifCloseEvent2 );
-						} else {
-							$( '#whats-new-toolbar .post-gif' ).show();
-						}
+						bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
 
 						// check emoji is enable in profile or not.
 						if ( BP_Nouveau.media.emoji.profile === false ) {
@@ -4354,14 +4330,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 
-						// check gif is enable in groups or not.
-						if ( BP_Nouveau.media.gif.groups === false ) {
-							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-							var gifCloseEvent = new Event( 'activity_gif_close' );
-							document.dispatchEvent( gifCloseEvent );
-						} else {
-							$( '#whats-new-toolbar .post-gif' ).show();
-						}
+						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 
 						// check emoji is enable in groups or not.
 						if ( BP_Nouveau.media.emoji.groups === false ) {
@@ -4399,14 +4368,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 
-						// check gif is enable in profile or not.
-						if ( BP_Nouveau.media.gif.profile === false ) {
-							$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-							var gifCloseEvent2 = new Event( 'activity_gif_close' );
-							document.dispatchEvent( gifCloseEvent2 );
-						} else {
-							$( '#whats-new-toolbar .post-gif' ).show();
-						}
+						bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
 
 						// check emoji is enable in profile or not.
 						if ( BP_Nouveau.media.emoji.profile === false ) {
@@ -4486,6 +4448,36 @@ window.bp = window.bp || {};
 				placeholder: BP_Nouveau.activity.strings.whatsnewPlaceholder,
 				'aria-label': BP_Nouveau.activity.strings.whatsnewLabel,
 				contenteditable: true,
+			},
+		}
+	);
+
+	bp.Views.PostGifProfile = bp.View.extend(
+		{
+			initialize: function () {
+				// check gif is enable in profile or not.
+				if ( ( ! _.isUndefined( BP_Nouveau.media.gif.profile ) && BP_Nouveau.media.gif.profile === false ) || BP_Nouveau.media.gif_api_key === '' ) {
+					$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
+					var gifCloseEvent2 = new Event( 'activity_gif_close' );
+					document.dispatchEvent( gifCloseEvent2 );
+				} else {
+					$( '#whats-new-toolbar .post-gif' ).show();
+				}
+			},
+		}
+	);
+
+	bp.Views.PostGifGroup = bp.View.extend(
+		{
+			initialize: function () {
+				// check gif is enable in groups or not.
+				if ( ( ! _.isUndefined( BP_Nouveau.media.gif.groups ) && BP_Nouveau.media.gif.groups === false ) || BP_Nouveau.media.gif_api_key === '' ) {
+					$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
+					var gifCloseEvent = new Event( 'activity_gif_close' );
+					document.dispatchEvent( gifCloseEvent );
+				} else {
+					$( '#whats-new-toolbar .post-gif' ).show();
+				}
 			},
 		}
 	);

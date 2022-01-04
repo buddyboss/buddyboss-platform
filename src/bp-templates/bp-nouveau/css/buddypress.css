@@ -1187,6 +1187,7 @@ a.layout-grid-view {
   display: flex;
   align-items: center;
   cursor: pointer;
+  text-align: left;
 }
 
 .bp-activity-privacy__label:hover {
