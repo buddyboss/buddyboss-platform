@@ -3991,10 +3991,11 @@ window.bp = window.bp || {};
 					this.cleanFeedback();
 					this.$el.removeClass( 'has-feedback' );
 				} else {
+					this.cleanFeedback(); //Clean if there's any error already displayed.
 					this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
 					this.$el.addClass( 'has-feedback' );
-					var errorHeight = this.$el.find( '#message-feedabck' ).height();
-					this.$el.find( '#activity-header' ).css( { 'margin-bottom': errorHeight + 30 + 'px' } );
+					var errorHeight = this.$el.find( '#message-feedabck' ).outerHeight( true );
+					this.$el.find( '#activity-header' ).css( { 'margin-bottom': errorHeight + 'px' } );
 				}
 			},
 
