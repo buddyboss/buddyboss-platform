@@ -612,7 +612,7 @@ function bbp_restore_caps_from_wp_roles() {
 /**
  * Restore capabilities to create topic tags for non-admin organizer
  *
- * @since  BuddyBoss x.x.x
+ * @since  BuddyBoss [BBVERSION]
  *
  * @param array $allcaps Current user's all capabilities.
  * @param array $caps    Required capability.
