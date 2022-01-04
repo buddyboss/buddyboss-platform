@@ -2004,21 +2004,19 @@ function bb_reset_profile_cover_position( $old_value = '', $value = '' ) {
 			)
 		);
 
+		remove_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+		remove_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
+
 		if ( ! empty( $all_users ) ) {
 			foreach ( $all_users as $id ) {
-				if ( empty(
-					bp_attachments_get_attachment(
-						'url',
-						array(
-							'object_dir' => 'members',
-							'item_id'    => $id,
-						)
-					)
-				) ) {
+				if ( ! bp_attachments_get_user_has_cover_image( $id ) ) {
 					delete_user_meta( $id, 'bp_cover_position' );
 				}
 			}
 		}
+
+		add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+		add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 	}
 }
 add_action( 'update_option_bp-default-custom-profile-cover', 'bb_reset_profile_cover_position', 10, 2 );
@@ -2051,21 +2049,19 @@ function bb_reset_group_cover_position( $old_value = '', $value = '' ) {
 			)
 		);
 
+		remove_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+		remove_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
+
 		if ( ! empty( $all_groups ) && ! empty( $all_groups['groups'] ) ) {
 			foreach ( $all_groups['groups'] as $group_id ) {
-				if ( empty(
-					bp_attachments_get_attachment(
-						'url',
-						array(
-							'object_dir' => 'groups',
-							'item_id'    => $group_id,
-						)
-					)
-				) ) {
+				if ( ! bp_attachments_get_group_has_cover_image( $group_id ) ) {
 					groups_delete_groupmeta( $group_id, 'bp_cover_position' );
 				}
 			}
 		}
+
+		add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+		add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 	}
 }
 add_action( 'update_option_bp-default-custom-group-cover', 'bb_reset_group_cover_position', 10, 2 );
