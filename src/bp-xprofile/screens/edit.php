@@ -40,7 +40,7 @@ function xprofile_screen_edit_profile() {
 		// Check the nonce.
 		check_admin_referer( 'bp_xprofile_edit' );
 
-		// First, clear the data for deleted fields, if any
+		// First, clear the data for deleted fields, if any.
 		if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
 			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
@@ -110,11 +110,11 @@ function xprofile_screen_edit_profile() {
 						$bp_current_user = new WP_User( bp_displayed_user_id() );
 
 						foreach ( $bp_current_user->roles as $role ) {
-							// Remove role
+							// Remove role.
 							$bp_current_user->remove_role( $role );
 						}
 
-						// Add role
+						// Add role.
 						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				}
@@ -167,12 +167,15 @@ function xprofile_screen_edit_profile() {
 				// Update the field data and visibility level.
 				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
 				$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, $is_required[ $field_id ] );
-				$value         = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
 
+				// We need to pass post value here.
+				// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
 				$new_values[ $field_id ] = array(
 					'value'      => $value,
 					'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
 				);
+
+				$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
 
 				if ( ! $field_updated ) {
 					$errors = true;

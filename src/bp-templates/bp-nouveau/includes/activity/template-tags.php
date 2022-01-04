@@ -273,8 +273,11 @@ function bp_nouveau_activity_state() {
 			</span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
-		<?php if ( bp_activity_can_comment() ) : ?>
-			<a href="#" class="activity-state-comments">
+		<?php if ( bp_activity_can_comment() ) :
+			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
+			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
+			?>
+			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
@@ -330,7 +333,7 @@ function bb_nouveau_activity_inner_buttons( $args = array() ) {
  * @since BuddyBoss 1.7.2
  *
  * @param array $args Button attributes.
- * 
+ *
  * @return array
  */
 function bb_nouveau_get_activity_inner_buttons( $args ) {
@@ -375,7 +378,7 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 	}
 
 	$return = bp_nouveau()->activity->inner_buttons->get( $sort );
-	
+
 	return $return;
 }
 
@@ -1711,13 +1714,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	if ( $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
-		$video_id = BP_Video::get_activity_video_id( $activity_id );
+		$video_id       = BP_Video::get_activity_video_id( $activity_id );
+		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {
 			$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
 			if ( ! empty( $attachment_id ) ) {
 				$video_privacy = bb_media_user_can_access( $video_id, 'video' );
 				$can_edit      = true === (bool) $video_privacy['can_edit'];
-				if ( $can_edit ) {
+				if ( $can_edit && ( bb_user_can_create_video() || $video_group_id > 0 ) ) {
 					$parent_activity_id          = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 					$attachment_urls             = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 					$buttons['change_thumbnail'] = array(

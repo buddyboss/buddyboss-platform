@@ -1,7 +1,13 @@
 <?php
+
 /**
- * @ignore parser file
+ * bbPress BBCode Parser
  *
+ * @package bbPress
+ * @subpackage Administration
+ */
+
+/*
 This is a compressed copy of NBBC. Do not edit!
 
 Copyright (c) 2008-9, the Phantom Inker.  All rights reserved.
@@ -11,10 +17,10 @@ Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
 
- * Redistributions of source code must retain the above copyright
+* Redistributions of source code must retain the above copyright
   notice, this list of conditions and the following disclaimer.
 
- * Redistributions in binary form must reproduce the above copyright
+* Redistributions in binary form must reproduce the above copyright
   notice, this list of conditions and the following disclaimer in
   the documentation and/or other materials provided with the
   distribution.
@@ -30,7 +36,7 @@ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 define( 'BBCODE_VERSION', '1.4.5' );
 define( 'BBCODE_RELEASE', '2010-09-17' );
@@ -238,7 +244,7 @@ class BBCodeLexer {
 							if ( strlen( $this->text ) > 0 ) {
 								return $this->token = BBCODE_TEXT;
 							}
-							continue;
+							continue 2;
 						}
 					default:
 							$this->tag   = false;
@@ -250,11 +256,11 @@ class BBCodeLexer {
 					case 123:
 						if ( preg_match( $this->pat_comment, $this->text ) ) {
 							$this->state = BBCODE_LEXSTATE_TEXT;
-							continue;
+							continue 2;
 						}
 						if ( preg_match( $this->pat_comment2, $this->text ) ) {
 							$this->state = BBCODE_LEXSTATE_TEXT;
-							continue;
+							continue 2;
 						}
 						if ( preg_match( $this->pat_wiki, $this->text, $matches ) ) {
 							$this->tag          = array(
@@ -1547,9 +1553,17 @@ $/Dx",
 							$this->smiley_info[ $token ] = $info;
 						}
 						$alt     = htmlspecialchars( $token );
-						$output .= '<img src="' . htmlspecialchars( $this->smiley_url . '/' . $this->smileys[ $token ] )
-						. "\" width=\"{$info[0]}\" height=\"{$info[1]}\""
-						. " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
+						$output .= '<img src="' . htmlspecialchars( $this->smiley_url . '/' . $this->smileys[ $token ] ) . '"';
+
+						if ( isset( $info[0] ) ) {
+							$output .= " width=\"{$info[0]}\"";
+						}
+
+						if ( isset( $info[1] ) ) {
+							$output .= " height=\"{$info[1]}\"";
+						}
+
+						$output .= " alt=\"$alt\" title=\"$alt\" class=\"bbcode_smiley\" />";
 					}
 					$is_a_smiley = ! $is_a_smiley;
 				}
@@ -1784,15 +1798,15 @@ $/Dx",
 					$this->Internal_CleanupWSByPoppingStack( @$rule['after_tag'], $output );
 					$tag_body = $this->Internal_CollectTextReverse( $output, count( $output ) - 1, $end );
 					$this->Internal_CleanupWSByPoppingStack( @$rule['before_tag'], $this->stack );
-					$this->Internal_UpdateParamsForMissingEndTag( @$token[ BBCODE_STACK_TAG ] );
-					$tag_output = $this->DoTag(
+					@$token[ BBCODE_STACK_TAG ] = @$this->Internal_UpdateParamsForMissingEndTag( @$token[ BBCODE_STACK_TAG ] );
+					$tag_output                 = $this->DoTag(
 						BBCODE_OUTPUT,
 						$name,
 						@$token[ BBCODE_STACK_TAG ]['_default'],
 						@$token[ BBCODE_STACK_TAG ],
 						$tag_body
 					);
-					$output     = array(
+					$output                     = array(
 						array(
 							BBCODE_STACK_TOKEN => BBCODE_TEXT,
 							BBCODE_STACK_TAG   => false,
@@ -2172,7 +2186,7 @@ $/Dx",
 		$params['_defaultcontent'] = strlen( @$params['_default'] ) ? $params['_default'] : $contents;
 		return $this->FillTemplate( @$tag_rule['template'], $params, @$tag_rule['default'] );
 	}
-	function Internal_UpdateParamsForMissingEndTag( &$params ) {
+	function Internal_UpdateParamsForMissingEndTag( $params ) {
 		switch ( $this->tag_marker ) {
 			case '[':
 				$tail_marker = ']';
@@ -2191,6 +2205,7 @@ $/Dx",
 				break;
 		}
 		$params['_endtag'] = $this->tag_marker . '/' . $params['_name'] . $tail_marker;
+		return $params;
 	}
 	function Internal_ProcessIsolatedTag( $tag_name, $tag_params, $tag_rule ) {
 		if ( ! $this->DoTag( BBCODE_CHECK, $tag_name, @$tag_params['_default'], $tag_params, '' ) ) {
@@ -2266,7 +2281,7 @@ $/Dx",
 		array_splice( $this->stack, $start );
 		$this->Internal_ComputeCurrentClass();
 		$this->Internal_CleanupWSByPoppingStack( @$tag_rule['before_tag'], $this->stack );
-		$tag_params['_endtag'] = $end_tag_params['_tag'];
+		$tag_params['_endtag'] = isset( $end_tag_params['_tag'] ) ? $end_tag_params['_tag'] : "";
 		$tag_params['_hasend'] = true;
 		$output                = $this->DoTag(
 			BBCODE_OUTPUT,
@@ -2506,4 +2521,3 @@ $/Dx",
 		return $result;
 	}
 }
-
