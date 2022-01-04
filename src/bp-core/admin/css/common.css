@@ -2558,8 +2558,8 @@ table tbody td .bb-description {
   border-radius: 3px;
 }
 
-body.users_page_bp-profile-edit.modal-open #TB_window,
-.buddyboss_page_bp-settings.modal-open #TB_window {
+body.users_page_bp-profile-edit #TB_window,
+.buddyboss_page_bp-settings #TB_window {
   height: auto !important;
   width: 820px !important;
   max-width: 90%;
@@ -2569,13 +2569,13 @@ body.users_page_bp-profile-edit.modal-open #TB_window,
   overflow: auto;
 }
 
-body.users_page_bp-profile-edit.modal-open #TB_window .bp-avatar #avatar-to-crop,
-.buddyboss_page_bp-settings.modal-open #TB_window .bp-avatar #avatar-to-crop {
+body.users_page_bp-profile-edit #TB_window .bp-avatar #avatar-to-crop,
+.buddyboss_page_bp-settings #TB_window .bp-avatar #avatar-to-crop {
   margin-bottom: 15px;
 }
 
-body.users_page_bp-profile-edit.modal-open #TB_ajaxContent,
-.buddyboss_page_bp-settings.modal-open #TB_ajaxContent {
+body.users_page_bp-profile-edit #TB_ajaxContent,
+.buddyboss_page_bp-settings #TB_ajaxContent {
   height: auto !important;
   width: auto !important;
   padding: 15px;
