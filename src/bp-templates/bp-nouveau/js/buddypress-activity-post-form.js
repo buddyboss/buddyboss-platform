@@ -4461,8 +4461,6 @@ window.bp = window.bp || {};
 				// check gif is enable in profile or not.
 				if ( ( ! _.isUndefined( BP_Nouveau.media.gif.profile ) && BP_Nouveau.media.gif.profile === false ) || BP_Nouveau.media.gif_api_key === '' ) {
 					$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-					var gifCloseEvent2 = new Event( 'activity_gif_close' );
-					document.dispatchEvent( gifCloseEvent2 );
 				} else {
 					$( '#whats-new-toolbar .post-gif' ).show();
 				}
@@ -4476,8 +4474,6 @@ window.bp = window.bp || {};
 				// check gif is enable in groups or not.
 				if ( ( ! _.isUndefined( BP_Nouveau.media.gif.groups ) && BP_Nouveau.media.gif.groups === false ) || BP_Nouveau.media.gif_api_key === '' ) {
 					$( '#whats-new-toolbar .post-gif' ).removeClass( 'active' ).hide();
-					var gifCloseEvent = new Event( 'activity_gif_close' );
-					document.dispatchEvent( gifCloseEvent );
 				} else {
 					$( '#whats-new-toolbar .post-gif' ).show();
 				}
