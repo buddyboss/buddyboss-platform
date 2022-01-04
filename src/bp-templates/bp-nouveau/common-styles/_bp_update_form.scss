@@ -432,15 +432,13 @@
 
 		&.has-feedback {
 
-			.bb-model-header {
-				margin-bottom: 47px;
-			}
-
-			#message.bp-messages {
+			#message-feedabck.bp-messages {
 				position: absolute;
 				top: 58px;
-				border-radius: 0;
-				padding: 2px 13px;
+				margin: 15px 25px;
+				width: calc(100% - 50px);
+				min-width: initial;
+				border-radius: 4px;
 
 				p:empty,
 				div:empty {
@@ -451,6 +449,10 @@
 					padding: 10px 20px 10px 5px;
 				}
 			}
+		}
+
+		&:not(.has-feedback) #activity-header {
+			margin-bottom: 0 !important;
 		}
 
 	}

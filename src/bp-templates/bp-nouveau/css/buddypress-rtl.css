@@ -1187,6 +1187,7 @@ a.layout-grid-view {
   display: flex;
   align-items: center;
   cursor: pointer;
+  text-align: right;
 }
 
 .bp-activity-privacy__label:hover {
@@ -1424,29 +1425,31 @@ a.layout-grid-view {
   margin: 0 0 15px 0;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback .bb-model-header,
-.activity-update-form .activity-form.focus-in.has-feedback .bb-model-header {
-  margin-bottom: 47px;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages,
-.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message-feedabck.bp-messages,
+.activity-update-form .activity-form.focus-in.has-feedback #message-feedabck.bp-messages {
   position: absolute;
   top: 58px;
-  border-radius: 0;
-  padding: 2px 13px;
+  margin: 15px 25px;
+  width: calc(100% - 50px);
+  min-width: initial;
+  border-radius: 4px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages p:empty,
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages div:empty,
-.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages p:empty,
-.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages div:empty {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message-feedabck.bp-messages p:empty,
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message-feedabck.bp-messages div:empty,
+.activity-update-form .activity-form.focus-in.has-feedback #message-feedabck.bp-messages p:empty,
+.activity-update-form .activity-form.focus-in.has-feedback #message-feedabck.bp-messages div:empty {
   display: none;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message.bp-messages > div,
-.activity-update-form .activity-form.focus-in.has-feedback #message.bp-messages > div {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message-feedabck.bp-messages > div,
+.activity-update-form .activity-form.focus-in.has-feedback #message-feedabck.bp-messages > div {
   padding: 10px 5px 10px 20px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in:not(.has-feedback) #activity-header,
+.activity-update-form .activity-form.focus-in:not(.has-feedback) #activity-header {
+  margin-bottom: 0 !important;
 }
 
 .bp-nouveau-activity-form-placeholder- #user-status-huddle,

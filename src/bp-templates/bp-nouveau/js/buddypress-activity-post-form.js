@@ -824,7 +824,7 @@ window.bp = window.bp || {};
 	bp.Views.activityFeedback = bp.View.extend(
 		{
 			tagName: 'div',
-			id: 'message',
+			id: 'message-feedabck',
 			template: bp.template( 'activity-post-form-feedback' ),
 
 			initialize: function () {
@@ -3979,7 +3979,7 @@ window.bp = window.bp || {};
 				_.each(
 					this.views._views[ '' ],
 					function ( view ) {
-						if ( 'message' === view.$el.prop( 'id' ) ) {
+						if ( 'message-feedabck' === view.$el.prop( 'id' ) ) {
 							view.remove();
 						}
 					}
@@ -3993,6 +3993,8 @@ window.bp = window.bp || {};
 				} else {
 					this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
 					this.$el.addClass( 'has-feedback' );
+					var errorHeight = this.$el.find( '#message-feedabck' ).height();
+					this.$el.find( '#activity-header' ).css( { 'margin-bottom': errorHeight + 30 + 'px' } );
 				}
 			},
 
