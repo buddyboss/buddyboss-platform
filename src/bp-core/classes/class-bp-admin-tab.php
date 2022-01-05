@@ -109,6 +109,21 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
+			$custom_upload_alert = '';
+			if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
+				$custom_upload_alert = sprintf(
+					esc_html__( 'Changing Member Profiles setting will reset all members cover photo position. %1$s %2$s Are you sure?', 'buddyboss' ),
+					"\n",
+					"\n"
+				);
+			} elseif ( 'bp-groups' === bp_core_get_admin_active_tab() ) {
+				$custom_upload_alert = sprintf(
+					esc_html__( 'Changing Social Groups setting will reset all groups cover photo position. %1$s %2$s Are you sure?', 'buddyboss' ),
+					"\n",
+					"\n"
+				);
+			}
+
 			wp_localize_script(
 				'bp-admin',
 				'BP_ADMIN',
@@ -138,6 +153,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'wordpress_avatar_types'   => array( 'mystery', 'blank', 'gravatar_default', 'identicon', 'wavatar', 'monsterid', 'retro' ),
 					),
 					'profile_group_cover'  => array(
+						'upload_alert'      => $custom_upload_alert,
 						'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
 						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 						'feedback_messages' => array(
@@ -326,12 +342,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '', $notice = '' ) {
 			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
 			if ( ! empty( $tutorial_callback ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
+			}
+
+			if ( ! empty( $notice ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
 			}
 
 			return $this;
@@ -551,6 +571,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 				echo '<table class="form-table">';
 				$this->bp_custom_do_settings_fields( $page, $section['id'] );
+				echo '</table>';
+
+				if ( isset( $section['notice'] ) && ! empty( $section['notice'] ) ) {
+					?>
+					<div class="display-notice bb-bottom-notice">
+						<?php echo esc_html( $section['notice'] ); ?>
+					</div>
+					<?php
+				}
+
 				echo '</table></div>';
 			}
 		}

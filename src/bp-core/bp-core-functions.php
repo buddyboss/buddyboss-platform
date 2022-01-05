@@ -3822,39 +3822,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 function bp_email_get_schema() {
 
 	$schema = array(
-		'activity-comment'                   => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-		),
-		'activity-comment-author'            => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-		),
-		'activity-at-message'                => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-		),
-		'groups-at-message'                  => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-		),
-		'core-user-registration'             => array(
+		'core-user-registration'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3862,7 +3830,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
 		),
-		'core-user-registration-with-blog'   => array(
+		'core-user-registration-with-blog' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3873,63 +3841,7 @@ function bp_email_get_schema() {
 				'multisite' => true,
 			),
 		),
-		'friends-request'                    => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
-		),
-		'friends-request-accepted'           => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
-		),
-		'groups-details-updated'             => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-		),
-		'groups-invitation'                  => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
-		),
-		'groups-member-promoted'             => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
-		),
-		'groups-membership-request'          => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
-		),
-		'messages-unread'                    => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
-		),
-		'settings-verify-email-change'       => array(
+		'settings-verify-email-change'     => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3937,39 +3849,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 		),
-		'groups-membership-request-accepted' => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-		),
-		'groups-membership-request-rejected' => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
-		),
-		'bbp-new-forum-topic'                => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
-		),
-		'bbp-new-forum-reply'                => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
-		),
-		'invites-member-invite'              => array(
+		'invites-member-invite'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3977,15 +3857,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
-		'group-message-email'                => array(
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
-			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
-		),
-		'content-moderation-email'           => array(
+		'content-moderation-email'         => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3993,7 +3865,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
 		),
-		'user-moderation-email'              => array(
+		'user-moderation-email'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -4034,38 +3906,6 @@ function bp_email_get_schema() {
  * @todo check if these can be deprecated
  */
 function bp_email_get_type_schema( $field = 'description' ) {
-	$activity_comment = array(
-		'description' => __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_activity_new_reply',
-			'message'  => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
-		),
-	);
-
-	$activity_comment_author = array(
-		'description' => __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_activity_new_reply',
-			'message'  => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
-		),
-	);
-
-	$activity_at_message = array(
-		'description' => __( 'Recipient was mentioned in an activity update.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_activity_new_mention',
-			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
-		),
-	);
-
-	$groups_at_message = array(
-		'description' => __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_activity_new_mention',
-			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
-		),
-	);
-
 	$core_user_registration = array(
 		'description' => __( 'Recipient has registered for an account.', 'buddyboss' ),
 		'unsubscribe' => false,
@@ -4076,110 +3916,14 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
-	$friends_request = array(
-		'description' => __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_friends_friendship_request',
-			'message'  => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
-		),
-	);
-
-	$friends_request_accepted = array(
-		'description' => __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_friends_friendship_accepted',
-			'message'  => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
-		),
-	);
-
-	$groups_details_updated = array(
-		'description' => __( "A group's details were updated.", 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_groups_group_updated',
-			'message'  => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
-		),
-	);
-
-	$groups_invitation = array(
-		'description' => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_groups_invite',
-			'message'  => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
-		),
-	);
-
-	$groups_member_promoted = array(
-		'description' => __( "Recipient's status within a group has changed.", 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_groups_admin_promotion',
-			'message'  => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
-		),
-	);
-
-	$groups_membership_request = array(
-		'description' => __( 'A member has requested permission to join a group.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_groups_membership_request',
-			'message'  => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
-		),
-	);
-
-	$messages_unread = array(
-		'description' => __( 'Recipient has received a private message.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_messages_new_message',
-			'message'  => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
-		),
-	);
-
 	$settings_verify_email_change = array(
 		'description' => __( 'Recipient has changed their email address.', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
-	$groups_membership_request_accepted = array(
-		'description' => __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_membership_request_completed',
-			'message'  => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
-		),
-	);
-
-	$groups_membership_request_rejected = array(
-		'description' => __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_membership_request_completed',
-			'message'  => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
-		),
-	);
-
-	$bbp_new_forum_topic = array(
-		'description' => __( 'A member has created a new forum discussion.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_bbp_new_forum_topic',
-			'message'  => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
-		),
-	);
-
-	$bbp_new_forum_reply = array(
-		'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_bbp_new_forum_reply',
-			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
-		),
-	);
-
 	$invites_member_invite = array(
 		'description' => __( 'Recipient has been invited by a member to join the website.', 'buddyboss' ),
 		'unsubscribe' => false,
-	);
-
-	$group_message_email = array(
-		'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
-		'unsubscribe' => array(
-			'meta_key' => 'notification_group_messages_new_message',
-			'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
-		),
 	);
 
 	$content_moderation_email = array(
@@ -4193,28 +3937,12 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$types = array(
-		'activity-comment'                   => $activity_comment,
-		'activity-comment-author'            => $activity_comment_author,
-		'activity-at-message'                => $activity_at_message,
-		'groups-at-message'                  => $groups_at_message,
-		'core-user-registration'             => $core_user_registration,
-		'core-user-registration-with-blog'   => $core_user_registration_with_blog,
-		'friends-request'                    => $friends_request,
-		'friends-request-accepted'           => $friends_request_accepted,
-		'groups-details-updated'             => $groups_details_updated,
-		'groups-invitation'                  => $groups_invitation,
-		'groups-member-promoted'             => $groups_member_promoted,
-		'groups-membership-request'          => $groups_membership_request,
-		'messages-unread'                    => $messages_unread,
-		'settings-verify-email-change'       => $settings_verify_email_change,
-		'groups-membership-request-accepted' => $groups_membership_request_accepted,
-		'groups-membership-request-rejected' => $groups_membership_request_rejected,
-		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
-		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
-		'invites-member-invite'              => $invites_member_invite,
-		'group-message-email'                => $group_message_email,
-		'content-moderation-email'           => $content_moderation_email,
-		'user-moderation-email'              => $user_moderation_email,
+		'core-user-registration'           => $core_user_registration,
+		'core-user-registration-with-blog' => $core_user_registration_with_blog,
+		'settings-verify-email-change'     => $settings_verify_email_change,
+		'invites-member-invite'            => $invites_member_invite,
+		'content-moderation-email'         => $content_moderation_email,
+		'user-moderation-email'            => $user_moderation_email,
 	);
 
 	/**
@@ -6036,6 +5764,84 @@ function bb_check_server_disabled_symlink() {
 }
 
 /**
+ * Check the notification is enabled for the user ot not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id           User ID.
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_is_notification_enabled( $user_id, $notification_type, $type = 'email' ) {
+
+	if ( empty( $user_id ) || empty( $notification_type ) ) {
+		return false;
+	}
+
+	// All preferences registered.
+	$preferences = bb_register_notification_preferences();
+
+	// Saved notification from backend default settings.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$all_notifications    = array();
+	$default_by_admin     = array();
+
+	if ( ! empty( $preferences ) ) {
+		$preferences = array_column( $preferences, 'fields', null );
+		foreach ( $preferences as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
+		}
+	}
+
+	$all_notifications = array_map(
+		function ( $n ) use ( $type ) {
+			if (
+				in_array( $type, array( 'web', 'app' ), true )
+			) {
+				$n['key'] = $n['key'] . '_' . $type;
+
+				return $n;
+			} elseif (
+				'email' === $type
+			) {
+				return $n;
+			}
+
+		},
+		$all_notifications
+	);
+
+	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+	if ( ! empty( $enabled_notification ) ) {
+		foreach ( $enabled_notification as $key => $types ) {
+			if ( isset( $types[ $type ] ) ) {
+				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
+				$default_by_admin[ $key_type ] = $types[ $type ];
+			}
+		}
+	}
+
+	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
+	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
+
+	if (
+		bb_enabled_legacy_email_preference() &&
+		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+	) {
+		return true;
+	} elseif (
+		array_key_exists( $notification_type, $notifications )
+		&& 'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+	) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Function will restrict RSS feed.
  *
  * @since BuddyBoss [BBVERSION]
@@ -6052,57 +5858,53 @@ function bb_restricate_rss_feed() {
 		strpos( $actual_link, 'admin-ajax.php' ) === false &&
 		strpos( $actual_link, 'wp-json' ) === false
 	) {
-		$check_feed = '';
-		if ( strpos( $actual_link, '?feed' ) !== false ) { // if permalink has ? then need to check with feed=.
-			$current_url_explode = array_filter( explode( '?', $actual_link ) );
-			if ( isset( $current_url_explode[1] ) ) {
-				$check_feed = $current_url_explode[1];
-				if ( strpos( $current_url_explode[1], '&' ) !== false ) {
-					$current_url_explode = array_filter( explode( '&', $current_url_explode[1] ) );
-					if ( isset( $current_url_explode[1] ) ) {
-						$check_feed = $current_url_explode[1];
-					}
-				}
-			}
-		} else {
-			$current_url_explode = array_filter( explode( bp_get_root_domain(), $actual_link ) );
-			if ( isset( $current_url_explode[1] ) ) {
-				$check_feed = $current_url_explode[1];
-			}
-		}
-		$exclude_rss_feed    = bb_enable_private_rss_feeds_public_content();
+		$request_url = untrailingslashit( $actual_link );
+		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
 			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
 				// Check if current url has slash in the last if not then add because we allow to add
 				// feed url like this one - /feed/.
-				if ( isset( $check_feed ) ) {
-					if ( substr( $check_feed, - 1 ) !== '/' ) {
-						$check_feed = trailingslashit( $check_feed );
-					}
-					if ( ! in_array( $check_feed, $exclude_arr_rss_feeds, true ) ) {
-						$defaults = array(
-							'mode'     => 2,
-							'redirect' => $actual_link,
-							'root'     => bp_get_root_domain(),
-							'message'  => __( 'Please login to access this website.', 'buddyboss' ),
-						);
-						bp_core_no_access( $defaults );
-						exit();
+				foreach ( $exclude_arr_rss_feeds as $url ) {
+					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+					$un_trailing_slash_it_url = untrailingslashit( $url );
+					// Check if strict match
+					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						return;
+					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url );
+						// Allow to view if fragment matched.
+						foreach ( $fragments as $fragment ) {
+							if ( $fragment === trim( $url, '/' ) ) {
+								return;
+							}
+						}
+						// Allow to view if fragment matched with the trailing slash.
+						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						if ( $is_matched_fragment === $url ) {
+							return;
+						}
+						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
+						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+							return;
+						}
+						// Check URL is fully matched without remove trailing slash.
+					} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
+						return;
 					}
 				}
 			}
-		} else {
-			$defaults = array(
-				'mode'     => 2,
-				'redirect' => $actual_link,
-				'root'     => bp_get_root_domain(),
-				'message'  => __( 'Please login to access this website.', 'buddyboss' ),
-			);
-			bp_core_no_access( $defaults );
-			exit();
 		}
+
+		$defaults = array(
+			'mode'     => 2,
+			'redirect' => $actual_link,
+			'root'     => bp_get_root_domain(),
+			'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+		);
+		bp_core_no_access( $defaults );
+		exit();
 	}
 }
 
@@ -6132,7 +5934,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	);
 	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
 	// Allow some endpoints which is mandatory for app.
-	if ( in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+	if ( ! empty( $exclude_required_endpoints ) && in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
 		return $response;
 	}
 
@@ -6155,18 +5957,33 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
+	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+
+	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
 	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
-				$endpoints = untrailingslashit( trim( $endpoints ) );
-				if ( strpos( $endpoints, 'wp-json' ) !== false ) {
-					$endpoints = str_replace( 'wp-json', '', $endpoints );
-				}
-				$current_endpoint_allowed = preg_match( '@^' . $endpoints . '$@i', $current_endpoint, $matches );
-				if ( $current_endpoint_allowed ) {
-					return true;
+				if ( ! empty( $endpoints ) ) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
+					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
+						return true;
+					} else {
+						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
+							$endpoints = str_replace( trailingslashit( bp_get_root_domain() ), '', $endpoints );
+						}
+						if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+							$endpoints = str_replace( 'wp-json', '', $endpoints );
+						}
+						$endpoints                = str_replace( '//', '/', $endpoints );
+						$endpoints                = str_replace( '///', '/', $endpoints );
+						$endpoints                = '/' . ltrim( $endpoints, '/' );
+						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						if ( $current_endpoint_allowed ) {
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -6734,4 +6551,380 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		'is_buddyboss_theme_active'      => $is_buddyboss_theme_active,
 		'is_buddyboss_app_plugin_active' => $is_buddyboss_app_plugin_active,
 	);
+}
+
+/**
+ * Functions to get all registered notifications.
+ *
+ * @param string $component component name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_notifications( $component = '' ) {
+
+	$notifications = apply_filters( 'bb_register_notifications', array() );
+
+	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
+		return $notifications[ $component ];
+	}
+
+	return $notifications;
+}
+
+/**
+ * Functions to get all registered notifications.
+ *
+ * @param string $component component name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_notification_preferences( $component = '' ) {
+
+	$notifications = apply_filters( 'bb_register_notification_preferences', array() );
+
+	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
+		return $notifications[ $component ];
+	}
+
+	return $notifications;
+}
+
+/**
+ * Check whether to send notification to user or not based on their preferences.
+ *
+ * @param int    $user_id          User id.
+ * @param string $component_name   Component Name.
+ * @param string $component_action Component Action.
+ * @param string $pref_type        Preference type.
+ *
+ * @return bool
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_can_send_notification( $user_id, $component_name, $component_action = '', $pref_type = 'email' ) {
+
+	$all_notifications = bb_register_notifications();
+
+	$notification_type = array_filter(
+		array_map(
+			function ( $n ) use ( $component_name, $component_action ) {
+				if ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+					return $n['notification_type'];
+				}
+			},
+			$all_notifications
+		)
+	);
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	$notification_type = current( $notification_type );
+
+	return (bool) bb_is_notification_enabled( $user_id, $notification_type, $pref_type );
+}
+
+/**
+ * Get user notification preference values.
+ *
+ * @param int    $user_id   User id.
+ * @param string $pref_type Notification preference type.
+ *
+ * @return array
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_type = 'email' ) {
+
+	$keys              = array();
+	$all_notifications = bb_register_notifications();
+	$user_id           = ( 0 === $user_id ) ? bp_loggedin_user_id() : $user_id;
+
+	foreach ( $all_notifications as $notification ) {
+		$user_meta_key = $notification['notification_type'] . ( ( 'email' !== $pref_type ) ? '_' . $pref_type : '' );
+		$keys[]        = array(
+			'notification_type' => $user_meta_key,
+			'component_name'    => $notification['component'],
+			'component_action'  => $notification['component_action'],
+			'value'             => bb_is_notification_enabled( $user_id, $notification['notification_type'], $pref_type ),
+		);
+	}
+
+	return $keys;
+}
+
+/**
+ * Functions to get all/specific email templates which associates with notification type.
+ *
+ * @param string $notification_type Notification type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_notification_email_templates( $notification_type = '' ) {
+
+	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+
+	if ( ! empty( $notification_emails ) && isset( $notification_emails[ $notification_type ] ) ) {
+		return $notification_emails[ $notification_type ];
+	}
+
+	return $notification_emails;
+}
+
+/**
+ * Function to check the web notification enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_web_notification_enabled() {
+	return (bool) apply_filters( 'bb_web_notification_enabled', ( bp_is_active( 'notifications' ) && bp_get_option( '_bp_on_screen_notifications_enable', 0 ) ) );
+}
+
+/**
+ * Function to check the app push notification enabled or not.
+ * - enabled from app plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_app_notification_enabled() {
+	return (bool) apply_filters( 'bb_app_notification_enabled', false );
+}
+
+/**
+ * List preferences types.
+ *
+ * @param array $field   Field data.
+ * @param int   $user_id User id.
+ *
+ * @return array list of options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_notification_preferences_types( $field, $user_id = 0 ) {
+	$options                  = array();
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
+	if ( ! $email_checked ) {
+		$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
+	}
+
+	$options['email'] = array(
+		'is_render'  => bb_check_email_type_registered( $field['key'] ),
+		'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
+		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
+	);
+
+	if ( bb_web_notification_enabled() ) {
+		$web_checked = bp_get_user_meta( $user_id, $field['key'] . '_web', true );
+		if ( ! $web_checked ) {
+			$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
+		}
+
+		$options['web'] = array(
+			'is_render'  => bb_check_notification_registered( $field['key'] ),
+			'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
+			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
+		);
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$app_checked = bp_get_user_meta( $user_id, $field['key'] . '_app', true );
+		if ( ! $app_checked ) {
+			$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
+		}
+		$options['app'] = array(
+			'is_render'  => bb_check_notification_registered( $field['key'] ),
+			'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
+			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
+		);
+	}
+
+	return apply_filters( 'bb_notifications_types', $options );
+
+}
+
+/**
+ * Check the notification registered with specific notification type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $notification_type Notification Type.
+ *
+ * @return array|mixed
+ */
+function bb_check_notification_registered( string $notification_type ) {
+	$notifications     = bb_register_notification_preferences();
+	$all_notifications = array();
+
+	if ( ! empty( $notifications ) ) {
+		$notifications = array_column( $notifications, 'fields', null );
+		foreach ( $notifications as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
+		}
+		$all_notifications = array_column( $all_notifications, 'notifications', 'key' );
+	}
+
+	if ( empty( $all_notifications ) ) {
+		return false;
+	}
+
+	if ( $notification_type && isset( $all_notifications[ $notification_type ] ) ) {
+		return ! empty( $all_notifications[ $notification_type ] );
+	}
+
+	return false;
+}
+
+/**
+ * Check the email type registered with specific notification type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $notification_type Notification Type.
+ *
+ * @return array|mixed
+ */
+function bb_check_email_type_registered( string $notification_type ) {
+	$notifications     = bb_register_notification_preferences();
+	$all_notifications = array();
+
+	if ( ! empty( $notifications ) ) {
+		$notifications = array_column( $notifications, 'fields', null );
+		foreach ( $notifications as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
+		}
+		$all_notifications = array_column( $all_notifications, 'email_types', 'key' );
+	}
+
+	if ( empty( $all_notifications ) ) {
+		return false;
+	}
+
+	if ( $notification_type && isset( $all_notifications[ $notification_type ] ) ) {
+		return ! empty( $all_notifications[ $notification_type ] );
+	}
+
+	return false;
+}
+
+/**
+ * Enabled legacy email preferences.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_enabled_legacy_email_preference() {
+	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', false );
+}
+
+/**
+ * Render the notification settings on the front end.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $notification_group Notification group name.
+ */
+function bb_render_notification( $notification_group ) {
+
+	if ( empty( $notification_group ) ) {
+		return;
+	}
+
+	$options                  = bb_register_notification_preferences( $notification_group );
+	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	if ( empty( $options['fields'] ) ) {
+		return;
+	}
+
+	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
+	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+
+	$options['fields'] = array_filter(
+		$options['fields'],
+		function ( $var ) use ( $enabled_notification ) {
+			return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
+		}
+	);
+
+	if ( ! empty( $options['fields'] ) ) {
+		?>
+
+		<table class="main-notification-settings">
+			<tbody>
+
+			<?php if ( ! empty( $options['label'] ) ) { ?>
+				<tr class="notification_heading">
+					<td class="title" colspan="3"><?php echo esc_html( $options['label'] ); ?></td>
+				</tr>
+				<?php
+			}
+
+			foreach ( $options['fields'] as $field ) {
+
+				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+				?>
+				<tr>
+					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
+
+					<?php
+					foreach ( $options as $key => $v ) {
+						$is_render = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+						$name      = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
+						if ( $is_render ) {
+							?>
+							<td class="<?php echo esc_attr( $key ); ?>">
+								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+								<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+							</td>
+							<?php
+						} else {
+							?>
+							<td class="<?php echo esc_attr( $key ); ?> notification_no_option">
+								<?php esc_html_e( '-', 'buddyboss' ); ?>
+							</td>
+							<?php
+						}
+					}
+					?>
+				</tr>
+				<?php
+			}
+
+			?>
+			</tbody>
+		</table>
+
+		<?php
+		if ( 'activity' === $notification_group ) {
+			$action_key = 'bp_' . $notification_group . '_screen_notification_settings';
+		} else {
+			$action_key = $notification_group . '_screen_notification_settings';
+		}
+
+		if ( has_action( $action_key ) ) {
+			?>
+			<table class="notification-settings">
+				<thead>
+				<?php
+				/**
+				 * Fires inside the closing </tbody> tag for activity screen notification settings.
+				 *
+				 * @since BuddyPress 1.2.0
+				 */
+				do_action( $action_key );
+				?>
+				</thead>
+			</table>
+			<?php
+		}
+	}
 }

@@ -99,7 +99,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 	}
 
 	if ( 'bbp_new_at_mention' === $action ) {
-		$topic_id    = bbp_get_reply_topic_id( $item_id );
+		$topic_id = bbp_get_reply_topic_id( $item_id );
 
 		if ( empty( $topic_id ) ) {
 			$topic_id = $item_id;
@@ -245,12 +245,18 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				continue;
 			}
 
-			$args['user_id']          = $user_id;
-			$args['component_action'] = 'bbp_new_at_mention';
+			$args['user_id']           = $user_id;
+			$args['component_action']  = 'bbp_new_at_mention';
 			$args['secondary_item_id'] = get_current_user_id();
 
 			// If forum is not accesible to user, do not send notification.
-			$can_access = bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) );
+			$can_access = bbp_user_can_view_forum(
+				array(
+					'user_id'         => $user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => true,
+				)
+			);
 
 			/**
 			 * Filters bbPress' ability to send notifications for @mentions.
@@ -261,7 +267,6 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 			 * @param int $forum_id ID of forum.
 			 *
 			 * @since BuddyBoss 1.2.9
-			 *
 			 */
 			if ( ! apply_filters( 'bbp_forums_at_name_do_notifications', $can_access, $usernames, $user_id, $forum_id ) ) {
 				continue;
@@ -279,8 +284,8 @@ add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
  *
  * @since BuddyBoss 1.2.8
  *
- * @param int   $topic_id
- * @param int   $forum_id
+ * @param int $topic_id
+ * @param int $forum_id
  */
 function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 	// If our temporary variable doesn't exist, stop now.
@@ -312,10 +317,16 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				continue;
 			}
 
-			$args['user_id']          = $user_id;
+			$args['user_id'] = $user_id;
 
 			// If forum is not accesible to user, do not send notification.
-			$can_access = bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) );
+			$can_access = bbp_user_can_view_forum(
+				array(
+					'user_id'         => $user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => true,
+				)
+			);
 
 			/**
 			 * Filters bbPress' ability to send notifications for @mentions.
@@ -326,7 +337,6 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 			 * @param int $forum_id ID of forum.
 			 *
 			 * @since BuddyBoss 1.2.9
-			 *
 			 */
 			if ( ! apply_filters( 'bbp_forums_at_name_do_notifications', $can_access, $usernames, $user_id, $forum_id ) ) {
 				continue;
@@ -404,3 +414,88 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	exit();
 }
 add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
+
+/**
+ * Add Forum/Topic Subscribe email settings to the Settings > Notifications page.
+ *
+ * @since BuddyBoss 1.5.9
+ */
+function forums_notification_settings() {
+	if ( bp_action_variables() ) {
+		bp_do_404();
+
+		return;
+	}
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		bb_render_notification( buddypress()->forums->id );
+	} else {
+		$notification_forums_following_reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_reply', true );
+		$notification_forums_following_topic = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_topic', true );
+		if ( ! $notification_forums_following_reply ) {
+			$notification_forums_following_reply = 'yes';
+		}
+
+		if ( ! $notification_forums_following_topic ) {
+			$notification_forums_following_topic = 'yes';
+		}
+		?>
+
+		<table class="notification-settings" id="forums-notification-settings">
+			<thead>
+			<tr>
+				<th class="icon"></th>
+				<th class="title"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
+				<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+				<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr id="forums-notification-settings-new-message">
+				<td></td>
+				<td><?php esc_html_e( 'A member replies to a discussion you are subscribed', 'buddyboss' ); ?></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
+						<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_reply, 'no', true ); ?> />
+						<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+			</tr>
+			<tr id="forums-notification-settings-new-message">
+				<td></td>
+				<td><?php esc_html_e( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ); ?></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />
+						<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_topic, 'no', true ); ?> />
+						<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+			</tr>
+			<?php
+
+			/**
+			 * Fires inside the closing </tbody> tag for forums screen notification settings.
+			 *
+			 * @since BuddyBoss 1.5.9
+			 */
+			do_action( 'forums_screen_notification_settings' );
+			?>
+			</tbody>
+		</table>
+
+		<?php
+	}
+}
+add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );

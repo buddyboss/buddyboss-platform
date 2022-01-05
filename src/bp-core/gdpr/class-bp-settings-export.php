@@ -56,7 +56,7 @@ final class BP_Settings_Export extends BP_Export {
 		$item_id      = "{$this->exporter_name}-{$group_id}";
 
 		/**
-		 * Email Preferences
+		 * Notification Preferences
 		 */
 
 		$notification_settings = $this->get_notification_settings();

@@ -709,7 +709,7 @@ window.bp = window.bp || {};
 
 				self.video_dropzone_obj.on(
 					'uploadprogress',
-					function( element, file ) {
+					function( element ) {
 
 						if ( element.upload.progress <= 99 ) {
 

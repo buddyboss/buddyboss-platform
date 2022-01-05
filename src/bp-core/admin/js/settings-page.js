@@ -388,9 +388,9 @@ window.bp = window.bp || {};
 						var post_type = $( this ).data( 'post_type' );
 
 						if ( true === this.checked ) {
-							  $( '.bp-feed-post-type-comment-' + post_type )
-							 .closest( 'tr' )
-							 .show();
+							$( '.bp-feed-post-type-comment-' + post_type )
+							.closest( 'tr' )
+							.show();
 						}
 					}
 				);
@@ -1146,7 +1146,7 @@ window.bp = window.bp || {};
 							function( response ) {
 								$this.html( $this.data( 'remove' ) );
 
-								// Update each avatars of the page
+								// Update each avatars of the page.
 								$( '.default-profile-avatar-custom .' + avatarObject + '-' + response.item_id + '-avatar' ).each(
 									function() {
 										$( this ).prop( 'src', response.avatar );
@@ -1187,10 +1187,20 @@ window.bp = window.bp || {};
 			);
 
 			$( document ).on(
+				'click',
+				'#default-profile-cover-file, #default-group-cover-file',
+				function() {
+					return confirm( BP_ADMIN.profile_group_cover.upload_alert );
+
+				}
+			);
+
+			$( document ).on(
 				'change',
 				'#default-profile-cover-file, #default-group-cover-file',
 				function(e) {
 					e.preventDefault();
+
 					var fileData                = $( this )[0].files[0],
 						coverContainer          = $( '.custom-profile-group-cover' ),
 						coverUploadBtnContainer = coverContainer.find( '.bb-img-upload-button' ),
@@ -1489,7 +1499,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Show/hide web/app preview
+			// Show/hide web/app preview.
 			$( '.preview-switcher .button' ).on(
 				'click',
 				function( event ) {
@@ -1875,6 +1885,31 @@ window.bp = window.bp || {};
 						return confirm( BP_ADMIN.moderation.suspend_confirm_message );
 					} else if ( 'unsuspend' === DataAction ) {
 						return confirm( BP_ADMIN.moderation.unsuspend_confirm_message );
+					}
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.notification-defaults',
+				function () {
+					var isHidden = $( this ).next( '.manage-defaults' );
+					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
+						$( this ).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
+					} else {
+						$( this ).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
+					}
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.bb-notification-checkbox',
+				function () {
+					if ( false === $( this ).prop( 'checked' ) ) {
+						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).attr( 'disabled', true );
+					} else {
+						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).removeAttr( 'disabled' );
 					}
 				}
 			);
