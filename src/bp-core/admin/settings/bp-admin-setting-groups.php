@@ -127,7 +127,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-type' . ( $is_disabled_cover ? ' bp-hide' : '' );
-			$this->add_field( 'bp-default-group-cover-type', esc_html__( 'Default group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
+			$this->add_field( 'bp-default-group-cover-type', esc_html__( 'Default Group Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_type', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom' . ( ! $is_disabled_cover && 'custom' === $default_cover_type ? '' : ' bp-hide' );
