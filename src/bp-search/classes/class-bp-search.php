@@ -766,7 +766,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
-				$args['search_term'] = htmlspecialchars($_GET['s'], ENT_NOQUOTES);
+				$args['search_term'] = $_GET['s'];
 			}
 
 			if ( isset( $_GET['list'] ) && ! empty( $_GET['list'] ) ) {
