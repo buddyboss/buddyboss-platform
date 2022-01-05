@@ -2085,12 +2085,16 @@ function bb_add_default_cover_image_inline_css() {
 		$background_color = '#e2e9ef';
 	}
 
-	if ( ! bp_disable_cover_image_uploads() ) {
-		$css_rules .= '#buddypress #header-cover-image{ background-color: ' . $background_color . '; }';
+	if ( ! bp_disable_cover_image_uploads() && 'custom' !== $profile_cover_type ) {
+		$css_rules .= '.bp_members #buddypress #header-cover-image, .bp_members #buddypress #header-cover-image .guillotine-window img{ background-color: ' . $background_color . '; }';
+	} else {
+		$css_rules .= '.bp_members #buddypress #header-cover-image, .bp_members #buddypress #header-cover-image .guillotine-window img{ background-color: #ffffff; }';
 	}
 
-	if ( ! bp_disable_group_cover_image_uploads() ) {
-		$css_rules .= '.list-wrap .bs-group-cover a{ background-color: ' . $background_color . '; }';
+	if ( ! bp_disable_group_cover_image_uploads() && 'custom' !== $group_cover_type ) {
+		$css_rules .= '.bp_group #buddypress #header-cover-image, .bp_group #buddypress #header-cover-image .guillotine-window img, .list-wrap .bs-group-cover a{ background-color: ' . $background_color . '; }';
+	} else {
+		$css_rules .= '.bp_group #buddypress #header-cover-image, .bp_group #buddypress #header-cover-image .guillotine-window img, .list-wrap .bs-group-cover a{ background-color: #ffffff; }';
 	}
 
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
