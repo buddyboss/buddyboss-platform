@@ -21,7 +21,22 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @var object
 	 */
-	private static $_instance = null;
+	private static $instance = null;
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return null|BP_Friends_Notification|Controller|object
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor method.
@@ -29,6 +44,16 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
+		// Initialize.
+		$this->start();
+	}
+
+	/**
+	 * Initialize all methods inside it.
+	 *
+	 * @return mixed|void
+	 */
+	public function load() {
 		$this->register_preferences_group(
 			buddypress()->friends->id,
 			esc_html__( 'Connections', 'buddyboss' ),
@@ -38,23 +63,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_for_friendship_request();
 		$this->register_notification_for_friendship_accept();
-
-		$this->start();
-	}
-
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 
 	/**
@@ -62,10 +70,10 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_request() {
 		$this->register_preference(
-			buddypress()->friends->id,
 			'notification_friends_friendship_request',
 			esc_html__( 'A member invites you to connect', 'buddyboss' ),
-			esc_html__( 'A member receives a new connection request', 'buddyboss' )
+			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
+			buddypress()->friends->id
 		);
 
 		$this->register_email_type(
@@ -100,10 +108,10 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_accept() {
 		$this->register_preference(
-			buddypress()->friends->id,
 			'notification_friends_friendship_accepted',
 			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
+			buddypress()->friends->id
 		);
 
 		$this->register_email_type(
@@ -132,5 +140,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'notification_friends_friendship_accepted'
 		);
 	}
+
 
 }
