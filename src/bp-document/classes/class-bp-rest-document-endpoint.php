@@ -1351,23 +1351,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		// Below condition will check if document has comments then like/comment button will not visible for that particular media.
-		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
-			$activity = new BP_Activity_Activity( $data['activity_id'] );
-			if ( isset( $activity->secondary_item_id ) ) {
-				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-				if (
-					! empty( $get_activity->id ) &&
-					(
-						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
-					)
-				) {
-					$data['hide_activity_actions'] = true;
-				}
-			}
-		}
-
 		if ( ! empty( $document->attachment_id ) ) {
 			$data['description']  = get_post_field( 'post_content', $document->attachment_id );
 			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );

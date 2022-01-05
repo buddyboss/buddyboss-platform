@@ -995,7 +995,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			),
 			'media-video-loop-none'             => array(
 				'type'    => 'info',
-				'message' => __( 'Sorry, no photos & videos were found.', 'buddyboss' ),
+				'message' => __( 'Sorry, no photos or videos were found.', 'buddyboss' ),
 			),
 			'video-loop-none'                   => array(
 				'type'    => 'info',

@@ -13,13 +13,12 @@ $args = array(
 );
 
 $group_members = groups_get_group_members( $args );
-
-$group_id = 0;
+$group_id      = 0;
+$extensions    = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : false;
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }
 
-$extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : false;
 ?>
 
 <div class="bb-groups-messages-right">
@@ -36,16 +35,22 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 						<p></p>
 					</div>
 				</div>
-				<?php if ( 0 !== $group_members['count'] ) { ?>
+				<?php
+				if ( 0 !== $group_members['count'] ) {
+					?>
 					<span class="group-messages-helper-text"><?php esc_html_e( 'Send to', 'buddyboss' ); ?></span>
 					<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
 						<option value="all" selected="selected"><?php esc_html_e( 'All Group Members', 'buddyboss' ); ?></option>
 					</select>
-				<?php } ?>
+					<?php
+				}
+				?>
 			</div>
 		</div>
 
-		<?php if ( 0 !== $group_members['count'] ) { ?>
+		<?php
+		if ( 0 !== $group_members['count'] ) {
+			?>
 			<div class="bb-groups-messages-right-bottom">
 				<div id="bp-group-message-content">
 					<div id="group_message_content" name="group_message_content" tabindex="3"></div>
@@ -78,8 +83,10 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 									</div>
 								</div>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) : ?>
+							<?php
+						endif;
+						if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) :
+							?>
 							<div class="dropzone closed" id="bp-group-messages-post-video-uploader"></div>
 							<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
 							<div class="forum-post-video-template" style="display:none;">
@@ -117,8 +124,10 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 									<div class="dz-video-thumbnail"></span></div>
 								</div>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) ) : ?>
+							<?php
+						endif;
+						if ( bp_is_active( 'media' ) ) :
+							?>
 							<div class="dropzone closed" id="bp-group-messages-post-document-uploader"></div>
 							<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 							<div class="forum-post-document-template" style="display:none;">
@@ -146,8 +155,10 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 									</div>
 								</div>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) ) : ?>
+							<?php
+						endif;
+						if ( bp_is_active( 'media' ) ) :
+							?>
 							<div class="bp-group-messages-attached-gif-container closed">
 								<div class="gif-image-container">
 									<img src="" alt="">
@@ -172,15 +183,18 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 									<span class="bb-icon bb-icon-text-format"></span>
 								</a>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php
+						endif;
+						if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
+							?>
 							<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 								<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a photo', 'buddyboss' ); ?>">
 									<span class="bb-icon bb-icon-camera-small"></span>
 								</a>
 							</div>
-						<?php endif; ?>
-						<?php
+							<?php
+						endif;
+
 						$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
 						if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
 							?>
@@ -189,15 +203,20 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 									<i class="bb-icon bb-icon-video-alt"></i>
 								</a>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php
+						endif;
+
+						if ( bp_is_active( 'media' ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
+							?>
 							<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 								<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a document', 'buddyboss' ); ?>">
 									<span class="bb-icon bb-icon-attach"></span>
 								</a>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php
+						endif;
+						if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
+							?>
 							<div class="post-elements-buttons-item post-gif">
 								<div class="gif-media-search">
 									<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Post a GIF', 'buddyboss' ); ?>">
@@ -219,24 +238,17 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 									</div>
 								</div>
 							</div>
-						<?php endif; ?>
-						<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), 0, 0 ) ) : ?>
+							<?php
+						endif;
+						if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), 0, 0 ) ) :
+							?>
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
-						<?php endif; ?>
+							<?php
+						endif;
+						?>
 						<div id="group-messages-new-submit" class="submit">
 							<?php
-
 							$disabled = '';
-							$args     = array(
-								'page'                => 1,
-								'per_page'            => 12,
-								'group_id'            => bp_get_current_group_id(),
-								'exclude'             => array( bp_loggedin_user_id() ),
-								'exclude_admins_mods' => false,
-							);
-
-							$group_members = groups_get_group_members( $args );
-
 							if ( empty( $group_members['members'] ) ) {
 								$disabled = 'disabled';
 							}
@@ -246,6 +258,8 @@ $extensions = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : fa
 					</div>
 				</div>
 			</div>
-		<?php } ?>
+			<?php
+		}
+		?>
 	</form>
 </div>
