@@ -969,25 +969,18 @@ window.bp = window.bp || {};
 						if ( 'BuddyBoss' === $( this ).val() ) {
 
 							enableProfileGravatarContainer.removeClass( 'bp-hide' );
-							profileAvatarURL = webAvatarPreviewContainer.attr( 'data-wordpress-avatar' );
+							defaultProfileAvatarTypeContainer.removeClass( 'bp-hide' );
 
-							if ( allowAvatarUpload.prop( 'checked' ) ) {
-								defaultProfileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
+							defaultProfileAvatarTypeVal = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val();
+							profileAvatarURL            = $( '.' + defaultProfileAvatarTypeVal + '-profile-avatar' ).prop( 'src' );
 
-								defaultProfileAvatarTypeContainer.removeClass( 'bp-hide' );
+							if ( 'custom' === defaultProfileAvatarTypeVal ) {
+								defaultProfileAvatarCustomContainer.removeClass( 'bp-hide' );
 
-								profileAvatarURL = $( '.' + defaultProfileAvatarTypeVal + '-profile-avatar' ).prop( 'src' );
-
-								if ( 'custom' === defaultProfileAvatarTypeVal ) {
-									defaultProfileAvatarCustomContainer.removeClass( 'bp-hide' );
-
-									profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
-									if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
-										profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
-									}
+								profileAvatarURL = $( '#bp-default-user-custom-avatar' ).val();
+								if ( typeof profileAvatarURL.length !== 'undefined' && 0 == profileAvatarURL.length ) {
+									profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 								}
-							} else {
-								profileAvatarURL = webAvatarPreviewContainer.attr( 'data-blank-avatar' );
 							}
 
 						} else if ( 'WordPress' === $( this ).val() ) {
