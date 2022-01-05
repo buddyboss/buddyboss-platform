@@ -21,7 +21,22 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @var object
 	 */
-	private static $_instance = null;
+	private static $instance = null;
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return null|BP_Activity_Notification|Controller|object
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor method.
@@ -29,6 +44,16 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
+		// Initialize.
+		$this->start();
+	}
+
+	/**
+	 * Intitialize all methods inside it.
+	 *
+	 * @return mixed|void
+	 */
+	public function load() {
 		$this->register_preferences_group(
 			buddypress()->activity->id,
 			esc_html__( 'Activity Feed', 'buddyboss' ),
@@ -38,23 +63,6 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_for_mentions();
 		$this->register_notification_for_reply();
-
-		$this->start();
-	}
-
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 
 	/**
@@ -62,14 +70,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_mentions() {
 		$this->register_preference(
-			buddypress()->activity->id,
 			'notification_activity_new_mention',
 			sprintf(
 			/* translators: %s: users mention name. */
 				__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
 				bp_activity_get_user_mentionname( get_current_user_id() )
 			),
-			esc_html__( 'A member is mentioned in another member\'s update', 'buddyboss' )
+			esc_html__( 'A member is mentioned in another member\'s update', 'buddyboss' ),
+			buddypress()->activity->id
 		);
 
 		$this->register_email_type(
@@ -124,10 +132,10 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_reply() {
 		$this->register_preference(
-			buddypress()->activity->id,
 			'notification_activity_new_reply',
 			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+			buddypress()->activity->id
 		);
 
 		$this->register_email_type(
