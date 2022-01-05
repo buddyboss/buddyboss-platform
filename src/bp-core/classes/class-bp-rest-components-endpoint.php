@@ -62,6 +62,17 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base.'/pages',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_pages' ),
+					//'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -157,6 +168,52 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_components_get_items', $current_components, $response, $request );
+
+		return $response;
+	}
+	
+	
+	/**
+	 * Retrieve components pages.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api {GET} /wp-json/buddyboss/v1/components/pages Component Pages
+	 * @apiGroup Components
+	 * @apiDescription Retrieve components Pages
+	 * @apiVersion 1.0.0
+	 * @apiPermission LoggedInUser
+	 */
+	public function get_pages( $request ) {
+		$bp_pages = bp_core_get_directory_page_ids('all');
+
+		$retval = array();
+
+		if( !empty( $bp_pages ) ){
+			foreach( $bp_pages as $component => $page_id ){
+				$retval[$component] = array(
+					'page_id'    => $page_id,
+					'page_title' => get_the_title( $page_id ),
+				);
+			}
+		}
+		
+		
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after a list of components is fetched via the REST API.
+		 *
+		 * @param array $current_components Fetched components.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bp_rest_components_get_pages', $response, $request );
 
 		return $response;
 	}
