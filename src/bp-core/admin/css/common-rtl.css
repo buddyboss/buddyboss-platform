@@ -2326,6 +2326,29 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
+#bp_media_settings_symlinks .bp-feedback,
+#bp_privacy .bp-feedback {
+  box-shadow: none;
+  padding-top: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback .bp-icon,
+#bp_privacy .bp-feedback .bp-icon {
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback > p,
+#bp_privacy .bp-feedback > p {
+  color: #666 !important;
+  margin-top: 0 !important;
+  padding: 10px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  border-right: 0;
+  width: 100%;
+}
+
 .admin-notice .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
@@ -2357,6 +2380,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e855";
+}
+
+table tbody td .bb-description {
+  color: #999;
+  margin-top: 6px;
+  margin-bottom: 0;
 }
 
 /*------------------------------------------------------------------------------
@@ -2548,6 +2577,25 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .preview_avatar_cover .button-group > .button:last-child:first-child {
   border-radius: 3px;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap {
+  position: relative;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap .preview-item-cover {
+  min-height: 120px;
+  max-height: 120px;
+  margin-bottom: 45px;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap .preview-item-avatar {
+  top: 25px;
+  position: absolute;
+  border-radius: 12px;
+  border: 0;
+  height: 70px;
+  width: 70px;
 }
 
 body.users_page_bp-profile-edit #TB_window,

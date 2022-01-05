@@ -2327,7 +2327,28 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 #bp_media_settings_symlinks .bp-feedback,
-#bp_privacy .bp-feedback,
+#bp_privacy .bp-feedback {
+  box-shadow: none;
+  padding-top: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback .bp-icon,
+#bp_privacy .bp-feedback .bp-icon {
+  border-radius: 4px 0 0 4px;
+  margin: 0;
+}
+
+#bp_media_settings_symlinks .bp-feedback > p,
+#bp_privacy .bp-feedback > p {
+  color: #666 !important;
+  margin-top: 0 !important;
+  padding: 10px 8px;
+  border: 1px solid #ccc;
+  border-radius: 0 4px 4px 0;
+  border-left: 0;
+  width: 100%;
+}
+
 .admin-notice .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
@@ -2344,7 +2365,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
-  padding: 10px 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 0 4px 4px 0;
   border-left: 0;
@@ -2556,6 +2577,25 @@ table tbody td .bb-description {
 
 .preview_avatar_cover .button-group > .button:last-child:first-child {
   border-radius: 3px;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap {
+  position: relative;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap .preview-item-cover {
+  min-height: 120px;
+  max-height: 120px;
+  margin-bottom: 45px;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap .preview-item-avatar {
+  top: 25px;
+  position: absolute;
+  border-radius: 12px;
+  border: 0;
+  height: 70px;
+  width: 70px;
 }
 
 body.users_page_bp-profile-edit #TB_window,

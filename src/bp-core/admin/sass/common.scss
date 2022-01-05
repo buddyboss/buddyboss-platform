@@ -2747,6 +2747,26 @@ table tbody td .bb-description {
 
 }
 
+.group-cover-options .preview_avatar_cover .app-preview-wrap {
+	position: relative;
+
+	.preview-item-cover {
+		min-height: 120px;
+		max-height: 120px;
+		margin-bottom: 45px;
+	}
+
+	.preview-item-avatar {
+		top: 25px;
+		position: absolute;
+		border-radius: 12px;
+		border: 0;
+		height: 70px;
+		width: 70px
+	}
+
+}
+
 body.users_page_bp-profile-edit,
 .buddyboss_page_bp-settings {
 
