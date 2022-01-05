@@ -21,7 +21,22 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @var object
 	 */
-	private static $_instance = null;
+	private static $instance = null;
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return null|BP_Messages_Notification|Controller|object
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor method.
@@ -29,6 +44,16 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
+		// Initialize.
+		$this->start();
+	}
+
+	/**
+	 * Initialize all methods inside it.
+	 *
+	 * @return mixed|void
+	 */
+	public function load() {
 		$this->register_preferences_group(
 			buddypress()->messages->id,
 			esc_html__( 'Messages', 'buddyboss' ),
@@ -37,23 +62,6 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_for_new_message();
-
-		$this->start();
-	}
-
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 
 	/**
@@ -61,10 +69,10 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_new_message() {
 		$this->register_preference(
-			buddypress()->messages->id,
 			'notification_messages_new_message',
 			esc_html__( 'A member sends you a new message', 'buddyboss' ),
-			esc_html__( 'A member receives a new message', 'buddyboss' )
+			esc_html__( 'A member receives a new message', 'buddyboss' ),
+			buddypress()->messages->id
 		);
 
 		$this->register_email_type(
@@ -93,5 +101,4 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'notification_messages_new_message'
 		);
 	}
-
 }
