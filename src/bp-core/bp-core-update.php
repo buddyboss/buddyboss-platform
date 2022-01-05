@@ -1401,6 +1401,11 @@ function bb_update_to_1_8_1() {
 function bb_update_to_1_8_5() {
 	global $buddyboss_theme_options;
 
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	/* Check if options are empty */
 	if ( empty( $buddyboss_theme_options ) ) {
 		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
