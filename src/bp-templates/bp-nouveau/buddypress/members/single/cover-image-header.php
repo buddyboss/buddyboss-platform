@@ -37,7 +37,7 @@ if ( ! empty( $cover_image_url ) ) {
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 
-			<?php if ( ! empty( $cover_image_url ) ) { ?>
+			<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( $displayed_user->id ) ) { ?>
 				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-move"></i>
 				</a>
@@ -106,13 +106,15 @@ if ( ! empty( $cover_image_url ) ) {
 			);
 			?>
 
-			<?php bp_nouveau_member_header_bubble_buttons(
+			<?php
+			bp_nouveau_member_header_bubble_buttons(
 				array(
 					'container'         => 'div',
 					'button_element'    => 'button',
 					'container_classes' => array( 'bb_more_options' ),
 				)
-			); ?>
+			);
+			?>
 
 		</div><!-- #item-header-content -->
 	</div><!-- #item-header-cover-image -->
