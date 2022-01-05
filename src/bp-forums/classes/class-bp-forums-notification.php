@@ -21,7 +21,22 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @var object
 	 */
-	private static $_instance = null;
+	private static $instance = null;
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return null|BP_Forums_Notification|Controller|object
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor method.
@@ -29,6 +44,16 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
+		// Initialize.
+		$this->start();
+	}
+
+	/**
+	 * Initialize all methods inside it.
+	 *
+	 * @return mixed|void
+	 */
+	public function load() {
 		$this->register_preferences_group(
 			buddypress()->forums->id,
 			esc_html__( 'Forums', 'buddyboss' ),
@@ -41,33 +66,19 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		// Creates discussion in a forum you are subscribed.
 		$this->register_notification_for_forums_following_topic();
-
-		$this->start();
 	}
 
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
 
-		return self::$_instance;
-	}
 
 	/**
 	 * Register notification for replies to a discussion you are subscribed.
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$this->register_preference(
-			buddypress()->forums->id,
 			'notification_forums_following_reply',
-			esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' )
+			esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
+			'',
+			buddypress()->forums->id
 		);
 
 		$this->register_email_type(
@@ -108,9 +119,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$this->register_preference(
-			buddypress()->forums->id,
 			'notification_forums_following_topic',
-			esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' )
+			esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
+			'',
+			buddypress()->forums->id
 		);
 
 		$this->register_email_type(
