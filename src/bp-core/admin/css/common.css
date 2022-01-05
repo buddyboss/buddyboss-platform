@@ -2550,6 +2550,25 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   border-radius: 3px;
 }
 
+.group-cover-options .preview_avatar_cover .app-preview-wrap {
+  position: relative;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap .preview-item-cover {
+  min-height: 120px;
+  max-height: 120px;
+  margin-bottom: 45px;
+}
+
+.group-cover-options .preview_avatar_cover .app-preview-wrap .preview-item-avatar {
+  top: 20px;
+  position: absolute;
+  border-radius: 4px;
+  border: 0;
+  height: 70px;
+  width: 70px;
+}
+
 body.users_page_bp-profile-edit #TB_window,
 .buddyboss_page_bp-settings #TB_window {
   height: auto !important;
