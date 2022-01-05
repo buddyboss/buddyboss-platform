@@ -58,7 +58,8 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function start() {
+	final public function start() {
+		$this->load();
 		add_filter( 'bb_register_notification_preferences', array( $this, 'register_notification_preferences' ) );
 		add_filter( 'bb_register_notifications', array( $this, 'register_notifications' ) );
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
@@ -68,6 +69,15 @@ abstract class BP_Core_Notification_Abstract {
 		add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
 
 	}
+
+	/**
+	 * Abstract method to call the other methods inside it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return mixed|void
+	 */
+	abstract public function load();
 
 	/************************************ Filters ************************************/
 
@@ -134,7 +144,7 @@ abstract class BP_Core_Notification_Abstract {
 			}
 		}
 
-		$priority  = array_column( $notifications, 'priority' );
+		$priority = array_column( $notifications, 'priority' );
 
 		array_multisort( $priority, SORT_ASC, $notifications );
 
@@ -298,10 +308,10 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preferences_group( string $group_key = 'other', string $group_label = '', string $group_admin_label = '', $priority = 10 ) {
+	final public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label = '', $priority = 10 ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
-			'group_label'       => ( ! empty( $group_label ) ? $group_label : esc_html__( 'Other', 'buddyboss' ) ),
+			'group_label'       => $group_label,
 			'group_admin_label' => $group_admin_label,
 			'priority'          => $priority,
 		);
@@ -310,21 +320,21 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register preference.
 	 *
-	 * @param string $notification_group       Notification group.
 	 * @param string $notification_type        Notification Type key.
 	 * @param string $notification_label       Notification label.
 	 * @param string $notification_admin_label Notification admin label.
+	 * @param string $notification_group       Notification group.
 	 * @param bool   $default                  Default status.
 	 *
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_preference( string $notification_group, string $notification_type, string $notification_label, string $notification_admin_label = '', bool $default = true ) {
+	final public function register_preference( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
 		$this->prefernces[] = array(
-			'notification_group'       => $notification_group,
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
 			'notification_admin_label' => $notification_admin_label,
+			'notification_group'       => $notification_group,
 			'notification_default'     => $default,
 		);
 	}
@@ -339,7 +349,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function register_notification( string $component, string $component_action, string $notification_type ) {
+	final public function register_notification( string $component, string $component_action, string $notification_type ) {
 		$this->notifications[] = array(
 			'component'         => $component,
 			'component_action'  => $component_action,
@@ -357,7 +367,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param array  $email_schema      Email schema.
 	 * @param string $notification_type Notification Type key.
 	 */
-	public function register_email_type( string $email_type, array $args, array $email_schema, string $notification_type ) {
+	final public function register_email_type( string $email_type, array $args, array $email_schema, string $notification_type ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type'        => $email_type,
 			'args'              => array(
