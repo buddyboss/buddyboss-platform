@@ -259,7 +259,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$args = array(
-				'search_term'   => htmlspecialchars($_REQUEST['search_term'], ENT_NOQUOTES),
+				'search_term'   => $_REQUEST['search_term'],
 				// How many results should be displyed in autosuggest?
 				// @todo: give a settings field for this value
 				'ajax_per_page' => $_REQUEST['per_page'],
