@@ -347,7 +347,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			$edit_forum = ! empty( $_POST['bbp-edit-group-forum'] ) ? true : false;
 			$forum_id   = 0;
-			$group_id   = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();			
+			$group_id   = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();
 
 			// update current forum id groups meta data
 			$current_forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );

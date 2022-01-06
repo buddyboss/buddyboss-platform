@@ -859,7 +859,7 @@ function bbp_forum_recursive_group_id( $forum_id ) {
  * Check if there's a parent forum that is associated with private group
  * 
  *
- * @param $forum_id
+ * @param int $forum_id
  *
  * @since Buddyboss [BBVERSION]
  * @return bool
@@ -870,8 +870,8 @@ function bb_forum_has_parent_with_private_group( $forum_id ) {
 		return false;
 	}	
 
-	$group_id   = bbp_forum_recursive_group_id( $forum_id );
-	$group 		= groups_get_group( $group_id );
+	$group_id	= bbp_forum_recursive_group_id( $forum_id );
+	$group		= groups_get_group( $group_id );
 
 	return $group && $group->status === bbp_get_private_status_id();
 }
