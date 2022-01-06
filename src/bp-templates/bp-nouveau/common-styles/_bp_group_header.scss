@@ -51,6 +51,7 @@
 			margin: 0;
 			max-width: 100%;
 			width: 30px;
+			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 		}
 	} // close moderators-lists
 
