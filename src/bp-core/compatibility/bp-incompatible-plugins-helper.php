@@ -46,7 +46,7 @@ function bp_helper_plugins_loaded_callback() {
 	/**
 	 * Include plugin when plugin is activated
 	 *
-	 * Support Rank Math SEO
+	 * Support Elementor
 	 */
 	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
 		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
