@@ -374,17 +374,12 @@ window.bp = window.bp || {};
 					self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_label );
 
-					// Make selected current privacy.
-					var $activityPrivacySelect = self.postForm.$el.find( '.bp-activity-privacy__input:checked' );
-
-					$activityPrivacySelect.val( activity_data.privacy );
 					self.postForm.$el.find( '.bp-activity-privacy__input#' + activity_data.privacy ).prop( 'checked', true );
 					
 					// Update privacy status.
 					var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
 					var privacy_edit_label = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).text();
 					if ( ! _.isUndefined( privacy ) ) {
-						$activityPrivacySelect.val( privacy );
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( privacy_edit_label );
 						self.postForm.$el.find( '.bp-activity-privacy__input#' + privacy ).prop( 'checked', true );
