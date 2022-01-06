@@ -386,12 +386,21 @@ function bp_learndash_page_display() {
  * @return $value bool
  */
 function bp_core_learndash_certificates_enables() {
-
+	static $bb_learndash_certificates_cache = array();
 	$value = false;
-	$query = array(
-		'post_type' => 'sfwd-certificates',
+	$args  = array(
+		'post_type'      => 'sfwd-certificates',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'fields'         => 'ids',
+		// 'posts_per_page' => 1 -> We just check here if certification available then display tab in profile section.
+		// So if we get only one course then we can verify it like certificate available or not.
 	);
-	$query = new \WP_Query( $query );
+	$cache_key = 'bp_core_learndash_certificates_enables';
+	if ( ! isset( $bb_learndash_certificates_cache[ $cache_key ] ) ) {
+		$bb_learndash_certificates_cache[ $cache_key ] = new \WP_Query( $args );
+	}
+	$query = $bb_learndash_certificates_cache[ $cache_key ];
 
 	if ( $query->have_posts() ) {
 		$value = true;
