@@ -1889,7 +1889,6 @@ window.bp = window.bp || {};
 
 			handleKeyUp: function () {
 				var self = this;
-
 				if ( this.linkTimeout != null ) {
 					clearTimeout( this.linkTimeout );
 				}
@@ -1981,8 +1980,7 @@ window.bp = window.bp || {};
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
-
-					if ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_success' ) == true ) {
+					if ( ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_success' ) == true ) && self.options.activity.get( 'link_url' ) === url ) {
 						return false;
 					}
 
@@ -2107,7 +2105,7 @@ window.bp = window.bp || {};
 										},
 										paste: {
 											forcePlainText: false,
-											cleanPastedHTML: false,
+											cleanPastedHTML: true,
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
@@ -2115,8 +2113,8 @@ window.bp = window.bp || {};
 												[ new RegExp( /<\/h[1-6]/gi ), '</b' ],
 											],
 											cleanAttrs: [ 'class', 'style', 'dir', 'id' ],
-											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-											unwrapTags: [ 'ul', 'ol', 'li' ]
+											cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+											unwrapTags: []
 										},
 										imageDragging: false
 									}

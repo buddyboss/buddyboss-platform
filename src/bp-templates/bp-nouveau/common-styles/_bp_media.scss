@@ -600,6 +600,7 @@
 		width: auto;
 		min-width: 100%;
 		object-fit: cover;
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 	}
 
 	&:after {
@@ -1252,6 +1253,7 @@ ul.bb-albums-list {
 		width: auto;
 		min-width: 100%;
 		object-fit: cover;
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 	}
 
 	.bb-more-photos {

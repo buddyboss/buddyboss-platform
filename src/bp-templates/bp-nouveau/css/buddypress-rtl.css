@@ -1061,6 +1061,7 @@ a.layout-grid-view {
   display: inline-block;
   margin-left: 10px;
   vertical-align: middle;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-post-avatar,
@@ -2166,6 +2167,10 @@ input.search-query-input {
     /* stylelint-disable-line selector-class-pattern */
     max-width: 60%;
   }
+}
+
+.activity-list .activity-item .activity-avatar img.avatar {
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .activity-list .activity-item.new_forum_post .activity-inner, .activity-list .activity-item.new_forum_topic .activity-inner {
@@ -4748,6 +4753,7 @@ span.dashicons.dashicons-admin-file:before {
   height: 25px;
   max-width: none;
   width: 25px;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .buddypress-wrap .activity-comments .acomment-meta,
@@ -4874,6 +4880,7 @@ form.ac-form .ac-reply-avatar {
 
 form.ac-form .ac-reply-avatar img {
   border: 1px solid #eee;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 form.ac-form .ac-reply-content a {
@@ -5845,6 +5852,7 @@ body.guillotine-dragging * {
   margin: 0;
   max-width: 100%;
   width: 30px;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .groups-header .parent-list {
@@ -7454,6 +7462,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 #message-threads .bp-message-link .thread-avatar img.avatar {
   max-width: 60px;
   width: 100%;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 #message-threads .bp-message-link .thread-multiple-avatar {
@@ -7767,6 +7776,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 #bp-message-thread-list img.avatar {
   float: right;
   margin: 0 0 0 10px;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 #bp-message-thread-list .actions a:before {
@@ -11087,6 +11097,7 @@ button[data-bp-tooltip] {
   display: inline-block;
   height: auto;
   width: 50%;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .buddypress-wrap .grid.bp-list > li .item-meta,
@@ -11694,6 +11705,10 @@ div.bbp-reply-header {
   overflow-wrap: normal;
   overflow: auto;
   max-width: 100%;
+}
+
+#bbpress-forums div.bbp-reply-content div.bbcode_code {
+  overflow-x: auto;
 }
 
 /* =Reply to
@@ -14626,6 +14641,7 @@ body.login .login-popup .mfp-close:hover {
   width: auto;
   min-width: 100%;
   object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .bb-item-cover-wrap:after {
@@ -15257,6 +15273,7 @@ ul.bb-albums-list img {
   width: auto;
   min-width: 100%;
   object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 ul.bb-albums-list .bb-more-photos {
@@ -22772,6 +22789,10 @@ div#bp-group-message-content #whats-new-attachments {
   align-items: center;
   border-radius: 0;
   width: 100%;
+}
+
+#group-messages-container .item-list li .item-avatar img {
+  image-rendering: -webkit-optimize-contrast;
 }
 
 #group-messages-container .bb-groups-messages-left .list-title {
