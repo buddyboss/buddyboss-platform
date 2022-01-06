@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Groups Notification Class.
  *
- * @package BuddyBoss/Groups
+ * @package BuddyBoss\Groups
  *
  * @since   BuddyBoss [BBVERSION]
  */

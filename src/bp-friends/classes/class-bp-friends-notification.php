@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Connections Notification Class.
  *
- * @package BuddyBoss/Friends
+ * @package BuddyBoss\Friends
  *
  * @since   BuddyBoss [BBVERSION]
  */
