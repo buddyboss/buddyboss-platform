@@ -285,7 +285,7 @@ abstract class BP_Moderation_Abstract {
 
 			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 			if ( ! empty( $hidden_users_ids ) ) {
-				return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
+				return "SELECT DISTINCT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
 			}
 		}
 
