@@ -590,12 +590,12 @@ function bb_core_validate_nickname_mepr_signup( $errors ) {
 	if ( function_exists( 'bp_xprofile_nickname_field_id' ) ) {
 		$nickname   = '';
 		if ( isset( $_POST['user_login'] ) ) {
-		$nickname = sanitize_text_field( $_POST['user_login'] );
+			$nickname = sanitize_text_field( $_POST['user_login'] );
 		}
-		$field_id   = bp_xprofile_nickname_field_id();
-		$message    = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
+		$field_id = bp_xprofile_nickname_field_id();
+		$message = bp_xprofile_validate_nickname_value( '', $field_id, $nickname, '' );
 		if ( ! empty( $message ) ) {
-		$errors['user_login'] =  $message;
+			$errors['user_login'] = $message;
 		}
 	}
 	return $errors;
