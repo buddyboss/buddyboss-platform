@@ -79,6 +79,7 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
 				previewTemplate: uploaderVideoTemplate,
+				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 			};
 
 			this.videoThumbnailOptions = {
@@ -93,6 +94,7 @@ window.bp = window.bp || {};
 				maxFiles: 1,
 				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictMaxFilesExceeded: BP_Nouveau.video.thumb_dict_file_exceeded,
+				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 			};
 
 			// if defined, add custom dropzone options.
