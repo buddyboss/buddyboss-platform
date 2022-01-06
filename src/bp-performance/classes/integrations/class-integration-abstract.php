@@ -198,7 +198,7 @@ abstract class Integration_Abstract {
 								$cache_group = $this->integration_name . '_' . $param_value;
 							}
 
-							$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $cache_group, $this->get_current_endpoint() );
+							$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $cache_group );
 						}
 
 						if ( false !== $get_cache ) {
@@ -317,7 +317,7 @@ abstract class Integration_Abstract {
 		$user_id = ( ! empty( $args ) && ! empty( $args['user_cache'] ) ) ? $this->get_loggedin_user_id() : 0;
 		$results = false;
 
-		$cache_val = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name, $this->get_current_endpoint() );
+		$cache_val = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name );
 
 		$include_param = isset( $args['include_param'] ) ? $args['include_param'] : 'include';
 		$unique_id     = isset( $args['unique_id'] ) ? $args['unique_id'] : 'id';
@@ -327,7 +327,7 @@ abstract class Integration_Abstract {
 			$results           = array();
 			$results['header'] = ( isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
 			foreach ( $cache_val['data'] as $item_id ) {
-				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id, $this->get_current_endpoint() );
+				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id );
 				if ( false !== $get_cache ) {
 					$results['data'][] = $get_cache;
 				} else {
@@ -418,7 +418,6 @@ abstract class Integration_Abstract {
 	 */
 	public function endpoint_cache_render() {
 		if ( $this->api_cache_data ) {
-			$current_endpoint = $this->get_current_endpoint();
 
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
@@ -447,7 +446,7 @@ abstract class Integration_Abstract {
 				}
 			}
 
-			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'], $current_endpoint );
+			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'] );
 			echo wp_json_encode( $this->api_cache_data );
 			exit;
 		}
