@@ -1784,3 +1784,54 @@ function bp_attachments_cover_image_ajax_delete() {
 	}
 }
 add_action( 'wp_ajax_bp_cover_image_delete', 'bp_attachments_cover_image_ajax_delete' );
+
+/**
+ * Get default cover image class if cover type is 'BuddyBoss' or 'None'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $item_id The item id (eg: a user or a group id). Defaults to current user.
+ * @param string $item    The item to get the settings for ("user" or "group").
+ * @return string|null Return the class if the cover type is 'BuddyBoss' or 'None' otherwise null.
+ */
+function bb_attachment_get_cover_image_class( $item_id = 0, $item = 'user' ) {
+
+	$cover_image_class = '';
+
+	if ( 'user' === $item && ! bp_disable_cover_image_uploads() ) {
+
+		if ( empty( $item_id ) ) {
+			$item_id = bp_displayed_user_id();
+		}
+
+		$profile_cover_type = bb_get_default_profile_cover_type();
+		$cover_image_class  = bp_attachments_get_user_has_cover_image( $item_id ) ? '' : ' has-default';
+
+		if ( 'custom' === $profile_cover_type ) {
+			$cover_image_class = '';
+		}
+	} elseif ( 'group' === $item && ! bp_disable_group_cover_image_uploads() ) {
+
+		if ( empty( $item_id ) ) {
+			$item_id = bp_get_current_group_id();
+		}
+
+		$group_cover_type  = bb_get_default_group_cover_type();
+		$cover_image_class = bp_attachments_get_group_has_cover_image( $item_id ) ? '' : ' has-default';
+
+		if ( 'custom' === $group_cover_type ) {
+			$cover_image_class = '';
+		}
+	}
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|null $cover_image_class The default profile or group cover class.
+	 * @param int         $item_id           The item id (eg: a user or a group id). Defaults to current user.
+	 * @param string      $item              The item to get the settings for ("user" or "group").
+	 */
+	return apply_filters( 'bb_attachment_get_cover_image_class', $cover_image_class, $item_id, $item );
+}

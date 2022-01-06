@@ -19,6 +19,7 @@ $group_cover_image        = bp_attachments_get_attachment(
 );
 $has_cover_image          = '';
 $has_cover_image_position = '';
+$has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
 
 ?>
 
@@ -34,12 +35,7 @@ $has_cover_image_position = '';
 	}
 	?>
 
-	<div id="header-cover-image" class="
-	<?php
-	echo $has_cover_image_position;
-	echo $has_cover_image;
-	?>
-	">
+	<div id="header-cover-image" class="<?php echo esc_attr( $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
 		<?php
 		if ( bp_group_use_cover_image_header() ) {
 
