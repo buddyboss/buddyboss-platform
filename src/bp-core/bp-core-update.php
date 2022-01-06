@@ -1406,6 +1406,9 @@ function bb_update_to_1_8_5() {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
+	// Delete custom css transient.
+	delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
+
 	/* Check if options are empty */
 	if ( empty( $buddyboss_theme_options ) ) {
 		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );

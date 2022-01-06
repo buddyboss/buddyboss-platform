@@ -39,8 +39,9 @@ bp_nouveau_before_loop(); ?>
 								'item_id'    => bp_get_group_id(),
 							)
 						);
+						$has_default_cover     = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
 						?>
-						<div class="bs-group-cover only-grid-view"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
+						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 					<?php } ?>
 
 					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
