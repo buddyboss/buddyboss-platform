@@ -2851,6 +2851,8 @@ window.bp = window.bp || {};
 					if ( this.model.attributes.item_id === 0 ) {
 						whats_new_form.addClass( 'focus-in--blank-group' );
 					}
+				} else {
+					$( '#privacy-status-submit' ).click();
 				}
 			}
 		}

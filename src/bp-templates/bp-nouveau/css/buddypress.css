@@ -1148,6 +1148,14 @@ a.layout-grid-view {
   display: none;
 }
 
+#whats-new-form.focus-in--privacy:not(.focus-in--group) .privacy-status-form-footer {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  opacity: 0;
+  border: 0;
+}
+
 #whats-new-form.focus-in--attm #editor-toolbar,
 #whats-new-form.focus-in--scroll #editor-toolbar {
   border-top: 1px solid #eee;
