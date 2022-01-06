@@ -941,7 +941,6 @@ window.bp = window.bp || {};
 
 			// Profile Avatar Settings Show/Hide.
 			var profileAvatarType                   = $( '#bp-profile-avatar-type' ),
-				allowAvatarUpload                   = $( '#bp-disable-avatar-uploads' ),
 				defaultProfileAvatarType            = $( 'input[type=radio][name=bp-default-profile-avatar-type]' ),
 				defaultProfileAvatarTypeVal         = $( 'input[type=radio][name=bp-default-profile-avatar-type]:checked' ).val(),
 				defaultProfileAvatarTypeContainer   = $( '.default-profile-avatar-type' ),
