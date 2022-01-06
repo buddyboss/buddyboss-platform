@@ -2861,6 +2861,10 @@ window.bp = window.bp || {};
 					}
 				} else {
 					$( '#privacy-status-submit' ).click();
+					this.model.set( 'object', 'user' );
+					
+					// Update multi media options dependent on profile/group view
+					Backbone.trigger('mediaprivacy');
 				}
 			}
 		}
