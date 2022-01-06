@@ -49,7 +49,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Intitialize all methods inside it.
+	 * Initialize all methods inside it.
 	 *
 	 * @return mixed|void
 	 */
