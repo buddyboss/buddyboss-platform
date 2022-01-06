@@ -701,7 +701,16 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 				if ( ! $gravatar || empty( $gravatar ) ) {
 					remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
-					$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', get_avatar_url( $params['email'], array( 'force_default' => true ) ) );
+					$gravatar = apply_filters(
+						'bp_gravatar_not_found_avatar',
+						get_avatar_url(
+							$params['email'],
+							array(
+								'size'          => $params['width'],
+								'force_default' => true,
+							)
+						)
+					);
 					add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
 				}
 
@@ -972,7 +981,7 @@ function bp_avatar_ajax_delete() {
 				)
 			);
 		}
-		
+
 		$return = array(
 			'avatar'        => $avatar,
 			'feedback_code' => 4,
