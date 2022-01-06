@@ -15,6 +15,7 @@ $cover_image_url          = bp_attachments_get_attachment(
 		'item_id'    => $displayed_user->id,
 	)
 );
+$has_default_cover        = bb_attachment_get_cover_image_class( $displayed_user->id, 'user' );
 
 if ( ! empty( $cover_image_url ) ) {
 	$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
@@ -26,7 +27,7 @@ if ( ! empty( $cover_image_url ) ) {
 ?>
 
 <div id="cover-image-container">
-	<div id="header-cover-image" class="<?php echo esc_attr( $has_cover_image_position . $has_cover_image ); ?>">
+	<div id="header-cover-image" class="<?php echo esc_attr( $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
 		<?php
 		if ( ! empty( $cover_image_url ) ) {
 			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( '' !== $cover_image_position ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : '' ) . ( '' !== $cover_image_position ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : '' ) . ' alt="" />';
