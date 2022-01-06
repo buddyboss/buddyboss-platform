@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Forums Notification Class.
  *
- * @package BuddyBoss/Forums
+ * @package BuddyBoss\Forums
  *
  * @since   BuddyBoss [BBVERSION]
  */
