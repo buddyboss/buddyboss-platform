@@ -3860,6 +3860,14 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$can_move     = false;
 	}
 
+	if ( ! bp_is_profile_albums_support_enabled() && ( 'photo' === $type || 'video' === $type ) && 'grouponly' !== $media_privacy ) {
+		$can_move = false;
+	}
+
+	if ( ! bp_is_group_albums_support_enabled() && ( 'photo' === $type || 'video' === $type ) && 'grouponly' === $media_privacy ) {
+		$can_move = false;
+	}
+
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
 	$data['can_add']      = $can_add;
