@@ -2,7 +2,7 @@ jQuery( document ).ready(
 	function() {
 
 		if ( typeof window.MediumEditor !== 'undefined' ) {
-			
+
 			window.forums_medium_forum_editor = [];
 			window.forums_medium_reply_editor = [];
 			window.forums_medium_topic_editor = [];
@@ -40,7 +40,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
 							imageDragging: false
@@ -140,7 +140,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
 							imageDragging: false
@@ -240,7 +240,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
 							imageDragging: false
@@ -405,9 +405,14 @@ jQuery( document ).ready(
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
-										cleanReplacements: [],
-										cleanAttrs: ['class', 'style', 'dir'],
-										cleanTags: ['meta'],
+										cleanReplacements: [
+											[new RegExp(/<div/gi), '<p'],
+											[new RegExp(/<\/div/gi), '</p'],
+											[new RegExp(/<h[1-6]/gi), '<b'],
+											[new RegExp(/<\/h[1-6]/gi), '</b'],
+										],
+										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
 									imageDragging: false
@@ -449,13 +454,13 @@ jQuery( document ).ready(
 										forcePlainText: false,
 										cleanPastedHTML: true,
 										cleanReplacements: [
-											[new RegExp(/<div>/gi), '<p>'],
-											[new RegExp(/<\/div>/gi), '</p>'],
+											[new RegExp(/<div/gi), '<p'],
+											[new RegExp(/<\/div/gi), '</p'],
 											[new RegExp(/<h[1-6]/gi), '<b'],
-											[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
-										cleanAttrs: ['class', 'style', 'dir'],
-										cleanTags: ['meta'],
+										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
 									imageDragging: false
@@ -497,13 +502,13 @@ jQuery( document ).ready(
 										forcePlainText: false,
 										cleanPastedHTML: true,
 										cleanReplacements: [
-											[new RegExp(/<div>/gi), '<p>'],
-											[new RegExp(/<\/div>/gi), '</p>'],
+											[new RegExp(/<div/gi), '<p'],
+											[new RegExp(/<\/div/gi), '</p'],
 											[new RegExp(/<h[1-6]/gi), '<b'],
-											[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
-										cleanAttrs: ['class', 'style', 'dir'],
-										cleanTags: ['meta'],
+										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
 									imageDragging: false
