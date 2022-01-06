@@ -507,7 +507,7 @@ class BP_Core_Suspend {
 		$result    = wp_cache_get( $cache_key, 'bb' );
 		if ( false === $result ) {
 			$user_ids = sprintf( 'item_id IN(\'%s\')', implode( "','", $user_id ) );
-			$result   = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} WHERE {$user_ids} AND item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
+			$result   = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE {$user_ids} AND item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );
 		}
 
