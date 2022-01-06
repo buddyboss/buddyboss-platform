@@ -811,7 +811,20 @@ window.bp = window.bp || {};
 				// Post activity hide modal
 				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
 				$singleActivityFormWrap.hide();
+
+				this.resetMultiMediaOptions();
 			},
+
+			resetMultiMediaOptions: function () {
+
+				if( window.activityMediaAction !== null ) {
+					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+					window.activityMediaAction = null;
+				}
+
+				$( '#whats-new-form' ).removeClass( 'focus-in--attm' );
+				
+			}
 		}
 	);
 
