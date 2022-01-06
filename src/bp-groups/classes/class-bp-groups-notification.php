@@ -21,7 +21,22 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @var object
 	 */
-	private static $_instance = null;
+	private static $instance = null;
+
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return null|BP_Groups_Notification|Controller|object
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor method.
@@ -29,6 +44,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
+		// Initialize.
+		$this->start();
+	}
+
+	/**
+	 * Initialize all methods inside it.
+	 *
+	 * @return mixed|void
+	 */
+	public function load() {
 		$this->register_preferences_group(
 			buddypress()->groups->id,
 			esc_html__( 'Social Groups', 'buddyboss' ),
@@ -54,23 +79,6 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( true === bp_disable_group_messages() ) {
 			$this->register_notification_for_group_user_messages();
 		}
-
-		$this->start();
-	}
-
-	/**
-	 * Get the instance of this class.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return Controller|null
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 
 	/**
@@ -78,9 +86,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_invite() {
 		$this->register_preference(
-			buddypress()->groups->id,
 			'notification_groups_invite',
-			esc_html__( 'A member invites you to join a group', 'buddyboss' )
+			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+			'',
+			buddypress()->groups->id
 		);
 
 		$this->register_email_type(
@@ -115,9 +124,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_updated() {
 		$this->register_preference(
-			buddypress()->groups->id,
 			'notification_groups_group_updated',
-			esc_html__( 'Group information is updated', 'buddyboss' )
+			esc_html__( 'Group information is updated', 'buddyboss' ),
+			'',
+			buddypress()->groups->id
 		);
 
 		$this->register_email_type(
@@ -146,10 +156,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_user_promotion() {
 		$this->register_preference(
-			buddypress()->groups->id,
 			'notification_groups_admin_promotion',
 			esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
-			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddyboss' )
+			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddyboss' ),
+			buddypress()->groups->id
 		);
 
 		$this->register_email_type(
@@ -190,9 +200,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_membership_request() {
 		$this->register_preference(
-			buddypress()->groups->id,
 			'notification_groups_membership_request',
-			esc_html__( 'A member requests to join a private group you organize', 'buddyboss' )
+			esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
+			'',
+			buddypress()->groups->id
 		);
 
 		$this->register_email_type(
@@ -227,10 +238,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_membership_request_completed() {
 		$this->register_preference(
-			buddypress()->groups->id,
 			'notification_membership_request_completed',
 			esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
-			esc_html__( 'A member\'s request to join a group has been approved or denied', 'buddyboss' )
+			esc_html__( 'A member\'s request to join a group has been approved or denied', 'buddyboss' ),
+			buddypress()->groups->id
 		);
 
 		$this->register_email_type(
@@ -291,10 +302,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_user_messages() {
 		$this->register_preference(
-			buddypress()->groups->id,
 			'notification_group_messages_new_message',
 			esc_html__( 'A group sends you a new message', 'buddyboss' ),
-			esc_html__( 'A member receives a new group message', 'buddyboss' )
+			esc_html__( 'A member receives a new group message', 'buddyboss' ),
+			buddypress()->groups->id
 		);
 
 		$this->register_email_type(

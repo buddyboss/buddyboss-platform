@@ -88,7 +88,7 @@ final class BP_Settings_Export extends BP_Export {
 
 		$export_items[] = array(
 			'group_id'    => $group_id . '_notification',
-			'group_label' => __( 'Email Preferences', 'buddyboss' ),
+			'group_label' => __( 'Notification Preferences', 'buddyboss' ),
 			'item_id'     => 'bp_notification_settings',
 			'data'        => $notification_data,
 		);
