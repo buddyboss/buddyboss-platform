@@ -158,20 +158,20 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'translatepress-multilingual/index.php', $bp_plugins, true ) && is_multisite() ) {
 
 		/**
-		 * Exclude translatepress lang slug from URL path for only multisite
+		 * Exclude translatepress lang slug from URL path for only multisite.
 		 * 
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $url URL with Language code
+		 * @param string $url URL with Language code.
 		 * 
-		 * @return string $url URL without language code
+		 * @return string $url URL without language code.
 		 */
 		function bb_core_multisite_multilang_translatepress_exclude_lang_slug( $url ) {
-			if( ! is_admin() ) {
+			if ( ! is_admin() ) {
 				$tp_settings = get_option( 'trp_settings' );
-				if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
+				if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && ! empty( $tp_settings['url-slugs'] ) ) {
 					foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
-					$url = str_replace( $lang_slug . '/', '', $url );
+						$url = str_replace( $lang_slug . '/', '', $url );
 					}
 				}
 			}
