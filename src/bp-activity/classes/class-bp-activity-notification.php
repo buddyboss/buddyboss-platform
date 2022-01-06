@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Activity Notification Class.
  *
- * @package BuddyBoss/Activity
+ * @package BuddyBoss\Activity
  *
  * @since   BuddyBoss [BBVERSION]
  */
