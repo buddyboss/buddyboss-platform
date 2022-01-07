@@ -1212,166 +1212,167 @@ add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notif
  */
 function groups_screen_notification_settings() {
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		bb_render_notification( buddypress()->groups->id );
-	} else {
-		if ( ! $group_invite = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_invite', true ) ) {
-			$group_invite = 'yes';
-		}
+	// Bail out if legacy method not enabled.
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		return;
+	}
 
-		if ( ! $group_update = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_group_updated', true ) ) {
-			$group_update = 'yes';
-		}
+	if ( ! $group_invite = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_invite', true ) ) {
+		$group_invite = 'yes';
+	}
 
-		if ( ! $group_promo = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_admin_promotion', true ) ) {
-			$group_promo = 'yes';
-		}
+	if ( ! $group_update = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_group_updated', true ) ) {
+		$group_update = 'yes';
+	}
 
-		if ( ! $group_request = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_membership_request', true ) ) {
-			$group_request = 'yes';
-		}
+	if ( ! $group_promo = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_admin_promotion', true ) ) {
+		$group_promo = 'yes';
+	}
 
-		if ( ! $group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
-			$group_request_completed = 'yes';
-		}
+	if ( ! $group_request = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_membership_request', true ) ) {
+		$group_request = 'yes';
+	}
 
+	if ( ! $group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
+		$group_request_completed = 'yes';
+	}
+
+	if ( true === bp_disable_group_messages() ) {
+		if ( ! $group_message = bp_get_user_meta( bp_displayed_user_id(), 'notification_group_messages_new_message', true ) ) {
+			$group_message = 'yes';
+		}
+	}
+	?>
+
+	<table class="notification-settings" id="groups-notification-settings">
+		<thead>
+		<tr>
+			<th class="icon"></th>
+			<th class="title"><?php esc_html_e( 'Social Groups', 'buddyboss' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr id="groups-notification-settings-invitation">
+			<td></td>
+			<td><?php esc_html_e( 'A member invites you to join a group', 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_invite]" id="notification-groups-invite-yes" class="bs-styled-radio" value="yes" <?php checked( $group_invite, 'yes', true ); ?> />
+					<label for="notification-groups-invite-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_invite]" id="notification-groups-invite-no" class="bs-styled-radio" value="no" <?php checked( $group_invite, 'no', true ); ?> />
+					<label for="notification-groups-invite-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+		<tr id="groups-notification-settings-info-updated">
+			<td></td>
+			<td><?php esc_html_e( 'Group information is updated', 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_group_updated]" id="notification-groups-group-updated-yes" class="bs-styled-radio" value="yes" <?php checked( $group_update, 'yes', true ); ?> />
+					<label for="notification-groups-group-updated-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_group_updated]" id="notification-groups-group-updated-no" class="bs-styled-radio" value="no" <?php checked( $group_update, 'no', true ); ?> />
+					<label for="notification-groups-group-updated-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+		<tr id="groups-notification-settings-promoted">
+			<td></td>
+			<td><?php esc_html_e( 'You are promoted to a group organizer or moderator', 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_admin_promotion]" id="notification-groups-admin-promotion-yes" class="bs-styled-radio" value="yes" <?php checked( $group_promo, 'yes', true ); ?> />
+					<label for="notification-groups-admin-promotion-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_admin_promotion]" id="notification-groups-admin-promotion-no" class="bs-styled-radio" value="no" <?php checked( $group_promo, 'no', true ); ?> />
+					<label for="notification-groups-admin-promotion-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+		<tr id="groups-notification-settings-request">
+			<td></td>
+			<td><?php esc_html_e( 'A member requests to join a private group you organize', 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_membership_request]" id="notification-groups-membership-request-yes" class="bs-styled-radio" value="yes" <?php checked( $group_request, 'yes', true ); ?> />
+					<label for="notification-groups-membership-request-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_groups_membership_request]" id="notification-groups-membership-request-no" class="bs-styled-radio" value="no" <?php checked( $group_request, 'no', true ); ?> />
+					<label for="notification-groups-membership-request-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+		<tr id="groups-notification-settings-request-completed">
+			<td></td>
+			<td><?php esc_html_e( 'Your request to join a group has been approved or denied', 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_membership_request_completed]" id="notification-groups-membership-request-completed-yes" class="bs-styled-radio" value="yes" <?php checked( $group_request_completed, 'yes', true ); ?> />
+					<label for="notification-groups-membership-request-completed-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_membership_request_completed]" id="notification-groups-membership-request-completed-no" class="bs-styled-radio" value="no" <?php checked( $group_request_completed, 'no', true ); ?> />
+					<label for="notification-groups-membership-request-completed-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+
+		<?php
 		if ( true === bp_disable_group_messages() ) {
-			if ( ! $group_message = bp_get_user_meta( bp_displayed_user_id(), 'notification_group_messages_new_message', true ) ) {
-				$group_message = 'yes';
-			}
+			?>
+			<tr id="groups-notification-settings-request-messages">
+				<td></td>
+				<td><?php esc_html_e( 'A group sends you a new message', 'buddyboss' ); ?></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />
+						<label for="notification-groups-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-no" class="bs-styled-radio" value="no" <?php checked( $group_message, 'no', true ); ?> />
+						<label for="notification-groups-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+			</tr>
+			<?php
 		}
 		?>
 
-		<table class="notification-settings" id="groups-notification-settings">
-			<thead>
-			<tr>
-				<th class="icon"></th>
-				<th class="title"><?php esc_html_e( 'Social Groups', 'buddyboss' ); ?></th>
-				<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-				<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
-			</tr>
-			</thead>
-
-			<tbody>
-			<tr id="groups-notification-settings-invitation">
-				<td></td>
-				<td><?php esc_html_e( 'A member invites you to join a group', 'buddyboss' ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_invite]" id="notification-groups-invite-yes" class="bs-styled-radio" value="yes" <?php checked( $group_invite, 'yes', true ); ?> />
-						<label for="notification-groups-invite-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_invite]" id="notification-groups-invite-no" class="bs-styled-radio" value="no" <?php checked( $group_invite, 'no', true ); ?> />
-						<label for="notification-groups-invite-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
-			<tr id="groups-notification-settings-info-updated">
-				<td></td>
-				<td><?php esc_html_e( 'Group information is updated', 'buddyboss' ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_group_updated]" id="notification-groups-group-updated-yes" class="bs-styled-radio" value="yes" <?php checked( $group_update, 'yes', true ); ?> />
-						<label for="notification-groups-group-updated-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_group_updated]" id="notification-groups-group-updated-no" class="bs-styled-radio" value="no" <?php checked( $group_update, 'no', true ); ?> />
-						<label for="notification-groups-group-updated-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
-			<tr id="groups-notification-settings-promoted">
-				<td></td>
-				<td><?php esc_html_e( 'You are promoted to a group organizer or moderator', 'buddyboss' ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_admin_promotion]" id="notification-groups-admin-promotion-yes" class="bs-styled-radio" value="yes" <?php checked( $group_promo, 'yes', true ); ?> />
-						<label for="notification-groups-admin-promotion-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_admin_promotion]" id="notification-groups-admin-promotion-no" class="bs-styled-radio" value="no" <?php checked( $group_promo, 'no', true ); ?> />
-						<label for="notification-groups-admin-promotion-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
-			<tr id="groups-notification-settings-request">
-				<td></td>
-				<td><?php esc_html_e( 'A member requests to join a private group you organize', 'buddyboss' ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_membership_request]" id="notification-groups-membership-request-yes" class="bs-styled-radio" value="yes" <?php checked( $group_request, 'yes', true ); ?> />
-						<label for="notification-groups-membership-request-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_groups_membership_request]" id="notification-groups-membership-request-no" class="bs-styled-radio" value="no" <?php checked( $group_request, 'no', true ); ?> />
-						<label for="notification-groups-membership-request-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
-			<tr id="groups-notification-settings-request-completed">
-				<td></td>
-				<td><?php esc_html_e( 'Your request to join a group has been approved or denied', 'buddyboss' ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_membership_request_completed]" id="notification-groups-membership-request-completed-yes" class="bs-styled-radio" value="yes" <?php checked( $group_request_completed, 'yes', true ); ?> />
-						<label for="notification-groups-membership-request-completed-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_membership_request_completed]" id="notification-groups-membership-request-completed-no" class="bs-styled-radio" value="no" <?php checked( $group_request_completed, 'no', true ); ?> />
-						<label for="notification-groups-membership-request-completed-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
-
-			<?php
-			if ( true === bp_disable_group_messages() ) {
-				?>
-				<tr id="groups-notification-settings-request-messages">
-					<td></td>
-					<td><?php esc_html_e( 'A group sends you a new message', 'buddyboss' ); ?></td>
-					<td class="yes">
-						<div class="bp-radio-wrap">
-							<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />
-							<label for="notification-groups-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-						</div>
-					</td>
-					<td class="no">
-						<div class="bp-radio-wrap">
-							<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-no" class="bs-styled-radio" value="no" <?php checked( $group_message, 'no', true ); ?> />
-							<label for="notification-groups-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-						</div>
-					</td>
-				</tr>
-				<?php
-			}
-			?>
-
-			<?php
-
-			/**
-			 * Fires at the end of the available group settings fields on Notification Settings page.
-			 *
-			 * @since BuddyPress 1.0.0
-			 */
-			do_action( 'groups_screen_notification_settings' );
-			?>
-
-			</tbody>
-		</table>
-
 		<?php
-	}
+
+		/**
+		 * Fires at the end of the available group settings fields on Notification Settings page.
+		 *
+		 * @since BuddyPress 1.0.0
+		 */
+		do_action( 'groups_screen_notification_settings' );
+		?>
+
+		</tbody>
+	</table>
+
+	<?php
 
 }
 
