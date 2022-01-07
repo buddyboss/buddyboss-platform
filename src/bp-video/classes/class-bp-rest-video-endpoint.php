@@ -1794,7 +1794,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2028,7 +2028,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2197,7 +2197,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $videos['videos'] ) ) {
 			return;

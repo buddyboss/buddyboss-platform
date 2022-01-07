@@ -70,17 +70,18 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url                 : BP_Nouveau.ajaxurl,
-					timeout             : 3 * 60 * 60 * 1000,
-					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
-					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles       : 'image/*',
-					autoProcessQueue    : true,
-					addRemoveLinks      : true,
-					uploadMultiple      : false,
-					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded
+					url                 		: BP_Nouveau.ajaxurl,
+					timeout             		: 3 * 60 * 60 * 1000,
+					dictFileTooBig      		: BP_Nouveau.media.dictFileTooBig,
+					dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       		: 'image/*',
+					autoProcessQueue    		: true,
+					addRemoveLinks      		: true,
+					uploadMultiple      		: false,
+					maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
+					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				};
 
 				// if defined, add custom dropzone options.
@@ -1462,17 +1463,18 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                 : BP_Nouveau.ajaxurl,
-						timeout             : 3 * 60 * 60 * 1000,
-						dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-						acceptedFiles       : 'image/*',
-						autoProcessQueue    : true,
-						addRemoveLinks      : true,
-						uploadMultiple      : false,
-						maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-						maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-						dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
-						previewTemplate		 : acCommentDefaultTemplate,
+						url                 		: BP_Nouveau.ajaxurl,
+						timeout             		: 3 * 60 * 60 * 1000,
+						dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
+						acceptedFiles       		: 'image/*',
+						autoProcessQueue    		: true,
+						addRemoveLinks      		: true,
+						uploadMultiple      		: false,
+						maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+						maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
+						previewTemplate		 		: acCommentDefaultTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
@@ -1642,20 +1644,21 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                  : BP_Nouveau.ajaxurl,
-						timeout              : 3 * 60 * 60 * 1000,
-						dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
-						acceptedFiles        : BP_Nouveau.media.document_type,
-						createImageThumbnails: false,
-						dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
-						autoProcessQueue     : true,
-						addRemoveLinks       : true,
-						uploadMultiple       : false,
-						maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-						maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-						dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
-						dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
-						previewTemplate		 : acCommentDocumentTemplate,
+						url                  		: BP_Nouveau.ajaxurl,
+						timeout              		: 3 * 60 * 60 * 1000,
+						dictFileTooBig       		: BP_Nouveau.media.dictFileTooBig,
+						acceptedFiles        		: BP_Nouveau.media.document_type,
+						createImageThumbnails		: false,
+						dictDefaultMessage   		: BP_Nouveau.media.dropzone_document_message,
+						autoProcessQueue     		: true,
+						addRemoveLinks       		: true,
+						uploadMultiple       		: false,
+						maxFiles             		: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+						maxFilesize          		: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+						dictInvalidFileType  		: BP_Nouveau.document.dictInvalidFileType,
+						dictMaxFilesExceeded 		: BP_Nouveau.media.document_dict_file_exceeded,
+						previewTemplate		 		: acCommentDocumentTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
@@ -1825,20 +1828,21 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                  : BP_Nouveau.ajaxurl,
-						timeout              : 3 * 60 * 60 * 1000,
-						dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
-						acceptedFiles        : BP_Nouveau.video.video_type,
-						createImageThumbnails: false,
-						dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
-						autoProcessQueue     : true,
-						addRemoveLinks       : true,
-						uploadMultiple       : false,
-						maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-						maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-						dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
-						dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
-						previewTemplate		 : acCommentVideoTemplate,
+						url                  		: BP_Nouveau.ajaxurl,
+						timeout              		: 3 * 60 * 60 * 1000,
+						dictFileTooBig       		: BP_Nouveau.video.dictFileTooBig,
+						acceptedFiles        		: BP_Nouveau.video.video_type,
+						createImageThumbnails		: false,
+						dictDefaultMessage   		: BP_Nouveau.video.dropzone_video_message,
+						autoProcessQueue     		: true,
+						addRemoveLinks       		: true,
+						uploadMultiple       		: false,
+						maxFiles             		: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+						maxFilesize          		: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+						dictInvalidFileType  		: BP_Nouveau.video.dictInvalidFileType,
+						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
+						previewTemplate		 		: acCommentVideoTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
