@@ -3541,7 +3541,7 @@ msgid "Enable on-screen notifications"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1434
-msgid "Show members new notifications received while on a page on-screen."
+msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1452
@@ -3563,7 +3563,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1493
-msgid "Show new notifications in the title of the browser tab"
+msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1494
