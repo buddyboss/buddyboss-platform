@@ -19,19 +19,19 @@ function bp_core_set_avatar_constants() {
 	$bp = buddypress();
 
 	if ( ! defined( 'BP_AVATAR_THUMB_WIDTH' ) ) {
-		define( 'BP_AVATAR_THUMB_WIDTH', 50 );
+		define( 'BP_AVATAR_THUMB_WIDTH', 150 );
 	}
 
 	if ( ! defined( 'BP_AVATAR_THUMB_HEIGHT' ) ) {
-		define( 'BP_AVATAR_THUMB_HEIGHT', 50 );
+		define( 'BP_AVATAR_THUMB_HEIGHT', 150 );
 	}
 
 	if ( ! defined( 'BP_AVATAR_FULL_WIDTH' ) ) {
-		define( 'BP_AVATAR_FULL_WIDTH', 150 );
+		define( 'BP_AVATAR_FULL_WIDTH', 300 );
 	}
 
 	if ( ! defined( 'BP_AVATAR_FULL_HEIGHT' ) ) {
-		define( 'BP_AVATAR_FULL_HEIGHT', 150 );
+		define( 'BP_AVATAR_FULL_HEIGHT', 300 );
 	}
 
 	if ( ! defined( 'BP_AVATAR_ORIGINAL_MAX_WIDTH' ) ) {
