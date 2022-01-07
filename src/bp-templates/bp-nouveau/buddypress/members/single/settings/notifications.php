@@ -10,7 +10,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 ?>
 
 <h2 class="screen-heading email-settings-screen">
-	<?php _e( 'Notification Preferences', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Notification Preferences', 'buddyboss' ); ?>
 </h2>
 
 <p class="bp-help-text email-notifications-info">
@@ -95,22 +95,24 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 		<tbody>
 
 			<tr class="section-end">
-				<td>A manual notification from a site admin</td>
+				<td>
+					<?php esc_html_e( 'A manual notification from a site admin', 'buddyboss' ); ?>
+				</td>
 				<td class="email notification_no_option">
-					-
+					<?php esc_html_e( '-', 'buddyboss' ); ?>
 				</td>
 
 				<?php if ( bb_web_notification_enabled() ) { ?>
 				<td class="web">
 					<input type="checkbox" id="admin_notification_web" name="" class="bs-styled-checkbox" />
-					<label for="admin_notification_web">Web</label>
+					<label for="admin_notification_web"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
 				</td>
 				<?php } ?>
 
 				<?php if ( bb_app_notification_enabled() ) { ?>
 				<td class="app">
 					<input type="checkbox" id="admin_notification_app" name="" class="bs-styled-checkbox" />
-					<label for="admin_notification_app">App</label>
+					<label for="admin_notification_app"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
 				</td>
 				<?php } ?>
 			</tr>
