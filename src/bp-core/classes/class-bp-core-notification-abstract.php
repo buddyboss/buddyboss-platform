@@ -52,6 +52,13 @@ abstract class BP_Core_Notification_Abstract {
 	private $email_types = array();
 
 	/**
+	 * Notification load default priority.
+	 *
+	 * @var int
+	 */
+	private $priority = 20;
+
+	/**
 	 * Initialize.
 	 *
 	 * @return void
@@ -133,6 +140,12 @@ abstract class BP_Core_Notification_Abstract {
 					'notifications' => ( ! empty( $all_notifications ) && isset( $all_notifications[ $preference['notification_type'] ] ) ) ? $all_notifications[ $preference['notification_type'] ] : array(),
 					'email_types'   => ( ! empty( $all_email_types ) && isset( $all_email_types[ $preference['notification_type'] ] ) ) ? $all_email_types[ $preference['notification_type'] ] : array(),
 				);
+
+				if ( 'other' === $preference['notification_group'] ) {
+					$notifications[ $preference['notification_group'] ]['label']       = esc_html__( 'Other', 'buddyboss' );
+					$notifications[ $preference['notification_group'] ]['admin_label'] = esc_html__( 'Other Notifications', 'buddyboss' );
+					$notifications[ $preference['notification_group'] ]['priority']    = $this->priority;
+				}
 			}
 		}
 
@@ -308,12 +321,12 @@ abstract class BP_Core_Notification_Abstract {
 	 * @return void
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label = '', $priority = 10 ) {
+	final public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
 			'group_label'       => $group_label,
 			'group_admin_label' => $group_admin_label,
-			'priority'          => $priority,
+			'priority'          => ( 0 === $priority ? $this->priority : $priority ),
 		);
 	}
 
