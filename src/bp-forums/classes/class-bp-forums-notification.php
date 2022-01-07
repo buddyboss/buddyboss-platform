@@ -58,7 +58,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			buddypress()->forums->id,
 			esc_html__( 'Forums', 'buddyboss' ),
 			esc_html__( 'Forums Notifications', 'buddyboss' ),
-			40
+			8
 		);
 
 		// Replies to a discussion you are subscribed.

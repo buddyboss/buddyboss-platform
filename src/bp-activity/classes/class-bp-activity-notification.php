@@ -58,7 +58,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			buddypress()->activity->id,
 			esc_html__( 'Activity Feed', 'buddyboss' ),
 			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
-			10
+			2
 		);
 
 		$this->register_notification_for_mentions();
