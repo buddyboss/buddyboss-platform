@@ -1250,7 +1250,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'uploadprogress',
-					function( element, file ) {
+					function( element ) {
 						
 						if ( element.upload.progress <= 99 ) {
 							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );

@@ -2754,7 +2754,7 @@ window.bp = window.bp || {};
 
 					self.video_dropzone_obj.on(
 						'uploadprogress',
-						function( element, file ) {
+						function( element ) {
 
 							if ( element.upload.progress <= 99 ) {
 								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
@@ -3190,7 +3190,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'uploadprogress',
-						function( element, file ) {
+						function( element ) {
 							if ( element.upload.progress <= 99 ) {
 								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 

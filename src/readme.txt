@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 5.6.20
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.5 =
+* Profiles - Fixed profile type search settings to show when the Network Search component is active
+* Profiles - Fixed exported data to show profile type field value to name instead of id
+* Groups - Fixed changing group photo updates user avatar temporarily in the header
+* Forums - Fixed discussion reply notification issue showing wrong member name
+* Activity - Fixed public URL link preview issue for private network
+* Media - Fixed bunch of non-translatable strings related to the media component
+* Media - Fixed missing 'video-js-rtl.min.css' file error when a site using RTL language
+* Text Editor - Fixed HTML copy paste issue
+* LearnDash - Code refactoring to fix warnings and notices
+* REST API - Fixed sign up user exists endpoint error message status code in the API
+* REST API - Fixed activity uploaded media order in the API
 
 = 1.8.4 =
 * Groups - Fixed group private messages screen, members load more issue on scroll
