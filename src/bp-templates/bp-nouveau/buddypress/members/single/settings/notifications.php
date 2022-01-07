@@ -21,7 +21,7 @@ if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
 
 <p class="bp-help-text email-notifications-info">
 	<?php
-	if ( true === bb_enabled_legacy_email_preference() ||  ) {
+	if ( true === bb_enabled_legacy_email_preference() || ( ! bb_web_notification_enabled() && ! bb_app_notification_enabled() ) ) {
 		esc_html_e( 'Choose your email notification preferences.', 'buddyboss' );
 	} else {
 		esc_html_e( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
