@@ -10,7 +10,13 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 ?>
 
 <h2 class="screen-heading email-settings-screen">
-	<?php esc_html_e( 'Notification Preferences', 'buddyboss' ); ?>
+<?php
+if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
+	esc_html_e( 'Notification Preferences', 'buddyboss' );
+} else {
+	esc_html_e( 'Email Preferences', 'buddyboss' );
+}
+?>
 </h2>
 
 <p class="bp-help-text email-notifications-info">
@@ -33,11 +39,17 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 				<i class="bb-icon bb-icon-mail"></i>
 			</span>
 
+		<?php
+		if ( bb_app_notification_enabled() ) {
+			?>
 			<div class="notification_type_info">
 				<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
 				<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
 			</div>
 		</div><!-- .notification_type -->
+			<?php
+		}
+		?>
 
 		<?php if ( bb_web_notification_enabled() ) { ?>
 		<div class="notification_type web_notification">
