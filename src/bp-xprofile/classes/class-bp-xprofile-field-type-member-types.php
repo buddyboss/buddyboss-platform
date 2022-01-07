@@ -247,7 +247,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	/**
 	 * Format profile type to display name instead of id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.5
 	 *
 	 * @param string     $field_value The profile type id value, as saved in the database.
 	 * @param string|int $field_id    Optional. ID of the field.
