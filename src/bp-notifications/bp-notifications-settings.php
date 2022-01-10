@@ -30,12 +30,15 @@ function bb_notification_get_settings_sections() {
 			'page'              => 'notifications',
 			'title'             => __( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
+			'notice'            => (
+				false === bb_enabled_legacy_email_preference() ?
+				sprintf(
+					__( 'You can register your own notifications types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
+					'<a href="#">' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
+				) : ''
+			),
 		),
 	);
-
-	if ( bb_enabled_legacy_email_preference() ) {
-		unset( $settings['bp_notification_settings_automatic'] );
-	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_sections', $settings );
 }
@@ -135,19 +138,28 @@ function bb_notification_get_settings_fields() {
 
 	$fields['bp_notification_settings_automatic'] = array();
 
-	$fields['bp_notification_settings_automatic']['infos'] = array(
-		'title'             => __( 'Notes', 'buddyboss' ),
-		'callback'          => 'bb_admin_setting_callback_on_automatic_notification_information',
-		'sanitize_callback' => 'string',
-		'args'              => array( 'class' => 'notes-hidden-header' ),
-	);
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$fields['bp_notification_settings_automatic']['infos'] = array(
+			'title'             => __( 'Notes', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_automatic_notification_information',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header' ),
+		);
 
-	$fields['bp_notification_settings_automatic']['fields'] = array(
-		'title'             => __( 'Notification Fields', 'buddyboss' ),
-		'callback'          => 'bb_admin_setting_callback_on_automatic_notification_fields',
-		'sanitize_callback' => 'string',
-		'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
-	);
+		$fields['bp_notification_settings_automatic']['fields'] = array(
+			'title'             => __( 'Notification Fields', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_on_automatic_notification_fields',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
+		);
+	} else {
+		$fields['bp_notification_settings_automatic']['infos'] = array(
+			'title'             => __( 'Notes', 'buddyboss' ),
+			'callback'          => 'bb_admin_setting_callback_notification_warning',
+			'sanitize_callback' => 'string',
+			'args'              => array( 'class' => 'notes-hidden-header' ),
+		);
+	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
 }
@@ -261,6 +273,21 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 		}
 		echo '</tbody></table>';
 	}
+}
+
+/**
+ * Callback fields for the notification warning.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_notification_warning() {
+	echo '<p class="description notification-information bp-new-notice-panel">' .
+		sprintf(
+			wp_kses_post( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' ),
+			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
+			'<a>' . esc_html__( 'BuddyBoss Labs', 'buddyboss' ) . '</a>'
+		) .
+	'</p>';
 }
 
 /**

@@ -503,7 +503,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				if ( isset( $section['notice'] ) && ! empty( $section['notice'] ) ) {
 					?>
 					<div class="display-notice bb-bottom-notice">
-						<?php echo esc_html( $section['notice'] ); ?>
+						<?php echo wp_kses_post( $section['notice'] ); ?>
 					</div>
 					<?php
 				}
