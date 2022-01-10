@@ -1784,9 +1784,15 @@ function bp_check_member_type_field_have_options() {
  * @return string
  */
 function bp_xprofile_get_member_display_name( $user_id = null ) {
+	static $cache;
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
 		return false;
+	}
+
+	$cache_key = 'bp_xprofile_get_member_display_name_' . trim( $user_id );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
 	}
 
 	$user = get_userdata( $user_id );
@@ -1903,6 +1909,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			}
 			break;
 	}
+	$cache[ $cache_key ] = trim( $display_name );
 
 	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
