@@ -1766,14 +1766,12 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 
 	if ( bp_is_active( 'notifications' ) ) {
 		?>
-        <input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
-            <?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
-        />
-        <label for="bp_labs_notification_preferences_enabled">
-            <?php
-            esc_html_e( 'Enable Notification Preferences', 'buddyboss' );
-            ?>
-        </label>
+		<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
+			<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
+		/>
+		<label for="bp_labs_notification_preferences_enabled">
+			<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
+		</label>
 
 		<?php
 		printf(
@@ -1786,7 +1784,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 				add_query_arg(
 					array(
 						'page' => 'bp-settings',
-						'tab' => 'bp-notifications',
+						'tab'  => 'bp-notifications',
 					),
 					admin_url( 'admin.php' )
 				)
