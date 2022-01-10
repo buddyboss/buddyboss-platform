@@ -1402,7 +1402,6 @@ class BP_Groups_Group {
 		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], $r );
 
 		$paged_groups_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-		error_log( $paged_groups_sql );
 		/**
 		 * Filters the pagination SQL statement.
 		 *
