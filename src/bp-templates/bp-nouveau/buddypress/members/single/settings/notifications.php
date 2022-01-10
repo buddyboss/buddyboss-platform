@@ -38,6 +38,7 @@ if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
 			?>
 
 			<div class="notification_info">
+				<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 				<div class="notification_type email_notification">
 					<span class="notification_type_icon">
