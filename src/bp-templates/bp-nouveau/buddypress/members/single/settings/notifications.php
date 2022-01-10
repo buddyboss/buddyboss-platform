@@ -31,55 +31,57 @@ if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
 
-	<?php if ( false === bb_enabled_legacy_email_preference() ) { ?>
-	<div class="notification_info">
+	<?php
+	if ( false === bb_enabled_legacy_email_preference() ) {
 
-		<div class="notification_type email_notification">
-			<span class="notification_type_icon">
-				<i class="bb-icon bb-icon-mail"></i>
-			</span>
-
-		<?php
-		//if ( bb_app_notification_enabled() ) {
+		if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
 			?>
-			<div class="notification_type_info">
-				<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
-				<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
-			</div>
-		</div><!-- .notification_type -->
-			<?php
-		//}
-		?>
 
-		<?php if ( bb_web_notification_enabled() ) { ?>
-		<div class="notification_type web_notification">
-			<span class="notification_type_icon">
-				<i class="bb-icon bb-icon-monitor"></i>
-			</span>
+			<div class="notification_info">
 
-			<div class="notification_type_info">
-				<h3><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
-				<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss' ); ?></p>
-			</div>
-		</div><!-- .notification_type -->
+				<div class="notification_type email_notification">
+					<span class="notification_type_icon">
+						<i class="bb-icon bb-icon-mail"></i>
+					</span>
+
+					<div class="notification_type_info">
+						<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
+						<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
+					</div>
+				</div><!-- .notification_type -->
+
+				<?php if ( bb_web_notification_enabled() ) { ?>
+				<div class="notification_type web_notification">
+					<span class="notification_type_icon">
+						<i class="bb-icon bb-icon-monitor"></i>
+					</span>
+
+					<div class="notification_type_info">
+						<h3><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
+						<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss' ); ?></p>
+					</div>
+				</div><!-- .notification_type -->
+				<?php } ?>
+
+				<?php if ( bb_app_notification_enabled() ) { ?>
+				<div class="notification_type app_notification">
+					<span class="notification_type_icon">
+						<i class="bb-icon bb-icon-smartphone"></i>
+					</span>
+
+					<div class="notification_type_info">
+						<h3><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
+						<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss' ); ?></p>
+					</div>
+				</div><!-- .notification_type -->
+				<?php } ?>
+
+			</div><!-- .notification_info -->
 		<?php } ?>
-
-		<?php if ( bb_app_notification_enabled() ) { ?>
-		<div class="notification_type app_notification">
-			<span class="notification_type_icon">
-				<i class="bb-icon bb-icon-smartphone"></i>
-			</span>
-
-			<div class="notification_type_info">
-				<h3><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
-				<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss' ); ?></p>
-			</div>
-		</div><!-- .notification_type -->
-		<?php } ?>
-
-	</div><!-- .notification_info -->
 
 	<table class="main-notification-settings">
+
+		<?php if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) { ?>
 		<thead>
 			<tr>
 				<th class="title"><?php esc_html_e( 'Enable notifications', 'buddyboss' ); ?></th>
@@ -103,9 +105,10 @@ if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
 				<?php } ?>
 			</tr>
 		</thead>
+		<?php } ?>
 
 		<tbody>
-
+			<?php if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) { ?>
 			<tr class="section-end">
 				<td>
 					<?php esc_html_e( 'A manual notification from a site admin', 'buddyboss' ); ?>
@@ -128,6 +131,8 @@ if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
 				</td>
 				<?php } ?>
 			</tr>
+			<?php } ?>
+
 		</tbody>
 	</table>
 	<?php } ?>
