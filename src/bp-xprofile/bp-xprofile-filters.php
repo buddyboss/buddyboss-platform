@@ -740,11 +740,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 		return $cache[ $cache_key ];
 	}
 
-	if ( !empty( $user_id ) ) {
+	if ( ! empty( $user_id ) ) {
 
 		$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-		if ( !empty( $display_name ) ) {
+		if ( ! empty( $display_name ) ) {
 			$full_name = $display_name;
 		}
 
@@ -754,7 +754,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
 
 			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
