@@ -1675,42 +1675,14 @@ function bb_labs_get_settings_sections() {
 
 	$settings = array(
 		'bp_labs_settings_notifications' => array(
-			'page'              => 'labs',
-			'title'             => __( 'BuddyBoss Labs', 'buddyboss' ),
-			'tutorial_callback' => 'bb_labs_notifications_uploading_tutorial',
-			'callback'          => 'bb_labs_notification_preferences_info_section_callback',
+			'page'     => 'labs',
+			'title'    => __( 'BuddyBoss Labs', 'buddyboss' ),
+			'callback' => 'bb_labs_notification_preferences_info_section_callback',
 		),
 	);
 
 	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
 
-}
-
-/**
- * Link to BuddyBoss Labs tutorial.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_labs_notifications_uploading_tutorial() {
-	?>
-
-	<p>
-		<a class="button" href="
-		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62827,
-				),
-				'admin.php'
-			)
-		);
-		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
-
-	<?php
 }
 
 /**
@@ -1792,7 +1764,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		);
 	} else {
 		printf(
-			'<p class="description">%s</p>',
+			'<p class="notice">%s</p>',
 			sprintf(
 				__( 'This feature requires the %s component to be enabled.', 'buddyboss' ),
 				'<strong><a href="' . esc_url(
@@ -1812,6 +1784,25 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 			)
 		);
 	}
+
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			'<a href="%1$s" class="button">%2$s</a>',
+			esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 0,
+						),
+						'admin.php'
+					)
+				)
+			),
+			esc_html__( 'View Tutorial', 'buddyboss' )
+		)
+	);
 
 }
 
