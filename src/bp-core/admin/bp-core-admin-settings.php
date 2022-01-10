@@ -1803,7 +1803,7 @@ function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
 }
 
 /**
- * User settings section description for the settings page
+ * Buddyboss Labs settings section callback.
  *
  * @since BuddyBoss [BBVERSION]
  */
