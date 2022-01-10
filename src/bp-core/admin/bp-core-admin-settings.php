@@ -1592,3 +1592,124 @@ function bb_after_update_activity_settings( $tab_name ) {
 	}
 }
 add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
+
+/**
+ * Register the labs settings section.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return array
+ */
+function bb_labs_get_settings_sections() {
+
+	$settings = array(
+		'bp_labs_settings_notifications' => array(
+			'page'              => 'labs',
+			'title'             => __( 'BuddyBoss Labs', 'buddyboss' ),
+			'tutorial_callback' => 'bb_labs_notifications_uploading_tutorial',
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
+
+}
+
+/**
+ * Link to BuddyBoss Labs tutorial.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_notifications_uploading_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62827,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
+ * Get settings fields by section.
+ *
+ * @param string $section_id Section id.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_labs_get_settings_fields();
+	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all the settings fields.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_get_settings_fields() {
+
+	$fields = array();
+
+	$fields['bp_labs_settings_notifications'] = array(
+
+		'bp_labs_notification_preferences_enabled'  => array(
+			'title'             => __( 'Notification Preferences', 'buddyboss' ),
+			'callback'          => 'bb_labs_settings_callback_notification_preferences_enabled',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields', $fields );
+}
+
+/**
+ * Setting > Media > Profile support
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_settings_callback_notification_preferences_enabled() {
+	?>
+    <input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
+		<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
+    />
+    <label for="bp_labs_notification_preferences_enabled">
+		<?php
+		esc_html_e( 'Enable Notification Preferences', 'buddyboss' );
+		?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if notification support is enabled.
+ *
+ * @param int $default Default false.
+ *
+ * @return bool Is media profile media support enabled or not
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+}
