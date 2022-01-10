@@ -1364,7 +1364,7 @@ class BP_Groups_Group {
 			$sql['orderby'] = 'ORDER BY rand()';
 		} elseif ( 'include' === $orderby ) {
 			if ( ! empty( $r['include'] ) ) {
-				$field_data     = implode( ',', $r['include'] );
+				$field_data     = implode( ',', array_map( 'absint', $r['include'] ) );
 				$sql['orderby'] = "ORDER BY FIELD(g.id, {$field_data})";
 			}
 		} else {
