@@ -584,6 +584,7 @@ class BP_User_Query {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function do_wp_user_query() {
+		static $do_wp_user_query;
 		$fields = array(
 			'ID',
 			'user_login',
@@ -610,24 +611,27 @@ class BP_User_Query {
 		 * @param array         $value Array of arguments for the user query.
 		 * @param BP_User_Query $this  Current BP_User_Query instance.
 		 */
-		$wp_user_query = new WP_User_Query(
-			apply_filters(
-				'bp_wp_user_query_args',
-				array(
+		$args = array(
+			// Relevant.
+			'fields'      => $fields,
+			'include'     => $this->user_ids,
 
-					// Relevant.
-					'fields'      => $fields,
-					'include'     => $this->user_ids,
+			// Overrides
+			'blog_id'     => 0,    // BP does not require blog roles.
+			'count_total' => false, // We already have a count.
 
-					// Overrides
-					'blog_id'     => 0,    // BP does not require blog roles.
-					'count_total' => false, // We already have a count.
-
-				),
-				$this
-			)
 		);
-
+		$cache_key = 'bb_do_wp_user_query_' . md5( maybe_serialize( $args ) );
+		if ( ! isset( $do_wp_user_query[ $cache_key ] ) ) {
+			$do_wp_user_query[ $cache_key ] = new WP_User_Query(
+				apply_filters(
+					'bp_wp_user_query_args',
+					$args,
+					$this
+				)
+			);
+		}
+		$wp_user_query = $do_wp_user_query[ $cache_key ];
 		// We calculate total_users using a standalone query, except
 		// when a whitelist of user_ids is passed to the constructor.
 		// This clause covers the latter situation, and ensures that
