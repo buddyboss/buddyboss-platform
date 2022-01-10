@@ -163,7 +163,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
-			'name'            => __( 'Notification Preferences', 'buddyboss' ),
+			'name'            => ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) ? esc_html__( 'Notification Preferences', 'buddyboss' ) : esc_html__( 'Email Preferences', 'buddyboss' ),
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
