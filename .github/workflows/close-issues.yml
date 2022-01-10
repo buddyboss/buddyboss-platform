@@ -20,6 +20,6 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         days-before-stale: 0
         days-before-close: 0
-        stale-issue-message: 'We are no longer accepting GitHub issue submissions- as our issue tracking and development projects have now moved to JIRA. [Click here](https://www.buddyboss.com/moving-to-jira/) to read more about it.
+        stale-issue-message: 'We are no longer accepting GitHub issue submissions as our issue tracking and development projects have now moved to JIRA. [Click here](https://www.buddyboss.com/moving-to-jira/) to read more about it.
                               
-                              If you wish to report an issue or bug, please do so from the [BuddyBoss Support Portal](https://support.buddyboss.com/support/login)- or [Report a Bug](https://www.buddyboss.com/report-a-bug) directly on our site.'
+                              If you wish to report an issue or bug, please do so from the [BuddyBoss Support Portal](https://support.buddyboss.com/support/login) or [Report a Bug](https://www.buddyboss.com/report-a-bug) directly on our site.'
