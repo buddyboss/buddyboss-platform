@@ -132,6 +132,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
 		'generating_thumb'                   => 'Generating thumbnail…',
+		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_video_album() ) {
