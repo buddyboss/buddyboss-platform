@@ -6101,6 +6101,18 @@ function bb_check_email_type_registered( string $notification_type ) {
 }
 
 /**
+ * Checks if notification preference is enabled or not with from buddyboss labs.
+ *
+ * @param int $default Default false.
+ *
+ * @return bool Is media profile media support enabled or not
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+}
+
+/**
  * Enabled legacy email preferences.
  *
  * @since BuddyBoss [BBVERSION]
@@ -6108,7 +6120,7 @@ function bb_check_email_type_registered( string $notification_type ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preference() {
-	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', true );
+	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', bp_is_active( 'notifications' ) && ! bp_is_labs_notification_preferences_support_enabled() );
 }
 
 /**

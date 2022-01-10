@@ -1791,18 +1791,6 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 }
 
 /**
- * Checks if notification support is enabled.
- *
- * @param int $default Default false.
- *
- * @return bool Is media profile media support enabled or not
- * @since BuddyBoss [BBVERSION]
- */
-function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
-}
-
-/**
  * Buddyboss Labs settings section callback.
  *
  * @since BuddyBoss [BBVERSION]
