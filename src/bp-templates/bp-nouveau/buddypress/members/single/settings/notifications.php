@@ -11,7 +11,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 
 <h2 class="screen-heading email-settings-screen">
 <?php
-if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
+if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
 	esc_html_e( 'Notification Preferences', 'buddyboss' );
 } else {
 	esc_html_e( 'Email Preferences', 'buddyboss' );
