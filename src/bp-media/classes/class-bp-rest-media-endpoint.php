@@ -2223,7 +2223,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -2752,7 +2752,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -3118,7 +3118,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;

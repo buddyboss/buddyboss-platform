@@ -302,7 +302,7 @@ window.bp = window.bp || {};
 				var membersDiv = document.getElementById( 'members-list' );
 				$( '.bb-icon-loader' ).hide();
 				var scroll_xhr;
-				if ( membersDiv.length ) {
+				if ( $( membersDiv ).length ) {
 					membersDiv.addEventListener(
 						'scroll',
 						function () {
@@ -880,7 +880,7 @@ window.bp = window.bp || {};
 						},
 						paste: {
 							forcePlainText: false,
-							cleanPastedHTML: false,
+							cleanPastedHTML: true,
 							cleanReplacements: [
 							[new RegExp( /<div/gi ), '<p'],
 							[new RegExp( /<\/div/gi ), '</p'],
@@ -888,8 +888,8 @@ window.bp = window.bp || {};
 							[new RegExp( /<\/h[1-6]/gi ), '</b'],
 							],
 							cleanAttrs: ['class', 'style', 'dir', 'id'],
-							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-							unwrapTags: [ 'ul', 'ol', 'li' ]
+							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+							unwrapTags: []
 						},
 						imageDragging: false
 					}

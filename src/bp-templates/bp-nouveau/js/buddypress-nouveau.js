@@ -1064,7 +1064,7 @@ window.bp = window.bp || {};
 		 * Set title tag in notification data attribute.
 		 */
 		setTitle: function() {
-			var title = $('html').find( 'title' ).text();
+			var title = $('html head').find( 'title' ).text();
 			$('.bb-onscreen-notification').attr( 'data-title-tag', title );
 		},
 
