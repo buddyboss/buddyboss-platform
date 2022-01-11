@@ -6228,17 +6228,32 @@ function bb_render_notification( $notification_group ) {
 	}
 }
 
+/**
+ * Function to update the screen label based on the different senarios.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
 function bb_core_notification_preferences_data() {
 
 	$data = array(
-		'menu_title'          => '',
-		'menu_icon'           => '',
-		'screen_title'        => '',
-		'screen_description'  => '',
-		'show_checkbox_lable' => true
+		'menu_title'          => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'screen_title'        => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss' ),
+		'show_checkbox_label' => false,
 	);
 
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$data['menu_title']          = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['screen_title']        = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
+		$data['show_checkbox_label'] = true;
 
-    return $data;
+		if ( ! ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
+			$data['screen_description'] = esc_html__( 'Choose which notifications to receive by email.', 'buddyboss' );
+		}
+	}
 
+	return $data;
 }
