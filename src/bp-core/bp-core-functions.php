@@ -6120,7 +6120,7 @@ function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preference() {
-	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', ! ( bp_is_labs_notification_preferences_support_enabled() && bp_is_active( 'notifications' ) ) );
+	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', ! bp_is_labs_notification_preferences_support_enabled() );
 }
 
 /**

@@ -1736,33 +1736,16 @@ function bb_labs_get_settings_fields() {
  */
 function bb_labs_settings_callback_notification_preferences_enabled() {
 
-	if ( bp_is_active( 'notifications' ) ) {
-		?>
-		<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
-			<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
-		/>
-		<label for="bp_labs_notification_preferences_enabled">
-			<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
-		</label>
+	?>
+	<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
+		<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
+	/>
+	<label for="bp_labs_notification_preferences_enabled">
+		<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
+	</label>
 
-		<?php
-		printf(
-			'<p class="description">%s</p>',
-			sprintf(
-				__(
-					'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.',
-					'buddyboss'
-				),
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-notifications',
-					),
-					admin_url( 'admin.php' )
-				)
-			)
-		);
-	} else {
+	<?php
+	if ( ! bp_is_active( 'notifications' ) ) {
 		printf(
 			'<p class="bp-new-notice-panel-notice">%s</p>',
 			sprintf(
@@ -1781,6 +1764,23 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 			esc_html__(
 				'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the Notifications settings.',
 				'buddyboss'
+			)
+		);
+	} else {
+
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' ),
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-notifications',
+						),
+						admin_url( 'admin.php' )
+					)
+                )
 			)
 		);
 	}
