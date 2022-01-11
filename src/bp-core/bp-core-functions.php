@@ -6227,3 +6227,18 @@ function bb_render_notification( $notification_group ) {
 		}
 	}
 }
+
+function bb_core_notification_preferences_data() {
+
+	$data = array(
+		'menu_title'          => '',
+		'menu_icon'           => '',
+		'screen_title'        => '',
+		'screen_description'  => '',
+		'show_checkbox_lable' => true
+	);
+
+
+    return $data;
+
+}
