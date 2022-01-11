@@ -7,7 +7,7 @@
 				<?php esc_html_e( 'Select a group', 'buddyboss' ); ?>
 			<# } else { #>
 				<# if ( data.edit_activity === true ) {  #>
-					<?php esc_html_e( 'Edit activity', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Edit post', 'buddyboss' ); ?>
 				<# } else { #>
 					<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
 				<# } #>
