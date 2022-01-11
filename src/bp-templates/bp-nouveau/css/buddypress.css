@@ -1036,11 +1036,18 @@ a.layout-grid-view {
   max-width: 60%;
 }
 
+@media screen and (max-width: 500px) {
+  .activity-post-name-status {
+    max-width: 80%;
+  }
+}
+
 #bp-activity-privacy-point {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   margin-top: 5px;
+  max-width: 100%;
 }
 
 #bp-activity-privacy-point .privacy-point-icon:before {
@@ -1098,6 +1105,7 @@ a.layout-grid-view {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  flex: 1;
 }
 
 #bp-activity-privacy-point .bb-icon-angle-down {

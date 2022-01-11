@@ -22,6 +22,10 @@
 
 .activity-post-name-status {
 	max-width: 60%;
+
+	@media screen and (max-width: 500px) {
+		max-width: 80%;
+	}
 }
 
 #bp-activity-privacy-point {
@@ -29,6 +33,7 @@
 	align-items: center;
 	cursor: pointer;
 	margin-top: 5px;
+	max-width: 100%;
 
 	.privacy-point-icon:before {
 		font-family: bb-icons;
@@ -104,6 +109,7 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
+		flex: 1;
 	}
 
 	.bb-icon-angle-down {
