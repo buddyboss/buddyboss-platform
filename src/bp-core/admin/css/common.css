@@ -1177,6 +1177,45 @@ body.post-type-reply #edit-slug-box {
   margin-bottom: 0;
 }
 
+.bp-new-notice-panel-alert {
+  color: #666;
+  background-color: #f6f6f8;
+  border: 1px solid #d1d1d1;
+  padding: 12px 10px;
+}
+
+.bp-admin-card .form-table td .bp-new-notice-panel-alert {
+  color: #666;
+}
+
+.bp-new-notice-panel-alert:before {
+  content: '\e8c2';
+  color: #808080;
+  font-size: 20px;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.bp-new-notice-panel-notice {
+  background-color: #fff3c8;
+  color: #8b6300;
+  border: 0;
+  padding: 12px 10px;
+  margin-bottom: 15px;
+}
+
+.bp-admin-card .form-table td .bp-new-notice-panel-notice {
+  margin-bottom: 15px;
+}
+
+.bp-admin-card .form-table td .bp-new-notice-panel-notice,
+.bp-new-notice-panel-notice a {
+  color: #8b6300;
+}
+
 @media screen and (max-width: 782px) {
   .bp-new-notice-panel {
     margin-bottom: 1.5em;
@@ -2368,12 +2407,16 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding-right: 0;
 }
 
-#bp_notification_settings_automatic table.form-table .notes-hidden-header .notification-information {
-  color: #444;
-}
-
 #bp_notification_settings_automatic table.form-table .no-padding {
   padding: 0;
+}
+
+#bp_notification_settings_automatic table.form-table tbody tr {
+  margin-bottom: 20px;
+}
+
+#bp_notification_settings_automatic table.form-table tbody tr th {
+  margin-bottom: 15px;
 }
 
 #bp_notification_settings_automatic .field-set {

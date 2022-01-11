@@ -1764,7 +1764,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		);
 	} else {
 		printf(
-			'<p class="notice">%s</p>',
+			'<p class="bp-new-notice-panel-notice">%s</p>',
 			sprintf(
 				__( 'This feature requires the %s component to be enabled.', 'buddyboss' ),
 				'<strong><a href="' . esc_url(

@@ -293,7 +293,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_notification_warning() {
-	echo '<p class="description notification-information bp-new-notice-panel">' .
+	echo '<p class="description notification-information bp-new-notice-panel-alert">' .
 		sprintf(
 					/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
 				__( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' ),
