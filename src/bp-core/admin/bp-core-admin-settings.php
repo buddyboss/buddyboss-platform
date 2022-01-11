@@ -607,7 +607,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 	$hide_show_style       = '';
-	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
+	$placeholder_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg';
 	$profile_cover_image   = bb_get_default_custom_upload_profile_cover();
 
 	if ( empty( $profile_cover_image ) ) {
@@ -912,7 +912,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 	$hide_show_style       = '';
-	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
+	$placeholder_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg';
 	$group_cover_image     = bb_get_default_custom_upload_group_cover();
 
 	if ( empty( $group_cover_image ) ) {
