@@ -517,7 +517,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
  */
 function bp_admin_setting_callback_default_profile_custom_avatar() {
 	$hide_show_style        = 'bp-inline-block';
-	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
+	$placeholder_avatar_url = buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	$custom_avatar_url      = bb_get_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
@@ -627,7 +627,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 			</label>
 			<a href="#" class="delete button button-large bb-img-remove-button <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
-		
+
 		<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display: none;">
 			<div class="bp-feedback">
 				<span class="bp-icon" aria-hidden="true"></span>
@@ -823,7 +823,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
  */
 function bp_admin_setting_callback_default_group_custom_avatar() {
 	$hide_show_style        = 'bp-inline-block';
-	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
+	$placeholder_avatar_url = buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	$custom_avatar_url      = bb_get_default_custom_upload_group_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
