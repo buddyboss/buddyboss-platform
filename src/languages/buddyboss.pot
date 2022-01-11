@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-07 04:25:05+00:00\n"
+"POT-Creation-Date: 2022-01-11 05:52:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -110,7 +110,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:581
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:587
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -545,7 +545,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:2532
 #: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:62
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:164
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:171
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:26
@@ -561,7 +561,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:33
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:24
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:24
-#: bp-templates/bp-nouveau/includes/activity/functions.php:197
+#: bp-templates/bp-nouveau/includes/activity/functions.php:222
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1332
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1402
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1478
@@ -961,7 +961,7 @@ msgstr[1] ""
 #: bp-messages/bp-messages-template.php:733
 #: bp-messages/classes/class-bp-messages-component.php:367
 #: bp-notifications/classes/class-bp-notifications-component.php:290
-#: bp-templates/bp-nouveau/includes/activity/functions.php:111
+#: bp-templates/bp-nouveau/includes/activity/functions.php:113
 #: bp-xprofile/classes/class-bp-xprofile-component.php:447
 #. translators: %s = member name
 msgid "Profile photo of %s"
@@ -1075,7 +1075,7 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:4122
 #: bp-activity/bp-activity-template.php:4128
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:968
-#: bp-templates/bp-nouveau/includes/activity/functions.php:330
+#: bp-templates/bp-nouveau/includes/activity/functions.php:357
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
 msgstr ""
@@ -1126,6 +1126,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:282
 #: bp-media/classes/class-bp-media-component.php:169
 #: bp-media/classes/class-bp-media-privacy.php:52
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:6
 #: bp-video/classes/class-bp-video-component.php:142
 #: bp-xprofile/classes/class-bp-xprofile-component.php:182
 msgid "Public"
@@ -1140,6 +1141,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:170
 #: bp-media/classes/class-bp-media-privacy.php:54
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:723
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:8
 #: bp-templates/bp-nouveau/includes/groups/functions.php:133
 #: bp-templates/bp-nouveau/includes/members/functions.php:27
 #: bp-video/classes/class-bp-video-component.php:143
@@ -1158,6 +1160,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:174
 #: bp-media/classes/class-bp-media-privacy.php:55
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1053
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:10
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
 #: bp-templates/bp-nouveau/includes/groups/functions.php:154
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
@@ -1171,6 +1174,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-privacy.php:53
 #: bp-media/classes/class-bp-media-component.php:177
 #: bp-media/classes/class-bp-media-privacy.php:53
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:12
 #: bp-video/classes/class-bp-video-component.php:150
 #: bp-xprofile/classes/class-bp-xprofile-component.php:199
 msgid "Only Me"
@@ -1195,7 +1199,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-component.php:415
 #: bp-activity/classes/class-bp-rest-activity-details-endpoint.php:282
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:959
-#: bp-templates/bp-nouveau/includes/activity/functions.php:316
+#: bp-templates/bp-nouveau/includes/activity/functions.php:343
 msgid "Mentions"
 msgstr ""
 
@@ -3720,7 +3724,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:941
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1047
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:776
-#: bp-templates/bp-nouveau/includes/activity/functions.php:288
+#: bp-templates/bp-nouveau/includes/activity/functions.php:315
 #: bp-templates/bp-nouveau/includes/customizer.php:196
 #: bp-video/classes/class-bp-video.php:678
 msgid "Connections"
@@ -3756,7 +3760,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1078
 #: bp-moderation/classes/class-bp-moderation-groups.php:112
 #: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:742
-#: bp-templates/bp-nouveau/includes/activity/functions.php:301
+#: bp-templates/bp-nouveau/includes/activity/functions.php:328
 #: bp-templates/bp-nouveau/includes/customizer.php:199
 msgid "Groups"
 msgstr ""
@@ -4108,7 +4112,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-activity.php:98
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:932
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:127
-#: bp-templates/bp-nouveau/includes/activity/functions.php:273
+#: bp-templates/bp-nouveau/includes/activity/functions.php:300
 msgid "Likes"
 msgstr ""
 
@@ -5087,7 +5091,6 @@ msgid "Diversity"
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:293
-#: bp-templates/bp-nouveau/includes/document/functions.php:96
 msgid "Drop files here to upload"
 msgstr ""
 
@@ -7663,6 +7666,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:768 bp-groups/bp-groups-template.php:857
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1847
 #: bp-moderation/classes/class-bp-moderation-groups.php:234
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:14
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:61
 msgid "Group"
 msgstr ""
@@ -8956,7 +8960,7 @@ msgid "Collapsible Form"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:129
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:27
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:221
 msgid "of"
 msgstr ""
@@ -9072,7 +9076,7 @@ msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:1968
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:27
 #: bp-video/bp-video-functions.php:2509
 msgid "Image"
 msgstr ""
@@ -14406,83 +14410,103 @@ msgstr ""
 msgid "Email (will not be published) (required):"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:137
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:111
+#: bp-forums/templates/default/bbpress/form-attachments.php:40
+#: bp-forums/templates/default/bbpress/form-attachments.php:86
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:36
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:63
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-document.php:5
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-media.php:8
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-document.php:5
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-media.php:8
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:33
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:144
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:213
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:67
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:140
+#: bp-templates/bp-nouveau/buddypress/media/create-album.php:39
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:45
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:46
+msgid "Upload Failed"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-attachments.php:144
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:118
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-video.php:32
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-video.php:32
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:200
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:123
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:203
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:128
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:67
 msgid "0% Uploaded"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:148
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
+#: bp-forums/templates/default/bbpress/form-attachments.php:155
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-editor-toolbar.php:2
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:255
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:181
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:259
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:188
 msgid "Show formatting"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:148
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
+#: bp-forums/templates/default/bbpress/form-attachments.php:155
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-editor-toolbar.php:2
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:9
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:255
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:181
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:259
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:188
 msgid "Hide formatting"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:159
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:128
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
+#: bp-forums/templates/default/bbpress/form-attachments.php:166
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:135
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:5
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:16
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:263
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:191
-msgid "Attach a photo"
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:267
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:198
+msgid "Attach photo"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:170
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:134
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
+#: bp-forums/templates/default/bbpress/form-attachments.php:177
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:141
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:15
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:26
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:273
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:202
-msgid "Attach a video"
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:277
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:209
+msgid "Attach video"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:181
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:139
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:32
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:37
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:280
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:212
-msgid "Attach a document"
-msgstr ""
-
-#: bp-forums/templates/default/bbpress/form-attachments.php:193
+#: bp-forums/templates/default/bbpress/form-attachments.php:188
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:146
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:41
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:45
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:288
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:222
-msgid "Post a GIF"
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:25
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:37
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:284
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:219
+msgid "Attach document"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:199
+#: bp-forums/templates/default/bbpress/form-attachments.php:200
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:153
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:34
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:45
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:292
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:229
+msgid "Choose a GIF"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-attachments.php:206
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:295
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:229
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:299
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:236
 msgid "Search GIPHY"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:215
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:153
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:47
+#: bp-forums/templates/default/bbpress/form-attachments.php:222
+#: bp-media/bp-media-settings.php:42
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:160
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-editor-toolbar.php:13
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:52
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:309
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:245
-msgid "Insert an emoji"
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:313
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:250
+msgid "Emoji"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:31
@@ -14645,6 +14669,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:503
 #: bp-moderation/classes/class-bp-moderation-activity.php:517
 #: bp-moderation/classes/class-bp-moderation-activity.php:531
+#: bp-templates/bp-nouveau/includes/activity/functions.php:220
 #: bp-templates/bp-nouveau/includes/functions.php:1531
 msgid "Post"
 msgstr ""
@@ -15962,6 +15987,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php:5
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:145
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:42
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:33
@@ -16901,6 +16927,7 @@ msgid "No Group Profile Photo"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-list-table.php:237
+#: bp-templates/bp-nouveau/includes/activity/functions.php:182
 msgid "No groups found."
 msgstr ""
 
@@ -19497,10 +19524,6 @@ msgstr ""
 
 #: bp-media/bp-media-functions.php:2197
 msgid "BuddyBoss Media data update is failing!"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:42
-msgid "Emoji"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:47
@@ -23976,7 +23999,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:61
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:34
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:97
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:103
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:41
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:65
 #: bp-templates/bp-nouveau/buddypress/video/video-loop.php:35
@@ -23990,7 +24013,6 @@ msgid "Load More"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:17
-#: bp-templates/bp-nouveau/includes/activity/functions.php:195
 msgid "Post Update"
 msgstr ""
 
@@ -24078,25 +24100,73 @@ msgid "All Types"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-edit-postin.php:5
-#: bp-templates/bp-nouveau/includes/activity/functions.php:175
+#: bp-templates/bp-nouveau/includes/activity/functions.php:177
 msgid "Post in: Group"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-edit-postin.php:8
-#: bp-templates/bp-nouveau/includes/activity/functions.php:166
+#: bp-templates/bp-nouveau/includes/activity/functions.php:168
 msgid "Post in: Profile"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-header.php:5
+msgid "Who can see your post?"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-header.php:7
+msgid "Select a group"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-header.php:10
+msgid "Edit activity"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-header.php:12
+msgid "Create a post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:4
 msgid "Loading preview..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:40
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:7
 msgid "Cancel Preview"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php:14
-msgid "Remove item"
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:13
+msgid "Visible to anyone, on or off this site"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:15
+msgid "Visible to all members on this site"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:17
+msgid "Visible only to your connections"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:19
+msgid "Visible only to you"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:36
+msgid "Post in Group"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:37
+msgid "Visible to members of a group"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php:3
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php:4
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:94
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:148
+#: bp-templates/bp-nouveau/buddypress/video/uploader.php:122
+msgid "Back"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-editor-toolbar.php:7
+msgid "Mention someone"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:16
@@ -24400,7 +24470,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:17
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:31
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:73
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:75
 msgid "Create new folder"
 msgstr ""
 
@@ -24520,24 +24590,18 @@ msgstr ""
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:59
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:61
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:24
 msgid "Select Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:91
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:93
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:100
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:141
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:147
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:121
 msgid "Done"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:92
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:142
-#: bp-templates/bp-nouveau/buddypress/video/uploader.php:122
-msgid "Back"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:24
@@ -24817,16 +24881,16 @@ msgstr ""
 msgid "Send to"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:313
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:317
 msgid "Send Individually"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:314
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:318
 msgid "Create New Thread"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:322
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:256
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:326
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:259
 msgid "Send Message"
 msgstr ""
 
@@ -24895,7 +24959,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:16
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-album.php:75
+#: bp-templates/bp-nouveau/buddypress/media/create-album.php:80
 #: bp-templates/bp-nouveau/buddypress/media/index.php:46
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:19
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:25
@@ -24935,7 +24999,7 @@ msgid "No albums found. Please create and select album."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/location-move.php:14
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:69
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:75
 #: bp-templates/bp-nouveau/buddypress/video/location-move.php:14
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:77
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:84
@@ -25463,114 +25527,126 @@ msgstr ""
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:542
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:548
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:622
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:644
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:628
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:650
 #. translators: 1: string or media and medias. 2: group text.
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:623
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:629
 msgid "media"
 msgid_plural "medias"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:624
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:646
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:630
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:652
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:645
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:651
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:663
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:669
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:715
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:721
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:738
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:744
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:738
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:744
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:769
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:775
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:818
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:824
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:90
+#: bp-templates/bp-nouveau/includes/activity/functions.php:91
 msgid "Sorry, Your update cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:176
-msgid "Start typing the group name..."
+#: bp-templates/bp-nouveau/includes/activity/functions.php:92
+msgid "An error occurred while saving your post."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:192
-msgid "Write here or use @ to mention someone."
+#: bp-templates/bp-nouveau/includes/activity/functions.php:178
+msgid "Search groups"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:193
+#: bp-templates/bp-nouveau/includes/activity/functions.php:180
+msgid "Loading groups..."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:181
+msgid "Finding groups..."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:217
+msgid "Share what's on your mind, %s..."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:218
 msgid "Post what's new"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:194
+#: bp-templates/bp-nouveau/includes/activity/functions.php:219
 msgid "Post in"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:196
+#: bp-templates/bp-nouveau/includes/activity/functions.php:221
 msgid "Update Post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:198
+#: bp-templates/bp-nouveau/includes/activity/functions.php:223
 msgid "%d Comment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:199
+#: bp-templates/bp-nouveau/includes/activity/functions.php:224
 msgid "%d Comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:200
+#: bp-templates/bp-nouveau/includes/activity/functions.php:225
 msgid "Loading..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:204
+#: bp-templates/bp-nouveau/includes/activity/functions.php:229
 msgid "Write something to %s..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:208
+#: bp-templates/bp-nouveau/includes/activity/functions.php:233
 msgid "Share something with your group..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:245
+#: bp-templates/bp-nouveau/includes/activity/functions.php:272
 msgid "All Updates"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:552
+#: bp-templates/bp-nouveau/includes/activity/functions.php:579
 msgid "New mentions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:557
+#: bp-templates/bp-nouveau/includes/activity/functions.php:584
 msgid "New update replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:562
+#: bp-templates/bp-nouveau/includes/activity/functions.php:589
 msgid "New update comment replies"
 msgstr ""
 
@@ -25855,6 +25931,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:113
 #: bp-templates/bp-nouveau/includes/video/functions.php:132
 msgid "Please upload only the following file types: "
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:96
+msgid "<strong>Add Files</strong> Or drag and drop"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/functions.php:98
@@ -26912,7 +26992,7 @@ msgid "You don't have permission to move this media."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:132
-msgid "Drop images here to upload"
+msgid "<strong>Add Photos</strong> Or drag and drop"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:133
@@ -27288,7 +27368,7 @@ msgid "You don't have permission to move this video."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:114
-msgid "Drop videos here to upload"
+msgid "<strong>Add Videos</strong> Or drag and drop"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/video/functions.php:115
