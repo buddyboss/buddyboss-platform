@@ -374,6 +374,10 @@ class BP_Media {
 			case 'menu_order':
 				break;
 
+			case 'include':
+				$r['order_by'] = 'include';
+				break;
+
 			default:
 				$r['order_by'] = 'date_created';
 				break;
@@ -390,7 +394,9 @@ class BP_Media {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
-
+			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
+				$order_by = "FIELD(m.id, {$in})";
+			}
 			// we want to disable limit query when include media ids.
 			$r['page']     = false;
 			$r['per_page'] = false;
@@ -478,7 +484,14 @@ class BP_Media {
 		}
 
 		// Query first for media IDs.
-		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
+		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by}";
+		if ( ! empty( $r['order_by'] ) && 'include' !== $r['order_by'] ) {
+			if ( 'id' === $r['order_by'] ) {
+				$media_ids_sql .= " {$sort}";
+			} else {
+				$media_ids_sql .= " {$sort}, m.id {$sort}";
+			}
+		}
 
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
