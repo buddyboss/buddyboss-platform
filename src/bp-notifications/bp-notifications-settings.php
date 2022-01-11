@@ -295,10 +295,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 function bb_admin_setting_callback_notification_warning() {
 	echo '<p class="description notification-information bp-new-notice-panel">' .
 		sprintf(
-			wp_kses_post(
 					/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
-				__( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' )
-			),
+				__( 'Enable the %1$s feature in %2$s to manage the notification types used on your site.', 'buddyboss' ),
 			'<strong>' . esc_html__( 'Notification Preferences', 'buddyboss' ) . '</strong>',
 			'<a href="' .
 				esc_url(
