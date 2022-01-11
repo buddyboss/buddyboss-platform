@@ -965,8 +965,8 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		)
 	);
 
-	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
-	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
+	$web_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
+	$app_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
 
 	if ( 'buddyboss' !== bb_get_default_group_cover_type() ) {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'groups' );
@@ -1517,8 +1517,8 @@ function bp_feed_settings_callback_platform( $args ) {
 		$option_name = $args['activity_name'];
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
-		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'], 'buddyboss' ); ?></label>
-		<?php
+		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
+    <?php
 
 }
 
@@ -1782,8 +1782,8 @@ function bp_core_admin_settings_save() {
 
 add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
 
- /*
-  Admin settings for showing the email confirmation field.
+/**
+ * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
  *
@@ -1797,8 +1797,8 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 	<?php
 }
 
-/*
-  Admin settings for showing the legal agreement confirmation field.
+/**
+ * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
  *
@@ -1912,12 +1912,12 @@ function bp_group_directories_tutorial() {
 	<?php
 }
 
-/*
- Admin settings for showing the allow custom registration checkbox.
-*
-* @since BuddyBoss 1.2.8
-*
-*/
+/**
+ * Admin settings for showing the allow custom registration checkbox.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
 	$allow_custom_registration = bp_allow_custom_registration();
@@ -1947,12 +1947,12 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 	}
 }
 
-/*
- Admin settings for showing the allow custom registration checkbox.
-*
-* @since BuddyBoss 1.2.8
-*
-*/
+/**
+ * Admin settings for showing the allow custom registration checkbox.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ */
 function bp_admin_setting_callback_register_page_url() {
 	?>
 	<input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
@@ -2001,8 +2001,6 @@ function bp_admin_setting_callback_group_messages() {
 	<label for="bp-disable-group-messages"><?php esc_html_e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }
-
-
 
 /**
  * Link to Moderation Block tutorial
@@ -2171,7 +2169,6 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
 	<?php
 }
 
-
 /**
  * Link to Moderation Report tutorial
  *
@@ -2198,6 +2195,7 @@ function bp_admin_on_screen_notification_setting_tutorial() {
 
 	<?php
 }
+
 /**
  * After update activity setting
  *
