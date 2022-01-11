@@ -680,8 +680,8 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		$avatar = $wordpress_avatar_url;
 	}
 
-	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
-	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
+	$web_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
+	$app_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
 
 	if ( 'buddyboss' !== bb_get_default_profile_cover_type() ) {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
