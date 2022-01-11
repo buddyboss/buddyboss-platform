@@ -7,26 +7,14 @@
  */
 
 bp_nouveau_member_hook( 'before', 'settings_template' );
+
+$data = bb_core_notification_preferences_data();
 ?>
 
-<h2 class="screen-heading email-settings-screen">
-<?php
-if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
-	esc_html_e( 'Notification Preferences', 'buddyboss' );
-} else {
-	esc_html_e( 'Email Preferences', 'buddyboss' );
-}
-?>
-</h2>
+<h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
 
 <p class="bp-help-text email-notifications-info">
-	<?php
-	if ( true === bb_enabled_legacy_email_preference() || ( ! bb_web_notification_enabled() && ! bb_app_notification_enabled() ) ) {
-		esc_html_e( 'Choose your email notification preferences.', 'buddyboss' );
-	} else {
-		esc_html_e( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
-	}
-	?>
+	<?php echo wp_kses_post( $data['screen_description'] ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
@@ -82,7 +70,7 @@ if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_ena
 
 	<table class="main-notification-settings">
 
-		<?php if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) { ?>
+		<?php if ( true === $data['show_checkbox_label'] ) { ?>
 		<thead>
 			<tr>
 				<th class="title"><?php esc_html_e( 'Enable notifications', 'buddyboss' ); ?></th>
