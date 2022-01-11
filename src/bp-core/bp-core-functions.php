@@ -6229,11 +6229,11 @@ function bb_render_notification( $notification_group ) {
 }
 
 /**
- * Function to update the screen label based on the different senarios.
+ * Function to update the screen label based on the different scenarios.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array
+ * @return array Settings data.
  */
 function bb_core_notification_preferences_data() {
 
