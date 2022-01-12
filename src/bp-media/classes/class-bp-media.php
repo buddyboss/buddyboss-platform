@@ -396,6 +396,7 @@ class BP_Media {
 			$where_conditions['in'] = "m.id IN ({$in})";
 			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
 				$order_by = "FIELD(m.id, {$in})";
+				$sort     = '';
 			}
 			// we want to disable limit query when include media ids.
 			$r['page']     = false;
@@ -484,13 +485,9 @@ class BP_Media {
 		}
 
 		// Query first for media IDs.
-		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by}";
+		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}";
 		if ( ! empty( $r['order_by'] ) && 'include' !== $r['order_by'] ) {
-			if ( 'id' === $r['order_by'] ) {
-				$media_ids_sql .= " {$sort}";
-			} else {
-				$media_ids_sql .= " {$sort}, m.id {$sort}";
-			}
+			$media_ids_sql .= ", m.id {$sort}";
 		}
 
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
