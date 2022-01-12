@@ -13,11 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss moderation Document Folder.
  *
  * @since BuddyBoss 1.5.6
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 class BP_Moderation_Folder extends BP_Moderation_Abstract {
 
 	/**

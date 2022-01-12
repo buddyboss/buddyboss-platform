@@ -13,11 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Moderation Report endpoints.
  *
  * @since 0.1.0
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 	/**

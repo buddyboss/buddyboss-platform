@@ -16,11 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * List table class for the Moderation component admin page.
  *
  * @since BuddyBoss 1.5.6
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 class BP_Moderation_List_Table extends WP_List_Table {
 
 	/**

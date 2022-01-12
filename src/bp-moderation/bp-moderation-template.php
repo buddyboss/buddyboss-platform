@@ -13,11 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Output the moderation component slug.
  *
  * @since BuddyBoss 1.5.6
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 function bp_moderation_slug() {
 	echo esc_html( bp_get_moderation_slug() );
 }
