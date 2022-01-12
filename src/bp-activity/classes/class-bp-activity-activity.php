@@ -527,6 +527,10 @@ class BP_Activity_Activity {
 			case 'is_spam':
 				break;
 
+			case 'include':
+				$r['order_by'] = 'include';
+				break;
+
 			default:
 				$r['order_by'] = 'date_recorded';
 				break;
@@ -548,6 +552,10 @@ class BP_Activity_Activity {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "a.id IN ({$in})";
+			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
+				$order_by = "FIELD(a.id, {$in})";
+				$sort     = '';
+			}
 		}
 
 		// The filter activities by their privacy
