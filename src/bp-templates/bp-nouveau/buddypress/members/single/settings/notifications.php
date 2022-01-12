@@ -95,34 +95,6 @@ $data = bb_core_notification_preferences_data();
 			</tr>
 		</thead>
 		<?php } ?>
-
-		<tbody>
-			<?php if ( bb_web_notification_enabled() || bb_app_notification_enabled() ) { ?>
-			<tr class="section-end">
-				<td>
-					<?php esc_html_e( 'A manual notification from a site admin', 'buddyboss' ); ?>
-				</td>
-				<td class="email notification_no_option">
-					<?php esc_html_e( '-', 'buddyboss' ); ?>
-				</td>
-
-				<?php if ( bb_web_notification_enabled() ) { ?>
-				<td class="web">
-					<input type="checkbox" id="admin_notification_web" name="" class="bs-styled-checkbox" />
-					<label for="admin_notification_web"><?php esc_html_e( 'Web', 'buddyboss' ); ?></label>
-				</td>
-				<?php } ?>
-
-				<?php if ( bb_app_notification_enabled() ) { ?>
-				<td class="app">
-					<input type="checkbox" id="admin_notification_app" name="" class="bs-styled-checkbox" />
-					<label for="admin_notification_app"><?php esc_html_e( 'App', 'buddyboss' ); ?></label>
-				</td>
-				<?php } ?>
-			</tr>
-			<?php } ?>
-
-		</tbody>
 	</table>
 	<?php } ?>
 

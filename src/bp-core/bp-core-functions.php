@@ -5978,7 +5978,7 @@ function bb_web_notification_enabled() {
  * @return bool
  */
 function bb_web_push_notification_enabled() {
-	return (bool) apply_filters( 'bb_web_push_notification_enabled', true );
+	return (bool) apply_filters( 'bb_web_push_notification_enabled', false );
 }
 
 /**
@@ -6284,16 +6284,73 @@ function bb_manual_notification_options() {
 
 	$data = array(
 		'label'  => esc_html__( 'A manual notification from a site admin', 'buddyboss' ),
-		'fields' => array( 'email' => '' ),
+		'fields' => array(),
 	);
 
 	if ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) {
-		$data['field']['web'] = 'notification_web_push';
+		$data['fields']['notification_web_push'] = esc_html__( 'Web', 'buddyboss' );
+	} else {
+		$data['fields']['notification_web_push'] = '';
 	}
 
 	if ( bb_app_notification_enabled() ) {
-		$data['field']['app'] = 'notification_app_push';
+		$data['fields']['notification_app_push'] = esc_html__( 'App', 'buddyboss' );
 	}
 
-	return $data;
+	return apply_filters( 'bb_manual_notification_options', $data );
+}
+
+/**
+ * Render the manual notification settings on the front end.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_render_manual_notification() {
+
+	$manual_notifications = bb_manual_notification_options();
+
+	if ( empty( $manual_notifications ) ) {
+		return;
+	}
+
+	if ( ! empty( $manual_notifications['fields'] ) ) {
+		?>
+		<table class="main-notification-settings">
+			<tbody>
+
+				<tr>
+					<td><?php echo isset( $manual_notifications['label'] ) ? esc_html( $manual_notifications['label'] ) : ''; ?></td>
+					<td class="email notification_no_option">
+						<?php esc_html_e( '-', 'buddyboss' ); ?>
+					</td>
+					<?php
+					foreach ( $manual_notifications['fields'] as $key => $label ) {
+						$class = '';
+						if ( 'notification_web_push' === $key ) {
+							$class = 'web';
+						} elseif ( 'notification_app_push' === $key ) {
+							$class = 'app';
+						}
+						if ( ! empty( $key ) && ! empty( $label ) ) {
+							$name = 'notifications[' . $key . ']';
+							?>
+							<td class="<?php echo esc_attr( $class ); ?>">
+								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+								<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
+							</td>
+							<?php
+						} else {
+							?>
+							<td class="<?php echo esc_attr( $class ); ?> notification_no_option">
+								<?php esc_html_e( '-', 'buddyboss' ); ?>
+							</td>
+							<?php
+						}
+					}
+					?>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
 }
