@@ -3,14 +3,17 @@ jQuery( document ).ready(
 
 		if ( typeof window.MediumEditor !== 'undefined' ) {
 
-			  var toolbarOptions = {
+			window.forums_medium_forum_editor = [];
+			window.forums_medium_reply_editor = [];
+			window.forums_medium_topic_editor = [];
+
+			var toolbarOptions = {
 					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
 					relativeContainer: document.getElementById('whats-new-toolbar'),
 					static: true,
 					updateOnEmptySelection: true
 			};
 			if ( jQuery( '.bbp_editor_forum_content' ).length ) {
-				window.forums_medium_forum_editor = [];
 				jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
@@ -29,7 +32,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -37,8 +40,8 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: [ 'ul', 'ol', 'li' ]
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+								unwrapTags: []
 							},
 							imageDragging: false
 						}
@@ -111,7 +114,6 @@ jQuery( document ).ready(
 			} );
 
 			if ( jQuery( '.bbp_editor_reply_content' ).length ) {
-				window.forums_medium_reply_editor = [];
 				jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
@@ -130,7 +132,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -138,8 +140,8 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: [ 'ul', 'ol', 'li' ]
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+								unwrapTags: []
 							},
 							imageDragging: false
 						}
@@ -212,7 +214,6 @@ jQuery( document ).ready(
 			} );
 
 			if ( jQuery( '.bbp_editor_topic_content' ).length ) {
-				window.forums_medium_topic_editor = [];
 				jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
@@ -231,7 +232,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 									[new RegExp(/<div/gi), '<p'],
 									[new RegExp(/<\/div/gi), '</p'],
@@ -239,8 +240,8 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: [ 'ul', 'ol', 'li' ]
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+								unwrapTags: []
 							},
 							imageDragging: false
 						}
@@ -404,9 +405,14 @@ jQuery( document ).ready(
 									paste: {
 										forcePlainText: false,
 										cleanPastedHTML: true,
-										cleanReplacements: [],
-										cleanAttrs: ['class', 'style', 'dir'],
-										cleanTags: ['meta'],
+										cleanReplacements: [
+											[new RegExp(/<div/gi), '<p'],
+											[new RegExp(/<\/div/gi), '</p'],
+											[new RegExp(/<h[1-6]/gi), '<b'],
+											[new RegExp(/<\/h[1-6]/gi), '</b'],
+										],
+										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
 									imageDragging: false
@@ -427,7 +433,7 @@ jQuery( document ).ready(
 						});
 					}
 					if ( jQuery( '.bbp_editor_reply_content' ).length ) {
-						window.forums_medium_reply_editor = [];
+
 						jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
@@ -448,13 +454,13 @@ jQuery( document ).ready(
 										forcePlainText: false,
 										cleanPastedHTML: true,
 										cleanReplacements: [
-											[new RegExp(/<div>/gi), '<p>'],
-											[new RegExp(/<\/div>/gi), '</p>'],
+											[new RegExp(/<div/gi), '<p'],
+											[new RegExp(/<\/div/gi), '</p'],
 											[new RegExp(/<h[1-6]/gi), '<b'],
-											[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
-										cleanAttrs: ['class', 'style', 'dir'],
-										cleanTags: ['meta'],
+										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
 									imageDragging: false
@@ -475,7 +481,7 @@ jQuery( document ).ready(
 						});
 					}
 					if ( jQuery( '.bbp_editor_topic_content' ).length ) {
-						window.forums_medium_topic_editor = [];
+
 						jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
@@ -496,13 +502,13 @@ jQuery( document ).ready(
 										forcePlainText: false,
 										cleanPastedHTML: true,
 										cleanReplacements: [
-											[new RegExp(/<div>/gi), '<p>'],
-											[new RegExp(/<\/div>/gi), '</p>'],
+											[new RegExp(/<div/gi), '<p'],
+											[new RegExp(/<\/div/gi), '</p'],
 											[new RegExp(/<h[1-6]/gi), '<b'],
-											[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
-										cleanAttrs: ['class', 'style', 'dir'],
-										cleanTags: ['meta'],
+										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
 									imageDragging: false

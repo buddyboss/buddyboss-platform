@@ -8,7 +8,7 @@
 
 if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
     ?>
-    <div class="bp-feedback bp-messages error moderation_notice is_hidden"><span class="bp-icon" aria-hidden="true"></span><p>Sorry, you were not able to report this usuer.</p></div>
+    <div class="bp-feedback bp-messages error moderation_notice is_hidden"><span class="bp-icon" aria-hidden="true"></span><p><?php _e( 'Sorry, you were not able to report this member.', 'buddyboss' ); ?></p></div>
     <table id="moderation-list" class="bp-tables-user">
     <thead>
     <th class="title">
