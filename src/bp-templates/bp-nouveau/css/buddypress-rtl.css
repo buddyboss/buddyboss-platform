@@ -2184,6 +2184,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-autocomplete-wrapper .activity-autocomplete-clear i {
   font-size: 20px;
   color: rgba(18, 43, 70, 0.4);
+  display: block;
 }
 
 .activity-is-autocomplete .activity-autocomplete-wrapper .activity-autocomplete-clear {
@@ -2230,13 +2231,13 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 #whats-new-post-in-box-items .bp-activity-object .avatar {
-  width: 40px;
+  width: 30px;
   border-radius: 4px;
   margin-left: 15px;
 }
 
 #whats-new-post-in-box-items .bp-activity-object .bp-item-name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   vertical-align: middle;
   white-space: nowrap;
@@ -2263,7 +2264,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 #bp-activity-group-ac-items {
   min-width: 200px;
-  max-height: 220px;
+  max-height: 230px;
   overflow-y: auto;
   padding: 0;
   margin: 10px 0 0;
