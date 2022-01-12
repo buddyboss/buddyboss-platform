@@ -1213,6 +1213,7 @@ a.layout-grid-view {
 .bp-activity-privacy__label .privacy-tag-wrapper {
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 .bp-activity-privacy__label .privacy-radio {
