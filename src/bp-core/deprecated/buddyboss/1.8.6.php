@@ -37,3 +37,20 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 	}
 
 }
+
+/**
+ * Use the mystery group avatar for groups.
+ *
+ * @since BuddyPress 2.6.0
+ *
+ * @param string $avatar Current avatar src.
+ * @param array  $params Avatar params.
+ * @return string
+ */
+function bp_groups_default_avatar( $avatar, $params ) {
+
+	_deprecated_function( __FUNCTION__, '1.8.6', 'bb_attachments_get_default_profile_group_avatar_image' );
+
+	$avatar = bb_attachments_get_default_profile_group_avatar_image( $params );
+	return $avatar;
+}
