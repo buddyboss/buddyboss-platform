@@ -38,6 +38,19 @@ abstract class BP_Moderation_Abstract {
 	public $alias;
 
 	/**
+	 * BP_Moderation_Abstract constructor.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function __construct() {
+		/**
+		 * If moderation setting enabled for this content then it'll filter hidden content.
+		 * And IF moderation setting enabled for member then it'll filter blocked user content.
+		 */
+		add_filter( 'bb_exclude_where_query_conditions', array( $this, 'update_where_sql' ) );
+	}
+
+	/**
 	 * Check whether bypass argument pass for admin user or not.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -224,8 +237,7 @@ abstract class BP_Moderation_Abstract {
 	protected function exclude_where_query() {
 		$where = '';
 
-		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
-		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
+		$where .= " OR ( ( {$this->alias}.hide_parent = 1 ) OR ( {$this->alias}.hide_sitewide = 1 ) )";
 
 		$blocked_query = $this->blocked_user_query();
 		if ( ! empty( $blocked_query ) ) {
@@ -236,6 +248,27 @@ abstract class BP_Moderation_Abstract {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Update where query Remove hidden/blocked user's Activities
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $where_conditions Array of where condition.
+	 *
+	 * @return mixed
+	 */
+	public function update_where_sql( $where_conditions ) {
+		$where_conditions['hide_parent']   = 'hide_parent = 1';
+		$where_conditions['hide_sitewide'] = 'hide_sitewide = 1';
+
+		$blocked_query = $this->blocked_user_query();
+		if ( ! empty( $blocked_query ) ) {
+			$where_conditions['blocked_members'] = "( id IN ( $blocked_query ) )";
+		}
+
+		return $where_conditions;
 	}
 
 	/**
@@ -252,7 +285,7 @@ abstract class BP_Moderation_Abstract {
 
 			$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 			if ( ! empty( $hidden_users_ids ) ) {
-				return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
+				return "SELECT DISTINCT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (" . implode( ',', $hidden_users_ids ) . ')';
 			}
 		}
 

