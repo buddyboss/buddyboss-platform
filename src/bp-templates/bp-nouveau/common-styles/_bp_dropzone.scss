@@ -644,8 +644,8 @@
 
 		.dz-progress-ring {
 			position: absolute;
-			top: -1px;
-			left: -1px;
+			top: -2px;
+			left: -2px;
 			transition: 0.35s stroke-dashoffset;
 			transform: rotate(-90deg);
 			transform-origin: 50% 50%;

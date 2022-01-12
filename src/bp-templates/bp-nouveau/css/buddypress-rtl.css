@@ -1213,6 +1213,7 @@ a.layout-grid-view {
 .bp-activity-privacy__label .privacy-tag-wrapper {
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 .bp-activity-privacy__label .privacy-radio {
@@ -1791,6 +1792,26 @@ a.layout-grid-view {
 
 .atwho-container .atwho-view {
   z-index: 999999;
+}
+
+@media (max-width: 400px) {
+  .atwho-view ul li {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 10px;
+  }
+  .atwho-view ul li img {
+    height: 20px;
+    margin: 0 0 0 10px;
+    width: 20px;
+  }
+  .atwho-view ul li .username {
+    margin: 0;
+    padding: 0;
+  }
+  .atwho-view ul li small {
+    margin-right: 0;
+  }
 }
 
 #whats-new-toolbar {
@@ -21701,30 +21722,31 @@ div.dropzone.dz-started .dz-default.dz-message {
 .dropzone.video-dropzone .dz-progress-count {
   position: absolute;
   z-index: 12;
-  bottom: 10px;
-  right: 50%;
-  width: 50%;
-  transform: translateX(50%);
+  bottom: 0;
+  right: 0;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
-  border-radius: 10px;
   padding: 0 15px 0 20px;
   font-size: 13px;
   letter-spacing: 0.3px;
   line-height: 2.5;
-  min-width: 140px;
+  border-radius: 0 0 4px 4px;
+  text-align: center;
+  text-indent: -20px;
 }
 
 .dropzone.video-dropzone .dz-preview {
   background: #f0f3f7;
+  border-radius: 4px;
 }
 
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove {
   position: absolute;
-  bottom: 15px;
+  bottom: 5px;
   top: inherit;
   right: 50%;
-  margin-right: 53px;
+  margin-right: 50px;
   transform: translateX(50%);
   background-color: transparent;
   line-height: 1;
@@ -21734,7 +21756,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
-  font-size: 26px;
+  font-size: 24px;
   color: #fff;
   line-height: 1;
 }
@@ -21816,6 +21838,10 @@ div.dropzone.dz-started .dz-default.dz-message {
   bottom: 15px;
 }
 
+.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-remove {
+  background-color: transparent;
+}
+
 .dropzone.video-dropzone .dz-preview.dz-file-preview .dz-remove {
   background-color: #fd4343;
   position: absolute;
@@ -21892,6 +21918,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   height: 100%;
   width: 100%;
   object-fit: cover;
+  border-radius: 4px;
 }
 
 .dropzone.video-dropzone .dz-preview .dz-success-mark {
@@ -22578,8 +22605,8 @@ body > .open-popup.video-error-popup {
 
 .dropzone .dz-preview .dz-progress-ring-wrap .dz-progress-ring {
   position: absolute;
-  top: -1px;
-  right: -1px;
+  top: -2px;
+  right: -2px;
   transition: 0.35s stroke-dashoffset;
   transform: rotate(90deg);
   transform-origin: 50% 50%;
