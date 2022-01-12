@@ -6313,6 +6313,8 @@ function bb_render_manual_notification() {
 		return;
 	}
 
+    $user_id = bp_loggedin_user_id();
+
 	if ( ! empty( $manual_notifications['fields'] ) ) {
 		?>
 		<table class="main-notification-settings">
@@ -6332,10 +6334,11 @@ function bb_render_manual_notification() {
 							$class = 'app';
 						}
 						if ( ! empty( $key ) && ! empty( $label ) ) {
-							$name = 'notifications[' . $key . ']';
+							$name    = 'notifications[' . $key . ']';
+							$checked = bp_get_user_meta( $user_id, $key, true );
 							?>
 							<td class="<?php echo esc_attr( $class ); ?>">
-								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
 								<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
 							</td>
 							<?php
