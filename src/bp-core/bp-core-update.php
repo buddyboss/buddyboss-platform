@@ -351,7 +351,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18401 ) {
-			bb_update_to_1_8_5();
+			bb_update_to_1_8_6();
 		}
 	}
 
@@ -1397,8 +1397,11 @@ function bb_update_to_1_8_1() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_8_5() {
+function bb_update_to_1_8_6() {
 	global $buddyboss_theme_options;
+
+	// Do not ignore deprecated code for existing installs.
+	bp_add_option( '_bp_ignore_deprecated_code', false );
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -1435,13 +1438,13 @@ function bb_update_to_1_8_5() {
 
 	if ( ! bp_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
 
-		$temp_profile_cover = bb_to_1_8_5_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
+		$temp_profile_cover = bb_to_1_8_6_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
 
 		if ( isset( $temp_profile_cover['filename'], $temp_profile_cover['path'], $temp_profile_cover['url'] ) && ! empty( $temp_profile_cover['filename'] ) && ! empty( $temp_profile_cover['path'] ) && ! empty( $temp_profile_cover['url'] ) ) {
 
-			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_5_allow_extension', 10, 2 );
-			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_5_change_overrides' );
-			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_5_image_upload_dir', 99 );
+			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension', 10, 2 );
+			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir', 99 );
 
 			// Upload the file.
 			$cover_image_attachment                        = new BP_Attachment_Cover_Image();
@@ -1458,9 +1461,9 @@ function bb_update_to_1_8_5() {
 			// No error.
 			$profile_cover_image = $cover_image_attachment->upload( $_FILES );
 
-			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_5_allow_extension' );
-			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_5_change_overrides' );
-			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_5_image_upload_dir' );
+			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension' );
+			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir' );
 
 			if ( ! empty( $profile_cover_image ) && isset( $profile_cover_image['url'] ) ) {
 				bp_update_option( 'bp-default-profile-cover-type', 'custom' );
@@ -1495,13 +1498,13 @@ function bb_update_to_1_8_5() {
 
 	if ( ! bp_disable_group_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
 
-		$temp_group_cover = bb_to_1_8_5_upload_temp_cover_file( 'buddyboss_group_cover_default' );
+		$temp_group_cover = bb_to_1_8_6_upload_temp_cover_file( 'buddyboss_group_cover_default' );
 
 		if ( isset( $temp_group_cover['filename'], $temp_group_cover['path'], $temp_group_cover['url'] ) && ! empty( $temp_group_cover['filename'] ) && ! empty( $temp_group_cover['path'] ) && ! empty( $temp_group_cover['url'] ) ) {
 
-			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_5_allow_extension', 10, 2 );
-			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_5_change_overrides' );
-			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_5_image_upload_dir', 99 );
+			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension', 10, 2 );
+			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir', 99 );
 
 			// Upload the file.
 			$group_cover_image_attachment                        = new BP_Attachment_Cover_Image();
@@ -1518,9 +1521,9 @@ function bb_update_to_1_8_5() {
 			// No error.
 			$group_cover_image = $group_cover_image_attachment->upload( $_FILES );
 
-			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_5_allow_extension' );
-			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_5_change_overrides' );
-			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_5_image_upload_dir' );
+			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension' );
+			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir' );
 
 			if ( ! empty( $group_cover_image ) && isset( $group_cover_image['url'] ) ) {
 				bp_update_option( 'bp-default-group-cover-type', 'custom' );
@@ -1563,7 +1566,7 @@ function bb_update_to_1_8_5() {
  * @param string $cover_type The option name of cover. 'buddyboss_profile_cover_default' or 'buddyboss_group_cover_default'.
  * @return array Array containing the path, URL, and file name.
  */
-function bb_to_1_8_5_upload_temp_cover_file( $cover_type ) {
+function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 	$data = array(
 		'filename' => '',
 		'path'     => '',
@@ -1623,7 +1626,7 @@ function bb_to_1_8_5_upload_temp_cover_file( $cover_type ) {
  * @param string $type The requested file type.
  * @return array List of allowed extensions.
  */
-function bb_to_1_8_5_allow_extension( $exts, $type ) {
+function bb_to_1_8_6_allow_extension( $exts, $type ) {
 	$exts[] = 'webp';
 	return $exts;
 }
@@ -1636,7 +1639,7 @@ function bb_to_1_8_5_allow_extension( $exts, $type ) {
  * @param array $overrides The wp_handle_upload overrides.
  * @return array The wp_handle_upload overrides.
  */
-function bb_to_1_8_5_change_overrides( $overrides ) {
+function bb_to_1_8_6_change_overrides( $overrides ) {
 	$overrides['test_form'] = false;
 	return $overrides;
 }
@@ -1648,7 +1651,7 @@ function bb_to_1_8_5_change_overrides( $overrides ) {
  *
  * @return array See wp_upload_dir().
  */
-function bb_to_1_8_5_image_upload_dir( $args ) {
+function bb_to_1_8_6_image_upload_dir( $args ) {
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
 	if ( isset( $_POST['group_cover_upload'] ) ) {

@@ -30,7 +30,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 		$group_cover_position = groups_get_groupmeta( bp_get_current_group_id(), 'bp_cover_position', true );
 		$has_cover_image      = ' has-cover-image';
 		if ( '' !== $group_cover_position ) {
-			$has_cover_image_position = 'has-position';
+			$has_cover_image_position = ' has-position';
 		}
 	}
 	?>
