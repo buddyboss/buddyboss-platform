@@ -383,6 +383,7 @@ class BP_Activity_Activity {
 	 *               - 'activities' is an array of the located activities
 	 */
 	public static function get( $args = array() ) {
+		static $bb_activity_cache;
 		global $wpdb;
 
 		$function_args = func_get_args();
@@ -660,12 +661,16 @@ class BP_Activity_Activity {
 			// Legacy queries joined against the user table.
 			$select_sql = 'SELECT DISTINCT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name';
 			$from_sql   = " FROM {$bp->activity->table_name} a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID";
-
+			$cache_key = 'bp_use_legacy_activity_query_' . md5( maybe_serialize( $r ) );
 			if ( ! empty( $page ) && ! empty( $per_page ) ) {
 				$pag_sql = $wpdb->prepare( 'LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page );
 
 				/** This filter is documented in bp-activity/bp-activity-classes.php */
-				$activity_sql = apply_filters( 'bp_activity_get_user_join_filter', "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY a.date_recorded {$sort}, a.id {$sort} {$pag_sql}", $select_sql, $from_sql, $where_sql, $sort, $pag_sql );
+				//$activity_sql = apply_filters( 'bp_activity_get_user_join_filter', "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY a.date_recorded {$sort}, a.id {$sort} {$pag_sql}", $select_sql, $from_sql, $where_sql, $sort, $pag_sql );
+				if ( ! isset( $bb_activity_cache[ $cache_key ] ) ) {
+					$bb_activity_cache[ $cache_key ] = apply_filters( 'bp_activity_get_user_join_filter', "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY a.date_recorded {$sort}, a.id {$sort} {$pag_sql}", $select_sql, $from_sql, $where_sql, $sort, $pag_sql );
+				}
+				$activity_sql = $bb_activity_cache[ $cache_key ];
 			} else {
 				$pag_sql = '';
 
@@ -680,7 +685,10 @@ class BP_Activity_Activity {
 				 * @param string $where_sql  Final WHERE MySQL statement portion for legacy query.
 				 * @param string $sort       Final sort direction for legacy query.
 				 */
-				$activity_sql = apply_filters( 'bp_activity_get_user_join_filter', "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY a.date_recorded {$sort}, a.id {$sort}", $select_sql, $from_sql, $where_sql, $sort, $pag_sql );
+				//$activity_sql = apply_filters( 'bp_activity_get_user_join_filter', "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY a.date_recorded {$sort}, a.id {$sort}", $select_sql, $from_sql, $where_sql, $sort, $pag_sql );
+				if ( ! isset( $bb_activity_cache[ $cache_key ] ) ) {
+					$bb_activity_cache[ $cache_key ] = apply_filters( 'bp_activity_get_user_join_filter', "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY a.date_recorded {$sort}, a.id {$sort}", $select_sql, $from_sql, $where_sql, $sort, $pag_sql );
+				}
 			}
 
 			/*
@@ -725,12 +733,11 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			//$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-			static $cache;
-			$cache_key = 'bp_activity_' . md5( maybe_serialize( $r ) );
-			if ( ! isset( $cache[ $cache_key ] ) ) {
-				$cache[ $cache_key ] = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
+			$cache_key = 'bb_activity_' . md5( maybe_serialize( $r ) );
+			if ( ! isset( $bb_activity_cache[ $cache_key ] ) ) {
+				$bb_activity_cache[ $cache_key ] = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
 			}
-			$activity_ids_sql = $cache[ $cache_key ];
+			$activity_ids_sql = $bb_activity_cache[ $cache_key ];
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
