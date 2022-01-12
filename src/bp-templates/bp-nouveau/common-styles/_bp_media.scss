@@ -2123,8 +2123,8 @@ img.emojioneemoji {
 		border: 1px solid #e7e9eb;
 		text-align: center;
 		height: 100%;
-		min-height: 130px;
-		width: 130px;
+		min-height: 140px;
+		width: 140px;
 		flex-flow: column;
 		align-items: center;
 		justify-content: center;
@@ -2553,7 +2553,7 @@ img.emojioneemoji {
 }
 
 div.dropzone .dz-preview {
-	min-width: 130px;
+	min-width: 139px;
 
 	.dz-success-mark,
 	.dz-progress,
@@ -2568,10 +2568,10 @@ div.dropzone .dz-preview {
 }
 
 .dz-preview .dz-image {
-	height: 130px;
+	height: 139px;
 
 	img {
-		max-width: 130px;
+		max-width: 139px;
 		object-fit: cover;
 	}
 }
