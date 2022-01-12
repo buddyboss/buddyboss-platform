@@ -1400,6 +1400,9 @@ function bb_update_to_1_8_1() {
 function bb_update_to_1_8_6() {
 	global $buddyboss_theme_options;
 
+	// Do not ignore deprecated code for existing installs.
+	bp_add_option( '_bp_ignore_deprecated_code', false );
+
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
