@@ -2119,7 +2119,7 @@ img.emojioneemoji {
 		overflow: hidden;
 		padding: 5px 10px;
 		display: flex;
-		background-color: #fafafa;
+		background-color: #f8f8f8;
 		border: 1px solid #e7e9eb;
 		text-align: center;
 		height: 100%;
@@ -2213,6 +2213,11 @@ img.emojioneemoji {
 		min-width: 100%;
 	}
 
+	.dz-remove {
+		background-color: transparent;
+		color: #92949d;
+	}
+
 }
 
 
@@ -2269,6 +2274,11 @@ img.emojioneemoji {
 
 	&.dz-complete.dz-file-preview {
 		background-color: #f8f8f8;
+	}
+
+	&.dz-file-preview .dz-remove,
+	&.dz-complete.dz-file-preview .dz-remove {
+		background-color: transparent;
 	}
 
 	&.dz-preview .dz-details {

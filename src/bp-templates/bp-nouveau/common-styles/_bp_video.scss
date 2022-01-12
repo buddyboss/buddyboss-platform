@@ -1549,16 +1549,16 @@ div.dropzone.dz-started {
 			bottom: inherit;
 			transform: none;
 			margin: 0;
-			top: 5px;
+			top: 8px;
 			left: inherit;
-			right: 5px;
+			right: 8px;
 			background-color: #e7e7ea;
-			height: 16px;
-			width: 16px;
+			height: 17px;
+			width: 17px;
 			line-height: inherit;
 
 			&:after {
-				font-size: 17px;
+				font-size: 18px;
 				color: #9ea8b3;
 				line-height: 1;
 				position: absolute;
@@ -1641,6 +1641,7 @@ div.dropzone.dz-started {
 		.dz-filename > span {
 			max-width: 70%;
 			margin: auto;
+			line-height: 1.2;
 		}
 
 	}

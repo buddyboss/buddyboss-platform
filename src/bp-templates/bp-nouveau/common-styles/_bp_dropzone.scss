@@ -85,10 +85,10 @@
 	cursor: pointer;
 	border: none;
 	position: absolute;
-	top: 5px;
-	right: 5px;
-	height: 16px;
-	width: 16px;
+	top: 8px;
+	right: 8px;
+	height: 17px;
+	width: 17px;
 	border-radius: 50%;
 	color: #c3c6c9;
 	z-index: 101;
@@ -103,7 +103,7 @@
 		top: 0;
 		left: 0;
 		font-family: "bb-icons";/* stylelint-disable-line */
-		font-size: 17px;
+		font-size: 18px;
 		line-height: 1;
 		speak: none;
 		display: inline-block;
@@ -683,12 +683,19 @@
 			display: none;
 		}
 
+		.dz-remove {
+			background-color: transparent;
+			color: #92949d;
+			top: 8px;
+			right: 8px;
+		}
+
 		&.dz-complete .dz-details {
 
 			.dz-filename {
 				position: static;
 				padding-right: 0;
-				margin-top: 6px;
+				margin-top: 8px;
 			}
 
 			.dz-size {
@@ -698,7 +705,7 @@
 			.dz-icon {
 				display: block;
 				height: 28px;
-				margin-top: 30px;
+				margin-top: 25px;
 				position: relative;
 
 				&:before {
@@ -733,11 +740,15 @@
 				bottom: 3px;
 				left: 10px;
 				right: 0;
+				font-size: 13px;
+				color: #828890;
 				padding-right: 20px;
 			}
 
 			.dz-size {
 				display: none;
+				font-size: 13px;
+				color: #828890;
 			}
 
 		}
