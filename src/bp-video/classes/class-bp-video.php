@@ -373,6 +373,10 @@ class BP_Video {
 			case 'menu_order':
 				break;
 
+			case 'include':
+				$r['order_by'] = 'include';
+				break;
+
 			default:
 				$r['order_by'] = 'date_created';
 				break;
@@ -389,6 +393,10 @@ class BP_Video {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
+			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
+				$order_by = "FIELD(m.id, {$in})";
+				$sort     = '';
+			}
 
 			// we want to disable limit query when include video ids.
 			$r['page']     = false;
@@ -476,7 +484,7 @@ class BP_Video {
 			// populate the has_more_items flag.
 			$video_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 		}
-
+		//error_log( $video_ids_sql );
 		/**
 		 * Filters the paged video MySQL statement.
 		 *

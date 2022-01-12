@@ -421,10 +421,7 @@ class BP_Document {
 		);
 
 		// Query first for document IDs.
-		$document_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}";
-		if ( ! empty( $r['order_by'] ) && 'include' !== $r['order_by'] ) {
-			$document_ids_sql .= ", d.id {$sort}";
-		}
+		$document_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, d.id {$sort}";
 
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
