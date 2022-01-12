@@ -73,7 +73,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
 
-		add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
+		// add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
 
 	}
 
