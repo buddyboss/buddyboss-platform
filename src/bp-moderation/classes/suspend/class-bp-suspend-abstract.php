@@ -119,23 +119,7 @@ abstract class BP_Suspend_Abstract {
 	 * @return string|void
 	 */
 	protected function exclude_where_query() {
-		global $wpdb;
-		$bp = buddypress();
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$select_sql = $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = %s", $this->item_type );
-
-		// Where conditions.
-		$where_conditions = array( 'user_suspended' => 'user_suspended = 1' );
-		$where_conditions = apply_filters( 'bb_exclude_where_query_conditions', $where_conditions );
-		$where_sql        = join( ' OR ', $where_conditions );
-
-		/**
-		 * Filter to extend the where sql for moderation.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		return apply_filters( 'bb_get_exclude_conditions_filter', "{$select_sql} AND ( {$where_sql} )" );
+		return "( {$this->alias}.user_suspended = 0 OR {$this->alias}.user_suspended IS NULL )";
 	}
 
 	/**
@@ -475,13 +459,7 @@ abstract class BP_Suspend_Abstract {
 	public static function is_content_reported_hidden( $item_id, $item_type ) {
 		global $wpdb, $bp;
 
-		$cache_key = 'bb_is_content_reported_hidden_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
-
-		if ( false === $result ) {
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
-		}
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
 
 		return ! empty( $result );
 	}

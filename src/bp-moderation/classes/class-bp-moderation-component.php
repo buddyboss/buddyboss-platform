@@ -149,17 +149,6 @@ class BP_Moderation_Component extends BP_Component {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function setup_cache_groups() {
-		// Global groups.
-		wp_cache_add_global_groups(
-			array(
-				'bb',
-				'bp_moderation',
-				'bb_moderation',
-				'bp_moderation_reporters',
-			)
-		);
-
-		parent::setup_cache_groups();
 	}
 
 	/**
