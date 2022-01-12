@@ -1794,6 +1794,26 @@ a.layout-grid-view {
   z-index: 999999;
 }
 
+@media (max-width: 400px) {
+  .atwho-view ul li {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 10px;
+  }
+  .atwho-view ul li img {
+    height: 20px;
+    margin: 0 10px 0 0;
+    width: 20px;
+  }
+  .atwho-view ul li .username {
+    margin: 0;
+    padding: 0;
+  }
+  .atwho-view ul li small {
+    margin-left: 0;
+  }
+}
+
 #whats-new-toolbar {
   padding: 10px;
 }
