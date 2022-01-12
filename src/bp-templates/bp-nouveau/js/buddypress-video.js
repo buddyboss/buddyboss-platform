@@ -42,8 +42,9 @@ window.bp = window.bp || {};
 
 			var bodySelector = $( 'body' );
 
-			this.thumbnail_xhr      = null;
-			this.thumbnail_interval = null;
+			this.thumbnail_xhr          = null;
+			this.thumbnail_interval     = null;
+			this.thumbnail_max_interval = 6;
 
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
@@ -1107,7 +1108,13 @@ window.bp = window.bp || {};
 		},
 
 		getEditVideoThumbnail: function ( data ) {
-			this.thumbnail_xhr = $.ajax(
+
+			// Check if max interval exceed then stop ajax request.
+			if ( 0 === bp.Nouveau.Video.thumbnail_max_interval ) {
+				clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+			}
+
+			bp.Nouveau.Video.thumbnail_xhr = $.ajax(
 				{
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
@@ -1116,6 +1123,9 @@ window.bp = window.bp || {};
 					success: function ( response ) {
 						if ( response.success ) {
 
+							bp.Nouveau.Video.thumbnail_max_interval--;
+
+							// Check if thumbnail is generated then stop ajax request.
 							if ( 'yes' === response.data.ffmpeg_generated ) {
 								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 							}
@@ -1141,7 +1151,14 @@ window.bp = window.bp || {};
 								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
 							}
 
+						} else {
+							// If found any error from the response then stop ajax request.
+							clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 						}
+					},
+					error: function () {
+						// If found any error from server then stop ajax request.
+						clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 					}
 				}
 			);
@@ -1174,6 +1191,9 @@ window.bp = window.bp || {};
 			$( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).addClass( 'is-disabled' );
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
 			$( window ).scroll();
+
+			// If close popup then stop ajax request.
+			clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 		},
 
 		openAlbumUploader: function ( event ) {
