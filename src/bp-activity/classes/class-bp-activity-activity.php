@@ -708,13 +708,8 @@ class BP_Activity_Activity {
 			}
 		} else {
 			// Query first for activity IDs.
-			//$activity_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
-			static $cache;
-			$cache_key = md5( maybe_serialize( $r ) );
-			if ( ! isset( $cache[ $cache_key ] ) ) {
-				$cache[ $cache_key ] = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
-			}
-			$activity_ids_sql = $cache[ $cache_key ];
+			$activity_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
+
 			if ( ! empty( $per_page ) && ! empty( $page ) ) {
 				// We query for $per_page + 1 items in order to
 				// populate the has_more_items flag.
@@ -729,8 +724,13 @@ class BP_Activity_Activity {
 			 * @param string $activity_ids_sql MySQL statement used to query for Activity IDs.
 			 * @param array  $r                Array of arguments passed into method.
 			 */
-			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-
+			//$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
+			static $cache;
+			$cache_key = md5( maybe_serialize( $r ) );
+			if ( ! isset( $cache[ $cache_key ] ) ) {
+				$cache[ $cache_key ] = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
+			}
+			$activity_ids_sql = $cache[ $cache_key ];
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
