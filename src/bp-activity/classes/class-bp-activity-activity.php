@@ -708,8 +708,13 @@ class BP_Activity_Activity {
 			}
 		} else {
 			// Query first for activity IDs.
-			$activity_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
-
+			//$activity_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
+			static $cache;
+			$cache_key = md5( maybe_serialize( $r ) );
+			if ( ! isset( $cache[ $cache_key ] ) ) {
+				$cache[ $cache_key ] = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
+			}
+			$activity_ids_sql = $cache[ $cache_key ];
 			if ( ! empty( $per_page ) && ! empty( $page ) ) {
 				// We query for $per_page + 1 items in order to
 				// populate the has_more_items flag.
