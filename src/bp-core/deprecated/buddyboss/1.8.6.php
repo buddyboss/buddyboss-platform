@@ -51,6 +51,6 @@ function bp_groups_default_avatar( $avatar, $params ) {
 
 	_deprecated_function( __FUNCTION__, '1.8.6', 'bb_attachments_get_default_profile_group_avatar_image' );
 
-	$avatar = bb_attachments_get_default_profile_group_avatar_image( $params );
-	return $avatar;
+	$params['object'] = 'group';
+	return bb_attachments_get_default_profile_group_avatar_image( $params );
 }
