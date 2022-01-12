@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Messages Notification Class.
  *
- * @package BuddyBoss/Messages
+ * @package BuddyBoss\Messages
  *
  * @since   BuddyBoss [BBVERSION]
  */
@@ -58,7 +58,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			buddypress()->messages->id,
 			esc_html__( 'Messages', 'buddyboss' ),
 			esc_html__( 'Private Messaging', 'buddyboss' ),
-			20
+			4
 		);
 
 		$this->register_notification_for_new_message();

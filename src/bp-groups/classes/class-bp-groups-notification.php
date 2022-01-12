@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Groups Notification Class.
  *
- * @package BuddyBoss/Groups
+ * @package BuddyBoss\Groups
  *
  * @since   BuddyBoss [BBVERSION]
  */
@@ -58,7 +58,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			buddypress()->groups->id,
 			esc_html__( 'Social Groups', 'buddyboss' ),
 			esc_html__( 'Social Groups Notifications', 'buddyboss' ),
-			30
+			6
 		);
 
 		// Group user invites.

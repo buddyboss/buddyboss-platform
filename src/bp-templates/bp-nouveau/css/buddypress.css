@@ -8377,6 +8377,10 @@ body .bp-messages-user-threads {
   margin-bottom: 30px;
 }
 
+.notification_info .notification_learn_more {
+  display: none;
+}
+
 .notification_info .notification_type {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8405,6 +8409,27 @@ body .bp-messages-user-threads {
 .notification_info .notification_type .notification_type_info h3,
 .notification_info .notification_type .notification_type_info p {
   margin-bottom: 0;
+}
+
+@media screen and (max-width: 900px) {
+  .notification_info {
+    flex-direction: column;
+  }
+  .notification_info .notification_learn_more {
+    display: block;
+    margin-bottom: 0;
+  }
+  .notification_info .notification_learn_more.show {
+    margin-bottom: 15px;
+  }
+  .notification_info .notification_type {
+    display: none;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .notification_info .notification_type.show {
+    display: flex;
+  }
 }
 
 .main-notification-settings {

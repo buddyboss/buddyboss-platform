@@ -2322,3 +2322,175 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
 	<?php
 }
+
+/**
+ * Register the labs settings section.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @return array
+ */
+function bb_labs_get_settings_sections() {
+
+	$settings = array(
+		'bp_labs_settings_notifications' => array(
+			'page'     => 'labs',
+			'title'    => __( 'BuddyBoss Labs', 'buddyboss' ),
+			'callback' => 'bb_labs_notification_preferences_info_section_callback',
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
+
+}
+
+/**
+ * Get settings fields by section.
+ *
+ * @param string $section_id Section id.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_labs_get_settings_fields();
+	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all the settings fields.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_get_settings_fields() {
+
+	$fields = array();
+
+	$fields['bp_labs_settings_notifications'] = array(
+
+		'bp_labs_notification_preferences_enabled' => array(
+			'title'             => __( 'Notification Preferences', 'buddyboss' ),
+			'callback'          => 'bb_labs_settings_callback_notification_preferences_enabled',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields', $fields );
+}
+
+/**
+ * Setting > Media > Profile support
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_settings_callback_notification_preferences_enabled() {
+
+	?>
+	<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
+		<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
+	/>
+	<label for="bp_labs_notification_preferences_enabled">
+		<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
+	</label>
+
+	<?php
+	if ( ! bp_is_active( 'notifications' ) ) {
+		printf(
+			'<p class="bp-new-notice-panel-notice">%s</p>',
+			sprintf(
+				__( 'This feature requires the %s component to be enabled.', 'buddyboss' ),
+				'<strong><a href="' . esc_url(
+					add_query_arg(
+						array( 'page' => 'bp-components' ),
+						admin_url( 'admin.php' )
+					)
+				) . '">' . esc_html__( 'Notifications', 'buddyboss' ) . '</a></strong>'
+			)
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__(
+				'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the Notifications settings.',
+				'buddyboss'
+			)
+		);
+	} else {
+
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' ),
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-notifications',
+						),
+						admin_url( 'admin.php' )
+					)
+                )
+			)
+		);
+	}
+
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			'<a href="%1$s" class="button">%2$s</a>',
+			esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 0,
+						),
+						'admin.php'
+					)
+				)
+			),
+			esc_html__( 'View Tutorial', 'buddyboss' )
+		)
+	);
+
+}
+
+/**
+ * Buddyboss Labs settings section callback.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_labs_notification_preferences_info_section_callback() {
+	?>
+
+	<p>
+	<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__(
+					'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s">support portal</a>.',
+					'buddyboss'
+				),
+				add_query_arg(
+					array(
+						'page' => 'bp-pages',
+					),
+					admin_url( 'admin.php' )
+				)
+			)
+		);
+	?>
+		</p>
+
+	<?php
+}

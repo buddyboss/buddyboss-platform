@@ -2701,6 +2701,21 @@ window.bp = window.bp || {};
 		 */
 		 profileNotificationSetting: function () {
 			this.profileNotificationSettingInputs(['.email', '.web', '.app'] );
+
+			//Learn More section hide/show for mobile
+			$( '.notification_info .notification_learn_more' ).click( function( e ) {
+				e.preventDefault();
+
+				$( this ).find( 'a span' ).toggleClass( function() { 
+					if ( $( this ).hasClass( 'bb-icon-chevron-down' ) ) {
+						return 'bb-icon-chevron-up';
+					} else {
+						return 'bb-icon-chevron-down';
+					}
+				});
+				$( this ).toggleClass( 'show' ).parent().find( '.notification_type' ).toggleClass( 'show' );
+
+			});
 		},
 		/**
 		 *  Enable Disable profile notification setting inputs

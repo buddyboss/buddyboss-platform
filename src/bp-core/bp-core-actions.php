@@ -140,6 +140,16 @@ add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
 add_action(
 	'bp_init',
+	function () {
+		if ( false === bb_enabled_legacy_email_preference() ) {
+			// Render notifications on frontend.
+			add_action( 'bp_notification_settings', 'bb_render_notification_settings', 1 );
+		}
+	}
+);
+
+add_action(
+	'bp_init',
 	function() {
 		$component = bp_get_option( 'bp-active-components' );
 
@@ -460,3 +470,18 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 }
 
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
+
+/**
+ * Render registered notifications into frontend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_render_notification_settings() {
+	$registered_notification = bb_register_notification_preferences();
+
+	if ( ! empty( $registered_notification ) ) {
+		foreach ( $registered_notification as $group => $data ) {
+			bb_render_notification( $group );
+		}
+	}
+}

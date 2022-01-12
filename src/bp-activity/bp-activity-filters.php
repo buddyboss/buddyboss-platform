@@ -2484,13 +2484,13 @@ function bp_blogs_activity_content_set_temp_content() {
 	global $activities_template;
 
 	$activity = $activities_template->activity;
-	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$content = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $content, 'WP_Post' ) ) {
 			$activities_template->activity->content = '&#8203;';
 		}
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$activities_template->activity->content = '&#8203;';
 	}
 
@@ -2523,8 +2523,8 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			}
 
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
+				$content = str_replace( ' [&hellip;]', '&hellip;', $content );
+				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
 				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$iframe  = $matches[0];
@@ -3153,84 +3153,88 @@ function bb_load_activity_notifications() {
  */
 function bp_activity_screen_notification_settings() {
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		bb_render_notification( buddypress()->activity->id );
-	} else {
+	// Bail out if legacy method not enabled.
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		return;
+	}
 
-		if ( bp_activity_do_mentions() ) {
-			if ( ! $mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true ) ) {
-				$mention = 'yes';
-			}
+	if ( bp_activity_do_mentions() ) {
+		if ( ! $mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true ) ) {
+			$mention = 'yes';
 		}
+	}
 
-		if ( ! $reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true ) ) {
-			$reply = 'yes';
-		}
+	if ( ! $reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true ) ) {
+		$reply = 'yes';
+	}
 
-		?>
+	?>
 
-		<table class="notification-settings" id="activity-notification-settings">
-			<thead>
-			<tr>
-				<th class="icon">&nbsp;</th>
-				<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss' ); ?></th>
-				<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-				<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
-			</tr>
-			</thead>
+	<table class="notification-settings" id="activity-notification-settings">
+		<thead>
+		<tr>
+			<th class="icon">&nbsp;</th>
+			<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+		</tr>
+		</thead>
 
-			<tbody>
-			<?php if ( bp_activity_do_mentions() ) : ?>
-				<?php $current_user = wp_get_current_user(); ?>
-				<tr id="activity-notification-settings-mentions">
-					<td>&nbsp;</td>
-					<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
-					<td class="yes">
-						<div class="bp-radio-wrap">
-							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio" value="yes" <?php checked( $mention, 'yes', true ); ?> />
-							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-						</div>
-					</td>
-					<td class="no">
-						<div class="bp-radio-wrap">
-							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio" value="no" <?php checked( $mention, 'no', true ); ?> />
-							<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-						</div>
-					</td>
-				</tr>
-			<?php endif; ?>
-
-			<tr id="activity-notification-settings-replies">
+		<tbody>
+		<?php if ( bp_activity_do_mentions() ) : ?>
+			<?php $current_user = wp_get_current_user(); ?>
+			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
+				<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio" value="yes" <?php checked( $reply, 'yes', true ); ?> />
-						<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"
+							   value="yes" <?php checked( $mention, 'yes', true ); ?> />
+						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 					</div>
 				</td>
 				<td class="no">
 					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio" value="no" <?php checked( $reply, 'no', true ); ?> />
-						<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio"
+							   value="no" <?php checked( $mention, 'no', true ); ?> />
+						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
 					</div>
 				</td>
 			</tr>
+		<?php endif; ?>
 
-			<?php
-
-			/**
-			 * Fires inside the closing </tbody> tag for activity screen notification settings.
-			 *
-			 * @since BuddyPress 1.2.0
-			 */
-			do_action( 'bp_activity_screen_notification_settings' )
-			?>
-			</tbody>
-		</table>
+		<tr id="activity-notification-settings-replies">
+			<td>&nbsp;</td>
+			<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio"
+						   value="yes" <?php checked( $reply, 'yes', true ); ?> />
+					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio"
+						   value="no" <?php checked( $reply, 'no', true ); ?> />
+					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
 
 		<?php
-	}
+
+		/**
+		 * Fires inside the closing </tbody> tag for activity screen notification settings.
+		 *
+		 * @since BuddyPress 1.2.0
+		 */
+		do_action( 'bp_activity_screen_notification_settings' )
+		?>
+		</tbody>
+	</table>
+
+	<?php
 
 }
 add_action( 'bp_notification_settings', 'bp_activity_screen_notification_settings', 1 );

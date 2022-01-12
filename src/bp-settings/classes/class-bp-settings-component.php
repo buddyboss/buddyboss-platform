@@ -160,10 +160,11 @@ class BP_Settings_Component extends BP_Component {
 			'user_has_access' => $access,
 		);
 
+		$data = bb_core_notification_preferences_data();
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
-			'name'            => __( 'Notification Preferences', 'buddyboss' ),
+			'name'            => $data['menu_title'],
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,

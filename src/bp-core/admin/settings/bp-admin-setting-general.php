@@ -25,7 +25,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 	public function register_fields() {
 
-		// Main General Settings Section
+		// Main General Settings Section.
 		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ), '', 'bp_admin_setting_tutorial' );
 
 		// Account Deletion Settings.
@@ -44,7 +44,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$args = array();
 
 
-		// Main Registration Settings Section
+		// Main Registration Settings Section.
 		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ), '', 'bp_admin_registration_setting_tutorial' );
 
 		// Registration Settings.
@@ -76,7 +76,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
-		// Main Privacy Settings Section
+		// Main Privacy Settings Section.
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ), '', 'bp_privacy_tutorial' );
 
 		// Private Network Settings.

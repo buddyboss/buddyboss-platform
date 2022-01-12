@@ -6814,6 +6814,18 @@ function bb_check_email_type_registered( string $notification_type ) {
 }
 
 /**
+ * Checks if notification preference is enabled or not with from buddyboss labs.
+ *
+ * @param int $default Default false.
+ *
+ * @return bool Is media profile media support enabled or not
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
+}
+
+/**
  * Enabled legacy email preferences.
  *
  * @since BuddyBoss [BBVERSION]
@@ -6821,7 +6833,7 @@ function bb_check_email_type_registered( string $notification_type ) {
  * @return bool
  */
 function bb_enabled_legacy_email_preference() {
-	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', false );
+	return (bool) apply_filters( 'bb_enabled_legacy_email_preference', ! bp_is_labs_notification_preferences_support_enabled() );
 }
 
 /**
@@ -6927,4 +6939,34 @@ function bb_render_notification( $notification_group ) {
 			<?php
 		}
 	}
+}
+
+/**
+ * Function to update the screen label based on the different scenarios.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Settings data.
+ */
+function bb_core_notification_preferences_data() {
+
+	$data = array(
+		'menu_title'          => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'screen_title'        => esc_html__( 'Email Preferences', 'buddyboss' ),
+		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss' ),
+		'show_checkbox_label' => false,
+	);
+
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		$data['menu_title']          = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['screen_title']        = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
+		$data['show_checkbox_label'] = true;
+
+		if ( ! ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
+			$data['screen_description'] = esc_html__( 'Choose which notifications to receive by email.', 'buddyboss' );
+		}
+	}
+
+	return $data;
 }

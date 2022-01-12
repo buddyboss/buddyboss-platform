@@ -3,7 +3,7 @@
  * BuddyBoss - Document Edit Child Folder
  *
  * @since BuddyBoss 1.4.0
- * @package BuddyBoss/Core
+ * @package BuddyBoss\Core
  */
 
 global $document_folder_template;

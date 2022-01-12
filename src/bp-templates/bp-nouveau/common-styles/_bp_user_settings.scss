@@ -40,6 +40,10 @@
 	display: flex;
 	margin-bottom: 30px;
 
+	.notification_learn_more {
+		display: none;
+	}
+
 	.notification_type {
 		display: -webkit-box;
 		display: -ms-flexbox;
@@ -72,6 +76,33 @@
 		h3,
 		p {
 			margin-bottom: 0;
+		}
+
+	}
+
+	@media screen and (max-width: 900px) {
+
+		flex-direction: column;
+
+		.notification_learn_more {
+			display: block;
+			margin-bottom: 0;
+
+			&.show {
+				margin-bottom: 15px;
+			}
+
+		}
+
+		.notification_type {
+			display: none;
+			width: 100%;
+			margin-bottom: 12px;
+
+			&.show {
+				display: flex;
+			}
+
 		}
 
 	}
