@@ -2051,6 +2051,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   padding: 0 !important;
 }
 
+.activity-update-form .activity-attached-gif-container {
+  margin-bottom: 15px;
+}
+
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar,
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar,

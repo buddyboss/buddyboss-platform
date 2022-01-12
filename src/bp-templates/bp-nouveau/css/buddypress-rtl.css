@@ -1036,11 +1036,18 @@ a.layout-grid-view {
   max-width: 60%;
 }
 
+@media screen and (max-width: 500px) {
+  .activity-post-name-status {
+    max-width: 80%;
+  }
+}
+
 #bp-activity-privacy-point {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   margin-top: 5px;
+  max-width: 100%;
 }
 
 #bp-activity-privacy-point .privacy-point-icon:before {
@@ -1098,6 +1105,7 @@ a.layout-grid-view {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  flex: 1;
 }
 
 #bp-activity-privacy-point .bb-icon-angle-down {
@@ -2041,6 +2049,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   width: calc(800px - 25px);
   max-width: calc(100vw - 40px - 10%);
   padding: 0 !important;
+}
+
+.activity-update-form .activity-attached-gif-container {
+  margin-bottom: 15px;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
