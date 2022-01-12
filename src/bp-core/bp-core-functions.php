@@ -5971,6 +5971,17 @@ function bb_web_notification_enabled() {
 }
 
 /**
+ * Function to check the web push notification enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_web_push_notification_enabled() {
+	return (bool) apply_filters( 'bb_web_push_notification_enabled', true );
+}
+
+/**
  * Function to check the app push notification enabled or not.
  * - enabled from app plugin.
  *
@@ -6253,6 +6264,35 @@ function bb_core_notification_preferences_data() {
 		if ( ! ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
 			$data['screen_description'] = esc_html__( 'Choose which notifications to receive by email.', 'buddyboss' );
 		}
+	}
+
+	return $data;
+}
+
+/**
+ * Create an option to render the manual notification options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array|void
+ */
+function bb_manual_notification_options() {
+
+	if ( ! ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) && ! bb_app_notification_enabled() ) {
+		return array();
+	}
+
+	$data = array(
+		'label'  => esc_html__( 'A manual notification from a site admin', 'buddyboss' ),
+		'fields' => array( 'email' => '' ),
+	);
+
+	if ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) {
+		$data['field']['web'] = 'notification_web_push';
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$data['field']['app'] = 'notification_app_push';
 	}
 
 	return $data;
