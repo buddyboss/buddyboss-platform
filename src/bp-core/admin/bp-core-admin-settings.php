@@ -517,7 +517,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
  */
 function bp_admin_setting_callback_default_profile_custom_avatar() {
 	$hide_show_style        = 'bp-inline-block';
-	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
+	$placeholder_avatar_url = buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	$custom_avatar_url      = bb_get_default_custom_upload_profile_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
@@ -607,7 +607,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 	$hide_show_style       = '';
-	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
+	$placeholder_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg';
 	$profile_cover_image   = bb_get_default_custom_upload_profile_cover();
 
 	if ( empty( $profile_cover_image ) ) {
@@ -627,7 +627,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 			</label>
 			<a href="#" class="delete button button-large bb-img-remove-button <?php echo esc_attr( $hide_show_style ); ?>" data-removing="<?php esc_html_e( 'Removing...', 'buddyboss' ); ?>" data-remove="<?php esc_html_e( 'Remove', 'buddyboss' ); ?>"><?php esc_html_e( 'Remove', 'buddyboss' ); ?></a>
 		</div>
-		
+
 		<div class="bp-messages-feedback admin-notice bp-cover-image-status bb-custom-profile-group-cover-feedback" style="display: none;">
 			<div class="bp-feedback">
 				<span class="bp-icon" aria-hidden="true"></span>
@@ -680,8 +680,8 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		$avatar = $wordpress_avatar_url;
 	}
 
-	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
-	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
+	$web_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
+	$app_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
 
 	if ( 'buddyboss' !== bb_get_default_profile_cover_type() ) {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
@@ -823,7 +823,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
  */
 function bp_admin_setting_callback_default_group_custom_avatar() {
 	$hide_show_style        = 'bp-inline-block';
-	$placeholder_avatar_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg' );
+	$placeholder_avatar_url = buddypress()->plugin_url . 'bp-core/images/bb-avatar-placeholder.jpg';
 	$custom_avatar_url      = bb_get_default_custom_upload_group_avatar();
 
 	if ( ! $custom_avatar_url || empty( $custom_avatar_url ) ) {
@@ -912,7 +912,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 	$hide_show_style       = '';
-	$placeholder_cover_url = esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg' );
+	$placeholder_cover_url = buddypress()->plugin_url . 'bp-core/images/bb-cover-placeholder.jpg';
 	$group_cover_image     = bb_get_default_custom_upload_group_cover();
 
 	if ( empty( $group_cover_image ) ) {
@@ -965,8 +965,8 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		)
 	);
 
-	$web_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
-	$app_cover_preview = esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' );
+	$web_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
+	$app_cover_preview = buddypress()->plugin_url . 'bp-core/images/cover-image.png';
 
 	if ( 'buddyboss' !== bb_get_default_group_cover_type() ) {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'groups' );
@@ -1517,8 +1517,8 @@ function bp_feed_settings_callback_platform( $args ) {
 		$option_name = $args['activity_name'];
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
-		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'], 'buddyboss' ); ?></label>
-		<?php
+		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
+    <?php
 
 }
 
@@ -1782,8 +1782,8 @@ function bp_core_admin_settings_save() {
 
 add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
 
- /*
-  Admin settings for showing the email confirmation field.
+/**
+ * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
  *
@@ -1797,8 +1797,8 @@ function bp_admin_setting_callback_register_show_confirm_email() {
 	<?php
 }
 
-/*
-  Admin settings for showing the legal agreement confirmation field.
+/**
+ * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
  *
@@ -1912,12 +1912,12 @@ function bp_group_directories_tutorial() {
 	<?php
 }
 
-/*
- Admin settings for showing the allow custom registration checkbox.
-*
-* @since BuddyBoss 1.2.8
-*
-*/
+/**
+ * Admin settings for showing the allow custom registration checkbox.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
 	$allow_custom_registration = bp_allow_custom_registration();
@@ -1947,12 +1947,12 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 	}
 }
 
-/*
- Admin settings for showing the allow custom registration checkbox.
-*
-* @since BuddyBoss 1.2.8
-*
-*/
+/**
+ * Admin settings for showing the allow custom registration checkbox.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ */
 function bp_admin_setting_callback_register_page_url() {
 	?>
 	<input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
@@ -2001,8 +2001,6 @@ function bp_admin_setting_callback_group_messages() {
 	<label for="bp-disable-group-messages"><?php esc_html_e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }
-
-
 
 /**
  * Link to Moderation Block tutorial
@@ -2171,7 +2169,6 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
 	<?php
 }
 
-
 /**
  * Link to Moderation Report tutorial
  *
@@ -2198,6 +2195,7 @@ function bp_admin_on_screen_notification_setting_tutorial() {
 
 	<?php
 }
+
 /**
  * After update activity setting
  *

@@ -21,7 +21,7 @@ if ( ! empty( $cover_image_url ) ) {
 	$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
 	$has_cover_image      = ' has-cover-image';
 	if ( '' !== $cover_image_position ) {
-		$has_cover_image_position = 'has-position';
+		$has_cover_image_position = ' has-position';
 	}
 }
 ?>

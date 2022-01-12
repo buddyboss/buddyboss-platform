@@ -2006,7 +2006,7 @@ function bb_add_default_cover_image_inline_css() {
 		$bb_theme_version = $current_theme->parent()->get( 'Version' );
 	}
 
-	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.3', '<' ) ) {
+	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.4', '<' ) ) {
 
 		$profile_cover_type = bb_get_default_profile_cover_type();
 		$group_cover_type   = bb_get_default_group_cover_type();
