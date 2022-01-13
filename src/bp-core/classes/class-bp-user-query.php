@@ -301,6 +301,9 @@ class BP_User_Query {
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.ID';
 					$sql['order']   = 'DESC';
+					if ( isset( $this->query_vars['order'] ) && ! empty( $this->query_vars['order'] ) ) {
+						$sql['order'] = $this->query_vars['order'];
+					}
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
@@ -389,6 +392,10 @@ class BP_User_Query {
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
 			$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
+			if ( isset( $this->query_vars['orderby'] ) && 'include' === $this->query_vars['orderby'] ) {
+				$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
+				$sql['order']   = '';
+			}
 		}
 
 		// 'exclude' - User ids to exclude from the results.
@@ -417,7 +424,7 @@ class BP_User_Query {
 
 		// 'search_terms' searches user_login and user_nicename
 		// xprofile field matches happen in bp_xprofile_bp_user_query_search().
-		if ( false !== $search_terms ) {
+		if ( false !== (bool) $search_terms ) {
 			$search_terms = bp_esc_like( wp_kses_normalize_entities( $search_terms ) );
 
 			if ( $search_wildcard === 'left' ) {
