@@ -382,10 +382,17 @@ function bp_admin_repair_list() {
 	}
 
 	// Emails:
+	// - install missing emails.
+	$repair_list[99] = array(
+		'bp-missing-emails',
+		__( 'Install Missing emails (restore missing emails from defaults).', 'buddyboss' ),
+		'bp_admin_install_emails',
+	);
+
 	// - reinstall emails.
 	$repair_list[100] = array(
 		'bp-reinstall-emails',
-		__( 'Reinstall emails (delete and restore from defaults).', 'buddyboss' ),
+		__( 'Reset emails (delete and restore from defaults).', 'buddyboss' ),
 		'bp_admin_reinstall_emails',
 	);
 
@@ -897,6 +904,87 @@ function bp_core_admin_available_tools_intro() {
 		</p>
 	</div>
 	<?php
+}
+
+/**
+ * Install Missing emails from defaults.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bp_admin_install_emails() {
+	$switched = false;
+
+	// Switch to the root blog, where the email posts live.
+	if ( ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
+		bp_register_taxonomies();
+
+		$switched = true;
+	}
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$emails          = bp_email_get_schema();
+	$descriptions    = bp_email_get_type_schema();
+	$installed_email = 0;
+
+	// Add these emails to the database.
+	foreach ( $emails as $id => $email ) {
+		if (
+			term_exists( $id, bp_get_email_tax_type() ) &&
+			get_terms(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'slug'     => $id,
+					'fields'   => 'count',
+				)
+			) > 0
+		) {
+			continue;
+		}
+
+		// Some emails are multisite-only.
+		if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
+		}
+
+		$installed_email ++;
+	}
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
+
+	return array(
+		'status'  => 1,
+		'message' => sprintf(
+		    /* translator: %d: Number of emails installed */
+			esc_html__( '%d Emails have been successfully installed.', 'buddyboss' ),
+			$installed_email
+		),
+	);
 }
 
 /**

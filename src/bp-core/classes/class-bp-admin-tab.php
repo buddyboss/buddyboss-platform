@@ -107,36 +107,42 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			$screen    = get_current_screen();
-			$screen_id = $screen ? $screen->id : '';
+			$screen         = get_current_screen();
+			$screen_id      = $screen ? $screen->id : '';
+			$email_template = '';
 
 			if ( 'edit-bp-email' === $screen_id ) {
 
-				$email_template      = '';
-				$all_emails          = bp_email_get_type_schema( 'all' );
-				$all_schema          = bp_email_get_schema();
+				$emails              = bp_email_get_schema();
+				$descriptions        = bp_email_get_type_schema( 'description' );
 				$total_missing_count = 0;
 				$missing_email_label = array();
 
 				ob_start();
 
-				if ( ! empty( $all_emails ) ) {
-					foreach ( $all_emails as $key => $email ) {
-						$total_email_count = 0;
-						if ( array_key_exists( $key, $all_schema ) ) {
-							$total_email_count += get_terms(
-								array(
-									'taxonomy' => bp_get_email_tax_type(),
-									'slug'     => $key,
-									'fields'   => 'count',
-								)
-							);
+				// Add these emails to the database.
+				foreach ( $emails as $id => $email ) {
+					if (
+						term_exists( $id, bp_get_email_tax_type() ) &&
+						get_terms(
+							array(
+								'taxonomy' => bp_get_email_tax_type(),
+								'slug'     => $id,
+								'fields'   => 'count',
+							)
+						) > 0
+					) {
+						continue;
+					}
 
-							if ( count( $all_schema[ $key ] ) > $total_email_count ) {
-								$total_missing_count ++;
-								$missing_email_label[] = $email['description'];
-							}
-						}
+					// Some emails are multisite-only.
+					if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+						continue;
+					}
+
+					if ( array_key_exists( $id, $descriptions ) ) {
+						$total_missing_count ++;
+						$missing_email_label[] = $descriptions[ $id ];
 					}
 				}
 
