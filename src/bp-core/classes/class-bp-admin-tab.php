@@ -113,34 +113,28 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			if ( 'edit-bp-email' === $screen_id ) {
 
 				$email_template      = '';
-				$all_notifications   = bb_register_notification_preferences();
+				$all_emails          = bp_email_get_type_schema( 'all' );
+				$all_schema          = bp_email_get_schema();
 				$total_missing_count = 0;
 				$missing_email_label = array();
 
 				ob_start();
 
-				if ( ! empty( $all_notifications ) ) {
-					foreach ( $all_notifications as $field_group ) {
-						if ( ! empty( $field_group['fields'] ) ) {
-							foreach ( $field_group['fields'] as $field ) {
-								$label             = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
-								$registered_emails = bb_register_notification_email_templates( $field['key'] );
-								$total_email_count = 0;
-								if ( ! empty( $registered_emails ) ) {
-									foreach ( $registered_emails as $email_type ) {
-										$total_email_count += get_terms(
-											array(
-												'taxonomy' => bp_get_email_tax_type(),
-												'slug'     => $email_type,
-												'fields'   => 'count',
-											)
-										);
-									}
-								}
-								if ( ! empty( $registered_emails ) && count( $registered_emails ) > $total_email_count ) {
-									$total_missing_count++;
-									$missing_email_label[] = $label;
-								}
+				if ( ! empty( $all_emails ) ) {
+					foreach ( $all_emails as $key => $email ) {
+						$total_email_count = 0;
+						if ( array_key_exists( $key, $all_schema ) ) {
+							$total_email_count += get_terms(
+								array(
+									'taxonomy' => bp_get_email_tax_type(),
+									'slug'     => $key,
+									'fields'   => 'count',
+								)
+							);
+
+							if ( count( $all_schema[ $key ] ) > $total_email_count ) {
+								$total_missing_count ++;
+								$missing_email_label[] = $email['description'];
 							}
 						}
 					}
