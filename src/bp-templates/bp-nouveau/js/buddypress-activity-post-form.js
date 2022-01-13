@@ -986,6 +986,13 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
+
+							var image = $( file.previewElement ).find( '.dz-image img' )[0];
+							var isLoaded = image.complete && image.naturalHeight !== 0;
+							if (!isLoaded) {
+								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '.</div>' ) );
+								this.removeFile( file );
+							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback + '</div>' ) );
 							this.removeFile( file );
