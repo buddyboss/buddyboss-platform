@@ -1189,7 +1189,7 @@ body.post-type-reply #edit-slug-box {
 }
 
 .bp-new-notice-panel-alert:before {
-  content: '\e8c2';
+  content: "\e8c2";
   color: #808080;
   font-size: 20px;
   font-family: "bb-icons";

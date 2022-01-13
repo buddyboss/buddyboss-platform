@@ -68,7 +68,7 @@ $data = bb_core_notification_preferences_data();
 			</div><!-- .notification_info -->
 		<?php } ?>
 
-	<table class="main-notification-settings">
+	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss' ); ?> ">
 
 		<?php if ( true === $data['show_checkbox_label'] ) { ?>
 		<thead>

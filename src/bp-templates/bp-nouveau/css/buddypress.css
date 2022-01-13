@@ -8401,6 +8401,10 @@ body .bp-messages-user-threads {
   margin-bottom: 0;
 }
 
+.main-notification-settings:first-of-type {
+  margin-bottom: 15px;
+}
+
 .main-notification-settings thead {
   background-color: #ededed;
 }
@@ -8470,6 +8474,98 @@ body .bp-messages-user-threads {
 .main-notification-settings .web,
 .main-notification-settings .app {
   min-width: 95px;
+}
+
+@media screen and (min-width: 901px) {
+  .main-notification-settings .bb-mobile-setting {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .main-notification-settings {
+    display: block;
+  }
+  .main-notification-settings .bb-mobile-setting {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    margin-left: 10px;
+  }
+  .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor {
+    float: right;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #d7dce5;
+    border-radius: 3px;
+    padding: 5px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor:after {
+    content: "\e826";
+    color: #d7dce5;
+    font-size: 22px;
+    font-family: "bb-icons";
+    /* stylelint-disable-line */
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .main-notification-settings .bb-mobile-setting ul {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    display: none;
+    margin: 0;
+    padding: 10px 4px 0;
+    width: 150px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #d3d4d6;
+    box-sizing: border-box;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05), 0 6px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  .main-notification-settings .bb-mobile-setting ul li {
+    width: 100%;
+    padding: 0 8px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting.active ul {
+    display: block;
+    z-index: 1;
+  }
+  .main-notification-settings tbody,
+  .main-notification-settings thead,
+  .main-notification-settings tr {
+    display: block;
+  }
+  .main-notification-settings tbody td {
+    display: none;
+  }
+  .main-notification-settings tbody td:first-child {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .main-notification-settings thead th {
+    display: none;
+  }
+  .main-notification-settings thead th.title {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
 }
 
 /*__ notifications __*/

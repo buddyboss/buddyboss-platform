@@ -1235,9 +1235,9 @@ body.post-type-reply #edit-slug-box {
 }
 
 .bp-new-notice-panel-alert {
-    color: #666;
+	color: #666;
 	background-color: #f6f6f8;
-    border: 1px solid #d1d1d1;
+	border: 1px solid #d1d1d1;
 	padding: 12px 10px;
 
 	.bp-admin-card .form-table td & {
@@ -1245,7 +1245,7 @@ body.post-type-reply #edit-slug-box {
 	}
 
 	&:before {
-		content: '\e8c2';
+		content: "\e8c2";
 		color: #808080;
 		font-size: 20px;
 		font-family: "bb-icons";/* stylelint-disable-line */
@@ -1258,9 +1258,9 @@ body.post-type-reply #edit-slug-box {
 
 .bp-new-notice-panel-notice {
 	background-color: #fff3c8;
-    color: #8b6300;
-    border: 0;
-    padding: 12px 10px;
+	color: #8b6300;
+	border: 0;
+	padding: 12px 10px;
 	margin-bottom: 15px;
 
 	.bp-admin-card .form-table td & {
