@@ -1656,7 +1656,7 @@ window.bp = window.bp || {};
 				if ( ! _.isEmpty( gifData ) ) {
 					this.el.style.backgroundImage = 'url(' + gifData.images.fixed_width.url + ')';
 					this.el.style.backgroundSize  = 'contain';
-					this.el.style.height          = gifData.images.original.height + 'px';
+					this.el.style.minHeight          = gifData.images.original.height + 'px';
 					this.el.style.width           = gifData.images.original.width + 'px';
 					$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
 				}
@@ -1668,7 +1668,7 @@ window.bp = window.bp || {};
 				this.model.set( 'gif_data', {} );
 				this.el.style.backgroundImage = '';
 				this.el.style.backgroundSize  = '';
-				this.el.style.height          = '0px';
+				this.el.style.minHeight          = '0px';
 				this.el.style.width           = '0px';
 				document.removeEventListener( 'activity_gif_close', this.destroy.bind( this ) );
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );

@@ -1439,7 +1439,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-attachments .dropzone.open,
 .activity-update-form .activity-form.focus-in #whats-new-attachments .dropzone.open {
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in.has-feedback #message-feedabck.bp-messages,
@@ -2073,7 +2073,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-update-form .activity-attached-gif-container {
-  margin-bottom: 15px;
+  margin-bottom: 0;
+  height: auto !important;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,

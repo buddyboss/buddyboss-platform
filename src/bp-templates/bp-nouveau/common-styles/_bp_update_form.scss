@@ -445,7 +445,7 @@
 		}
 
 		#whats-new-attachments .dropzone.open {
-			margin: 0 0 15px 0;
+			margin: 0 0 10px 0;
 		}
 
 		&.has-feedback {
@@ -1053,7 +1053,8 @@
 	}
 
 	.activity-attached-gif-container {
-		margin-bottom: 15px;
+		margin-bottom: 0;
+		height: auto !important;
 	}
 
 }
