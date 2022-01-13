@@ -340,6 +340,7 @@ class BP_User_Query {
 					$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
 					$sql['orderby']  = 'ORDER BY u.display_name';
 					$sql['order']    = 'ASC';
+
 					// When profile sync is disabled, alphabetical sorts must happen against
 					// the xprofile table.
 				} else {

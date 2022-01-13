@@ -484,7 +484,7 @@ class BP_Video {
 			// populate the has_more_items flag.
 			$video_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 		}
-		//error_log( $video_ids_sql );
+
 		/**
 		 * Filters the paged video MySQL statement.
 		 *
