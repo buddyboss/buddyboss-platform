@@ -987,6 +987,8 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 
+							Backbone.trigger('cleanFeedBack');
+
 							var image = $( file.previewElement ).find( '.dz-image img' )[0];
 							var isLoaded = image.complete && image.naturalHeight !== 0;
 							if (!isLoaded) {
@@ -1194,6 +1196,8 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+
+							Backbone.trigger('cleanFeedBack');
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -1431,6 +1435,8 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
+
+							Backbone.trigger('cleanFeedBack');
 
 							// validate if video file is corrupted
 							if ( response.data.js_preview === undefined ) {
@@ -3735,6 +3741,7 @@ window.bp = window.bp || {};
 				this.listenTo(Backbone, 'mediaprivacy', this.updateMultiMediaOptions);
 
 				this.listenTo(Backbone, 'onError', this.onError);
+				this.listenTo(Backbone, 'cleanFeedBack', this.cleanFeedback);
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
@@ -4012,6 +4019,7 @@ window.bp = window.bp || {};
 					function ( view ) {
 						if ( 'message-feedabck' === view.$el.prop( 'id' ) ) {
 							view.remove();
+							$( '#whats-new-form #activity-header' ).css( { 'margin-bottom': 0 } );
 						}
 					}
 				);
