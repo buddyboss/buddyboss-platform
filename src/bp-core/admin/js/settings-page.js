@@ -6,6 +6,15 @@
 
 	$(
 		function() {
+
+
+			// Add buttons to Email Template screen.
+			var $email_template_screen = $( '.edit-php.post-type-bp-email' ),
+				$title_action   = $email_template_screen.find( '.page-title-action:first' );
+
+			$title_action.after( BP_ADMIN.email_template.html );
+
+
 			$( '[data-run-js-condition]' ).each(
 				function() {
 					var id  = $( this ).data( 'run-js-condition' );
