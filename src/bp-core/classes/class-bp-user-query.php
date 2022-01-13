@@ -305,9 +305,6 @@ class BP_User_Query {
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.ID';
 					$sql['order']   = 'DESC';
-					if ( isset( $this->query_vars['order'] ) && ! empty( $this->query_vars['order'] ) ) {
-						$sql['order'] = $this->query_vars['order'];
-					}
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
