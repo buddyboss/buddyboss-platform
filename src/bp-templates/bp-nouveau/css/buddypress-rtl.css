@@ -16732,17 +16732,17 @@ img.emojioneemoji {
 }
 
 .dropzone .dz-preview.dz-error .dz-details:before {
-  content: '\e9d3';
+  content: "\e9d3";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   height: 50px;
   width: 50px;
   display: inline-block;
-  background-color: #F1F2F3;
+  background-color: #f1f2f3;
   border-radius: 50%;
   line-height: 50px;
-  color: #92949D;
+  color: #92949d;
 }
 
 .dropzone .dz-preview.dz-error .dz-details .dz-size {
@@ -16805,7 +16805,7 @@ img.emojioneemoji {
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
-  content: '\e9d2';
+  content: "\e9d2";
   margin-top: 34px;
 }
 
@@ -16833,7 +16833,7 @@ img.emojioneemoji {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
-  content: '\e9d4';
+  content: "\e9d4";
   font-size: 16px;
   position: absolute;
   top: 50%;
@@ -22138,7 +22138,7 @@ body > .open-popup.video-error-popup {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  letter-spacing: -0.24px;
+  letter-spacing: normal;
   font-weight: 300;
   margin-top: 8px;
 }

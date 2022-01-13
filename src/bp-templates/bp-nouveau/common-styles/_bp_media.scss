@@ -2172,16 +2172,16 @@ img.emojioneemoji {
 	.dz-details {
 
 		&:before {
-			content: '\e9d3';
+			content: "\e9d3";
 			font-family: "bb-icons"; /* stylelint-disable-line */
 			font-size: 18px;
 			height: 50px;
 			width: 50px;
 			display: inline-block;
-			background-color: #F1F2F3;
+			background-color: #f1f2f3;
 			border-radius: 50%;
 			line-height: 50px;
-			color: #92949D;
+			color: #92949d;
 		}
 
 		.dz-size {
@@ -2257,7 +2257,7 @@ img.emojioneemoji {
 		}
 
 		&:before {
-			content: '\e9d2';
+			content: "\e9d2";
 			margin-top: 34px;
 		}
 
@@ -2291,7 +2291,7 @@ img.emojioneemoji {
 		}
 
 		&:before {
-			content: '\e9d4';
+			content: "\e9d4";
 			font-size: 16px;
 			position: absolute;
 			top: 50%;
