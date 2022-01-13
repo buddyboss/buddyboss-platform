@@ -432,12 +432,20 @@ class BP_Notifications_Notification {
 				$order_by               = implode( ', ', $order_by_clean );
 				$conditions['order_by'] = "{$order_by}";
 			}
+
+			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
+				$conditions['order_by'] = "FIELD(id, {$in})";
+			}
 		}
 
 		// Sort order direction.
 		if ( ! empty( $args['sort_order'] ) && in_array( $args['sort_order'], array( 'ASC', 'DESC' ) ) ) {
 			$sort_order               = $args['sort_order'];
 			$conditions['sort_order'] = "{$sort_order}";
+			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+				$conditions['sort_order'] = '';
+			}
 		}
 
 		// Custom ORDER BY.
@@ -705,6 +713,7 @@ class BP_Notifications_Notification {
 			array(
 				'order_by'   => $r['order_by'],
 				'sort_order' => $r['sort_order'],
+				'id'         => $r['id'],
 			)
 		);
 
