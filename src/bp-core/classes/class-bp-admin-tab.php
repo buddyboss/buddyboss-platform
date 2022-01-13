@@ -142,15 +142,79 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 				if ( $total_missing_count > 0 ) {
 					?>
-					<a href="javascript:void(0);" class="page-title-action">
+					<a href="javascript:void(0);" class="page-title-action btn-open-missing-email">
 						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
 						<?php esc_html_e( 'Email Missing', 'buddyboss' ); ?>
 					</a>
+					<div id="bp-hello-container" class="bp-hello-email" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+						<div class="bp-hello-header">
+							<div class="bp-hello-title">
+								<h2 id="bp-hello-title" tabindex="-1"><span class="count"><?php echo esc_html( $total_missing_count ); ?> </span><?php esc_html_e( 'Email Missing', 'buddyboss' ); ?></h2>
+							</div>
+							<div class="bp-hello-close">
+								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
+									<?php esc_html_e( 'Close', 'buddyboss' ); ?>
+								</button>
+							</div>
+						</div>
+
+						<div class="bp-hello-content">
+							<?php
+							if ( ! empty( $missing_email_label ) ) {
+								echo '<div class="missing-email-list"><ul>';
+
+								foreach ( $missing_email_label as $label ) {
+									echo '<li>' . wp_kses_post( $label ) . '</li>';
+								}
+
+								echo '</ul></div>';
+							}
+							?>
+							<div class="bb-popup-buttons">
+								<a href="
+								<?php
+								echo esc_url(
+									bp_get_admin_url(
+										add_query_arg(
+											array(
+												'page'   => 'bp-tools',
+												'tab'    => 'bp-repair-community',
+												'enable' => 'bp-reinstall-emails',
+											),
+											'admin.php'
+										)
+									)
+								);
+								?>
+								" class="button">
+									<?php esc_html_e( 'Reset All Emails', 'buddyboss' ); ?>
+								</a>
+								<a href="
+								<?php
+								echo esc_url(
+									bp_get_admin_url(
+										add_query_arg(
+											array(
+												'page'   => 'bp-tools',
+												'tab'    => 'bp-repair-community',
+												'enable' => 'bp-missing-emails',
+											),
+											'admin.php'
+										)
+									)
+								);
+								?>
+								" class="button button-primary">
+									<?php esc_html_e( 'Install Missing Emails', 'buddyboss' ); ?>
+								</a>
+							</div>
+						</div>
+					</div>
 					<?php
 				}
 
 				// Get the output buffer contents.
-				$email_template = ob_get_clean();
+				$email_template = trim( ob_get_clean() );
 			}
 
 			wp_localize_script(
