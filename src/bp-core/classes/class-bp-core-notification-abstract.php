@@ -73,6 +73,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 99, 8 );
+		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
 
 		// add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
 	}
@@ -291,6 +292,26 @@ abstract class BP_Core_Notification_Abstract {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Filters active components with registered notifications callbacks.
+	 *
+	 * @since BuddyPress [BBVERSION]
+	 *
+	 * @param array $component_names   Array of registered component names.
+	 */
+	public function get_registered_components( $component_names ) {
+
+		if ( ! empty( $this->notifications ) ) {
+			$custom_component = array_unique( array_column( $this->notifications, 'component' ) );
+
+			if ( ! empty( $custom_component ) ) {
+				$component_names = array_unique( array_merge( $component_names, $custom_component ) );
+			}
+		}
+
+		return $component_names;
 	}
 
 	/************************************ Actions ************************************/
