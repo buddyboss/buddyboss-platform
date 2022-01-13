@@ -107,18 +107,53 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			$screen         = get_current_screen();
-			$screen_id      = $screen ? $screen->id : '';
-			$email_template = '';
+			$screen    = get_current_screen();
+			$screen_id = $screen ? $screen->id : '';
+
 			if ( 'edit-bp-email' === $screen_id ) {
+
+				$email_template      = '';
+				$all_notifications   = bb_register_notification_preferences();
+				$total_missing_count = 0;
+				$missing_email_label = array();
+
 				ob_start();
 
-				?>
-				<a href="javascript:void(0);" class="page-title-action">
-					<span class="count">0 </span>
-					<?php esc_html_e( 'Email Missing', 'buddyboss' ); ?>
-				</a>
-				<?php
+				if ( ! empty( $all_notifications ) ) {
+					foreach ( $all_notifications as $field_group ) {
+						if ( ! empty( $field_group['fields'] ) ) {
+							foreach ( $field_group['fields'] as $field ) {
+								$label             = ( ! empty( $field['admin_label'] ) ? $field['admin_label'] : $field['label'] );
+								$registered_emails = bb_register_notification_email_templates( $field['key'] );
+								$total_email_count = 0;
+								if ( ! empty( $registered_emails ) ) {
+									foreach ( $registered_emails as $email_type ) {
+										$total_email_count += get_terms(
+											array(
+												'taxonomy' => bp_get_email_tax_type(),
+												'slug'     => $email_type,
+												'fields'   => 'count',
+											)
+										);
+									}
+								}
+								if ( ! empty( $registered_emails ) && count( $registered_emails ) > $total_email_count ) {
+									$total_missing_count++;
+									$missing_email_label[] = $label;
+								}
+							}
+						}
+					}
+				}
+
+				if ( $total_missing_count > 0 ) {
+					?>
+					<a href="javascript:void(0);" class="page-title-action">
+						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
+						<?php esc_html_e( 'Email Missing', 'buddyboss' ); ?>
+					</a>
+					<?php
+				}
 
 				// Get the output buffer contents.
 				$email_template = ob_get_clean();
