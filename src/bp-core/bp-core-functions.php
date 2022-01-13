@@ -6684,6 +6684,17 @@ function bb_web_notification_enabled() {
 }
 
 /**
+ * Function to check the web push notification enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_web_push_notification_enabled() {
+	return (bool) apply_filters( 'bb_web_push_notification_enabled', false );
+}
+
+/**
  * Function to check the app push notification enabled or not.
  * - enabled from app plugin.
  *
@@ -6969,4 +6980,96 @@ function bb_core_notification_preferences_data() {
 	}
 
 	return $data;
+}
+
+/**
+ * Create an option to render the manual notification options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array|void
+ */
+function bb_manual_notification_options() {
+
+	if ( ! ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) && ! bb_app_notification_enabled() ) {
+		return array();
+	}
+
+	$data = array(
+		'label'  => esc_html__( 'A manual notification from a site admin', 'buddyboss' ),
+		'fields' => array(),
+	);
+
+	if ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) {
+		$data['fields']['notification_web_push'] = esc_html__( 'Web', 'buddyboss' );
+	} else {
+		$data['fields']['notification_web_push'] = '';
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$data['fields']['notification_app_push'] = esc_html__( 'App', 'buddyboss' );
+	}
+
+	return apply_filters( 'bb_manual_notification_options', $data );
+}
+
+/**
+ * Render the manual notification settings on the front end.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_render_manual_notification() {
+
+	$manual_notifications = bb_manual_notification_options();
+
+	if ( empty( $manual_notifications ) ) {
+		return;
+	}
+
+	$user_id = bp_loggedin_user_id();
+
+	if ( ! empty( $manual_notifications['fields'] ) ) {
+		?>
+		<table class="main-notification-settings">
+			<tbody>
+
+				<tr>
+					<td><?php echo isset( $manual_notifications['label'] ) ? esc_html( $manual_notifications['label'] ) : ''; ?></td>
+					<td class="email notification_no_option">
+						<?php esc_html_e( '-', 'buddyboss' ); ?>
+					</td>
+					<?php
+					foreach ( $manual_notifications['fields'] as $key => $label ) {
+						$class = '';
+						if ( 'notification_web_push' === $key ) {
+							$class = 'web';
+						} elseif ( 'notification_app_push' === $key ) {
+							$class = 'app';
+						}
+						if ( ! empty( $key ) && ! empty( $label ) ) {
+							$name    = 'notifications[' . $key . ']';
+							$checked = bp_get_user_meta( $user_id, $key, true );
+							if ( empty( $checked ) ) {
+								$checked = 'yes';
+                            }
+							?>
+							<td class="<?php echo esc_attr( $class ); ?>">
+								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
+								<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
+							</td>
+							<?php
+						} else {
+							?>
+							<td class="<?php echo esc_attr( $class ); ?> notification_no_option">
+								<?php esc_html_e( '-', 'buddyboss' ); ?>
+							</td>
+							<?php
+						}
+					}
+					?>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+	}
 }
