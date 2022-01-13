@@ -281,7 +281,7 @@
 // Modal
 .modal-mask {
 	position: fixed;
-	z-index: 999901;
+	z-index: 9999999;
 	top: 0;
 	left: 0;
 	width: 100vw;
@@ -600,6 +600,7 @@
 		width: auto;
 		min-width: 100%;
 		object-fit: cover;
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 	}
 
 	&:after {
@@ -1252,6 +1253,7 @@ ul.bb-albums-list {
 		width: auto;
 		min-width: 100%;
 		object-fit: cover;
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 	}
 
 	.bb-more-photos {
