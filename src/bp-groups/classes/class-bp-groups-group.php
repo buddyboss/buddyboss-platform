@@ -1301,10 +1301,6 @@ class BP_Groups_Group {
 		$order   = $r['order'];
 		$orderby = $r['orderby'];
 
-		// We are getting default type active.
-		if ( 'id' === $orderby || 'include' === $orderby ) {
-			$r['type'] = '';
-		}
 		// If a 'type' parameter was passed, parse it and overwrite
 		// 'order' and 'orderby' params passed to the function.
 		if ( ! empty( $r['type'] ) ) {
@@ -1571,6 +1567,11 @@ class BP_Groups_Group {
 			case 'random':
 				$order   = '';
 				$orderby = 'random';
+				break;
+
+			case 'include':
+				$order   = '';
+				$orderby = 'include';
 				break;
 		}
 

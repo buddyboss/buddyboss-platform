@@ -260,6 +260,10 @@ class BP_User_Query {
 			'limit'   => '',
 		);
 
+		// 'include' - User ids to include in the results.
+		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
+		$include_ids = $this->get_include_ids( $include );
+
 		/* TYPE **************************************************************/
 
 		// Determines the sort order, which means it also determines where the
@@ -339,7 +343,6 @@ class BP_User_Query {
 					$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
 					$sql['orderby']  = 'ORDER BY u.display_name';
 					$sql['order']    = 'ASC';
-
 					// When profile sync is disabled, alphabetical sorts must happen against
 					// the xprofile table.
 				} else {
@@ -356,6 +359,18 @@ class BP_User_Query {
 				// are filtered out, we add an appropriate sub-query.
 				$sql['where'][] = "u.{$this->uid_name} IN ( SELECT ID FROM {$wpdb->users} WHERE " . bp_core_get_status_sql( '' ) . ' )';
 
+				break;
+
+			// 'include' sorts by the 'included id' users.
+			case 'include':
+				$this->uid_name  = 'ID';
+				$this->uid_table = $wpdb->users;
+				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
+				if ( ! empty( $include_ids ) ) {
+					$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
+					$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
+					$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
+				}
 				break;
 
 			// Any other 'type' falls through.
@@ -382,20 +397,12 @@ class BP_User_Query {
 
 		/* WHERE *************************************************************/
 
-		// 'include' - User ids to include in the results.
-		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
-		$include_ids = $this->get_include_ids( $include );
-
 		// An array containing nothing but 0 should always fail.
-		if ( 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
+		if ( is_array( $include_ids ) && 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
 			$sql['where'][] = $this->no_results['where'];
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
 			$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
-			if ( isset( $this->query_vars['orderby'] ) && 'include' === $this->query_vars['orderby'] ) {
-				$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
-				$sql['order']   = '';
-			}
 		}
 
 		// 'exclude' - User ids to exclude from the results.
