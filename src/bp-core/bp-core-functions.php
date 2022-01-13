@@ -6336,6 +6336,9 @@ function bb_render_manual_notification() {
 						if ( ! empty( $key ) && ! empty( $label ) ) {
 							$name    = 'notifications[' . $key . ']';
 							$checked = bp_get_user_meta( $user_id, $key, true );
+							if ( empty( $checked ) ) {
+								$checked = 'yes';
+                            }
 							?>
 							<td class="<?php echo esc_attr( $class ); ?>">
 								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
