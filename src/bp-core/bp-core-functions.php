@@ -6313,7 +6313,7 @@ function bb_render_manual_notification() {
 		return;
 	}
 
-    $user_id = bp_loggedin_user_id();
+	$user_id = bp_loggedin_user_id();
 
 	if ( ! empty( $manual_notifications['fields'] ) ) {
 		?>
