@@ -195,6 +195,7 @@ function bb_admin_setting_callback_on_automatic_notification_information() {
 function bb_admin_setting_callback_on_automatic_notification_fields() {
 	$all_notifications    = bb_register_notification_preferences();
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$email_url            = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() );
 
 	if ( ! empty( $all_notifications ) ) {
 		echo '<table class="form-table"><tbody>';
@@ -243,7 +244,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 
 									if ( ! empty( $registered_emails ) && count( $registered_emails ) > $total_email_count ) {
 										?>
-										<div class="no-email-info"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></div>
+											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></a>
 										<?php
 									}
 									?>
