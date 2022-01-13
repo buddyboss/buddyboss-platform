@@ -456,8 +456,8 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param int    $notification_id       Notification ID.
 	 *
 	 * @return array {
-	 *  "link" => "" // Notification URL.
-	 *  "text" => "" // Notification Text
+	 *  'link' => '' // Notification URL.
+	 *  'text' => '' // Notification Text
 	 * }
 	 */
 	abstract public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id );
