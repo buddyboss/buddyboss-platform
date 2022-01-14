@@ -238,16 +238,18 @@ function bp_repair_community_submenu_page() {
 					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
 
 					<div class="checkbox">
-						<?php foreach ( bp_admin_repair_list() as $item ) : ?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>">
+						<?php foreach ( bp_admin_repair_list() as $item ) :
+							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
+                            ?>
+							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo ( true === $disabled ? 'disabled' : '' ); ?>">
 								<input
 										type="checkbox"
 										class="checkbox"
 										name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
 										value="<?php echo esc_attr( $item[0] ); ?>"
 									<?php
-									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
-										echo 'checked';}
+									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) { echo 'checked'; }
+                                    disabled( $disabled );
 									?>
 								/> <?php echo esc_html( $item[1] ); ?></label>
 						<?php endforeach; ?>
@@ -387,6 +389,7 @@ function bp_admin_repair_list() {
 		'bp-missing-emails',
 		__( 'Install Missing emails (restore missing emails from defaults).', 'buddyboss' ),
 		'bp_admin_install_emails',
+		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ),
 	);
 
 	// - reinstall emails.
@@ -394,6 +397,7 @@ function bp_admin_repair_list() {
 		'bp-reinstall-emails',
 		__( 'Reset emails (delete and restore from defaults).', 'buddyboss' ),
 		'bp_admin_reinstall_emails',
+		( isset( $_GET['tool'] ) && 'bp-missing-emails' === $_GET['tool'] ),
 	);
 
 	// Check whether member type is enabled.

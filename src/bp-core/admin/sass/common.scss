@@ -290,6 +290,16 @@ TABLE OF CONTENTS:
 			margin-left: 25px;
 		}
 	}
+
+	.section-repair_community {
+		label.disabled {
+			opacity: 0.7;
+
+			input[type="checkbox"]:disabled {
+				opacity: 1;
+			}
+		}
+	}
 }
 
 /*
