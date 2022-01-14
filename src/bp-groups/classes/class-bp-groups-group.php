@@ -1045,7 +1045,7 @@ class BP_Groups_Group {
 	 *                                            When present, will override orderby and order params.
 	 *                                            Default: null.
 	 *     @type string       $orderby            Optional. Property to sort by. 'date_created', 'last_activity',
-	 *                                            'total_member_count', 'name', 'random', 'meta_id'.
+	 *                                            'total_member_count', 'name', 'random', 'meta_id', 'id', 'include'.
 	 *                                            Default: 'date_created'.
 	 *     @type string       $order              Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 	 *     @type int          $per_page           Optional. Number of items to return per page of results.
@@ -1304,7 +1304,6 @@ class BP_Groups_Group {
 		// If a 'type' parameter was passed, parse it and overwrite
 		// 'order' and 'orderby' params passed to the function.
 		if ( ! empty( $r['type'] ) ) {
-
 			/**
 			 * Filters the 'type' parameter used to overwrite 'order' and 'orderby' values.
 			 *
@@ -1359,6 +1358,11 @@ class BP_Groups_Group {
 		// Random order is a special case.
 		if ( 'rand()' === $orderby ) {
 			$sql['orderby'] = 'ORDER BY rand()';
+		} elseif ( 'include' === $orderby ) {
+			if ( ! empty( $r['include'] ) ) {
+				$field_data     = implode( ',', array_map( 'absint', $r['include'] ) );
+				$sql['orderby'] = "ORDER BY FIELD(g.id, {$field_data})";
+			}
 		} else {
 			$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 		}
@@ -1394,7 +1398,6 @@ class BP_Groups_Group {
 		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], $r );
 
 		$paged_groups_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-
 		/**
 		 * Filters the pagination SQL statement.
 		 *
@@ -1608,6 +1611,14 @@ class BP_Groups_Group {
 
 			case 'meta_id':
 				$order_by_term = buddypress()->groups->table_name_groupmeta . '.id';
+				break;
+
+			case 'id':
+				$order_by_term = 'g.id';
+				break;
+
+			case 'include':
+				$order_by_term = 'include';
 				break;
 		}
 
