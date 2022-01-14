@@ -1568,11 +1568,6 @@ class BP_Groups_Group {
 				$order   = '';
 				$orderby = 'random';
 				break;
-
-			case 'include':
-				$order   = '';
-				$orderby = 'include';
-				break;
 		}
 
 		return array(
