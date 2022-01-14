@@ -225,17 +225,6 @@ class BP_Group_Member_Query extends BP_User_Query {
 			$sql['where'][] = $roles_sql;
 		}
 
-		// member ids where condition for includes specific users id.
-		$include_ids = array();
-		if (
-			$this->query_vars['type'] === 'include'
-			&& isset( $this->query_vars['include'] )
-			&& ! empty( $this->query_vars['include'] )
-		) {
-			$include_ids    = implode( ',', wp_parse_id_list( $this->query_vars['include'] ) );
-			$sql['where'][] = "user_id IN ({$include_ids})";
-		}
-
 		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
 
 		// We fetch group members in order of last_joined, regardless
@@ -249,16 +238,6 @@ class BP_Group_Member_Query extends BP_User_Query {
 		}
 
 		$sql['order'] = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
-
-		// member ids order by includes specific users id.
-		if (
-			$this->query_vars['type'] === 'include'
-			&& isset( $this->query_vars['include'] )
-			&& ! empty( $this->query_vars['include'] )
-		) {
-			$sql['orderby'] = "ORDER BY FIELD(user_id, {$include_ids})";
-			$sql['order']   = '';
-		}
 
 		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" );
 
