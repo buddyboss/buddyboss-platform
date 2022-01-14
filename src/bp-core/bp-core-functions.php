@@ -5824,6 +5824,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 
 	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
+	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
 	if (
 		bb_enabled_legacy_email_preference() &&
@@ -5831,8 +5832,9 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	) {
 		return true;
 	} elseif (
-		array_key_exists( $notification_type, $notifications )
-		&& 'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+		array_key_exists( $notification_type, $notifications ) &&
+		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
+		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
 	) {
 		return true;
 	}
