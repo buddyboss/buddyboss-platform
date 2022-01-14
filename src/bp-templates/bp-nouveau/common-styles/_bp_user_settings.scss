@@ -156,6 +156,10 @@
 
 	}
 
+	input[type="checkbox"]:disabled {
+		opacity: 0;
+	}
+
 	tbody {
 
 		.title {

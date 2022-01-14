@@ -2765,19 +2765,19 @@ window.bp = window.bp || {};
 			   var nodeSelector = $( this ).find( 'td' ).length ? 'td' : 'th';
 			   var allInputsChecked = 0;
 			   $( this ).find( nodeSelector + ':not(:first-child)' ).each( function() {
-				   if( $( this ).find( 'input').length ) {
+				   if( $( this ).find( 'input[type="checkbox"]').length ) {
 					   var inputText = $( this ).find( 'label' ).text();
 					   var inputChecked = $( this ).find( 'input' ).is( ':checked' ) ? 'checked' : '';
 					   var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
-					   available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
+					   available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
 				   }
 				   if( !$( this ).find( 'input:checked' ).length ) {
 					   return;
 				   }
-				   selected_text += selected_text === '' ? $( this ).find( 'input + label' ).text().trim() : ', ' + $( this ).find( 'input + label' ).text().trim();
+				   selected_text += selected_text === '' ? $( this ).find( 'input[type="checkbox"] + label' ).text().trim() : ', ' + $( this ).find( 'input[type="checkbox"] + label' ).text().trim();
 				   allInputsChecked++;
 			   });
-			   if( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input' ).length ) {
+			   if( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
 					selected_text = textAll;
 			   } else {
 				   selected_text = selected_text === '' ? textNone : selected_text;
