@@ -6016,6 +6016,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 		'is_render'  => bb_check_email_type_registered( $field['key'] ),
 		'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
 		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
+		'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification', true ),
 	);
 
 	if ( bb_web_notification_enabled() ) {
@@ -6028,6 +6029,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
 			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
+			'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification_web', true ),
 		);
 	}
 
@@ -6040,6 +6042,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
 			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
+			'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification_app', true ),
 		);
 	}
 
@@ -6187,12 +6190,14 @@ function bb_render_notification( $notification_group ) {
 
 					<?php
 					foreach ( $options as $key => $v ) {
-						$is_render = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-						$name      = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
+						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $field['key'], $key );
+						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
 						if ( $is_render ) {
 							?>
-							<td class="<?php echo esc_attr( $key ); ?>">
-								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> />
+							<td class="<?php echo esc_attr( $key ) . esc_attr( true === $is_disabled ? ' disabled' : '' ); ?>">
+								<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" <?php disabled( $is_disabled ); ?> />
+								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled ); ?> />
 								<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
 							</td>
 							<?php
@@ -6268,6 +6273,85 @@ function bb_core_notification_preferences_data() {
 
 	return $data;
 }
+/**
+ * Create an option to render the manual notification options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array|void
+ */
+function bb_enable_notifications_options() {
+
+	if ( true === bb_enabled_legacy_email_preference() ) {
+		return array();
+	}
+
+	$data = array(
+		'label'  => esc_html__( 'Enable notifications', 'buddyboss' ),
+		'fields' => array(
+			'enable_notification' => esc_html__( 'Email', 'buddyboss' ),
+		),
+	);
+
+	if ( bb_web_notification_enabled() ) {
+		$data['fields']['enable_notification_web'] = esc_html__( 'Web', 'buddyboss' );
+	}
+
+	if ( bb_app_notification_enabled() ) {
+		$data['fields']['enable_notification_app'] = esc_html__( 'App', 'buddyboss' );
+	}
+
+	return apply_filters( 'bb_enable_notification_options', $data );
+}
+
+/**
+ * Render the enable notification settings on the front end.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_render_enable_notification_options() {
+	$enable_notifications = bb_enable_notifications_options();
+
+	if ( empty( $enable_notifications ) ) {
+		return;
+	}
+
+	$user_id = bp_loggedin_user_id();
+
+	?>
+	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss' ); ?> ">
+		<thead>
+			<tr>
+				<th class="title"><?php echo esc_html( $enable_notifications['label'] ); ?></th>
+				<?php
+				foreach ( $enable_notifications['fields'] as $key => $label ) {
+					$class = 'email';
+					if ( 'enable_notification_web' === $key ) {
+						$class = 'web';
+					} elseif ( 'enable_notification_app' === $key ) {
+						$class = 'app';
+					}
+					if ( ! empty( $key ) && ! empty( $label ) ) {
+						$name    = 'notifications[' . $key . ']';
+						$checked = bp_get_user_meta( $user_id, $key, true );
+						if ( 'no' !== $checked ) {
+							$checked = 'yes';
+						}
+						?>
+						<th class="<?php echo esc_attr( $class ); ?>">
+							<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" />
+							<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
+							<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
+						</th>
+						<?php
+					}
+				}
+				?>
+			</tr>
+		</thead>
+	</table>
+	<?php
+}
 
 /**
  * Create an option to render the manual notification options.
@@ -6327,21 +6411,25 @@ function bb_render_manual_notification() {
 					</td>
 					<?php
 					foreach ( $manual_notifications['fields'] as $key => $label ) {
-						$class = '';
+						$class    = '';
+						$disabled = false;
 						if ( 'notification_web_push' === $key ) {
-							$class = 'web';
+							$class    = 'web';
+							$disabled = 'no' === bp_get_user_meta( $user_id, 'enable_notification_web', true );
 						} elseif ( 'notification_app_push' === $key ) {
-							$class = 'app';
+							$class    = 'app';
+							$disabled = 'no' === bp_get_user_meta( $user_id, 'enable_notification_app', true );
 						}
 						if ( ! empty( $key ) && ! empty( $label ) ) {
 							$name    = 'notifications[' . $key . ']';
 							$checked = bp_get_user_meta( $user_id, $key, true );
-							if ( empty( $checked ) ) {
+							if ( 'no' !== $checked ) {
 								$checked = 'yes';
-                            }
+							}
 							?>
-							<td class="<?php echo esc_attr( $class ); ?>">
-								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
+							<td class="<?php echo esc_attr( $class ) . esc_attr( true === $disabled ? ' disabled' : '' ); ?>">
+								<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" <?php disabled( $disabled ); ?> />
+								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> <?php disabled( $disabled ); ?> />
 								<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
 							</td>
 							<?php
@@ -6360,3 +6448,4 @@ function bb_render_manual_notification() {
 		<?php
 	}
 }
+

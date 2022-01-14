@@ -432,6 +432,8 @@ add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
 function bb_render_notification_settings() {
 	$registered_notification = bb_register_notification_preferences();
 
+	bb_render_enable_notification_options();
+
 	bb_render_manual_notification();
 
 	if ( ! empty( $registered_notification ) ) {

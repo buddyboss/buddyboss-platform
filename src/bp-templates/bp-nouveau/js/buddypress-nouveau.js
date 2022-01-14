@@ -2741,11 +2741,11 @@ window.bp = window.bp || {};
 			   (function (_i) {
 				   $( document ).on( 'click', '.main-notification-settings th' + node[_i] + ' input[type="checkbox"]', function() {
 					   if( $( this ).is( ':checked' ) ) {
-						   $( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' );
-						   $( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).removeClass( 'disabled' );
+						   $( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
+						   $( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 					   } else {
-						   $( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' );
-						   $( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' );
+						   $( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+						   $( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 					   }
 				   });
 			   })(i);
