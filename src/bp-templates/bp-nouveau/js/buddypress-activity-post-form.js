@@ -3887,7 +3887,9 @@ window.bp = window.bp || {};
 				} else {
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
 					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
-						$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
+							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+						}
 					});
 					//Hide mention dropdown while window resized
 					$( window ).on( 'resize', function() {
