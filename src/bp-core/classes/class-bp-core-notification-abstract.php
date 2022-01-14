@@ -234,7 +234,6 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_emails( array $emails ) {
 		if ( ! empty( $this->email_types ) ) {
-			$emails = array();
 			foreach ( $this->email_types as $key => $val ) {
 				if ( ! empty( $val['notification_type'] ) && isset( $emails[ $val['notification_type'] ] ) ) {
 					if ( ! in_array( $key, $emails[ $val['notification_type'] ], true ) ) {
