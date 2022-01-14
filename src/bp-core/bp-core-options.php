@@ -1806,8 +1806,19 @@ function bp_core_display_name_format( $default = 'first_name' ) {
  */
 function bp_rest_enable_private_network() {
 
-	// If BB APP Private then all rest will be private.
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+	// If BB APP active + BB APP Private + BB Private REST APIs enable then and then all rest will be private.
+	if (
+		function_exists( 'bbapp_is_private_app_enabled' ) // buddyboss-app is active.
+		&& true == (bool) bbapp_is_private_app_enabled() // private app is enabled.
+		&& true == (bool) bp_enable_private_rest_apis() // BB private rest api is enabled.
+	) {
+		$retval = (bool) bbapp_is_private_app_enabled();
+
+		// If BB APP active + private API is disable.
+	} elseif (
+		function_exists( 'bbapp_is_private_app_enabled' ) // buddyboss-app is active.
+		&& false == (bool) bbapp_is_private_app_enabled() // private app is disable.
+	) {
 		$retval = (bool) bbapp_is_private_app_enabled();
 
 		// If platform rest API private.
