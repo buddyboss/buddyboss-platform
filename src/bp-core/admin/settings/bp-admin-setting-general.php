@@ -95,10 +95,6 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 				true === bbapp_is_private_app_enabled()
 			) ||
 			(
-				function_exists( 'bbapp_is_private_app_enabled' ) &&
-				true === bbapp_is_private_app_enabled()
-			) ||
-			(
 				! function_exists( 'bbapp_is_private_app_enabled' ) &&
 				true === bp_enable_private_rest_apis()
 			)

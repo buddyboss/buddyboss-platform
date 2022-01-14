@@ -2241,10 +2241,11 @@ function bb_admin_setting_callback_private_rest_apis() {
 	$disable_field    = false;
 	$checked_checkbox = bp_enable_private_rest_apis();
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		$disable_field = true;
 		if ( true === bbapp_is_private_app_enabled() ) {
-			// Forcefully checked true because app is private.
-			$checked_checkbox = true;
+			$disable_field    = false;
+		} else {
+			$disable_field    = true;
+			$checked_checkbox = false;
 		}
 	}
 	?>
