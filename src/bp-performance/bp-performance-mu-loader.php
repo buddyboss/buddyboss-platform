@@ -76,7 +76,8 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 			if (
 				(
 					! empty( $apps_settings ) && // buddyboss-app is active.
-					! empty( $apps_settings['private_app.enabled'] ) // private app is enabled.
+					! empty( $apps_settings['private_app.enabled'] ) && // private app is enabled.
+					true === (bool) $enable_private_rest_apis // BB private rest api is enabled.
 				) ||
 				(
 					empty( $apps_settings ) && // buddyboss-app disabled.
