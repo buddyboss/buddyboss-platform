@@ -812,6 +812,7 @@ function groups_get_group_members( $args = array() ) {
 			'type'                => 'last_joined',
 			'xprofile_query'      => false,
 			'populate_extras'     => true,
+			'include'             => false,
 		),
 		'groups_get_group_members'
 	);
@@ -848,6 +849,7 @@ function groups_get_group_members( $args = array() ) {
 				'type'            => $r['type'],
 				'xprofile_query'  => $r['xprofile_query'],
 				'populate_extras' => $r['populate_extras'],
+				'include'         => $r['include'],
 			)
 		);
 
