@@ -829,7 +829,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'bp_rest_register_errors',
 				$bp->signup->errors,
 				array(
-					'status' => 200,
+					'status' => 400,
 				)
 			);
 		}
