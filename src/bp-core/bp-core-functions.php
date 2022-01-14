@@ -6375,7 +6375,7 @@ function bb_manual_notification_options() {
 
 	if ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) {
 		$data['fields']['notification_web_push'] = esc_html__( 'Web', 'buddyboss' );
-	} else {
+	} elseif ( bb_web_notification_enabled() ) {
 		$data['fields']['notification_web_push'] = '';
 	}
 
