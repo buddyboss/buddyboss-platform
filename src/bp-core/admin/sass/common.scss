@@ -291,6 +291,17 @@ TABLE OF CONTENTS:
 			margin-left: 25px;
 		}
 	}
+
+	.section-repair_community {
+
+		label.disabled {
+			opacity: 0.7;
+
+			input[type="checkbox"]:disabled {
+				opacity: 1;
+			}
+		}
+	}
 }
 
 /*
@@ -2865,6 +2876,7 @@ body.users_page_bp-profile-edit,
 				padding: 5px 10px;
 				color: #8c0202;
 				font-size: 11px;
+				text-decoration: none;
 			}
 
 			.notification-defaults {

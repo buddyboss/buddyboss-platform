@@ -275,6 +275,14 @@ TABLE OF CONTENTS:
   margin-left: 25px;
 }
 
+.buddyboss_page_bp-repair-community .section-repair_community label.disabled {
+  opacity: 0.7;
+}
+
+.buddyboss_page_bp-repair-community .section-repair_community label.disabled input[type="checkbox"]:disabled {
+  opacity: 1;
+}
+
 /*
  * 2.5 Settings - Tabs
  */
@@ -2687,6 +2695,7 @@ body.users_page_bp-profile-edit #TB_ajaxContent,
   padding: 5px 10px;
   color: #8c0202;
   font-size: 11px;
+  text-decoration: none;
 }
 
 #bp_notification_settings_automatic .field-set .field-block .notification-defaults {

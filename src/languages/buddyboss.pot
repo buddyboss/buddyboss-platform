@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-12 11:49:06+00:00\n"
+"POT-Creation-Date: 2022-01-14 09:41:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -789,7 +789,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2456
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:222
-#: bp-core/admin/bp-core-admin-tools.php:866
+#: bp-core/admin/bp-core-admin-tools.php:877
 #: bp-core/classes/class-bp-admin.php:513
 #: bp-core/classes/class-bp-admin.php:514
 #: bp-core/classes/class-bp-admin.php:536
@@ -1248,6 +1248,7 @@ msgid "Filter activities list"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:347
+#: bp-core/bp-core-functions.php:7037
 #: bp-groups/classes/class-bp-groups-list-table.php:354
 #: bp-messages/bp-messages-template.php:1023
 #: bp-moderation/classes/class-bp-moderation-list-table.php:276
@@ -3204,8 +3205,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:39
 #: bp-core/admin/bp-core-admin-pages.php:42
 #: bp-core/admin/bp-core-admin-pages.php:46
-#: bp-core/classes/class-bp-admin-tab.php:298
-#: bp-core/classes/class-bp-admin-tab.php:319 bp-forums/groups.php:344
+#: bp-core/classes/class-bp-admin-tab.php:406
+#: bp-core/classes/class-bp-admin-tab.php:427 bp-forums/groups.php:344
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:35
 msgid "Save Settings"
 msgstr ""
@@ -3300,7 +3301,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:515
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:571
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:653
-#: bp-core/classes/class-bp-admin-tab.php:311
+#: bp-core/classes/class-bp-admin-tab.php:419
 #: bp-integrations/learndash/bp-learndash-functions.php:421
 #: bp-integrations/learndash/bp-learndash-functions.php:444
 #: bp-integrations/learndash/bp-learndash-functions.php:467
@@ -3588,6 +3589,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:890
+#: bp-core/bp-core-functions.php:7037
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:192
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:207
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:221
@@ -3618,9 +3620,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:698
 #: bp-core/admin/bp-core-admin-settings.php:983
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:62
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:92
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:119
+#: bp-core/bp-core-functions.php:7016 bp-core/bp-core-functions.php:7096
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:57
 msgid "App"
 msgstr ""
 
@@ -3977,13 +3978,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2337
-#: bp-notifications/bp-notifications-settings.php:313
+#: bp-notifications/bp-notifications-settings.php:314
 msgid "BuddyBoss Labs"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2380
-#: bp-core/bp-core-functions.php:6961 bp-core/bp-core-functions.php:6962
-#: bp-notifications/bp-notifications-settings.php:302
+#: bp-core/bp-core-functions.php:6979 bp-core/bp-core-functions.php:6980
+#: bp-notifications/bp-notifications-settings.php:303
 #: bp-settings/classes/class-bp-settings-component.php:264
 msgid "Notification Preferences"
 msgstr ""
@@ -4252,73 +4253,77 @@ msgstr ""
 msgid "Data to Repair:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:258 bp-forums/admin/tools.php:97
+#: bp-core/admin/bp-core-admin-tools.php:260 bp-forums/admin/tools.php:97
 msgid "Repair Items"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:318
+#: bp-core/admin/bp-core-admin-tools.php:320
 msgid "Repair total members count."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:324
+#: bp-core/admin/bp-core-admin-tools.php:326
 msgid "Repair member \"last activity\" data."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:332
+#: bp-core/admin/bp-core-admin-tools.php:334
 msgid "Repair default profile set and fields."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:338
+#: bp-core/admin/bp-core-admin-tools.php:340
 msgid "Re-sync BuddyBoss profile fields to WordPress profile fields."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:344
+#: bp-core/admin/bp-core-admin-tools.php:346
 msgid "Re-sync WordPress profile fields to BuddyBoss profile fields."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:350
+#: bp-core/admin/bp-core-admin-tools.php:352
 msgid "Update display name to selected format in profile settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:359
+#: bp-core/admin/bp-core-admin-tools.php:361
 msgid "Repair total connections count for each member."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:369
+#: bp-core/admin/bp-core-admin-tools.php:371
 msgid "Repair total groups count for each member."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:379
+#: bp-core/admin/bp-core-admin-tools.php:381
 msgid "Repopulate site tracking records."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:388
-msgid "Reinstall emails (delete and restore from defaults)."
+#: bp-core/admin/bp-core-admin-tools.php:390
+msgid "Install Missing emails (restore missing emails from defaults)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:400
+#: bp-core/admin/bp-core-admin-tools.php:398
+msgid "Reset emails (delete and restore from defaults)."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:411
 msgid ""
 "Assign members without a profile type to the default profile type (excludes "
 "admins)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:410
+#: bp-core/admin/bp-core-admin-tools.php:421
 msgid "Update activity favorites data."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:419
+#: bp-core/admin/bp-core-admin-tools.php:430
 msgid ""
 "Create the database table for Invitations and migrate existing group "
 "invitations if needed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:449
+#: bp-core/admin/bp-core-admin-tools.php:460
 msgid "Counting the number of connections for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:450
-#: bp-core/admin/bp-core-admin-tools.php:511
-#: bp-core/admin/bp-core-admin-tools.php:559 bp-forums/admin/tools.php:251
+#: bp-core/admin/bp-core-admin-tools.php:461
+#: bp-core/admin/bp-core-admin-tools.php:522
+#: bp-core/admin/bp-core-admin-tools.php:570 bp-forums/admin/tools.php:251
 #: bp-forums/admin/tools.php:317 bp-forums/admin/tools.php:376
 #: bp-forums/admin/tools.php:442 bp-forums/admin/tools.php:444
 #: bp-forums/admin/tools.php:575 bp-forums/admin/tools.php:632
@@ -4332,19 +4337,19 @@ msgstr ""
 msgid "Failed!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:492
-#: bp-core/admin/bp-core-admin-tools.php:542
-#: bp-core/admin/bp-core-admin-tools.php:571
-#: bp-core/admin/bp-core-admin-tools.php:593
-#: bp-core/admin/bp-core-admin-tools.php:610
-#: bp-core/admin/bp-core-admin-tools.php:671
-#: bp-core/admin/bp-core-admin-tools.php:708
-#: bp-core/admin/bp-core-admin-tools.php:759
-#: bp-core/admin/bp-core-admin-tools.php:804
-#: bp-core/admin/bp-core-admin-tools.php:1041
-#: bp-core/admin/bp-core-admin-tools.php:1084
-#: bp-core/admin/bp-core-admin-tools.php:1236
-#: bp-core/admin/bp-core-admin-tools.php:1245 bp-forums/admin/tools.php:297
+#: bp-core/admin/bp-core-admin-tools.php:503
+#: bp-core/admin/bp-core-admin-tools.php:553
+#: bp-core/admin/bp-core-admin-tools.php:582
+#: bp-core/admin/bp-core-admin-tools.php:604
+#: bp-core/admin/bp-core-admin-tools.php:621
+#: bp-core/admin/bp-core-admin-tools.php:682
+#: bp-core/admin/bp-core-admin-tools.php:719
+#: bp-core/admin/bp-core-admin-tools.php:770
+#: bp-core/admin/bp-core-admin-tools.php:815
+#: bp-core/admin/bp-core-admin-tools.php:1133
+#: bp-core/admin/bp-core-admin-tools.php:1176
+#: bp-core/admin/bp-core-admin-tools.php:1328
+#: bp-core/admin/bp-core-admin-tools.php:1337 bp-forums/admin/tools.php:297
 #: bp-forums/admin/tools.php:299 bp-forums/admin/tools.php:357
 #: bp-forums/admin/tools.php:359 bp-forums/admin/tools.php:400
 #: bp-forums/admin/tools.php:402 bp-forums/admin/tools.php:610
@@ -4365,83 +4370,87 @@ msgstr ""
 msgid "Complete!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:510
+#: bp-core/admin/bp-core-admin-tools.php:521
 msgid "Counting the number of groups for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:556
+#: bp-core/admin/bp-core-admin-tools.php:567
 msgid "Repopulating Blogs records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:587
+#: bp-core/admin/bp-core-admin-tools.php:598
 msgid "Counting the number of active members on the site&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:605
+#: bp-core/admin/bp-core-admin-tools.php:616
 msgid "Determining last activity dates for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:667
+#: bp-core/admin/bp-core-admin-tools.php:678
 msgid "Repair default profile set and fields&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:698
-#: bp-core/admin/bp-core-admin-tools.php:749
-#: bp-core/admin/bp-core-admin-tools.php:794
-#: bp-core/admin/bp-core-admin-tools.php:1032
-#: bp-core/admin/bp-core-admin-tools.php:1075
+#: bp-core/admin/bp-core-admin-tools.php:709
+#: bp-core/admin/bp-core-admin-tools.php:760
+#: bp-core/admin/bp-core-admin-tools.php:805
+#: bp-core/admin/bp-core-admin-tools.php:1124
+#: bp-core/admin/bp-core-admin-tools.php:1167
 msgid "%s members updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:705
+#: bp-core/admin/bp-core-admin-tools.php:716
 msgid "Re-sync user profile data to WordPress; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:756
+#: bp-core/admin/bp-core-admin-tools.php:767
 msgid "Re-sync user WordPress data to BuddyBoss profile fields; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:801
+#: bp-core/admin/bp-core-admin-tools.php:812
 msgid "Update WordPress user display names&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:896
-#: bp-core/admin/bp-core-admin-tools.php:899
+#: bp-core/admin/bp-core-admin-tools.php:907
+#: bp-core/admin/bp-core-admin-tools.php:910
 msgid "BuddyBoss Tools"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:898
+#: bp-core/admin/bp-core-admin-tools.php:909
 msgid ""
 "BuddyBoss keeps track of various relationships between users, groups, and "
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:899
+#: bp-core/admin/bp-core-admin-tools.php:910
 msgid "Use the %s to repair these relationships."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:966
+#: bp-core/admin/bp-core-admin-tools.php:991
+msgid "%d Emails have been successfully installed."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1058
 msgid "Emails have been successfully reinstalled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:987
+#: bp-core/admin/bp-core-admin-tools.php:1079
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1040
+#: bp-core/admin/bp-core-admin-tools.php:1132
 msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1083
+#: bp-core/admin/bp-core-admin-tools.php:1175
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1104 bp-forums/admin/tools.php:1953
+#: bp-core/admin/bp-core-admin-tools.php:1196 bp-forums/admin/tools.php:1953
 #: bp-forums/functions.php:869
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:546
@@ -4479,38 +4488,38 @@ msgstr ""
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1220
+#: bp-core/admin/bp-core-admin-tools.php:1312
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1232
-#: bp-core/admin/bp-core-admin-tools.php:1241
+#: bp-core/admin/bp-core-admin-tools.php:1324
+#: bp-core/admin/bp-core-admin-tools.php:1333
 msgid "Update members activity favorites&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1266
+#: bp-core/admin/bp-core-admin-tools.php:1358
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the Invitations database table if it does not exist&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1267
+#: bp-core/admin/bp-core-admin-tools.php:1359
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1280
+#: bp-core/admin/bp-core-admin-tools.php:1372
 msgid "Created invitations table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1288
+#: bp-core/admin/bp-core-admin-tools.php:1380
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating group invitations&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1289
+#: bp-core/admin/bp-core-admin-tools.php:1381
 msgid "Failed to migrate invitations!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1296
+#: bp-core/admin/bp-core-admin-tools.php:1388
 msgid "Migrated invitations!"
 msgstr ""
 
@@ -4972,6 +4981,7 @@ msgstr ""
 #: bp-core/admin/templates/check-video-mime-type.php:18
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:19
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:24
+#: bp-core/classes/class-bp-admin-tab.php:161
 msgid "Close pop-up"
 msgstr ""
 
@@ -4981,7 +4991,8 @@ msgstr ""
 #: bp-core/admin/templates/check-video-mime-type.php:19
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:21
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
-#: bp-forums/admin/topics.php:847 bp-forums/topics/template.php:3008
+#: bp-core/classes/class-bp-admin-tab.php:162 bp-forums/admin/topics.php:847
+#: bp-forums/topics/template.php:3008
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:12
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:10
@@ -5431,7 +5442,7 @@ msgid "Upload Error: %s"
 msgstr ""
 
 #: bp-core/bp-core-attachments.php:1562
-#: bp-core/classes/class-bp-admin-tab.php:142
+#: bp-core/classes/class-bp-admin-tab.php:258
 msgid "There was a problem uploading the cover photo."
 msgstr ""
 
@@ -5469,7 +5480,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:5904
+#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:5906
 msgid "Please login to access this website."
 msgstr ""
 
@@ -6146,7 +6157,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3284 bp-core/bp-core-functions.php:3380
-#: bp-forums/admin/metaboxes.php:573
+#: bp-core/bp-core-functions.php:7007 bp-forums/admin/metaboxes.php:573
 #: bp-members/classes/class-bp-members-admin.php:2466
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -6156,8 +6167,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:320
 #: bp-search/classes/class-bp-search-members.php:364
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:66
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:37
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:79
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:32
 #: bp-templates/bp-nouveau/includes/functions.php:1163
 #: bp-templates/bp-nouveau/includes/functions.php:1237
 #: bp-templates/bp-nouveau/includes/functions.php:1303
@@ -6185,7 +6195,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3373 bp-core/classes/class-bp-admin.php:904
+#: bp-core/bp-core-functions.php:3373 bp-core/classes/class-bp-admin.php:910
 msgid "Situations"
 msgstr ""
 
@@ -6458,17 +6468,17 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:5942
+#: bp-core/bp-core-functions.php:5944
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6510
+#: bp-core/bp-core-functions.php:6512
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed with "
 "custom CSS."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6529
+#: bp-core/bp-core-functions.php:6531
 #. translators: 1: theme setting url 2: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -6476,14 +6486,14 @@ msgid ""
 "changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6536
+#: bp-core/bp-core-functions.php:6538
 #. translators: 1: theme setting url
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed in the <a "
 "href=\"%s\">Theme Options</a>."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6542
+#: bp-core/bp-core-functions.php:6544
 #. translators: 1: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -6491,27 +6501,40 @@ msgid ""
 "href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6904
+#: bp-core/bp-core-functions.php:6922 bp-core/bp-core-functions.php:7125
+#: bp-core/bp-core-functions.php:7154
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:184
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:106
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6954 bp-core/bp-core-functions.php:6955
+#: bp-core/bp-core-functions.php:6972 bp-core/bp-core-functions.php:6973
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:867
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6956
+#: bp-core/bp-core-functions.php:6974
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6963
+#: bp-core/bp-core-functions.php:6981
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6967
+#: bp-core/bp-core-functions.php:6985
 msgid "Choose which notifications to receive by email."
+msgstr ""
+
+#: bp-core/bp-core-functions.php:7005
+msgid "Enable notifications"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:7012 bp-core/bp-core-functions.php:7090
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:44
+msgid "Web"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:7085
+msgid "A manual notification from a site admin"
 msgstr ""
 
 #: bp-core/bp-core-moderation.php:134
@@ -7142,29 +7165,42 @@ msgid ""
 "<a href=\"###SITEURL###\">###SITEURL###</a>"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:117
+#: bp-core/classes/class-bp-admin-tab.php:153
+#: bp-core/classes/class-bp-admin-tab.php:158
+msgid "Email Missing"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin-tab.php:196
+msgid "Reset All Emails"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin-tab.php:214
+msgid "Install Missing Emails"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin-tab.php:233
 msgid "Please upload a file to check the MIME Type."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:120
+#: bp-core/classes/class-bp-admin-tab.php:236
 msgid ""
 "Are you sure you want to import data? This action is going to alter your "
 "database. If this is a live website you may want to create a backup of your "
 "database first."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:121
+#: bp-core/classes/class-bp-admin-tab.php:237
 msgid ""
 "Are you sure you want to delete all Default Data content? Content that was "
 "created by you and others, and not by this default data installer, will not "
 "be deleted."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:124
+#: bp-core/classes/class-bp-admin-tab.php:240
 msgid "Select site to repair the forums"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:128
+#: bp-core/classes/class-bp-admin-tab.php:244
 msgid ""
 "Please confirm you want to suspend this member. Members who are suspended "
 "will be logged out and not allowed to login again. Their content will be "
@@ -7172,7 +7208,7 @@ msgid ""
 "this process to complete."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:129
+#: bp-core/classes/class-bp-admin-tab.php:245
 msgid ""
 "Please confirm you want to unsuspend this member. Members who are "
 "unsuspended will be allowed to login again, and their content will no "
@@ -7180,7 +7216,7 @@ msgid ""
 "minutes for this process to complete."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:141
+#: bp-core/classes/class-bp-admin-tab.php:257
 #: bp-core/classes/class-bp-attachment.php:162
 #: bp-document/bp-document-functions.php:1430
 #: bp-media/bp-media-functions.php:150 bp-video/bp-video-functions.php:119
@@ -7188,21 +7224,21 @@ msgstr ""
 msgid "No file was uploaded."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:145
+#: bp-core/classes/class-bp-admin-tab.php:261
 msgid ""
 "Cover photo was uploaded successfully. For best results, upload an image "
 "that is %1$spx by %2$spx or larger."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:149
+#: bp-core/classes/class-bp-admin-tab.php:265
 msgid "Cover photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:150
+#: bp-core/classes/class-bp-admin-tab.php:266
 msgid "There was a problem deleting cover photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin-tab.php:151
+#: bp-core/classes/class-bp-admin-tab.php:267
 msgid "Cover photo was deleted successfully."
 msgstr ""
 
@@ -7243,11 +7279,11 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:832
+#: bp-core/classes/class-bp-admin.php:838
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:833
+#: bp-core/classes/class-bp-admin.php:839
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -7575,7 +7611,7 @@ msgstr ""
 msgid "Display post featured image?"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-notification-abstract.php:145
+#: bp-core/classes/class-bp-core-notification-abstract.php:146
 #: bp-core/profile-search/bps-xprofile.php:319
 #: bp-core/profile-search/bps-xprofile.php:616
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:235
@@ -7586,7 +7622,7 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-notification-abstract.php:146
+#: bp-core/classes/class-bp-core-notification-abstract.php:147
 msgid "Other Notifications"
 msgstr ""
 
@@ -23867,15 +23903,15 @@ msgid ""
 "receive via email, web or app in their Notification Preferences."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:246
+#: bp-notifications/bp-notifications-settings.php:247
 msgid "Missing Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:251
+#: bp-notifications/bp-notifications-settings.php:252
 msgid "Manage Defaults"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:300
+#: bp-notifications/bp-notifications-settings.php:301
 #. translators: 1. Notification Preferences label. 2. BuddyBoss labs.
 msgid ""
 "Enable the %1$s feature in %2$s to manage the notification types used on "
@@ -25768,34 +25804,20 @@ msgstr ""
 msgid "Leave password fields blank for no change"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:29
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:24
 msgid "Learn more"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:38
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:33
 msgid "A notification sent to your inbox"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:49
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:85
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:112
-msgid "Web"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:50
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:45
 msgid "A notification in the corner of your screen"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:63
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:58
 msgid "A notification pushed to your mobile device"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:76
-msgid "Enable notifications"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:103
-msgid "A manual notification from a site admin"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:12
@@ -29608,17 +29630,17 @@ msgctxt "Separator in time since"
 msgid ","
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6720
+#: bp-core/bp-core-functions.php:6733
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6732
+#: bp-core/bp-core-functions.php:6746
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6744
+#: bp-core/bp-core-functions.php:6759
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""

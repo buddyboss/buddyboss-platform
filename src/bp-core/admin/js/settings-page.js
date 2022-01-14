@@ -9,6 +9,45 @@ window.bp = window.bp || {};
 
 	$(
 		function() {
+
+
+			// Add buttons to Email Template screen.
+			var $email_template_screen = $( '.edit-php.post-type-bp-email' ),
+				$title_action   = $email_template_screen.find( '.page-title-action:first' );
+
+			$title_action.after( BP_ADMIN.email_template.html );
+
+			$( document ).on(
+				'click',
+				'.btn-open-missing-email',
+				function(e) {
+					e.preventDefault();
+
+					if ( $( document ).find( '#bp-hello-backdrop' ).length ) {
+					} else {
+						var finder = $( document ).find( '.bp-hello-email' );
+						$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
+					}
+					var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+						modal    = document.getElementById( 'bp-hello-container' );
+
+					if ( null === backdrop ) {
+						return;
+					}
+					document.body.classList.add( 'bp-disable-scroll' );
+
+					// Show modal and overlay.
+					backdrop.style.display = '';
+					modal.style.display    = '';
+
+					// Focus the "X" so bp_hello_handle_keyboard_events() works.
+					var focus_target = modal.querySelectorAll( 'a[href], button' );
+					focus_target     = Array.prototype.slice.call( focus_target );
+					focus_target[0].focus();
+				}
+			);
+
+
 			$( '[data-run-js-condition]' ).each(
 				function() {
 					var id  = $( this ).data( 'run-js-condition' );

@@ -805,6 +805,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET ) && isset( $_GET['post_type'] ) && bp_get_email_post_type() === $_GET['post_type'] ) {
+				wp_enqueue_style( 'bp-hello-css' );
+				wp_enqueue_script( 'bp-hello-js' );
+			}
+
 			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
 				wp_enqueue_style( 'bp-hello-css' );
 			}

@@ -479,6 +479,8 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
 function bb_render_notification_settings() {
 	$registered_notification = bb_register_notification_preferences();
 
+	bb_render_enable_notification_options();
+
 	bb_render_manual_notification();
 
 	if ( ! empty( $registered_notification ) ) {

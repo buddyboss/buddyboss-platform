@@ -72,9 +72,10 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
+		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 99, 8 );
+		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
 
 		// add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
-
 	}
 
 	/**
@@ -233,7 +234,6 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_emails( array $emails ) {
 		if ( ! empty( $this->email_types ) ) {
-			$emails = array();
 			foreach ( $this->email_types as $key => $val ) {
 				if ( ! empty( $val['notification_type'] ) && isset( $emails[ $val['notification_type'] ] ) ) {
 					if ( ! in_array( $key, $emails[ $val['notification_type'] ], true ) ) {
@@ -246,6 +246,71 @@ abstract class BP_Core_Notification_Abstract {
 		}
 
 		return $emails;
+	}
+
+	/**
+	 * Filters the notification content for notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content               Component action.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $action_item_count     Number of notifications with the same action.
+	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param string $component_action_name Canonical notification action.
+	 * @param string $component_name        Notification component ID.
+	 * @param int    $notification_id       Notification ID.
+	 *
+	 * @return string|array If $format is 'string', return a string of the notification content.
+	 *                      If $format is 'object', return an array formatted like:
+	 *                      array( 'text' => 'CONTENT', 'link' => 'LINK' ).
+	 */
+	public function get_notifications_for_user( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
+
+		$custom_content = $this->format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id );
+
+		// Validate the return value & return if validated.
+		if (
+			is_array( $custom_content ) &&
+			isset( $custom_content['text'] ) &&
+			isset( $custom_content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $custom_content['link'] ) ) {
+					$content = esc_html( $custom_content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $custom_content['link'] ) . '">' . esc_html( $custom_content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $custom_content['text'],
+					'link' => $custom_content['link'],
+				);
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Filters active components with registered notifications callbacks.
+	 *
+	 * @since BuddyPress [BBVERSION]
+	 *
+	 * @param array $component_names   Array of registered component names.
+	 */
+	public function get_registered_components( $component_names ) {
+
+		if ( ! empty( $this->notifications ) ) {
+			$custom_component = array_unique( array_column( $this->notifications, 'component' ) );
+
+			if ( ! empty( $custom_component ) ) {
+				$component_names = array_unique( array_merge( $component_names, $custom_component ) );
+			}
+		}
+
+		return $component_names;
 	}
 
 	/************************************ Actions ************************************/
@@ -396,5 +461,25 @@ abstract class BP_Core_Notification_Abstract {
 			'notification_type' => $notification_type,
 		);
 	}
+
+	/**
+	 * Format the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $action_item_count     Number of notifications with the same action.
+	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param string $component_action_name Canonical notification action.
+	 * @param string $component_name        Notification component ID.
+	 * @param int    $notification_id       Notification ID.
+	 *
+	 * @return array {
+	 *  'link' => '' // Notification URL.
+	 *  'text' => '' // Notification Text
+	 * }
+	 */
+	abstract public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id );
 }
 
