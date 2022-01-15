@@ -2529,10 +2529,11 @@ window.bp = window.bp || {};
 				this.$el.find( '#activity-autocomplete' ).focus();
 				// After select any group it will scroll to particular selected group.
 				if ( $( '#bp-activity-group-ac-items .bp-activity-object' ).length ) {
+					var activityGroupAcItems = $( '#bp-activity-group-ac-items' );
 					$( '.bp-activity-object' ).each( function () {
 						if ( $( this ).hasClass( 'selected' ) ) {
-							$( '#bp-activity-group-ac-items' ).scrollTop( window.acScrollPos );
-							$( '#bp-activity-group-ac-items' ).on( 'scroll', function () {	
+							activityGroupAcItems.scrollTop( window.acScrollPos );
+							activityGroupAcItems.on( 'scroll', function () {	
 								window.acScrollPos = $( this ).scrollTop();
 							} );
 						}
