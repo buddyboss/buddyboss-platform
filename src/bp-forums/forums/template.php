@@ -170,7 +170,11 @@ function bbp_has_forums( $args = '' ) {
 			$bbp->forum_query->found_posts = $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count;
 		}
 
-		$base = $base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+		if ( ! empty( $default_post_parent ) ) {
+			$base = add_query_arg( 'paged', '%#%', bbp_get_forum_permalink( $default_post_parent ) ); // If a forum has subforums, this is the URL to their first page
+		} else {
+			$base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+		}
 
 		// Pagination settings with filter
 		$bbp_topic_pagination = apply_filters(
