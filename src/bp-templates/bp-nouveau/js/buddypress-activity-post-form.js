@@ -2507,15 +2507,16 @@ window.bp = window.bp || {};
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
 						var currentPage = 1;
 						$scrollable.on( 'scroll', function () {
+							window.acScrollPos = $scrollable.scrollTop();
 							if ( $this.$el.find( '#bp-activity-group-ac-items' ).hasClass('load_more_data') ) {
-									currentPage++;
-									if ( currentPage > group_total_page ) {
-										$this.$el.find( '#bp-activity-group-ac-items' ).removeClass( 'load_more_data' );
-										currentPage = 1;
-										return false;
-									} else {
-										$this.loadMoreData( $this, currentPage );
-									}
+								currentPage++;
+								if ( currentPage > group_total_page ) {
+									$this.$el.find( '#bp-activity-group-ac-items' ).removeClass( 'load_more_data' );
+									currentPage = 1;
+									return false;
+								} else {
+									$this.loadMoreData( $this, currentPage );
+								}
 							}
 						} );
 					}
@@ -2530,8 +2531,9 @@ window.bp = window.bp || {};
 				if ( $( '#bp-activity-group-ac-items .bp-activity-object' ).length ) {
 					$( '.bp-activity-object' ).each( function () {
 						if ( $( this ).hasClass( 'selected' ) ) {
-							$( '#bp-activity-group-ac-items' ).animate( {
-								'scrollTop': $( this ).position().top - 60
+							$( '#bp-activity-group-ac-items' ).scrollTop( window.acScrollPos );
+							$( '#bp-activity-group-ac-items' ).on( 'scroll', function () {	
+								window.acScrollPos = $( this ).scrollTop();
 							} );
 						}
 					} );

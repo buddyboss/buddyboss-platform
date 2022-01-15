@@ -2293,6 +2293,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   width: 100%;
   width: calc(100% - 10px);
   z-index: 11;
+  position: relative;
 }
 
 #bp-activity-group-ac-items:empty {

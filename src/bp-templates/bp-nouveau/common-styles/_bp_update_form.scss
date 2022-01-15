@@ -1266,6 +1266,7 @@
 	width: 100%;
 	width: calc(100% - 10px);
 	z-index: 11;
+	position: relative;
 
 	&:empty {
 		display: none;
