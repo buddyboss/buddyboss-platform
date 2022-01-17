@@ -1476,7 +1476,7 @@ div.dropzone.dz-started {
 		bottom: 0;
 		left: 0;
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
+		background-color: rgba(0, 0, 0, 0.5);
 		color: #fff;
 		padding: 0 20px 0 15px;
 		font-size: 13px;
@@ -1580,7 +1580,7 @@ div.dropzone.dz-started {
 
 		.dz-filename {
 			font-size: 13px;
-			color: #828890;
+			color: rgba(18, 43, 70, 0.5);
 			line-height: 1;
 			opacity: 1;
 			visibility: visible;

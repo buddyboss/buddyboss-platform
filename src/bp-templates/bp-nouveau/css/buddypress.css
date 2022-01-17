@@ -1420,7 +1420,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .bb-icon,
 .activity-update-form .activity-form.focus-in #editor-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
+  color: rgba(18, 43, 70, 0.5);
   font-size: 24px;
   margin-right: 10px;
 }
@@ -3376,7 +3376,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .ac-reply-toolbar .bb-icon,
 #whats-new-toolbar .bb-icon,
 #whats-new-messages-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
+  color: rgba(18, 43, 70, 0.5);
   transition: all linear 0.2s;
   font-size: 24px;
   width: auto;
@@ -21737,7 +21737,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   padding: 0 20px 0 15px;
   font-size: 13px;
@@ -21841,7 +21841,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename {
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   line-height: 1;
   opacity: 1;
   visibility: visible;
@@ -22641,7 +22641,11 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
 }
 
 .dropzone.document-dropzone .dz-preview .dz-icon {
@@ -22688,7 +22692,7 @@ body > .open-popup.video-error-popup {
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"] {
   font-size: 28px;
-  color: #92949d;
+  color: rgba(18, 43, 70, 0.5);
   left: 50%;
   background-color: #fafafa;
   display: block;
@@ -22702,14 +22706,14 @@ body > .open-popup.video-error-popup {
   left: 10px;
   right: 0;
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   padding-right: 20px;
 }
 
 .dropzone.document-dropzone .dz-preview .dz-details .dz-size {
   display: none;
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   font-weight: 300;
 }
 
