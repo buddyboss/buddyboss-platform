@@ -1626,11 +1626,11 @@ function bb_admin_setting_callback_private_rest_apis() {
 			)
 		)
 	);
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
 		printf(
 			'<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			sprintf(
-				__( 'BuddyBoss App is enabled. Please go to <a href="%s">settings</a> here to restrict App and REST APIs access to logged-in members only.', 'buddyboss' ),
+				__( 'BuddyBoss App plugin is active. Please go to <a href="%s">settings</a> to enable "Private App" that will allow you to enable or disable REST APIs access for non-logged-in members.', 'buddyboss' ),
 				add_query_arg(
 					array(
 						'page' => 'bbapp-settings',
