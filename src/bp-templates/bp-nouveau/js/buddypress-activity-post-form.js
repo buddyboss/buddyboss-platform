@@ -2507,7 +2507,7 @@ window.bp = window.bp || {};
 						var $scrollable = this.$el.find( '#bp-activity-group-ac-items' );
 						var currentPage = 1;
 						$scrollable.on( 'scroll', function () {
-							window.acScrollPos = $scrollable.scrollTop();
+							window.acScrollPosition = $scrollable.scrollTop();
 							if ( $this.$el.find( '#bp-activity-group-ac-items' ).hasClass('load_more_data') ) {
 								currentPage++;
 								if ( currentPage > group_total_page ) {
@@ -2532,9 +2532,9 @@ window.bp = window.bp || {};
 					var activityGroupAcItems = $( '#bp-activity-group-ac-items' );
 					$( '.bp-activity-object' ).each( function () {
 						if ( $( this ).hasClass( 'selected' ) ) {
-							activityGroupAcItems.scrollTop( window.acScrollPos );
+							activityGroupAcItems.scrollTop( window.acScrollPosition );
 							activityGroupAcItems.on( 'scroll', function () {	
-								window.acScrollPos = $( this ).scrollTop();
+								window.acScrollPosition = $( this ).scrollTop();
 							} );
 						}
 					} );
