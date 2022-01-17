@@ -55,7 +55,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 		$this->register_preferences_group(
-			buddypress()->forums->id,
+			'forums',
 			esc_html__( 'Forums', 'buddyboss' ),
 			esc_html__( 'Forums Notifications', 'buddyboss' ),
 			8
@@ -78,7 +78,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'notification_forums_following_reply',
 			esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
 			'',
-			buddypress()->forums->id
+			'forums'
 		);
 
 		$this->register_email_type(
@@ -122,7 +122,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'notification_forums_following_topic',
 			esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
 			'',
-			buddypress()->forums->id
+			'forums'
 		);
 
 		$this->register_email_type(

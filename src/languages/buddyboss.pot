@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-14 09:41:26+00:00\n"
+"POT-Creation-Date: 2022-01-17 09:12:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -857,31 +857,31 @@ msgstr ""
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2311
+#: bp-activity/bp-activity-functions.php:2313
 #: bp-groups/bp-groups-activity.php:476
 msgid ""
 "Allowed time for editing this activity is passed already, you can not edit "
 "now."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2990
+#: bp-activity/bp-activity-functions.php:2992
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:377
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3022
+#: bp-activity/bp-activity-functions.php:3024
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3712
+#: bp-activity/bp-activity-functions.php:3714
 msgid "Thumbnail"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5146
+#: bp-activity/bp-activity-functions.php:5148
 msgid "URL is not valid."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5154
+#: bp-activity/bp-activity-functions.php:5156
 #: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:101
 msgid "Sorry! preview is not available right now. Please try again later."
 msgstr ""
@@ -1248,7 +1248,7 @@ msgid "Filter activities list"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:347
-#: bp-core/bp-core-functions.php:7037
+#: bp-core/bp-core-functions.php:7038
 #: bp-groups/classes/class-bp-groups-list-table.php:354
 #: bp-messages/bp-messages-template.php:1023
 #: bp-moderation/classes/class-bp-moderation-list-table.php:276
@@ -1309,7 +1309,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-document/classes/class-bp-document.php:680
+#: bp-document/classes/class-bp-document.php:687
 #: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1772
 #: bp-forums/admin.php:28 bp-forums/admin.php:29 bp-forums/admin.php:45
 #: bp-forums/admin.php:46 bp-forums/admin.php:231 bp-forums/admin.php:274
@@ -1323,12 +1323,12 @@ msgstr ""
 #: bp-forums/forums/template.php:49 bp-media/bp-media-filters.php:1408
 #: bp-media/bp-media-settings.php:239 bp-media/bp-media-settings.php:246
 #: bp-media/bp-media-settings.php:253 bp-media/bp-media-settings.php:260
-#: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:743
+#: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:750
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1143
 #: bp-search/bp-search-functions.php:369
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:738
 #: bp-templates/bp-nouveau/includes/customizer.php:202
-#: bp-video/classes/class-bp-video.php:682
+#: bp-video/classes/class-bp-video.php:690
 msgid "Forums"
 msgstr ""
 
@@ -2360,7 +2360,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:281
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:119
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:187
-#: bp-core/bp-core-functions.php:782 bp-core/bp-core-update.php:881
+#: bp-core/bp-core-functions.php:782 bp-core/bp-core-update.php:885
 msgid "Sites"
 msgstr ""
 
@@ -3296,7 +3296,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:2026
 #: bp-core/admin/bp-core-admin-settings.php:2053
 #: bp-core/admin/bp-core-admin-settings.php:2193
-#: bp-core/admin/bp-core-admin-settings.php:2461
+#: bp-core/admin/bp-core-admin-settings.php:2462
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:515
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:571
@@ -3589,7 +3589,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:890
-#: bp-core/bp-core-functions.php:7037
+#: bp-core/bp-core-functions.php:7038
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:192
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:207
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:221
@@ -3620,7 +3620,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:698
 #: bp-core/admin/bp-core-admin-settings.php:983
-#: bp-core/bp-core-functions.php:7016 bp-core/bp-core-functions.php:7096
+#: bp-core/bp-core-functions.php:7017 bp-core/bp-core-functions.php:7097
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:57
 msgid "App"
 msgstr ""
@@ -3946,58 +3946,58 @@ msgstr ""
 msgid "5 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2253
+#: bp-core/admin/bp-core-admin-settings.php:2254
 msgid "Restrict REST APIs access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2258
+#: bp-core/admin/bp-core-admin-settings.php:2259
 msgid "Login and <a href=\"%s\">Registration</a> APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2271
+#: bp-core/admin/bp-core-admin-settings.php:2272
 msgid ""
 "BuddyBoss App is enabled. Please go to <a href=\"%s\">settings</a> here to "
 "restrict App and REST APIs access to logged-in members only."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2295
+#: bp-core/admin/bp-core-admin-settings.php:2296
 msgid ""
 "Enter REST API endpoints URLs or URI fragments (e.g. "
 "wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
 "one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2309
+#: bp-core/admin/bp-core-admin-settings.php:2310
 msgid "Restrict RSS Feeds access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2321
+#: bp-core/admin/bp-core-admin-settings.php:2322
 msgid ""
 "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
 "publicly visible always. Enter one endpoint URL or URI per line. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2337
+#: bp-core/admin/bp-core-admin-settings.php:2338
 #: bp-notifications/bp-notifications-settings.php:314
 msgid "BuddyBoss Labs"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2380
-#: bp-core/bp-core-functions.php:6979 bp-core/bp-core-functions.php:6980
+#: bp-core/admin/bp-core-admin-settings.php:2381
+#: bp-core/bp-core-functions.php:6980 bp-core/bp-core-functions.php:6981
 #: bp-notifications/bp-notifications-settings.php:303
 #: bp-settings/classes/class-bp-settings-component.php:264
 msgid "Notification Preferences"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2402
+#: bp-core/admin/bp-core-admin-settings.php:2403
 msgid "Enable Notification Preferences"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2410
+#: bp-core/admin/bp-core-admin-settings.php:2411
 msgid "This feature requires the %s component to be enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2416
+#: bp-core/admin/bp-core-admin-settings.php:2417
 #: bp-core/admin/settings/bp-admin-setting-notifications.php:28
 #: bp-core/bp-core-functions.php:2536 bp-core/deprecated/buddypress/2.1.php:538
 #: bp-core/gdpr/class-bp-notification-export.php:27
@@ -4012,7 +4012,7 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2422
+#: bp-core/admin/bp-core-admin-settings.php:2423
 msgid ""
 "Once enabled, a Notification Preferences screen will be available to each "
 "member in their Account Settings. In this screen, members can configure "
@@ -4021,7 +4021,7 @@ msgid ""
 "Notifications settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2432
+#: bp-core/admin/bp-core-admin-settings.php:2433
 msgid ""
 "Once enabled, a Notification Preferences screen will be available to each "
 "member in their Account Settings. In this screen, members can configure "
@@ -4030,7 +4030,7 @@ msgid ""
 "href=\"%s\">Notifications</a> settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2480
+#: bp-core/admin/bp-core-admin-settings.php:2481
 msgid ""
 "BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You "
 "can help us prepare these features for official release by reporting issues "
@@ -4108,7 +4108,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
 #: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:783
-#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:883
+#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:887
 #: bp-core/classes/class-bp-email-tokens.php:417 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1426 bp-groups/bp-groups-admin.php:2082
 #: bp-groups/bp-groups-functions.php:4098
@@ -4137,8 +4137,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:75
 #: bp-core/admin/settings/bp-admin-setting-friends.php:21
 #: bp-core/gdpr/class-bp-friendship-export.php:58
-#: bp-document/classes/class-bp-document.php:676
-#: bp-document/classes/class-bp-document.php:1396
+#: bp-document/classes/class-bp-document.php:683
+#: bp-document/classes/class-bp-document.php:1403
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119 bp-friends/bp-friends-filters.php:387
 #: bp-friends/classes/class-bp-friends-component.php:29
@@ -4146,14 +4146,14 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:259
 #: bp-friends/classes/class-bp-friends-component.php:305
 #: bp-friends/classes/class-bp-friends-notification.php:59
-#: bp-media/classes/class-bp-media.php:739
+#: bp-media/classes/class-bp-media.php:746
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:941
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1047
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:776
 #: bp-templates/bp-nouveau/includes/activity/functions.php:288
 #: bp-templates/bp-nouveau/includes/customizer.php:196
-#: bp-video/classes/class-bp-video.php:678
+#: bp-video/classes/class-bp-video.php:686
 msgid "Connections"
 msgstr ""
 
@@ -4169,7 +4169,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:111
 #: bp-core/admin/settings/bp-admin-setting-groups.php:25
 #: bp-core/bp-core-functions.php:781 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:882 bp-core/gdpr/class-bp-group-export.php:27
+#: bp-core/bp-core-update.php:886 bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
 #: bp-groups/bp-groups-admin.php:38 bp-groups/bp-groups-admin.php:48
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
@@ -4524,7 +4524,7 @@ msgid "Migrated invitations!"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:77
-#: bp-core/admin/settings/bp-admin-setting-general.php:128
+#: bp-core/admin/settings/bp-admin-setting-general.php:124
 msgid "Activity Settings"
 msgstr ""
 
@@ -4630,8 +4630,8 @@ msgid "Private Website"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:86
-#: bp-core/admin/settings/bp-admin-setting-general.php:106
-#: bp-core/admin/settings/bp-admin-setting-general.php:112
+#: bp-core/admin/settings/bp-admin-setting-general.php:102
+#: bp-core/admin/settings/bp-admin-setting-general.php:108
 msgid "Public Content"
 msgstr ""
 
@@ -4639,16 +4639,16 @@ msgstr ""
 msgid "Private REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:110
+#: bp-core/admin/settings/bp-admin-setting-general.php:106
 msgid "Private RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:119
+#: bp-core/admin/settings/bp-admin-setting-general.php:115
 #: bp-forums/admin/settings.php:1549
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:125
+#: bp-core/admin/settings/bp-admin-setting-general.php:121
 msgid "Groups Settings"
 msgstr ""
 
@@ -5480,7 +5480,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:5906
+#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:5907
 msgid "Please login to access this website."
 msgstr ""
 
@@ -6157,7 +6157,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3284 bp-core/bp-core-functions.php:3380
-#: bp-core/bp-core-functions.php:7007 bp-forums/admin/metaboxes.php:573
+#: bp-core/bp-core-functions.php:7008 bp-forums/admin/metaboxes.php:573
 #: bp-members/classes/class-bp-members-admin.php:2466
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -6468,17 +6468,17 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:5944
+#: bp-core/bp-core-functions.php:5945
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6512
+#: bp-core/bp-core-functions.php:6513
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed with "
 "custom CSS."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6531
+#: bp-core/bp-core-functions.php:6532
 #. translators: 1: theme setting url 2: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -6486,14 +6486,14 @@ msgid ""
 "changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6538
+#: bp-core/bp-core-functions.php:6539
 #. translators: 1: theme setting url
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed in the <a "
 "href=\"%s\">Theme Options</a>."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6544
+#: bp-core/bp-core-functions.php:6545
 #. translators: 1: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -6501,39 +6501,39 @@ msgid ""
 "href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6922 bp-core/bp-core-functions.php:7125
-#: bp-core/bp-core-functions.php:7154
+#: bp-core/bp-core-functions.php:6923 bp-core/bp-core-functions.php:7126
+#: bp-core/bp-core-functions.php:7155
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:184
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6972 bp-core/bp-core-functions.php:6973
+#: bp-core/bp-core-functions.php:6973 bp-core/bp-core-functions.php:6974
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:867
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6974
+#: bp-core/bp-core-functions.php:6975
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6981
+#: bp-core/bp-core-functions.php:6982
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6985
+#: bp-core/bp-core-functions.php:6986
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7005
+#: bp-core/bp-core-functions.php:7006
 msgid "Enable notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7012 bp-core/bp-core-functions.php:7090
+#: bp-core/bp-core-functions.php:7013 bp-core/bp-core-functions.php:7091
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:44
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7085
+#: bp-core/bp-core-functions.php:7086
 msgid "A manual notification from a site admin"
 msgstr ""
 
@@ -6711,26 +6711,26 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:880
+#: bp-core/bp-core-update.php:884
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1252
+#: bp-core/bp-core-update.php:1256
 #: bp-templates/bp-nouveau/includes/video/functions.php:300
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1260
+#: bp-core/bp-core-update.php:1264
 #: bp-templates/bp-nouveau/includes/video/functions.php:308
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1268
+#: bp-core/bp-core-update.php:1272
 #: bp-templates/bp-nouveau/includes/video/functions.php:316
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1276
+#: bp-core/bp-core-update.php:1280
 #: bp-templates/bp-nouveau/includes/video/functions.php:324
 msgid "Quicktime"
 msgstr ""
@@ -9173,14 +9173,14 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-folder.php:524
 #: bp-document/classes/class-bp-document-privacy.php:58
-#: bp-document/classes/class-bp-document.php:666
-#: bp-document/classes/class-bp-document.php:1386
+#: bp-document/classes/class-bp-document.php:673
+#: bp-document/classes/class-bp-document.php:1393
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:156
 #: bp-media/classes/class-bp-media-album.php:520
 #: bp-media/classes/class-bp-media-privacy.php:59
-#: bp-media/classes/class-bp-media.php:732
+#: bp-media/classes/class-bp-media.php:739
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:58
-#: bp-video/classes/class-bp-video.php:671
+#: bp-video/classes/class-bp-video.php:679
 msgid "Group Members"
 msgstr ""
 
@@ -9197,12 +9197,12 @@ msgstr ""
 msgid "There is no document."
 msgstr ""
 
-#: bp-document/classes/class-bp-document.php:678
+#: bp-document/classes/class-bp-document.php:685
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
-#: bp-media/classes/class-bp-media.php:741
+#: bp-media/classes/class-bp-media.php:748
 #: bp-messages/bp-messages-template.php:1465
 #: bp-templates/bp-nouveau/includes/customizer.php:336
-#: bp-video/classes/class-bp-video.php:680
+#: bp-video/classes/class-bp-video.php:688
 msgid "Message"
 msgstr ""
 
@@ -29538,7 +29538,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:904
+#: class-buddypress.php:905
 msgid "BuddyPress Nouveau"
 msgstr ""
 
@@ -29620,7 +29620,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:122
+#: bp-core/admin/settings/bp-admin-setting-general.php:118
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
@@ -29630,17 +29630,17 @@ msgctxt "Separator in time since"
 msgid ","
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6733
+#: bp-core/bp-core-functions.php:6734
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6746
+#: bp-core/bp-core-functions.php:6747
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6759
+#: bp-core/bp-core-functions.php:6760
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""

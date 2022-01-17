@@ -8478,6 +8478,10 @@ body .bp-messages-user-threads {
   opacity: 0;
 }
 
+.main-notification-settings input[type="checkbox"]:disabled {
+  opacity: 0;
+}
+
 .main-notification-settings tbody .title {
   font-size: 14px;
   color: #a3a5a9;
