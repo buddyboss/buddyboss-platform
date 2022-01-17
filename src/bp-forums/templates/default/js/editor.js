@@ -43,7 +43,10 @@ jQuery( document ).ready(
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								linkValidation: true
+							}
 						}
 					);
 
@@ -143,7 +146,10 @@ jQuery( document ).ready(
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								linkValidation: true
+							}
 						}
 					);
 
@@ -243,7 +249,10 @@ jQuery( document ).ready(
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								linkValidation: true
+							}
 						}
 					);
 
@@ -314,6 +323,18 @@ jQuery( document ).ready(
 				jQuery( window.forums_medium_topic_editor[ key ].elements[ 0 ] ).focus();
 				medium_editor.toggleClass( 'active' );
 			} );
+
+			jQuery( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
+
+				var URL = event.target.value;
+				
+				if ( bp.Nouveau.isURL( URL ) ) {
+					jQuery( event.target ).removeClass('isNotValid').addClass('isValid');
+				} else {
+					jQuery( event.target ).removeClass('isValid').addClass('isNotValid');
+				}
+
+			});
 		}
 
 			/* Use backticks instead of <code> for the Code button in the editor */
@@ -415,7 +436,10 @@ jQuery( document ).ready(
 										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										linkValidation: true
+									}
 								}
 							);
 
@@ -463,7 +487,10 @@ jQuery( document ).ready(
 										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										linkValidation: true
+									}
 								}
 							);
 
@@ -511,7 +538,10 @@ jQuery( document ).ready(
 										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										linkValidation: true
+									}
 								}
 							);
 
