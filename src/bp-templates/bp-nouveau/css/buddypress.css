@@ -14661,6 +14661,11 @@ body.login .login-popup .mfp-close:hover {
   opacity: 0;
 }
 
+.bb-item-cover-wrap.bb-video-cover-wrap img {
+  min-width: auto;
+  max-height: 100%;
+}
+
 .bb-item-thumb {
   position: relative;
   z-index: 1;

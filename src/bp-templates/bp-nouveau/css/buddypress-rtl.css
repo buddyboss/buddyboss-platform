@@ -14661,6 +14661,11 @@ body.login .login-popup .mfp-close:hover {
   opacity: 0;
 }
 
+.bb-item-cover-wrap.bb-video-cover-wrap img {
+  min-width: auto;
+  max-height: 100%;
+}
+
 .bb-item-thumb {
   position: relative;
   z-index: 1;
@@ -19988,7 +19993,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
