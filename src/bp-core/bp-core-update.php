@@ -211,12 +211,16 @@ function bp_version_updater() {
 	// Install BP schema and activate only Activity and XProfile.
 	if ( bp_is_install() ) {
 
+		do_action( 'bb_core_before_install', $default_components );
+
 		// Apply schema and set Activity and XProfile components as active.
 		bp_core_install( $default_components );
 		bp_update_option( 'bp-active-components', $default_components );
 		bp_core_add_page_mappings( $default_components, 'delete' );
 		bp_core_install_emails();
 		bp_core_install_invitations();
+
+		do_action( 'bb_core_after_install', $default_components );
 
 		// Upgrades.
 	} else {
