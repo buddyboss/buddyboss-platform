@@ -1437,12 +1437,6 @@ window.bp = window.bp || {};
 							self.model.set( 'video', self.video );
 
 							Backbone.trigger('cleanFeedBack');
-
-							// validate if video file is corrupted
-							if ( response.data.js_preview === undefined ) {
-								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '.<div>' ) );
-								this.removeFile( file );
-							}
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
