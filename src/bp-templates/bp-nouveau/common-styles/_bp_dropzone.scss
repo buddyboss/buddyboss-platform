@@ -675,6 +675,26 @@
 
 	.dz-preview {
 
+		&:not(.dz-complete) {
+
+			.dz-progress-ring-wrap {
+				background-color: rgba(0, 0, 0, 0.05);
+	
+				.bb-icon {
+					color: rgba(18, 43, 70, 0.5);
+				}
+			}
+	
+			.dz-progress-count {
+				background-color: rgba(0, 0, 0, 0.05);
+				color: rgba(18, 43, 70, 0.5);
+			}
+	
+			.dz-remove:after {
+				color: rgba(18, 43, 70, 0.5);
+			}
+		}
+
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 

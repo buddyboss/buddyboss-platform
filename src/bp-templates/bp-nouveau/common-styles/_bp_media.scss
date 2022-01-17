@@ -2178,10 +2178,10 @@ img.emojioneemoji {
 			height: 50px;
 			width: 50px;
 			display: inline-block;
-			background-color: #f1f2f3;
+			background-color: rgba(0, 0, 0, 0.05);
 			border-radius: 50%;
 			line-height: 50px;
-			color: #92949d;
+			color: rgba(18, 43, 70, 0.5);
 		}
 
 		.dz-size {
@@ -2190,7 +2190,7 @@ img.emojioneemoji {
 
 		.dz-filename {
 			font-size: 13px;
-			color: #828890;
+			color: rgba(18, 43, 70, 0.5);
 			line-height: 1.2;
 			margin-top: 10px;
 
@@ -2301,7 +2301,7 @@ img.emojioneemoji {
 
 		.dz-filename {
 			font-size: 13px;
-			color: #828890;
+			color: rgba(18, 43, 70, 0.5);
 			line-height: 1;
 			opacity: 1;
 			visibility: visible;

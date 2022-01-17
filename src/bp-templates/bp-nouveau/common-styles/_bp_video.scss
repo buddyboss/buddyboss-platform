@@ -1490,6 +1490,10 @@ div.dropzone.dz-started {
 	.dz-preview {
 		background: #f0f3f7;
 		border-radius: 4px;
+
+		&:not(.dz-complete) .dz-remove {
+			color: #fff;
+		}
 	}
 
 	div.dz-preview.dz-file-preview .dz-remove {
@@ -1507,7 +1511,6 @@ div.dropzone.dz-started {
 
 		&:after {
 			font-size: 24px;
-			color: #fff;
 			line-height: 1;
 		}
 	}
@@ -1658,7 +1661,6 @@ div.dropzone.dz-started {
 		.dz-details {
 			width: 100%;
 			color: #fff;
-			background-color: rgba(0, 0, 0, 0.3);
 			z-index: 1;
 		}
 
