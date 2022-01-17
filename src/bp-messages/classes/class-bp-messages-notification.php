@@ -55,7 +55,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 		$this->register_preferences_group(
-			buddypress()->messages->id,
+			'messages',
 			esc_html__( 'Messages', 'buddyboss' ),
 			esc_html__( 'Private Messaging', 'buddyboss' ),
 			4
@@ -72,7 +72,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'notification_messages_new_message',
 			esc_html__( 'A member sends you a new message', 'buddyboss' ),
 			esc_html__( 'A member receives a new message', 'buddyboss' ),
-			buddypress()->messages->id
+			'messages'
 		);
 
 		$this->register_email_type(
@@ -96,7 +96,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->messages->id,
+			'messages',
 			'new_message',
 			'notification_messages_new_message'
 		);

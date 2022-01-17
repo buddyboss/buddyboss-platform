@@ -55,7 +55,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 		$this->register_preferences_group(
-			buddypress()->friends->id,
+			'friends',
 			esc_html__( 'Connections', 'buddyboss' ),
 			esc_html__( 'Connections Notifications', 'buddyboss' ),
 			10
@@ -73,7 +73,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'notification_friends_friendship_request',
 			esc_html__( 'A member invites you to connect', 'buddyboss' ),
 			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
-			buddypress()->friends->id
+			'friends'
 		);
 
 		$this->register_email_type(
@@ -97,7 +97,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->friends->id,
+			'friends',
 			'friendship_request',
 			'notification_friends_friendship_request'
 		);
@@ -111,7 +111,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'notification_friends_friendship_accepted',
 			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
-			buddypress()->friends->id
+			'friends'
 		);
 
 		$this->register_email_type(
@@ -135,7 +135,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->friends->id,
+			'friends',
 			'friendship_accepted',
 			'notification_friends_friendship_accepted'
 		);

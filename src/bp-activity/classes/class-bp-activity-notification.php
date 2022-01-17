@@ -55,7 +55,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 		$this->register_preferences_group(
-			buddypress()->activity->id,
+			'activity',
 			esc_html__( 'Activity Feed', 'buddyboss' ),
 			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
 			2
@@ -77,7 +77,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				bp_activity_get_user_mentionname( get_current_user_id() )
 			),
 			esc_html__( 'A member is mentioned in another member\'s update', 'buddyboss' ),
-			buddypress()->activity->id
+			'activity'
 		);
 
 		$this->register_email_type(
@@ -121,7 +121,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->activity->id,
+			'activity',
 			'new_at_mention',
 			'notification_activity_new_mention'
 		);
@@ -135,7 +135,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'notification_activity_new_reply',
 			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
-			buddypress()->activity->id
+			'activity'
 		);
 
 		$this->register_email_type(
@@ -179,13 +179,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->activity->id,
+			'activity',
 			'update_reply',
 			'notification_activity_new_reply'
 		);
 
 		$this->register_notification(
-			buddypress()->activity->id,
+			'activity',
 			'comment_reply',
 			'notification_activity_new_reply'
 		);
