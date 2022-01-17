@@ -74,13 +74,13 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 				}
 			}
 			if (
+				true === (bool) $enable_private_rest_apis && // BB private rest api is enabled.
 				(
-					! empty( $apps_settings ) && // buddyboss-app is active.
-					! empty( $apps_settings['private_app.enabled'] ) // private app is enabled.
-				) ||
-				(
-					empty( $apps_settings ) && // buddyboss-app disabled.
-					true === (bool) $enable_private_rest_apis // BB private rest api is enabled.
+					(
+						! empty( $apps_settings ) && // buddyboss-app is active.
+						! empty( $apps_settings['private_app.enabled'] ) // private app is enabled.
+					) ||
+					empty( $apps_settings ) // buddyboss-app disabled.
 				)
 			) {
 				return bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );

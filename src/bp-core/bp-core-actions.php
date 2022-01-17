@@ -449,8 +449,15 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 		! is_user_logged_in() &&
 		! empty( $handler['permission_callback'] ) &&
 		(
-			( function_exists( 'bbapp_is_private_app_enabled' ) && true === bbapp_is_private_app_enabled() ) ||
-			( ! function_exists( 'bbapp_is_private_app_enabled' ) && true === bp_enable_private_rest_apis() )
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is active.
+				true === bbapp_is_private_app_enabled() && // private app is enabled.
+				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+			) ||
+			(
+				! function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is not active.
+				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+			)
 		)
 	) {
 		return bb_restricate_rest_api( $response, $handler, $request );

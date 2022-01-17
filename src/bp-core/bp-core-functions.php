@@ -6042,10 +6042,13 @@ function bb_check_server_disabled_symlink() {
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-	if ( strpos( $actual_link, '/feed/' ) === false &&
-	     strpos( $actual_link, 'feed=' ) === false ) { // if permalink has ? then need to check with feed=.
+	if (
+		strpos( $actual_link, '/feed/' ) === false &&
+		strpos( $actual_link, 'feed=' ) === false
+	) { // if permalink has ? then need to check with feed=.
 		return;
 	}
+
 	if (
 		strpos( $actual_link, 'wp-cron.php' ) === false &&
 		strpos( $actual_link, 'wp-login.php' ) === false &&
@@ -6063,7 +6066,7 @@ function bb_restricate_rss_feed() {
 				foreach ( $exclude_arr_rss_feeds as $url ) {
 					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 					$un_trailing_slash_it_url = untrailingslashit( $url );
-					// Check if strict match
+					// Check if strict match.
 					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 						return;
 					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
@@ -6152,7 +6155,6 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
 	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
-
 	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
 	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {

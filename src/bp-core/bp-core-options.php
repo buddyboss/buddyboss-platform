@@ -1835,13 +1835,18 @@ function bp_core_display_name_format( $default = 'first_name' ) {
  */
 function bp_rest_enable_private_network() {
 
-	// If BB APP Private then all rest will be private.
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
-		$retval = (bool) bbapp_is_private_app_enabled();
-
-		// If platform rest API private.
-	} else {
-		$retval = (bool) bp_enable_private_rest_apis();
+	$retval = false;
+	if (
+		true === (bool) bp_enable_private_rest_apis() &&
+		(
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) // buddyboss-app is active.
+				&& true === (bool) bbapp_is_private_app_enabled() // private app is disable.
+			)
+			|| ! function_exists( 'bbapp_is_private_app_enabled' )
+		)
+	) {
+		$retval = true;
 	}
 
 	if ( true === $retval ) {
