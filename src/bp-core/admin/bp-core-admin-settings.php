@@ -1603,7 +1603,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	$checked_checkbox = bp_enable_private_rest_apis();
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
 		if ( true === bbapp_is_private_app_enabled() ) {
-			$disable_field    = false;
+			$disable_field = false;
 		} else {
 			$disable_field    = true;
 			$checked_checkbox = false;
@@ -1613,32 +1613,51 @@ function bb_admin_setting_callback_private_rest_apis() {
 
 	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"<?php checked( $checked_checkbox ); ?><?php disabled( $disable_field ); ?>/>
 	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
-	<?php
-	printf(
-		'<p class="description">%s</p>',
-		sprintf(
-			__( 'Login and <a href="%s">Registration</a> APIs will remain publicly visible.', 'buddyboss' ),
-			add_query_arg(
-				array(
-					'page' => 'bp-pages',
-				),
-				admin_url( 'admin.php' )
-			)
-		)
-	);
-	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
+	<p class="description">
+		<?php
 		printf(
-			'<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			wp_kses_post(
+			/* translators: Registration link. */
+				__( 'Login and %s APIs will remain publicly visible.', 'buddyboss' )
+			),
 			sprintf(
-				__( 'BuddyBoss App plugin is active. Please go to <a href="%s">settings</a> to enable "Private App" that will allow you to enable or disable REST APIs access for non-logged-in members.', 'buddyboss' ),
-				add_query_arg(
-					array(
-						'page' => 'bbapp-settings',
-					),
-					admin_url( 'admin.php' )
+				'<a href="%s">' . esc_html__( 'Registration', 'buddyboss' ) . '</a>',
+				esc_url(
+					add_query_arg(
+						array( 'page' => 'bp-pages' ),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
+		?>
+	</p>
+	<?php
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
+		?>
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p>
+				<?php
+				printf(
+					wp_kses_post(
+					/* translators: Settings link. */
+						__( 'BuddyBoss App plugin is active. Please go to %s to enable "Private App" that will allow you to enable or disable REST APIs access for non-logged-in members.', 'buddyboss' )
+					),
+					sprintf(
+						'<a href="%s">' . esc_html__( 'settings', 'buddyboss' ) . '</a>',
+						esc_url(
+							add_query_arg(
+								array( 'page' => 'bbapp-settings' ),
+								admin_url( 'admin.php' )
+							)
+						)
+					)
+				);
+				?>
+			</p>
+		</div>
+		<?php
 	}
 }
 
