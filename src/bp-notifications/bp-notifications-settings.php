@@ -246,6 +246,10 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 										?>
 											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></a>
 										<?php
+									} elseif ( ! empty( $registered_emails ) ) {
+										?>
+										<a class="email-info" href="#"><?php esc_html_e( 'Email Template', 'buddyboss' ); ?></a>
+										<?php
 									}
 									?>
 

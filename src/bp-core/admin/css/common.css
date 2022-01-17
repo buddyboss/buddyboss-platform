@@ -2415,7 +2415,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .bp-hello-email .bp-hello-title .count {
   font-size: inherit;
-  padding: 2px ​10px;
+  padding: 2px 10px;
   margin-right: 10px;
 }
 
@@ -2524,6 +2524,16 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   color: #8c0202;
   font-size: 11px;
   text-decoration: none;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .email-info {
+  margin-right: 15px;
+  margin-left: auto;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  text-decoration: none;
+  background-color: #dfe5ea;
 }
 
 #bp_notification_settings_automatic .field-set .field-block .notification-defaults {
