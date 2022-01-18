@@ -106,7 +106,6 @@
 	}
 
 	.bp-activity-privacy-status {
-		color: #92949d;
 		font-weight: 500;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -153,14 +152,10 @@
 
 	#bp-activity-privacy-point {
 		display: inline-flex;
-
-		.privacy-point-icon {
-			color: #92949d;
-		}
+		color: #92949d;
 
 		.bb-icon-chevron-down {
 			font-size: 12px;
-			color: #92949d;
 			margin-left: 5px;
 		}
 	}
