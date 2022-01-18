@@ -1933,14 +1933,9 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: #4d5c6d;
 }
 
-.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
+.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid.validate {
   color: #ef3e46 !important;
   border-color: #f5858a !important;
-}
-
-.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid ~ a {
-  opacity: 0.5;
-  pointer-events: none;
 }
 
 .activity-update-form #activity-header h3 {
@@ -2054,6 +2049,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   border: 0;
   background-color: transparent !important;
   color: rgba(18, 43, 70, 0.4) !important;
+}
+
+.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button b:before {
+  font-size: 26px;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
@@ -16730,6 +16729,18 @@ img.emojioneemoji {
   margin-top: 0;
 }
 
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-image {
+  background-color: #f8f8f8;
+}
+
 .dropzone .dz-preview.dz-error {
   background-color: #f8f8f8;
 }
@@ -21843,6 +21854,23 @@ div.dropzone.dz-started .dz-default.dz-message {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-count {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail):not(.dz-complete) .dz-remove {
+  color: rgba(18, 43, 70, 0.5);
 }
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {

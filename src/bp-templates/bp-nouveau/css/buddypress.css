@@ -2051,6 +2051,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: rgba(18, 43, 70, 0.4) !important;
 }
 
+.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button b:before {
+  font-size: 26px;
+}
+
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
   background: none transparent !important;

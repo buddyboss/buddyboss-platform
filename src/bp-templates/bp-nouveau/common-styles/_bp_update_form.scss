@@ -1027,6 +1027,10 @@
 				background-color: transparent !important;
 				color: rgba(18, 43, 70, 0.4) !important;
 
+				b:before {
+					font-size: 26px;
+				}
+
 				&.medium-editor-button-active {
 					color: #122b46 !important;
 					background: none transparent !important;
