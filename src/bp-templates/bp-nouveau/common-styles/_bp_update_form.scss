@@ -230,7 +230,7 @@
 }
 
 .privacy-status-form-body {
-	padding: 15px 0;
+	padding: 5px 0 15px;
 }
 
 .bp-activity-privacy__label {
@@ -331,8 +331,8 @@
 	background: transparent;
 	border: 0;
 	font-size: 14px;
+	font-weight: 500;
 	color: #a3a5a9;
-	font-weight: 400;
 	margin: 0 10px;
 	padding: 0 10px;
 	width: auto;
@@ -1057,10 +1057,11 @@
 
 	.medium-editor-toolbar .medium-editor-toolbar-form-active {
 		position: absolute;
+		left: 15px;
 		bottom: 6px;
 		box-shadow: none;
-		width: calc(800px - 25px);
-		max-width: calc(100vw - 40px - 10%);
+		width: calc(800px - 40px);
+		max-width: calc(100vw - 55px - 10%);
 		padding: 0 !important;
 	}
 
