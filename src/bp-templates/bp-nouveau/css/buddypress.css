@@ -2233,6 +2233,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   height: 44px;
   position: relative;
   z-index: 2;
+  background-color: transparent;
 }
 
 #whats-new-post-in-box-items li {
@@ -21880,7 +21881,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
-  background-color: #f8f8f8 !important;
+  background-color: #f8f8f8;
   z-index: 1;
   border-radius: 4px;
 }
