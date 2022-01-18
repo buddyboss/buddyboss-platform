@@ -5151,7 +5151,7 @@ function bp_activity_action_parse_url() {
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => __( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => __( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
 	}
 
 	// send json success.
