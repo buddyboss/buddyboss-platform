@@ -1572,6 +1572,29 @@ div.dropzone.dz-started {
 
 	}
 
+	.dz-preview:not(.dz-has-thumbnail) {
+
+		.dz-progress-ring-wrap {
+			background-color: rgba(0, 0, 0, 0.05);
+
+			.bb-icon {
+				color: rgba(18, 43, 70, 0.5);
+			}
+		}
+
+		.dz-progress-count {
+			background-color: rgba(0, 0, 0, 0.05);
+			color: rgba(18, 43, 70, 0.5);
+		}
+
+		&:not(.dz-complete) {
+
+			.dz-remove {
+				color: rgba(18, 43, 70, 0.5);
+			}
+		}
+	}
+
 	.dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
 		background-color: #f8f8f8 !important;
 		z-index: 1;

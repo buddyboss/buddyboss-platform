@@ -2153,6 +2153,24 @@ img.emojioneemoji {
 
 }
 
+.dropzone.media-dropzone {
+
+	.dz-preview:not(.dz-image-preview) {
+
+		.dz-progress-ring-wrap {
+			background-color: rgba(0, 0, 0, 0.05);
+
+			.bb-icon {
+				color: rgba(18, 43, 70, 0.5);
+			}
+		}
+
+		.dz-image {
+			background-color: #f8f8f8;
+		}
+	}
+} 
+
 // Dropzone Error
 .dropzone .dz-preview.dz-error {
 	background-color: #f8f8f8;

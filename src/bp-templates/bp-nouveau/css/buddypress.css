@@ -16725,6 +16725,18 @@ img.emojioneemoji {
   margin-top: 0;
 }
 
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-image {
+  background-color: #f8f8f8;
+}
+
 .dropzone .dz-preview.dz-error {
   background-color: #f8f8f8;
 }
@@ -21838,6 +21850,23 @@ div.dropzone.dz-started .dz-default.dz-message {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-count {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail):not(.dz-complete) .dz-remove {
+  color: rgba(18, 43, 70, 0.5);
 }
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
