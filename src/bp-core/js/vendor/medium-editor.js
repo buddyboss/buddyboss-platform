@@ -4032,12 +4032,21 @@ MediumEditor.extensions = {};
 
         handleSaveClick: function (event) {
             // Clicking Save -> create the anchor
+			var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+			if ( toolbarInput.classList.contains( 'isNotValid' ) ) {
+				toolbarInput.classList.add( 'validate' );
+				return false;
+			} else {
+				toolbarInput.classList.remove( 'validate' );
+			}
             event.preventDefault();
             this.doFormSave();
         },
 
         handleCloseClick: function (event) {
             // Click Close -> close the form
+			var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+			toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
         }

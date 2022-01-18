@@ -906,14 +906,11 @@
 }
 
 .medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
-	color: #ef3e46 !important;
-	border-color: #f5858a !important;
 
-	~ a {
-		opacity: 0.5;
-		pointer-events: none;
+	&.validate {
+		color: #ef3e46 !important;
+		border-color: #f5858a !important;
 	}
-
 }
 
 .activity-update-form {

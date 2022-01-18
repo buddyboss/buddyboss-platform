@@ -1933,14 +1933,9 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: #4d5c6d;
 }
 
-.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
+.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid.validate {
   color: #ef3e46 !important;
   border-color: #f5858a !important;
-}
-
-.medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid ~ a {
-  opacity: 0.5;
-  pointer-events: none;
 }
 
 .activity-update-form #activity-header h3 {
