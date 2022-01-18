@@ -2325,7 +2325,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 #bp-activity-group-ac-items::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
   margin-right: 5px;
 }
 
