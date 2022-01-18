@@ -21831,13 +21831,13 @@ div.dropzone.dz-started .dz-default.dz-message {
   left: inherit;
   right: 8px;
   background-color: #e7e7ea;
-  height: 17px;
-  width: 17px;
+  height: 19px;
+  width: 19px;
   line-height: inherit;
 }
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
-  font-size: 18px;
+  font-size: 20px;
   color: #9ea8b3;
   line-height: 1;
   position: absolute;
@@ -22106,8 +22106,8 @@ body > .open-popup.video-error-popup {
   position: absolute;
   top: 8px;
   right: 8px;
-  height: 17px;
-  width: 17px;
+  height: 19px;
+  width: 19px;
   border-radius: 50%;
   color: #c3c6c9;
   z-index: 101;
@@ -22121,7 +22121,7 @@ body > .open-popup.video-error-popup {
   left: 0;
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
   speak: none;
   display: inline-block;
