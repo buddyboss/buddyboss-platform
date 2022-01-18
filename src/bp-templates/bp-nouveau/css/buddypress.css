@@ -2298,7 +2298,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   padding: 0;
   margin: 10px 0 0;
   width: 100%;
-  width: calc(100% - 10px);
   z-index: 11;
   position: relative;
 }
@@ -2323,6 +2322,18 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 #bp-activity-group-ac-items .groups-selection .animate-spin {
   margin-right: 10px;
+}
+
+#bp-activity-group-ac-items::-webkit-scrollbar {
+  width: 10px;
+  margin-right: 5px;
+}
+
+#bp-activity-group-ac-items::-webkit-scrollbar-thumb {
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 9999px;
+  background-color: #a4acb4;
 }
 
 .bp-item-opt {
