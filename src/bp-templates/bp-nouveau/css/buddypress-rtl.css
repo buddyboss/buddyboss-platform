@@ -2581,10 +2581,10 @@ div[class*="attached-gif-container"] {
 div[class*="attached-gif-container"] .gif-image-remove {
   border-radius: 10px;
   cursor: pointer;
-  height: 16px;
-  left: 5px;
+  height: 19px;
+  width: 19px;
   top: 5px;
-  width: 16px;
+  left: 5px;
   background-color: #f8f8f8;
 }
 
@@ -2595,7 +2595,7 @@ div[class*="attached-gif-container"] .gif-image-overlay {
 }
 
 div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-close {
-  font-size: 17px;
+  font-size: 20px;
   vertical-align: top;
 }
 
