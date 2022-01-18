@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
+
 class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 	/**
@@ -49,10 +50,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return;
 		}
 
-		add_filter( 'bp_activity_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
@@ -248,8 +247,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		$where = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden activity Where SQL statement.
@@ -259,12 +257,8 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's activity.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
+		$where                             = apply_filters( 'bp_suspend_activity_get_where_conditions', $where, $this );
+		$where_conditions['suspend_where'] = ' a.id NOT IN ( ' . $where . ' )';
 		return $where_conditions;
 	}
 
@@ -290,7 +284,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type, true ) ) {
+		if ( 'activity_comment' !== $activity->type && BP_Core_Suspend::check_suspended_content( (int) $activity->id, self::$type ) ) {
 			return false;
 		}
 

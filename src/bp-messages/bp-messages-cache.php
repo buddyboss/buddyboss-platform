@@ -127,3 +127,18 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 
 	BP_Messages_Thread::$noCache = false;
 }
+
+/**
+ * Delete the messages cache on different actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_core_clear_message_cache() {
+	bp_core_reset_incrementor( 'bp_messages' );
+}
+
+add_action( 'messages_message_after_save', 'bp_core_clear_message_cache' );
+add_action( 'messages_delete_thread', 'bp_core_clear_message_cache' );
+add_action( 'messages_send_notice', 'bp_core_clear_message_cache' );
+add_action( 'messages_message_sent', 'bp_core_clear_message_cache' );
+add_action( 'messages_message_after_save', 'bp_core_clear_message_cache' );

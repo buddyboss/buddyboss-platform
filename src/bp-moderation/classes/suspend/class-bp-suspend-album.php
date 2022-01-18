@@ -49,10 +49,8 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			return;
 		}
 
-		add_filter( 'bp_media_album_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_media_album_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bp_media_search_join_sql_album', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_album', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
@@ -179,8 +177,7 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
+		$where = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden album Where SQL statement.
@@ -190,12 +187,9 @@ class BP_Suspend_Album extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's album.
 		 * @param array $class current class object.
 		 */
-		$where = apply_filters( 'bp_suspend_media_album_get_where_conditions', $where, $this );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
+		$where                             = apply_filters( 'bp_suspend_media_album_get_where_conditions', $where, $this );
+		$where_conditions['suspend_where'] = ' m.id NOT IN ( ' . $where . ' )';
+		
 		return $where_conditions;
 	}
 

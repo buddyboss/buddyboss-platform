@@ -779,6 +779,7 @@ function groups_get_group_mods( $group_id ) {
  */
 function groups_get_group_members( $args = array() ) {
 
+	static $cache  = array();
 	$function_args = func_get_args();
 
 	// Backward compatibility with old method of passing arguments.
@@ -836,9 +837,11 @@ function groups_get_group_members( $args = array() ) {
 			}
 		}
 
-		// Perform the group member query (extends BP_User_Query).
-		$members = new BP_Group_Member_Query(
-			array(
+		$cache_key = 'bp_groups_get_group_members_' . md5( serialize( $args ) );
+		if ( ! isset( $cache[ $cache_key ] ) ) {
+			// Perform the group member query (extends BP_User_Query).
+			$members = new BP_Group_Member_Query(
+				array(
 				'group_id'        => $r['group_id'],
 				'per_page'        => $r['per_page'],
 				'page'            => $r['page'],
@@ -848,8 +851,12 @@ function groups_get_group_members( $args = array() ) {
 				'type'            => $r['type'],
 				'xprofile_query'  => $r['xprofile_query'],
 				'populate_extras' => $r['populate_extras'],
-			)
-		);
+				)
+			);
+			$cache[ $cache_key ] = $members;
+		} else {
+			$members = $cache[ $cache_key ];
+		}
 
 		// Structure the return value as expected by the template functions.
 		$retval = array(
@@ -2830,7 +2837,7 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
  */
 function groups_get_groupmeta( $group_id, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = get_metadata( 'group', $group_id, $meta_key, $single );
+    $retval = get_metadata( 'group', $group_id, $meta_key, $single );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
@@ -3982,7 +3989,11 @@ function bp_groups_get_excluded_group_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	static $bp_group_type_query = null;
+
+	if ( null === $bp_group_type_query ) {
+		$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	}
 	if ( $bp_group_type_query->have_posts() ) :
 		while ( $bp_group_type_query->have_posts() ) :
 			$bp_group_type_query->the_post();

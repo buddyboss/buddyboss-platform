@@ -123,6 +123,7 @@ function bbp_get_forum_post_type_supports() {
  * @uses                     WP_Query To make query and get the forums
  */
 function bbp_has_forums( $args = '' ) {
+	static $bbp_forum_query = array();
 	global $wp_rewrite;
 
 	// Forum archive only shows root
@@ -155,8 +156,12 @@ function bbp_has_forums( $args = '' ) {
 	);
 
 	// Run the query
-	$bbp              = bbpress();
-	$bbp->forum_query = new WP_Query( $bbp_f );
+	$bbp       = bbpress();
+	$cache_key = 'bbp_has_forums_' . md5( maybe_serialize( $bbp_f ) );
+	if ( ! isset( $bbp_forum_query[ $cache_key ] ) ) {
+		$bbp_forum_query[ $cache_key ] = new WP_Query( $bbp_f );
+	}
+	$bbp->forum_query = $bbp_forum_query[ $cache_key ];
 
 	// Add pagination values to query object
 	$bbp->forum_query->posts_per_page = $bbp_f['posts_per_page'];

@@ -57,6 +57,8 @@ function bp_notifications_clear_all_for_user_cache( $user_id = 0 ) {
  */
 function bp_notifications_clear_all_for_user_cache_after_save( BP_Notifications_Notification $n ) {
 	bp_notifications_clear_all_for_user_cache( $n->user_id );
+	wp_cache_delete( $n->id, 'bp_notifications' );
+	wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
 }
 add_action( 'bp_notification_after_save', 'bp_notifications_clear_all_for_user_cache_after_save' );
 
@@ -81,6 +83,11 @@ function bp_notifications_clear_all_for_user_cache_before_delete( $args ) {
 	foreach ( $user_ids as $user_id ) {
 		bp_notifications_clear_all_for_user_cache( $user_id );
 	}
+
+	foreach ( $ns as $n ) {
+		wp_cache_delete( $n->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
+	}
 }
 add_action( 'bp_notification_before_delete', 'bp_notifications_clear_all_for_user_cache_before_delete' );
 
@@ -97,11 +104,17 @@ function bp_notifications_clear_all_for_user_cache_before_update( $update_args, 
 	// User ID is passed in where arugments.
 	if ( ! empty( $where_args['user_id'] ) ) {
 		bp_notifications_clear_all_for_user_cache( $where_args['user_id'] );
+		if ( ! empty( $where_args['id'] ) ) {
+			wp_cache_delete( $where_args['id'], 'bp_notifications' );
+			wp_cache_delete( 'bp_notifications_check_access_' . $where_args['user_id'] . '_' . $where_args['id'], 'bp_notifications' );
+		}
 
 		// Get user ID from Notification ID.
 	} elseif ( ! empty( $where_args['id'] ) ) {
 		$n = bp_notifications_get_notification( $where_args['id'] );
 		bp_notifications_clear_all_for_user_cache( $n->user_id );
+		wp_cache_delete( $n->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
 	}
 }
 add_action( 'bp_notification_before_update', 'bp_notifications_clear_all_for_user_cache_before_update', 10, 2 );

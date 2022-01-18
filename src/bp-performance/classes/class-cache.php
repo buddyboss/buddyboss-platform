@@ -227,10 +227,15 @@ class Cache {
 	 * @param string $group_name Cache group name.
 	 */
 	public function purge_by_group( $group_name ) {
+		static $bp_purge_by_group = array();
 		global $wpdb;
+		$cache_key = 'purge_by_group_' . $group_name;
+		if ( ! isset( $bp_purge_by_group[ $cache_key ] ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$bp_purge_by_group[ $cache_key ] = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
+		}
+		$caches = $bp_purge_by_group[ $cache_key ];
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
 		if ( ! empty( $caches ) ) {
 			foreach ( $caches as $key => $cache ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

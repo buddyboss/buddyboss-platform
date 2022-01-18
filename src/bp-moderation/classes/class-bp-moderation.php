@@ -194,6 +194,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function populate() {
+		static $bb_report_row_query = array();
 		global $wpdb;
 
 		$row = wp_cache_get( $this->id, 'bb_moderation' );
@@ -219,8 +220,14 @@ class BP_Moderation {
 		/**
 		 * Fetch User Report data
 		 */
-		$bp         = buddypress();
-		$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+		$bp        = buddypress();
+		$cache_key = 'bp_moderation_populate_' . $this->id . '_' . $this->user_id;
+		if ( ! isset( $bb_report_row_query[ $cache_key ] ) ) {
+			$report_row                        = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
+			$bb_report_row_query[ $cache_key ] = ! empty( $report_row ) ? $report_row : false;
+		} else {
+			$report_row = $bb_report_row_query[ $cache_key ];
+		}
 		if ( empty( $report_row ) ) {
 			return;
 		}
@@ -913,7 +920,13 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+		$cache_key = 'bb_get_specific_moderation_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bb' );
+
+		if ( false === $result ) {
+			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bb' );
+		}
 
 		return ! empty( $result ) ? $result : false;
 	}

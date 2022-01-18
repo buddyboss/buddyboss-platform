@@ -56,10 +56,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$this->alias = $this->alias . 'fr'; // fr = Forum Reply.
 
-		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
 
-		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Blocked template.
@@ -217,38 +215,29 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 	 * @return mixed Where SQL
 	 */
 	public function update_where_sql( $where_conditions, $wp_query = null ) {
-
+		global $wpdb;
 		$action_name = current_filter();
+		$reply_slug  = bbp_get_reply_post_type();
+		$post_types  = isset( $wp_query ) ? wp_parse_slug_list( $wp_query->get( 'post_type' ) ) : array();
 
 		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
-			$reply_slug = bbp_get_reply_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( false === $wp_query->get( 'moderation_query' ) || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
 				return $where_conditions;
 			}
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
-
-		/**
-		 * Filters the hidden forum reply Where SQL statement.
-		 *
-		 * @since BuddyBoss 1.5.6
-		 *
-		 * @param array $where Query to hide suspended user's forum reply.
-		 * @param array $class current class object.
-		 */
+		$where = $this->exclude_where_query();
+		// If we add below filter above then its display error related to table name not define.
 		$where = apply_filters( 'bp_suspend_forum_reply_get_where_conditions', $where, $this );
 
-		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forum_reply_search_where_sql' === $action_name ) {
-				$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-			} else {
-				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
+			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
+				$where_conditions .= ' AND ' . $wpdb->posts . '.ID NOT IN ( ' . $where . ' )';
+				return $where_conditions;
 			}
 		}
 
+		$where_conditions['suspend_where'] = ' p.id NOT IN ( ' . $where . ' )';
 		return $where_conditions;
 	}
 
