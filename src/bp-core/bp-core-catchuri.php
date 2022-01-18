@@ -1206,8 +1206,10 @@ function bp_private_network_template_redirect() {
 						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 						$un_trailing_slash_it_url = untrailingslashit( $url );
 
-						// Check if strict match
-						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						// Check if embed.
+						if ( $request_url === $un_trailing_slash_it_url . '/embed' ) {
+							return;
+						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 							return;
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );

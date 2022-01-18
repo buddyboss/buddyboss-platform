@@ -164,7 +164,7 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 function bp_activity_add_meta_boxes() {
 	global $post;
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bp_is_active( 'activity' ) || empty( $post ) ) {
 		return;
 	}
 
