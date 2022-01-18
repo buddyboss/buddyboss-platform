@@ -1102,6 +1102,8 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point .bp-activity-privacy-status {
+  color: #92949d;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -1143,6 +1145,16 @@ a.layout-grid-view {
 
 #whats-new-form.focus-in #bp-activity-privacy-point {
   display: inline-flex;
+}
+
+#whats-new-form.focus-in #bp-activity-privacy-point .privacy-point-icon {
+  color: #92949d;
+}
+
+#whats-new-form.focus-in #bp-activity-privacy-point .bb-icon-chevron-down {
+  font-size: 12px;
+  color: #92949d;
+  margin-right: 5px;
 }
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
@@ -1420,7 +1432,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .bb-icon,
 .activity-update-form .activity-form.focus-in #editor-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
+  color: rgba(18, 43, 70, 0.5);
   font-size: 24px;
   margin-left: 10px;
 }
@@ -2293,6 +2305,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   width: 100%;
   width: calc(100% - 10px);
   z-index: 11;
+  position: relative;
 }
 
 #bp-activity-group-ac-items:empty {
@@ -3375,7 +3388,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 .ac-reply-toolbar .bb-icon,
 #whats-new-toolbar .bb-icon,
 #whats-new-messages-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
+  color: rgba(18, 43, 70, 0.5);
   transition: all linear 0.2s;
   font-size: 24px;
   width: auto;
@@ -16740,10 +16753,10 @@ img.emojioneemoji {
   height: 50px;
   width: 50px;
   display: inline-block;
-  background-color: #f1f2f3;
+  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 50%;
   line-height: 50px;
-  color: #92949d;
+  color: rgba(18, 43, 70, 0.5);
 }
 
 .dropzone .dz-preview.dz-error .dz-details .dz-size {
@@ -16752,7 +16765,7 @@ img.emojioneemoji {
 
 .dropzone .dz-preview.dz-error .dz-details .dz-filename {
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   line-height: 1.2;
   margin-top: 10px;
 }
@@ -16844,7 +16857,7 @@ img.emojioneemoji {
 
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-filename {
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   line-height: 1;
   opacity: 1;
   visibility: visible;
@@ -21736,7 +21749,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   bottom: 0;
   right: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   padding: 0 15px 0 20px;
   font-size: 13px;
@@ -21750,6 +21763,10 @@ div.dropzone.dz-started .dz-default.dz-message {
 .dropzone.video-dropzone .dz-preview {
   background: #f0f3f7;
   border-radius: 4px;
+}
+
+.dropzone.video-dropzone .dz-preview:not(.dz-complete) .dz-remove {
+  color: #fff;
 }
 
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove {
@@ -21768,7 +21785,6 @@ div.dropzone.dz-started .dz-default.dz-message {
 
 .dropzone.video-dropzone div.dz-preview.dz-file-preview .dz-remove:after {
   font-size: 24px;
-  color: #fff;
   line-height: 1;
 }
 
@@ -21840,7 +21856,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) .dz-filename {
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   line-height: 1;
   opacity: 1;
   visibility: visible;
@@ -21911,7 +21927,6 @@ div.dropzone.dz-started .dz-default.dz-message {
 .dropzone.video-dropzone .dz-preview.dz-file-preview .dz-details {
   width: 100%;
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
@@ -22639,8 +22654,29 @@ body > .open-popup.video-error-popup {
   font-size: 18px;
 }
 
+.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-count {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(18, 43, 70, 0.5);
+}
+
+.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-remove:after {
+  color: rgba(18, 43, 70, 0.5);
+}
+
 .dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap .bb-icon {
+  color: rgba(18, 43, 70, 0.5);
 }
 
 .dropzone.document-dropzone .dz-preview .dz-icon {
@@ -22687,7 +22723,7 @@ body > .open-popup.video-error-popup {
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"] {
   font-size: 28px;
-  color: #92949d;
+  color: rgba(18, 43, 70, 0.5);
   right: 50%;
   background-color: #fafafa;
   display: block;
@@ -22701,14 +22737,14 @@ body > .open-popup.video-error-popup {
   right: 10px;
   left: 0;
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   padding-left: 20px;
 }
 
 .dropzone.document-dropzone .dz-preview .dz-details .dz-size {
   display: none;
   font-size: 13px;
-  color: #828890;
+  color: rgba(18, 43, 70, 0.5);
   font-weight: 300;
 }
 

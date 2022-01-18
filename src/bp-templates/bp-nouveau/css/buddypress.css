@@ -1102,6 +1102,8 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point .bp-activity-privacy-status {
+  color: #92949d;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -1143,6 +1145,16 @@ a.layout-grid-view {
 
 #whats-new-form.focus-in #bp-activity-privacy-point {
   display: inline-flex;
+}
+
+#whats-new-form.focus-in #bp-activity-privacy-point .privacy-point-icon {
+  color: #92949d;
+}
+
+#whats-new-form.focus-in #bp-activity-privacy-point .bb-icon-chevron-down {
+  font-size: 12px;
+  color: #92949d;
+  margin-left: 5px;
 }
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
