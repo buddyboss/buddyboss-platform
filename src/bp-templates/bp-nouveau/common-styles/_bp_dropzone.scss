@@ -689,10 +689,6 @@
 				background-color: rgba(0, 0, 0, 0.05);
 				color: rgba(18, 43, 70, 0.5);
 			}
-
-			.dz-remove:after {
-				color: rgba(18, 43, 70, 0.5);
-			}
 		}
 
 		.dz-progress-ring-wrap {
@@ -749,7 +745,6 @@
 					font-size: 28px;
 					color: rgba(18, 43, 70, 0.5);
 					left: 50%;
-					background-color: #fafafa;
 					display: block;
 					position: absolute;
 					transform: translateX(-50%);

@@ -22656,10 +22656,6 @@ body > .open-popup.video-error-popup {
   color: rgba(18, 43, 70, 0.5);
 }
 
-.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-remove:after {
-  color: rgba(18, 43, 70, 0.5);
-}
-
 .dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
   background-color: rgba(0, 0, 0, 0.05);
 }
@@ -22714,7 +22710,6 @@ body > .open-popup.video-error-popup {
   font-size: 28px;
   color: rgba(18, 43, 70, 0.5);
   left: 50%;
-  background-color: #fafafa;
   display: block;
   position: absolute;
   transform: translateX(-50%);
