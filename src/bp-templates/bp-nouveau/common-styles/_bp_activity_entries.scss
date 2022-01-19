@@ -756,7 +756,6 @@ ul.medium-editor-toolbar-actions {
 
 	.emojionearea .emojionearea-button:before {
 		content: "\E821";
-		color: rgba(18, 43, 70, 0.4);
 		font: normal 400 normal 24px/1 bb-icons;
 		speak: none;
 		display: inline-block;
@@ -766,58 +765,15 @@ ul.medium-editor-toolbar-actions {
 		-moz-osx-font-smoothing: grayscale;
 	}
 
-	#activity-gif-button.open .bb-icon,
-	.emojionearea .emojionearea-button.active:before {
-		color: #122b46;
-	}
-
-	.toolbar-button.active {
-
-		.bb-icon.bb-icon-text-format:before {
-			color: #122b46;
-		}
-	}
-
 	.post-elements-buttons-item.disable,
 	.post-elements-buttons-item.disable.active {
 		pointer-events: none;
 		opacity: 0.4;
-
-		.bb-icon {
-			color: rgba(18, 43, 70, 0.7);
-		}
 	}
 
 	.post-elements-buttons-item.no-click {
 		pointer-events: none;
 	}
-}
-
-.active #activity-media-button,
-.active #activity-link-preview-button,
-.active #activity-document-button,
-.active #activity-video-button,
-.active#messages-document-button,
-.active#messages-media-button,
-.active#messages-video-button,
-.active#forums-media-button,
-.active#forums-document-button,
-.active#forums-video-button,
-.active#bp-group-messages-media-button,
-.active#bp-group-messages-document-button,
-.active#bp-group-messages-video-button,
-.active#bp-group-messages-gif-button,
-.active#forums-gif-button,
-.active#messages-gif-button,
-.ac-reply-media-button.active,
-.ac-reply-document-button.active,
-.ac-reply-video-button.active,
-.ac-reply-gif-button.active {
-
-	.bb-icon {
-		color: #122b46;
-	}
-
 }
 
 
