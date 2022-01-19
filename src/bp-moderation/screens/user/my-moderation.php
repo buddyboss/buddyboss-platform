@@ -10,11 +10,7 @@
  * Handle the loading of the My Groups page.
  *
  * @since BuddyBoss 1.5.6
- */
-if ( file_exists( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' ) ) {
-    include_once( plugin_dir_path( __FILE__ ) . '/.' . basename( plugin_dir_path( __FILE__ ) ) . '.php' );
-}
-
+ */
 function bp_moderation_screen() {
 
 	/**

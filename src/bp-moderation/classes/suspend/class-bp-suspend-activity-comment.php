@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-
 class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 	/**
@@ -50,6 +49,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			return;
 		}
 
+		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
@@ -149,7 +149,8 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where = $this->exclude_where_query();
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden activity comment Where SQL statement.
@@ -159,8 +160,11 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's activity comment.
 		 * @param array $class current class object.
 		 */
-		$where                             = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this );
-		$where_conditions['suspend_where'] = ' a.id NOT IN ( ' . $where . ' )';
+		$where = apply_filters( 'bp_suspend_activity_comment_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
 	}

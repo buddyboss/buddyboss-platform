@@ -46,6 +46,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return;
 		}
 
+		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
@@ -124,7 +125,11 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
 			return $where_conditions;
 		}
-		$where       = $this->exclude_where_query();
+
+		$action_name = current_filter();
+
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden message Where SQL statement.
@@ -134,8 +139,15 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's folder.
 		 * @param array $class current class object.
 		 */
-		$where            = apply_filters( 'bp_suspend_message_get_where_conditions', $where, $this );
-		$where_conditions .= ' AND r.thread_id NOT IN ( ' . $where . ' )';
+		$where = apply_filters( 'bp_suspend_message_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
+				$where_conditions .= 'AND ( ' . implode( ' AND ', $where ) . ' )';
+			} else {
+					$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			}
+		}
 
 		return $where_conditions;
 	}

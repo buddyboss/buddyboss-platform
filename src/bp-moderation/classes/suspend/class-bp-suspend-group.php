@@ -54,15 +54,19 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return;
 		}
 
+		add_filter( 'bp_groups_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// group count.
+		add_filter( 'bp_groups_get_join_count_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_groups_get_where_count_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// invitation
+		add_filter( 'bp_invitations_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_invitations_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Search group
+		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
@@ -145,7 +149,8 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where = $this->exclude_where_query();
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden group Where SQL statement.
@@ -155,12 +160,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's group.
 		 * @param array $class current class object.
 		 */
-		$where       = apply_filters( 'bp_suspend_group_get_where_conditions', $where, $this );
-		$action_name = current_filter();
-		if ( 'bp_invitations_get_where_conditions' === $action_name ) {
-			$where_conditions['suspend_where'] = ' i.item_id NOT IN ( ' . $where . ' )';
-		} else {
-			$where_conditions['suspend_where'] = ' g.id NOT IN ( ' . $where . ' )';
+		$where = apply_filters( 'bp_suspend_group_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 		}
 
 		return $where_conditions;

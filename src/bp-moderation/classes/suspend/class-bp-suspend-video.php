@@ -52,15 +52,20 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$this->alias = $this->alias . 'v'; // v = Video.
 
 		// modify in videos count for album.
+		add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
 		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
 
 		// modify in group videos count for album.
+		add_filter( 'bp_media_get_join_count_sql', array( $this, 'update_join_media_sql' ), 10, 2 );
 		add_filter( 'bp_media_get_where_count_conditions', array( $this, 'update_where_media_sql' ), 10, 2 );
 
+		add_filter( 'bp_media_search_join_sql_photo', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_media_search_where_conditions_photo', array( $this, 'update_where_sql' ), 10, 2 );
 
+		add_filter( 'bp_video_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_video_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
+		add_filter( 'bp_video_search_join_sql_video', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_video_search_where_conditions_video', array( $this, 'update_where_sql' ), 10, 2 );
 
 		if ( bp_is_active( 'activity' ) ) {
@@ -279,7 +284,8 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where = $this->exclude_where_query();
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden video Where SQL statement.
@@ -289,8 +295,11 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's video.
 		 * @param array $class current class object.
 		 */
-		$where                             = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
-		$where_conditions['suspend_where'] = ' m.id NOT IN ( ' . $where . ' )';
+		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
 	}
@@ -310,7 +319,8 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			return $where_conditions;
 		}
 
-		$where = $this->exclude_where_query();
+		$where                  = array();
+		$where['suspend_where'] = $this->exclude_where_query();
 
 		/**
 		 * Filters the hidden video Where SQL statement.
@@ -320,8 +330,11 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		 * @param array $where Query to hide suspended user's video.
 		 * @param array $class current class object.
 		 */
-		$where                             = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
-		$where_conditions['suspend_where'] = ' m.id NOT IN ( ' . $where . ' )';
+		$where = apply_filters( 'bp_suspend_video_get_where_conditions', $where, $this );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
 	}
