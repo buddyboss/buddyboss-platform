@@ -700,18 +700,26 @@ function bp_core_fetch_avatar( $args = '' ) {
 				$gravatar = bb_attachments_get_default_profile_group_avatar_image( $params );
 
 				if ( ! $gravatar || empty( $gravatar ) ) {
-					remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
-					$gravatar = apply_filters(
-						'bp_gravatar_not_found_avatar',
-						get_avatar_url(
-							$params['email'],
-							array(
-								'size'          => $params['width'],
-								'force_default' => true,
-							)
+					/**
+					 * Filters the Gravatar URL host.
+					 *
+					 * @since BuddyPress 1.0.2
+					 *
+					 * @param string $value Gravatar URL host.
+					 */
+					$gravatar_url = apply_filters( 'bp_gravatar_url', 'https://www.gravatar.com/avatar/' );
+
+					// Append email hash to Gravatar.
+					$gravatar_url .= md5( strtolower( $params['email'] ) );
+
+					$gravatar = esc_url(
+						add_query_arg(
+							rawurlencode_deep( array_filter( $url_args ) ),
+							$gravatar_url
 						)
 					);
-					add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
+
+					$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', $gravatar );
 				}
 
 				/**
@@ -758,7 +766,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 		if ( ! $gravatar || empty( $gravatar ) ) {
 			remove_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
-			$gravatar = get_avatar_url( $params['email'], array( 'force_default' => true ) );
+			$gravatar = get_avatar_url( $params['email'], array( 'force_default' => true, 'size' => $params['width'] ) );
 			add_filter( 'get_avatar_url', 'bb_core_get_avatar_data_url_filter', 10, 3 );
 		}
 
