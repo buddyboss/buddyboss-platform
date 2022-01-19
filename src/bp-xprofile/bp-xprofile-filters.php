@@ -115,7 +115,7 @@ add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-//Display Name setting support
+// Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 
 // Repair repeater field repeated in admin side.
@@ -167,10 +167,10 @@ function bp_xprofile_sanitize_field_default( $field_default = '' ) {
  *
  * @param string      $content  Content to filter.
  * @param object|null $data_obj The BP_XProfile_ProfileData object.
- * @param int|null                     $field_id Optional. The ID of the profile field.
+ * @param int|null    $field_id Optional. The ID of the profile field.
  * @return string $content
  */
-function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
+function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	global $allowedtags;
 
 	$xprofile_allowedtags             = $allowedtags;
@@ -731,7 +731,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * @global \BP_XProfile_Field_Type $field
  *
  * @param  string $full_name
- * @param  int $user_id
+ * @param  int    $user_id
  * @return string
  */
 function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
@@ -740,11 +740,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 		return $full_name;
 	}
 
-	if ( !empty( $user_id ) ) {
+	if ( ! empty( $user_id ) ) {
 
 		$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-		if ( !empty( $display_name ) ) {
+		if ( ! empty( $display_name ) ) {
 			$full_name = $display_name;
 		}
 
@@ -754,7 +754,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
 
 			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
@@ -942,7 +942,7 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 /**
  * Change display_name for admin areas.
  *
- * @param array $email_content Email Content array.
+ * @param array       $email_content Email Content array.
  * @param object|null $user User Object
  *
  * @since BuddyBoss 1.0.0
@@ -1046,28 +1046,28 @@ function bp_social_network_search_key( $id, $array ) {
  *
  * @since BuddyBoss 1.5.1
  */
-function bp_xprofile_exclude_display_name_profile_fields( $args ){
+function bp_xprofile_exclude_display_name_profile_fields( $args ) {
 
 	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 	$current_value = bp_get_option( 'bp-display-name-format' );
 
 	$fields_id = array();
 
-	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
 		$fields_id[] = bp_xprofile_lastname_field_id();
 	}
 
-	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
 		$fields_id[] = bp_xprofile_lastname_field_id();
 	}
 
-	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
 		$fields_id[] = bp_xprofile_firstname_field_id();
 	}
 
 	if ( ! empty( $fields_id ) ) {
 		if ( empty( $args['exclude_fields'] ) ) {
-			$args['exclude_fields'] = [];
+			$args['exclude_fields'] = array();
 		}
 		$args['exclude_fields'] = array_merge( wp_parse_id_list( $args['exclude_fields'] ), $fields_id );
 	}
