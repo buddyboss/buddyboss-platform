@@ -74,7 +74,7 @@ add_action( 'bp_blogs_remove_data', 'bp_core_clear_cache' );
  *
  * @param BP_Blogs_Blog $blog Instance of the class.
  */
-function bp_blogs_clear_cache( $blog ) {
+function bb_blogs_clear_cache( $blog ) {
 	if ( ! empty( $blog->user_id ) ) {
 		wp_cache_delete( 'bp_blogs_of_user_' . $blog->user_id, 'bp' );
 		wp_cache_delete( 'bp_total_blogs_for_user_' . $blog->user_id, 'bp' );
@@ -85,4 +85,4 @@ function bp_blogs_clear_cache( $blog ) {
 	}
 }
 
-add_action( 'bp_blogs_blog_after_save', 'bp_blogs_clear_cache' );
+add_action( 'bp_blogs_blog_after_save', 'bb_blogs_clear_cache' );
