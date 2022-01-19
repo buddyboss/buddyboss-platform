@@ -1417,7 +1417,6 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-
 		if ( empty( $forum_id ) && ! empty( $topic_id ) ) {
 			$forum_id = bbp_get_topic_forum_id( $topic_id );
 		}
