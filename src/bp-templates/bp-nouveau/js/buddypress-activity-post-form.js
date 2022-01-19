@@ -2087,11 +2087,6 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				//Remove mentioned members Link
-				var tempNode = $( '<div></div>' ).html( urlText );
-				tempNode.find( 'a.bp-suggestions-mention' ).remove();
-				urlText = tempNode;
-
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
 					urlText = urlText.replace( /<img .*?>/g, '' );
 				}
