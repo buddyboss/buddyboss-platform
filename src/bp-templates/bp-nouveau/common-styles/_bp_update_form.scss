@@ -421,7 +421,7 @@
 			-ms-flex-pack: end;
 			justify-content: flex-end;
 			position: relative;
-			padding: 13px 25px 10px;
+			padding: 20px 25px 16px;
 			margin: 0;
 			border-top: 0;
 
@@ -921,7 +921,7 @@
 
 	.medium-editor-toolbar {
 		top: inherit;
-		bottom: 0;
+		bottom: 7px;
 		left: 11px;
 		visibility: hidden;
 		z-index: 99;
