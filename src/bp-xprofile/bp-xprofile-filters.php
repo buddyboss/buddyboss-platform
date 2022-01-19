@@ -124,6 +124,10 @@ add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
 // Repair user nicknames.
 add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
 
+// Validate user_nickname when user created from the backend
+add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 4 );
+add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_update', 10, 3 );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -1255,4 +1259,52 @@ function bb_xprofile_repair_user_nicknames_callback() {
 		'records' => $records_updated,
 		'message' => __( 'User nickname update complete!', 'buddyboss' ),
 	);
+}
+
+/**
+ * The user_nickname make compatible with BuddyBoss when user created from the backend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array   $meta Default meta values and keys for the user.
+ * @param WP_User $user User object.
+ * @param bool    $update Whether the user is being updated rather than created.
+ * @param array   $userdata The raw array of data passed to wp_insert_user().
+ *
+ * @return array
+ */
+function bb_validate_user_nickname_on_user_register( array $meta, WP_User $user, bool $update, array $userdata ) {
+
+	if ( ! $update ) {
+		if ( isset( $meta['nickname'] ) && ! empty( $meta['nickname'] ) ) {
+			$meta['nickname'] = sanitize_title( $meta['nickname'] );
+		} elseif ( isset( $user->user_nicename ) && ! empty( $user->user_nicename ) ) {
+			$meta['nickname'] = sanitize_title( $user->user_nicename );
+		} elseif ( isset( $user->user_login ) && ! empty( $user->user_login ) ) {
+			$meta['nickname'] = sanitize_title( $user->user_login );
+		}
+	}
+
+	return $meta;
+}
+
+/**
+ * Validate user_nickname when user updated from the backend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Error $errors WP_Error object (passed by reference).
+ * @param bool     $update Whether this is a user update.
+ * @param stdClass $user   User object (passed by reference).
+ */
+function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $update, stdClass $user ) {
+
+	if ( $update && isset( $user->nickname ) && ! empty( $user->nickname ) ) {
+		$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $user->nickname, $user->ID );
+
+		// or use the user_nickname.
+		if ( $invalid ) {
+			$errors->add( 'nickname', esc_html( $invalid ) );
+		}
+	}
 }
