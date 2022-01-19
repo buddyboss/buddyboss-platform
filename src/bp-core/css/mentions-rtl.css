@@ -41,7 +41,7 @@
 	cursor: pointer;
 	display: block;
 	font-size: 14px;
-	height: 20px;
+	min-height: 20px;
 	line-height: 20px;
 	margin: 0;
 	overflow: hidden;
@@ -81,9 +81,6 @@
 	font-weight: 500;
 	margin: 0 0 0 10px;
 	max-width: 130px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
 }
 
 .atwho-view .cur {

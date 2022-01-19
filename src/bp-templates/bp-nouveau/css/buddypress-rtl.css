@@ -1102,7 +1102,6 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point .bp-activity-privacy-status {
-  color: #92949d;
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1145,15 +1144,11 @@ a.layout-grid-view {
 
 #whats-new-form.focus-in #bp-activity-privacy-point {
   display: inline-flex;
-}
-
-#whats-new-form.focus-in #bp-activity-privacy-point .privacy-point-icon {
   color: #92949d;
 }
 
 #whats-new-form.focus-in #bp-activity-privacy-point .bb-icon-chevron-down {
   font-size: 12px;
-  color: #92949d;
   margin-right: 5px;
 }
 
@@ -1925,7 +1920,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
   width: calc(100% - 80px);
   margin-bottom: 0;
-  background-color: #fff;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder,
@@ -2067,7 +2061,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
   width: calc(100% - 80px);
   margin-bottom: 0;
-  background-color: #fff;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
@@ -2238,6 +2231,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   height: 44px;
   position: relative;
   z-index: 2;
+  background-color: transparent;
 }
 
 #whats-new-post-in-box-items li {
@@ -2303,7 +2297,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   padding: 0;
   margin: 10px 0 0;
   width: 100%;
-  width: calc(100% - 10px);
   z-index: 11;
   position: relative;
 }
@@ -2328,6 +2321,18 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 #bp-activity-group-ac-items .groups-selection .animate-spin {
   margin-left: 10px;
+}
+
+#bp-activity-group-ac-items::-webkit-scrollbar {
+  width: 12px;
+  margin-left: 5px;
+}
+
+#bp-activity-group-ac-items::-webkit-scrollbar-thumb {
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 9999px;
+  background-color: #a4acb4;
 }
 
 .bp-item-opt {
@@ -20702,7 +20707,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
@@ -21874,7 +21879,7 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail) {
-  background-color: #f8f8f8 !important;
+  background-color: #f8f8f8;
   z-index: 1;
   border-radius: 4px;
 }
