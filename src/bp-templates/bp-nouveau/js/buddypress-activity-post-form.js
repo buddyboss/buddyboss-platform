@@ -2585,6 +2585,7 @@ window.bp = window.bp || {};
 				
 				if ( 'group' === this.options.type ) {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<div class="groups-selection groups-selection--finding"><i class="dashicons dashicons-update animate-spin"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</span></div>' );
+					this.$el.find( '#bp-activity-group-ac-items' ).addClass( 'group_scrolling--revive' );
 				} else {
 					this.$el.find( '#bp-activity-group-ac-items' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
 				}
@@ -2612,6 +2613,7 @@ window.bp = window.bp || {};
 				}
 				if ( 'group' === optionType ) {
 					this.$el.find( '#bp-activity-group-ac-items' ).find( '.groups-selection--finding' ).remove();
+					this.$el.find( '#bp-activity-group-ac-items' ).removeClass( 'group_scrolling--revive' );
 				} else {
 					this.$el.find( '#bp-activity-group-ac-items' ).find( 'i.dashicons' ).remove();
 				}

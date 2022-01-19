@@ -2323,9 +2323,12 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   margin-right: 10px;
 }
 
+#bp-activity-group-ac-items.group_scrolling--revive {
+  overflow-y: visible;
+}
+
 #bp-activity-group-ac-items::-webkit-scrollbar {
   width: 12px;
-  margin-right: 5px;
 }
 
 #bp-activity-group-ac-items::-webkit-scrollbar-thumb {

@@ -1296,11 +1296,14 @@
 			margin-right: 10px;
 		}
 	}
+
+	&.group_scrolling--revive {
+		overflow-y: visible;
+	}
 }
 
 #bp-activity-group-ac-items::-webkit-scrollbar {
 	width: 12px;
-	margin-right: 5px;
 }
 
 #bp-activity-group-ac-items::-webkit-scrollbar-thumb {
