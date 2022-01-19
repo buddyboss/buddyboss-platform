@@ -65,17 +65,18 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url                 : BP_Nouveau.ajaxurl,
-				timeout             : 3 * 60 * 60 * 1000,
-				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles       : 'image/*',
-				autoProcessQueue    : true,
-				addRemoveLinks      : true,
-				uploadMultiple      : false,
-				maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+				url                 		 : BP_Nouveau.ajaxurl,
+				timeout             		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig      		 : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  		 : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       		 : 'image/*',
+				autoProcessQueue    		 : true,
+				addRemoveLinks      		 : true,
+				uploadMultiple      		 : false,
+				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles 		 : 10,
+				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 			// if defined, add custom dropzone options.
@@ -91,19 +92,20 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_document_options = {
-				url                  : BP_Nouveau.ajaxurl,
-				timeout              : 3 * 60 * 60 * 1000,
-				dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
-				acceptedFiles        : BP_Nouveau.media.document_type,
-				createImageThumbnails: false,
-				dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
-				autoProcessQueue     : true,
-				addRemoveLinks       : true,
-				uploadMultiple       : false,
-				maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
-				dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
+				url                  		 : BP_Nouveau.ajaxurl,
+				timeout              		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig       		 : BP_Nouveau.media.dictFileTooBig,
+				acceptedFiles        		 : BP_Nouveau.media.document_type,
+				createImageThumbnails		 : false,
+				dictDefaultMessage   		 : BP_Nouveau.media.dropzone_document_message,
+				autoProcessQueue     		 : true,
+				addRemoveLinks       		 : true,
+				uploadMultiple       		 : false,
+				maxFiles             		 : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+				maxFilesize          		 : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+				dictInvalidFileType  		 : BP_Nouveau.document.dictInvalidFileType,
+				dictMaxFilesExceeded 		 : BP_Nouveau.media.document_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 		},
@@ -115,19 +117,20 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_video_options = {
-				url                  : BP_Nouveau.ajaxurl,
-				timeout              : 3 * 60 * 60 * 1000,
-				dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
-				acceptedFiles        : BP_Nouveau.video.video_type,
-				createImageThumbnails: false,
-				dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
-				autoProcessQueue     : true,
-				addRemoveLinks       : true,
-				uploadMultiple       : false,
-				maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-				maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
-				dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
+				url                  		 : BP_Nouveau.ajaxurl,
+				timeout              		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig       		 : BP_Nouveau.video.dictFileTooBig,
+				acceptedFiles        		 : BP_Nouveau.video.video_type,
+				createImageThumbnails		 : false,
+				dictDefaultMessage   		 : BP_Nouveau.video.dropzone_video_message,
+				autoProcessQueue     		 : true,
+				addRemoveLinks       		 : true,
+				uploadMultiple       		 : false,
+				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles 		 : 10,
+				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size 		 : 2,
+				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
+				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
 			};
 
 		},
@@ -1027,7 +1030,7 @@ window.bp = window.bp || {};
 							},
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 								[new RegExp( /<div/gi ), '<p'],
 								[new RegExp( /<\/div/gi ), '</p'],
@@ -1035,8 +1038,8 @@ window.bp = window.bp || {};
 								[new RegExp( /<\/h[1-6]/gi ), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: [ 'ul', 'ol', 'li' ]
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+								unwrapTags: []
 							},
 							imageDragging: false
 						}
