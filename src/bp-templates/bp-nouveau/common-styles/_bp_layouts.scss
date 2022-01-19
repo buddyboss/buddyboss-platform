@@ -179,6 +179,7 @@
 					display: inline-block;
 					height: auto;
 					width: 50%;
+					image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 				}
 			}
 

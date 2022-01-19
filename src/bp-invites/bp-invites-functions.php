@@ -502,10 +502,10 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 					$bp_user = new WP_User( $user_id );
 					foreach ( $bp_user->roles as $role ) {
-						// Remove role
+						// Remove role.
 						$bp_user->remove_role( $role );
 					}
-					// Add role
+					// Add role.
 					$bp_user->add_role( $selected_member_type_wp_roles[0] );
 				}
 			}

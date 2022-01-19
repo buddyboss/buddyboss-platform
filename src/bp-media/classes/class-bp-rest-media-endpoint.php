@@ -1409,23 +1409,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'user_permissions'      => $this->get_media_current_user_permissions( $media ),
 			'type'                  => $media->type,
 		);
-		
-		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
-		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
-			$activity = new BP_Activity_Activity( $data['activity_id'] );
-			if ( isset( $activity->secondary_item_id ) ) {
-				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-				if (
-					! empty( $get_activity->id ) &&
-					(
-						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
-					)
-				) {
-					$data['hide_activity_actions'] = true;
-				}
-			}
-		}
 
 		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
 		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
@@ -2240,7 +2223,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -2769,7 +2752,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -3135,7 +3118,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -3508,6 +3491,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 							$retval['edit_post_privacy'] = $parent_activity_id;
 						} else {
 							$retval['edit_post_privacy'] = $media->activity_id;
+						}
+
+						$activity = new BP_Activity_Activity( (int) $retval['edit_post_privacy'] );
+						if ( ! empty( $activity->id ) && ! empty( $activity->type ) && 'activity_comment' === $activity->type ) {
+							$retval['edit_post_privacy'] = 0;
 						}
 					} else {
 						$retval['edit_privacy'] = 1;
