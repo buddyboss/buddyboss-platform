@@ -1943,7 +1943,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar {
   top: inherit;
-  bottom: 7px;
+  bottom: 9px;
   left: 11px;
   visibility: hidden;
   z-index: 99;
@@ -2070,7 +2070,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-form-active {
   position: absolute;
   left: 15px;
-  bottom: 6px;
+  bottom: 5px;
   box-shadow: none;
   width: calc(800px - 40px);
   max-width: calc(100vw - 55px - 10%);
