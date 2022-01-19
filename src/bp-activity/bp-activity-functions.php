@@ -3966,6 +3966,7 @@ function bp_activity_mark_as_spam( &$activity, $source = 'by_a_person' ) {
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 	// Clear the activity comment cache for this activity item.
+	wp_cache_delete( $activity->id, 'bp_activity_comments' );
 	wp_cache_delete( 'get_child_comments_' . $activity->id, 'bp_activity_comments' );
 
 	// If Akismet is active, and this was a manual spam/ham request, stop Akismet checking the activity.
