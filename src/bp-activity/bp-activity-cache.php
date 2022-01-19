@@ -88,23 +88,24 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_delet
  *
  * @param array $activities Array of activities.
  */
-function bp_activity_clear_cache_after_deleted_activity( $activities ) {
-	foreach ( (array) $activities as $activity ) {
-		wp_cache_delete( $activity->id, 'bp_activity' );
-		wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
-		wp_cache_delete( 'bp_media_activity_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
-		wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );       // Used in get_activity_attachment_id().
-		wp_cache_delete( 'bp_document_activity_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
-		wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
-		wp_cache_delete( 'bp_video_activity_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
-		wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
-
-		if ( ! empty( $activity->secondary_item_id ) ) {
-			wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity' ); // Used in BP_Activity_Activity::get_child_comments().
+function bb_activity_clear_cache_after_deleted_activity( $activities ) {
+	if ( ! empty( $activities ) ) {
+		foreach ( (array) $activities as $activity ) {
+			wp_cache_delete( $activity->id, 'bp_activity' );
+			wp_cache_delete( 'bb_activity_hierarchy_' . $activity->id, 'bp_activity' );     // Used in bb_get_activity_hierarchy().
+			wp_cache_delete( 'bp_media_activity_id_' . $activity->id, 'bp_media' );         // Used in get_activity_media_id().
+			wp_cache_delete( 'bp_media_attachment_id_' . $activity->id, 'bp_media' );       // Used in get_activity_attachment_id().
+			wp_cache_delete( 'bp_document_activity_id_' . $activity->id, 'bp_document' );   // Used in get_activity_document_id().
+			wp_cache_delete( 'bp_document_attachment_id_' . $activity->id, 'bp_document' ); // Used in get_activity_attachment_id().
+			wp_cache_delete( 'bp_video_activity_id_' . $activity->id, 'bp_video' );         // Used in get_activity_video_id().
+			wp_cache_delete( 'bp_video_attachment_id_' . $activity->id, 'bp_video' );       // Used in get_activity_attachment_id().
+			if ( ! empty( $activity->secondary_item_id ) ) {
+				wp_cache_delete( 'bp_get_child_comments_' . $activity->secondary_item_id, 'bp_activity' ); // Used in BP_Activity_Activity::get_child_comments().
+			}
 		}
 	}
 }
-add_action( 'bp_activity_after_delete', 'bp_activity_clear_cache_after_deleted_activity', 10, 1 );
+add_action( 'bp_activity_after_delete', 'bb_activity_clear_cache_after_deleted_activity', 10, 1 );
 
 /**
  * Reset cache incrementor for the Activity component.
