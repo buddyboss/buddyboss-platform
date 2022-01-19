@@ -2350,3 +2350,9 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   /* stylelint-disable-line */
   content: "\e855";
 }
+
+table tbody td .bb-description {
+  color: #999;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
