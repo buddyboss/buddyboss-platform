@@ -94,6 +94,11 @@
 	&.bp-activity-edit-group {
 		opacity: 0.5;
 		cursor: default;
+
+		.bb-icon-chevron-down {
+			display: none;
+		}
+
 	}
 
 	&.bp-activity-focus-group-active {
