@@ -644,43 +644,88 @@ jQuery( document ).ready(
 					touch: 'pointer',
 					tolerance: 'pointer',
 
-					// When field is dropped on tab
-					drop: function( ev, ui ) {
-							var $item = jQuery( this ), // The tab
-							$list     = jQuery( $item.find( 'a' ).attr( 'href' ) ).find( '.connectedSortable' ); // The tab body
+					drop: function (ev, ui) {
+						var $item = jQuery(this), // The tab
+							$list = jQuery($item.find('a').attr('href')).find('.connectedSortable'), // The tab body
+							dropInGroup = function (fieldId) {
+								var fieldOrder, postData = {
+									action: 'xprofile_reorder_fields',
+									'cookie': encodeURIComponent(document.cookie),
+									'_wpnonce_reorder_fields': jQuery('input#_wpnonce_reorder_fields').val()
+								};
 
-							// Remove helper class
-							jQuery( $item ).removeClass( 'drop-candidate' );
+								// Select new tab as current.
+								$tabs.tabs('option', 'active', $tab_items.index($item));
 
-							// Hide field, change selected tab, and show new placement
-							ui.draggable.hide(
-								'slow',
-								function() {
+								// Refresh $list variable.
+								$list = jQuery($item.find('a').attr('href')).find('.connectedSortable');
+								jQuery($list).find('p.nofields').hide('slow');
 
-									// Select new tab as current
-									$tabs.tabs( 'option', 'active', $tab_items.index( $item ) );
+								jQuery.extend(postData, {
+									'field_group_id': jQuery($list).attr('id'),
+									'group_tab': jQuery($item).prop('id')
+								});
 
-									// Show new placement
-									jQuery( this ).appendTo( $list ).show( 'slow' ).animate( {opacity: '1'}, 500 );
+								// Set serialized data
+								fieldOrder = jQuery($list).sortable('serialize');
 
-									// Refresh $list variable
-									$list = jQuery( $item.find( 'a' ).attr( 'href' ) ).find( '.connectedSortable' );
-									jQuery( $list ).find( 'p.nofields' ).hide( 'slow' );
+								if (fieldId) {
+									var serializedField = fieldId.replace('draggable_field_', 'draggable_signup_field[]=');
+									if (fieldOrder) {
+										fieldOrder += '&' + serializedField;
+									} else {
+										fieldOrder = serializedField;
+									}
 
-									// Ajax update field locations and orders
-									jQuery.post(
-										ajaxurl,
-										{
-											action: 'xprofile_reorder_fields',
-											'cookie': encodeURIComponent( document.cookie ),
-											'_wpnonce_reorder_fields': jQuery( 'input#_wpnonce_reorder_fields' ).val(),
-											'field_order': jQuery( $list ).sortable( 'serialize' ),
-											'field_group_id': jQuery( $list ).attr( 'id' )
-										},
-										function() {}
-									);
+									jQuery.extend(postData, {
+										'new_signup_field_id': serializedField
+									});
+								} else {
+									// Show new placement.
+									jQuery(this).appendTo($list).show('slow').animate({ opacity: '1' }, 500);
+
+									// Refresh $list variable.
+									$list = jQuery($item.find('a').attr('href')).find('.connectedSortable');
+
+									// Reset serialized data.
+									fieldOrder = jQuery($list).sortable('serialize');
+
+									jQuery.extend(postData, {
+										'field_group_id': jQuery($list).attr('id')
+									});
 								}
-							);
+
+								jQuery.extend(postData, {
+									'field_order': fieldOrder
+								});
+
+								// Ajax update field locations and orders.
+								jQuery.post(ajaxurl, postData, function (response) {
+									if (response.data && response.data.signup_field) {
+										jQuery($list).append(response.data.signup_field);
+
+										if (response.data.field_id) {
+											jQuery('#draggable_field_' + response.data.field_id + ' legend').append(
+												jQuery('<span></span>').addClass('bp-signup-field-label').html(XProfileAdmin.signup_info)
+											);
+										}
+									}
+								}, 'json').always(function () {
+									isMovingToSignups = false;
+								});
+							};
+
+						// Remove helper class.
+						jQuery($item).removeClass('drop-candidate');
+
+						if ('signup-group' === jQuery($item).prop('id')) {
+							// Simply add the field to signup ones.
+							dropInGroup(ui.draggable.prop('id'));
+
+						} else if (!ui.draggable.prop('id').match(/draggable_signup_field_([0-9]+)/)) {
+							// Hide field, change selected tab, and show new placement.
+							ui.draggable.hide('slow', dropInGroup);
+						}
 					},
 					over: function() {
 						jQuery( this ).addClass( 'drop-candidate' );
