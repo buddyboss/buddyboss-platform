@@ -801,10 +801,10 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy_modal', 'general' );
 
 				// Reset group
-				var selected_item = this.$el.closest( '#whats-new-form' ).find( '.bp-activity-object.selected' );
-				selected_item.find( '.privacy-radio' ).removeClass( 'selected' );
-				selected_item.find( '.bp-activity-object__radio' ).prop('checked', false);
-				selected_item.removeClass( 'selected' );
+				// var selected_item = this.$el.closest( '#whats-new-form' ).find( '.bp-activity-object.selected' );
+				// selected_item.find( '.privacy-radio' ).removeClass( 'selected' );
+				// selected_item.find( '.bp-activity-object__radio' ).prop('checked', false);
+				// selected_item.removeClass( 'selected' );
 				
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
