@@ -528,7 +528,7 @@ jQuery( document ).ready(
 					cursor: 'move',
 					axis: 'x,y',
 					opacity: 1,
-					items: 'li',
+					items: 'li:not(.not-sortable)',
 					tolerance: 'intersect',
 
 					update: function() {
