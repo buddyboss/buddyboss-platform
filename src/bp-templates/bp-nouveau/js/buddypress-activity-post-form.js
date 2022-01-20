@@ -3272,9 +3272,9 @@ window.bp = window.bp || {};
 				'click #activity-document-button': 'toggleDocumentSelector',
 				'click #activity-video-button': 'toggleVideoSelector',
 				'click .post-elements-buttons-item:not( .post-gif ):not( .post-media ):not( .post-video )': 'activeButton',
-				'click .post-elements-buttons-item.post-gif': 'activeMediaButton',
-				'click .post-elements-buttons-item.post-media': 'activeMediaButton',
-				'click .post-elements-buttons-item.post-video': 'activeVideoButton',
+				'click .post-elements-buttons-item.post-gif:not(.disable)': 'activeMediaButton',
+				'click .post-elements-buttons-item.post-media:not(.disable)': 'activeMediaButton',
+				'click .post-elements-buttons-item.post-video:not(.disable)': 'activeVideoButton',
 			},
 			gifMediaSearchDropdownView: false,
 
