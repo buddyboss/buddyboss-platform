@@ -1047,7 +1047,9 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'media' );
-							self.model.unset( 'errors' );
+							if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
+								self.model.unset( 'errors' );
+							}
 						}
 					}
 				);
@@ -1270,7 +1272,9 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'document' );
-							self.model.unset( 'errors' );
+							if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
+								self.model.unset( 'errors' );
+							}
 						}
 					}
 				);
@@ -1507,7 +1511,9 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'video' );
-							self.model.unset( 'errors' );
+							if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
+								self.model.unset( 'errors' );
+							}
 						}
 					}
 				);
@@ -1676,7 +1682,9 @@ window.bp = window.bp || {};
 
 			destroy: function () {
 				this.model.set( 'gif_data', {} );
-				this.model.unset( 'errors' );
+				if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
+					this.model.unset( 'errors' );
+				}
 				this.el.style.backgroundImage = '';
 				this.el.style.backgroundSize  = '';
 				this.el.style.minHeight          = '0px';
