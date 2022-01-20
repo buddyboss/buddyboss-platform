@@ -955,6 +955,41 @@ function xprofile_ajax_reorder_field_groups() {
 add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_groups' );
 
 /**
+ * Removes a field from signup fields.
+ *
+ * @since 8.0.0
+ */
+function bp_xprofile_ajax_remove_signup_field() {
+	// Check the nonce.
+	check_admin_referer( 'bp_reorder_fields', '_wpnonce_reorder_fields' );
+
+	if ( ! isset( $_POST['signup_field_id'] ) || ! $_POST['signup_field_id'] ) {
+		return wp_send_json_error();
+	}
+
+	$signup_field_id = (int) wp_unslash( $_POST['signup_field_id'] );
+
+	// Validate the field ID.
+	$signup_position = bp_xprofile_get_meta( $signup_field_id, 'field', 'signup_position' );
+
+	if ( ! $signup_position ) {
+		wp_send_json_error();
+	}
+
+	bp_xprofile_delete_meta( $signup_field_id, 'field', 'signup_position' );
+
+	/**
+	 * Fires when a signup field is removed from the signup form.
+	 *
+	 * @since 8.0.0
+	 */
+	do_action( 'bp_xprofile_removed_signup_field' );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_xprofile_remove_signup_field', 'bp_xprofile_ajax_remove_signup_field' );
+
+/**
  * Check if the gender field has been added.
  *
  * @since BuddyBoss 1.0.0
