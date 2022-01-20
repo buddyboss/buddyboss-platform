@@ -94,6 +94,11 @@
 	&.bp-activity-edit-group {
 		opacity: 0.5;
 		cursor: default;
+
+		.bb-icon-chevron-down {
+			display: none;
+		}
+
 	}
 
 	&.bp-activity-focus-group-active {
@@ -427,7 +432,6 @@
 
 			.emojionearea-button:before {
 				content: "\E821";
-				color: rgba(18, 43, 70, 0.4);
 				font: normal 400 normal 24px/1 bb-icons;
 				opacity: 1;
 				background: none;
@@ -435,14 +439,8 @@
 			}
 
 			.bb-icon {
-				color: rgba(18, 43, 70, 0.5);
 				font-size: 24px;
 				margin-right: 10px;
-			}
-
-			.emojionearea .emojionearea-button.active:before,
-			.toolbar-button.active .bb-icon:before {
-				color: #122b46;
 			}
 
 			.post-mention .bb-icon {
@@ -547,6 +545,21 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	#whats-new-toolbar .post-elements-buttons-item.disable,
+	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
+		pointer-events: initial;
+
+		a.toolbar-button {
+			cursor: default;
+
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+
+	}
+
 	#whats-new-content-placeholder,
 	#whats-new-content {
 		padding: 0;
@@ -616,7 +629,7 @@
 		}
 
 		.whats-new-scroll-view {
-			max-height: calc(100vh - 200px);
+			max-height: calc(100vh - 280px);
 			overflow: auto;
 			width: 100%;
 			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
@@ -873,10 +886,8 @@
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 
@@ -904,6 +915,21 @@
 	&.validate {
 		color: #ef3e46 !important;
 		border-color: #f5858a !important;
+	}
+}
+
+.medium-editor-toolbar,
+.buddypress .medium-editor-toolbar {
+
+	.medium-editor-toolbar-actions {
+
+		button {
+			color: rgba(18, 43, 70, 0.4);
+
+			&.medium-editor-button-active {
+				color: #122b46;
+			}
+		}
 	}
 }
 
@@ -1019,14 +1045,12 @@
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
 
 				b:before {
 					font-size: 26px;
 				}
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 

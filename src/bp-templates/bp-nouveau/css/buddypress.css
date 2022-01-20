@@ -1092,6 +1092,10 @@ a.layout-grid-view {
   cursor: default;
 }
 
+#bp-activity-privacy-point.bp-activity-edit-group .bb-icon-chevron-down {
+  display: none;
+}
+
 #bp-activity-privacy-point.bp-activity-focus-group-active {
   opacity: 0.5;
   cursor: default;
@@ -1418,7 +1422,6 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
 .activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea-button:before {
   content: "\E821";
-  color: rgba(18, 43, 70, 0.4);
   font: normal 400 normal 24px/1 bb-icons;
   opacity: 1;
   background: none;
@@ -1427,16 +1430,8 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .bb-icon,
 .activity-update-form .activity-form.focus-in #editor-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.5);
   font-size: 24px;
   margin-right: 10px;
-}
-
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea .emojionearea-button.active:before,
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .toolbar-button.active .bb-icon:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea .emojionearea-button.active:before,
-.activity-update-form .activity-form.focus-in #editor-toolbar .toolbar-button.active .bb-icon:before {
-  color: #122b46;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-mention .bb-icon,
@@ -1551,6 +1546,30 @@ a.layout-grid-view {
   border-top: 1px solid #eee;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active),
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
+  pointer-events: initial;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button {
+  cursor: default;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:before, .bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:after,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:before,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:after,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:before,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:after,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:before,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:after {
+  display: none;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-content-placeholder,
 .bp-nouveau-activity-form-placeholder- #whats-new-content,
 .activity-update-form #whats-new-content-placeholder,
@@ -1632,7 +1651,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .whats-new-scroll-view,
 .activity-update-form.modal-popup .whats-new-scroll-view {
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 280px);
   overflow: auto;
   width: 100%;
   overscroll-behavior: contain;
@@ -1902,12 +1921,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   min-width: 30px;
   border: 0;
   background-color: transparent !important;
-  color: rgba(18, 43, 70, 0.4) !important;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  color: #122b46 !important;
   background: none transparent !important;
 }
 
@@ -1930,6 +1947,16 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid.validate {
   color: #ef3e46 !important;
   border-color: #f5858a !important;
+}
+
+.medium-editor-toolbar .medium-editor-toolbar-actions button,
+.buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  color: rgba(18, 43, 70, 0.4);
+}
+
+.medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
+.buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+  color: #122b46;
 }
 
 .activity-update-form #activity-header h3 {
@@ -2042,7 +2069,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   min-width: 30px;
   border: 0;
   background-color: transparent !important;
-  color: rgba(18, 43, 70, 0.4) !important;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button b:before {
@@ -2050,7 +2076,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  color: #122b46 !important;
   background: none transparent !important;
 }
 
@@ -3415,7 +3440,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #whats-new-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-messages-toolbar .emojionearea .emojionearea-button:before {
   content: "\E821";
-  color: rgba(18, 43, 70, 0.4);
   font: normal 400 normal 24px/1 bb-icons;
   speak: none;
   display: inline-block;
@@ -3423,21 +3447,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   text-transform: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.ac-reply-toolbar #activity-gif-button.open .bb-icon,
-.ac-reply-toolbar .emojionearea .emojionearea-button.active:before,
-#whats-new-toolbar #activity-gif-button.open .bb-icon,
-#whats-new-toolbar .emojionearea .emojionearea-button.active:before,
-#whats-new-messages-toolbar #activity-gif-button.open .bb-icon,
-#whats-new-messages-toolbar .emojionearea .emojionearea-button.active:before {
-  color: #122b46;
-}
-
-.ac-reply-toolbar .toolbar-button.active .bb-icon.bb-icon-text-format:before,
-#whats-new-toolbar .toolbar-button.active .bb-icon.bb-icon-text-format:before,
-#whats-new-messages-toolbar .toolbar-button.active .bb-icon.bb-icon-text-format:before {
-  color: #122b46;
 }
 
 .ac-reply-toolbar .post-elements-buttons-item.disable,
@@ -3450,42 +3459,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   opacity: 0.4;
 }
 
-.ac-reply-toolbar .post-elements-buttons-item.disable .bb-icon,
-.ac-reply-toolbar .post-elements-buttons-item.disable.active .bb-icon,
-#whats-new-toolbar .post-elements-buttons-item.disable .bb-icon,
-#whats-new-toolbar .post-elements-buttons-item.disable.active .bb-icon,
-#whats-new-messages-toolbar .post-elements-buttons-item.disable .bb-icon,
-#whats-new-messages-toolbar .post-elements-buttons-item.disable.active .bb-icon {
-  color: rgba(18, 43, 70, 0.7);
-}
-
 .ac-reply-toolbar .post-elements-buttons-item.no-click,
 #whats-new-toolbar .post-elements-buttons-item.no-click,
 #whats-new-messages-toolbar .post-elements-buttons-item.no-click {
   pointer-events: none;
-}
-
-.active #activity-media-button .bb-icon,
-.active #activity-link-preview-button .bb-icon,
-.active #activity-document-button .bb-icon,
-.active #activity-video-button .bb-icon,
-.active#messages-document-button .bb-icon,
-.active#messages-media-button .bb-icon,
-.active#messages-video-button .bb-icon,
-.active#forums-media-button .bb-icon,
-.active#forums-document-button .bb-icon,
-.active#forums-video-button .bb-icon,
-.active#bp-group-messages-media-button .bb-icon,
-.active#bp-group-messages-document-button .bb-icon,
-.active#bp-group-messages-video-button .bb-icon,
-.active#bp-group-messages-gif-button .bb-icon,
-.active#forums-gif-button .bb-icon,
-.active#messages-gif-button .bb-icon,
-.ac-reply-media-button.active .bb-icon,
-.ac-reply-document-button.active .bb-icon,
-.ac-reply-video-button.active .bb-icon,
-.ac-reply-gif-button.active .bb-icon {
-  color: #122b46;
 }
 
 .activity-url-scrapper-loading {
@@ -8644,11 +8621,9 @@ input#send-to-input {
   min-width: 30px;
   border: 0;
   background-color: transparent !important;
-  color: rgba(18, 43, 70, 0.4) !important;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  color: #122b46 !important;
   background: none transparent !important;
 }
 
@@ -22705,10 +22680,6 @@ body > .open-popup.video-error-popup {
   color: rgba(18, 43, 70, 0.5);
 }
 
-.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-remove:after {
-  color: rgba(18, 43, 70, 0.5);
-}
-
 .dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap {
   background-color: rgba(0, 0, 0, 0.05);
 }
@@ -22763,7 +22734,6 @@ body > .open-popup.video-error-popup {
   font-size: 28px;
   color: rgba(18, 43, 70, 0.5);
   left: 50%;
-  background-color: #fafafa;
   display: block;
   position: absolute;
   transform: translateX(-50%);
@@ -23426,11 +23396,9 @@ span.icons:before {
   min-width: 30px;
   border: 0;
   background-color: transparent !important;
-  color: rgba(18, 43, 70, 0.4) !important;
 }
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
-  color: #122b46 !important;
   background: none transparent !important;
 }
 
