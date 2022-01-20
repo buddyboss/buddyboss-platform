@@ -1995,7 +1995,7 @@ function bb_add_default_cover_image_inline_css() {
 
 	// BuddyBoss theme is not activated.
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
-		$css_rules .= '#buddypress #header-cover-image.has-default, #buddypress #header-cover-image.has-default .guillotine-window img, .bs-group-cover a{ background-color: #e2e9ef; }';
+		$css_rules .= '#buddypress #header-cover-image.has-default, #buddypress #header-cover-image.has-default .guillotine-window img, .bs-group-cover a img{ background-color: #e2e9ef; }';
 	}
 
 	// Buddyboss theme compatibility.
