@@ -1006,10 +1006,11 @@ add_action( 'wp_ajax_xprofile_check_gender_added_previously', 'xprofile_check_ge
  * @param object            $admin_group Admin group object.
  * @param string            $class       Classes to append to output.
  */
-function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
+function xprofile_admin_field( $admin_field, $admin_group, $class = '', $is_signup = false ) {
 	global $field;
 
 	$field = $admin_field;
+	$fieldset_id = sprintf( 'draggable_field_%d', $field->id );
 
 	// Users admin URL
 	$url = bp_get_admin_url( 'admin.php' );
@@ -1053,9 +1054,14 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 
 	$fieldset_class[] = ! empty( $class ) ? $class : '';
 	$fieldset_class   = array_filter( $fieldset_class );
+
+	// Avoid duplicate IDs into the signup group.
+	if ( $is_signup ) {
+		$fieldset_id = sprintf( 'draggable_signup_field_%d', $field->id );
+	}
 	?>
 
-	<fieldset id="draggable_field_<?php echo esc_attr( $field->id ); ?>" class="<?php echo implode( ' ', $fieldset_class ); ?>">
+	<fieldset id="<?php echo esc_attr( $fieldset_id ); ?>" class="<?php echo implode( ' ', $fieldset_class ); ?>">
 		<legend>
 			<span>
 				<span class="field-name"><?php bp_the_profile_field_name(); ?></span>
@@ -1092,10 +1098,18 @@ endif;
 			<div class="actions">
 				<a class="button edit" href="<?php echo esc_url( $field_edit_url ); ?>"><?php _e( 'Edit', 'buddyboss' ); ?></a>
 
-				<?php if ( $field->can_delete ) : ?>
+				<?php if ( $field->can_delete && ! $is_signup ) : ?>
 
 					<div class="delete-button">
-						<a class="confirm submit-delete deletion" href="<?php echo esc_url( $field_delete_url ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+						<a class="confirm submit-delete deletion" href="<?php echo esc_url( wp_nonce_url( $field_delete_url, 'bp_xprofile_delete_field-' . $field->id, 'bp_xprofile_delete_field' ) ); ?>"><?php _ex( 'Delete', 'Delete field link', 'buddypress' ); ?></a>
+					</div>
+
+				<?php endif; ?>
+
+				<?php if ( $field->can_delete && $is_signup ) : ?>
+
+					<div class="delete-button">
+						<a class="submit-delete removal" href="<?php echo esc_attr( sprintf( '#remove_field-%d', $field->id ) ); ?>"><?php echo esc_html_x( 'Remove', 'Remove field link', 'buddypress' ); ?></a>
 					</div>
 
 				<?php endif; ?>
