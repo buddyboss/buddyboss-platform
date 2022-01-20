@@ -764,7 +764,7 @@ jQuery( document ).ready(
 				}
 			);
 
-			jQuery( '#sigunup-fields' ).on( 'click', '.removal', function( e ) {
+			jQuery( '#signup-fields .removal' ).on( 'click', function( e ) {
 				e.preventDefault();
 
 				var fieldId = jQuery( e.target ).attr( 'href' ).replace( '#remove_field-', '' ),
