@@ -763,5 +763,29 @@ jQuery( document ).ready(
 					);
 				}
 			);
+
+			jQuery( '#sigunup-fields' ).on( 'click', '.removal', function( e ) {
+				e.preventDefault();
+
+				var fieldId = jQuery( e.target ).attr( 'href' ).replace( '#remove_field-', '' ),
+					container = jQuery( e.target ).closest( '#draggable_signup_field_' + fieldId );
+
+				if ( ! fieldId ) {
+					return false;
+				}
+
+				// Ajax update field locations and orders.
+				jQuery.post( ajaxurl, {
+					action: 'xprofile_remove_signup_field',
+					'cookie': encodeURIComponent(document.cookie),
+					'_wpnonce_reorder_fields': jQuery( 'input#_wpnonce_reorder_fields' ).val(),
+					'signup_field_id': fieldId
+				}, function( response ) {
+					if ( response.success ) {
+						jQuery( container ).remove();
+						jQuery( '#draggable_field_' + fieldId + ' .bp-signup-field-label' ).remove();
+					}
+				}, 'json' );
+			} );
 	}
 );
