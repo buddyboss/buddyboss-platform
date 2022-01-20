@@ -987,8 +987,6 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 
-							Backbone.trigger('cleanFeedBack');
-
 							var image = $( file.previewElement ).find( '.dz-image img' )[0];
 							var isLoaded = image.complete && image.naturalHeight !== 0;
 							if (!isLoaded) {
@@ -1199,8 +1197,6 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
-
-							Backbone.trigger('cleanFeedBack');
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -1441,8 +1437,6 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.video.push( response.data );
 							self.model.set( 'video', self.video );
-
-							Backbone.trigger('cleanFeedBack');
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
