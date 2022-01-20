@@ -2371,6 +2371,11 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin: 0 7px 25px 0;
 }
 
+.avatar-options .avatar-custom-input > label {
+  display: inline-block;
+  vertical-align: top;
+}
+
 .avatar-options .avatar-custom-input input[type="radio"] {
   opacity: 0;
   visibility: hidden;
@@ -2384,6 +2389,10 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 .avatar-options .avatar-custom-input input[type="radio"]:checked + label .img-block img {
   border-color: #2271b1;
   box-shadow: 0 0 0 1px #2271b1;
+}
+
+.avatar-options .avatar-custom-input input[type="radio"]:checked:before {
+  position: absolute;
 }
 
 .avatar-options .avatar-custom-input .img-block {

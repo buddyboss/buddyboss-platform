@@ -2520,6 +2520,11 @@ h2.has_tutorial_btn {
 		display: inline-block;
 		margin: 0 7px 25px 0;
 
+		> label {
+			display: inline-block;
+			vertical-align: top;
+		}
+
 		input[type="radio"] {
 			opacity: 0;
 			visibility: hidden;
@@ -2533,6 +2538,11 @@ h2.has_tutorial_btn {
 				border-color: #2271b1;
 				box-shadow: 0 0 0 1px #2271b1;
 			}
+
+			&:checked:before {
+				position: absolute;
+			}
+
 		}
 
 		.img-block {
