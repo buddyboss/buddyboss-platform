@@ -4043,10 +4043,10 @@ MediumEditor.extensions = {};
             this.doFormSave();
         },
 
-        handleCloseClick: function (event) {
+        handleCloseClick: function ( event ) {
             // Click Close -> close the form
-			var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
-			toolbarInput.classList.remove( 'validate' );
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
         }
