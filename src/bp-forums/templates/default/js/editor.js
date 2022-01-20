@@ -1,3 +1,6 @@
+/* global bp */
+window.bp = window.bp || {};
+
 jQuery( document ).ready(
 	function() {
 
