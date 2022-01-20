@@ -808,7 +808,8 @@ function xprofile_admin_delete_field( $field_id, $field_type = 'field', $delete_
 /**
  * Handles the ajax reordering of fields within a group.
  *
- * @since BuddyPress 1.0.0
+ * @since 1.0.0
+ * @since 8.0.0 Returns a JSON object.
  */
 function xprofile_ajax_reorder_fields() {
 
@@ -822,9 +823,111 @@ function xprofile_ajax_reorder_fields() {
 	parse_str( $_POST['field_order'], $order );
 
 	$field_group_id = $_POST['field_group_id'];
+	$group_tab      = '';
 
-	foreach ( (array) $order['draggable_field'] as $position => $field_id ) {
-		xprofile_update_field_position( (int) $field_id, (int) $position, (int) $field_group_id );
+	if ( isset( $_POST['group_tab'] ) && $_POST['group_tab'] ) {
+		$group_tab = wp_unslash( $_POST['group_tab'] );
+	}
+
+	if ( 'signup-fields' === $field_group_id ) {
+		parse_str( $_POST['field_order'], $order );
+		$fields = (array) $order['draggable_signup_field'];
+		$fields = array_map( 'intval', $fields );
+
+		if ( isset( $_POST['new_signup_field_id'] ) && $_POST['new_signup_field_id'] ) {
+			parse_str( $_POST['new_signup_field_id'], $signup_field );
+			$signup_fields = (array) $signup_field['draggable_signup_field'];
+		}
+
+		// Adding a new field to the registration form.
+		if ( 'signup-group' === $group_tab ) {
+			$field_id = (int) reset( $signup_fields );
+
+			// Load the field.
+			$field = xprofile_get_field( $field_id, null, false );
+
+			if ( $field instanceof BP_XProfile_Field ) {
+				// The field doesn't support the feature, stop right away!
+				if ( ! $field->field_type_supports( 'signup_position' ) ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'This field cannot be inserted into the registration form.', 'buddypress' ),
+						)
+					);
+				}
+
+				$signup_position = bp_xprofile_get_meta( $field->id, 'field', 'signup_position' );
+
+				if ( ! $signup_position ) {
+					$position = array_search( $field->id, $fields, true );
+					if ( false !== $position ) {
+						$position += 1;
+					} else {
+						$position = 1;
+					}
+
+					// Set the signup position.
+					bp_xprofile_update_field_meta( $field->id, 'signup_position', $position );
+
+					// Get the real Group object.
+					$group = xprofile_get_field_group( $field->id );
+
+					// Gets the HTML Output of the signup field.
+					$signup_field = bp_xprofile_admin_get_signup_field( $field, $group );
+
+					/**
+					 * Fires once a signup field has been inserted.
+					 *
+					 * @since 8.0.0
+					 */
+					do_action( 'bp_xprofile_inserted_signup_field' );
+
+					// Send the signup field to output.
+					wp_send_json_success(
+						array(
+							'signup_field' => $signup_field,
+							'field_id'     => $field->id,
+						)
+					);
+				} else {
+					wp_send_json_error(
+						array(
+							'message' => __( 'This field has been already added to the registration form.', 'buddypress' ),
+						)
+					);
+				}
+
+			} else {
+				wp_send_json_error();
+			}
+		} else {
+			// it's a sort operation.
+			foreach ( $fields as $position => $field_id ) {
+				bp_xprofile_update_field_meta( (int) $field_id, 'signup_position', (int) $position + 1 );
+			}
+
+			/**
+			 * Fires once the signup fields have been reordered.
+			 *
+			 * @since 8.0.0
+			 */
+			do_action( 'bp_xprofile_reordered_signup_fields' );
+
+			wp_send_json_success();
+		}
+	} else {
+		/**
+		 * @todo there's something going wrong here.
+		 * moving a field to another tab when there's only the fullname field fails.
+		 */
+		parse_str( $_POST['field_order'], $order );
+		$fields = (array) $order['draggable_field'];
+
+		foreach ( $fields as $position => $field_id ) {
+			xprofile_update_field_position( (int) $field_id, (int) $position, (int) $field_group_id );
+		}
+
+		wp_send_json_success();
 	}
 }
 add_action( 'wp_ajax_xprofile_reorder_fields', 'xprofile_ajax_reorder_fields' );
