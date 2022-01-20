@@ -545,6 +545,21 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	#whats-new-toolbar .post-elements-buttons-item.disable,
+	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
+		pointer-events: initial;
+
+		a.toolbar-button {
+			cursor: default;
+
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+
+	}
+
 	#whats-new-content-placeholder,
 	#whats-new-content {
 		padding: 0;
@@ -614,7 +629,7 @@
 		}
 
 		.whats-new-scroll-view {
-			max-height: calc(100vh - 200px);
+			max-height: calc(100vh - 280px);
 			overflow: auto;
 			width: 100%;
 			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup

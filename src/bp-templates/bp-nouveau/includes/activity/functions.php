@@ -90,6 +90,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'errors'           => array(
 			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => __( 'An error occurred while saving your post.', 'buddyboss' ),
+			'media_fail'         => __( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
 	);
 

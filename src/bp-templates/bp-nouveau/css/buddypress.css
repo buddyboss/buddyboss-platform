@@ -1546,6 +1546,30 @@ a.layout-grid-view {
   border-top: 1px solid #eee;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active),
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
+  pointer-events: initial;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button {
+  cursor: default;
+}
+
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:before, .bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:after,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:before,
+.bp-nouveau-activity-form-placeholder- #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:after,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:before,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.disable a.toolbar-button:after,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:before,
+.activity-update-form #whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) a.toolbar-button:after {
+  display: none;
+}
+
 .bp-nouveau-activity-form-placeholder- #whats-new-content-placeholder,
 .bp-nouveau-activity-form-placeholder- #whats-new-content,
 .activity-update-form #whats-new-content-placeholder,
@@ -1627,7 +1651,7 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .whats-new-scroll-view,
 .activity-update-form.modal-popup .whats-new-scroll-view {
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 280px);
   overflow: auto;
   width: 100%;
   overscroll-behavior: contain;

@@ -169,13 +169,13 @@ window.bp = window.bp || {};
 
 						// Make tool box button disable.
 						if ( tool_box.find( '#activity-media-button' ) ) {
-							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-document-button' ) ) {
-							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-video-button' ) ) {
-							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
 							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active' );
@@ -195,13 +195,13 @@ window.bp = window.bp || {};
 							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
 						if ( tool_box.find( '#activity-document-button' ) ) {
-							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-video-button' ) ) {
-							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
-							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						// END Toolbox Button.
 
@@ -250,16 +250,16 @@ window.bp = window.bp || {};
 
 						// Make tool box button disable.
 						if ( tool_box.find( '#activity-media-button' ) ) {
-							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-video-button' ) ) {
-							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-document-button' ) ) {
 							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
-							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						// END Toolbox Button.
 
@@ -312,16 +312,16 @@ window.bp = window.bp || {};
 
 						// Make tool box button disable.
 						if ( tool_box.find( '#activity-media-button' ) ) {
-							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-document-button' ) ) {
-							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#activity-video-button' ) ) {
 							tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
 						}
 						if ( tool_box.find( '#activity-gif-button' ) ) {
-							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						// END Toolbox Button.
 
@@ -1047,6 +1047,7 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'media' );
+							self.model.unset( 'errors' );
 						}
 					}
 				);
@@ -1269,6 +1270,7 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'document' );
+							self.model.unset( 'errors' );
 						}
 					}
 				);
@@ -1505,6 +1507,7 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'video' );
+							self.model.unset( 'errors' );
 						}
 					}
 				);
@@ -1673,6 +1676,7 @@ window.bp = window.bp || {};
 
 			destroy: function () {
 				this.model.set( 'gif_data', {} );
+				this.model.unset( 'errors' );
 				this.el.style.backgroundImage = '';
 				this.el.style.backgroundSize  = '';
 				this.el.style.minHeight          = '0px';
@@ -3261,6 +3265,7 @@ window.bp = window.bp || {};
 			id: 'whats-new-toolbar',
 			template: bp.template( 'whats-new-toolbar' ),
 			events: {
+				'click .post-elements-buttons-item.disable .toolbar-button': 'disabledButton',
 				'click #activity-link-preview-button': 'toggleURLInput',
 				'click #activity-gif-button': 'toggleGifSelector',
 				'click #activity-media-button': 'toggleMediaSelector',
@@ -3321,6 +3326,12 @@ window.bp = window.bp || {};
 
 			toggleGifSelector: function ( e ) {
 				e.preventDefault();
+
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( parentElement.hasClass( 'no-click' ) || parentElement.hasClass( 'disable' ) ) {
+					return;
+				}
+
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
 				this.closeVideoSelector();
@@ -3348,8 +3359,8 @@ window.bp = window.bp || {};
 
 			toggleMediaSelector: function ( e ) {
 				e.preventDefault();
-
-				if( !$( '.activity-form' ).hasClass( 'focus-in' ) ) {
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( !$( '.activity-form' ).hasClass( 'focus-in' ) || parentElement.hasClass( 'no-click' ) || parentElement.hasClass( 'disable' ) ) {
 					return;
 				}
 
@@ -3364,7 +3375,8 @@ window.bp = window.bp || {};
 			toggleDocumentSelector: function ( e ) {
 				e.preventDefault();
 
-				if( !$( '.activity-form' ).hasClass( 'focus-in' ) ) {
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( !$( '.activity-form' ).hasClass( 'focus-in' ) || parentElement.hasClass( 'no-click' ) || parentElement.hasClass( 'disable' )) {
 					return;
 				}
 
@@ -3379,7 +3391,8 @@ window.bp = window.bp || {};
 			toggleVideoSelector: function ( e ) {
 				e.preventDefault();
 
-				if( !$( '.activity-form' ).hasClass( 'focus-in' ) ) {
+				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
+				if( !$( '.activity-form' ).hasClass( 'focus-in' ) || parentElement.hasClass( 'no-click' ) || parentElement.hasClass( 'disable' )) {
 					return;
 				}
 
@@ -3464,6 +3477,10 @@ window.bp = window.bp || {};
 				} else {
 					event.currentTarget.classList.add( 'active' );
 				}
+			},
+
+			disabledButton: function () {
+				Backbone.trigger( 'onError', BP_Nouveau.activity.params.errors.media_fail, 'info noMediaError' );
 			}
 		}
 	);
@@ -3797,8 +3814,16 @@ window.bp = window.bp || {};
 				this.model.on('change:video change:document change:media change:gif_data', this.postValidate, this);
 
 				// Remove feedback.
-				this.cleanFeedback();
-				this.$el.removeClass( 'has-feedback' );
+				var self = this;
+				_.each(
+					this.views._views[ '' ],
+					function ( view ) {
+						if ( 'message-feedabck' === view.$el.prop( 'id' ) && !view.$el.hasClass( 'noMediaError' )) { //Do not remove Media error message
+							self.cleanFeedback();
+							self.$el.removeClass( 'has-feedback' );
+						}
+					}
+				);
 
 				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
@@ -4430,11 +4455,13 @@ window.bp = window.bp || {};
 				}
 			},
 
-			onError: function ( error ) {
+			onError: function ( error, type ) {
+				var erroType = type || 'error';
+				this.model.unset( 'errors' );
 				this.model.set(
 					'errors',
 					{
-						type: 'error',
+						type: erroType,
 						value: error
 					}
 				);
