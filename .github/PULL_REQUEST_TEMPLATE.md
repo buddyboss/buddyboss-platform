@@ -1,37 +1,15 @@
-### All Submissions:
+### Jira Issue:
+<!-- Paste Jira issue link -->
 
-* [ ] Have you followed the [Pull Requests Guidelines](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Pull-Requests#pull-request-guidelines)?
-* [ ] Does your code follow the [WordPress' Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/)?
-* [ ] Have you checked to ensure there aren't other open [Pull Requests](../pulls) for the same update/change?
 
-<!-- Mark completed items with an [x] -->
+### General Note
+Keep all conversations related to this PR in the associated Jira issue(s). Do NOT add comment on this PR or edit this PR’s description.
 
-<!-- You can erase any parts of this template not applicable to your Pull Request. -->
+### Notes to Developer
+* Ensure the IDs (i.e. PROD-1) of all associated Jira issues are reference in this PR’s title
+* Ensure that you have achieved the Definition of Done before submitting for review
+* When this PR is ready for review, move the associate Jira issue(s) to “Needs Review” (or “Code Review” for Dev Tasks)
 
-### Changes proposed in this Pull Request:
-
-<!-- Describe the changes made to this Pull Request and the reason for such changes. -->
-
-Fixes #ISSUE_NUMBER .
-
-### How to test the changes in this Pull Request:
-
-1.
-2.
-3.
-
-### Proof Screenshots or Video
-
-<!-- Add proof video or screenshots of what is fixed or added -->
-
-### Other information:
-
-* [ ] Have you added an explanation of what your changes do and why you'd like us to include them?
-* [ ] Have you written new tests for your changes, as applicable?
-* [ ] Have you successfully run tests with your changes locally?
-
-<!-- Mark completed items with an [x] -->
-
-### Changelog entry
-
-> Enter a summary of all changes on this Pull Request. This will appear in the changelog if accepted.
+### Notes to Reviewer
+* Ensure that the Definition of Done have been achieved before approving a PR
+* When this PR is approved, move the associated Jira issue(s) to “Needs QA” (or “Approved” for Dev Tasks)
