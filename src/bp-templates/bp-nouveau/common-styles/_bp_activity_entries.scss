@@ -856,6 +856,11 @@ ul.medium-editor-toolbar-actions {
 	.activity-video-preview & {
 		float: none;
 		margin: 0 auto;
+
+		p iframe {
+			max-width: 100%;
+		}
+
 	}
 }
 

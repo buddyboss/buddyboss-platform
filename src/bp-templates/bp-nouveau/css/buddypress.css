@@ -3541,6 +3541,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin: 0 auto;
 }
 
+.activity-video-preview .activity-link-preview-excerpt p iframe {
+  max-width: 100%;
+}
+
 .activity-link-preview-image {
   margin-bottom: 10px;
 }
