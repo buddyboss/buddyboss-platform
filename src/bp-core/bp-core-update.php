@@ -349,6 +349,11 @@ function bp_version_updater() {
 		if ( $raw_db_version < 17951 ) {
 			bb_update_to_1_8_1();
 		}
+
+		// Version 8.0.0.
+		if ( $raw_db_version < 18500 ) {
+			bp_update_to_8_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1385,5 +1390,70 @@ function bb_update_to_1_8_1() {
 	if ( function_exists( 'bb_email_queue' ) ) {
 		// Install email queue table.
 		bb_email_queue()::create_db_table();
+	}
+}
+
+/**
+ * Retuns needed the fullname field ID for an update task.
+ *
+ * @since 8.0.0
+ *
+ * @return int The fullname field ID.
+ */
+function bp_get_fullname_field_id_for_update()
+{
+	/**
+	 * The xProfile component is active by default on new installs, even if it
+	 * might be inactive during this update, we need to set the custom visibility
+	 * for the default field, in case the Administrator decides to reactivate it.
+	 */
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+	return (int) $wpdb->get_var($wpdb->prepare("SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = %s", addslashes(bp_get_option('bp-xprofile-fullname-field-name'))));
+}
+
+/**
+ * 8.0.0 update routine.
+ *
+ * - Edit the `new_avatar` activity type's component to `members`.
+ * - Upgrade Primary xProfile Group's fields to signup fields.
+ *
+ * @since 8.0.0
+ */
+function bp_update_to_8_0()
+{
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+
+	// Check if we need to create default signup fields.
+	$field_id            = bp_get_fullname_field_id_for_update();
+	$has_signup_position = (bool) $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$bp_prefix}bp_xprofile_meta WHERE meta_key = 'signup_position' AND object_type = 'field' AND object_id = %d", $field_id));
+	if (bp_get_signup_allowed() && !$has_signup_position) {
+		// Get the Primary Group's fields.
+		$signup_fields = $wpdb->get_col("SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE group_id = 1 ORDER BY field_order ASC");
+
+		// Migrate potential signup fields.
+		if ($signup_fields) {
+			$signup_position = 0;
+			foreach ($signup_fields as $signup_field_id) {
+				$signup_position += 1;
+
+				$wpdb->insert(
+					$bp_prefix . 'bp_xprofile_meta',
+					array(
+						'object_id'   => $signup_field_id,
+						'object_type' => 'field',
+						'meta_key'    => 'signup_position',
+						'meta_value'  => $signup_position,
+					),
+					array(
+						'%d',
+						'%s',
+						'%s',
+						'%d',
+					)
+				);
+			}
+		}
 	}
 }
