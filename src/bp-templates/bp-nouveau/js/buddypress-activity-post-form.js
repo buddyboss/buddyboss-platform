@@ -1000,6 +1000,7 @@ window.bp = window.bp || {};
 									_results.push( node.textContent = message );
 								}
 
+								// Unset media if all uploaded media has error
 								response.data.menu_order_error_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview.dz-error' ).length;
 								if ( self.media.length === response.data.menu_order_error_count ) {
 									self.model.unset( 'media' );	
@@ -1041,6 +1042,12 @@ window.bp = window.bp || {};
 									self.media.splice( i, 1 );
 									self.model.set( 'media', self.media );
 								}
+							}
+
+							// Unset media if all uploaded media has error
+							var media_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
+							if ( self.media.length === media_error_count ) {
+								self.model.unset( 'media' );	
 							}
 						}
 
