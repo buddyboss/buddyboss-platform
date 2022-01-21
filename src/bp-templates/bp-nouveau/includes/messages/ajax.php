@@ -814,10 +814,14 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 	}
 
+	add_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
+
 	// Simulate the loop.
 	if ( ! bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
 		// Remove the bp_current_action() override.
 		$bp->current_action = $reset_action;
+
+		remove_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
 
 		wp_send_json_error(
 			array(
@@ -826,6 +830,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			)
 		);
 	}
+
+	remove_filter( 'bb_messages_recipients_per_page', 'bb_get_user_message_recipients' );
 
 	// remove the message thread filter.
 	if ( 'starred' === $bp->current_action ) {
@@ -2852,4 +2858,8 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 			'type'    => 'success',
 		)
 	);
+}
+
+function bb_get_user_message_recipients() {
+	return 5;
 }
