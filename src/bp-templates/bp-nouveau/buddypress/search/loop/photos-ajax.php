@@ -8,7 +8,6 @@
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
 
 $listing_class  = '';
 $attachment_id  = bp_get_media_attachment_id();
