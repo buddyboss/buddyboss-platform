@@ -9,7 +9,8 @@
  * @version 1.0.0
  */
 
-global $current_comment; ?>
+global $current_comment;
+?>
 <li class="bp-search-item bp-search-item_posts_comments">
 	<div class="list-wrap">
 		<div class="item-avatar">
