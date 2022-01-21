@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for displaying the search results of the photos ajax
+ * Media search Ajax Template
  *
  * This template can be overridden by copying it to yourtheme/buddypress/search/loop/photos-ajax.php.
  *
@@ -9,12 +9,6 @@
  * @version 1.0.0
  */
 ?>
-<?php
-/**
- * Media search Ajax Template
- *
- * @package BuddyBoss\Core
- */
 
 $listing_class  = '';
 $attachment_id  = bp_get_media_attachment_id();
