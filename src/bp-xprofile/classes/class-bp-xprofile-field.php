@@ -1435,6 +1435,53 @@ class BP_XProfile_Field {
 	}
 
 	/**
+	 * Gets field type supports.
+	 *
+	 * @since 8.0.0
+	 *
+	 * @return bool[] Supported features.
+	 */
+	public function get_field_type_supports() {
+		$supports = array(
+			'switch_fieldtype'        => true,
+			'required'                => true,
+			'do_autolink'             => true,
+			'allow_custom_visibility' => true,
+			'member_types'            => true,
+			'signup_position'         => true,
+		);
+
+		if ( isset( $this->type_obj ) && $this->type_obj ) {
+			$field_type = $this->type_obj;
+
+			if ( isset( $field_type::$supported_features ) ) {
+				$supports = array_merge( $supports, $field_type::$supported_features );
+			}
+		}
+
+		return $supports;
+	}
+
+	/**
+	 * Checks whether the field type supports the requested feature.
+	 *
+	 * @since 8.0.0
+	 *
+	 * @param string $support The name of the feature.
+	 * @return boolean True if the field type supports the feature. False otherwise.
+	 */
+	public function field_type_supports( $support = '' ) {
+		$retval   = true;
+		$features = $this->get_field_type_supports();
+
+		if ( isset( $features[ $support ] ) ) {
+			$retval = $features[ $support ];
+		}
+
+		return $retval;
+	}
+
+	/**
 	 * Private method used to display the submit metabox.
 	 *
 	 * @since BuddyPress 2.3.0
