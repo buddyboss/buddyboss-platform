@@ -2,6 +2,8 @@
 /**
  * BuddyBoss - Groups Send Invites
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/invite/send-invites.php.
+ *
  * @since BuddyBoss 1.2.3
  * @version 1.2.3
  */

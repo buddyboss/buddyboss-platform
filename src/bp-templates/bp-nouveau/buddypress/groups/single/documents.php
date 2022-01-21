@@ -2,6 +2,10 @@
 /**
  * BuddyBoss - Groups Document
  *
+ * This template is used to render group documents.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/documents.php.
+ *
  * @since BuddyBoss 1.4.0
  * @version 1.4.0
  */
