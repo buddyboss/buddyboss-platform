@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Media Privacy Change
+ * The template for media privacy change
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/media/media-privacy.php.
  *
  * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
+ * @version 1.5.6
  */
 
 $album_privacy = '';

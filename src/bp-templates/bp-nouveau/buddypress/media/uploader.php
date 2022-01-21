@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Uploader
+ * The template for media uploader
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/media/uploader.php.
  *
  * @since BuddyBoss 1.0.0
+ * @version [BBVERSION]
  */
 ?>
 <div id="bp-media-uploader" style="display: none;" class="bp-media-photo-uploader">
