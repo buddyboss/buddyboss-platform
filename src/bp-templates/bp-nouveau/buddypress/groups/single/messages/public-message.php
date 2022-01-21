@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages/public-message.php.
  *
  * @since BuddyBoss 1.5.7
- * @version 1.5.7
+ * @version [BBVERSION]
  */
 
 $args = array(

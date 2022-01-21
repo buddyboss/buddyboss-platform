@@ -2,6 +2,10 @@
 /**
  * BuddyBoss - Moderation Reported Content entry
  *
+ * This template is used to render each reported content entry.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/moderation/moderation-reported-content-entry.php.
+ *
  * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  */
