@@ -215,29 +215,30 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
-		'whatsnewPlaceholder' => sprintf( __( "Share what's on your mind, %s...", 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
-		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
-		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
-		'postUpdateButton'    => __( 'Post', 'buddyboss' ),
-		'updatePostButton'    => __( 'Update Post', 'buddyboss' ),
-		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
-		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
-		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
-		'loadingMore'         => __( 'Loading...', 'buddyboss' ),
+		'whatsnewPlaceholder' => sprintf( esc_html__( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
+		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
+		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
+		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
+		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
+		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
+		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
+		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
+		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( __( "Write something to %s...", 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
     }
 
 	if ( bp_is_group() ) {
-		$activity_strings['whatsnewPlaceholder'] = __( 'Share something with the group...', 'buddyboss' );
+		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
+
 		$activity_params = array_merge(
 			$activity_params,
 			array(
-				'object'      => 'group',
-				'item_id'     => bp_get_current_group_id(),
-				'item_name'   => bp_get_current_group_name(),
+				'object'       => 'group',
+				'item_id'      => bp_get_current_group_id(),
+				'item_name'    => bp_get_current_group_name(),
 				'group_avatar' => bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
