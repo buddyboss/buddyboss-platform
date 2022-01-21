@@ -1,6 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Group Invites )
+ * The template for members settings ( Group Invites )
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/group-invites.php.
  *
  * @since BuddyPress 3.0.0
  * @version 3.0.0

@@ -1,6 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Capabilities )
+ * The template for members settings ( Capabilities )
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/capabilities.php.
  *
  * @since BuddyPress 3.0.0
  * @version 3.1.0
