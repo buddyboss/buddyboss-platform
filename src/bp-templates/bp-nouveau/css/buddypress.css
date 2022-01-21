@@ -1101,7 +1101,7 @@ a.layout-grid-view {
   cursor: default;
 }
 
-#bp-activity-privacy-point.bp-activity-focus-group-active i.bb-icon-angle-down {
+#bp-activity-privacy-point.bp-activity-focus-group-active i.bb-icon-chevron-down {
   display: none;
 }
 
@@ -1113,7 +1113,7 @@ a.layout-grid-view {
   flex: 1;
 }
 
-#bp-activity-privacy-point .bb-icon-angle-down {
+#bp-activity-privacy-point .bb-icon-chevron-down {
   margin-left: 2px;
 }
 

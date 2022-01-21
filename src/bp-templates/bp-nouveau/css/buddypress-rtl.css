@@ -1101,7 +1101,7 @@ a.layout-grid-view {
   cursor: default;
 }
 
-#bp-activity-privacy-point.bp-activity-focus-group-active i.bb-icon-angle-down {
+#bp-activity-privacy-point.bp-activity-focus-group-active i.bb-icon-chevron-down {
   display: none;
 }
 
@@ -1113,7 +1113,7 @@ a.layout-grid-view {
   flex: 1;
 }
 
-#bp-activity-privacy-point .bb-icon-angle-down {
+#bp-activity-privacy-point .bb-icon-chevron-down {
   margin-right: 2px;
 }
 
@@ -20690,7 +20690,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
