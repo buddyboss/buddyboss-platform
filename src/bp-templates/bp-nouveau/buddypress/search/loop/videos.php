@@ -5,18 +5,8 @@
  * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos.php.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.7.0
  * @version 1.0.0
- */
-?>
-<?php
-/**
- * Video search Template
- *
- * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos.php.
- *
- * @package BuddyBoss\Core
- * @version 1.7.0
  */
 
 $listing_class = '';
