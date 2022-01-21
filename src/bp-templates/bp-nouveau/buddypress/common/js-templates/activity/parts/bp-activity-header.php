@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity header
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-header.php.
+ *
+ * @since [BBVERSION]
+ * @version [BBVERSION]
+ */
+ 
+ ?>
 <script type="text/html" id="tmpl-activity-header">
     <h3>
         <span class="activity-header-data">
