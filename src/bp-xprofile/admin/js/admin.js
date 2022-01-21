@@ -473,6 +473,8 @@ function sortFieldOptions( sortElem ){
 jQuery( document ).ready(
 	function() {
 
+		    var isMovingToSignups = false;
+
 			// Set focus in Field Title, if we're on the right page
 			jQuery( '#bp-xprofile-add-field #title' ).focus();
 
@@ -728,9 +730,11 @@ jQuery( document ).ready(
 						}
 					},
 					over: function() {
+						isMovingToSignups = true;
 						jQuery( this ).addClass( 'drop-candidate' );
 					},
 					out: function() {
+						isMovingToSignups = false;
 						jQuery( this ).removeClass( 'drop-candidate' );
 					}
 					}
