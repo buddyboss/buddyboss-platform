@@ -1,6 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Single Profile Edit
+ * The template for members single profile edit
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/edit.php.
  *
  * @since BuddyPress 3.0.0
  * @version 3.1.0

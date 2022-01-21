@@ -1,6 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Profile Loop
+ * The template for members profile loop
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/profile-loop.php.
  *
  * @since BuddyPress 3.0.0
  * @version 3.1.0
