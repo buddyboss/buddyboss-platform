@@ -1000,9 +1000,8 @@ window.bp = window.bp || {};
 									_results.push( node.textContent = message );
 								}
 
-								response.data.menu_order_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview' ).length;
 								response.data.menu_order_error_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview.dz-error' ).length;
-								if ( response.data.menu_order_count === response.data.menu_order_error_count ) {
+								if ( self.media.length === response.data.menu_order_error_count ) {
 									self.model.unset( 'media' );	
 								}
 								return _results;
