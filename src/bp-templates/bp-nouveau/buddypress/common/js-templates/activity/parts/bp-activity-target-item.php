@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php.
  *
- * @since [BBVERSION]
+ * @since 1.0.0
  * @version [BBVERSION]
  */
 
