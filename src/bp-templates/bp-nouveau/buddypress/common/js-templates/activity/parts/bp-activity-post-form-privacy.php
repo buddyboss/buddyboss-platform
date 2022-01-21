@@ -22,7 +22,7 @@
 						</span>
 					</div>
 				</div>
-				<span class="privacy-radio"><input type="radio" id="<?php echo esc_attr( $key ); ?>" class="bp-activity-privacy__input" name="privacy" value="<?php echo esc_attr( $key ); ?>" data-title="<?php echo esc_attr( $privacy ); ?>" <?php if( 'public' === $key ) echo 'checked'; ?>><span></span></span>
+				<span class="privacy-radio"><input type="radio" id="<?php echo esc_attr( $key ); ?>" class="bp-activity-privacy__input" name="privacy" value="<?php echo esc_attr( $key ); ?>" data-title="<?php echo esc_attr( $privacy ); ?>" <?php if( 'public' === $key ) echo esc_attr( 'checked' ); ?>><span></span></span>
 			</label>
 		<?php endforeach; ?>
 		
