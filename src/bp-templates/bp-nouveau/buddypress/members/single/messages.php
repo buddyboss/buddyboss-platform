@@ -1,7 +1,10 @@
 <?php
 /**
- * BuddyBoss - Users Messages
+ * The template for users messages
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/messages.php.
+ *
+ * @since BuddyPress 1.0.0
  * @version 3.0.0
  */
 ?>

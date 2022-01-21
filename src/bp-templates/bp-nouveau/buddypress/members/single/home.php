@@ -1,8 +1,10 @@
 <?php
 /**
- * BuddyBoss - Members Home
+ * The template for members home
  *
- * @since BuddyPress   1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/home.php.
+ *
+ * @since BuddyPress 1.0.0
  * @version 3.0.0
  */
 ?>

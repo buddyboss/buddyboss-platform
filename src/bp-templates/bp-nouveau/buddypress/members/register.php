@@ -1,6 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members/Blogs Registration forms
+ * The template for members/blogs registration forms
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/register.php.
  *
  * @since BuddyPress 3.0.0
  * @version 3.1.0

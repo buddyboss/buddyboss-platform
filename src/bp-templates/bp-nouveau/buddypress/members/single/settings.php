@@ -1,7 +1,10 @@
 <?php
 /**
- * BuddyBoss - Users Settings
+ * The template for users profile
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings.php.
+ *
+ * @since BuddyPress 1.0.0
  * @version 3.0.0
  */
 

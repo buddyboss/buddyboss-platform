@@ -1,6 +1,8 @@
 <?php
 /**
- * BuddyBoss - Users Connections
+ * The template for users connections
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/friends.php.
  *
  * @since BuddyPress 3.0.0
  * @version 3.0.0
