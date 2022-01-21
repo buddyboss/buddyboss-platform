@@ -2,6 +2,8 @@
 /**
  * BP Nouveau Group's cover photo template.
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/admin/group-cover-image.php.
+ *
  * @since BuddyPress 3.0.0
  * @version 1.0.0
  */
