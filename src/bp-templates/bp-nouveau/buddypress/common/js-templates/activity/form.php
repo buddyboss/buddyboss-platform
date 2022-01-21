@@ -2,7 +2,10 @@
 /**
  * Activity Post form JS Templates
  *
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/form.php.
+ *
+ * @since   1.0.0
+ * @version [BBVERSION]
  */
 
 /**
