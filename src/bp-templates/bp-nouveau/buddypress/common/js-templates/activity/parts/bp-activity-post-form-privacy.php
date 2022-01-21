@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity post form privacy
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php.
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-post-form-privacy">
 	<div class="bp-activity-privacy__list">
 		<?php foreach( bp_activity_get_visibility_levels() as $key => $privacy ) : ?>

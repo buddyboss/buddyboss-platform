@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity media
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-media.php.
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-media">
     <div class="dropzone closed media-dropzone" id="activity-post-media-uploader"></div>
     <div class="activity-post-default-template" style="display:none;">

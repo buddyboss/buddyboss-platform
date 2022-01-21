@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity link preview
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php.
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>

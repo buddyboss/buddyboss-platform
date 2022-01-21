@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity target item
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php.
+ *
+ * @since [BBVERSION]
+ * @version [BBVERSION]
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-target-item">
 	<label for="bp-item-opt-{{data.id}}">
 		<# if ( data.selected ) { #>
