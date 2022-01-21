@@ -3,6 +3,7 @@
  * BuddyBoss - Groups Invites
  *
  * @since BuddyBoss 1.2.3
+ * @version 1.2.3
  */
 
 switch ( bp_get_group_current_invite_tab() ) :

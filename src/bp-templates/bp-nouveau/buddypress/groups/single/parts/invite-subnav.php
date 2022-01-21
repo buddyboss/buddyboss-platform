@@ -3,6 +3,7 @@
  * BuddyPress Single Groups Invites Navigation
  *
  * @since BuddyBoss 1.2.3
+ * @version 1.2.3
  */
 ?>
 

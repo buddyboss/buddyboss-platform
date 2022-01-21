@@ -3,7 +3,7 @@
  * BuddyBoss - Groups Home
  *
  * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @version 1.0.0
  */
 
 if ( bp_has_groups() ) :

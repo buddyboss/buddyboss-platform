@@ -3,7 +3,7 @@
  * BuddyBoss - Groups Header
  *
  * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @version 1.0.0
  */
 
 $group_link       = bp_get_group_permalink();

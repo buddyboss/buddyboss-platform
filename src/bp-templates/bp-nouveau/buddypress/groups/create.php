@@ -3,7 +3,7 @@
  * BuddyBoss - Groups Create
  *
  * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @version 1.0.0
  */
 
 bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
