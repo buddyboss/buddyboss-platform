@@ -1163,7 +1163,8 @@ a.layout-grid-view {
 #whats-new-form.focus-in--privacy .whats-new-form-header,
 #whats-new-form.focus-in--privacy #editor-toolbar,
 #whats-new-form.focus-in--privacy #whats-new-attachments,
-#whats-new-form.focus-in--privacy .whats-new-form-footer {
+#whats-new-form.focus-in--privacy .whats-new-form-footer,
+#whats-new-form.focus-in--privacy #message-feedabck {
   display: none;
 }
 
