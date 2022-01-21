@@ -2,7 +2,10 @@
 /**
  * Video search Ajax Template
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/videos-ajax.php.
+ *
  * @package BuddyBoss\Core
+ * @version 1.7.0
  */
 
 $listing_class = '';

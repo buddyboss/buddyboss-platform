@@ -2,7 +2,10 @@
 /**
  * Video search Template
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos.php.
+ *
  * @package BuddyBoss\Core
+ * @version 1.7.0
  */
 
 $listing_class = '';
