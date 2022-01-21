@@ -1,5 +1,16 @@
 <?php
 /**
+ * Template for displaying the search results of the videos
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos.php.
+ *
+ * @package BuddyBoss\Core
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
+<?php
+/**
  * Video search Template
  *
  * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos.php.

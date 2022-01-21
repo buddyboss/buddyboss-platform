@@ -1,3 +1,14 @@
+<?php
+/**
+ * Template for displaying the search results of the message
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/message.php.
+ *
+ * @package BuddyBoss\Core
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
 <?php global $current_message; ?>
 <li class="bp-search-item bp-search-item_message">
 	<p class="message_participants">

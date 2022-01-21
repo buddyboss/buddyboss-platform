@@ -1,4 +1,15 @@
 <?php
+/**
+ * Template for displaying the search results of the courses
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/sfwd-courses.php.
+ *
+ * @package BuddyBoss\Core
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
+<?php
 $course_id = get_the_ID();
 $total = bp_search_get_total_lessons_count( $course_id );
 $meta = get_post_meta( $course_id, '_sfwd-courses', true );

@@ -1,5 +1,16 @@
 <?php
 /**
+ * Template for displaying the search results of the photos ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/photos-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
+<?php
+/**
  * Media search Ajax Template
  *
  * @package BuddyBoss\Core
