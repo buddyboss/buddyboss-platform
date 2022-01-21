@@ -2,9 +2,12 @@
 /**
  * BuddyBoss - Video Uploader
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/uploader.php.
+ *
  * @package BuddyBoss\Core
  *
  * @since BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 ?>
