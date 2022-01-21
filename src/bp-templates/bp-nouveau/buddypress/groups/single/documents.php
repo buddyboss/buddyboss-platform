@@ -3,6 +3,7 @@
  * BuddyBoss - Groups Document
  *
  * @since BuddyBoss 1.4.0
+ * @version 1.4.0
  */
 ?>
 

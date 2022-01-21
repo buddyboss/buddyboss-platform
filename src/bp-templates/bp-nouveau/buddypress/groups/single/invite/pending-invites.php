@@ -3,6 +3,7 @@
  * BuddyBoss - Groups Pending Invites
  *
  * @since BuddyBoss 1.2.3
+ * @version 1.2.3
  */
 
 ?>

@@ -3,6 +3,7 @@
  * BuddyBoss - Groups Send Invites
  *
  * @since BuddyBoss 1.2.3
+ * @version 1.2.3
  */
 
 ?>

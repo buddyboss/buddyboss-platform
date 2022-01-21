@@ -3,6 +3,7 @@
  * BuddyBoss - Groups Media
  *
  * @since BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 ?>
 

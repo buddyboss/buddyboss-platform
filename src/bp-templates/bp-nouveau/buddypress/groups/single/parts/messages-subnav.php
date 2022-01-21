@@ -3,6 +3,7 @@
  * BuddyPress Single Groups Messages Navigation
  *
  * @since BuddyBoss 1.5.7
+ * @version 1.5.7
  */
 ?>
 

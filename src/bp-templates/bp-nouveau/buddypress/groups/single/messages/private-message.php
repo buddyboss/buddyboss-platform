@@ -3,6 +3,7 @@
  * BP Nouveau Group's Private Message template.
  *
  * @since BuddyBoss 1.5.7
+ * @version 1.5.7
  */
 
 $args = array(
