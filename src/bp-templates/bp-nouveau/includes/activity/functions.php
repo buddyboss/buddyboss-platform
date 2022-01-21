@@ -88,9 +88,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
 		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
 		'errors'           => array(
-			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
-			'post_fail'         => __( 'An error occurred while saving your post.', 'buddyboss' ),
-			'media_fail'         => __( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
+			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
+			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
+			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
 	);
 
@@ -175,12 +175,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		// the groups component is active & the current user is at least a member of 1 group
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                      => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder'  => __( 'Search groups', 'buddyboss' ),
+				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
+				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
 				'priority'                  => 10,
-				'loading_group_placeholder' => __( 'Loading groups...', 'buddyboss' ),
-				'finding_group_placeholder' => __( 'Finding groups...', 'buddyboss' ),
-				'no_groups_found'           => __( 'No groups found.', 'buddyboss' ),
+				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss' ),
+				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss' ),
+				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss' ),
 			);
 			$group_args = array(
 				'user_id'     => bp_loggedin_user_id(),
