@@ -1620,10 +1620,12 @@ abstract class BBP_Converter_Base {
 			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value > 0", '_bbp_old_forum_parent_id' );
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$parent_id = $this->callback_forumid( $row->meta_value );
@@ -1646,10 +1648,12 @@ abstract class BBP_Converter_Base {
 			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_sticky_status_id', 'sticky' );
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_stick_topic( $row->value_id );
@@ -1671,10 +1675,12 @@ abstract class BBP_Converter_Base {
 			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_sticky_status_id', 'super-sticky' );
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_stick_topic( $row->value_id, true );
@@ -1696,10 +1702,12 @@ abstract class BBP_Converter_Base {
 			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_bbp_old_closed_status_id', 'closed' );
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_close_topic( $row->value_id );
@@ -1721,10 +1729,12 @@ abstract class BBP_Converter_Base {
 			: $this->wpdb->prepare( "SELECT post_id AS value_id, meta_value FROM {$this->wpdb->postmeta} WHERE meta_key = %s AND meta_value > 0", '_bbp_old_reply_to_id' );
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$reply_to = $this->callback_reply_to( $row->meta_value );
@@ -1741,7 +1751,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.6.0 bbPress (r5538)
 	 */
 	public function convert_anonymous_topic_authors( $start = 1 ) {
-
 		$has_update = false;
 
 		if ( ! empty( $this->sync_table ) ) {
@@ -1769,10 +1778,12 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$anonymous_topic_author_id = 0;
@@ -1792,7 +1803,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.6.0 bbPress (r5538)
 	 */
 	public function convert_anonymous_reply_authors( $start = 1 ) {
-
 		$has_update = false;
 
 		if ( ! empty( $this->sync_table ) ) {
@@ -1820,10 +1830,12 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Set max row in '_bbp_converter_rows_in_step' variable.
-		$this->count_rows_by_results( $query );
+		if ( 0 === $start ) {
+			$this->count_rows_by_results( $query );
+		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT {$start}, {$this->max_rows}" );
+		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$anonymous_reply_author_id = 0;
