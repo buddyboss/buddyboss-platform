@@ -1160,6 +1160,10 @@ a.layout-grid-view {
   display: block;
 }
 
+#whats-new-form.focus-in--privacy #activity-header {
+  margin-bottom: 0 !important;
+}
+
 #whats-new-form.focus-in--privacy .whats-new-form-header,
 #whats-new-form.focus-in--privacy #editor-toolbar,
 #whats-new-form.focus-in--privacy #whats-new-attachments,
