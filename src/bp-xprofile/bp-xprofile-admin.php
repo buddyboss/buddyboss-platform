@@ -389,11 +389,11 @@ endif;
 				?>
 				<div id="tabs-signup-group"" class="tab-wrapper">
 					<div class="tab-toolbar">
-						<p class="description"><?php esc_html_e( 'Drag fields from other field sets and drop them on the above tab to include them in your registration form.', 'buddypress' ); ?></a>
+						<p class="description"><?php esc_html_e( 'Drag fields from other field sets and drop them on the above tab to include them in your registration form.', 'buddyboss' ); ?></a>
 					</div>
 					<fieldset id="signup-fields" class="connectedSortable field-group" aria-live="polite" aria-atomic="true" aria-relevant="all">
 						<legend class="screen-reader-text">
-							<?php esc_html_e( 'Fields to use into the registration form', 'buddypress' );?>
+							<?php esc_html_e( 'Fields to use into the registration form', 'buddyboss' );?>
 						</legend>
 
 						<?php
@@ -427,14 +427,14 @@ endif;
 
 						if ( ! $has_signup_fields ) {
 							?>
-							<p class="nodrag nofields"><?php esc_html_e( 'There are no registration fields set. The registration form uses the primary group by default.', 'buddypress' ); ?></p>
+							<p class="nodrag nofields"><?php esc_html_e( 'There are no registration fields set. The registration form uses the primary group by default.', 'buddyboss' ); ?></p>
 							<?php
 						}
 						?>
 					</fieldset>
 
 					<?php if ( bp_get_signup_allowed() ) : ?>
-						<p><?php esc_html_e( '* Fields in this field set appear on your registration form.', 'bodduboss' ); ?></p>
+						<p><?php esc_html_e( '* Fields in this field set appear on your registration form.', 'buddyboss' ); ?></p>
 					<?php else : ?>
 						<p>
 							<?php
@@ -445,13 +445,13 @@ endif;
 								$settings_link = sprintf(
 									' <a href="%1$">%2$s</a>.',
 									esc_url( network_admin_url( 'settings.php' ) ),
-									esc_html__( 'Edit settings', 'buddypress' )
+									esc_html__( 'Edit settings', 'buddyboss' )
 								);
 							} elseif ( current_user_can( 'manage_options' ) ) {
 								$settings_link = sprintf(
 									' <a href="%1$s">%2$s</a>.',
 									esc_url( bp_get_admin_url( 'options-general.php' ) ),
-									esc_html__( 'Edit settings', 'buddypress' )
+									esc_html__( 'Edit settings', 'buddyboss' )
 								);
 							}
 
@@ -849,7 +849,7 @@ function xprofile_ajax_reorder_fields() {
 				if ( ! $field->field_type_supports( 'signup_position' ) ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'This field cannot be inserted into the registration form.', 'buddypress' ),
+							'message' => __( 'This field cannot be inserted into the registration form.', 'buddyboss' ),
 						)
 					);
 				}
@@ -890,7 +890,7 @@ function xprofile_ajax_reorder_fields() {
 				} else {
 					wp_send_json_error(
 						array(
-							'message' => __( 'This field has been already added to the registration form.', 'buddypress' ),
+							'message' => __( 'This field has been already added to the registration form.', 'buddyboss' ),
 						)
 					);
 				}
@@ -1134,7 +1134,7 @@ endif;
 				<?php if ( $field->can_delete && ! $is_signup ) : ?>
 
 					<div class="delete-button">
-						<a class="confirm submit-delete deletion" href="<?php echo esc_url( wp_nonce_url( $field_delete_url, 'bp_xprofile_delete_field-' . $field->id, 'bp_xprofile_delete_field' ) ); ?>"><?php _ex( 'Delete', 'Delete field link', 'buddypress' ); ?></a>
+						<a class="confirm submit-delete deletion" href="<?php echo esc_url( wp_nonce_url( $field_delete_url, 'bp_xprofile_delete_field-' . $field->id, 'bp_xprofile_delete_field' ) ); ?>"><?php _ex( 'Delete', 'Delete field link', 'buddyboss' ); ?></a>
 					</div>
 
 				<?php endif; ?>
@@ -1142,7 +1142,7 @@ endif;
 				<?php if ( $field->can_delete && $is_signup ) : ?>
 
 					<div class="delete-button">
-						<a class="submit-delete removal" href="<?php echo esc_attr( sprintf( '#remove_field-%d', $field->id ) ); ?>"><?php echo esc_html_x( 'Remove', 'Remove field link', 'buddypress' ); ?></a>
+						<a class="submit-delete removal" href="<?php echo esc_attr( sprintf( '#remove_field-%d', $field->id ) ); ?>"><?php echo esc_html_x( 'Remove', 'Remove field link', 'buddyboss' ); ?></a>
 					</div>
 
 				<?php endif; ?>
