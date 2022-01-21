@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity header
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php.
+ *
+ * @since [BBVERSION]
+ * @version [BBVERSION]
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-post-case-privacy">
 	<div id="bp-activity-privacy-point" class="{{data.privacy}}">
 		<span class="privacy-point-icon"></span>

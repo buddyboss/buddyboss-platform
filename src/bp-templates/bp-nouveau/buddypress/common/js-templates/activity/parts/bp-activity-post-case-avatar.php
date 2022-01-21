@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity header
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-case-avatar.php.
+ *
+ * @since [BBVERSION]
+ * @version [BBVERSION]
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-post-case-avatar">
 	<# if ( data.display_avatar ) {  #>
 	<div class="activity-post-avatar-container">

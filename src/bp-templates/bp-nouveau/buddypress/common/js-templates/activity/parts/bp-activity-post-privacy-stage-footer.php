@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity header
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php.
+ *
+ * @since [BBVERSION]
+ * @version [BBVERSION]
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-post-privacy-stage-footer">
 	<div class="privacy-status-actions">
 		<input type="button" id="privacy-status-back" class="text-button small" value="<?php esc_html_e( 'Back', 'buddyboss' ); ?>">
