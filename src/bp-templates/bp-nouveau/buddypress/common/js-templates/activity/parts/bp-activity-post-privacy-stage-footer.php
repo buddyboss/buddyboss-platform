@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying activity header
+ * The template for displaying activity post privacy stage footer
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-privacy-stage-footer.php.
  *

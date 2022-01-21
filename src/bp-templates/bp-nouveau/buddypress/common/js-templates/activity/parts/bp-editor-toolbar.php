@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying activity header
+ * The template for displaying edit toolbar
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-editor-toolbar.php.
  *
