@@ -2,7 +2,7 @@
 /**
  * BP Nouveau messages document template
  *
- * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-document.php.
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-attached-gif.php.
  *
  * @since   1.0.0
  * @version 1.0.0

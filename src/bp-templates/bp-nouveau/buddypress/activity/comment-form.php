@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/activity/comment-form.php.
  *
  * @since   BuddyPress 3.0.0
- * @version [BBVERSION]
+ * @version 3.1.1
  */
 
 if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_comment() ) {

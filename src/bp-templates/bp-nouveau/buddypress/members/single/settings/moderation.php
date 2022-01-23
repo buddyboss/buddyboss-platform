@@ -6,7 +6,7 @@
  *
  * @since BuddyBoss 1.5.6
  * @package BuddyBoss
- * @version 1.0.0
+ * @version 2.0.1
  */
 
 switch ( bp_current_action() ) :

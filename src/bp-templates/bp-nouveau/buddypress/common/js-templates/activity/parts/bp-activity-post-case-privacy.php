@@ -4,8 +4,8 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php.
  *
- * @since [BBVERSION]
- * @version [BBVERSION]
+ * @since 1.0.0
+ * @version 1.0.0
  */
 
 ?>
@@ -13,7 +13,7 @@
 	<div id="bp-activity-privacy-point" class="{{data.privacy}}">
 		<span class="privacy-point-icon"></span>
 		<span class="bp-activity-privacy-status">
-			<# if ( data.privacy === 'public' ) {  #>	
+			<# if ( data.privacy === 'public' ) {  #>
 				<?php esc_html_e( 'Public', 'buddyboss' ); ?>
 			<# } else if ( data.privacy === 'loggedin' ) { #>
 				<?php esc_html_e( 'All Members', 'buddyboss' ); ?>
@@ -23,7 +23,7 @@
 				<?php esc_html_e( 'Only Me', 'buddyboss' ); ?>
 			<# } else { #>
 				<?php esc_html_e( 'Group', 'buddyboss' ); ?>
-			<# } #>	
+			<# } #>
 		</span>
 		<i class="bb-icon-chevron-down"></i>
 	</div>
