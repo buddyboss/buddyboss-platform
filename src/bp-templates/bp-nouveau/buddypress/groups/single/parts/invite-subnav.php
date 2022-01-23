@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/groups/single/parts/invite-subnav.php.
  *
  * @since BuddyBoss 1.2.3
- * @version 1.2.3
+ * @version 1.0.0
  */
 ?>
 

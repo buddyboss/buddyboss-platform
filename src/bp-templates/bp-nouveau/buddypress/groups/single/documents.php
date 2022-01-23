@@ -7,7 +7,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/groups/single/documents.php.
  *
  * @since BuddyBoss 1.4.0
- * @version 1.4.0
+ * @version 1.0.0
  */
 ?>
 

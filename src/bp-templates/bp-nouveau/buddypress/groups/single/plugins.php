@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/groups/single/plugins.php.
  *
  * @since BuddyPress 3.0.0
- * @version 1.0.0
+ * @version 3.0.1
  */
 
 bp_nouveau_group_hook( 'before', 'plugin_template' );
