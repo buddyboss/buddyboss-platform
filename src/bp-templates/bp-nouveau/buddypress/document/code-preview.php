@@ -6,7 +6,7 @@
  *
  * @since BuddyBoss 1.5.7
  * @package BuddyBoss\Core
- * @version 1.5.7
+ * @version 1.0.0
  */
 
 $attachment_id            = bp_get_document_attachment_id();
