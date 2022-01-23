@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php.
  *
  * @since 1.0.0
- * @version [BBVERSION]
+ * @version 1.0.0
  */
 
 ?>
@@ -20,7 +20,7 @@
 		<# } #>
 
 		<span class="bp-item-name">{{data.name}}</span>
-		
+
 		<span class="bb-radio-style privacy-radio <# if ( data.selected ) { #>selected<# } #>">
 			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
 		</span>
