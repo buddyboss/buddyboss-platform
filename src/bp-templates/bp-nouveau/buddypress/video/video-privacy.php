@@ -6,7 +6,7 @@
  *
  * @since BuddyBoss 1.7.0
  * @package BuddyBoss\Core
- * @version 1.7.0
+ * @version 1.0.0
  */
 
 $album_privacy = '';

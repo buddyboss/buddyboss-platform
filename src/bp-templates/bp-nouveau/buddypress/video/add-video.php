@@ -9,7 +9,7 @@
  * @package BuddyBoss\Core
  *
  * @since BuddyBoss 1.7.0
- * @version 1.7.0
+ * @version 1.0.0
  */
 
 if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
