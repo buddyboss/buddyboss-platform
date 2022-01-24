@@ -1752,7 +1752,7 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 		return wp_get_attachment_image( $thumbnail_id, $size );
 	}
 
-	if ( bp_is_active( 'groups' ) && $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
 		$group_id = $group_ids[0];
 
 		$group_avatar_url = bp_core_fetch_avatar(
