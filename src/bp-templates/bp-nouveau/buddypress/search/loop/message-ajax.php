@@ -8,8 +8,8 @@
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
-<?php global $current_message; ?>
+
+global $current_message; ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_ajax">
 	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), trailingslashit( bp_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ) );?>'>
 		<div class="item">

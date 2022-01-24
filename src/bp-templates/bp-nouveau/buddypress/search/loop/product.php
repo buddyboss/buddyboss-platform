@@ -8,8 +8,8 @@
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
-<?php $product = wc_get_product( get_the_ID() ); ?>
+
+$product = wc_get_product( get_the_ID() ); ?>
 <li class="bp-search-item bp-search-item_product">
 	<div class="list-wrap">
 		<div class="item-avatar">

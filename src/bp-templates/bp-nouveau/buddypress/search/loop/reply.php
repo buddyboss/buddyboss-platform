@@ -8,8 +8,7 @@
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
-<?php
+
 $reply_id = get_the_ID();
 $topic_id = bbp_get_reply_topic_id($reply_id);
 ?>

@@ -8,8 +8,8 @@
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
-<?php $total = bp_search_get_total_topics_count( get_the_ID() ) ?>
+
+$total = bp_search_get_total_topics_count( get_the_ID() ) ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_sfwd-lessons">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), get_permalink() ));?>">
 		<div class="item-avatar">
