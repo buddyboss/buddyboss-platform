@@ -415,6 +415,14 @@ endif;
 								}
 							}
 
+							$email_field_id = bp_get_option( 'bp-xprofile-email-field-id', 0 );
+							$_signup_field = xprofile_get_field( $email_field_id, null, false );
+							$signup_fields[ $_signup_field->id ] = bp_xprofile_admin_get_signup_field( $_signup_field, $signup_group, '' );
+
+							$password_field_id = bp_get_option( 'bp-xprofile-password-field-id', 0 );
+							$_signup_field = xprofile_get_field( $password_field_id, null, false );
+							$signup_fields[ $_signup_field->id ] = bp_xprofile_admin_get_signup_field( $_signup_field, $signup_group, '' );
+
 							// Output signup fields according to their signup position.
 							foreach ( $signup_fields_order as $ordered_signup_field_id ) {
 								if ( ! isset( $signup_fields[ $ordered_signup_field_id ] ) ) {
