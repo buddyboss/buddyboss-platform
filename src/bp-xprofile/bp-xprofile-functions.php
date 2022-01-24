@@ -1233,6 +1233,44 @@ function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true
 }
 
 /**
+ * Get the field id of the email field
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_xprofile_email_field_id( $defalut = 0, $get_option = true ) {
+	$field_id = 0;
+
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-email-field-id' );
+	}
+
+	if ( empty( $field_id ) && $get_option ) {
+		$field_id = bp_get_option( 'bp-xprofile-email-field-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_email_field_id', $field_id );
+}
+
+/**
+ * Get the field id of the password field
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_xprofile_password_field_id( $defalut = 0, $get_option = true ) {
+	$field_id = 0;
+
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-password-field-id' );
+	}
+
+	if ( empty( $field_id ) && $get_option ) {
+		$field_id = bp_get_option( 'bp-xprofile-password-field-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_password_field_id', $field_id );
+}
+
+/**
  * Return the field name for the Full Name xprofile field.
  *
  * @since BuddyPress 1.5.0
