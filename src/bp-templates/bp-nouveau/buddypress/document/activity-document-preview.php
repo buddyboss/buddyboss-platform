@@ -4,9 +4,9 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/document/activity-document-preview.php.
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Core
- * @version 1.0.0
+ * @version 1.7.0
  */
 
 // Doc/PDF/image extension files preview.

@@ -1748,7 +1748,7 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 		return wp_get_attachment_image( $thumbnail_id, $size );
 	}
 
-	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	if ( bp_is_active( 'groups' ) && $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
 		$group_id = $group_ids[0];
 
 		if ( bp_get_group_has_avatar( $group_id ) ) {

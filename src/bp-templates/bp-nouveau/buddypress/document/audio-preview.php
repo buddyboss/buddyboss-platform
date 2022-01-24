@@ -4,9 +4,9 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/document/audio-preview.php.
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Core
- * @version 1.0.0
+ * @version 1.7.0
  */
 
 $audio_url                 = '';
