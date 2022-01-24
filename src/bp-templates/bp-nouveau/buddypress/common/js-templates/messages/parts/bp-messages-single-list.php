@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages single list template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-single-list.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-single-list">
 
 	<# if ( data.message_from && 'group' === data.message_from ) { #>

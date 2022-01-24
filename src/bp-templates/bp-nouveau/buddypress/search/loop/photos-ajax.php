@@ -2,7 +2,11 @@
 /**
  * Media search Ajax Template
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/photos-ajax.php.
+ *
  * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 $listing_class  = '';
