@@ -66,7 +66,7 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bb_media_check_default_access', array( $this, 'bb_media_check_default_access_access' ), PHP_INT_MAX, 1 );
 
 		add_action( 'bp_core_before_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_add_back_to_local' ) );
-		add_action( 'bp_core_before_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_remove_back_to_local' ) );
+		add_action( 'bp_core_after_regenerate_attachment_thumbnails', array( $this, 'bb_offload_download_remove_back_to_local' ) );
 
 	}
 
