@@ -1722,7 +1722,7 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
 		$group_id = $group_ids[0];
 
-		if ( bp_get_group_has_avatar( $group_id ) ) {
+		if ( bp_is_active( 'groups' ) && bp_get_group_has_avatar( $group_id ) ) {
 			return bp_core_fetch_avatar(
 				array(
 					'item_id'       => $group_id,
@@ -1751,7 +1751,7 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
 		$group_id = $group_ids[0];
 
-		if ( bp_get_group_has_avatar( $group_id ) ) {
+		if ( bp_is_active( 'groups' ) && bp_get_group_has_avatar( $group_id ) ) {
 			return bp_core_fetch_avatar(
 				array(
 					'item_id'       => $group_id,
