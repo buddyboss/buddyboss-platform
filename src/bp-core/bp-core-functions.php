@@ -5498,6 +5498,11 @@ function bp_core_is_empty_directory( $dir ) {
  */
 function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 
+	/**
+	 * Action to perform before regenerating attachment thumbnails.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	do_action( 'bp_core_before_regenerate_attachment_thumbnails' );
 
 	if ( function_exists( 'wp_get_original_image_path' ) ) {
@@ -5512,6 +5517,11 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 	wp_update_attachment_metadata( $attachment_id, $new_metadata );
 
+	/**
+	 * Action to perform after regenerating attachment thumbnails.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	do_action( 'bp_core_after_regenerate_attachment_thumbnails' );
 }
 
