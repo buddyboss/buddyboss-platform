@@ -1432,7 +1432,7 @@ function bp_update_to_8_0()
 	$has_signup_position = (bool) $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$bp_prefix}bp_xprofile_meta WHERE meta_key = 'signup_position' AND object_type = 'field' AND object_id = %d", $field_id));
 	if (bp_get_signup_allowed() && !$has_signup_position) {
 		// Get the Primary Group's fields.
-		$signup_fields = $wpdb->get_col("SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE group_id = 1 ORDER BY field_order ASC");
+		$signup_fields = $wpdb->get_col("SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE group_id in ( 0, 1 ) ORDER BY group_id, field_order ASC");
 
 		// Migrate potential signup fields.
 		if ($signup_fields) {
