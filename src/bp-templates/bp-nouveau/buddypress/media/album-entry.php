@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/media/album-entry.php.
  *
- * @since BuddyBoss 1.0.0
+ * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 ?>

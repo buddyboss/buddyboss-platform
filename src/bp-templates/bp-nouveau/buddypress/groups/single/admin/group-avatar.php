@@ -4,8 +4,8 @@
  *
  * This template can be overridden by copying it toyourtheme/buddypress/groups/single/admin/group-avatar.php.
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.1
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
