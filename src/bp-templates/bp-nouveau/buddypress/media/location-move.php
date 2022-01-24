@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/media/location-move.php.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

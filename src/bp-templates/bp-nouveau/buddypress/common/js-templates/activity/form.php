@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/form.php.
  *
  * @since   1.0.0
- * @version 3.1.1
+ * @version [BBVERSION]
  */
 
 /**

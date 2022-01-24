@@ -1,11 +1,11 @@
 <?php
 /**
- * BP Nouveau Activity Comment form template.
+ * The template for BP Nouveau Activity Comment form.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/activity/comment-form.php.
  *
  * @since   BuddyPress 3.0.0
- * @version 3.1.1
+ * @version 1.0.0
  */
 
 if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_comment() ) {
