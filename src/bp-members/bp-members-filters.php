@@ -538,7 +538,7 @@ function bb_core_prime_mentions_results() {
 		return;
 	}
 
-	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
+	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
 		return;
 	}
 
