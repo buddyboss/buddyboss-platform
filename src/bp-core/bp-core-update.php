@@ -1425,6 +1425,8 @@ function bp_update_to_8_0()
 	global $wpdb;
 	$bp_prefix = bp_core_get_table_prefix();
 
+	bp_core_install_account_profiles_fields();
+
 	// Check if we need to create default signup fields.
 	$field_id            = bp_get_fullname_field_id_for_update();
 	$has_signup_position = (bool) $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$bp_prefix}bp_xprofile_meta WHERE meta_key = 'signup_position' AND object_type = 'field' AND object_id = %d", $field_id));

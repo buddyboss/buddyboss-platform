@@ -642,6 +642,121 @@ function bp_core_install_default_profiles_fields() {
 }
 
 /**
+ * Install default profile fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_install_account_profiles_fields() {
+	global $wpdb;
+
+	$bp_prefix = bp_core_get_table_prefix();
+
+	$is_multisite = is_multisite() ? true : false;
+
+	// These values should only be updated if they are not already present.
+	if ( ! bp_get_option( 'bp-xprofile-email-field-name' ) ) {
+		bp_update_option( 'bp-xprofile-email-field-name', __( 'Email', 'buddyboss' ) );
+	}
+
+	if ( ! bp_get_option( 'bp-xprofile-password-field-name' ) ) {
+		bp_update_option( 'bp-xprofile-password-field-name', __( 'Password', 'buddyboss' ) );
+	}
+
+	// Email
+	$email_id = bp_xprofile_email_field_id();
+
+	if ( $email_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$email_id}" ) ) {
+			$result = $wpdb->insert(
+				"{$bp_prefix}bp_xprofile_fields",
+				array(
+					'group_id'    => 0,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-email-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				)
+			);
+			if ( $result ) {
+				$email_id = $wpdb->insert_id;
+				if ( $is_multisite ) {
+					add_site_option( 'bp-xprofile-email-field-id', $email_id );
+				}
+			}
+		}
+	} else {
+		$result = $wpdb->insert(
+			"{$bp_prefix}bp_xprofile_fields",
+			array(
+				'group_id'    => 0,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-email-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			)
+		);
+		if ( $result ) {
+			$email_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-email-field-id', $email_id );
+			}
+		}
+	}
+	bp_update_option( 'bp-xprofile-email-field-id', $email_id );
+
+	// Password
+	$password_id = bp_xprofile_password_field_id();
+
+	if ( $password_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$password_id}" ) ) {
+			$result = $wpdb->insert(
+				"{$bp_prefix}bp_xprofile_fields",
+				array(
+					'group_id'    => 0,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-password-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				)
+			);
+			if ( $result ) {
+				$password_id = $wpdb->insert_id;
+				if ( $is_multisite ) {
+					add_site_option( 'bp-xprofile-password-field-id', $password_id );
+				}
+			}
+		}
+	} else {
+		$result = $wpdb->insert(
+			"{$bp_prefix}bp_xprofile_fields",
+			array(
+				'group_id'    => 0,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-password-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			)
+		);
+		if ( $result ) {
+			$password_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-password-field-id', $password_id );
+			}
+		}
+	}
+	bp_update_option( 'bp-xprofile-password-field-id', $password_id );
+
+}
+
+/**
  * Install database tables for the Sites component.
  *
  * @since BuddyPress 1.0.0
