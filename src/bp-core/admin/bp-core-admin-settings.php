@@ -406,7 +406,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 	?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php esc_html_e( 'Allow members to upload a profile avatar', 'buddyboss' ); ?></label>
 
 	<?php
 }
