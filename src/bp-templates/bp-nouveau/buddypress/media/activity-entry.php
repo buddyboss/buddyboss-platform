@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Activity Media
+ * The template for activity media
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/media/activity-entry.php.
  *
  * @since BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 global $media_template;

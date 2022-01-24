@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Single Group Invites
+ * The template for members single group invites
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/groups/invites.php.
  *
  * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @version 3.1.1
  */
 ?>
 

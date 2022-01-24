@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyPress Single Members item Sub Navigation
+ * The template for single members item sub navigation
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/item-subnav.php.
  *
  * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @version 3.0.1
  */
 ?>
 

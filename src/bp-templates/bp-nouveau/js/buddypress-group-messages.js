@@ -894,9 +894,22 @@ window.bp = window.bp || {};
 						imageDragging: false,
 						anchor: {
 							placeholderText: BP_Nouveau.anchorPlaceholderText,
+							linkValidation: true
 						}
 					}
 				);
+
+				$( document ).on ( 'keyup', '#bp-group-message-content .medium-editor-toolbar-input', function( event ) {
+
+					var URL = event.target.value;
+					
+					if ( bp.Nouveau.isURL( URL ) ) {
+						$( event.target ).removeClass('isNotValid').addClass('isValid');
+					} else {
+						$( event.target ).removeClass('isValid').addClass('isNotValid');
+					}
+
+				});
 
 				window.group_messages_editor.subscribe(
 					'editableInput',

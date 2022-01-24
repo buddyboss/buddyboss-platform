@@ -2,8 +2,10 @@
 /**
  * BuddyBoss - Groups Loop
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/groups-loop.php.
+ *
  * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @version 3.1.1
  */
 
 bp_nouveau_before_loop(); ?>

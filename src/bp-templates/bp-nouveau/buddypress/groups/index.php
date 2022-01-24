@@ -2,8 +2,10 @@
 /**
  * BP Nouveau - Groups Directory
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/index.php.
+ *
  * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @version 3.0.1
  */
 ?>
 

@@ -1,10 +1,12 @@
 <?php
 /**
- * BuddyPress Members Directory
+ * The template for members directory
  *
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/index.php.
+ *
+ * @since BuddyBoss 1.0.0
+ * @version 3.0.1
  */
-
 ?>
 
 <?php

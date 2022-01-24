@@ -2,8 +2,10 @@
 /**
  * BuddyBoss - Groups Header item-actions.
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/parts/header-item-actions.php.
+ *
  * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @version 3.1.1
  */
 ?>
 <div id="item-actions" class="group-item-actions">

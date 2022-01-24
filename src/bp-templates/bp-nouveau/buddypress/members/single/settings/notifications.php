@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Notifications )
+ * The template for members settings ( Notifications )
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/notifications.php.
  *
  * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @version 3.0.1
  */
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>

@@ -1,10 +1,13 @@
 <?php
 /**
- * BP Nouveau template notices template.
+ * The template for BP Nouveau template notices template
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/notices/template-notices.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
+
 ?>
 <aside class="<?php bp_nouveau_template_message_classes(); ?>">
 	<span class="bp-icon" aria-hidden="true"></span>

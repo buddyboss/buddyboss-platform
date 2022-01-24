@@ -2,7 +2,12 @@
 /**
  * BuddyBoss - Groups Album
  *
+ * This template is used to show the group album.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/albums.php.
+ *
  * @since BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 ?>
 

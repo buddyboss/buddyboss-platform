@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Activity Document Preview Main
+ * The template for activity document preview main
  *
- * @since   BuddyBoss 1.7.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/activity-document-preview.php.
+ *
+ * @since BuddyBoss 1.7.0
  * @package BuddyBoss\Core
+ * @version 1.0.0
  */
 
 // Doc/PDF/image extension files preview.

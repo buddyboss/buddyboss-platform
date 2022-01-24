@@ -2,8 +2,11 @@
 /**
  * BuddyBoss - Video Privacy Change
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/video-privacy.php.
+ *
  * @since BuddyBoss 1.7.0
  * @package BuddyBoss\Core
+ * @version 1.0.0
  */
 
 $album_privacy = '';

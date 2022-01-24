@@ -1,3 +1,6 @@
+/* global bp */
+window.bp = window.bp || {};
+
 jQuery( document ).ready(
 	function() {
 
@@ -46,6 +49,7 @@ jQuery( document ).ready(
 							imageDragging: false,
 							anchor: {
 								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -149,6 +153,7 @@ jQuery( document ).ready(
 							imageDragging: false,
 							anchor: {
 								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -252,6 +257,7 @@ jQuery( document ).ready(
 							imageDragging: false,
 							anchor: {
 								placeholderText: BP_Nouveau.anchorPlaceholderText,
+								linkValidation: true
 							}
 						}
 					);
@@ -323,6 +329,18 @@ jQuery( document ).ready(
 				jQuery( window.forums_medium_topic_editor[ key ].elements[ 0 ] ).focus();
 				medium_editor.toggleClass( 'active' );
 			} );
+
+			jQuery( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
+
+				var URL = event.target.value;
+				
+				if ( bp.Nouveau.isURL( URL ) ) {
+					jQuery( event.target ).removeClass('isNotValid').addClass('isValid');
+				} else {
+					jQuery( event.target ).removeClass('isValid').addClass('isNotValid');
+				}
+
+			});
 		}
 
 			/* Use backticks instead of <code> for the Code button in the editor */
@@ -427,6 +445,7 @@ jQuery( document ).ready(
 									imageDragging: false,
 									anchor: {
 										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true
 									}
 								}
 							);
@@ -478,6 +497,7 @@ jQuery( document ).ready(
 									imageDragging: false,
 									anchor: {
 										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true
 									}
 								}
 							);
@@ -529,6 +549,7 @@ jQuery( document ).ready(
 									imageDragging: false,
 									anchor: {
 										placeholderText: BP_Nouveau.anchorPlaceholderText,
+										linkValidation: true
 									}
 								}
 							);

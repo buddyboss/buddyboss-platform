@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Loop
+ * The template for members loop
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/members-loop.php.
  *
  * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @version 3.0.1
  */
 
 bp_nouveau_before_loop(); ?>
