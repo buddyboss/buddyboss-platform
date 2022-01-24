@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/media/uploader.php.
  *
  * @since BuddyBoss 1.0.0
- * @version [BBVERSION]
+ * @version 1.0.0
  */
 ?>
 <div id="bp-media-uploader" style="display: none;" class="bp-media-photo-uploader">
