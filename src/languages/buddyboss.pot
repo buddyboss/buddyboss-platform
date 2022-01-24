@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-21 19:17:12+00:00\n"
+"POT-Creation-Date: 2022-01-24 18:09:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -547,7 +547,7 @@ msgstr ""
 #: bp-moderation/screens/content-report-form.php:62
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:173
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:18
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:30
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:27
@@ -557,7 +557,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:26
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:27
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:37
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:47
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:48
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:36
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:27
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:27
@@ -2176,15 +2176,15 @@ msgstr ""
 #: bp-members/bp-members-template.php:1260
 #: bp-messages/bp-messages-template.php:873
 #: bp-search/classes/class-bp-search-component.php:28
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:6
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:10
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:11
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:312
-#: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:20
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:17
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:21
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:12
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:321
+#: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:23
 #: bp-templates/bp-nouveau/buddypress/document/single-folder.php:43
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:49
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:38
-#: bp-templates/bp-nouveau/buddypress/search/search-form.php:28
+#: bp-templates/bp-nouveau/buddypress/search/search-form.php:29
 msgid "Search"
 msgstr ""
 
@@ -4544,11 +4544,11 @@ msgstr ""
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:21
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
 #: bp-forums/admin/topics.php:847 bp-forums/topics/template.php:3008
-#: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
+#: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:18
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:15
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:13
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:37
-#: bp-templates/bp-nouveau/buddypress/notifications/on-screen.php:30
+#: bp-templates/bp-nouveau/buddypress/notifications/on-screen.php:29
 #: bp-templates/bp-nouveau/buddypress/video/theatre.php:16
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:455
 msgid "Close"
@@ -7545,9 +7545,9 @@ msgid "A dynamic list of network posts"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-network-posts-widget.php:148
-#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:25
+#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:24
 #: bp-templates/bp-nouveau/buddypress/search/loop/product.php:31
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:37
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:36
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:27
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:27
 msgid "Permalink to %s"
@@ -8962,27 +8962,27 @@ msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:129
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:38
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:221
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:230
 msgid "of"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:130
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:222
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:231
 msgid "km"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:131
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:223
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:232
 msgid "miles"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:132
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:224
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:233
 msgid "Start typing, then select a location"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:134
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:226
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:235
 msgid "get current location"
 msgstr ""
 
@@ -9391,7 +9391,7 @@ msgid "Your browser does not support the audio element."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1409
-#: bp-templates/bp-nouveau/buddypress/document/code-preview.php:36
+#: bp-templates/bp-nouveau/buddypress/document/code-preview.php:37
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:688
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2482
 msgid "Click to expand"
@@ -10754,7 +10754,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:24
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:24
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:34
-#: bp-templates/bp-nouveau/buddypress/video/create-album.php:28
+#: bp-templates/bp-nouveau/buddypress/video/create-album.php:27
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:33
 msgid "Title"
 msgstr ""
@@ -11107,7 +11107,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:1216 bp-groups/bp-groups-admin.php:1568
 #: bp-groups/classes/class-bp-group-extension.php:524
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:52
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:48
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:49
 #: bp-templates/bp-nouveau/includes/functions.php:1458
 #: bp-templates/bp-nouveau/includes/functions.php:1489
 #: bp-templates/bp-nouveau/includes/functions.php:1500
@@ -14882,7 +14882,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2530
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2754
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:215
-#: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:42
+#: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:46
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2317
 msgid "This content has been hidden as the member is suspended."
 msgstr ""
@@ -14894,7 +14894,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2487
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2532
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2756
-#: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:44
+#: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:48
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1202
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2319
 msgid "This content has been hidden as you have blocked this member."
@@ -14905,7 +14905,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1254
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:1872
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2758
-#: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:46
+#: bp-templates/bp-nouveau/buddypress/activity/blocked-comment.php:50
 msgid "This content has been hidden from site admin."
 msgstr ""
 
@@ -19039,12 +19039,12 @@ msgid "Collapse All"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:47
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:56
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:59
 msgid "Grid View"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:50
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:65
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:68
 msgid "List View"
 msgstr ""
 
@@ -21795,8 +21795,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-messages/bp-messages-template.php:869
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:14
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:16
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:15
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:17
 #. translators: accessibility text
 msgid "Search Messages"
 msgstr ""
@@ -23994,7 +23994,7 @@ msgstr ""
 msgid "Capabilities"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
+#: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:31
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:47
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:93
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:62
@@ -24095,8 +24095,8 @@ msgstr ""
 msgid "unsubscribe"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/filters/group-filters.php:49
-#: bp-templates/bp-nouveau/buddypress/common/filters/member-filters.php:43
+#: bp-templates/bp-nouveau/buddypress/common/filters/group-filters.php:52
+#: bp-templates/bp-nouveau/buddypress/common/filters/member-filters.php:46
 msgid "All Types"
 msgstr ""
 
@@ -24183,7 +24183,7 @@ msgstr ""
 msgid "Group invitations menu"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:5
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:16
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:21
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:22
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:25
@@ -24196,25 +24196,25 @@ msgstr ""
 msgid "Search Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:3
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:14
 msgid "Optional: Customize the message of your invite."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:4
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:15
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1313
 #: bp-templates/bp-nouveau/includes/messages/functions.php:119
 msgid "Type message"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:8
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:49
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:87
 msgid "Send"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:3
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:5
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:11
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:14
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:16
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-paginate.php:16
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-paginate.php:23
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:670
@@ -24224,7 +24224,7 @@ msgstr ""
 msgid "Previous page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:10
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:21
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:680
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:681
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1019
@@ -24232,25 +24232,25 @@ msgstr ""
 msgid "Next page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:15
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:26
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:562
 msgid "Invited by:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:24
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:35
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:578
 msgid "The invite has not been sent."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:26
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:37
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:582
 msgid "The invite has been sent."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:35
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:39
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:48
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:46
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:50
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:59
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:61
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:598
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:607
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:624
@@ -24260,8 +24260,8 @@ msgstr ""
 msgid "Cancel invitation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:35
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:41
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:46
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-users.php:52
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:602
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:611
 #: bp-templates/bp-nouveau/includes/groups/functions.php:339
@@ -24338,105 +24338,105 @@ msgstr ""
 msgid "Send Reply"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/nav/directory-nav.php:10
+#: bp-templates/bp-nouveau/buddypress/common/nav/directory-nav.php:12
 msgid "Directory menu"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
+#: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:18
 msgid "Close this notice"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:57
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:66
 msgid "From"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:64
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:148
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:73
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:157
 #. translators: no option picked in select box
 msgid "Select Day"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:79
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:88
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:249
 msgid "January"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:80
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:89
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:250
 msgid "February"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:81
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:90
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:251
 msgid "March"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:82
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:91
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:252
 msgid "April"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:83
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:92
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:253
 msgid "May"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:84
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:93
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:254
 msgid "June"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:85
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:94
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:255
 msgid "July"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:86
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:95
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:256
 msgid "August"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:87
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:96
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:257
 msgid "September"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:88
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:97
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:258
 msgid "October"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:89
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:98
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:259
 msgid "November"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:90
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:99
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:260
 msgid "December"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:96
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:165
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:105
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:174
 #. translators: no option picked in select box
 msgid "Select Month"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:114
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:183
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:123
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:192
 #. translators: no option picked in select box
 msgid "Select Year"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:141
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:150
 msgid "To"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:310
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:319
 msgid "Reset"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:319
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:328
 msgid "Please add fields to search members."
 msgstr ""
 
@@ -24751,7 +24751,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-cover-image.php:27
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:41
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:38
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:39
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-cover-image.php:13
 msgid "Change Cover Photo"
 msgstr ""
@@ -24818,17 +24818,17 @@ msgid "(banned)"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:47
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:43
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:44
 msgid "Reposition Cover Photo"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:53
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:49
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:50
 msgid "Drag to move cover photo"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:54
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:50
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:51
 msgid "Cover photo"
 msgstr ""
 
@@ -24969,9 +24969,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/index.php:48
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:22
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:28
-#: bp-templates/bp-nouveau/buddypress/video/create-album.php:23
-#: bp-templates/bp-nouveau/buddypress/video/create-album.php:50
-#: bp-templates/bp-nouveau/buddypress/video/create-album.php:54
+#: bp-templates/bp-nouveau/buddypress/video/create-album.php:22
+#: bp-templates/bp-nouveau/buddypress/video/create-album.php:49
+#: bp-templates/bp-nouveau/buddypress/video/create-album.php:53
 #: bp-templates/bp-nouveau/buddypress/video/index.php:53
 #: bp-templates/bp-nouveau/includes/media/functions.php:149
 msgid "Create Album"
@@ -24979,7 +24979,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:25
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:18
-#: bp-templates/bp-nouveau/buddypress/video/create-album.php:29
+#: bp-templates/bp-nouveau/buddypress/video/create-album.php:28
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:17
 msgid "Enter Album Title"
 msgstr ""
@@ -25122,7 +25122,7 @@ msgstr ""
 msgid "Sorry, no %s were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:60
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:61
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:16
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
 msgid "Change Profile Photo"
@@ -25346,12 +25346,12 @@ msgstr ""
 msgid "Unblock"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/moderation/moderation-reported-content-entry.php:26
+#: bp-templates/bp-nouveau/buddypress/moderation/moderation-reported-content-entry.php:28
 msgid "moderated"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:32
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:32
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:31
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:31
 msgid "ago"
 msgstr ""
 
@@ -25366,7 +25366,7 @@ msgstr[1] ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:36
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:31
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:38
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:37
 msgid "%d reply"
 msgid_plural "%d replies"
 msgstr[0] ""
@@ -25390,7 +25390,7 @@ msgstr ""
 msgid "View Conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:37
+#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:36
 msgid "By %s"
 msgstr ""
 
@@ -25399,7 +25399,7 @@ msgid "Sale!"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses-ajax.php:27
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:33
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:32
 msgid "%d lesson"
 msgid_plural "%d lessons"
 msgstr[0] ""
@@ -25413,7 +25413,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:42
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:53
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:52
 msgid "Tags:"
 msgstr ""
 
@@ -25437,11 +25437,11 @@ msgstr ""
 msgid "No results for '%s'"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/search-form.php:23
+#: bp-templates/bp-nouveau/buddypress/search/search-form.php:24
 msgid "Search Network&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/search-form.php:23
+#: bp-templates/bp-nouveau/buddypress/search/search-form.php:24
 msgid "Try different keywords&hellip;"
 msgstr ""
 
