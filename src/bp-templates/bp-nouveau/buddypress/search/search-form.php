@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/search/search-form.php.
  *
  * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @version 3.1.1
  */
 $search_term =  ! empty( $_REQUEST['s'] ) ? esc_html( $_REQUEST['s'] ) : '';
 ?>
