@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This template is used to print a single activity comment.
  *

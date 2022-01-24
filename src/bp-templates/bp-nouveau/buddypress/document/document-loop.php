@@ -4,9 +4,9 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/document/document-loop.php.
  *
- * @since BuddyBoss 1.4.0
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
- * @version 1.0.0
+ * @version 1.4.0
  */
 
 bp_nouveau_before_loop();

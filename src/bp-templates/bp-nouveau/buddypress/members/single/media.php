@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/members/single/media.php.
  *
- * @since BuddyPress 1.0.0
+ * @since   BuddyPress 1.0.0
  * @version 1.0.0
  */
 

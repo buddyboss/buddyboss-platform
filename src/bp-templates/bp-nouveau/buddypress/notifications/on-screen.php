@@ -1,11 +1,10 @@
 <?php
-
 /**
  * The template for displaying the notifications on screen.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/notifications/on-screen.php.
  *
- * @since BuddyBoss 1.0.0
+ * @since   BuddyBoss 1.0.0
  * @package BuddyBoss\Core
  * @version 1.0.0
  */
