@@ -11,6 +11,7 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
 $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-no-results' : '';
 ?>
 
