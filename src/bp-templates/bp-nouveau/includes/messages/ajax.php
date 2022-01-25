@@ -2860,6 +2860,13 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	);
 }
 
+/**
+ * Return the while fetching members thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Recipient per page
+ */
 function bb_get_user_message_recipients() {
 	return 5;
 }
