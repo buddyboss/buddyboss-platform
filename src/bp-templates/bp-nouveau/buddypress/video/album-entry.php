@@ -6,8 +6,8 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
- * @version 1.0.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_album_template; ?>

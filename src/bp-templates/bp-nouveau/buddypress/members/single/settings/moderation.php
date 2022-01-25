@@ -4,9 +4,9 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/moderation.php.
  *
- * @since BuddyBoss 1.5.6
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss
- * @version 2.0.1
+ * @version 1.5.6
  */
 
 switch ( bp_current_action() ) :

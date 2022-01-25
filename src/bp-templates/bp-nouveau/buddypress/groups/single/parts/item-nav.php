@@ -4,8 +4,8 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/groups/single/parts/item-nav.php.
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.1
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 

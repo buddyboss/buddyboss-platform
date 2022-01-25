@@ -4,9 +4,9 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/general.php.
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.1
- * @todo password field lables need thinking, name for password fields do not conform to standards
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
+ * @todo    password field lables need thinking, name for password fields do not conform to standards
  */
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
