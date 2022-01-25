@@ -688,7 +688,11 @@
 				);
 
 				if ( 'list_grid' === groupView ) {
+					$( '.group-gride-style' ).show();
 					$( '.group-default-layout' ).show();
+				} else if ( 'grid' === groupView ) {
+					$( '.group-gride-style' ).show();
+					$( '.group-default-layout' ).hide();
 				} else {
 					$( '.group-default-layout' ).hide();
 				}
@@ -705,7 +709,11 @@
 						groupView = $( this ).val();
 
 						if ( 'list_grid' === groupView ) {
+							$( '.group-gride-style' ).show();
 							$( '.group-default-layout' ).show();
+						} else if ( 'grid' === groupView ) {
+							$( '.group-gride-style' ).show();
+							$( '.group-default-layout' ).hide();
 						} else {
 							$( '.group-default-layout' ).hide();
 						}
