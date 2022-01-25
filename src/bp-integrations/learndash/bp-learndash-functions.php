@@ -386,7 +386,8 @@ function bp_learndash_page_display() {
  * @return $value bool
  */
 function bp_core_learndash_certificates_enables() {
-	static $bb_learndash_certificates_cache = array();
+	static $cache = null;
+
 	$value = false;
 	$args  = array(
 		'post_type'   => 'sfwd-certificates',
@@ -396,18 +397,19 @@ function bp_core_learndash_certificates_enables() {
 		// 'numberposts' => 1 -> We just check here if certification available then display tab in profile section.
 		// So if we get only one course then we can verify it like certificate available or not.
 	);
-	$cache_key = 'bp_core_learndash_certificates_enables';
-	if ( ! isset( $bb_learndash_certificates_cache[ $cache_key ] ) ) {
-		$bb_learndash_certificates_cache[ $cache_key ] = get_posts( $args );
+
+	if ( null === $cache ) {
+		$query = get_posts( $args );
+	} else {
+		$query = $cache;
 	}
-	$query = $bb_learndash_certificates_cache[ $cache_key ];
+
 	if ( ! empty( $query ) && count( $query ) > 0 ) {
 		$value = true;
 	}
 
 	return $value;
 }
-
 
 /**
  * Social Group Sync View Tutorial button.
