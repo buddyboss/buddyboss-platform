@@ -947,7 +947,7 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$cache_key = 'get_slug_group_id_' . $group_id;
+		$cache_key = 'bp_group_slug_by_id_' . $group_id;
 		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $result ) {
@@ -970,7 +970,7 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$cache_key = 'has_members_group_id_' . $group_id;
+		$cache_key = 'bp_group_has_members_' . $group_id;
 		$members   = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $members ) {
@@ -998,7 +998,7 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$cache_key = 'has_membership_requests_' . $group_id;
+		$cache_key = 'bp_group_has_membership_requests_' . $group_id;
 		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $result ) {
@@ -1787,14 +1787,15 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$hidden_sql = '';
+		$cache_key  = 'bp_get_moderator_total_group_count';
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = "WHERE status != 'hidden'";
+			$cache_key  = 'bp_get_total_group_count';
 		}
 
 		$bp = buddypress();
 
-		$cache_key = 'get_total_group_count';
-		$record    = wp_cache_get( $cache_key, 'bp_groups' );
+		$record = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $record ) {
 			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
@@ -1816,7 +1817,7 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$cache_key = 'get_total_member_count_' . $group_id;
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
 		$record    = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $record ) {
