@@ -738,7 +738,7 @@ function bp_profile_photos_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => 72341,
+					'article' => 125202,
 				),
 				'admin.php'
 			)
