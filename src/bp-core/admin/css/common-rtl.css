@@ -2307,6 +2307,8 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   line-height: 2;
 }
 
+.bb-screen-position-outer .bb-screen-position #bb-group-layout-grid-style-left:checked:checked + .option:before,
+.bb-screen-position-outer .bb-screen-position #bb-group-layout-grid-style-centered:checked:checked + .option:before,
 .bb-screen-position-outer .bb-screen-position #bp_on_screen_notifications_position_left:checked:checked + .option:before,
 .bb-screen-position-outer .bb-screen-position #bp_on_screen_notifications_position_right:checked:checked + .option:before {
   border-color: #2370b1;
@@ -2355,4 +2357,72 @@ table tbody td .bb-description {
   color: #999;
   margin-top: 6px;
   margin-bottom: 0;
+}
+
+/*------------------------------------------------------------------------------
+ * 12.0 Group Directories Enhancement
+ *----------------------------------------------------------------------------*/
+.bb-grid-style-outer {
+  display: flex;
+  width: 180px;
+  justify-content: space-between;
+}
+
+.bb-grid-style-outer .bb-grid-style {
+  display: flex;
+  width: 85px;
+  flex-direction: column;
+  text-align: center;
+}
+
+.bb-grid-style-outer .bb-grid-style input[type="radio"] {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+}
+
+.bb-grid-style-outer .bb-grid-style .option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-grid-style-outer .bb-grid-style .option:before {
+  content: " ";
+  height: 80px;
+  width: 80px;
+  background: #f0f0f1;
+  display: flex;
+  border-radius: 5px;
+  border: 2px solid #ccd0d4;
+  transition: all 0.3s ease;
+}
+
+.bb-grid-style-outer .bb-grid-style .option:after {
+  content: " ";
+  width: 40px;
+  height: 20px;
+  border-radius: 2px;
+  background: #c3c4c7;
+  position: absolute;
+  top: 55px;
+}
+
+.bb-grid-style-outer .bb-grid-style .option.opt-left:after {
+  right: 8px;
+}
+
+.bb-grid-style-outer .bb-grid-style .option.opt-centered:after {
+  right: 22px;
+}
+
+.bb-grid-style-outer .bb-grid-style .option span {
+  font-size: 14px;
+  color: #999;
+  line-height: 2;
+}
+
+.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
+.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before {
+  border-color: #2370b1;
 }

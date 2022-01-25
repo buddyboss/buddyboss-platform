@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-07 04:25:05+00:00\n"
+"POT-Creation-Date: 2022-01-25 16:47:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3129,11 +3129,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:639
 #: bp-core/admin/bp-core-admin-settings.php:1005
 #: bp-core/admin/bp-core-admin-settings.php:1121
-#: bp-core/admin/bp-core-admin-settings.php:1291
-#: bp-core/admin/bp-core-admin-settings.php:1356
-#: bp-core/admin/bp-core-admin-settings.php:1393
-#: bp-core/admin/bp-core-admin-settings.php:1416
-#: bp-core/admin/bp-core-admin-settings.php:1554
+#: bp-core/admin/bp-core-admin-settings.php:1320
+#: bp-core/admin/bp-core-admin-settings.php:1385
+#: bp-core/admin/bp-core-admin-settings.php:1422
+#: bp-core/admin/bp-core-admin-settings.php:1445
+#: bp-core/admin/bp-core-admin-settings.php:1583
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3512,97 +3512,111 @@ msgid ""
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1309
+#: bp-core/admin/bp-core-admin-settings.php:1286
+msgid "Left"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1294
+msgid "Centered"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1299
+msgid ""
+"Select the style of the of grid layouts. Group avatars and cover images "
+"will only be displayed if they are enabled."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1338
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1310
+#: bp-core/admin/bp-core-admin-settings.php:1339
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1315
+#: bp-core/admin/bp-core-admin-settings.php:1344
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1335
+#: bp-core/admin/bp-core-admin-settings.php:1364
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1370
+#: bp-core/admin/bp-core-admin-settings.php:1399
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1433
+#: bp-core/admin/bp-core-admin-settings.php:1462
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1434
+#: bp-core/admin/bp-core-admin-settings.php:1463
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1452
+#: bp-core/admin/bp-core-admin-settings.php:1481
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1460
+#: bp-core/admin/bp-core-admin-settings.php:1489
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1478
+#: bp-core/admin/bp-core-admin-settings.php:1507
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1479
+#: bp-core/admin/bp-core-admin-settings.php:1508
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1493
+#: bp-core/admin/bp-core-admin-settings.php:1522
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1494
+#: bp-core/admin/bp-core-admin-settings.php:1523
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1509
+#: bp-core/admin/bp-core-admin-settings.php:1538
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1510
+#: bp-core/admin/bp-core-admin-settings.php:1539
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1511
+#: bp-core/admin/bp-core-admin-settings.php:1540
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1512
+#: bp-core/admin/bp-core-admin-settings.php:1541
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1513
+#: bp-core/admin/bp-core-admin-settings.php:1542
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1514
+#: bp-core/admin/bp-core-admin-settings.php:1543
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1515
+#: bp-core/admin/bp-core-admin-settings.php:1544
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1516
+#: bp-core/admin/bp-core-admin-settings.php:1545
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1517
+#: bp-core/admin/bp-core-admin-settings.php:1546
 msgid "5 Minutes"
 msgstr ""
 
@@ -4262,6 +4276,10 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:93
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:182
 msgid "Default View"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:98
+msgid "Grid Style"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
@@ -8072,13 +8090,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -29226,15 +29244,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
