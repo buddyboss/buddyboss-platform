@@ -2307,8 +2307,6 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   line-height: 2;
 }
 
-.bb-screen-position-outer .bb-screen-position #bb-group-layout-grid-style-left:checked:checked + .option:before,
-.bb-screen-position-outer .bb-screen-position #bb-group-layout-grid-style-centered:checked:checked + .option:before,
 .bb-screen-position-outer .bb-screen-position #bp_on_screen_notifications_position_left:checked:checked + .option:before,
 .bb-screen-position-outer .bb-screen-position #bp_on_screen_notifications_position_right:checked:checked + .option:before {
   border-color: #2370b1;
