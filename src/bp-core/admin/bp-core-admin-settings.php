@@ -724,6 +724,29 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 }
 
 /**
+ * Cover image sizes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_cover_image_size() {
+	?>
+	<div class="avatar-custom-input">
+		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
+			<option value="default"><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+			<option value="full_width"><?php esc_html_e( 'Full Width', 'buddyboss' ); ?></option>
+		</select>
+	</div>
+
+	<div class="avatar-custom-input">
+		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
+			<option value="small"><?php esc_html_e( 'Small', 'buddyboss' ); ?></option>
+			<option value="large"><?php esc_html_e( 'Large', 'buddyboss' ); ?></option>
+		</select>
+	</div>
+	<?php
+}
+
+/**
  * Link to Profile Photos tutorial
  *
  * @since BuddyBoss 1.1.1
