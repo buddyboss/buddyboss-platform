@@ -806,13 +806,7 @@ function bp_video_delete_attachment_video( $attachment_id ) {
 
 	$bp = buddypress();
 
-	$cache_key = 'bp_video_delete_attachment_video_' . $attachment_id;
-	$video     = wp_cache_get( $cache_key, 'bp_video' );
-
-	if ( false === $video ) {
-		$video = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore
-		wp_cache_set( $cache_key, $video, 'bp_video' );
-	}
+    $video = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore
 
 	if ( ! $video ) {
 		return false;

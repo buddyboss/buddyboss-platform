@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_video_clear_cache_for_video( $video ) {
 	wp_cache_delete( $video->id, 'bp_video' );
-	wp_cache_delete( 'bp_video_delete_attachment_video_' . $video->attachment_id, 'bp_video' );
 	wp_cache_delete( 'bb_video_activity_' . $video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 }
 add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
