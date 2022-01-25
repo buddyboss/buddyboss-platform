@@ -2616,7 +2616,7 @@ function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 
 
 	$video_album_table = $bp->video->table_name_albums;
 
-	$cache_key = 'bp_video_user_video_album_' . $user_id;
+	$cache_key = 'bp_video_user_video_album_' . $user_id . '_' . $group_id;
 	$data      = wp_cache_get( $cache_key, 'bp_video_album' );
 
 	if ( false === $data ) {
