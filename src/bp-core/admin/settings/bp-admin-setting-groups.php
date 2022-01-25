@@ -133,6 +133,19 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$args['class'] = 'group-cover-options avatar-options default-group-cover-custom' . ( ! $is_disabled_cover && 'custom' === $default_cover_type ? '' : ' bp-hide' );
 			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
 
+			if ( ! function_exists( 'bbp_pro_is_license_valid' ) || ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() ) ) {
+				$this->add_field( 'bp-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ), 'bp_admin_setting_callback_default_group_cover_size', 'string', array() );
+			}
+
+			/**
+			 * Fires to register group tab settings fields and section.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param Object $this BP_Admin_Setting_Groups.
+			 */
+			do_action( 'bp_admin_setting_group_images', $this );
+
 			$args          = array();
 			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );

@@ -724,6 +724,17 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 }
 
 /**
+ * Default profile cover sizes settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_cover_size() {
+	?>
+	<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-cover-sizes.png' ); ?>" width="650px" alt="">
+	<?php
+}
+
+/**
  * Link to Profile Photos tutorial
  *
  * @since BuddyBoss 1.1.1
@@ -1008,6 +1019,17 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 	</div>
 	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
+	<?php
+}
+
+/**
+ * Default group cover sizes settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_cover_size() {
+	?>
+	<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-cover-sizes.png' ); ?>" width="650px" alt="">
 	<?php
 }
 
