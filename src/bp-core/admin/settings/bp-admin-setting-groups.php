@@ -92,6 +92,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option',  'radio', $args );
 
+		// Admin Settings for Settings > Groups > Group Directories > Grid Style
+		$args = array();
+		$args['class'] = 'group-gride-style group-layout-options';
+		$this->add_field( 'bb-group-grid-style', __( 'Grid Style', 'buddyboss' ), 'bb_admin_setting_group_grid_style',  'radio', $args );
+
 		/**
 		 * Fires to register Groups tab settings fields and section.
 		 *
