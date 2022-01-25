@@ -2442,6 +2442,8 @@ h2.has_tutorial_btn {
 
 		}
 
+		#bb-group-layout-grid-style-left:checked:checked + .option,
+		#bb-group-layout-grid-style-centered:checked:checked + .option,
 		#bp_on_screen_notifications_position_left:checked:checked + .option,
 		#bp_on_screen_notifications_position_right:checked:checked + .option {
 
@@ -2497,4 +2499,85 @@ table tbody td .bb-description {
 	color: #999;
 	margin-top: 6px;
 	margin-bottom: 0;
+}
+
+/*------------------------------------------------------------------------------
+ * 12.0 Group Directories Enhancement
+ *----------------------------------------------------------------------------*/
+
+.bb-grid-style-outer {
+	display: flex;
+	width: 180px;
+	justify-content: space-between;
+
+	.bb-grid-style {
+		display: flex;
+		width: 85px;
+		flex-direction: column;
+		text-align: center;
+
+		input[type="radio"] {
+			opacity: 0;
+			visibility: hidden;
+			height: 0;
+		}
+
+		.option {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+
+			&:before {
+				content: " ";
+				height: 80px;
+				width: 80px;
+				background: #f0f0f1;
+				display: flex;
+				border-radius: 5px;
+				border: 2px solid #ccd0d4;
+				transition: all 0.3s ease;
+			}
+
+			&:after {
+				content: " ";
+				width: 40px;
+				height: 20px;
+				border-radius: 2px;
+				background: #c3c4c7;
+				position: absolute;
+				top: 55px;
+			}
+
+			&.opt-left {
+
+				&:after {
+					left: 8px;
+				}
+
+			}
+
+			&.opt-centered {
+
+				&:after {
+					left: 22px;
+				}
+
+			}
+
+			span {
+				font-size: 14px;
+				color: #999;
+				line-height: 2;
+			}
+
+		}
+
+		#bb-group-grid-style-left:checked:checked + .option,
+		#bb-group-grid-style-centered:checked:checked + .option {
+
+			&:before {
+				border-color: #2370b1;
+			}
+		}
+	}
 }
