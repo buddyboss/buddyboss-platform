@@ -1905,7 +1905,6 @@ window.bp = window.bp || {};
 							var circumference = radius * 2 * Math.PI;
 
 							circle.style.strokeDasharray  = circumference + ' ' + circumference;
-							circle.style.strokeDashoffset = circumference;
 							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 
 							if ( element.upload.progress <= 99 ) {
