@@ -244,7 +244,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			}
 
 			/**
-			 * Fires to register xProfile tab settings fields and section.
+			 * Fires to register profile images field.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
