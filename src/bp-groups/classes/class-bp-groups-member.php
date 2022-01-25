@@ -557,10 +557,11 @@ class BP_Groups_Member {
 		static $cache = array();
 
 		$pag_sql = '';
-		$cache_key = 'bb_group_ids_for_user' . $user_id;
+
+		$cache_key = 'bp_group_ids_for_user_' . $user_id . '_' . bp_loggedin_user_id();
 		if ( ! empty( $limit ) && ! empty( $page ) ) {
 			$pag_sql = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
-			$cache_key = 'bb_group_ids_for_user' . $user_id . '_' . $limit . '_' . $page;
+			$cache_key = 'bp_group_ids_for_user_' . $user_id . '_' . bp_loggedin_user_id() . '_' . $limit . '_' . $page;
 		}
 
 		$bp = buddypress();
