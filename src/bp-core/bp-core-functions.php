@@ -5863,7 +5863,7 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 			$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, Generic.Formatting.MultipleStatementAlignment.IncorrectWarning
 			$record = $wpdb->get_row( $media_sql );
-			wp_cache_set( $cache_key, $record, '$cache_group' );
+			wp_cache_set( $cache_key, $record, $cache_group );
 		}
 	}
 
