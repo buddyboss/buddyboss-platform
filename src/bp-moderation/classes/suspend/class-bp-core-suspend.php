@@ -232,11 +232,12 @@ class BP_Core_Suspend {
 		static $cache = array();
 		$bp = buddypress();
 
-		if ( ! isset( $cache[$suspend_id .  $user_id] ) ) {
-			$result = $wpdb->get_var($wpdb->prepare("SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id = %d AND sd.user_id = %d limit 1", (int) $suspend_id, (int) $user_id)); // phpcs:ignore
-			$cache[$suspend_id .  $user_id] = $result;
+		if ( ! isset( $cache[ $suspend_id . '_' . $user_id ] ) ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT sd.id FROM {$bp->table_prefix}bp_suspend_details sd WHERE sd.suspend_id = %d AND sd.user_id = %d limit 1", (int) $suspend_id, (int) $user_id ) ); // phpcs:ignore
+
+			$cache[ $suspend_id . '_' . $user_id ] = $result;
 		} else {
-			$result = $cache[$suspend_id .  $user_id];
+			$result = $cache[ $suspend_id . '_' . $user_id ];
 		}
 
 		return ! empty( $result );
@@ -424,11 +425,12 @@ class BP_Core_Suspend {
 
 			static $cache = array();
 
-			if ( ! isset( $cache[ $item_id .  $item_type ] ) ) {
+			if ( ! isset( $cache[ $item_id . '_' . $item_type ] ) ) {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
-				$cache[ $item_id . $item_type ] = ! empty( $result ) ? $result : false;
+
+				$cache[ $item_id . '_' . $item_type ] = ! empty( $result ) ? $result : false;
 			} else {
-				$result = $cache[ $item_id . $item_type ];
+				$result = $cache[ $item_id . '_' . $item_type ];
 			}
 
 			return ! empty( $result );
