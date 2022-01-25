@@ -3975,6 +3975,7 @@ function bp_group_ids_array_flatten( $array ) {
  * @return array
  */
 function bp_groups_get_excluded_group_types() {
+	static $bp_group_type_query = null;
 
 	$bp_group_type_ids  = array();
 	$post_type          = bp_groups_get_group_type_post_type();
@@ -3990,11 +3991,10 @@ function bp_groups_get_excluded_group_types() {
 		'nopaging'   => true,
 	);
 
-	static $bp_group_type_query = null;
-
 	if ( null === $bp_group_type_query ) {
 		$bp_group_type_query = new WP_Query( $bp_group_type_args );
 	}
+
 	if ( $bp_group_type_query->have_posts() ) :
 		while ( $bp_group_type_query->have_posts() ) :
 			$bp_group_type_query->the_post();
