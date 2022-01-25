@@ -1491,7 +1491,7 @@ function bbp_dropdown( $args = '' ) {
 	 * @return string The dropdown
 	 */
 function bbp_get_dropdown( $args = '' ) {
-	static $bbp_get_dropdown = array();
+	static $bbp_get_dropdown_cache = array();
 	/** Arguments */
 
 	// Parse arguments against default values
@@ -1552,11 +1552,15 @@ function bbp_get_dropdown( $args = '' ) {
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false,
 	);
+
 	$cache_key = 'bbp_get_dropdown_' . md5( maybe_serialize( $post_args ) );
-	if ( ! isset( $bbp_get_dropdown[ $cache_key ] ) ) {
-		$bbp_get_dropdown[ $cache_key ] = get_posts( $post_args );
+	if ( ! isset( $bbp_get_dropdown_cache[ $cache_key ] ) ) {
+		$posts = get_posts( $post_args );
+
+		$bbp_get_dropdown_cache[ $cache_key ] = $posts;
+	} else {
+		$posts = $bbp_get_dropdown_cache[ $cache_key ];
 	}
-	$posts = $bbp_get_dropdown[ $cache_key ];
 
 	/** Drop Down */
 
