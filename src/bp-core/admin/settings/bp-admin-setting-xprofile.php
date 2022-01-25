@@ -236,7 +236,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-default-profile-cover-type', esc_html__( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
 
 			/**
-			 * Fires to register xProfile tab settings fields and section.
+			 * Fires to register profile images field.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
