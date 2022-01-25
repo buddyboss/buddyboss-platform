@@ -2217,7 +2217,7 @@ function bp_activity_add( $args = '' ) {
 	if ( 'activity_comment' === $activity->type ) {
 		// Also clear the comment cache for the parent activity ID.
 		wp_cache_delete( $activity->item_id, 'bp_activity_comments' );
-		wp_cache_delete( 'get_child_comments_' . $activity->item_id, 'bp_activity_comments' );
+		wp_cache_delete( 'bp_get_child_comments_' . $activity->item_id, 'bp_activity_comments' );
 
 		BP_Activity_Activity::rebuild_activity_comment_tree( $activity->item_id );
 	}
@@ -3077,7 +3077,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Comment caches are stored only with the top-level item.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
-	wp_cache_delete( 'get_child_comments_' . $activity_id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
@@ -3475,7 +3475,7 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 
 	// Purge comment cache for the root activity update.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
-	wp_cache_delete( 'get_child_comments_' . $activity_id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
@@ -3967,7 +3967,7 @@ function bp_activity_mark_as_spam( &$activity, $source = 'by_a_person' ) {
 
 	// Clear the activity comment cache for this activity item.
 	wp_cache_delete( $activity->id, 'bp_activity_comments' );
-	wp_cache_delete( 'get_child_comments_' . $activity->id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity->id, 'bp_activity_comments' );
 
 	// If Akismet is active, and this was a manual spam/ham request, stop Akismet checking the activity.
 	if ( 'by_a_person' == $source && ! empty( $bp->activity->akismet ) ) {
@@ -4015,7 +4015,7 @@ function bp_activity_mark_as_ham( &$activity, $source = 'by_a_person' ) {
 
 	// Clear the activity comment cache for this activity item.
 	wp_cache_delete( $activity->id, 'bp_activity_comments' );
-	wp_cache_delete( 'get_child_comments_' . $activity->id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity->id, 'bp_activity_comments' );
 
 	// If Akismet is active, and this was a manual spam/ham request, stop Akismet checking the activity.
 	if ( 'by_a_person' == $source && ! empty( $bp->activity->akismet ) ) {
