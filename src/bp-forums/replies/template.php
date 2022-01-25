@@ -2583,51 +2583,11 @@ function bbp_get_topic_pagination_count() {
 
 	// Define local variable(s)
 	$retstr      = '';
-	$total_int   = $bbp->reply_query->total_count; // thread_reply
+	$curr_page   = $bbp->reply_query->paged; // thread_reply
 	$total_pages = $bbp->reply_query->total_pages; // total_pages
-	// Set pagination values
-	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
-	$from_num  = bbp_number_format( $start_num );
-	$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
-	$total     = bbp_number_format( $total_int );
 
-	if ( (int) $total_pages === (int) $bbp->reply_query->paged ) {
-		$to_num = $total;
-	}
-
-	// We are threading replies
-	if ( bbp_thread_replies() && bbp_is_single_topic() ) {
-		// Several replies in a topic with a single page
-		if ( empty( $to_num ) ) {
-			$retstr = sprintf( _n( 'Viewing %1$s reply', 'Viewing %1$s replies', $total_int, 'buddyboss' ), $total );
-
-			// Several replies in a topic with several pages
-		} else {
-			$retstr = sprintf( _n( 'Viewing %2$s of %4$s replies', 'Viewing %2$s - %3$s of %4$s replies', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
-		}
-		// We are not including the lead topic
-	} elseif ( bbp_show_lead_topic() ) {
-
-		// Several replies in a topic with a single page
-		if ( empty( $to_num ) ) {
-			$retstr = sprintf( _n( 'Viewing %1$s reply', 'Viewing %1$s replies', $total_int, 'buddyboss' ), $total );
-
-			// Several replies in a topic with several pages
-		} else {
-			$retstr = sprintf( _n( 'Viewing %2$s of %4$s replies', 'Viewing %2$s - %3$s of %4$s replies', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
-		}
-
-		// We are including the lead topic
-	} else {
-
-		// Several posts in a topic with a single page
-		if ( empty( $to_num ) ) {
-			$retstr = sprintf( _n( 'Viewing %1$s post', 'Viewing %1$s posts', $total_int, 'buddyboss' ), $total );
-
-			// Several posts in a topic with several pages
-		} else {
-			$retstr = sprintf( _n( 'Viewing %2$s of %4$s posts', 'Viewing %2$s - %3$s of %4$s posts', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
-		}
+	if( (int) $total_pages > 1 ) {
+		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
 	}
 
 	// Filter and return
@@ -2830,9 +2790,9 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 				// Get child reply.
 				$post_status   = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
 				$bbp_gtcpq_sql = $wpdb->prepare(
-					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} 
-				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status 
-				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s' 
+					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
+				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status
+				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s'
 				AND {$wpdb->postmeta}.meta_key = '%s';",
 					$topic_id,
 					bbp_get_reply_post_type(),
