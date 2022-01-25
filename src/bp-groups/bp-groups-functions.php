@@ -2838,7 +2838,7 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
  */
 function groups_get_groupmeta( $group_id, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-    $retval = get_metadata( 'group', $group_id, $meta_key, $single );
+	$retval = get_metadata( 'group', $group_id, $meta_key, $single );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
