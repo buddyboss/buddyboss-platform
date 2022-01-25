@@ -778,8 +778,8 @@ function groups_get_group_mods( $group_id ) {
  * @return false|array Multi-d array of 'members' list and 'count'.
  */
 function groups_get_group_members( $args = array() ) {
+	static $cache = array();
 
-	static $cache  = array();
 	$function_args = func_get_args();
 
 	// Backward compatibility with old method of passing arguments.
@@ -837,22 +837,23 @@ function groups_get_group_members( $args = array() ) {
 			}
 		}
 
-		$cache_key = 'bp_groups_get_group_members_' . md5( serialize( $args ) );
+		$group_member_args = array(
+			'group_id'        => $r['group_id'],
+			'per_page'        => $r['per_page'],
+			'page'            => $r['page'],
+			'group_role'      => $r['group_role'],
+			'exclude'         => $r['exclude'],
+			'search_terms'    => $r['search_terms'],
+			'type'            => $r['type'],
+			'xprofile_query'  => $r['xprofile_query'],
+			'populate_extras' => $r['populate_extras'],
+		);
+
+		$cache_key = 'bp_groups_get_group_members_' . md5( serialize( $group_member_args ) );
 		if ( ! isset( $cache[ $cache_key ] ) ) {
 			// Perform the group member query (extends BP_User_Query).
-			$members = new BP_Group_Member_Query(
-				array(
-				'group_id'        => $r['group_id'],
-				'per_page'        => $r['per_page'],
-				'page'            => $r['page'],
-				'group_role'      => $r['group_role'],
-				'exclude'         => $r['exclude'],
-				'search_terms'    => $r['search_terms'],
-				'type'            => $r['type'],
-				'xprofile_query'  => $r['xprofile_query'],
-				'populate_extras' => $r['populate_extras'],
-				)
-			);
+			$members = new BP_Group_Member_Query( $group_member_args );
+
 			$cache[ $cache_key ] = $members;
 		} else {
 			$members = $cache[ $cache_key ];
