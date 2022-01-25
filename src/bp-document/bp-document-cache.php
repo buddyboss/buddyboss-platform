@@ -86,10 +86,7 @@ function bp_document_clear_document_user_object_cache_on_delete( $documents ) {
 
 			if ( ! empty( $deleted_document->activity_id ) ) {
 				wp_cache_delete( 'bp_document_activity_id_' . $deleted_document->activity_id, 'bp_document' );
-			}
-
-			if ( ! empty( $deleted_document->attachment_id ) ) {
-				wp_cache_delete( 'bp_document_attachment_id_' . $deleted_document->attachment_id, 'bp_document' );
+				wp_cache_delete( 'bp_document_attachment_id_' . $deleted_document->activity_id, 'bp_document' );
 			}
 
 			if ( $user_id ) {

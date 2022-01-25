@@ -85,12 +85,9 @@ function bp_video_clear_video_user_object_cache_on_delete( $videos ) {
 
 			wp_cache_delete( 'bb_video_activity_' . $deleted_video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 
-			if ( ! empty( $deleted_document->activity_id ) ) {
-				wp_cache_delete( 'bp_document_activity_id_' . $deleted_document->activity_id, 'bp_document' );
-			}
-
-			if ( ! empty( $deleted_document->attachment_id ) ) {
-				wp_cache_delete( 'bp_document_attachment_id_' . $deleted_document->attachment_id, 'bp_document' );
+			if ( ! empty( $deleted_video->activity_id ) ) {
+				wp_cache_delete( 'bp_video_activity_id_' . $deleted_video->activity_id, 'bp_video' );
+				wp_cache_delete( 'bp_video_attachment_id_' . $deleted_video->activity_id, 'bp_video' );
 			}
 
 			if ( $user_id ) {
