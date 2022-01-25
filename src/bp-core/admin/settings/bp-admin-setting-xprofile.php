@@ -235,7 +235,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-default-profile-cover-type', esc_html__( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
 
-			$this->add_field( 'bp-default-profile-cover-type', esc_html__( 'Cover Image Sizes', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_image_size', 'string', $args );
+			/**
+			 * Fires to register xProfile tab settings fields and section.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param Object $this BP_Admin_Setting_Xprofile.
+			 */
+			do_action( 'bp_admin_setting_xprofile_profile_images', $this );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom' . ( ( ! $is_disabled_cover && 'custom' === $default_cover_type ) ? '' : ' bp-hide' );
