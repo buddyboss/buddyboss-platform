@@ -611,7 +611,7 @@ class BP_User_Query {
 		 * @param array         $value Array of arguments for the user query.
 		 * @param BP_User_Query $this  Current BP_User_Query instance.
 		 */
-		$args = array(
+		$args = apply_filters( 'bp_wp_user_query_args', array(
 			// Relevant.
 			'fields'      => $fields,
 			'include'     => $this->user_ids,
@@ -619,19 +619,18 @@ class BP_User_Query {
 			// Overrides
 			'blog_id'     => 0,    // BP does not require blog roles.
 			'count_total' => false, // We already have a count.
+		), $this );
 
-		);
 		$cache_key = 'bb_do_wp_user_query_' . md5( maybe_serialize( $args ) );
+
 		if ( ! isset( $do_wp_user_query[ $cache_key ] ) ) {
-			$do_wp_user_query[ $cache_key ] = new WP_User_Query(
-				apply_filters(
-					'bp_wp_user_query_args',
-					$args,
-					$this
-				)
-			);
+			$wp_user_query = new WP_User_Query( $args );
+
+			$do_wp_user_query[ $cache_key ] = $wp_user_query;
+		} else {
+			$wp_user_query = $do_wp_user_query[ $cache_key ];
 		}
-		$wp_user_query = $do_wp_user_query[ $cache_key ];
+
 		// We calculate total_users using a standalone query, except
 		// when a whitelist of user_ids is passed to the constructor.
 		// This clause covers the latter situation, and ensures that
