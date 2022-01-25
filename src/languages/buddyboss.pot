@@ -1,14 +1,14 @@
-# Copyright (C) 2021 BuddyBoss
+# Copyright (C) 2022 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-12-29 09:49:11+00:00\n"
+"POT-Creation-Date: 2022-01-25 19:21:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -14287,7 +14287,7 @@ msgstr ""
 msgid "Split the topic from this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2589
+#: bp-forums/replies/template.php:2590
 msgid "Page %1$s of %2$s"
 msgstr ""
 
@@ -18443,6 +18443,7 @@ msgid "Export is ready."
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:188
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:16
 msgid "Completed"
 msgstr ""
 
@@ -18994,6 +18995,7 @@ msgid "Group courses menu"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-progress.php:10
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:16
 msgid "Complete"
 msgstr ""
 
@@ -25176,8 +25178,8 @@ msgstr ""
 msgid "%s's Profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:16
-msgid "%s Complete"
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:28
+msgid "%"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/capabilities.php:12
