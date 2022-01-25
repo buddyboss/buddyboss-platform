@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_media_clear_cache_for_media( $media ) {
 	wp_cache_delete( $media->id, 'bp_media' );
-	wp_cache_delete( 'bp_attachment_media_' . $media->attachment_id, 'bp_media' );
 	wp_cache_delete( 'bp_attachment_media_id_' . $media->attachment_id, 'bp_media' );
 	wp_cache_delete( 'bb_media_activity_' . $media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 
@@ -88,7 +87,6 @@ function bp_media_clear_media_user_object_cache( $media ) {
 		wp_cache_delete( 'total_user_group_media_count_' . $user_id, 'bp_media' );
 	}
 	if ( $attachment_id ) {
-		wp_cache_delete( 'bp_attachment_media_' . $attachment_id, 'bp_media' );
 		wp_cache_delete( 'bp_attachment_media_id_' . $attachment_id, 'bp_media' );
 	}
 	if ( $activity_id ) {
@@ -123,7 +121,6 @@ function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
 				wp_cache_delete( 'total_user_group_media_count_' . $user_id, 'bp_media' );
 			}
 			if ( $attachment_id ) {
-				wp_cache_delete( 'bp_attachment_media_' . $attachment_id, 'bp_media' );
 				wp_cache_delete( 'bp_attachment_media_id_' . $attachment_id, 'bp_media' );
 			}
 
