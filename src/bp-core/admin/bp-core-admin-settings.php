@@ -1272,6 +1272,35 @@ function bp_admin_setting_group_layout_default_option() {
 }
 
 /**
+ * Admin Settings for Settings > Groups > Group Directories > Grid style
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_group_grid_style() {
+?>
+	<div class="bb-grid-style-outer">
+		<div class="bb-grid-style bb-bottom-left">
+			<input id="bb-group-grid-style-left" name="bb-group-layout-grid-style" type="radio" value="left" <?php checked( 'left' === bp_get_option( 'bb-group-grid-style', '' ) ? true : false ); ?> />
+			<label class="option opt-left" for="bb-group-grid-style-left">
+				<span>
+					<?php esc_html_e( 'Left', 'buddyboss' ); ?>
+				</span>
+			</label>
+		</div>
+		<div class="bb-grid-style bb-bottom-centered">
+			<input id="bb-group-grid-style-centered" name="bb-group-layout-grid-style" type="radio" value="centered" <?php checked( 'centered' === bp_get_option( 'bb-group-grid-style', '' ) ? true : false ); ?> />
+			<label class="option opt-centered" for="bb-group-grid-style-centered">
+				<span>
+					<?php esc_html_e( 'Centered', 'buddyboss' ); ?>
+				</span>
+			</label>
+		</div>
+	</div>
+	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+<?php
+}
+
+/**
  * Link to Group Directories tutorial
  *
  * @since BuddyBoss 1.2.0
