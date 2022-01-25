@@ -49,6 +49,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 					echo esc_attr( $user_progress_status );
 					?>
 					">
+						<span class="section_ico"><i class="bb-icon-check-small"></i></span>
 						<span class="section_number">
 							<?php echo esc_html( $single_section_details['number'] ); ?>
 						</span>
