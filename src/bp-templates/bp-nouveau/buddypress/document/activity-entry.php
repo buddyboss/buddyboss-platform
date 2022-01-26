@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Activity Document
+ * The template for activity document entry
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/activity-entry.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 $attachment_id     = bp_get_document_attachment_id();

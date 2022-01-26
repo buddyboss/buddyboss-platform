@@ -2534,6 +2534,15 @@ window.bp = window.bp || {};
 					self.document_dropzone_obj = new Dropzone( 'div#bp-group-messages-post-document-uploader', self.documentOptions );
 
 					self.document_dropzone_obj.on(
+						'addedfile',
+						function ( file ) {
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
+					);
+
+					self.document_dropzone_obj.on(
 						'sending',
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'document_document_upload' );
@@ -2647,7 +2656,7 @@ window.bp = window.bp || {};
 									tool_box.find( '#bp-group-messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '#bp-group-messages-video-button' ) ) {
-									tool_box.find( '#bp-group-messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+									tool_box.find( '#bp-group-messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '#bp-group-messages-gif-button' ) ) {
 									tool_box.find( '#bp-group-messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
@@ -2877,6 +2886,15 @@ window.bp = window.bp || {};
 					// init dropzone.
 					self.dropzone_obj[ dropzone_obj_key ] = new Dropzone( dropzone_container[ 0 ], self.documentOptions );
 					self.dropzone_media[ dropzone_obj_key ] = [];
+
+					self.dropzone_obj[ dropzone_obj_key ].on(
+						'addedfile',
+						function ( file ) {
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
+					);
 
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'sending',
@@ -3804,7 +3822,7 @@ window.bp = window.bp || {};
 
 				self.dropzone_obj.on(
 					'addedfile',
-					function () {
+					function ( file ) {
 						setTimeout(
 							function () {
 								if ( self.dropzone_obj.getAcceptedFiles().length ) {
@@ -3813,6 +3831,11 @@ window.bp = window.bp || {};
 							},
 							1000
 						);
+						var filename = file.upload.filename;
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						if( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').length ) {
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
 					}
 				);
 
