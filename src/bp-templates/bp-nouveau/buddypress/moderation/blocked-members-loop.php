@@ -8,7 +8,7 @@
  *
  * @since   BuddyBoss 1.5.6
  * @package BuddyBoss\Core
- * @version 1.0.0
+ * @version 1.5.6
  */
 
 if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :

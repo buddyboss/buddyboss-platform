@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/search/loop/sfwd-courses.php.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.0.0
+ * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 

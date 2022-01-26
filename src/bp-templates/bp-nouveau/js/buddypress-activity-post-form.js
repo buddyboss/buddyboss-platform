@@ -1421,18 +1421,19 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'uploadprogress',
 					function( element ) {
-						
+
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 						if ( element.upload.progress <= 99 ) {
 							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-						
-							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-							var radius        = circle.r.baseVal.value;
-							var circumference = radius * 2 * Math.PI;
-
-							circle.style.strokeDasharray  = circumference + ' ' + circumference;
-							circle.style.strokeDashoffset = circumference;
-							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
+						} else if ( element.upload.progress === 100 ) {
+							circle.style.strokeDashoffset = circumference - .99 * circumference;
+							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 						}
 					}
 				);
@@ -2871,7 +2872,8 @@ window.bp = window.bp || {};
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
 					//display image of the group.
 					if ( this.model.attributes.link_images && false === this.model.attributes.link_images.includes( 'mystery-group' ) ) {
-						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' ).html( '<img src="' + this.model.attributes.link_images + '" alt=""/>' );
+						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
+						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).html( '<img src="' + this.model.attributes.link_images + '" alt=""/>' );
 					} else {
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass( 'group-privacy-point-icon' ).addClass( 'privacy-point-icon' );
@@ -3773,7 +3775,7 @@ window.bp = window.bp || {};
 
 			events: {
 				'focus #whats-new': 'displayFull',
-				'keyup #whats-new': 'postValidate',
+				'input #whats-new': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The template for search results for the activity.
  *
