@@ -378,6 +378,31 @@
 					);
 			}
 
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
+
+				if (element.checked) {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-cover-image-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each( function() {
