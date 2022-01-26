@@ -1301,6 +1301,25 @@ function bb_admin_setting_group_grid_style() {
 }
 
 /**
+ * Allow Platform default group element setting field
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bb_admin_setting_group_elements( $args ) {
+
+	$element_name = $args['element_name'];
+?>
+	<input name="<?php echo esc_attr( 'bb-group-element-' . $element_name ); ?>" id="<?php echo esc_attr( $element_name ); ?>" type="checkbox" value="1" <?php checked( bb_platform_group_element_enable( 'bb-group-element-' . $element_name, true ) ); ?>/>
+	<label for="<?php echo esc_attr( $element_name ); ?>"><?php echo esc_html( $args['element_label'], 'buddyboss' ); ?></label>
+	<?php
+
+}
+
+/**
  * Link to Group Directories tutorial
  *
  * @since BuddyBoss 1.2.0
