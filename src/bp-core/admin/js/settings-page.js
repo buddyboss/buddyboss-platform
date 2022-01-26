@@ -430,6 +430,32 @@
 				);
 			}
 
+			// Hide/show group element group type
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_types' ).length ) {
+
+				var element = document.getElementById( 'bp-disable-group-type-creation' );
+
+				if (element.checked) {
+					$( '.bb-group-elements .bb-group-element-group-type' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-type-creation',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-group-type' ).show();
+							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each( function() {
