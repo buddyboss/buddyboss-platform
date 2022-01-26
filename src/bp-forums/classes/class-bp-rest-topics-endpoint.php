@@ -2856,8 +2856,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @param int $topic_id Topic ID.
 	 * @param int $forum_id Forum ID.
 	 *
-	 * @since
-	 *
 	 * @return bool
 	 */
 	public function can_reply( $topic_id, $forum_id ) {
