@@ -621,11 +621,14 @@ class BP_XProfile_Field {
 		}
 
 		$bp        = buddypress();
-		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id;
+		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id . '_' . $for_editing . '_' . $this->order_by;
 		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
-			$bp_get_children_cache[ $cache_key ] = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
+			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
+
+			$bp_get_children_cache[ $cache_key ] = $children;
+		} else {
+			$children = $bp_get_children_cache[ $cache_key ];
 		}
-		$children = $bp_get_children_cache[ $cache_key ];
 
 		/**
 		 * Filters the found children for a field.
@@ -1096,6 +1099,7 @@ class BP_XProfile_Field {
 	 */
 	public static function get_fields_for_member_type( $member_types ) {
 		global $wpdb;
+		static $unrestricted_field_ids = null;
 
 		$fields = array();
 
@@ -1148,8 +1152,6 @@ class BP_XProfile_Field {
 
 		// Any fields with no member_type metadata are available to all profile types.
 		if ( ! in_array( '_none', $member_types ) ) {
-			static $unrestricted_field_ids = null;
-
 			if ( null === $unrestricted_field_ids ) {
 				if ( ! empty( $all_recorded_field_ids ) ) {
 					$all_recorded_field_ids_sql = implode( ',', array_map( 'absint', $all_recorded_field_ids ) );
