@@ -378,6 +378,7 @@
 					);
 			}
 
+			// Hide/show group element cover image
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
 				var element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
