@@ -1029,7 +1029,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
  */
 function bp_admin_setting_callback_default_group_cover_size() {
 	?>
-	<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-cover-sizes.png' ); ?>" width="650px" alt="">
+	<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-cover-sizes.png' ); ?>" width="570px" alt="">
 	<?php
 }
 
