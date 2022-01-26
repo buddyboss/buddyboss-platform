@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-26 10:54:25+00:00\n"
+"POT-Creation-Date: 2022-01-26 11:52:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3129,11 +3129,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:639
 #: bp-core/admin/bp-core-admin-settings.php:1005
 #: bp-core/admin/bp-core-admin-settings.php:1121
-#: bp-core/admin/bp-core-admin-settings.php:1348
-#: bp-core/admin/bp-core-admin-settings.php:1413
-#: bp-core/admin/bp-core-admin-settings.php:1450
-#: bp-core/admin/bp-core-admin-settings.php:1473
-#: bp-core/admin/bp-core-admin-settings.php:1611
+#: bp-core/admin/bp-core-admin-settings.php:1347
+#: bp-core/admin/bp-core-admin-settings.php:1412
+#: bp-core/admin/bp-core-admin-settings.php:1449
+#: bp-core/admin/bp-core-admin-settings.php:1472
+#: bp-core/admin/bp-core-admin-settings.php:1610
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3526,103 +3526,103 @@ msgid ""
 "will only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1327
+#: bp-core/admin/bp-core-admin-settings.php:1326
 msgid ""
 "Select which elements show in group directories. Cover images will only "
 "display in grid view and group descriptions will only display in list view."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1366
+#: bp-core/admin/bp-core-admin-settings.php:1365
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1367
+#: bp-core/admin/bp-core-admin-settings.php:1366
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1372
+#: bp-core/admin/bp-core-admin-settings.php:1371
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1392
+#: bp-core/admin/bp-core-admin-settings.php:1391
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1427
+#: bp-core/admin/bp-core-admin-settings.php:1426
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1490
+#: bp-core/admin/bp-core-admin-settings.php:1489
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1491
+#: bp-core/admin/bp-core-admin-settings.php:1490
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1509
+#: bp-core/admin/bp-core-admin-settings.php:1508
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1517
+#: bp-core/admin/bp-core-admin-settings.php:1516
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1535
+#: bp-core/admin/bp-core-admin-settings.php:1534
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1536
+#: bp-core/admin/bp-core-admin-settings.php:1535
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1550
+#: bp-core/admin/bp-core-admin-settings.php:1549
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1551
+#: bp-core/admin/bp-core-admin-settings.php:1550
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1566
+#: bp-core/admin/bp-core-admin-settings.php:1565
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1567
+#: bp-core/admin/bp-core-admin-settings.php:1566
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1568
+#: bp-core/admin/bp-core-admin-settings.php:1567
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1569
+#: bp-core/admin/bp-core-admin-settings.php:1568
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1570
+#: bp-core/admin/bp-core-admin-settings.php:1569
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1571
+#: bp-core/admin/bp-core-admin-settings.php:1570
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1572
+#: bp-core/admin/bp-core-admin-settings.php:1571
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1573
+#: bp-core/admin/bp-core-admin-settings.php:1572
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1574
+#: bp-core/admin/bp-core-admin-settings.php:1573
 msgid "5 Minutes"
 msgstr ""
 

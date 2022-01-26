@@ -381,9 +381,9 @@
 			// Hide/show group element cover image
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
-				var element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
+				var cover_image_element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
 
-				if (element.checked) {
+				if (cover_image_element.checked) {
 					$( '.bb-group-elements .bb-group-element-cover-images' ).show();
 				} else {
 					$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
@@ -407,9 +407,9 @@
 			// Hide/show group element avatars
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
-				var element = document.getElementById( 'bp-disable-group-avatar-uploads' );
+				var avatar_element = document.getElementById( 'bp-disable-group-avatar-uploads' );
 
-				if (element.checked) {
+				if (avatar_element.checked) {
 					$( '.bb-group-elements .bb-group-element-avatars' ).show();
 				} else {
 					$( '.bb-group-elements .bb-group-element-avatars' ).hide();
@@ -433,9 +433,9 @@
 			// Hide/show group element group type
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_types' ).length ) {
 
-				var element = document.getElementById( 'bp-disable-group-type-creation' );
+				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
 
-				if (element.checked) {
+				if (group_type_element.checked) {
 					$( '.bb-group-elements .bb-group-element-group-type' ).show();
 				} else {
 					$( '.bb-group-elements .bb-group-element-group-type' ).hide();
