@@ -550,6 +550,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		if ( ! empty( $media_ids ) && bp_has_media(
 			array(
 				'include'  => $media_ids,
+				'user_id'  => false,
 				'privacy'  => array( 'message' ),
 				'order_by' => 'menu_order',
 				'sort'     => 'ASC',
@@ -582,6 +583,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			bp_has_video(
 				array(
 					'include'  => $video_ids,
+					'user_id'  => false,
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
@@ -613,6 +615,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		if ( ! empty( $document_ids ) && bp_has_document(
 			array(
 				'include'  => $document_ids,
+				'user_id'  => false,
 				'order_by' => 'menu_order',
 				'sort'     => 'ASC',
 			)
