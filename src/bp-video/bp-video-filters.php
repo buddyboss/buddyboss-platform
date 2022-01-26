@@ -806,7 +806,7 @@ function bp_video_delete_attachment_video( $attachment_id ) {
 
 	$bp = buddypress();
 
-    $video = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore
+	$video = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->video->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore
 
 	if ( ! $video ) {
 		return false;
