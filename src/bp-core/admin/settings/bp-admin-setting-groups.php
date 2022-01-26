@@ -98,29 +98,21 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_field( 'bb-group-grid-style', __( 'Grid Style', 'buddyboss' ), 'bb_admin_setting_group_grid_style',  'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Elements
-		$args = [ 'class' => 'child-no-padding-first', 'element_name' => 'cover-images', 'element_label' => __( 'Cover Images', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-cover-images', __( 'Elements', 'buddyboss' ), 'bb_admin_setting_group_elements', 'checkbox', $args );
+		$args = [
+			'class' => 'group-elements',
+			'elements' => [
+				[ 'element_name' => 'cover-images', 'element_label' => __( 'Cover Images', 'buddyboss' )],
+				[ 'element_name' => 'avatars', 'element_label' => __( 'Avatars', 'buddyboss' )],
+				[ 'element_name' => 'group-privacy', 'element_label' => __( 'Group Privacy', 'buddyboss' )],
+				[ 'element_name' => 'group-type', 'element_label' => __( 'Group Type', 'buddyboss' )],
+				[ 'element_name' => 'last-activity', 'element_label' => __( 'Last Activity', 'buddyboss' )],
+				[ 'element_name' => 'members', 'element_label' => __( 'Members', 'buddyboss' )],
+				[ 'element_name' => 'group-descriptions', 'element_label' => __( 'Group Descriptions', 'buddyboss' )],
+				[ 'element_name' => 'join-buttons', 'element_label' => __( 'Join Buttons', 'buddyboss' )]
+			]
+		];
+		$this->add_field( 'bb-group-elements', __( 'Elements', 'buddyboss' ), 'bb_admin_setting_group_elements', 'checkbox', $args );
 
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'avatars', 'element_label' => __( 'Avatars', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-avatars', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
-
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'group-privacy', 'element_label' => __( 'Group Privacy', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-group-privacy', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
-
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'group-type', 'element_label' => __( 'Group Type', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-group-type', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
-
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'last-activity', 'element_label' => __( 'Last Activity', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-last-activity', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
-
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'members', 'element_label' => __( 'Members', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-members', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
-
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'group-descriptions', 'element_label' => __( 'Group Descriptions', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-group-descriptions', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
-
-		$args = [ 'class' => 'child-no-padding', 'element_name' => 'join-buttons', 'element_label' => __( 'Join Buttons', 'buddyboss' )];
-		$this->add_field( 'bb-group-element-join-buttons', '', 'bb_admin_setting_group_elements', 'checkbox', $args );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.
