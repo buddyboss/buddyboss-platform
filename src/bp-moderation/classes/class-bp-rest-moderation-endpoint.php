@@ -410,7 +410,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
 
-			if ( bp_is_following(
+			if ( function_exists( 'bp_is_following' ) && bp_is_following(
 				array(
 					'leader_id'   => $item_id,
 					'follower_id' => $user_id,
