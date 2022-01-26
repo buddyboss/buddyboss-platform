@@ -1806,17 +1806,26 @@ function bp_core_display_name_format( $default = 'first_name' ) {
  */
 function bp_rest_enable_private_network() {
 
-	$retval = (
-		function_exists( 'bp_enable_private_network' ) &&
-		true !== bp_enable_private_network() &&
+	$retval = false;
+	if (
+		true === (bool) bp_enable_private_rest_apis() &&
 		(
-			! function_exists( 'bbapp_is_private_app_enabled' ) ||
 			(
-				function_exists( 'bbapp_is_private_app_enabled' ) &&
-				true === bbapp_is_private_app_enabled() // Check for buddyboss app private network.
+				function_exists( 'bbapp_is_private_app_enabled' ) // buddyboss-app is active.
+				&& true === (bool) bbapp_is_private_app_enabled() // private app is disable.
 			)
+			|| ! function_exists( 'bbapp_is_private_app_enabled' )
 		)
-	);
+	) {
+		$retval = true;
+	}
+
+	if ( true === $retval ) {
+		$current_rest_url = $GLOBALS['wp']->query_vars['rest_route'];
+		if ( ! empty( $current_rest_url ) && bb_is_allowed_endpoint( $current_rest_url ) ) {
+			$retval = false;
+		}
+	}
 
 	/**
 	 * Filters whether private private REST APIs is enabled.
@@ -1916,4 +1925,108 @@ function bb_feed_post_types() {
 function bb_feed_not_allowed_comment_post_types() {
 	// Exclude BP CPT.
 	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+}
+
+/**
+ * Enable private REST apis.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if private network for site is enabled, otherwise
+ *              false.
+ */
+function bp_enable_private_rest_apis( $default = false ) {
+	global $bp;
+	
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
+		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
+	} else {
+		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
+	}
+	
+	/**
+	 * Filters whether private REST apis for site is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether private network for site is enabled.
+	 */
+	return apply_filters( 'bp_enable_private_rest_apis', $val );
+}
+
+/**
+ * Add APIs endpoint which will ignore even if private REST APIs is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Private REST APIs public content.
+ */
+function bb_enable_private_rest_apis_public_content( $default = '' ) {
+	
+	/**
+	 * Filters Private REST APIs public content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Private REST APIs public content.
+	 */
+	return apply_filters( 'bb_enable_private_rest_apis_public_content', bp_get_option( 'bb-enable-private-rest-apis-public-content', '' ) );
+}
+
+/**
+ * Enable private RSS feeds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if private network for site is enabled, otherwise
+ *              false.
+ */
+function bp_enable_private_rss_feeds( $default = false ) {
+	global $bp;
+	
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
+		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
+	} else {
+		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
+	}
+	
+	/**
+	 * Filters whether private REST apis for site is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Whether private network for site is enabled.
+	 */
+	return apply_filters( 'bp_enable_private_rss_feeds', $val );
+}
+
+/**
+ * Add RSS feeds endpoint which will ignore even if private RSS feeds is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Private RSS Feeds public content.
+ */
+function bb_enable_private_rss_feeds_public_content( $default = '' ) {
+	
+	/**
+	 * Filters Private REST APIs public content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Private REST APIs public content.
+	 */
+	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bp_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
 }

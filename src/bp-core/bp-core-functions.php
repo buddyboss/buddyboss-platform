@@ -6033,3 +6033,154 @@ function bb_check_server_disabled_symlink() {
 
 	return false;
 }
+
+/**
+ * Function will restrict RSS feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_restricate_rss_feed() {
+	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	if (
+		strpos( $actual_link, '/feed/' ) === false &&
+		strpos( $actual_link, 'feed=' ) === false
+	) { // if permalink has ? then need to check with feed=.
+		return;
+	}
+
+	if (
+		strpos( $actual_link, 'wp-cron.php' ) === false &&
+		strpos( $actual_link, 'wp-login.php' ) === false &&
+		strpos( $actual_link, 'admin-ajax.php' ) === false &&
+		strpos( $actual_link, 'wp-json' ) === false
+	) {
+		$request_url = untrailingslashit( $actual_link );
+		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
+		if ( '' !== $exclude_rss_feed ) {
+			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
+			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
+				// Check if current url has slash in the last if not then add because we allow to add
+				// feed url like this one - /feed/.
+				foreach ( $exclude_arr_rss_feeds as $url ) {
+					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+					$un_trailing_slash_it_url = untrailingslashit( $url );
+					// Check if strict match.
+					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						return;
+					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url );
+						// Allow to view if fragment matched.
+						foreach ( $fragments as $fragment ) {
+							if ( $fragment === trim( $url, '/' ) ) {
+								return;
+							}
+						}
+						// Allow to view if fragment matched with the trailing slash.
+						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						if ( $is_matched_fragment === $url ) {
+							return;
+						}
+						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
+						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+							return;
+						}
+						// Check URL is fully matched without remove trailing slash.
+					} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
+						return;
+					}
+				}
+			}
+		}
+
+		$defaults = array(
+			'mode'     => 2,
+			'redirect' => $actual_link,
+			'root'     => bp_get_root_domain(),
+			'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+		);
+		bp_core_no_access( $defaults );
+		exit();
+	}
+}
+
+/**
+ * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response $response
+ */
+function bb_restricate_rest_api( $response, $handler, $request ) {
+	// Get current route.
+	$current_endpoint = $request->get_route();
+	// Add mandatory endpoint here for app which you want to exclude from restriction.
+	// ex: /buddyboss-app/auth/v1/jwt/token.
+	$default_exclude_endpoint = array(
+		'/buddyboss/v1/signup/form',
+		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
+		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
+		'/buddyboss/v1/settings',
+		'/buddyboss/v1/signup',
+	);
+	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
+	// Allow some endpoints which is mandatory for app.
+	if ( ! empty( $exclude_required_endpoints ) && in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+		return $response;
+	}
+
+	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
+		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
+		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
+		$response      = rest_ensure_response( $error );
+	}
+
+	return $response;
+}
+
+/**
+ * Function will check current REST APIs endpoint is allow or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $current_endpoint Current endpoint.
+ *
+ * @return bool true Return true if allow endpoint otherwise return false.
+ */
+function bb_is_allowed_endpoint( $current_endpoint ) {
+	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
+	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
+	if ( '' !== $exclude_endpoints ) {
+		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
+		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
+			foreach ( $exclude_arr_endpoints as $endpoints ) {
+				if ( ! empty( $endpoints ) ) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
+					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
+						return true;
+					} else {
+						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
+							$endpoints = str_replace( trailingslashit( bp_get_root_domain() ), '', $endpoints );
+						}
+						if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+							$endpoints = str_replace( 'wp-json', '', $endpoints );
+						}
+						$endpoints                = str_replace( '//', '/', $endpoints );
+						$endpoints                = str_replace( '///', '/', $endpoints );
+						$endpoints                = '/' . ltrim( $endpoints, '/' );
+						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						if ( $current_endpoint_allowed ) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+}
