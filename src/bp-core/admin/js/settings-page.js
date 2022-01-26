@@ -404,6 +404,32 @@
 				);
 			}
 
+			// Hide/show group element avatars
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var element = document.getElementById( 'bp-disable-group-avatar-uploads' );
+
+				if (element.checked) {
+					$( '.bb-group-elements .bb-group-element-avatars' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-avatar-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-avatars' ).show();
+							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each( function() {
