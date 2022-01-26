@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-25 16:57:14+00:00\n"
+"POT-Creation-Date: 2022-01-26 07:33:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3129,11 +3129,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:639
 #: bp-core/admin/bp-core-admin-settings.php:1005
 #: bp-core/admin/bp-core-admin-settings.php:1121
-#: bp-core/admin/bp-core-admin-settings.php:1320
-#: bp-core/admin/bp-core-admin-settings.php:1385
-#: bp-core/admin/bp-core-admin-settings.php:1422
-#: bp-core/admin/bp-core-admin-settings.php:1445
-#: bp-core/admin/bp-core-admin-settings.php:1583
+#: bp-core/admin/bp-core-admin-settings.php:1339
+#: bp-core/admin/bp-core-admin-settings.php:1404
+#: bp-core/admin/bp-core-admin-settings.php:1441
+#: bp-core/admin/bp-core-admin-settings.php:1464
+#: bp-core/admin/bp-core-admin-settings.php:1602
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:448
@@ -3526,97 +3526,97 @@ msgid ""
 "will only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1338
+#: bp-core/admin/bp-core-admin-settings.php:1357
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1339
+#: bp-core/admin/bp-core-admin-settings.php:1358
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1344
+#: bp-core/admin/bp-core-admin-settings.php:1363
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1364
+#: bp-core/admin/bp-core-admin-settings.php:1383
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1399
+#: bp-core/admin/bp-core-admin-settings.php:1418
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1462
+#: bp-core/admin/bp-core-admin-settings.php:1481
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1463
+#: bp-core/admin/bp-core-admin-settings.php:1482
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1481
+#: bp-core/admin/bp-core-admin-settings.php:1500
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1489
+#: bp-core/admin/bp-core-admin-settings.php:1508
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1507
+#: bp-core/admin/bp-core-admin-settings.php:1526
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1508
+#: bp-core/admin/bp-core-admin-settings.php:1527
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1522
+#: bp-core/admin/bp-core-admin-settings.php:1541
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1523
+#: bp-core/admin/bp-core-admin-settings.php:1542
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1538
+#: bp-core/admin/bp-core-admin-settings.php:1557
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1539
+#: bp-core/admin/bp-core-admin-settings.php:1558
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1540
+#: bp-core/admin/bp-core-admin-settings.php:1559
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1541
+#: bp-core/admin/bp-core-admin-settings.php:1560
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1542
+#: bp-core/admin/bp-core-admin-settings.php:1561
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1543
+#: bp-core/admin/bp-core-admin-settings.php:1562
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1544
+#: bp-core/admin/bp-core-admin-settings.php:1563
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1545
+#: bp-core/admin/bp-core-admin-settings.php:1564
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1546
+#: bp-core/admin/bp-core-admin-settings.php:1565
 msgid "5 Minutes"
 msgstr ""
 
@@ -3690,11 +3690,12 @@ msgid "What do you want to import?"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
-#: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:783
-#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:879
-#: bp-core/classes/class-bp-email-tokens.php:417 bp-forums/admin/topics.php:679
-#: bp-groups/bp-groups-admin.php:1426 bp-groups/bp-groups-admin.php:2082
-#: bp-groups/bp-groups-functions.php:4098
+#: bp-core/admin/bp-core-admin-tools.php:120
+#: bp-core/admin/settings/bp-admin-setting-groups.php:116
+#: bp-core/bp-core-functions.php:783 bp-core/bp-core-template.php:561
+#: bp-core/bp-core-update.php:879 bp-core/classes/class-bp-email-tokens.php:417
+#: bp-forums/admin/topics.php:679 bp-groups/bp-groups-admin.php:1426
+#: bp-groups/bp-groups-admin.php:2082 bp-groups/bp-groups-functions.php:4098
 #: bp-groups/bp-groups-functions.php:4117
 #: bp-groups/bp-groups-functions.php:4134 bp-groups/bp-groups-template.php:5458
 #: bp-groups/classes/class-bp-groups-component.php:645
@@ -4280,6 +4281,46 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:98
 msgid "Grid Style"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:101
+msgid "Cover Images"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:102
+msgid "Elements"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:104
+msgid "Avatars"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:107
+#: bp-groups/bp-groups-admin.php:1210
+msgid "Group Privacy"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:110
+#: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
+#: bp-groups/bp-groups-admin.php:1981 bp-groups/bp-groups-admin.php:2309
+#: bp-groups/bp-groups-functions.php:3576
+#: bp-groups/classes/class-bp-groups-list-table.php:744
+#: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:796
+#: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:269
+msgid "Group Type"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:113
+#: bp-core/gdpr/class-bp-group-export.php:130
+msgid "Last Activity"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:119
+msgid "Group Descriptions"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-groups.php:122
+msgid "Join Buttons"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
@@ -8050,15 +8091,6 @@ msgstr ""
 msgid "Search Group Types"
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
-#: bp-groups/bp-groups-admin.php:1981 bp-groups/bp-groups-admin.php:2309
-#: bp-groups/bp-groups-functions.php:3576
-#: bp-groups/classes/class-bp-groups-list-table.php:744
-#: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:796
-#: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:269
-msgid "Group Type"
-msgstr ""
-
 #: bp-core/deprecated/buddypress/1.5.php:168
 #: bp-templates/bp-nouveau/includes/members/functions.php:458
 msgid "About Me"
@@ -8480,10 +8512,6 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-group-export.php:129
 msgid "Total Members"
-msgstr ""
-
-#: bp-core/gdpr/class-bp-group-export.php:130
-msgid "Last Activity"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-group-membership-export.php:27
@@ -16134,10 +16162,6 @@ msgstr[1] ""
 
 #: bp-groups/bp-groups-admin.php:1180
 msgid "Search all Groups"
-msgstr ""
-
-#: bp-groups/bp-groups-admin.php:1210
-msgid "Group Privacy"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1220
