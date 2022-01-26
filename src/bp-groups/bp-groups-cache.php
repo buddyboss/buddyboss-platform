@@ -136,17 +136,20 @@ add_action( 'bp_groups_delete_group', 'bp_groups_clear_group_members_caches', 10
  *
  * @since BuddyPress 2.0.0
  *
- * @param int $user_id The user ID.
+ * @param int $user_id  The user ID.
+ * @param int $group_id The Group ID.
  */
-function bp_groups_clear_invite_count_for_user( $user_id, $group_id ) {
+function bp_groups_clear_invite_count_for_user( $user_id, $group_id = 0 ) {
 	wp_cache_delete( $user_id, 'bp_group_invite_count' );
 
 	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
 	wp_cache_delete( 'bp_get_moderator_total_group_count', 'bp_groups' );
 
-	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
-	wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
-	wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
+	if ( $group_id ) {
+		wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
+		wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
+		wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
+	}
 }
 add_action( 'groups_accept_invite', 'bp_groups_clear_invite_count_for_user' );
 add_action( 'groups_reject_invite', 'bp_groups_clear_invite_count_for_user' );
