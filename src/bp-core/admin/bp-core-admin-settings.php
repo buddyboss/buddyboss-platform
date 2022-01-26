@@ -1317,7 +1317,7 @@ function bb_admin_setting_group_elements( $args ) {
 	?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
 			<input name="<?php echo esc_attr('bb-group-element-' . $element_name); ?>" id="bb-group-element-<?php echo esc_attr($element_name); ?>" type="checkbox" value="1" <?php checked(bb_platform_group_element_enable('bb-group-element-' . $element_name, true)); ?> />
-			<label for="<?php echo esc_attr($element_name); ?>"><?php echo esc_html($element['element_label'], 'buddyboss'); ?></label>
+			<label for="bb-group-element-<?php echo esc_attr($element_name); ?>"><?php echo esc_html($element['element_label'], 'buddyboss'); ?></label>
 		</div>
 	<?php
 	}
