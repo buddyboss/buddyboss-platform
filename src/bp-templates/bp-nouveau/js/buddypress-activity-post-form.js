@@ -1851,9 +1851,10 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar  .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 
-				var whatNewAttm = $("#whats-new-attachments");
-				$('.whats-new-scroll-view').animate({
-					scrollTop: whatNewAttm.offset().top + whatNewAttm.outerHeight(true)
+				var whatNewForm = this.$el.closest( '#whats-new-form' );
+				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
+				whatNewScroll.stop().animate({
+					scrollTop: whatNewScroll[0].scrollHeight
 				}, 300);
 			},
 
@@ -3516,10 +3517,11 @@ window.bp = window.bp || {};
 
 			scrollToMedia: function () {
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
-				var whatNewAttm = whatNewForm.find( '#whats-new-attachments' );
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
 
-				whatNewScroll.scrollTop(whatNewScroll[0].scrollHeight);
+				whatNewScroll.stop().animate({
+					scrollTop: whatNewScroll[0].scrollHeight
+				}, 300);
 			}
 		}
 	);
