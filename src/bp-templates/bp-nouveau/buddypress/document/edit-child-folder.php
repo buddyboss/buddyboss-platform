@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Edit Child Folder
+ * The template for document edit child folder
  *
- * @since BuddyBoss 1.4.0
- * @package BuddyBoss/Core
+ * This template can be overridden by copying it to yourtheme/buddypress/document/edit-child-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_folder_template;

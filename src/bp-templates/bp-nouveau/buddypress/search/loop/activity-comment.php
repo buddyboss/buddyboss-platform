@@ -1,3 +1,15 @@
+<?php
+/**
+ * This template is used to print a single activity comment.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity-comment.php.
+ *
+ * @package BuddyBoss\Core
+ * @version 1.0.0
+ */
+
+?>
+
 <li class="bp-search-item bp-search-item_activity_comment">
 	<div class="list-wrap">
 		<div class="activity-avatar item-avatar">
