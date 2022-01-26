@@ -144,10 +144,12 @@ function bp_core_get_users( $args = '' ) {
 		// Get users like we were asked to do...
 		$cache_key = 'bp_core_get_users_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_core_get_users[ $cache_key ] ) ) {
-			$bp_core_get_users[ $cache_key ] = new BP_User_Query( $r );
-		}
+			$users = new BP_User_Query( $r );
 
-		$users = $bp_core_get_users[ $cache_key ];
+			$bp_core_get_users[ $cache_key ] = $users;
+		} else {
+			$users = $bp_core_get_users[ $cache_key ];
+		}
 
 		// ...but reformat the results to match bp_core_get_users() behavior.
 		$retval = array(
@@ -3316,13 +3318,13 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
  * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_member_type_post_by_type( $member_type ) {
+	static $member_type_post = array();
 	global $wpdb;
 
-	$cache_key	= 'bb_member_type_post_by_type_' . $member_type;
-	$post_id	= wp_cache_get( $cache_key, 'bp' );
+	$cache_key	= 'bb_member_type_post_by_type_' . sanitize_title( $member_type );
 
-	if( $post_id ) {
-		return $post_id;
+	if ( isset( $member_type_post[ $cache_key ] ) ) {
+		return $member_type_post[ $cache_key ];
 	}
 
 	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
@@ -3337,9 +3339,9 @@ function bp_member_type_post_by_type( $member_type ) {
 		$post_id = $wpdb->get_var( $query );
 	}
 
-	wp_cache_set( $cache_key, $post_id, 'bp' );
+	$member_type_post[ $cache_key ] = apply_filters( 'bp_member_type_post_by_type', $post_id );
 
-	return apply_filters( 'bp_member_type_post_by_type', $post_id );
+	return $member_type_post[ $cache_key ];
 }
 
 /**
@@ -3443,12 +3445,11 @@ function bp_get_removed_member_types() {
 		'nopaging'   => true,
 	);
 
-	$cache_key            = 'bp_get_removed_member_types';
-	$bp_member_type_query = wp_cache_get( $cache_key, 'bp_member_member_type' );
+	$bp_member_type_query = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
 
 	if ( false === $bp_member_type_query ) {
 		$bp_member_type_query = new WP_Query( $bp_member_type_args );
-		wp_cache_set( $cache_key, $bp_member_type_query, 'bp_member_member_type' );
+		wp_cache_set( 'bp_get_removed_member_types', $bp_member_type_query, 'bp_member_member_type' );
 	}
 	if ( $bp_member_type_query->have_posts() ) :
 		while ( $bp_member_type_query->have_posts() ) :
