@@ -28,33 +28,32 @@ function bp_profile_field_set_max_cap() {
  * @return type
  */
 function bp_get_repeater_template_field_ids( $field_group_id ) {
-	static $bp_group_field_ids = array();
-	static $bp_clone_field_ids = array();
+	static $bp_group_template_field_ids = array();
 	global $wpdb;
-	$bp        = buddypress();
-	$cache_key = 'bp_group_field_ids_' . $field_group_id;
-	if ( ! isset( $bp_group_field_ids[ $cache_key ] ) ) {
-		$bp_group_field_ids[ $cache_key ] = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
+	$bp = buddypress();
+
+	$cache_key = 'bp_group_template_field_ids_' . $field_group_id;
+	if ( isset( $bp_group_template_field_ids[ $cache_key ] ) ) {
+		return $bp_group_template_field_ids[ $cache_key ];
 	}
-	$group_field_ids = $bp_group_field_ids[ $cache_key ];
+
+	$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
 	if ( empty( $group_field_ids ) || is_wp_error( $group_field_ids ) ) {
 		return array();
 	}
 
-	$bp_clone_cache_key = 'bp_clone_field_ids_' . md5( maybe_serialize( $group_field_ids ) );
-	if ( ! isset( $bp_clone_field_ids[ $bp_clone_cache_key ] ) ) {
-		$bp_clone_field_ids[ $bp_clone_cache_key ] = $wpdb->get_col(
-			"SELECT object_id FROM {$bp->profile->table_name_meta} "
-			. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
-		);
-	}
-	$clone_field_ids = $bp_clone_field_ids[ $bp_clone_cache_key ];
+	$clone_field_ids = $wpdb->get_col(
+		"SELECT object_id FROM {$bp->profile->table_name_meta} "
+		. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
+	);
 
 	if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
 		$template_field_ids = $group_field_ids;
 	} else {
 		$template_field_ids = array_diff( $group_field_ids, $clone_field_ids );
 	}
+
+	$bp_group_template_field_ids[ $cache_key ] = $template_field_ids;
 
 	return $template_field_ids;
 }
@@ -77,6 +76,12 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 
 	$ids = array();
 
+	$cache_key = $field_group_id . '_' . $count;
+
+	if ( isset( $bp_clone_ids_subset[ $cache_key ] ) ) {
+		return $bp_clone_ids_subset[ $cache_key ];
+	}
+
 	$template_field_ids = bp_get_repeater_template_field_ids( $field_group_id );
 
 	if ( empty( $template_field_ids ) ) {
@@ -84,15 +89,12 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$cache_key = 'bp_clone_field_ids_subset_' . $template_field_id;
-		if ( ! isset( $bp_clone_ids_subset[ $cache_key ] ) ) {
-			$sql                               = $wpdb->prepare( "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
-		       JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
-		       WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
-		       AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC", $template_field_id );
-			$bp_clone_ids_subset[ $cache_key ] = $wpdb->get_results( $sql, ARRAY_A );
-		}
-		$results = $bp_clone_ids_subset[ $cache_key ];
+		$sql     = $wpdb->prepare( "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+		   JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
+		   WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
+		   AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC", $template_field_id );
+		$results = $wpdb->get_results( $sql, ARRAY_A );
+
 
 		for ( $i = 1; $i <= $count; $i++ ) {
 			// is there a clone already?
@@ -121,6 +123,8 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 		}
 	}
 
+	$bp_clone_ids_subset[ $cache_key ] = $ids;
+
 	return $ids;
 }
 
@@ -135,9 +139,14 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	static $bp_clone_field_ids_all = array();
 	global $wpdb;
-	$bp = buddypress();
+	$bp        = buddypress();
+	$cache_key = 'group_' . $field_group_id;
 
 	$ids = array();
+
+	if ( isset( $bp_clone_field_ids_all[ $cache_key ] ) ) {
+		return $bp_clone_field_ids_all[ $cache_key ];
+	}
 
 	$template_field_ids = bp_get_repeater_template_field_ids( $field_group_id );
 
@@ -146,18 +155,15 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$cache_key = 'clone_field_ids_all_' . $template_field_id;
-		if ( ! isset( $bp_clone_field_ids_all[ $cache_key ] ) ) {
-			$sql                                  = $wpdb->prepare( "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 
-				WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d", $template_field_id );
-			$bp_clone_field_ids_all[ $cache_key ] = $wpdb->get_col( $sql );
-		}
-		$results = $bp_clone_field_ids_all[ $cache_key ];
+		$sql     = $wpdb->prepare( "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d", $template_field_id );
+		$results = $wpdb->get_col( $sql );
 
 		if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 			$ids = array_merge( $ids, $results );
 		}
 	}
+
+	$bp_clone_field_ids_all[ $cache_key ] = $ids;
 
 	return $ids;
 }
@@ -363,11 +369,15 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 		return false;
 	}
 
-	$db_row_cache_key = 'db_row_cache_' . $field_id;
+	$db_row_cache_key = 'field_' . $field_id;
 	if ( ! isset( $db_row_cache[ $db_row_cache_key ] ) ) {
-		$db_row_cache[ $db_row_cache_key ] = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
+		$db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
+
+		$db_row_cache[ $db_row_cache_key ] = $db_row;
+	} else {
+		$db_row = $db_row_cache[ $db_row_cache_key ];
 	}
-	$db_row = $db_row_cache[ $db_row_cache_key ];
+
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
 		$template_field_id = $db_row['id'];
@@ -395,11 +405,15 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 		);
 		if ( $inserted ) {
 			$new_field_id    = $wpdb->insert_id;
-			$metas_cache_key = 'metas_cache_' . $template_field_id;
+			$metas_cache_key = 'field_meta_' . $template_field_id;
 			if ( ! isset( $metas_cache[ $metas_cache_key ] ) ) {
-				$metas_cache[ $metas_cache_key ] = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+				$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+
+				$metas_cache[ $metas_cache_key ] = $metas;
+			} else {
+				$metas = $metas_cache[ $metas_cache_key ];
 			}
-			$metas = $metas_cache[ $metas_cache_key ];
+
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				foreach ( $metas as $meta ) {
 					if ( ! empty( $meta['meta_key'] ) && $meta['meta_key'] === 'member_type' ) {
