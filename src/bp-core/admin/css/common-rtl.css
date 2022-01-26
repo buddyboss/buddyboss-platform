@@ -2360,6 +2360,10 @@ table tbody td .bb-description {
 /*------------------------------------------------------------------------------
  * 12.0 Group Directories Enhancement
  *----------------------------------------------------------------------------*/
+.bb-group-element {
+  margin-bottom: 10px;
+}
+
 .bb-grid-style-outer {
   display: flex;
   width: 180px;
