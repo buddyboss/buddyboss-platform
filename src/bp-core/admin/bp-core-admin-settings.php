@@ -1280,7 +1280,7 @@ function bb_admin_setting_group_grid_style() {
 ?>
 	<div class="bb-grid-style-outer">
 		<div class="bb-grid-style bb-bottom-left">
-			<input id="bb-group-grid-style-left" name="bb-group-layout-grid-style" type="radio" value="left" <?php checked( 'left' === bp_get_option( 'bb-group-grid-style', '' ) ? true : false ); ?> />
+			<input id="bb-group-grid-style-left" name="bb-group-grid-style" type="radio" value="left" <?php checked( 'left' === bp_get_option( 'bb-group-grid-style', '' ) ? true : false ); ?> />
 			<label class="option opt-left" for="bb-group-grid-style-left">
 				<span>
 					<?php esc_html_e( 'Left', 'buddyboss' ); ?>
@@ -1288,7 +1288,7 @@ function bb_admin_setting_group_grid_style() {
 			</label>
 		</div>
 		<div class="bb-grid-style bb-bottom-centered">
-			<input id="bb-group-grid-style-centered" name="bb-group-layout-grid-style" type="radio" value="centered" <?php checked( 'centered' === bp_get_option( 'bb-group-grid-style', '' ) ? true : false ); ?> />
+			<input id="bb-group-grid-style-centered" name="bb-group-grid-style" type="radio" value="centered" <?php checked( 'centered' === bp_get_option( 'bb-group-grid-style', '' ) ? true : false ); ?> />
 			<label class="option opt-centered" for="bb-group-grid-style-centered">
 				<span>
 					<?php esc_html_e( 'Centered', 'buddyboss' ); ?>
@@ -1316,7 +1316,7 @@ function bb_admin_setting_group_elements( $args ) {
 		$element_name = $element['element_name'];
 	?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
-			<input name="<?php echo esc_attr('bb-group-element-' . $element_name); ?>" id="bb-group-element-<?php echo esc_attr($element_name); ?>" type="checkbox" value="1" <?php checked(bb_platform_group_element_enable('bb-group-element-' . $element_name, true)); ?> />
+			<input name="bb-group-elements[]" id="bb-group-element-<?php echo esc_attr($element_name); ?>" type="checkbox" value="<?php echo $element_name; ?>" <?php checked(bb_platform_group_element_enable($element_name, true)); ?> />
 			<label for="bb-group-element-<?php echo esc_attr($element_name); ?>"><?php echo esc_html($element['element_label'], 'buddyboss'); ?></label>
 		</div>
 	<?php

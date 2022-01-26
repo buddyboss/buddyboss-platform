@@ -1409,7 +1409,7 @@ function bb_platform_group_element_enable( $element, $default = true ) {
 	 *
 	 * @param bool $value Whether or not the group element enable or not.
 	 */
-	return (bool) apply_filters( 'bp_platform_group_element_enable', (bool) bp_get_option( $element, $default ) );
+	return (bool) apply_filters( 'bp_platform_group_element_enable', (bool) in_array( $element, bp_get_option( 'bb-group-elements', $default ) ) );
 }
 
 /**
