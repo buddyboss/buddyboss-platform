@@ -2281,10 +2281,10 @@ function bb_admin_setting_callback_private_rest_apis() {
 				printf(
 					wp_kses_post(
 					/* translators: Settings link. */
-						__( 'BuddyBoss App plugin is active. Please go to %s to enable "Private App" that will allow you to enable or disable REST APIs access for non-logged-in members.', 'buddyboss' )
+						__( 'Your BuddyBoss App is currently public. To restrict access to REST APIs for logged-out members, please enable "Private App" in the %s.', 'buddyboss' )
 					),
 					sprintf(
-						'<a href="%s">' . esc_html__( 'settings', 'buddyboss' ) . '</a>',
+						'<a href="%s">' . esc_html__( 'BuddyBoss App\'s settings', 'buddyboss' ) . '</a>',
 						esc_url(
 							add_query_arg(
 								array( 'page' => 'bbapp-settings' ),
