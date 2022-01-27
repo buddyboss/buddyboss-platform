@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages document template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-document.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-messages-document">
     <div class="dropzone closed document-dropzone" id="messages-post-document-uploader"></div>
     <div class="message-post-document-template" style="display:none;">

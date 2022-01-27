@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages media
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-media.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-messages-media">
     <div class="dropzone closed media-dropzone" id="messages-post-media-uploader"></div>
     <div class="message-post-media-template" style="display:none;">

@@ -2,7 +2,10 @@
 /**
  * BP Nouveau Group's Private Message template.
  *
- * @since BuddyBoss 1.5.7
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages/private-message.php.
+ *
+ * @since   BuddyBoss 1.5.7
+ * @version 1.5.7
  */
 
 $args = array(

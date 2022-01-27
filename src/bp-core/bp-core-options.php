@@ -1959,7 +1959,7 @@ function bb_feed_not_allowed_comment_post_types() {
 /**
  * Enable private REST apis.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1969,17 +1969,17 @@ function bb_feed_not_allowed_comment_post_types() {
  */
 function bp_enable_private_rest_apis( $default = false ) {
 	global $bp;
-	
+
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
 	} else {
 		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
 	}
-	
+
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param bool $value Whether private network for site is enabled.
 	 */
@@ -1989,7 +1989,7 @@ function bp_enable_private_rest_apis( $default = false ) {
 /**
  * Add APIs endpoint which will ignore even if private REST APIs is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -1997,11 +1997,11 @@ function bp_enable_private_rest_apis( $default = false ) {
  * @return string Private REST APIs public content.
  */
 function bb_enable_private_rest_apis_public_content( $default = '' ) {
-	
+
 	/**
 	 * Filters Private REST APIs public content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
@@ -2011,7 +2011,7 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
 /**
  * Enable private RSS feeds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -2021,17 +2021,17 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
  */
 function bp_enable_private_rss_feeds( $default = false ) {
 	global $bp;
-	
+
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
 	} else {
 		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
 	}
-	
+
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param bool $value Whether private network for site is enabled.
 	 */
@@ -2041,7 +2041,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
 /**
  * Add RSS feeds endpoint which will ignore even if private RSS feeds is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2049,22 +2049,23 @@ function bp_enable_private_rss_feeds( $default = false ) {
  * @return string Private RSS Feeds public content.
  */
 function bb_enable_private_rss_feeds_public_content( $default = '' ) {
-	
+
 	/**
 	 * Filters Private REST APIs public content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param bool $value Private REST APIs public content.
 	 */
 	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bp_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
 }
 
+
 /** Profile Avatar ************************************************************/
 /**
  * Which type of profile avatar configured?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                          Default: 'BuddyBoss'.
@@ -2075,7 +2076,7 @@ function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
 	/**
 	 * Filters profile avatar type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Profile avatar type.
 	 */
@@ -2085,7 +2086,7 @@ function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
 /**
  * Which type of default profile avatar selected?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                          Default: 'buddyboss'.
@@ -2096,7 +2097,7 @@ function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
 	/**
 	 * Filters default profile avatar type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default profile avatar type.
 	 */
@@ -2106,7 +2107,7 @@ function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
 /**
  * Get default custom upload avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2123,7 +2124,7 @@ function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'fu
 	/**
 	 * Filters to change default custom upload avatar image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $custom_upload_profile_avatar Default custom upload avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -2135,7 +2136,7 @@ function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'fu
 /**
  * Which type of profile cover selected?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                          Default: 'buddyboss'.
@@ -2146,7 +2147,7 @@ function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
 	/**
 	 * Filters default profile cover type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default profile cover type.
 	 */
@@ -2156,7 +2157,7 @@ function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
 /**
  * Get default custom upload profile cover URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return string Return default custom upload profile cover URL.
  */
@@ -2164,7 +2165,7 @@ function bb_get_default_custom_upload_profile_cover() {
 	/**
 	 * Filters to change default custom upload cover image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default custom upload profile cover URL.
 	 */
@@ -2175,7 +2176,7 @@ function bb_get_default_custom_upload_profile_cover() {
 /**
  * Which type of group avatar selected?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                          Default: 'buddyboss'.
@@ -2186,7 +2187,7 @@ function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
 	/**
 	 * Filters default group avatar type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default group avatar type.
 	 */
@@ -2196,7 +2197,7 @@ function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
 /**
  * Get default custom upload avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                        Default: Empty string.
@@ -2213,7 +2214,7 @@ function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full
 	/**
 	 * Filters to change default custom upload avatar image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $custom_upload_group_avatar Default custom upload avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -2225,7 +2226,7 @@ function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full
 /**
  * Which type of group cover selected?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                          Default: 'buddyboss'.
@@ -2236,7 +2237,7 @@ function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
 	/**
 	 * Filters default group cover type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default group cover type.
 	 */
@@ -2246,7 +2247,7 @@ function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
 /**
  * Get default custom upload group cover URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: null.
@@ -2256,7 +2257,7 @@ function bb_get_default_custom_upload_group_cover() {
 	/**
 	 * Filters default custom upload cover image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default custom upload group cover URL.
 	 */

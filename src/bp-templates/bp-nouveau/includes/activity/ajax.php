@@ -525,7 +525,6 @@ function bp_nouveau_ajax_get_activity_objects() {
 		if ( isset( $_POST['search'] ) ) {
 			$args['search_terms'] = $_POST['search'];
 			$args['exclude']      = $exclude_groups;
-			$args['per_page']     = 2;
 		}
 
 		$groups = groups_get_groups(

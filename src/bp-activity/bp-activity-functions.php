@@ -5153,7 +5153,7 @@ function bp_activity_action_parse_url() {
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => __( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
 	}
 
 	// send json success.
@@ -5700,7 +5700,7 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 /**
  * Function will use for how many groups to display at a time in the activity post form.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return int
  */

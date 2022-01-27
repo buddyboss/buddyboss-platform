@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity target item
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php.
+ *
+ * @since   1.0.0
+ * @version 1.8.6
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-target-item">
 	<label for="bp-item-opt-{{data.id}}">
 		<# if ( data.selected ) { #>
@@ -9,7 +20,7 @@
 		<# } #>
 
 		<span class="bp-item-name">{{data.name}}</span>
-		
+
 		<span class="bb-radio-style privacy-radio <# if ( data.selected ) { #>selected<# } #>">
 			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
 		</span>

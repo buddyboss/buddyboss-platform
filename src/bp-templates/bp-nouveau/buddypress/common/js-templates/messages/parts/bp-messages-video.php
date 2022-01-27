@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages video
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-video.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-messages-video">
     <div class="dropzone closed video-dropzone" id="messages-post-video-uploader"></div>
     <div class="message-post-video-template" style="display:none;">

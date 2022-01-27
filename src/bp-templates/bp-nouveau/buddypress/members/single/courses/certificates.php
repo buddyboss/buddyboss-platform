@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Course Certificates
+ * The template for members course certificates
  *
- * @since BuddyBoss 1.2.0
- * @version 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/courses/certificates.php.
+ *
+ * @since   BuddyBoss 1.2.0
+ * @version 1.2.0
  */
 
 $user_id      = bp_displayed_user_id();

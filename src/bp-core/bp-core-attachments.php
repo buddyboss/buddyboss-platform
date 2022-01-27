@@ -528,7 +528,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	/**
 	 * Filters BuddyPress image attachment sub directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $subdir     The sub dir to uploaded BuddyPress image.
 	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
@@ -543,7 +543,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	/**
 	 * Filters BuddyPress image attachment directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $dir        The dir to uploaded BuddyPress image.
 	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
@@ -1578,7 +1578,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	/**
 	 * Filters BuddyPress image attachment sub directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $subdir     The sub dir to uploaded BuddyPress image.
 	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
@@ -1593,7 +1593,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	/**
 	 * Filters BuddyPress image attachment directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $dir        The dir to uploaded BuddyPress image.
 	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
@@ -1788,7 +1788,7 @@ add_action( 'wp_ajax_bp_cover_image_delete', 'bp_attachments_cover_image_ajax_de
 /**
  * Get default cover image class if cover type is 'BuddyBoss' or 'None'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param int    $item_id The item id (eg: a user or a group id). Defaults to current user.
  * @param string $item    The item to get the settings for ("user" or "group").
@@ -1827,7 +1827,7 @@ function bb_attachment_get_cover_image_class( $item_id = 0, $item = 'user' ) {
 	/**
 	 * Filters default cover image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string|null $cover_image_class The default profile or group cover class.
 	 * @param int         $item_id           The item id (eg: a user or a group id). Defaults to current user.

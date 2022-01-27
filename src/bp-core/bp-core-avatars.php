@@ -725,7 +725,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 				/**
 				 * Filters a default avatar URL.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 1.8.6
 				 *
 				 * @param string $avatar_url URL for a default avatar.
 				 * @param array  $params     Array of parameters for the request.
@@ -773,7 +773,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		/**
 		 * Filters a default avatar URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.6
 		 *
 		 * @param string $avatar_url URL for a default avatar.
 		 * @param array  $params     Array of parameters for the request.

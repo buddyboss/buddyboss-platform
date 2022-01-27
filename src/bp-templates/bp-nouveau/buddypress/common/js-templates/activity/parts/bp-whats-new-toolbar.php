@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying whats new toolbar
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-whats-new-toolbar">
 
 	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ) : ?>

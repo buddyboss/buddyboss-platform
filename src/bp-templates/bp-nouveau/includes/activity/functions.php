@@ -88,8 +88,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
 		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
 		'errors'           => array(
-			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
-			'post_fail'         => __( 'An error occurred while saving your post.', 'buddyboss' ),
+			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
+			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
+			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
 	);
 
@@ -174,12 +175,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		// the groups component is active & the current user is at least a member of 1 group
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                      => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder'  => __( 'Search groups', 'buddyboss' ),
+				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
+				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
 				'priority'                  => 10,
-				'loading_group_placeholder' => __( 'Loading groups...', 'buddyboss' ),
-				'finding_group_placeholder' => __( 'Finding groups...', 'buddyboss' ),
-				'no_groups_found'           => __( 'No groups found.', 'buddyboss' ),
+				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss' ),
+				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss' ),
+				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss' ),
 			);
 			$group_args = array(
 				'user_id'     => bp_loggedin_user_id(),
@@ -214,29 +215,30 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
-		'whatsnewPlaceholder' => sprintf( __( "Share what's on your mind, %s...", 'buddyboss' ), bp_get_user_firstname( $user_displayname ) ),
-		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
-		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
-		'postUpdateButton'    => __( 'Post', 'buddyboss' ),
-		'updatePostButton'    => __( 'Update Post', 'buddyboss' ),
-		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
-		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
-		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
-		'loadingMore'         => __( 'Loading...', 'buddyboss' ),
+		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
+		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
+		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
+		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
+		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
+		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
+		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
+		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
+		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( __( "Write something to %s...", 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
     }
 
 	if ( bp_is_group() ) {
-		$activity_strings['whatsnewPlaceholder'] = __( 'Share something with the group...', 'buddyboss' );
+		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
+
 		$activity_params = array_merge(
 			$activity_params,
 			array(
-				'object'      => 'group',
-				'item_id'     => bp_get_current_group_id(),
-				'item_name'   => bp_get_current_group_name(),
+				'object'       => 'group',
+				'item_id'      => bp_get_current_group_id(),
+				'item_name'    => bp_get_current_group_name(),
 				'group_avatar' => bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);

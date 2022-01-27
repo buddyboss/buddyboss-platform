@@ -1400,7 +1400,7 @@ function bb_update_to_1_8_1() {
  * update routine.
  * Migrate default cover images from theme option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bb_update_to_1_8_6() {
 	global $buddyboss_theme_options;
@@ -1566,7 +1566,7 @@ function bb_update_to_1_8_6() {
 /**
  * Upload default cover image to temp directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $cover_type The option name of cover. 'buddyboss_profile_cover_default' or 'buddyboss_group_cover_default'.
  * @return array Array containing the path, URL, and file name.
@@ -1625,7 +1625,7 @@ function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 /**
  * Allow 'webp' extension to migrate cover images.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param array  $exts List of allowed extensions.
  * @param string $type The requested file type.
@@ -1639,7 +1639,7 @@ function bb_to_1_8_6_allow_extension( $exts, $type ) {
 /**
  * Disallow to check 'action' param when migrate cover images.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param array $overrides The wp_handle_upload overrides.
  * @return array The wp_handle_upload overrides.
@@ -1652,7 +1652,7 @@ function bb_to_1_8_6_change_overrides( $overrides ) {
 /**
  * Gets the upload dir array for cover photos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return array See wp_upload_dir().
  */

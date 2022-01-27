@@ -94,25 +94,31 @@
 	&.bp-activity-edit-group {
 		opacity: 0.5;
 		cursor: default;
+
+		.bb-icon-chevron-down {
+			display: none;
+		}
+
 	}
 
 	&.bp-activity-focus-group-active {
 		opacity: 0.5;
 		cursor: default;
 
-		i.bb-icon-angle-down {
+		i.bb-icon-chevron-down {
 			display: none;
 		}
 	}
 
 	.bp-activity-privacy-status {
+		font-weight: 500;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
 		flex: 1;
 	}
 
-	.bb-icon-angle-down {
+	.bb-icon-chevron-down {
 		margin-left: 2px;
 	}
 }
@@ -151,6 +157,12 @@
 
 	#bp-activity-privacy-point {
 		display: inline-flex;
+		color: #92949d;
+
+		.bb-icon-chevron-down {
+			font-size: 12px;
+			margin-left: 5px;
+		}
 	}
 }
 
@@ -160,10 +172,15 @@
 		display: block;
 	}
 
+	#activity-header {
+		margin-bottom: 0 !important;
+	}
+
 	.whats-new-form-header,
 	#editor-toolbar,
 	#whats-new-attachments,
-	.whats-new-form-footer {
+	.whats-new-form-footer,
+	#message-feedabck {
 		display: none;
 	}
 }
@@ -218,7 +235,7 @@
 }
 
 .privacy-status-form-body {
-	padding: 15px 0;
+	padding: 5px 0 15px;
 }
 
 .bp-activity-privacy__label {
@@ -319,8 +336,8 @@
 	background: transparent;
 	border: 0;
 	font-size: 14px;
+	font-weight: 500;
 	color: #a3a5a9;
-	font-weight: 400;
 	margin: 0 10px;
 	padding: 0 10px;
 	width: auto;
@@ -414,13 +431,12 @@
 			-ms-flex-pack: end;
 			justify-content: flex-end;
 			position: relative;
-			padding: 13px 25px 10px;
+			padding: 20px 25px 16px;
 			margin: 0;
 			border-top: 0;
 
 			.emojionearea-button:before {
 				content: "\E821";
-				color: rgba(18, 43, 70, 0.4);
 				font: normal 400 normal 24px/1 bb-icons;
 				opacity: 1;
 				background: none;
@@ -428,14 +444,8 @@
 			}
 
 			.bb-icon {
-				color: rgba(18, 43, 70, 0.4);
 				font-size: 24px;
 				margin-right: 10px;
-			}
-
-			.emojionearea .emojionearea-button.active:before,
-			.toolbar-button.active .bb-icon:before {
-				color: #122b46;
 			}
 
 			.post-mention .bb-icon {
@@ -540,6 +550,21 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
+	#whats-new-toolbar .post-elements-buttons-item.disable,
+	#whats-new-toolbar .post-elements-buttons-item.no-click:not(.active) {
+		pointer-events: initial;
+
+		a.toolbar-button {
+			cursor: default;
+
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+
+	}
+
 	#whats-new-content-placeholder,
 	#whats-new-content {
 		padding: 0;
@@ -609,7 +634,7 @@
 		}
 
 		.whats-new-scroll-view {
-			max-height: calc(100vh - 200px);
+			max-height: calc(100vh - 280px);
 			overflow: auto;
 			width: 100%;
 			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
@@ -866,10 +891,8 @@
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 
@@ -884,7 +907,6 @@
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
 			width: calc(100% - 80px);
 			margin-bottom: 0;
-			background-color: #fff;
 
 			&::-webkit-input-placeholder {
 				color: #4d5c6d;
@@ -894,14 +916,26 @@
 }
 
 .medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
-	color: #ef3e46 !important;
-	border-color: #f5858a !important;
 
-	~ a {
-		opacity: 0.5;
-		pointer-events: none;
+	&.validate {
+		color: #ef3e46 !important;
+		border-color: #f5858a !important;
 	}
+}
 
+.medium-editor-toolbar,
+.buddypress .medium-editor-toolbar {
+
+	.medium-editor-toolbar-actions {
+
+		button {
+			color: rgba(18, 43, 70, 0.4);
+
+			&.medium-editor-button-active {
+				color: #122b46;
+			}
+		}
+	}
 }
 
 .activity-update-form {
@@ -918,7 +952,7 @@
 
 	.medium-editor-toolbar {
 		top: inherit;
-		bottom: 0;
+		bottom: 9px;
 		left: 11px;
 		visibility: hidden;
 		z-index: 99;
@@ -1016,10 +1050,12 @@
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
+
+				b:before {
+					font-size: 26px;
+				}
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 
@@ -1034,7 +1070,6 @@
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
 			width: calc(100% - 80px);
 			margin-bottom: 0;
-			background-color: #fff;
 
 			&::-webkit-input-placeholder {
 				color: #4d5c6d;
@@ -1045,10 +1080,11 @@
 
 	.medium-editor-toolbar .medium-editor-toolbar-form-active {
 		position: absolute;
-		bottom: 6px;
+		left: 15px;
+		bottom: 5px;
 		box-shadow: none;
-		width: calc(800px - 25px);
-		max-width: calc(100vw - 40px - 10%);
+		width: calc(800px - 40px);
+		max-width: calc(100vw - 55px - 10%);
 		padding: 0 !important;
 	}
 
@@ -1203,6 +1239,7 @@
 		height: 44px;
 		position: relative;
 		z-index: 2;
+		background-color: transparent;
 	}
 
 	li {
@@ -1264,7 +1301,6 @@
 	padding: 0;
 	margin: 10px 0 0;
 	width: 100%;
-	width: calc(100% - 10px);
 	z-index: 11;
 	position: relative;
 
@@ -1289,6 +1325,21 @@
 			margin-right: 10px;
 		}
 	}
+
+	&.group_scrolling--revive {
+		overflow-y: visible;
+	}
+}
+
+#bp-activity-group-ac-items::-webkit-scrollbar {
+	width: 12px;
+}
+
+#bp-activity-group-ac-items::-webkit-scrollbar-thumb {
+	border: 4px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+	border-radius: 9999px;
+	background-color: #a4acb4;
 }
 
 .bp-item-opt {
@@ -1536,10 +1587,10 @@ div[class*="attached-gif-container"] {
 	.gif-image-remove {
 		border-radius: 10px;
 		cursor: pointer;
-		height: 16px;
-		right: 5px;
+		height: 19px;
+		width: 19px;
 		top: 5px;
-		width: 16px;
+		right: 5px;
 		background-color: #f8f8f8;
 	}
 
@@ -1549,7 +1600,7 @@ div[class*="attached-gif-container"] {
 		position: absolute;
 
 		.bb-icon-close {
-			font-size: 17px;
+			font-size: 20px;
 			vertical-align: top;
 		}
 	}

@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying activity document
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-document.php.
+ *
+ * @since   1.0.0
+ * @version 1.8.6
+ */
+
+?>
 <script type="text/html" id="tmpl-activity-document">
     <div class="dropzone closed document-dropzone" id="activity-post-document-uploader"></div>
     <div class="activity-post-document-template" style="display:none;">

@@ -577,18 +577,18 @@ add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_fol
  *
  * This is intended to speed up @mentions lookups for a majority of use cases.
  *
- * @since buddyboss [BBVERSION]
+ * @since buddyboss 1.8.6
  *
  * @see   bp_activity_mentions_script()
  */
-function bp_core_prime_mentions_results() {
+function bb_core_prime_mentions_results() {
 
 	// Stop here if user is not logged in.
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
-	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
+	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
 		return;
 	}
 
@@ -681,5 +681,5 @@ function bp_core_prime_mentions_results() {
 	);
 }
 
-add_action( 'bp_activity_mentions_prime_results', 'bp_core_prime_mentions_results' );
-add_action( 'bbp_forums_mentions_prime_results', 'bp_core_prime_mentions_results' );
+add_action( 'bp_activity_mentions_prime_results', 'bb_core_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results' );
