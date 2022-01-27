@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Entry
+ * The template for media entry
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/entry.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 global $media_template;
@@ -58,7 +61,7 @@ if ( 'video' === $media_template->media->type ) {
 					<div class="video-action_list item-action_list">
 						<ul>
 							<?php
-							if ( $can_edit ) {
+							if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
 								?>
 								<li class="edit_thumbnail_video">
 									<a href="#" data-action="video" data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>" data-video-attachment-id="<?php bp_media_attachment_id(); ?>" data-video-id="<?php bp_media_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>
@@ -146,7 +149,7 @@ if ( 'video' === $media_template->media->type ) {
 		<div class="media-action-wrap">
 			<?php
 			$report_btn = bp_media_get_report_link( array( 'id' => bp_get_media_id() ) );
-			if ( $can_move || $report_btn ) {
+			if ( $can_move || $report_btn || $can_delete ) {
 				?>
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-v"></i>

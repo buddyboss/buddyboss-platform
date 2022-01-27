@@ -70,16 +70,18 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url                 : BP_Nouveau.ajaxurl,
-					timeout             : 3 * 60 * 60 * 1000,
-					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles       : 'image/*',
-					autoProcessQueue    : true,
-					addRemoveLinks      : true,
-					uploadMultiple      : false,
-					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					url                 		: BP_Nouveau.ajaxurl,
+					timeout             		: 3 * 60 * 60 * 1000,
+					dictFileTooBig      		: BP_Nouveau.media.dictFileTooBig,
+					dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       		: 'image/*',
+					autoProcessQueue    		: true,
+					addRemoveLinks      		: true,
+					uploadMultiple      		: false,
+					maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
+					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				};
 
 				// if defined, add custom dropzone options.
@@ -134,6 +136,9 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+
+			//Activity More Option Dropdown
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 
 			// Activity autoload.
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
@@ -1009,6 +1014,17 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
+				/* Stop past image from clipboard */
+				var ce = form.find( '.ac-input[contenteditable]' );
+				if ( ce.length > 0 ) {
+					var div_editor = ce.get( 0 );
+					div_editor.addEventListener( 'paste', function ( e ) {
+						e.preventDefault();
+						var text = e.clipboardData.getData( 'text/plain' );
+						document.execCommand( 'insertText', false, text );
+					} );
+				}
+
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
@@ -1043,6 +1059,11 @@ window.bp = window.bp || {};
 						}
 					);
 				}
+			}
+			
+			if ( target.hasClass( 'activity-state-no-comments' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
 			}
 
 			// Removing the form.
@@ -1163,7 +1184,7 @@ window.bp = window.bp || {};
 											activity_comments.append( '<ul></ul>' );
 										}
 									}
-
+									
 									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
 									$( form ).find( '.ac-input' ).first().html( '' );
 
@@ -1442,17 +1463,18 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                 : BP_Nouveau.ajaxurl,
-						timeout             : 3 * 60 * 60 * 1000,
-						dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-						acceptedFiles       : 'image/*',
-						autoProcessQueue    : true,
-						addRemoveLinks      : true,
-						uploadMultiple      : false,
-						maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-						maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-						dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
-						previewTemplate		 : acCommentDefaultTemplate,
+						url                 		: BP_Nouveau.ajaxurl,
+						timeout             		: 3 * 60 * 60 * 1000,
+						dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
+						acceptedFiles       		: 'image/*',
+						autoProcessQueue    		: true,
+						addRemoveLinks      		: true,
+						uploadMultiple      		: false,
+						maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+						maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
+						previewTemplate		 		: acCommentDefaultTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
@@ -1622,24 +1644,34 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                  : BP_Nouveau.ajaxurl,
-						timeout              : 3 * 60 * 60 * 1000,
-						dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
-						acceptedFiles        : BP_Nouveau.media.document_type,
-						createImageThumbnails: false,
-						dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
-						autoProcessQueue     : true,
-						addRemoveLinks       : true,
-						uploadMultiple       : false,
-						maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-						maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-						dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
-						dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
-						previewTemplate		 : acCommentDocumentTemplate,
+						url                  		: BP_Nouveau.ajaxurl,
+						timeout              		: 3 * 60 * 60 * 1000,
+						dictFileTooBig       		: BP_Nouveau.media.dictFileTooBig,
+						acceptedFiles        		: BP_Nouveau.media.document_type,
+						createImageThumbnails		: false,
+						dictDefaultMessage   		: BP_Nouveau.media.dropzone_document_message,
+						autoProcessQueue     		: true,
+						addRemoveLinks       		: true,
+						uploadMultiple       		: false,
+						maxFiles             		: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+						maxFilesize          		: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+						dictInvalidFileType  		: BP_Nouveau.document.dictInvalidFileType,
+						dictMaxFilesExceeded 		: BP_Nouveau.media.document_dict_file_exceeded,
+						previewTemplate		 		: acCommentDocumentTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
 					self.dropzone_document_obj = new Dropzone( '#ac-reply-post-document-uploader-' + target.data( 'ac-id' ), dropzone_options );
+
+					self.dropzone_document_obj.on(
+						'addedfile',
+						function ( file ) {
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
+					);
 
 					self.dropzone_document_obj.on(
 						'sending',
@@ -1805,20 +1837,21 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url                  : BP_Nouveau.ajaxurl,
-						timeout              : 3 * 60 * 60 * 1000,
-						dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
-						acceptedFiles        : BP_Nouveau.video.video_type,
-						createImageThumbnails: false,
-						dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
-						autoProcessQueue     : true,
-						addRemoveLinks       : true,
-						uploadMultiple       : false,
-						maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-						maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-						dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
-						dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
-						previewTemplate		 : acCommentVideoTemplate,
+						url                  		: BP_Nouveau.ajaxurl,
+						timeout              		: 3 * 60 * 60 * 1000,
+						dictFileTooBig       		: BP_Nouveau.video.dictFileTooBig,
+						acceptedFiles        		: BP_Nouveau.video.video_type,
+						createImageThumbnails		: false,
+						dictDefaultMessage   		: BP_Nouveau.video.dropzone_video_message,
+						autoProcessQueue     		: true,
+						addRemoveLinks       		: true,
+						uploadMultiple       		: false,
+						maxFiles             		: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+						maxFilesize          		: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+						dictInvalidFileType  		: BP_Nouveau.video.dictInvalidFileType,
+						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
+						previewTemplate		 		: acCommentVideoTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
@@ -2155,6 +2188,23 @@ window.bp = window.bp || {};
 				}
 			);
 		},
+
+		toggleActivityOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+			}
+		},
+
 	};
 
 	// Launch BP Nouveau Activity.

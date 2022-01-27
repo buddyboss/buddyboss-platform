@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages single template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-single.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-single">
 	<?php bp_nouveau_messages_hook( 'before', 'thread_content' ); ?>
 

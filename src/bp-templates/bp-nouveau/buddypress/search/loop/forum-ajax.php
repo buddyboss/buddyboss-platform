@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the forum ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/forum-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $total = bbp_get_forum_topic_count( get_the_ID() );
 $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'forum' );
 ?>

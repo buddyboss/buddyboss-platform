@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the document
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/document.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $listing_class       = '';
 $attachment_id       = bp_get_document_attachment_id();
 $extension           = '';

@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Theatre
+ * The template for document theatre
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/theatre.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>

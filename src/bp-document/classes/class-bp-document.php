@@ -347,7 +347,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "d.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "d.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -652,7 +652,7 @@ class BP_Document {
 				$document->group_id      = (int) $document->group_id;
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
-				$document->extension     = bp_document_extension( $document->attachment_id ); // Get document extension.
+				$document->extension     = ( $thumb_gen ? bp_document_extension( $document->attachment_id ) : false ); // Get document extension.
 			}
 
 			$group_name = '';
@@ -695,7 +695,7 @@ class BP_Document {
 			$attachment_data->activity_thumb     = $activity_thumb_image;
 			$attachment_data->activity_thumb_pdf = $activity_thumb_pdf;
 			$attachment_data->video_symlink      = $video_symlink;
-			$attachment_data->meta               = self::attachment_meta( $document->attachment_id );
+			$attachment_data->meta               = ( $thumb_gen ? self::attachment_meta( $document->attachment_id ) : '' );
 			$document->attachment_data           = $attachment_data;
 			$document->group_name                = $group_name;
 			$document->visibility                = $visibility;
@@ -937,8 +937,8 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
-			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
+			$where_conditions_document['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions_folder['group']   = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -1938,7 +1938,22 @@ class BP_Document {
 			$this->id = $wpdb->insert_id;
 		}
 
+
+		/**
+		 * Fire before documents preview generate.
+		 *
+		 * @since BuddyBoss 1.7.0.1
+		 */
+		do_action( 'bb_document_before_generate_document_previews' );
+
 		bp_document_generate_document_previews( $this->attachment_id );
+
+		/**
+		 * Fire after documents preview generate.
+		 *
+		 * @since BuddyBoss 1.7.0.1
+		 */
+		do_action( 'bb_document_after_generate_document_previews' );
 
 		// Update folder modified date.
 		$folder = (int) $this->folder_id;

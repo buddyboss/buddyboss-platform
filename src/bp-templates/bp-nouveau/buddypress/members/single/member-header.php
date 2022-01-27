@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Header
+ * The template for users header
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/member-header.php.
+ *
+ * @since   BuddyPress 1.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -49,6 +51,7 @@
 		<?php echo bp_get_user_social_networks_urls(); ?>
 
 		<?php bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) ); ?>
+		<?php bp_nouveau_member_header_bubble_buttons( array( 'container_classes' => array( 'bb_more_options' ), ) ); ?>
 	</div><!-- #item-header-content -->
 
 </div><!-- .item-header-wrap -->

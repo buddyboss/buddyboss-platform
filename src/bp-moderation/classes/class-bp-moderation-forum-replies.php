@@ -63,6 +63,18 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
+
+		// Report button text.
+		add_filter( "bb_moderation_{$this->item_type}_report_button_text", array( $this, 'report_button_text' ), 10, 2 );
+		add_filter( "bb_moderation_{$this->item_type}_reported_button_text", array( $this, 'report_button_text' ), 10, 2 );
+
+		// Report popup content type.
+		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Prepare report button for reply when activity moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -212,9 +224,62 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$author_id = self::get_content_owner_id( $item_id );
 
 		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-		     ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+			 ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Function to change report button text.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $button_text Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_button_text( $button_text, $item_id ) {
+		return esc_html__( 'Report Reply', 'buddyboss' );
+	}
+
+	/**
+	 * Function to change report type.
+	 *
+	 * @since BuddyBoss 1.7.3
+	 *
+	 * @param string $content_type Button text.
+	 * @param int    $item_id     Item id.
+	 *
+	 * @return string
+	 */
+	public function report_content_type( $content_type, $item_id ) {
+		return esc_html__( 'Reply', 'buddyboss' );
+	}
+
+	/**
+	 * Function to update activity report button arguments.
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $report_button Activity report button
+	 * @param array $args          Arguments
+	 *
+	 * @return array|string
+	 */
+	public function update_report_button_args( $report_button, $args ) {
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+
+		if ( empty( $activity->id ) || 'bbp_reply_create' !== $activity->type ) {
+			return $report_button;
+		}
+
+		$args['button_attr']['data-bp-content-id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
+		$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+
+		$report_button = bp_moderation_get_report_button( $args, false );
+
+		return $report_button;
 	}
 }

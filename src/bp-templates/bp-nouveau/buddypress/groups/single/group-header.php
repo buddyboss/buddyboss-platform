@@ -2,8 +2,12 @@
 /**
  * BuddyBoss - Groups Header
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template is used to render the group header.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/group-header.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 $group_link       = bp_get_group_permalink();
@@ -52,7 +56,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 		<?php endif; ?>
 
 		<?php bp_nouveau_group_header_buttons(); ?>
-
+		<?php bb_nouveau_group_header_bubble_buttons(); ?>
 	</div><!-- #item-header-content -->
 
 	<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>

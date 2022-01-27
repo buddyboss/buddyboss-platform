@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Activity Document Actions
+ * The template for activity document actions
  *
- * @since BuddyBoss 1.7.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/activity-document-actions.php.
+ *
+ * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Core
+ * @version 1.7.0
  */
 
 global $document_template;

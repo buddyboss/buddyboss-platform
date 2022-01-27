@@ -1,10 +1,13 @@
 <?php
 /**
- * BP Object search form
+ * The template for BP Object search form
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/search/search-form.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
+
 $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 ?>
 

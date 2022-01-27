@@ -1446,7 +1446,10 @@ MediumEditor.extensions = {};
 
         cleanupAttrs: function (el, attrs) {
             attrs.forEach(function (attr) {
-                el.removeAttribute(attr);
+                // Added support for emoji class - BuddyBoss.
+                if ( !jQuery( el ).hasClass( 'emojioneemoji' ) && !jQuery( el ).hasClass( 'emoji' ) ) {
+                    el.removeAttribute( attr );
+                }
             });
         },
 
@@ -4027,14 +4030,23 @@ MediumEditor.extensions = {};
             event.stopPropagation();
         },
 
-        handleSaveClick: function (event) {
+        handleSaveClick: function ( event ) {
             // Clicking Save -> create the anchor
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            if ( toolbarInput.classList.contains( 'isNotValid' ) ) {
+                toolbarInput.classList.add( 'validate' );
+                return false;
+            } else {
+                toolbarInput.classList.remove( 'validate' );
+            }
             event.preventDefault();
             this.doFormSave();
         },
 
-        handleCloseClick: function (event) {
+        handleCloseClick: function ( event ) {
             // Click Close -> close the form
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
         }
@@ -5248,6 +5260,14 @@ MediumEditor.extensions = {};
         return data;
     }
 
+    // Added support for removing image while pasting - BuddyBoss.
+    var isFilePaste = function (event) {
+        return event &&
+            event.clipboardData &&
+            event.clipboardData.items &&
+            event.clipboardData.types.includes( 'Files' );
+    }
+
     var PasteHandler = MediumEditor.Extension.extend({
         /* Paste Options */
 
@@ -5324,6 +5344,12 @@ MediumEditor.extensions = {};
                 return;
             }
 
+            // Added support for removing image while pasting - BuddyBoss.
+            if ( isFilePaste( event ) ) {
+                event.preventDefault();
+                return;
+            }
+
             var clipboardContent = getClipboardContent(event, this.window, this.document),
                 pastedHTML = clipboardContent['text/html'],
                 pastedPlain = clipboardContent['text/plain'];
@@ -5378,6 +5404,11 @@ MediumEditor.extensions = {};
         handlePasteBinPaste: function (event) {
             if (event.defaultPrevented) {
                 this.removePasteBin();
+                return;
+            }
+
+            // Added support for removing image while pasting - BuddyBoss.
+            if ( isFilePaste( event ) ) {
                 return;
             }
 
@@ -6784,7 +6815,7 @@ MediumEditor.extensions = {};
                     var newLI = node.parentNode.parentNode.parentNode.insertBefore(li, node.parentNode.parentNode.nextSibling);
                     node.remove();
                     MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
-                    
+
                 } else {
                    var  p = this.options.ownerDocument.createElement('p');
                     p.innerHTML = '<br>';

@@ -1,11 +1,21 @@
 <?php
+/**
+ * Template for displaying the search results of the post
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/post.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>
 <li class="bp-search-item bp-search-item_post <?php echo esc_attr( $result['post_class'] ); ?>">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
-				<img src="<?php echo $result['post_thumbnail']; ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title() ?>"/>
+				<img src="<?php echo esc_url( $result['post_thumbnail'] ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>"/>
 			</a>
 		</div>
 

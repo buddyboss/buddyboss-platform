@@ -640,6 +640,8 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 		return;
 	}
 
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+
 	/** Forum Status */
 
 	if ( ! empty( $_POST['bbp_forum_status'] ) && in_array( $_POST['bbp_forum_status'], array( 'open', 'closed' ) ) ) {
@@ -652,7 +654,7 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 
 	/** Forum Type */
 
-	if ( ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
+	if ( empty( $group_ids ) && ! empty( $_POST['bbp_forum_type'] ) && in_array( $_POST['bbp_forum_type'], array( 'forum', 'category' ) ) ) {
 		if ( 'category' === $_POST['bbp_forum_type'] && ! bbp_is_forum_category( $forum_id ) ) {
 			bbp_categorize_forum( $forum_id );
 		} elseif ( 'forum' === $_POST['bbp_forum_type'] && bbp_is_forum_category( $forum_id ) ) {
@@ -661,8 +663,7 @@ function bbp_save_forum_extras( $forum_id = 0 ) {
 	}
 
 	/** Forum Visibility */
-
-	if ( ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
+	if ( empty( bb_get_child_forum_group_ids( $forum_id ) ) && ! empty( $_POST['bbp_forum_visibility'] ) && in_array( $_POST['bbp_forum_visibility'], array( bbp_get_public_status_id(), bbp_get_private_status_id(), bbp_get_hidden_status_id() ) ) ) {
 
 		// Get forums current visibility
 		$visibility = bbp_get_forum_visibility( $forum_id );
@@ -974,7 +975,7 @@ function bbp_repair_forum_visibility() {
 	// Reset the $post global
 	wp_reset_postdata();
 
-	$hidden_forums  = new WP_Query(
+	$hidden_forums = new WP_Query(
 		array(
 			'suppress_filters' => true,
 			'nopaging'         => true,
@@ -1721,20 +1722,16 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
 		$group_id = $group_ids[0];
 
-		$group_avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id'       => $group_id,
-				'object'        => 'group',
-				'type'          => $type,
-				'html'          => false,
-				'force_default' => false,
-			)
-		);
-
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
-
-		if ( $group_avatar_url != $group_default_avatar ) {
-			return $group_avatar_url;
+		if ( bp_is_active( 'groups' ) && bp_get_group_has_avatar( $group_id ) ) {
+			return bp_core_fetch_avatar(
+				array(
+					'item_id'       => $group_id,
+					'object'        => 'group',
+					'type'          => $type,
+					'html'          => false,
+					'force_default' => false,
+				)
+			);
 		}
 	}
 
@@ -1754,19 +1751,7 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
 		$group_id = $group_ids[0];
 
-		$group_avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id'       => $group_id,
-				'object'        => 'group',
-				'type'          => $type,
-				'html'          => false,
-				'force_default' => false,
-			)
-		);
-
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
-
-		if ( $group_avatar_url != $group_default_avatar ) {
+		if ( bp_is_active( 'groups' ) && bp_get_group_has_avatar( $group_id ) ) {
 			return bp_core_fetch_avatar(
 				array(
 					'item_id'       => $group_id,
@@ -1873,7 +1858,7 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 			// check the user is the member of group or not while rendering the shortcode with group.
 			if ( bp_is_active( 'groups' ) ) {
 				foreach ( $forum_ids as $k => $forum_id ) {
-					$group_id  = bbp_forum_recursive_group_id( $forum_id );
+					$group_id = bbp_forum_recursive_group_id( $forum_id );
 					if ( ! empty( $group_id ) ) {
 						$is_member = groups_is_user_member( bbp_get_current_user_id(), $group_id );
 						if ( ! empty( $is_member ) ) {
@@ -2036,7 +2021,7 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
  *                        and forum id
  */
 function bbp_forum_query_topic_ids( $forum_id ) {
-	$topic_ids = bbp_get_public_child_ids( $forum_id, bbp_get_topic_post_type() );
+	$topic_ids = bbp_get_public_child_ids( $forum_id, bbp_get_topic_post_type(), true );
 
 	return apply_filters( 'bbp_forum_query_topic_ids', $topic_ids, $forum_id );
 }

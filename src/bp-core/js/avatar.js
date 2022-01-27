@@ -101,6 +101,12 @@ window.bp = window.bp || {};
 			} else if ( $( '#bp_xprofile_user_admin_avatar a.bp-xprofile-avatar-user-admin' ).length ) {
 				$( '#bp_xprofile_user_admin_avatar a.bp-xprofile-avatar-user-admin' ).remove();
 			}
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				$( '.bb-custom-profile-group-avatar-feedback' ).hide();
+				$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).html( '' );
+			}
+
 		},
 
 		setView: function( view ) {
@@ -156,6 +162,11 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				this.removeWarning();
+				$( '.bb-custom-profile-group-avatar-feedback' ).hide().find( '.bp-feedback' ).removeClass( 'success error' ).find( 'p' ).html( '' );
+			}
 		},
 
 		setupNav: function() {
@@ -216,6 +227,7 @@ window.bp = window.bp || {};
 		},
 
 		uploadProgress: function() {
+
 			// Create the Uploader status view
 			var avatarStatus = new bp.Views.uploaderStatus( { collection: bp.Uploader.filesQueue } );
 
@@ -249,6 +261,10 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'crop', view: avatar } );
 
 			avatar.inject( '.bp-avatar' );
+
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				this.removeWarning();
+			}
 		},
 
 		setAvatar: function( avatar ) {
@@ -267,6 +283,11 @@ window.bp = window.bp || {};
 				this.views.remove( { id: 'crop', view: crop } );
 			}
 
+			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+				$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
+				$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'uploading' ) );
+			}
+
 			// Set the avatar !
 			bp.ajax.post(
 				'bp_avatar_set',
@@ -278,82 +299,110 @@ window.bp = window.bp || {};
 					crop_x:        avatar.get( 'x' ),
 					crop_y:        avatar.get( 'y' ),
 					item_id:       avatar.get( 'item_id' ),
+					item_type:     avatar.get( 'item_type' ),
 					object:        avatar.get( 'object' ),
 					type:          _.isUndefined( avatar.get( 'type' ) ) ? 'crop' : avatar.get( 'type' ),
 					nonce:         avatar.get( 'nonces' ).set
 				}
 			).done(
 				function( response ) {
-						var avatarStatus = new bp.Views.AvatarStatus(
-							{
-								value : BP_Uploader.strings.feedback_messages[ response.feedback_code ],
-								type : 'success'
-							}
-						);
 
-						self.views.add(
-							{
-								id   : 'status',
-								view : avatarStatus
-							}
-						);
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
+					}
 
-						avatarStatus.inject( '.bp-avatar-status' );
-
-						// Update each avatars of the page
-						$( '.' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
-							function() {
-								$( this ).prop( 'src', response.avatar );
-							}
-						);
-
-						if( $( '.header-aside-inner .user-link .avatar' ).length ){
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					var avatarStatus = new bp.Views.AvatarStatus(
+						{
+							value : BP_Uploader.strings.feedback_messages[ response.feedback_code ],
+							type : 'success'
 						}
+					);
 
-						// Inject the Delete nav
-						bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
+					self.views.add(
+						{
+							id   : 'status',
+							view : avatarStatus
+						}
+					);
 
-						/**
-						 * Set the Attachment object
-						 *
-						 * You can run extra actions once the avatar is set using:
-						 * bp.Avatar.Attachment.on( 'change:url', function( data ) { your code } );
-						 *
-						 * In this case data.attributes will include the url to the newly
-						 * uploaded avatar, the object and the item_id concerned.
-						 */
-						self.Attachment.set(
-							_.extend(
-								_.pick( avatar.attributes, ['object', 'item_id'] ),
-								{ url: response.avatar, action: 'uploaded' }
-							)
-						);
+					avatarStatus.inject( '.bp-avatar-status' );
 
+					// Update each avatars of the page
+					$( '.' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).each(
+						function() {
+							$( this ).prop( 'src', response.avatar );
+						}
+					);
+
+					if ( $( '.header-aside-inner .user-link .avatar' ).length  && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					}
+
+					// Inject the Delete nav
+					bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
+
+					/**
+					 * Set the Attachment object
+					 *
+					 * You can run extra actions once the avatar is set using:
+					 * bp.Avatar.Attachment.on( 'change:url', function( data ) { your code } );
+					 *
+					 * In this case data.attributes will include the url to the newly
+					 * uploaded avatar, the object and the item_id concerned.
+					 */
+					self.Attachment.set(
+						_.extend(
+							_.pick( avatar.attributes, ['object', 'item_id'] ),
+							{ url: response.avatar, action: 'uploaded' }
+						)
+					);
+
+					// Show 'Remove' button when upload a new avatar.
+					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
+						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).removeClass( 'bp-hide' );
+					}
+
+					// Show image preview when avatar deleted.
+					$( '.custom-profile-group-avatar .' + avatar.get( 'object' ) + '-' + response.item_id + '-avatar' ).removeClass( 'bp-hide' );
+
+					// Update each avatars fields of the page
+					$( '.custom-profile-group-avatar .bb-upload-container .bb-default-custom-avatar-field' ).val( response.avatar );
+					$( '.custom-profile-group-avatar .bb-upload-container img' ).prop( 'src', response.avatar ).removeClass( 'bp-hide' );
+					$( '.preview_avatar_cover .preview-item-avatar img' ).prop( 'src', response.avatar );
 				}
 			).fail(
 				function( response ) {
-						var feedback = BP_Uploader.strings.default_error;
-					if ( ! _.isUndefined( response ) ) {
-						  feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
+
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
 					}
 
-						var avatarStatus = new bp.Views.AvatarStatus(
-							{
-								value : feedback,
-								type : 'error'
-							}
-						);
+					var feedback = BP_Uploader.strings.default_error;
+					if ( ! _.isUndefined( response ) ) {
+						feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
+					}
 
-						self.views.add(
-							{
-								id   : 'status',
-								view : avatarStatus
-							}
-						);
+					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
+						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'error' ).html( feedback );
+						$( '.bb-custom-profile-group-avatar-feedback' ).show();
+					}
 
-						avatarStatus.inject( '.bp-avatar-status' );
+					var avatarStatus = new bp.Views.AvatarStatus(
+						{
+							value : feedback,
+							type : 'error'
+						}
+					);
+
+					self.views.add(
+						{
+							id   : 'status',
+							view : avatarStatus
+						}
+					);
+
+					avatarStatus.inject( '.bp-avatar-status' );
 				}
 			);
 		},
@@ -443,11 +492,10 @@ window.bp = window.bp || {};
 							)
 						);
 
-						if( $( '.header-aside-inner .user-link .avatar' ).length ){
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-							$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
-						}
-
+					if ( $( '.header-aside-inner .user-link .avatar' ).length  && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
+						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					}
 				}
 			).fail(
 				function( response ) {
@@ -509,7 +557,7 @@ window.bp = window.bp || {};
 
 				// Display a message to inform about the delete tab
 				if ( 1 !== hasAvatar.get( 'hide' ) ) {
-					bp.Avatar.displayWarning( BP_Uploader.strings.has_avatar_warning );
+					bp.Avatar.displayWarning( BP_Uploader.strings.avatar_size_warning + '<br/>' + BP_Uploader.strings.has_avatar_warning );
 				}
 
 				_.each( this.collection.models, this.addNavItem, this );
@@ -616,12 +664,16 @@ window.bp = window.bp || {};
 
 			addItemView: function( item ) {
 				// Defaults to 150
-				var full_d = { full_h: 150, full_w: 150 };
+				var full_d = { full_h: 150, full_w: 150, item_type: '' };
 
 				// Make sure to take in account bp_core_avatar_full_height or bp_core_avatar_full_width php filters
 				if ( ! _.isUndefined( BP_Uploader.settings.crop.full_h ) && ! _.isUndefined( BP_Uploader.settings.crop.full_w ) ) {
 					full_d.full_h = BP_Uploader.settings.crop.full_h;
 					full_d.full_w = BP_Uploader.settings.crop.full_w;
+				}
+
+				if ( ! _.isUndefined( BP_Uploader.settings.defaults.multipart_params.bp_params.item_type ) ) {
+					full_d.item_type = BP_Uploader.settings.defaults.multipart_params.bp_params.item_type;
 				}
 
 				// Set the avatar model
@@ -749,7 +801,7 @@ window.bp = window.bp || {};
 							height: Math.round( ry * this.model.get( 'height' ) ) + 'px',
 							marginLeft: '-' + Math.round( rx * this.model.get( 'x' ) ) + 'px',
 							marginTop: '-' + Math.round( ry * this.model.get( 'y' ) ) + 'px'
-							}
+						}
 					);
 				}
 			}
