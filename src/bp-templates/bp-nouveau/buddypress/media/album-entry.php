@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Album Entry
+ * The template for album entry
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/album-entry.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 ?>
 

@@ -1,11 +1,13 @@
 <?php
 /**
- * BuddyBoss - Activity Document Code Preview
+ * The template for activity document code preview
  *
  * @var string $download_url Download Url.
+ * This template can be overridden by copying it to yourtheme/buddypress/document/code-preview.php.
  *
- * @since BuddyBoss 1.5.7
+ * @since   BuddyBoss 1.5.7
  * @package BuddyBoss\Core
+ * @version 1.5.7
  */
 
 $attachment_id            = bp_get_document_attachment_id();
