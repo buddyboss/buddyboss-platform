@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 1.8.6
  */
 
 // Exit if accessed directly.
@@ -61,7 +61,7 @@ function bp_groups_default_avatar( $avatar, $params ) {
  * This is intended to speed up @mentions lookups for a majority of use cases.
  *
  * @since BuddyPress 2.1.0
- * @deprecated BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss 1.8.6
  *
  * @see bp_activity_mentions_script()
  */

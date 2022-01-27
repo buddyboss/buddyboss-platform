@@ -1647,7 +1647,7 @@ add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
 /**
  * The custom profile and group avatar script data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param array  $script_data The avatar script data.
  * @param string $object      The object the avatar belongs to (eg: user or group).
@@ -1702,7 +1702,7 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 /**
  * Check ajax request is it for custom profile or group cover?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return bool True if request from admin and it's for profile cover otherwise false.
  */
@@ -1738,7 +1738,7 @@ function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
 /**
  * Setup upload directory for default custom profile or group cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param array $upload_dir The original Uploads dir.
  * @return array Array containing the path, URL, and other helpful settings.
@@ -1765,7 +1765,7 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
 	/**
 	 * Filters set upload directory for default custom profile or group cover.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param array $value Array containing the path, URL, and other helpful settings.
 	 */
@@ -1787,7 +1787,7 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
 /**
  * The cover path for default custom cover upload.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string     $cover_dir  Path to the cover folder path.
  * @param string     $object_dir The object dir (eg: members/groups). Defaults to members.
@@ -1820,7 +1820,7 @@ function bb_attachments_get_profile_group_attachment_dir( $cover_dir, $object_di
 /**
  * The cover sub path for default custom cover upload.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string     $cover_sub_dir Path to the cover folder path.
  * @param string     $object_dir    The object dir (eg: members/groups). Defaults to members.
@@ -1843,7 +1843,7 @@ function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 /**
  * Save default profile and group avatar option on upload custom avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $item_id     Inform about the user id the avatar was set for.
  * @param string $type        Inform about the way the avatar was set ('camera').
@@ -1876,7 +1876,7 @@ add_action( 'groups_avatar_uploaded', 'bb_save_profile_group_options_on_upload_c
 /**
  * Save default profile and group avatar option on delete custom avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param array $args {
  *     Array of function parameters.
@@ -1915,7 +1915,7 @@ add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_a
 /**
  * Save default profile and group cover options on upload custom cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
@@ -1944,7 +1944,7 @@ add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_
 /**
  * Save default profile and group cover options on delete custom cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param int $item_id Inform about the item id the cover photo was deleted for.
  */
@@ -1969,7 +1969,7 @@ add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_
 /**
  * Set gravatars when Gravatars is enabled from the Profile Images and Profile Avatars is BuddyBoss.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $avatar_default The avatar default.
  * @param array  $params         The avatar's data.
@@ -1988,7 +1988,7 @@ add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 )
 /**
  * Add inline css for profile and group cover background color when selected 'none' or 'BuddyBoss'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bb_add_default_cover_image_inline_css() {
 	$css_rules = '.list-wrap .bs-group-cover a:before{ background:unset; }';
@@ -2033,7 +2033,7 @@ add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
 /**
  * Enable gravatars for members when Profile Avatars is WordPress.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param bool  $no_grav Whether or not to skip Gravatar.
  * @param array $params Array of parameters for the avatar request.
