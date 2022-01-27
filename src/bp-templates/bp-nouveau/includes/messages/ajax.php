@@ -846,6 +846,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 	$threads->threads = array();
 	$i                = 0;
+	$content          = '';
 
 	while ( bp_message_threads() ) :
 		bp_message_thread();
@@ -893,6 +894,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		$group_message_type        = '';
 		$group_message_thread_type = '';
 		$group_message_fresh       = '';
+		$group                     = '';
+		$first_message             = '';
 
 		if ( ! empty( $group_id ) ) {
 			$group_message_users       = bp_messages_get_meta( $last_message_id, 'group_message_users', true );
@@ -901,11 +904,12 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
 
 			if ( bp_is_active( 'groups' ) ) {
-				$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+				$group      = groups_get_group( $group_id );
+				$group_name = bp_get_group_name( $group );
 				if ( empty( $group_name ) ) {
 					$group_link = 'javascript:void(0);';
 				} else {
-					$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+					$group_link = bp_get_group_permalink( $group );
 				}
 
 				$group_avatar = bp_core_fetch_avatar(
@@ -954,8 +958,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 			if ( $group_id ) {
 				if ( bp_is_active( 'groups' ) ) {
-					$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
-					$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+					$group        = empty( $group ) ? groups_get_group( $group_id ) : $group;
+					$group_name   = bp_get_group_name( $group );
+					$group_link   = bp_get_group_permalink( $group );
 					$group_avatar = bp_core_fetch_avatar(
 						array(
 							'item_id'    => $group_id,
@@ -999,7 +1004,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		$is_group_thread = 0;
 		if ( (int) $group_id > 0 ) {
 
-			$first_message           = BP_Messages_Thread::get_first_message( $bp_get_message_thread_id );
+			$first_message           = empty( $first_message ) ? BP_Messages_Thread::get_first_message( $bp_get_message_thread_id ) : $first_message;
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
