@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Blogs Create
+ * The template for BuddyBoss - Blogs Create
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/blogs/create.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_blogs_create_hook( 'before', 'content_template' ); ?>

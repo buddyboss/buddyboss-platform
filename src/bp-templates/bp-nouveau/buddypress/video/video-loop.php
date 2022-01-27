@@ -2,9 +2,12 @@
 /**
  * BuddyBoss - Video Loop
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/video-loop.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 bp_nouveau_before_loop();
