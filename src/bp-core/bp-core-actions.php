@@ -416,7 +416,7 @@ add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
 /**
  * Function will remove RSS Feeds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bb_restricate_rss_feed_callback() {
 	if ( is_user_logged_in() ) {
@@ -431,7 +431,7 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
 /**
  * Function will remove REST APIs endpoint.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.

@@ -15278,7 +15278,6 @@ body.login .login-popup .mfp-close:hover {
 
 .bb-member-media-header + #video-stream .grid.bp-list {
   padding-top: 0;
-  margin-top: 20px;
 }
 
 .bb-media-meta {
@@ -21829,6 +21828,18 @@ div.dropzone.dz-started .dz-default.dz-message {
   min-height: 139px !important;
   margin: 0 4px 10px;
   padding: 0 5px;
+}
+
+.video-type-navs.main-navs {
+  border-bottom: 1px solid #e7e9ec;
+}
+
+#video-stream {
+  margin-top: 20px;
+}
+
+#video-stream .video-list.bp-list {
+  margin-top: 0;
 }
 
 .dropzone.video-dropzone .dz-progress-count {

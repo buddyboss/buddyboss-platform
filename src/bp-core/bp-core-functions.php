@@ -6040,7 +6040,7 @@ function bb_check_server_disabled_symlink() {
 /**
  * Function will restrict RSS feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bb_restricate_rss_feed() {
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -6110,7 +6110,7 @@ function bb_restricate_rss_feed() {
 /**
  * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.
@@ -6149,7 +6149,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 /**
  * Function will check current REST APIs endpoint is allow or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $current_endpoint Current endpoint.
  *
@@ -6191,7 +6191,7 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 /**
  * Get default BuddyBoss profile avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default BuddyBoss profile avatar URL.
@@ -6205,7 +6205,7 @@ function bb_get_buddyboss_profile_avatar( $size = 'full' ) {
 	/**
 	 * Filters default BuddyBoss avatar image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -6216,7 +6216,7 @@ function bb_get_buddyboss_profile_avatar( $size = 'full' ) {
 /**
  * Get default legacy profile avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default legacy profile avatar URL.
@@ -6230,7 +6230,7 @@ function bb_get_legacy_profile_avatar( $size = 'full' ) {
 	/**
 	 * Filters default legacy avatar image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -6241,7 +6241,7 @@ function bb_get_legacy_profile_avatar( $size = 'full' ) {
 /**
  * Get default blank profile avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default blank profile avatar URL.
@@ -6255,7 +6255,7 @@ function bb_get_blank_profile_avatar( $size = 'full' ) {
 	/**
 	 * Filters default blank avatar image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -6266,7 +6266,7 @@ function bb_get_blank_profile_avatar( $size = 'full' ) {
 /**
  * Has default custom upload avatar?.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return bool True if found the custom profile avatar otherwise false.
  */
@@ -6309,7 +6309,7 @@ function bb_has_default_custom_upload_profile_avatar() {
 	/**
 	 * Filters has custom upload avatar image?
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param bool $retval  Whether or not a user has an uploaded avatar.
 	 * @param int  $item_id ID of the user being checked.
@@ -6320,7 +6320,7 @@ function bb_has_default_custom_upload_profile_avatar() {
 /**
  * Get default custom cover photo Width and Height.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
  * @return array|bool An associative array containing the advised width and height for the cover photo. False if settings are empty.
@@ -6341,7 +6341,7 @@ function bb_attachments_get_default_custom_cover_image_dimensions( $component = 
 /**
  * Get default BuddyBoss profile cover URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return string Return default BuddyBoss profile cover URL.
  */
@@ -6349,7 +6349,7 @@ function bb_get_buddyboss_profile_cover() {
 	/**
 	 * Filters default cover image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default BuddyBoss profile cover URL.
 	 */
@@ -6359,7 +6359,7 @@ function bb_get_buddyboss_profile_cover() {
 /**
  * Get default BuddyBoss group avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default BuddyBoss group avatar URL.
@@ -6373,7 +6373,7 @@ function bb_get_buddyboss_group_avatar( $size = 'full' ) {
 	/**
 	 * Filters to change default BuddyBoss avatar image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default BuddyBoss profile avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -6384,7 +6384,7 @@ function bb_get_buddyboss_group_avatar( $size = 'full' ) {
 /**
  * Get default legacy group avatar URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
  * @return string Return default legacy group avatar URL.
@@ -6398,7 +6398,7 @@ function bb_get_legacy_group_avatar( $size = 'full' ) {
 	/**
 	 * Filters to change default legacy avatar image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default legacy group avatar URL.
 	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
@@ -6409,7 +6409,7 @@ function bb_get_legacy_group_avatar( $size = 'full' ) {
 /**
  * Get default custom avatars for Profile and Group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $object The object to get the settings for ("user" for user or "group").
  * @param string $size   This parameter specifies whether you'd like the 'full' or smaller 'thumb' avatar. Default: 'thumb'.
@@ -6473,7 +6473,7 @@ function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
 	/**
 	 * Filters get default custom avatars for Profile and Group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $avatar_url The avatar URL if found the custom default avatar otherwise false.
 	 * @param string $object     The object to get the settings for ("user" for user or "group").
@@ -6485,7 +6485,7 @@ function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
 /**
  * Has default custom upload group avatar?
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return bool True if found the custom group avatar otherwise false.
  */
@@ -6493,7 +6493,7 @@ function bb_has_default_custom_upload_group_avatar() {
 	/**
 	 * Filters has custom upload group avatar image?
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param bool $value True if found the custom group avatar otherwise false.
 	 */
@@ -6503,7 +6503,7 @@ function bb_has_default_custom_upload_group_avatar() {
 /**
  * Get default BuddyBoss group cover URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return string Return default BuddyBoss group cover URL.
  */
@@ -6511,7 +6511,7 @@ function bb_get_custom_buddyboss_group_cover() {
 	/**
 	 * Filters default BuddyBoss group cover image.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string $value Default BuddyBoss group cover URL.
 	 */
@@ -6521,7 +6521,7 @@ function bb_get_custom_buddyboss_group_cover() {
 /**
  * Get default avatar image URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param array $params Parameters passed to bp_core_fetch_avatar().
  * @return false|string The avatar photo URL, false on failure.
@@ -6590,7 +6590,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 	/**
 	 * Filters default avatar image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
 	 * @param array       $params           Parameters passed to bp_core_fetch_avatar().
@@ -6601,7 +6601,7 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 /**
  * Get default cover image URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $component The component to get the settings for ("members" or "xprofile" for user or "groups").
  * @return false|array The cover photo settings in array, false on failure.
@@ -6644,7 +6644,7 @@ function bb_attachments_get_default_profile_group_cover_image( $component ) {
 	/**
 	 * Filters default cover image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
 	 * @param string $component The component to get the settings for ("members" for user or "groups").
@@ -6655,7 +6655,7 @@ function bb_attachments_get_default_profile_group_cover_image( $component ) {
 /**
  * Get default cover image URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $data whether to get the url or the path.
  * @param array  $args {
@@ -6678,7 +6678,7 @@ function bb_get_default_profile_group_cover( $data, $args ) {
 	/**
 	 * Filters default cover image URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
 	 * @param string $data whether to get the url or the path.
@@ -6696,7 +6696,7 @@ function bb_get_default_profile_group_cover( $data, $args ) {
 /**
  * Get settings for live preview default profile and group images.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return array Array contains information text and background colors.
  */

@@ -54,7 +54,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		/**
 		 * Validate custom option for group avatar and cover.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.6
 		 */
 		if ( ! isset( $bb_default_custom_group_avatar ) || ( isset( $bb_default_custom_group_avatar ) && empty( $bb_default_custom_group_avatar ) && 'custom' === $group_avatar_type_after_saving ) ) {
 
@@ -193,7 +193,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	/**
 	 * Setup default custom avatar upload directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param array $upload_dir The original Uploads dir.
 	 * @return array Array containing the path, URL, and other helpful settings.
@@ -227,7 +227,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		/**
 		 * Filters default custom avatar upload directory.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.6
 		 *
 		 * @param array $value Array containing the path, URL, and other helpful settings.
 		 */
