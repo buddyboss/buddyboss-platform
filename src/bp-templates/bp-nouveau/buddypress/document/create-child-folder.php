@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Create Child Folder
+ * The template for document create child folder
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/create-child-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_folder_template;

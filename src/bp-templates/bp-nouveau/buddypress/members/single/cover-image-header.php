@@ -1,10 +1,13 @@
 <?php
 /**
- * BuddyBoss - Users Cover Photo Header
+ * The template for users cover photo header
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/cover-image-header.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
+
 $has_cover_image          = '';
 $has_cover_image_position = '';
 $displayed_user           = bp_get_displayed_user();

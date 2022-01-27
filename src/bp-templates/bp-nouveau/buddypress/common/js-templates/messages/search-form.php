@@ -2,7 +2,8 @@
 /**
  * BP Nouveau Messages search form template.
  *
- * @since BuddyPress 3.2.0
+ * @since   BuddyPress 3.2.0
+ * @version 1.0.0
  */
 ?>
 <form action="" method="get" id="user_messages_search_form" class="bp-messages-search-form" data-bp-search="messages">

@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying the activity loop in the ajaxified search result.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/activity-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @version 1.0.0
+ */
+
+?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity">
 	<a href='<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bp_activity_thread_permalink() )); ?>'>
 		<div class="item-avatar">
