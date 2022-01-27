@@ -1401,9 +1401,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_data'       => $media->attachment_data,
 			'group_name'            => ( isset( $media->group_name ) ? $media->group_name : '' ),
 			'visibility'            => ( isset( $media->visibility ) ? $media->visibility : '' ),
-			'user_nicename'         => $media->user_nicename,
-			'user_login'            => $media->user_login,
-			'display_name'          => $media->display_name,
+			'user_nicename'         => get_the_author_meta( 'user_nicename', $media->user_id ),
+			'user_login'            => get_the_author_meta( 'user_login', $media->user_id ),
+			'display_name'          => bp_core_get_user_displayname( $media->user_id ),
 			'url'                   => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
 			'download_url'          => bp_media_download_link( $media->attachment_id, $media->id ),
 			'user_permissions'      => $this->get_media_current_user_permissions( $media ),
@@ -1420,6 +1420,23 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					(
 						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
 						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+					)
+				) {
+					$data['hide_activity_actions'] = true;
+				}
+			}
+		}
+
+		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
+		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( $data['activity_id'] );
+			if ( isset( $activity->secondary_item_id ) ) {
+				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+				if (
+					! empty( $get_activity->id ) &&
+					(
+						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
+						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
 					)
 				) {
 					$data['hide_activity_actions'] = true;
