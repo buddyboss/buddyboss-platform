@@ -28,7 +28,7 @@ if ( ! function_exists( 'bp_performance_loaded' ) ) {
 /**
  * Function will remove REST APIs endpoint.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $data              Result to send to the client.
  *                                                                            Usually a WP_REST_Response or WP_Error.
@@ -96,7 +96,7 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 /**
  * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $data              Result to send to the client.
  *                                                                            Usually a WP_REST_Response or WP_Error.
@@ -139,7 +139,7 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 /**
  * Function will check current REST APIs endpoint is allow or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $current_endpoint  Current endpoint.
  * @param string $exclude_endpoints List of endpoints which need to excluded
