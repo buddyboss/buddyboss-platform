@@ -142,3 +142,4 @@ add_action( 'messages_delete_thread', 'bp_core_clear_message_cache' );
 add_action( 'messages_send_notice', 'bp_core_clear_message_cache' );
 add_action( 'messages_message_sent', 'bp_core_clear_message_cache' );
 add_action( 'messages_message_after_save', 'bp_core_clear_message_cache' );
+add_action( 'messages_thread_mark_as_read', 'bp_core_clear_message_cache' );
