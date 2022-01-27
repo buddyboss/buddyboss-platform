@@ -946,9 +946,16 @@ class BP_Groups_Group {
 	public static function get_slug( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_slug_by_id_' . $group_id;
+		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM {$bp->groups->table_name} WHERE id = %d", $group_id ) );
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM {$bp->groups->table_name} WHERE id = %d", $group_id ) );
+			wp_cache_set( $cache_key, $result, 'bp_groups' );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -962,9 +969,14 @@ class BP_Groups_Group {
 	public static function has_members( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_has_members_' . $group_id;
+		$members   = wp_cache_get( $cache_key, 'bp_groups' );
 
-		$members = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d", $group_id ) );
+		if ( false === $members ) {
+			$members = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d", $group_id ) );
+			wp_cache_set( $cache_key, $members, 'bp_groups' );
+		}
 
 		if ( empty( $members ) ) {
 			return false;
@@ -985,9 +997,16 @@ class BP_Groups_Group {
 	public static function has_membership_requests( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_has_membership_requests_' . $group_id;
+		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 0", $group_id ) );
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 0", $group_id ) );
+			wp_cache_set( $cache_key, $result, 'bp_groups' );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -1768,13 +1787,22 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$hidden_sql = '';
+		$cache_key  = 'bp_get_moderator_total_group_count';
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = "WHERE status != 'hidden'";
+			$cache_key  = 'bp_get_total_group_count';
 		}
 
 		$bp = buddypress();
 
-		return $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
+		$record = wp_cache_get( $cache_key, 'bp_groups' );
+
+		if ( false === $record ) {
+			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
+			wp_cache_set( $cache_key, $record, 'bp_groups' );
+		}
+
+		return $record;
 	}
 
 	/**
@@ -1788,9 +1816,16 @@ class BP_Groups_Group {
 	public static function get_total_member_count( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		$record    = wp_cache_get( $cache_key, 'bp_groups' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) );
+		if ( false === $record ) {
+			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) );
+			wp_cache_set( $cache_key, $record, 'bp_groups' );
+		}
+
+		return $record;
 	}
 
 	/**

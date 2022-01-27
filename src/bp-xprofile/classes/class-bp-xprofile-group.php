@@ -270,6 +270,7 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
+		static $bp_xprofile_group_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
@@ -292,6 +293,12 @@ class BP_XProfile_Group {
 				'fetch_social_network_fields'    => false,
 			)
 		);
+
+		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
+
+		if ( isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
+			return $bp_xprofile_group_ids[ $cache_key ];
+		}
 
 		// Keep track of object IDs for cache-priming.
 		$object_ids = array(
@@ -324,6 +331,7 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
+			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -335,6 +343,7 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
+			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -426,6 +435,7 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
+			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -561,6 +571,8 @@ class BP_XProfile_Group {
 			// Reset indexes.
 			$groups = array_values( $groups );
 		}
+
+		$bp_xprofile_group_ids[ $cache_key ] = $groups;
 
 		return $groups;
 	}
