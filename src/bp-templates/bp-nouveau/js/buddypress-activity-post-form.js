@@ -1856,6 +1856,12 @@ window.bp = window.bp || {};
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar  .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
+
+				var whatNewForm = this.$el.closest( '#whats-new-form' );
+				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
+				whatNewScroll.stop().animate({
+					scrollTop: whatNewScroll[0].scrollHeight
+				}, 300);
 			},
 
 			// Add a single GifDataItem to the list by creating a view for it, and
@@ -3307,6 +3313,7 @@ window.bp = window.bp || {};
 				'click .post-elements-buttons-item.post-gif:not(.disable)': 'activeMediaButton',
 				'click .post-elements-buttons-item.post-media:not(.disable)': 'activeMediaButton',
 				'click .post-elements-buttons-item.post-video:not(.disable)': 'activeVideoButton',
+				'click .post-elements-buttons-item:not(.post-gif):not(.active)': 'scrollToMedia',
 			},
 			gifMediaSearchDropdownView: false,
 
@@ -3513,6 +3520,15 @@ window.bp = window.bp || {};
 
 			disabledButton: function () {
 				Backbone.trigger( 'onError', BP_Nouveau.activity.params.errors.media_fail, 'info noMediaError' );
+			},
+
+			scrollToMedia: function () {
+				var whatNewForm = this.$el.closest( '#whats-new-form' );
+				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
+
+				whatNewScroll.stop().animate({
+					scrollTop: whatNewScroll[0].scrollHeight
+				}, 300);
 			}
 		}
 	);
