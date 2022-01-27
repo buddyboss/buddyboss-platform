@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-document.php.
  *
  * @since   1.0.0
- * @version [BBVERSION]
+ * @version 1.8.6
  */
 
 ?>

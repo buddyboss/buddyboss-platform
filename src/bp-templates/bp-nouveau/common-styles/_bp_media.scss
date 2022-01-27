@@ -619,6 +619,11 @@
 		visibility: hidden;
 		opacity: 0;
 	}
+
+	&.bb-video-cover-wrap img {
+		min-width: auto;
+		max-height: 100%;
+	}
 }
 
 .bb-item-thumb {
