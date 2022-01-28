@@ -1079,10 +1079,10 @@ function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
 			bp_is_document_component() ||
 			! bp_is_activity_component()
 		) &&
-		! empty( $_REQUEST['action'] ) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
 		(
-			'document_get_activity' === $_REQUEST['action'] ||
-			'document_get_document_description' === $_REQUEST['action']
+			'document_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'document_get_document_description' === $_REQUEST['action'] // phpcs:ignore
 		)
 	) {
 		$activity = new BP_Activity_Activity( $activity_id );
