@@ -2871,7 +2871,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 /**
  * Return the while fetching members thread.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @return int Recipient per page
  */

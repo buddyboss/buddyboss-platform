@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.8.6\n"
+"Project-Id-Version: BuddyBoss Platform (Beta) 1.9.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-27 14:01:24+00:00\n"
+"POT-Creation-Date: 2022-01-28 07:32:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4353,7 +4353,10 @@ msgstr ""
 msgid "Posts in Activity Feeds"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
+#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+#: bp-core/admin/templates/about-buddyboss.php:26
+#: bp-performance/classes/class-settings.php:87
+#: bp-templates/bp-nouveau/includes/customizer.php:29
 msgid "BuddyBoss Platform"
 msgstr ""
 
@@ -29404,6 +29407,10 @@ msgstr ""
 
 #: cli/components/activity.php:977
 msgid "%1$s changed %2$s profile photo"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "BuddyBoss Platform (Beta)"
 msgstr ""
 
 #. Author URI of the plugin/theme
