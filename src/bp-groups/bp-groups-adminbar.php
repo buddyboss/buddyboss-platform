@@ -85,10 +85,10 @@ function bp_groups_group_admin_menu() {
 								// Get the forum.
 								$forum = get_posts(
 									array(
-										'name'                   => bp_action_variable(),
-										'post_status'            => 'publish',
-										'post_type'              => bbp_get_forum_post_type(),
-										'numberposts'            => 1,
+										'name'        => bp_action_variable(),
+										'post_status' => 'publish',
+										'post_type'   => bbp_get_forum_post_type(),
+										'numberposts' => 1,
 										'update_post_meta_cache' => false,
 										'update_post_term_cache' => false,
 									)
@@ -99,7 +99,7 @@ function bp_groups_group_admin_menu() {
 										'parent' => '',
 										'id'     => 'edit-forumn',
 										'title'  => __( 'Edit Forum', 'buddyboss' ),
-										'href'   => get_edit_post_link( $forum[0]->ID )
+										'href'   => get_edit_post_link( $forum[0]->ID ),
 									)
 								);
 						}
