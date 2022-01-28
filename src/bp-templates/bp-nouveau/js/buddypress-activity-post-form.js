@@ -73,6 +73,11 @@ window.bp = window.bp || {};
 				setTimeout( function() {
 					$( '.activity-update-form.modal-popup #whats-new' ).blur();
 					$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+					// Post activity hide modal
+					var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+					if ( $singleActivityFormWrap.length ) {
+						$singleActivityFormWrap.hide();
+					}
 				},0);
 			});
 
@@ -3978,6 +3983,11 @@ window.bp = window.bp || {};
 							setTimeout( function() {
 								$( '.activity-update-form.modal-popup #whats-new' ).blur();
 								$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+								// Post activity hide modal
+								var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+								if ( $singleActivityFormWrap.length ) {
+									$singleActivityFormWrap.hide();
+								}
 							},0);
 						}
 					}
