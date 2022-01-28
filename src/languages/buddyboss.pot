@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-27 09:35:13+00:00\n"
+"POT-Creation-Date: 2022-01-28 09:55:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -598,33 +598,33 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:589
-#: bp-activity/bp-activity-filters.php:2439
-#: bp-activity/bp-activity-filters.php:2472
+#: bp-activity/bp-activity-filters.php:679
+#: bp-activity/bp-activity-filters.php:2529
+#: bp-activity/bp-activity-filters.php:2562
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:593
-#: bp-activity/bp-activity-filters.php:2413
-#: bp-activity/bp-activity-filters.php:2437
-#: bp-activity/bp-activity-filters.php:2470
+#: bp-activity/bp-activity-filters.php:683
+#: bp-activity/bp-activity-filters.php:2503
+#: bp-activity/bp-activity-filters.php:2527
+#: bp-activity/bp-activity-filters.php:2560
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:649
+#: bp-activity/bp-activity-filters.php:739
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:907
+#: bp-activity/bp-activity-filters.php:997
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1702
-#: bp-activity/bp-activity-filters.php:1905
-#: bp-activity/bp-activity-filters.php:2065
-#: bp-activity/bp-activity-filters.php:2268
-#: bp-activity/bp-activity-filters.php:2675
-#: bp-activity/bp-activity-filters.php:2881
+#: bp-activity/bp-activity-filters.php:1792
+#: bp-activity/bp-activity-filters.php:1995
+#: bp-activity/bp-activity-filters.php:2155
+#: bp-activity/bp-activity-filters.php:2358
+#: bp-activity/bp-activity-filters.php:2765
+#: bp-activity/bp-activity-filters.php:2971
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1710
 #: cli/components/activity.php:763
 #. translators: 1. User Link. 2. Group link.
@@ -5419,96 +5419,96 @@ msgstr ""
 msgid "BuddyBoss Emails"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:136
+#: bp-core/bp-core-customizer-email.php:139
 msgid "Header"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:141
+#: bp-core/bp-core-customizer-email.php:144
 msgid "Body"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:146
+#: bp-core/bp-core-customizer-email.php:149
 msgid "Footer"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:316
+#: bp-core/bp-core-customizer-email.php:319
 msgid "Upload Logo"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:327
+#: bp-core/bp-core-customizer-email.php:330
 msgid "Site Title logo size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:328
+#: bp-core/bp-core-customizer-email.php:331
 msgid "Used when logo is set."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:341
+#: bp-core/bp-core-customizer-email.php:344
 msgid "Site Title color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:342
-#: bp-core/bp-core-customizer-email.php:350
+#: bp-core/bp-core-customizer-email.php:345
+#: bp-core/bp-core-customizer-email.php:353
 msgid "Used when logo is not set."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:349
+#: bp-core/bp-core-customizer-email.php:352
 msgid "Site Title text size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:363
+#: bp-core/bp-core-customizer-email.php:366
 msgid "Recipient Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:370
+#: bp-core/bp-core-customizer-email.php:373
 msgid "Recipient Text Size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:383
+#: bp-core/bp-core-customizer-email.php:386
 msgid "Email Background Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:390
+#: bp-core/bp-core-customizer-email.php:393
 msgid "Body Background Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:397
+#: bp-core/bp-core-customizer-email.php:400
 msgid "Body Border Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:404
+#: bp-core/bp-core-customizer-email.php:407
 msgid "Body Primary Text Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:411
+#: bp-core/bp-core-customizer-email.php:414
 msgid "Body Secondary Text Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:418
+#: bp-core/bp-core-customizer-email.php:421
 msgid "Body Text Size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:431
+#: bp-core/bp-core-customizer-email.php:434
 msgid "Quote Background Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:438
+#: bp-core/bp-core-customizer-email.php:441
 msgid "Links and Buttons Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:445
+#: bp-core/bp-core-customizer-email.php:448
 msgid "Change the email footer content."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:446
+#: bp-core/bp-core-customizer-email.php:449
 msgid "Footer Text"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:454
+#: bp-core/bp-core-customizer-email.php:457
 msgid "Footer Text Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:461
+#: bp-core/bp-core-customizer-email.php:464
 msgid "Footer Text Size"
 msgstr ""
 
@@ -13930,7 +13930,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5478
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2164
+#: bp-templates/bp-nouveau/includes/template-tags.php:2174
 msgid "Order By:"
 msgstr ""
 
@@ -20608,7 +20608,7 @@ msgstr ""
 msgid "Edit Cover Photo"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:135 bp-members/bp-members-filters.php:149
+#: bp-members/bp-members-filters.php:185 bp-members/bp-members-filters.php:199
 msgid "Email Address"
 msgstr ""
 
@@ -20651,7 +20651,7 @@ msgid "That username is not allowed"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1717
-#: bp-xprofile/bp-xprofile-filters.php:796
+#: bp-xprofile/bp-xprofile-filters.php:800
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
@@ -21674,22 +21674,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2405
+#: bp-templates/bp-nouveau/includes/template-tags.php:2415
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2587
+#: bp-templates/bp-nouveau/includes/template-tags.php:2597
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2619
-#: bp-templates/bp-nouveau/includes/template-tags.php:2643
+#: bp-templates/bp-nouveau/includes/template-tags.php:2629
+#: bp-templates/bp-nouveau/includes/template-tags.php:2653
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -23640,10 +23640,10 @@ msgstr ""
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:155
-#: bp-templates/bp-nouveau/includes/template-tags.php:2601
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
-#: bp-templates/bp-nouveau/includes/template-tags.php:2633
-#: bp-templates/bp-nouveau/includes/template-tags.php:2658
+#: bp-templates/bp-nouveau/includes/template-tags.php:2611
+#: bp-templates/bp-nouveau/includes/template-tags.php:2619
+#: bp-templates/bp-nouveau/includes/template-tags.php:2643
+#: bp-templates/bp-nouveau/includes/template-tags.php:2668
 msgid "Close (Esc)"
 msgstr ""
 
@@ -27651,29 +27651,29 @@ msgstr ""
 msgid "Loading Suggestions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2167
+#: bp-templates/bp-nouveau/includes/template-tags.php:2177
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2386
+#: bp-templates/bp-nouveau/includes/template-tags.php:2396
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2592
+#: bp-templates/bp-nouveau/includes/template-tags.php:2602
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2601
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
-#: bp-templates/bp-nouveau/includes/template-tags.php:2633
-#: bp-templates/bp-nouveau/includes/template-tags.php:2658
+#: bp-templates/bp-nouveau/includes/template-tags.php:2611
+#: bp-templates/bp-nouveau/includes/template-tags.php:2619
+#: bp-templates/bp-nouveau/includes/template-tags.php:2643
+#: bp-templates/bp-nouveau/includes/template-tags.php:2668
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2624
-#: bp-templates/bp-nouveau/includes/template-tags.php:2648
+#: bp-templates/bp-nouveau/includes/template-tags.php:2634
+#: bp-templates/bp-nouveau/includes/template-tags.php:2658
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
@@ -28328,58 +28328,58 @@ msgid ""
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:791
-#: bp-xprofile/bp-xprofile-filters.php:886
-#: bp-xprofile/bp-xprofile-filters.php:999
+#: bp-xprofile/bp-xprofile-filters.php:795
+#: bp-xprofile/bp-xprofile-filters.php:890
+#: bp-xprofile/bp-xprofile-filters.php:1003
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:532
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:802
+#: bp-xprofile/bp-xprofile-filters.php:806
 msgid "%1$s must be shorter than %2$d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:807
+#: bp-xprofile/bp-xprofile-filters.php:811
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:816
-#: bp-xprofile/bp-xprofile-filters.php:836
+#: bp-xprofile/bp-xprofile-filters.php:820
+#: bp-xprofile/bp-xprofile-filters.php:840
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:895
-#: bp-xprofile/bp-xprofile-filters.php:905
+#: bp-xprofile/bp-xprofile-filters.php:899
+#: bp-xprofile/bp-xprofile-filters.php:909
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1010
+#: bp-xprofile/bp-xprofile-filters.php:1014
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1086
+#: bp-xprofile/bp-xprofile-filters.php:1090
 msgid "Repair xProfile repeater fieldset."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1164
+#: bp-xprofile/bp-xprofile-filters.php:1168
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1184
+#: bp-xprofile/bp-xprofile-filters.php:1188
 msgid "Field update complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1201
+#: bp-xprofile/bp-xprofile-filters.php:1205
 msgid "Repair user nicknames."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1251
+#: bp-xprofile/bp-xprofile-filters.php:1255
 msgid "%s user nicknames updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1256
+#: bp-xprofile/bp-xprofile-filters.php:1260
 msgid "User nickname update complete!"
 msgstr ""
 
