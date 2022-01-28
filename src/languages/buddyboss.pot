@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-27 10:48:13+00:00\n"
+"POT-Creation-Date: 2022-01-27 09:35:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -598,33 +598,33 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:679
-#: bp-activity/bp-activity-filters.php:2529
-#: bp-activity/bp-activity-filters.php:2562
+#: bp-activity/bp-activity-filters.php:589
+#: bp-activity/bp-activity-filters.php:2439
+#: bp-activity/bp-activity-filters.php:2472
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:683
-#: bp-activity/bp-activity-filters.php:2503
-#: bp-activity/bp-activity-filters.php:2527
-#: bp-activity/bp-activity-filters.php:2560
+#: bp-activity/bp-activity-filters.php:593
+#: bp-activity/bp-activity-filters.php:2413
+#: bp-activity/bp-activity-filters.php:2437
+#: bp-activity/bp-activity-filters.php:2470
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:739
+#: bp-activity/bp-activity-filters.php:649
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:997
+#: bp-activity/bp-activity-filters.php:907
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1792
-#: bp-activity/bp-activity-filters.php:1995
-#: bp-activity/bp-activity-filters.php:2155
-#: bp-activity/bp-activity-filters.php:2358
-#: bp-activity/bp-activity-filters.php:2765
-#: bp-activity/bp-activity-filters.php:2971
+#: bp-activity/bp-activity-filters.php:1702
+#: bp-activity/bp-activity-filters.php:1905
+#: bp-activity/bp-activity-filters.php:2065
+#: bp-activity/bp-activity-filters.php:2268
+#: bp-activity/bp-activity-filters.php:2675
+#: bp-activity/bp-activity-filters.php:2881
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1710
 #: cli/components/activity.php:763
 #. translators: 1. User Link. 2. Group link.
@@ -5419,96 +5419,96 @@ msgstr ""
 msgid "BuddyBoss Emails"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:139
+#: bp-core/bp-core-customizer-email.php:136
 msgid "Header"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:144
+#: bp-core/bp-core-customizer-email.php:141
 msgid "Body"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:149
+#: bp-core/bp-core-customizer-email.php:146
 msgid "Footer"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:319
+#: bp-core/bp-core-customizer-email.php:316
 msgid "Upload Logo"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:330
+#: bp-core/bp-core-customizer-email.php:327
 msgid "Site Title logo size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:331
+#: bp-core/bp-core-customizer-email.php:328
 msgid "Used when logo is set."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:344
+#: bp-core/bp-core-customizer-email.php:341
 msgid "Site Title color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:345
-#: bp-core/bp-core-customizer-email.php:353
+#: bp-core/bp-core-customizer-email.php:342
+#: bp-core/bp-core-customizer-email.php:350
 msgid "Used when logo is not set."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:352
+#: bp-core/bp-core-customizer-email.php:349
 msgid "Site Title text size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:366
+#: bp-core/bp-core-customizer-email.php:363
 msgid "Recipient Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:373
+#: bp-core/bp-core-customizer-email.php:370
 msgid "Recipient Text Size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:386
+#: bp-core/bp-core-customizer-email.php:383
 msgid "Email Background Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:393
+#: bp-core/bp-core-customizer-email.php:390
 msgid "Body Background Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:400
+#: bp-core/bp-core-customizer-email.php:397
 msgid "Body Border Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:407
+#: bp-core/bp-core-customizer-email.php:404
 msgid "Body Primary Text Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:414
+#: bp-core/bp-core-customizer-email.php:411
 msgid "Body Secondary Text Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:421
+#: bp-core/bp-core-customizer-email.php:418
 msgid "Body Text Size"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:434
+#: bp-core/bp-core-customizer-email.php:431
 msgid "Quote Background Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:441
+#: bp-core/bp-core-customizer-email.php:438
 msgid "Links and Buttons Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:448
+#: bp-core/bp-core-customizer-email.php:445
 msgid "Change the email footer content."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:449
+#: bp-core/bp-core-customizer-email.php:446
 msgid "Footer Text"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:457
+#: bp-core/bp-core-customizer-email.php:454
 msgid "Footer Text Color"
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:464
+#: bp-core/bp-core-customizer-email.php:461
 msgid "Footer Text Size"
 msgstr ""
 
@@ -8416,13 +8416,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -13930,7 +13930,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5478
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2174
+#: bp-templates/bp-nouveau/includes/template-tags.php:2164
 msgid "Order By:"
 msgstr ""
 
@@ -20608,7 +20608,7 @@ msgstr ""
 msgid "Edit Cover Photo"
 msgstr ""
 
-#: bp-members/bp-members-filters.php:185 bp-members/bp-members-filters.php:199
+#: bp-members/bp-members-filters.php:135 bp-members/bp-members-filters.php:149
 msgid "Email Address"
 msgstr ""
 
@@ -20651,7 +20651,7 @@ msgid "That username is not allowed"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:1717
-#: bp-xprofile/bp-xprofile-filters.php:800
+#: bp-xprofile/bp-xprofile-filters.php:796
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
@@ -21674,22 +21674,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2415
+#: bp-templates/bp-nouveau/includes/template-tags.php:2405
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2597
+#: bp-templates/bp-nouveau/includes/template-tags.php:2587
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2629
-#: bp-templates/bp-nouveau/includes/template-tags.php:2653
+#: bp-templates/bp-nouveau/includes/template-tags.php:2619
+#: bp-templates/bp-nouveau/includes/template-tags.php:2643
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -23640,10 +23640,10 @@ msgstr ""
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:155
-#: bp-templates/bp-nouveau/includes/template-tags.php:2611
-#: bp-templates/bp-nouveau/includes/template-tags.php:2619
-#: bp-templates/bp-nouveau/includes/template-tags.php:2643
-#: bp-templates/bp-nouveau/includes/template-tags.php:2668
+#: bp-templates/bp-nouveau/includes/template-tags.php:2601
+#: bp-templates/bp-nouveau/includes/template-tags.php:2609
+#: bp-templates/bp-nouveau/includes/template-tags.php:2633
+#: bp-templates/bp-nouveau/includes/template-tags.php:2658
 msgid "Close (Esc)"
 msgstr ""
 
@@ -27651,29 +27651,29 @@ msgstr ""
 msgid "Loading Suggestions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2177
+#: bp-templates/bp-nouveau/includes/template-tags.php:2167
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2396
+#: bp-templates/bp-nouveau/includes/template-tags.php:2386
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2602
+#: bp-templates/bp-nouveau/includes/template-tags.php:2592
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2611
-#: bp-templates/bp-nouveau/includes/template-tags.php:2619
-#: bp-templates/bp-nouveau/includes/template-tags.php:2643
-#: bp-templates/bp-nouveau/includes/template-tags.php:2668
+#: bp-templates/bp-nouveau/includes/template-tags.php:2601
+#: bp-templates/bp-nouveau/includes/template-tags.php:2609
+#: bp-templates/bp-nouveau/includes/template-tags.php:2633
+#: bp-templates/bp-nouveau/includes/template-tags.php:2658
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2634
-#: bp-templates/bp-nouveau/includes/template-tags.php:2658
+#: bp-templates/bp-nouveau/includes/template-tags.php:2624
+#: bp-templates/bp-nouveau/includes/template-tags.php:2648
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
@@ -28328,58 +28328,58 @@ msgid ""
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:795
-#: bp-xprofile/bp-xprofile-filters.php:890
-#: bp-xprofile/bp-xprofile-filters.php:1003
+#: bp-xprofile/bp-xprofile-filters.php:791
+#: bp-xprofile/bp-xprofile-filters.php:886
+#: bp-xprofile/bp-xprofile-filters.php:999
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:532
 #: bp-xprofile/screens/edit.php:140
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:806
+#: bp-xprofile/bp-xprofile-filters.php:802
 msgid "%1$s must be shorter than %2$d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:811
+#: bp-xprofile/bp-xprofile-filters.php:807
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:820
-#: bp-xprofile/bp-xprofile-filters.php:840
+#: bp-xprofile/bp-xprofile-filters.php:816
+#: bp-xprofile/bp-xprofile-filters.php:836
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:899
-#: bp-xprofile/bp-xprofile-filters.php:909
+#: bp-xprofile/bp-xprofile-filters.php:895
+#: bp-xprofile/bp-xprofile-filters.php:905
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1014
+#: bp-xprofile/bp-xprofile-filters.php:1010
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1090
+#: bp-xprofile/bp-xprofile-filters.php:1086
 msgid "Repair xProfile repeater fieldset."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1168
+#: bp-xprofile/bp-xprofile-filters.php:1164
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1188
+#: bp-xprofile/bp-xprofile-filters.php:1184
 msgid "Field update complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1205
+#: bp-xprofile/bp-xprofile-filters.php:1201
 msgid "Repair user nicknames."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1255
+#: bp-xprofile/bp-xprofile-filters.php:1251
 msgid "%s user nicknames updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1260
+#: bp-xprofile/bp-xprofile-filters.php:1256
 msgid "User nickname update complete!"
 msgstr ""
 
@@ -29640,15 +29640,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
