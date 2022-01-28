@@ -489,7 +489,7 @@ window.bp = window.bp || {};
 					}
 
 					// Do not allow the edit privacy if activity is belongs to any folder/album.
-					if ( ! bp.privacyEditable ) {
+					if ( ! bp.privacyEditable && 'groups' !== activity_data.object ) {
 						self.postForm.$el.addClass( 'bp-activity-edit--privacy-idle' );
 					} else {
 						self.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
@@ -808,6 +808,13 @@ window.bp = window.bp || {};
 			},
 
 			close: function ( e ) {
+				// Reset Global variable after edit activity.
+				bp.privacyEditable = true;
+				bp.album_id        = 0;
+				bp.folder_id       = 0;
+				bp.group_id        = 0;
+				bp.privacy         = 'public';
+
 				e.preventDefault();
 				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 				this.model.set( 'privacy_modal', 'general' );
@@ -820,6 +827,9 @@ window.bp = window.bp || {};
 				
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
+
+				// Update privacy editable state class
+				this.$el.closest( '#whats-new-form' ).removeClass( 'bp-activity-edit--privacy-idle' );
 
 				// Post activity hide modal
 				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
