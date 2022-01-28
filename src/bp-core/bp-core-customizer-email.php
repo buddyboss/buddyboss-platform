@@ -567,7 +567,7 @@ add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
 /**
  * Set default avatar to customise email template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $avatar Default avatar.
  * @return string The default avatar URL based on backend setting.

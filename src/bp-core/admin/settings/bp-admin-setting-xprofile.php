@@ -105,7 +105,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		/**
 		 * Enable Gravatar's set disable if Profile Avatars is WordPress.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.6
 		 */
 		if ( isset( $bb_profile_avatar_type ) && 'WordPress' === sanitize_text_field( $bb_profile_avatar_type ) ) {
 			bp_update_option( 'bp-enable-profile-gravatar', '' );
@@ -114,7 +114,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		/**
 		 * Validate custom option for profile avatar and cover.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.6
 		 */
 		if ( ! isset( $bb_default_custom_profile_avatar ) || ( empty( $bb_default_custom_profile_avatar ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
 
@@ -672,7 +672,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Setup default custom avatar upload directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.6
 	 *
 	 * @param array $upload_dir The original Uploads dir.
 	 * @return array Array containing the path, URL, and other helpful settings.
@@ -706,7 +706,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		/**
 		 * Filters default custom avatar upload directory.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.8.6
 		 *
 		 * @param array $value Array containing the path, URL, and other helpful settings.
 		 */

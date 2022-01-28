@@ -2655,7 +2655,7 @@ add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_creat
 /**
  * Add notice in Show Avatar section in Discussion page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bb_discussion_page_show_notice_in_avatar_section() {
 	global $pagenow;

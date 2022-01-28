@@ -1,8 +1,12 @@
 <?php
 /**
- * Video search Ajax Template
+ * Template for displaying the search results of the videos ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/videos-ajax.php.
  *
  * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 $listing_class = '';

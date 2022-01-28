@@ -15,7 +15,7 @@ add_filter( 'bp_sent_invite_email_avatar', 'bb_sent_invite_email_avatar_default_
 /**
  * Set default avatar when sent invite.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @param string $avatar Default avatar.
  * @return string The default avatar URL based on backend setting.

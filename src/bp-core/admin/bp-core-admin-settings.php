@@ -428,7 +428,7 @@ function bp_admin_setting_callback_cover_image_uploads() {
 /**
  * Which type of avatar needs to display.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_profile_avatar_type() {
 	?>
@@ -468,7 +468,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 /**
  * Allow admin to set default profile avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_profile_avatar_type() {
 	?>
@@ -513,7 +513,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 /**
  * Allow admin to upload custom default profile avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_profile_custom_avatar() {
 	$hide_show_style        = 'bp-inline-block';
@@ -561,7 +561,7 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 /**
  * Allow admin to set default profile cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_profile_cover_type() {
 	?>
@@ -601,7 +601,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 /**
  * Allow admin to upload custom default profile cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_profile_custom_cover() {
 	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
@@ -653,7 +653,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 /**
  * Preview based on profile images settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_preview_profile_avatar_cover() {
 	$live_preview_settings = bb_get_settings_live_preview_default_profile_group_images();
@@ -766,7 +766,7 @@ function bp_profile_photos_tutorial() {
 /**
  * Link to Group Photos Settings tutorial
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_group_avatar_tutorial() {
 	?>
@@ -791,7 +791,7 @@ function bp_group_avatar_tutorial() {
 /**
  * Allow admin to set default group avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_group_avatar_type() {
 	?>
@@ -830,7 +830,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 /**
  * Allow admin to upload custom default group avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_group_custom_avatar() {
 	$hide_show_style        = 'bp-inline-block';
@@ -878,7 +878,7 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 /**
  * Allow admin to set default group cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_group_cover_type() {
 	?>
@@ -917,7 +917,7 @@ function bp_admin_setting_callback_default_group_cover_type() {
 /**
  * Allow admin to upload custom default group cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_default_group_custom_cover() {
 	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
@@ -966,7 +966,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 /**
  * Preview based on profile images settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  */
 function bp_admin_setting_callback_preview_group_avatar_cover() {
 	$live_preview_settings = bb_get_settings_live_preview_default_profile_group_images();
@@ -2253,3 +2253,114 @@ function bb_after_update_activity_settings( $tab_name ) {
 	}
 }
 add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10, 1 );
+
+/**
+ * Allow admin to make the REST APIs private.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_admin_setting_callback_private_rest_apis() {
+	$disable_field    = false;
+	$checked_checkbox = bp_enable_private_rest_apis();
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) ) {
+		if ( true === bbapp_is_private_app_enabled() ) {
+			$disable_field = false;
+		} else {
+			$disable_field    = true;
+			$checked_checkbox = false;
+		}
+	}
+	?>
+
+	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"<?php checked( $checked_checkbox ); ?><?php disabled( $disable_field ); ?>/>
+	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
+	<p class="description">
+		<?php
+		printf(
+			wp_kses_post(
+			/* translators: Registration link. */
+				__( 'Login and %s APIs will remain publicly visible.', 'buddyboss' )
+			),
+			sprintf(
+				'<a href="%s">' . esc_html__( 'Registration', 'buddyboss' ) . '</a>',
+				esc_url(
+					add_query_arg(
+						array( 'page' => 'bp-pages' ),
+						admin_url( 'admin.php' )
+					)
+				)
+			)
+		);
+		?>
+	</p>
+	<?php
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
+		?>
+		<div class="bp-feedback info">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p>
+				<?php
+				printf(
+					wp_kses_post(
+					/* translators: Settings link. */
+						__( 'Your BuddyBoss App is currently public. To restrict access to REST APIs for logged-out members, please enable "Private App" in the %s.', 'buddyboss' )
+					),
+					sprintf(
+						'<a href="%s">' . esc_html__( 'BuddyBoss App\'s settings', 'buddyboss' ) . '</a>',
+						esc_url(
+							add_query_arg(
+								array( 'page' => 'bbapp-settings' ),
+								admin_url( 'admin.php' )
+							)
+						)
+					)
+				);
+				?>
+			</p>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Allow admin to exclude REST APIs endpoint.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_admin_setting_callback_private_rest_apis_public_content() {
+	$disable_field = false;
+	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
+		$disable_field = true;
+	}
+	?>
+
+	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST API endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php disabled( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
+	<?php
+}
+
+/**
+ * Allow admin to make the RSS feeds private.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_admin_setting_callback_private_rss_feeds() {
+	?>
+
+	<input id="bb-enable-private-rss-feeds" name="bb-enable-private-rss-feeds" type="checkbox" value="1" <?php checked( bp_enable_private_rss_feeds() ); ?>/>
+	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS Feeds access to only logged-in members', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * Allow admin to exclude RSS feeds endpoint.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_admin_setting_callback_private_rss_feeds_public_content() {
+	?>
+
+	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php esc_html_e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one endpoint URL or URI per line. ', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
+	<?php
+}
