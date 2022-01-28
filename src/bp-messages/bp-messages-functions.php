@@ -1209,7 +1209,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
-				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
 				$legacy_user_avatar_name  = '-avatar2';
 

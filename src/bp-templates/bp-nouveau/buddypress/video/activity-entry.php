@@ -2,9 +2,14 @@
 /**
  * BuddyBoss - Activity Video
  *
+ * This template is used to render activity video.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/video/activity-entry.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_template;

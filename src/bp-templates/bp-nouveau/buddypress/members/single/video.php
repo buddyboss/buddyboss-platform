@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Video
+ * The template for users video
  *
- * @since BuddyBoss 1.7.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/video.php.
+ *
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 ?>
