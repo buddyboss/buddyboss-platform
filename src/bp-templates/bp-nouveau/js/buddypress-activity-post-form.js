@@ -488,6 +488,13 @@ window.bp = window.bp || {};
 						}
 					}
 
+					// Do not allow the edit privacy if activity is belongs to any folder/album.
+					if ( ! bp.privacyEditable ) {
+						self.postForm.$el.addClass( 'bp-activity-edit--privacy-idle' );
+					} else {
+						self.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
+					}
+
 					Backbone.trigger('editactivity');
 				},
 				0
@@ -2817,7 +2824,7 @@ window.bp = window.bp || {};
 			},
 
 			privacyTarget: function ( e ) {
-				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) ) {
+				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) || ! bp.privacyEditable ) {
 					return false;
 				}
 				e.preventDefault();
