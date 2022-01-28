@@ -104,7 +104,8 @@
 	.bp-activity-edit--privacy-idle & {
 		cursor: default;
 
-		span, i {
+		span,
+		i {
 			opacity: 0.5;
 		}
 	}
@@ -132,7 +133,9 @@
 }
 
 #whats-new-form:not(.bp-activity-edit--privacy-idle) {
+
 	#bp-activity-privacy-point {
+
 		&[data-bp-tooltip][data-bp-tooltip-pos="up"]:before,
 		&[data-bp-tooltip][data-bp-tooltip-pos="up"]:after {
 			display: none;

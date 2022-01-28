@@ -1136,7 +1136,8 @@ a.layout-grid-view {
   cursor: default;
 }
 
-.bp-activity-edit--privacy-idle #bp-activity-privacy-point span, .bp-activity-edit--privacy-idle #bp-activity-privacy-point i {
+.bp-activity-edit--privacy-idle #bp-activity-privacy-point span,
+.bp-activity-edit--privacy-idle #bp-activity-privacy-point i {
   opacity: 0.5;
 }
 
