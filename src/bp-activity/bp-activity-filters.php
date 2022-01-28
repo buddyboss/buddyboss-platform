@@ -2452,7 +2452,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  */
 function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
-	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity', 'video_get_activity' );
+	$exclude_action_arr = array( 'media_get_media_description', 'media_get_activity', 'document_get_document_description', 'document_get_activity', 'video_get_video_description', 'video_get_activity' );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, true ) ) {
