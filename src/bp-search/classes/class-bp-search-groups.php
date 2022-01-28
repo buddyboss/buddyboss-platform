@@ -68,6 +68,8 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
+			$search_term = htmlspecialchars( $search_term );
+
 			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {

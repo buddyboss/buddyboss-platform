@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Activity Document Folder Move
+ * The template for activity document folder move
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/activity-document-folder-move.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>
