@@ -729,8 +729,42 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_profile_cover_size() {
+
 	?>
-	<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-cover-sizes.png' ); ?>" width="650px" alt="">
+	<div class="">
+		<?php
+			$cover_profile_width = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-profile-width',
+					'label'       => esc_html__( 'Width', 'buddyboss' ),
+					'description' => esc_html__( 'Select the width of profile cover images in profile headers.', 'buddyboss' ),
+					'disabled'    => true,
+					'options'     => array(
+						'' => 'Default',
+					),
+				)
+			);
+			$cover_profile_width->render_field();
+		?>
+	</div>
+	<div class="">
+		<?php
+			$cover_profile_height = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-profile-height',
+					'label'       => esc_html__( 'Height', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of profile cover images in profile headers and member directories.', 'buddyboss' ),
+					'disabled'    => true,
+					'options'     => array(
+						'' => 'Small',
+					),
+				)
+			);
+			$cover_profile_height->render_field();
+		?>
+	</div>
 	<?php
 }
 
@@ -1028,8 +1062,42 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
  * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_setting_callback_default_group_cover_size() {
+
 	?>
-	<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-cover-sizes.png' ); ?>" width="570px" alt="">
+	<div class="">
+		<?php
+			$cover_group_width = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-group-width',
+					'label'       => esc_html__( 'Width', 'buddyboss' ),
+					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
+					'disabled'    => true,
+					'options'     => array(
+						'' => 'Default',
+					),
+				)
+			);
+			$cover_group_width->render_field();
+		?>
+	</div>
+	<div class="">
+		<?php
+			$cover_group_height = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-group-height',
+					'label'       => esc_html__( 'Height', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
+					'disabled'    => true,
+					'options'     => array(
+						'' => 'Small',
+					),
+				)
+			);
+			$cover_group_height->render_field();
+		?>
+	</div>
 	<?php
 }
 
@@ -1540,7 +1608,7 @@ function bp_feed_settings_callback_platform( $args ) {
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
-    <?php
+	<?php
 
 }
 
@@ -1808,7 +1876,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
  * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
- *
  */
 function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
@@ -1823,7 +1890,6 @@ function bp_admin_setting_callback_register_show_confirm_email() {
  * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
- *
  */
 function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
@@ -1938,7 +2004,6 @@ function bp_group_directories_tutorial() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
@@ -1973,7 +2038,6 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_page_url() {
 	?>

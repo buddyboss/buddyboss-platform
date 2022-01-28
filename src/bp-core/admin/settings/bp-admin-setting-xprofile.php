@@ -118,8 +118,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 */
 		if ( ! isset( $bb_default_custom_profile_avatar ) || ( empty( $bb_default_custom_profile_avatar ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
 
-			$bp_disable_avatar_uploads_before_saving   = $bp_disable_avatar_uploads_after_saving;
-			$bp_enable_profile_gravatar_before_saving  = $bp_enable_profile_gravatar_after_saving;
+			$bp_disable_avatar_uploads_before_saving  = $bp_disable_avatar_uploads_after_saving;
+			$bp_enable_profile_gravatar_before_saving = $bp_enable_profile_gravatar_after_saving;
 
 			if ( 'WordPress' === $profile_avatar_type_before_saving ) {
 				$bp_disable_avatar_uploads_before_saving   = '1';
@@ -239,18 +239,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom' . ( ( ! $is_disabled_cover && 'custom' === $default_cover_type ) ? '' : ' bp-hide' );
 			$this->add_field( 'bp-default-custom-profile-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
 
+			$default_profile_cover_size_class = 'profile-cover-options avatar-options ' . ( $is_disabled_cover ? ' bp-hide' : '' );
 			if ( ! function_exists( 'bbp_pro_is_license_valid' ) || ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() ) ) {
-				$this->add_field( 'bp-default-profile-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_size', 'string', array() );
+				$default_profile_cover_size_class .= ' disabled';
 			}
 
-			/**
-			 * Fires to register profile images field.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param Object $this BP_Admin_Setting_Xprofile.
-			 */
-			do_action( 'bp_admin_setting_profile_images', $this );
+			$args          = array();
+			$args['class'] = $default_profile_cover_size_class;
+			$this->add_field( 'bp-default-profile-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_size', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
