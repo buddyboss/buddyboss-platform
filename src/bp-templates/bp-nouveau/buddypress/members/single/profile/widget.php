@@ -20,7 +20,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 <div class="profile_completion_wrap">
 
 	<div class="pc_progress_wrap">
-		<svg class="pc_progress_graph" width="146" height="73" viewBox="0 0 146 73" fill="none">
+		<svg class="pc_progress_graph <?php echo ( $user_progress['completion_percentage'] == 0 ) ? 'pc_progress_graph--blank' : ''; ?>" width="146" height="73" viewBox="0 0 146 73" fill="none">
 			<path d="M143 73C143 34.3401 111.66 3 73 3C34.3401 3 3 34.3401 3 73" stroke="#F1F3F5" stroke-width="6"/>
 			<path stroke-dasharray="<?php echo esc_attr( $user_progress['completion_percentage'] ); ?>, 100" stroke-dashoffset="-<?php echo $user_progress_offset; ?>" class="pc_progress_rate" d="M143 73C143 34.3401 111.66 3 73 3C34.3401 3 3 34.3401 3 73" stroke="#F1F3F5" stroke-width="6" pathLength="100"/>
 		</svg>

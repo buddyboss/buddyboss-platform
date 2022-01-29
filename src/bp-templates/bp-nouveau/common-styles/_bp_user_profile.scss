@@ -420,6 +420,13 @@ div.profile_completion_wrap {
 		stroke-linecap: round;
 		stroke-width: 6;
 	}
+
+	&.pc_progress_graph--blank {
+
+		path {
+			stroke-linecap: initial;
+		}
+	}
 }
 
 .pc_progress_wrap {

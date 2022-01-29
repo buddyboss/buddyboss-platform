@@ -7170,6 +7170,10 @@ div.profile_completion_wrap .progress_text_wrap {
   stroke-width: 6;
 }
 
+.pc_progress_graph.pc_progress_graph--blank path {
+  stroke-linecap: initial;
+}
+
 .pc_progress_wrap {
   text-align: center;
   margin: 0 0 30px;
