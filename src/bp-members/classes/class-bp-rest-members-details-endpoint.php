@@ -229,6 +229,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
+		add_filter( 'bp_core_create_nav_link', array( $this, 'bp_rest_core_create_nav_link' ), 999 );
 
 		remove_action( 'bp_init', 'bb_moderation_load', 1 );
 		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
@@ -358,6 +359,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$retval['tabs'] = array_values( $profile_tabs );
 
+		remove_filter( 'bp_core_create_nav_link', array( $this, 'bp_rest_core_create_nav_link' ), 999 );
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
@@ -1308,6 +1310,30 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			return $is_current_component;
 		}
 		return false;
+	}
+
+	/**
+	 * Function to change the user domain for profile tabs.
+	 *
+	 * @param array $menu_args Menu arguments
+	 *
+	 * @return mixed
+	 */
+	public function bp_rest_core_create_nav_link( $menu_args ) {
+
+		$user_domain = '';
+
+		if ( bp_displayed_user_domain() ) {
+			$user_domain = bp_displayed_user_domain();
+		} elseif ( bp_loggedin_user_domain() ) {
+			$user_domain = bp_loggedin_user_domain();
+		}
+
+		if ( ! empty( $user_domain ) ) {
+			$menu_args['link'] = trailingslashit( $user_domain . $menu_args['slug'] );
+		}
+
+		return $menu_args;
 	}
 
 }

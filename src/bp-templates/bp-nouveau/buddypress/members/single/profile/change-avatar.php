@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Profile Change Avatar
+ * The template for members profile change avatar
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/change-avatar.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -14,7 +16,7 @@
 	<?php else : ?>
 		<?php esc_html_e( 'Profile Photo', 'buddyboss' ); ?>
 	<?php endif; ?>
-			
+
 </h2>
 
 <?php bp_nouveau_member_hook( 'before', 'avatar_upload_content' ); ?>

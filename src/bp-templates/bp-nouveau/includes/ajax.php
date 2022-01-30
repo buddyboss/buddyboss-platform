@@ -165,12 +165,12 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 
 	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['all'] = $GLOBALS['members_template']->total_member_count;
+	$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['personal'] = $GLOBALS['members_template']->total_member_count;
+	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
@@ -178,7 +178,7 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		if ( ! empty( $counts['following'] ) ) {
 			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 			bp_has_members( bp_ajax_querystring( 'members' ) );
-			$results['scopes']['following'] = $GLOBALS['members_template']->total_member_count;
+			$results['scopes']['following'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 		}
 	}
@@ -305,9 +305,9 @@ function bp_nouveau_ajax_save_cover_position() {
 	$position = floatval( $_POST['position'] );
 	$updated  = false;
 
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) ) {
 		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
-	} else if ( bp_is_user() ) {
+	} else if ( bp_is_user() && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
 		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
 	}
 

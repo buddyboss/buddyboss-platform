@@ -495,16 +495,16 @@ function bp_nouveau_ajax_get_activity_objects() {
 
 	if ( 'group' === $_POST['type'] ) {
 		$exclude_groups = array();
+		$exclude_groups_args                = array();
+		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
+		$exclude_groups_args['show_hidden'] = true;
+		$exclude_groups_args['fields']      = 'ids';
+		if ( isset( $_POST['search'] ) ) {
+			$exclude_groups_args['search_terms'] = $_POST['search'];
+			$exclude_groups_args['per_page']     = - 1;
+		}
 
-		$exclude_groups_query = groups_get_groups(
-			array(
-				'user_id'      => bp_loggedin_user_id(),
-				'search_terms' => $_POST['search'],
-				'show_hidden'  => true,
-				'per_page'     => - 1,
-				'fields'       => 'ids',
-			)
-		);
+		$exclude_groups_query = groups_get_groups( $exclude_groups_args );
 
 		if ( ! empty( $exclude_groups_query['groups'] ) ) {
 			foreach ( $exclude_groups_query['groups'] as $exclude_group ) {
@@ -513,16 +513,21 @@ function bp_nouveau_ajax_get_activity_objects() {
 				}
 			}
 		}
+		$args                = array();
+		$args['user_id']     = bp_loggedin_user_id();
+		$args['show_hidden'] = true;
+		$args['per_page']    = bb_activity_post_form_groups_per_page();
+		$args['orderby']     = 'name';
+		$args['order']       = 'ASC';
+		if ( isset( $_POST['page'] ) ) {
+			$args['page'] = $_POST['page'];
+		}
+		if ( isset( $_POST['search'] ) ) {
+			$args['search_terms'] = $_POST['search'];
+			$args['exclude']      = $exclude_groups;
+		}
 
-		$groups = groups_get_groups(
-			array(
-				'user_id'      => bp_loggedin_user_id(),
-				'search_terms' => $_POST['search'],
-				'show_hidden'  => true,
-				'per_page'     => 2,
-				'exclude'      => $exclude_groups,
-			)
-		);
+		$groups = groups_get_groups( $args );
 
 		wp_send_json_success( array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] ) );
 	} else {

@@ -1343,24 +1343,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					! empty( $get_activity->id ) &&
 					(
 						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
-					)
-				) {
-					$data['hide_activity_actions'] = true;
-				}
-			}
-		}
-
-		// Below condition will check if document has comments then like/comment button will not visible for that particular media.
-		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
-			$activity = new BP_Activity_Activity( $data['activity_id'] );
-			if ( isset( $activity->secondary_item_id ) ) {
-				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-				if (
-					! empty( $get_activity->id ) &&
-					(
-						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
+						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 					)
 				) {
 					$data['hide_activity_actions'] = true;
@@ -2335,7 +2318,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2611,7 +2594,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2770,7 +2753,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;

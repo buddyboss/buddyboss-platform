@@ -178,7 +178,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function update_button_sub_items( $item_id ) {
 
-		$activity = new BP_Activity_Activity( $item_id );
+		$activity = new BP_Activity_Activity( (int) $item_id );
 
 		if ( empty( $activity->id ) ) {
 			return array();
@@ -328,6 +328,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return bool
 	 */
 	public function validate_single_item( $retval, $item_id ) {
+
 		if ( empty( $item_id ) ) {
 			return $retval;
 		}
