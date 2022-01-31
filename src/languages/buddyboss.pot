@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-28 09:55:11+00:00\n"
+"POT-Creation-Date: 2022-01-31 11:01:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5295,7 +5295,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:681 bp-core/bp-core-catchuri.php:791
-#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:6101
+#: bp-core/bp-core-catchuri.php:1264 bp-core/bp-core-functions.php:6116
 msgid "Please login to access this website."
 msgstr ""
 
@@ -6817,17 +6817,17 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6139
+#: bp-core/bp-core-functions.php:6154
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6706
+#: bp-core/bp-core-functions.php:6721
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed with "
 "custom CSS."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6725
+#: bp-core/bp-core-functions.php:6740
 #. translators: 1: theme setting url 2: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -6835,14 +6835,14 @@ msgid ""
 "changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6732
+#: bp-core/bp-core-functions.php:6747
 #. translators: 1: theme setting url
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed in the <a "
 "href=\"%s\">Theme Options</a>."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6738
+#: bp-core/bp-core-functions.php:6753
 #. translators: 1: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -7476,6 +7476,10 @@ msgstr ""
 msgid ""
 "Regards, <br /> All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /> "
 "<a href=\"###SITEURL###\">###SITEURL###</a>"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin-setting-fields.php:149
+msgid "This field type does not support."
 msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:117
@@ -12361,6 +12365,22 @@ msgid ""
 "discussion</a>"
 msgstr ""
 
+#: bp-forums/bp-forumns-adminbar.php:45 bp-forums/forums/template.php:56
+msgid "Edit Forum"
+msgstr ""
+
+#: bp-forums/bp-forumns-adminbar.php:68
+msgid "Edit Forum %s"
+msgstr ""
+
+#: bp-forums/bp-forumns-adminbar.php:72
+msgid "%s Forum"
+msgstr ""
+
+#: bp-forums/bp-forumns-adminbar.php:80 bp-groups/bp-groups-adminbar.php:80
+msgid "Edit Forum Settings"
+msgstr ""
+
 #: bp-forums/classes/class-bbpress.php:121
 #: bp-forums/classes/class-bbpress.php:129
 #: bp-search/classes/class-bp-search-core.php:127
@@ -14168,10 +14188,6 @@ msgstr ""
 #: bp-forums/forums/template.php:54
 #: bp-forums/templates/default/bbpress/form-forum.php:33
 msgid "Create New Forum"
-msgstr ""
-
-#: bp-forums/forums/template.php:56
-msgid "Edit Forum"
 msgstr ""
 
 #: bp-forums/forums/template.php:58 bp-forums/forums/template.php:59
@@ -16792,10 +16808,6 @@ msgstr ""
 
 #: bp-groups/bp-groups-adminbar.php:72
 msgid "%s Group"
-msgstr ""
-
-#: bp-groups/bp-groups-adminbar.php:80
-msgid "Edit Forum Settings"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:186
