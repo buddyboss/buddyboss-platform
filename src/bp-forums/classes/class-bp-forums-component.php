@@ -454,7 +454,6 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				}
 			}
 			if ( bp_is_single_item() && bp_is_group() && bp_current_action() === 'forum' && bp_is_group_forum_topic() ) {
-				error_log( ' if 2' );
 				$query = new WP_Query(
 					array(
 						'name'      => bp_action_variable( 1 ),
@@ -473,8 +472,6 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					$topic_id = bbp_get_topic_id();
 				}
 			}
-			error_log( ' $forum_id ' . $forum_id );
-			error_log( ' $topic_id ' . $topic_id );
 			if ( ! empty( $forum_id ) ) {
 				$wp_admin_bar->add_menu(
 					array(
