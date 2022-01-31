@@ -750,6 +750,8 @@ function bb_get_elementor_maintenance_mode_template() {
 		return;
 	}
 
+	static $user = null;
+
 	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
 		return;
 	}
@@ -760,7 +762,10 @@ function bb_get_elementor_maintenance_mode_template() {
 		return;
 	}
 
-	$user         = wp_get_current_user();
+	if ( null === $user ) {
+		$user = wp_get_current_user();
+	}
+
 	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
 
 	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
