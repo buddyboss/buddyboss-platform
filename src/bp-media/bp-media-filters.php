@@ -2320,11 +2320,10 @@ function bp_media_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity media data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with media if media saved otherwise no media.
  *
@@ -2349,6 +2348,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			$media_ids = explode( ',', $media_ids );
 			$media_ids = array_unique( $media_ids );
+			$album_id  = 0;
 
 			foreach ( $media_ids as $media_id ) {
 
@@ -2370,7 +2370,12 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
 				);
-			}
+
+				if ( 0 !== $album_id && $media->album_id > 0 ) {
+					$album_id                     = $media->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
+            }
 		}
 
 		// Fetch gif data for the activity.
@@ -2389,6 +2394,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 	return $activity;
 }
+
 /**
  * Added activity entry class for media.
  *
