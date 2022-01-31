@@ -3167,7 +3167,7 @@ input.search-query-input {
 }
 
 .activity-list .bp-activity-head {
-  margin-left: 25px;
+  margin-left: 35px;
 }
 
 .activity-list .bb-activity-more-options-wrap {
@@ -15242,7 +15242,6 @@ body.login .login-popup .mfp-close:hover {
 
 .bb-member-media-header + #video-stream .grid.bp-list {
   padding-top: 0;
-  margin-top: 20px;
 }
 
 .bb-media-meta {
@@ -20736,7 +20735,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
@@ -21792,6 +21791,18 @@ div.dropzone.dz-started .dz-default.dz-message {
   min-height: 139px !important;
   margin: 0 4px 10px;
   padding: 0 5px;
+}
+
+.video-type-navs.main-navs {
+  border-bottom: 1px solid #e7e9ec;
+}
+
+#video-stream {
+  margin-top: 20px;
+}
+
+#video-stream .video-list.bp-list {
+  margin-top: 0;
 }
 
 .dropzone.video-dropzone .dz-progress-count {
