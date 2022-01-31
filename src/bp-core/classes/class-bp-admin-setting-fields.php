@@ -41,7 +41,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		);
 
 		/**
-		 * Initilize the field varible in this method.
+		 * Initialize the field variable in this method.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -143,7 +143,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		 */
 		private function field_not_supported() {
 			?>
-				<p><?php esc_html_e( 'This field type does not support.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'This field type does not support.', 'buddyboss' ); ?></p>
 			<?php
 		}
 
