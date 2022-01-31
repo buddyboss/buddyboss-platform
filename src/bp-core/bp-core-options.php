@@ -1431,6 +1431,7 @@ function bp_platform_is_feed_enable( $activity_type, $default = true ) {
  */
 function bb_platform_group_element_enable( $element, $default = true ) {
 
+	$group_elements = bp_get_option( 'bb-group-elements', array() );
 	/**
 	 * Filters whether specified $element should be enabled or no.
 	 *
@@ -1438,7 +1439,7 @@ function bb_platform_group_element_enable( $element, $default = true ) {
 	 *
 	 * @param bool $value Whether or not the group element enable or not.
 	 */
-	return (bool) apply_filters( 'bp_platform_group_element_enable', (bool) in_array( $element, bp_get_option( 'bb-group-elements', $default ) ) );
+	return (bool) apply_filters( 'bp_platform_group_element_enable', (bool) in_array( $element, $group_elements ) );
 }
 
 /**
