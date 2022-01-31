@@ -461,7 +461,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'hierarchical'        => true,
 						'query_var'           => true,
 						'menu_icon'           => '',
-						'show_in_menu'        => true,
+						'show_in_menu'        => false,
 					)
 				)
 			);
@@ -492,7 +492,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'hierarchical'        => false,
 						'query_var'           => true,
 						'menu_icon'           => '',
-						'show_in_menu'        => true,
+						'show_in_menu'        => false,
 					)
 				)
 			);
