@@ -1908,7 +1908,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'uploadprogress',
-						function( element, file ) {
+						function( element ) {
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
@@ -1920,7 +1920,7 @@ window.bp = window.bp || {};
 								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 								circle.style.strokeDashoffset = offset;
 							} else if ( element.upload.progress === 100 ) {
-								circle.style.strokeDashoffset = circumference - .99 * circumference;
+								circle.style.strokeDashoffset = circumference - 0.99 * circumference;
 								$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 							}
 						}
