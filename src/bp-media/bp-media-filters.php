@@ -2348,6 +2348,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 			$media_ids = explode( ',', $media_ids );
 			$media_ids = array_unique( $media_ids );
+			$album_id  = 0;
 
 			foreach ( $media_ids as $media_id ) {
 
@@ -2370,10 +2371,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'menu_order'    => $media->menu_order,
 				);
 
-                error_log( $media->album_id );
-
-				$activity['can_edit_privacy'] = ! ( ( $media->album_id > 0 ) );
-			}
+				if ( 0 !== $album_id && $media->album_id > 0 ) {
+					$album_id                     = $media->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
+            }
 		}
 
 		// Fetch gif data for the activity.
@@ -2389,8 +2391,6 @@ function bp_media_get_edit_activity_data( $activity ) {
 		$activity['profile_media'] = bp_is_profile_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), 0 );
 		$activity['group_media']   = bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && 'groups' === $activity['object'] ? $activity['item_id'] : 0 ) );
 	}
-
-	error_log( print_r( $activity, 1 ) );
 
 	return $activity;
 }

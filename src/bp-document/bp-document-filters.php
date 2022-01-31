@@ -1823,6 +1823,7 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 			$document_ids = explode( ',', $document_ids );
 			$document_ids = array_unique( $document_ids );
+			$folder_id    = 0;
 
 			foreach ( $document_ids as $document_id ) {
 				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
@@ -1850,7 +1851,11 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'menu_order'  => $document->menu_order,
 				);
 
-				$activity['can_edit_privacy'] = ! ( ( $document->folder_id > 0 ) );
+				if ( 0 !== $folder_id && $document->folder_id > 0 ) {
+					$folder_id                    = $document->folder_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 

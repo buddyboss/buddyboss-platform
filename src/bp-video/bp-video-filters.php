@@ -1530,6 +1530,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 			$video_ids = explode( ',', $video_ids );
 			$video_ids = array_unique( $video_ids );
+			$album_id  = 0;
 
 			foreach ( $video_ids as $video_id ) {
 
@@ -1572,10 +1573,13 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'video_count' => count( $video_ids ),
 				);
 
-				$activity['can_edit_privacy'] = ! ( ( $video->album_id > 0 ) );
+				if ( 0 !== $album_id && $video->album_id > 0 ) {
+					$album_id                     = $video->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
 			}
 		}
-}
+	}
 
 	return $activity;
 }
