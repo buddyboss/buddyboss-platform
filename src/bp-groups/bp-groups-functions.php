@@ -4060,8 +4060,9 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
  * @return mixed
  */
 function bp_group_get_group_type_id( $group_type = '' ) {
+	static $cache = array();
 
-	$args             = array(
+	$args = array(
 		'post_type'  => 'bp-group-type',
 		'meta_query' => array(
 			array(
@@ -4070,11 +4071,18 @@ function bp_group_get_group_type_id( $group_type = '' ) {
 			),
 		),
 	);
-	$group_type_query = new WP_Query( $args );
 
-	$posts = $group_type_query->posts;
+	$cache_key = md5( maybe_serialize( $args ) );
 
-	$id = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	} else {
+		$group_type_query = new WP_Query( $args );
+		$posts            = $group_type_query->posts;
+		$id               = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+
+		$cache[ $cache_key ] = $id;
+	}
 
 	return $id;
 }
