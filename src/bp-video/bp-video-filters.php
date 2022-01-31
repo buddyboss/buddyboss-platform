@@ -1525,7 +1525,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 			foreach ( $video_ids as $video_id ) {
 
-			    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
 					continue;
 				}
 
@@ -1537,7 +1537,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 				if ( $get_existing && $attachment_thumb_id ) {
 					$thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
-                }
+				}
 
 				if ( $get_existing && '' === $thumb ) {
 					$file = get_attached_file( $get_existing );
@@ -1546,7 +1546,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 						$data  = file_get_contents( $file ); // phpcs:ignore
 						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 					}
-                }
+				}
 
 				$activity['video'][] = array(
 					'id'          => $video_id,
@@ -1563,9 +1563,11 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'menu_order'  => $video->menu_order,
 					'video_count' => count( $video_ids ),
 				);
+
+				$activity['can_edit_privacy'] = ! ( ( $video->album_id > 0 ) );
 			}
 		}
-	}
+}
 
 	return $activity;
 }
