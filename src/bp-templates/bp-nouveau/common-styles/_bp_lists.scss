@@ -163,36 +163,75 @@
 			display: none;
 		}
 
-		.group-list {
-			padding-top: 0;
-		}
-
-		.group-list-header {
+		.bs-group-members .bs-group-member {
+			max-width: 26px;
+			float: left;
+			margin-right: -6px;
 			position: relative;
-			padding: 15px 0;
 
-			.item-avatar {
-				position: relative;
-				z-index: 1;
+			img {
+				border: 2px solid #fff;
+				border-radius: 50%;
+				float: left;
 			}
 
-			.bs-group-cover {
-				position: absolute;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				width: 100%;
+		}
 
-				img {
-					position: absolute;
-					top: 0;
-					bottom: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
+		.bs-group-cover {
+			padding-top: 52.56%;
+			position: relative;
+
+			img {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				object-fit: cover;
+				height: 100%;
+			}
+
+		}
+
+		.list-wrap {
+			padding-top: 0;
+
+			.item {
+				padding: 0 15px;
+
+				> .item-block * {
+
+					.buddypress-wrap & {
+						padding: 0;
+						text-align: left;
+					}
+
 				}
 
+			}
+
+		}
+
+		.item-entry {
+
+			.item-avatar {
+
+				.buddypress-wrap & {
+					text-align: left;
+				}
+
+			}
+
+			.group-avatar-wrap {
+				margin-top: -47px;
+				margin-left: 15px;
+	
+				img {
+					max-width: 75px;
+					margin-top: -47px;
+					position: relative;
+					border-radius: 0;
+				}
 			}
 		}
 	}

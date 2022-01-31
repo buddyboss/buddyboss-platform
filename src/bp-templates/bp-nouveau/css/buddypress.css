@@ -921,36 +921,61 @@ a.layout-grid-view {
   display: none;
 }
 
-.bp-list.groups-list .group-list {
+.bp-list.groups-list .bs-group-members .bs-group-member {
+  max-width: 26px;
+  float: left;
+  margin-right: -6px;
+  position: relative;
+}
+
+.bp-list.groups-list .bs-group-members .bs-group-member img {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  float: left;
+}
+
+.bp-list.groups-list .bs-group-cover {
+  padding-top: 52.56%;
+  position: relative;
+}
+
+.bp-list.groups-list .bs-group-cover img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  object-fit: cover;
+  height: 100%;
+}
+
+.bp-list.groups-list .list-wrap {
   padding-top: 0;
 }
 
-.bp-list.groups-list .group-list-header {
+.bp-list.groups-list .list-wrap .item {
+  padding: 0 15px;
+}
+
+.buddypress-wrap .bp-list.groups-list .list-wrap .item > .item-block * {
+  padding: 0;
+  text-align: left;
+}
+
+.buddypress-wrap .bp-list.groups-list .item-entry .item-avatar {
+  text-align: left;
+}
+
+.bp-list.groups-list .item-entry .group-avatar-wrap {
+  margin-top: -47px;
+  margin-left: 15px;
+}
+
+.bp-list.groups-list .item-entry .group-avatar-wrap img {
+  max-width: 75px;
+  margin-top: -47px;
   position: relative;
-  padding: 15px 0;
-}
-
-.bp-list.groups-list .group-list-header .item-avatar {
-  position: relative;
-  z-index: 1;
-}
-
-.bp-list.groups-list .group-list-header .bs-group-cover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-}
-
-.bp-list.groups-list .group-list-header .bs-group-cover img {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border-radius: 0;
 }
 
 @media screen and (min-width: 32em) {
