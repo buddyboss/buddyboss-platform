@@ -94,7 +94,7 @@ bp_nouveau_before_loop(); ?>
 					<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
 
 					<div class="group-members-wrap only-grid-view">
-						<?php //echo buddyboss_theme()->buddypress_helper()->group_members( bp_get_group_id(), array( 'member', 'mod', 'admin' ) ); ?> <!--To Do: Make a function in platform to list group member like theme has -->
+						<?php bb_groups_loop_members(); ?>
 					</div>
 
 				</div>
