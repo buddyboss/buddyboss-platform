@@ -332,8 +332,13 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		private function render_select_field() {
 
 			$multiple = '';
-			if ( $this->field['multiple'] ) {
+			if ( isset( $this->field['multiple'] ) ) {
 				$multiple = 'multiple';
+			}
+
+			$class = '';
+			if ( isset( $this->field['class'] ) ) {
+				$class = 'class="' . esc_attr( $this->field['class'] ) . '"';
 			}
 
 			if ( ! empty( $this->field['label'] ) ) {
@@ -342,7 +347,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 
 			$options = ( ! empty( $this->field['options'] ) ? $this->field['options'] : array() );
 			?>
-			<select name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" class="<?php echo esc_attr( $this->field['class'] ); ?>" <?php disabled( $this->field['disabled'] ); ?> <?php echo esc_attr( $multiple ); ?>>
+			<select name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" <?php echo $class; ?> <?php disabled( $this->field['disabled'] ); ?> <?php echo esc_attr( $multiple ); ?>>
 				<?php
 				if ( ! empty( $options ) ) {
 					foreach ( $options as $option_value => $option_label ) {
