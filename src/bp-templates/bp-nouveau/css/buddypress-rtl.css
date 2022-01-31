@@ -19575,8 +19575,9 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   margin: 0 20px;
 }
 
-#media-stream.document-parent > #bp-ajax-loader {
-  margin: 20px;
+#media-stream.document-parent > #bp-ajax-loader,
+#media-stream.document-parent > .bp-feedback.bp-messages {
+  margin: -1px;
 }
 
 .moderation-popup .modal-container {
