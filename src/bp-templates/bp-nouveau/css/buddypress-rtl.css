@@ -921,17 +921,38 @@ a.layout-grid-view {
   display: none;
 }
 
-.bp-list.groups-list .bs-group-members .bs-group-member {
-  max-width: 26px;
-  float: right;
-  margin-left: -6px;
-  position: relative;
+.bp-list.groups-list:not(.grid) .item-entry .item-avatar {
+  margin-left: 5px;
 }
 
-.bp-list.groups-list .bs-group-members .bs-group-member img {
-  border: 2px solid #fff;
-  border-radius: 50%;
-  float: right;
+.bp-list.groups-list:not(.grid) .item-entry .item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(100% - 100px);
+}
+
+.bp-list.groups-list:not(.grid) .item-entry .item .list-title {
+  margin-top: 0;
+}
+
+.bp-list.groups-list:not(.grid) .item-entry .item-block {
+  flex: 0 0 32%;
+  padding-left: 15px;
+}
+
+.bp-list.groups-list:not(.grid) .item-entry .group-members-wrap {
+  display: none;
+}
+
+.bp-list.groups-list:not(.grid) .item-entry .item-desc {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.bp-list.groups-list:not(.grid) .item-entry .item-desc p {
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .bp-list.groups-list .bs-group-cover {
@@ -962,24 +983,84 @@ a.layout-grid-view {
   text-align: right;
 }
 
-.buddypress-wrap .bp-list.groups-list .item-entry .item-avatar {
+.bp-list.groups-list .list-wrap .item .list-title {
+  margin: 15px 0 5px;
+  font-size: 20px;
+}
+
+.bp-list.groups-list .list-wrap .item .list-title a {
+  text-decoration: none;
+}
+
+.buddypress-wrap .bp-list.groups-list li.item-entry .item-avatar {
   text-align: right;
 }
 
-.bp-list.groups-list .item-entry .group-avatar-wrap {
-  margin-top: -47px;
+.bp-list.groups-list li.item-entry .group-avatar-wrap {
   margin-right: 15px;
 }
 
-.bp-list.groups-list .item-entry .group-avatar-wrap img {
+.buddypress-wrap .bp-list.groups-list li.item-entry .group-avatar-wrap img.avatar {
+  width: auto;
   max-width: 75px;
-  margin-top: -47px;
   position: relative;
   border-radius: 0;
 }
 
+.bp-list.groups-list.grid .item-entry .group-avatar-wrap img.avatar {
+  margin-top: -47px;
+}
+
 .bp-list.groups-list.grid .only-list-view {
   display: none;
+}
+
+.bp-list.groups-list .bs-group-members {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.bp-list.groups-list .bs-group-members .bs-group-member {
+  max-width: 26px;
+  float: right;
+  margin-left: -6px;
+  position: relative;
+}
+
+.bp-list.groups-list .bs-group-members .bs-group-member a {
+  text-decoration: none;
+}
+
+.bp-list.groups-list .bs-group-members .bs-group-member img {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  float: right;
+}
+
+.bp-list.groups-list .bs-group-members .bs-group-member .bb-icon {
+  height: 26px;
+  width: 26px;
+  font-size: 16px;
+  color: #c3c4c8;
+  line-height: 26px;
+  border-radius: 50%;
+  background-color: #f9f9f9;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bp-list.groups-list .footer-button-wrap {
+  display: flex;
+}
+
+.bp-list.groups-list .footer-button-wrap .action {
+  width: 100%;
+}
+
+.buddypress-wrap .bp-list.groups-list .footer-button-wrap .action .generic-button {
+  float: right;
 }
 
 @media screen and (min-width: 32em) {

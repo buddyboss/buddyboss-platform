@@ -4551,17 +4551,22 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			</span>
 			<?php
 		}
-		?>
-		</span>
-		<?php
+
 		if ( $total - sizeof( $members ) != 0 ) {
 			$member_count = $total - sizeof( $members );
 			?>
-			<span class="members">
-				<span class="members-count-g">+<?php echo esc_html( $member_count ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+<?php echo esc_html( $member_count ); printf( _n( ' member', ' members', $member_count, 'buddyboss-theme' ) ); ?>">
+				<a href="#"> <!-- ToDo Add link to group's members page -->
+					<span class="bb-icon bb-icon-menu-dots-h"></span>
+				</a>
 			</span>
 			<?php
 		}
+
+		?>
+		</span>
+		<?php
+		
 	}
 
 }

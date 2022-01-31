@@ -159,20 +159,50 @@
 
 	&.groups-list {
 
-		&:not(.grid) .only-grid-view {
-			display: none;
-		}
+		&:not(.grid) {
 
-		.bs-group-members .bs-group-member {
-			max-width: 26px;
-			float: left;
-			margin-right: -6px;
-			position: relative;
+			.only-grid-view {
+				display: none;
+			}
 
-			img {
-				border: 2px solid #fff;
-				border-radius: 50%;
-				float: left;
+			.item-entry {
+
+				.item-avatar {
+					margin-right: 5px;
+				}
+
+				.item {
+					display: flex;
+					align-items: center;
+					justify-content: flex-start;
+					width: calc(100% - 100px);
+
+					.list-title {
+						margin-top: 0;
+					}
+
+				}
+
+				.item-block {
+					flex: 0 0 32%;
+					padding-right: 15px;
+				}
+
+				.group-members-wrap {
+					display: none;
+				}
+
+				.item-desc {
+					flex: 1;
+					padding-right: 20px;
+
+					p {
+						font-size: 14px;
+						line-height: 1.4;
+					}
+
+				}
+
 			}
 
 		}
@@ -208,11 +238,21 @@
 
 				}
 
+				.list-title {
+					margin: 15px 0 5px;
+					font-size: 20px;
+
+					a {
+						text-decoration: none;
+					}
+
+				}
+
 			}
 
 		}
 
-		.item-entry {
+		li.item-entry {
 
 			.item-avatar {
 
@@ -223,20 +263,87 @@
 			}
 
 			.group-avatar-wrap {
-				margin-top: -47px;
 				margin-left: 15px;
-	
-				img {
-					max-width: 75px;
-					margin-top: -47px;
-					position: relative;
-					border-radius: 0;
+
+				img.avatar {
+
+					.buddypress-wrap & {
+						width: auto;
+						max-width: 75px;
+						position: relative;
+						border-radius: 0;
+					}
+
 				}
 			}
 		}
 
-		&.grid .only-list-view {
-			display: none;
+		&.grid {
+
+			.item-entry .group-avatar-wrap img.avatar {
+				margin-top: -47px;
+			}
+
+			.only-list-view {
+				display: none;
+			}
+
+		}
+
+		.bs-group-members {
+			display: flex;
+			margin-bottom: 15px;
+
+			.bs-group-member {
+				max-width: 26px;
+				float: left;
+				margin-right: -6px;
+				position: relative;
+
+				a {
+					text-decoration: none;
+				}
+
+				img {
+					border: 2px solid #fff;
+					border-radius: 50%;
+					float: left;
+				}
+
+				.bb-icon {
+					height: 26px;
+					width: 26px;
+					font-size: 16px;
+					color: #c3c4c8;
+					line-height: 26px;
+					border-radius: 50%;
+					background-color: #f9f9f9;
+					border: 2px solid #fff;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+			}
+
+		}
+
+		.footer-button-wrap {
+			display: flex;
+
+			.action {
+				width: 100%;
+
+				.generic-button {
+
+					.buddypress-wrap & {
+						float: left;
+					}
+
+				}
+
+			}
+
 		}
 
 	}
