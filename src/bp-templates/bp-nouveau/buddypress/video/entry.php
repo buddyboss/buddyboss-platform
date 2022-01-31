@@ -2,9 +2,12 @@
 /**
  * BuddyBoss - Video Entry
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/entry.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_template;

@@ -1,10 +1,13 @@
 <?php
 /**
- * BP Nouveau Activity Widget template.
+ * The template for BP Nouveau Activity Widget template.
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/widget.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
+
 ?>
 
 <?php if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
