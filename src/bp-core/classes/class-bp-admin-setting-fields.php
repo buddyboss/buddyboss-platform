@@ -47,9 +47,15 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		 *
 		 * @param array $args Pass the field attributes to render field.
 		 */
-		public function __construct( $args = array() ) {
+		public function __construct( array $args = array() ) {
 
-			$r = bp_parse_args(
+			if ( empty( $args['id'] ) ) {
+				return false;
+			}
+
+			$args = apply_filters( 'bb_admin_setting_field_' . $args['id'], $args );
+
+			$this->field = bp_parse_args(
 				$args,
 				array(
 					'type'        => '',
@@ -68,12 +74,6 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				),
 				'bb_admin_setting_fields'
 			);
-
-			if ( empty( $r['id'] ) ) {
-				return false;
-			}
-
-			$this->field = apply_filters( 'bb_admin_setting_field_' . $r['id'], $r );
 		}
 
 		/**
@@ -127,8 +127,11 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		 * Check the field type is supported or not?
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if field is supported otherwise false.
 		 */
-		private function is_field_supported() {
+		private function is_field_supported(): bool
+		{
 			if ( ! empty( $this->field['type'] ) && in_array( $this->field['type'], $this->supported_fields, true ) ) {
 				return true;
 			}
@@ -336,18 +339,13 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				$multiple = 'multiple';
 			}
 
-			$class = '';
-			if ( isset( $this->field['class'] ) ) {
-				$class = 'class="' . esc_attr( $this->field['class'] ) . '"';
-			}
-
 			if ( ! empty( $this->field['label'] ) ) {
 				echo '<label for="' . esc_attr( $this->field['id'] ) . '">' . wp_kses_post( $this->field['label'] ) . '</label>';
 			}
 
 			$options = ( ! empty( $this->field['options'] ) ? $this->field['options'] : array() );
 			?>
-			<select name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" <?php echo $class; ?> <?php disabled( $this->field['disabled'] ); ?> <?php echo esc_attr( $multiple ); ?>>
+			<select name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" class="<?php echo esc_attr( $this->field['class'] ); ?>" <?php disabled( $this->field['disabled'] ); ?> <?php echo esc_attr( $multiple ); ?>>
 				<?php
 				if ( ! empty( $options ) ) {
 					foreach ( $options as $option_value => $option_label ) {
