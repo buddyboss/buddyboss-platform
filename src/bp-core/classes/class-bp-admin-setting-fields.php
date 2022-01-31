@@ -335,7 +335,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		private function render_select_field() {
 
 			$multiple = '';
-			if ( isset( $this->field['multiple'] ) ) {
+			if ( $this->field['multiple'] ) {
 				$multiple = 'multiple';
 			}
 
