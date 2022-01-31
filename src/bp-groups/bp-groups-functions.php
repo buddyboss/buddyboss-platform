@@ -4500,3 +4500,61 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+
+	if ( ! $group_id ) {
+		$group_id = bp_get_group_id();
+	}
+
+	if ( ! $group_id ) {
+		return '';
+	}
+
+	$members = new \BP_Group_Member_Query(
+		array(
+			'group_id'     => $group_id,
+			'per_page'     => 3,
+			'page'         => 1,
+			'group_role'   => $role,
+			'exclude'      => false,
+			'search_terms' => false,
+			'type'         => 'active',
+		)
+	);
+
+	$total   = $members->total_users;
+	$members = array_values( $members->results );
+
+	if ( ! empty( $members ) ) {
+		?><span class="bs-group-members">
+		<?php
+		foreach ( $members as $member ) {
+			$avatar = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $member->ID,
+					'avatar_dir' => 'avatars',
+					'object'     => 'user',
+					'type'       => 'thumb',
+					'html'       => false,
+				)
+			);
+			?>
+			<img src="<?php echo $avatar; ?>"
+				 alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round"/>
+			<?php
+		}
+		?>
+		</span>
+		<?php
+		if ( $total - sizeof( $members ) != 0 ) {
+			$member_count = $total - sizeof( $members );
+			?>
+			<span class="members">
+				<span class="members-count-g">+<?php echo esc_html( $member_count  ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
+			</span>
+			<?php
+		}
+	}
+
+}
