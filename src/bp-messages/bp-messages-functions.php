@@ -1183,7 +1183,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 			if ( bp_is_active( 'groups' ) ) {
 
 				$group_name       = bp_get_group_name( groups_get_group( $group_id ) );
-				$group_avatar_url = bb_get_buddyboss_group_avatar();
+				$group_avatar_url = '';
 
 				if ( ! bp_disable_group_avatar_uploads() ) {
 					$group_avatar_url = bp_core_fetch_avatar(
@@ -1197,8 +1197,10 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'html'       => false,
 						)
 					);
+				} else {
+					$group_avatar_url = bb_get_buddyboss_group_avatar();
 				}
-				
+
 				$group_avatar = array(
 					'url'  => $group_avatar_url,
 					'name' => $group_name,
