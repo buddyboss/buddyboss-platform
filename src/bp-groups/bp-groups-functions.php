@@ -1101,24 +1101,28 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 	// Prime the invitations- and requests-as-memberships cache.
 	$invitation_ids = array();
 	if ( true !== $r['is_confirmed'] || false !== $r['invite_sent'] ) {
-		$invitation_ids = groups_get_invites( array(
-			'user_id'     => $user_id,
-			'invite_sent' => 'all',
-			'type'        => 'all',
-			'fields'      => 'ids'
-		) );
+		$invitation_ids = groups_get_invites(
+			array(
+				'user_id'     => $user_id,
+				'invite_sent' => 'all',
+				'type'        => 'all',
+				'fields'      => 'ids',
+			)
+		);
 
 		// Prime the invitations cache.
 		$uncached_invitation_ids = bp_get_non_cached_ids( $invitation_ids, 'bp_groups_invitations_as_memberships' );
 		if ( $uncached_invitation_ids ) {
-			$uncached_invitations = groups_get_invites( array(
-				'id'          => $uncached_invitation_ids,
-				'invite_sent' => 'all',
-				'type'        => 'all'
-			) );
+			$uncached_invitations = groups_get_invites(
+				array(
+					'id'          => $uncached_invitation_ids,
+					'invite_sent' => 'all',
+					'type'        => 'all',
+				)
+			);
 			foreach ( $uncached_invitations as $uncached_invitation ) {
 				// Reshape the result as a membership db entry.
-				$invitation = new StdClass;
+				$invitation                = new StdClass();
 				$invitation->id            = $uncached_invitation->id;
 				$invitation->group_id      = $uncached_invitation->item_id;
 				$invitation->user_id       = $uncached_invitation->user_id;
@@ -4527,7 +4531,8 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 	$members = array_values( $members->results );
 
 	if ( ! empty( $members ) ) {
-		?><span class="bs-group-members">
+		?>
+		<span class="bs-group-members">
 		<?php
 		foreach ( $members as $member ) {
 			$avatar = bp_core_fetch_avatar(
@@ -4551,7 +4556,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			$member_count = $total - sizeof( $members );
 			?>
 			<span class="members">
-				<span class="members-count-g">+<?php echo esc_html( $member_count  ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
+				<span class="members-count-g">+<?php echo esc_html( $member_count ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
 			</span>
 			<?php
 		}
