@@ -1529,6 +1529,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 			$activity['video'] = array();
 
 			$video_ids = explode( ',', $video_ids );
+			$video_ids = array_unique( $video_ids );
 
 			foreach ( $video_ids as $video_id ) {
 
