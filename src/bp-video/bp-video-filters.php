@@ -1517,11 +1517,19 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 		// Fetch video ids of activity.
 		$video_ids = bp_activity_get_meta( $activity['id'], 'bp_video_ids', true );
+		$video_id  = bp_activity_get_meta( $activity['id'], 'bp_video_id', true );
+
+		if ( ! empty( $video_ids ) && ! empty( $video_id ) ) {
+			$video_ids = $video_ids . ',' . $video_id;
+		} elseif ( ! empty( $video_id ) && empty( $video_ids ) ) {
+			$video_ids = $video_id;
+		}
 
 		if ( ! empty( $video_ids ) ) {
 			$activity['video'] = array();
 
 			$video_ids = explode( ',', $video_ids );
+			$video_ids = array_unique( $video_ids );
 
 			foreach ( $video_ids as $video_id ) {
 

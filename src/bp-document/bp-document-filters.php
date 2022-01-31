@@ -1810,11 +1810,19 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 		// Fetch document ids of activity.
 		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity['id'], 'bp_document_id', true );
+
+		if ( ! empty( $document_id ) && ! empty( $document_ids ) ) {
+			$document_ids = $document_ids . ',' . $document_id;
+		} elseif ( ! empty( $document_id ) && empty( $document_ids ) ) {
+			$document_ids = $document_id;
+		}
 
 		if ( ! empty( $document_ids ) ) {
 			$activity['document'] = array();
 
 			$document_ids = explode( ',', $document_ids );
+			$document_ids = array_unique( $document_ids );
 
 			foreach ( $document_ids as $document_id ) {
 				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
