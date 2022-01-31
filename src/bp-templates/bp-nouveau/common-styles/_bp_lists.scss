@@ -234,6 +234,11 @@
 				}
 			}
 		}
+
+		&.grid .only-list-view {
+			display: none;
+		}
+
 	}
 
 } // close .bp-list

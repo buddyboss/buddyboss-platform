@@ -978,6 +978,10 @@ a.layout-grid-view {
   border-radius: 0;
 }
 
+.bp-list.groups-list.grid .only-list-view {
+  display: none;
+}
+
 @media screen and (min-width: 32em) {
   #activity-stream {
     clear: both;

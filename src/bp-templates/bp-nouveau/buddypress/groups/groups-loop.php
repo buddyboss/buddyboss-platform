@@ -51,10 +51,6 @@ bp_nouveau_before_loop(); ?>
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 					<div class="item-avatar">
 						<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
-
-						<div class="groups-loop-buttons only-grid-view">
-							<?php bp_nouveau_groups_loop_buttons(); ?>
-						</div>
 					</div>
 				<?php endif; ?>
 
@@ -91,11 +87,11 @@ bp_nouveau_before_loop(); ?>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
-					<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
-
-					<div class="group-members-wrap only-grid-view">
+					<div class="group-members-wrap">
 						<?php bb_groups_loop_members(); ?>
 					</div>
+
+					<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
 
 				</div>
 
