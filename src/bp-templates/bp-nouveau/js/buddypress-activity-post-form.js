@@ -1049,7 +1049,7 @@ window.bp = window.bp || {};
 								bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
 								bp.Nouveau.Activity.postForm.dropzone_options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
 							) {
-								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ) );
+								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ), 'info' );
 							} else {
 								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
 							}
