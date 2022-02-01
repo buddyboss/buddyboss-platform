@@ -165,7 +165,6 @@
 	grid-template-columns: repeat(auto-fit, 275px);
 	-ms-flex-pack: distribute;
 	justify-content: space-around;
-	justify-items: initial;
 
 	&:before {
 		display: none; // this is a hack to get the grid to work
@@ -199,9 +198,16 @@
 		.item {
 			padding: 0 15px;
 
-			> .item-block * {
-				padding: 0;
-				text-align: left;
+			.item-block {
+				display: flex;
+				flex-flow: column;
+				align-items: flex-start;
+
+				* {
+					padding: 0;
+					text-align: left;
+				}
+
 			}
 
 			.list-title {
@@ -223,7 +229,14 @@
 		max-width: initial !important;
 
 		.item-avatar {
-			text-align: left;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-pack: start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
+			width: 100%;
+			text-align: initial;
 		}
 
 		.group-avatar-wrap {
