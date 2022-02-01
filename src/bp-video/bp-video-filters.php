@@ -1525,6 +1525,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 			$video_ids = $video_id;
 		}
 
+
 		if ( ! empty( $video_ids ) ) {
 			$activity['video'] = array();
 
@@ -1538,10 +1539,9 @@ function bp_video_get_edit_activity_data( $activity ) {
 					continue;
 				}
 
-				$video        = new BP_Video( $video_id );
-				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
-				$thumb        = '';
-
+				$video               = new BP_Video( $video_id );
+				$get_existing        = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+				$thumb               = '';
 				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
 
 				if ( $get_existing && $attachment_thumb_id ) {
@@ -1573,10 +1573,11 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'video_count' => count( $video_ids ),
 				);
 
-				if ( 0 !== $album_id && $video->album_id > 0 ) {
+				if ( 0 === $album_id && (int) $video->album_id > 0 ) {
 					$album_id                     = $video->album_id;
 					$activity['can_edit_privacy'] = false;
 				}
+
 			}
 		}
 	}

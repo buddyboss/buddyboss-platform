@@ -1851,7 +1851,7 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'menu_order'  => $document->menu_order,
 				);
 
-				if ( 0 !== $folder_id && $document->folder_id > 0 ) {
+				if ( 0 === $folder_id && $document->folder_id > 0 ) {
 					$folder_id                    = $document->folder_id;
 					$activity['can_edit_privacy'] = false;
 				}

@@ -2371,11 +2371,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'menu_order'    => $media->menu_order,
 				);
 
-				if ( 0 !== $album_id && $media->album_id > 0 ) {
+				if ( 0 === $album_id && $media->album_id > 0 ) {
 					$album_id                     = $media->album_id;
 					$activity['can_edit_privacy'] = false;
 				}
-            }
+			}
 		}
 
 		// Fetch gif data for the activity.
