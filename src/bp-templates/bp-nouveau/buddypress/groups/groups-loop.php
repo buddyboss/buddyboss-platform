@@ -23,7 +23,7 @@ bp_nouveau_before_loop(); ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class; ?>">
+	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class; ?> groups-dir-list">
 
 	<?php
 	while ( bp_groups() ) :

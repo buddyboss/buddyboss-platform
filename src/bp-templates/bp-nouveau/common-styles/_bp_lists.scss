@@ -159,10 +159,10 @@
 
 } // close .bp-list
 
-.buddypress-wrap ul.bp-list.groups-list {
+.buddypress-wrap ul.bp-list.groups-dir-list {
 	display: -ms-grid;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, 275px);
+	grid-template-columns: repeat(auto-fit, minmax(275px, 25%));
 	-ms-flex-pack: distribute;
 	justify-content: space-around;
 
