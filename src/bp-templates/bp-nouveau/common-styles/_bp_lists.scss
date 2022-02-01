@@ -208,8 +208,14 @@
 		}
 
 		.bs-group-cover {
-			padding-top: 52.56%;
-			position: relative;
+			margin: -15px -20px 0;
+
+			a {
+				position: relative;
+				display: block;
+				height: 100%;
+				padding-top: 52.56%;
+			}
 
 			img {
 				position: absolute;

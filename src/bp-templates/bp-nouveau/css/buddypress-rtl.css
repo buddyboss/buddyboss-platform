@@ -956,8 +956,14 @@ a.layout-grid-view {
 }
 
 .bp-list.groups-list .bs-group-cover {
-  padding-top: 52.56%;
+  margin: -15px -20px 0;
+}
+
+.bp-list.groups-list .bs-group-cover a {
   position: relative;
+  display: block;
+  height: 100%;
+  padding-top: 52.56%;
 }
 
 .bp-list.groups-list .bs-group-cover img {
