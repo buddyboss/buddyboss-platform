@@ -394,7 +394,7 @@ class BP_XProfile_Component extends BP_Component {
 			);
 
 			// Edit Avatar.
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',

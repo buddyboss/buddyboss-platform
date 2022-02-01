@@ -2,7 +2,10 @@
 /**
  * BuddyBoss - Groups Video
  *
- * @since BuddyBoss 1.7.0
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/videos.php.
+ *
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 ?>
 

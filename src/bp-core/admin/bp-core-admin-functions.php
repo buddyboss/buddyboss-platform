@@ -102,9 +102,9 @@ function bp_core_admin_backpat_page() {
 	$settings_url = add_query_arg( 'page', 'bp-components', $url ); ?>
 
 	<div class="wrap">
-		<h2><?php _e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
+		<h2><?php esc_html_e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
 
-		<p><?php _e( "Don't worry! We've moved the BuddyPress options into more convenient and easier to find locations. You're seeing this page because you are running a legacy BuddyPress plugin which has not been updated.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss' ); ?></p>
 		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%2$s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'admin.php?page=bp-profile-setup' ) ); ?></p>
 	</div>
 
@@ -2653,28 +2653,45 @@ function bp_core_admin_create_background_page() {
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );
 
 /**
- * Adds CSS to remove the Default Avatar settings from /wp-admin/options-discussion.php page.
- * These settings cannot be used with BuddyBoss, as we load custom avatars instead of gravatar.
+ * Add notice in Show Avatar section in Discussion page.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.8.6
  */
-function bp_remove_avatar_settings_from_options_discussion_page() {
+function bb_discussion_page_show_notice_in_avatar_section() {
 	global $pagenow;
 
-	if ( 'options-discussion.php' === $pagenow ) {
+	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'BuddyBoss' === bb_get_profile_avatar_type() ) {
 
+		$avatar_notice = sprintf(
+			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss' ),
+			add_query_arg(
+				array(
+					'page' => 'bp-settings',
+					'tab'  => 'bp-xprofile',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+
+		$avatar_notice_html  = '<div class="bp-messages-feedback admin-notice">';
+		$avatar_notice_html .= '<div class="bp-feedback warning">';
+		$avatar_notice_html .= '<span class="bp-icon" aria-hidden="true"></span>';
+		$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
+		$avatar_notice_html .= '</div>';
+		$avatar_notice_html .= '</div>';
 		?>
-		<style>
-			body.options-discussion-php #wpbody-content .wrap form table:nth-last-child(2) tbody tr:last-child {
-				display: none !important;
-			}
 
-			body.options-discussion-php #wpbody-content .wrap h2.title, body.options-discussion-php #wpbody-content .wrap h2.title + p, body.options-discussion-php #wpbody-content .wrap h2.title + p + table {
-				display: none !important;
-			}
-		</style>
+		<script type="text/javascript">
+			( function ( $ ) {
+				jQuery( document ).ready( function() {
+					var discussion_avatar_tbl = $( 'body.options-discussion-php #wpbody-content .wrap form table:eq(1)' );
+					if ( discussion_avatar_tbl.find( 'tr:eq(1)' ).hasClass( 'avatar-settings' ) ) {
+						discussion_avatar_tbl.prev().after( '<?php echo wp_kses_post( $avatar_notice_html ); ?>' );
+					}
+				} );
+			} )( jQuery );
+		</script>
 		<?php
-
 	}
 }
 

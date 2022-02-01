@@ -10,7 +10,13 @@ window.bp = window.bp || {};
 	bp.mentions.users = window.bp.mentions.users || [];
 
 	if ( typeof window.BP_Suggestions === 'object' ) {
-		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
+		if ( window.BP_Suggestions.friends && window.BP_Suggestions.friends.length > 0 ) {
+			bp.mentions.users = window.BP_Suggestions.friends;
+		} else if ( window.BP_Suggestions.members && window.BP_Suggestions.members.length > 0 ) {
+			bp.mentions.users = window.BP_Suggestions.members;
+		} else if ( bp.mentions.users && bp.mentions.users.length > 0 ) {
+			bp.mentions.users = bp.mentions.users;
+		}
 	}
 
 	bp.mentions.xhr = null;
