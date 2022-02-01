@@ -12050,6 +12050,11 @@ button[data-bp-tooltip] {
   top: 32px;
 }
 
+#wpadminbar #wp-admin-bar-edit-forumn > .ab-item:before {
+  content: "\f464";
+  top: 2px;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 10.0 - Forums classes
