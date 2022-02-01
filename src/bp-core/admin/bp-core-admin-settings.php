@@ -1893,22 +1893,23 @@ function bp_admin_setting_group_layout_default_option() {
 function bb_admin_setting_group_grid_style() {
 ?>
 	<div class="bb-grid-style-outer">
-		<div class="bb-grid-style bb-bottom-left">
-			<input id="bb-group-grid-style-left" name="bb-group-grid-style" type="radio" value="left" <?php checked( 'left' === bp_get_option( 'bb-group-grid-style', 'centered' ) ? true : false ); ?> />
-			<label class="option opt-left" for="bb-group-grid-style-left">
-				<span>
-					<?php esc_html_e( 'Left', 'buddyboss' ); ?>
-				</span>
-			</label>
-		</div>
-		<div class="bb-grid-style bb-bottom-centered">
-			<input id="bb-group-grid-style-centered" name="bb-group-grid-style" type="radio" value="centered" <?php checked( 'centered' === bp_get_option( 'bb-group-grid-style', 'centered' ) ? true : false ); ?> />
-			<label class="option opt-centered" for="bb-group-grid-style-centered">
-				<span>
-					<?php esc_html_e( 'Centered', 'buddyboss' ); ?>
-				</span>
-			</label>
-		</div>
+		<?php
+			$cover_profile_width = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'radio',
+					'id'          => 'bb-group-grid-style-',
+					'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
+					'disabled'    => true,
+					'opt_wrapper' => true,
+					'value'       => 'centered',
+					'options'     => array(
+						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
+						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
+					),
+				)
+			);
+			$cover_profile_width->render_field();
+		?>
 	</div>
 	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 <?php
@@ -1928,10 +1929,18 @@ function bb_admin_setting_group_elements( $args ) {
 	echo "<div class='bb-group-elements'>";
 	foreach ($args['elements'] as $element) {
 		$element_name = $element['element_name'];
+		$cover_profile_width = new BP_Admin_Setting_Fields(
+			array(
+				'type'        => 'checkbox',
+				'id'          => 'bb-group-element-' . $element_name,
+				'label'       => $element['element_label'],
+				'disabled'    => true,
+				'value'       => 1,
+			)
+		);
 	?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
-			<input name="bb-group-elements[]" id="bb-group-element-<?php echo esc_attr($element_name); ?>" type="checkbox" value="<?php echo $element_name; ?>" <?php checked(bb_platform_group_element_enable($element_name, true)); ?> />
-			<label for="bb-group-element-<?php echo esc_attr($element_name); ?>"><?php echo esc_html($element['element_label'], 'buddyboss'); ?></label>
+			<?php $cover_profile_width->render_field(); ?>
 		</div>
 	<?php
 	}
