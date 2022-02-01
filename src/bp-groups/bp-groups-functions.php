@@ -4558,7 +4558,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			$member_count = $total - sizeof( $members );
 			?>
 			<span class="members">
-				<span class="members-count-g">+<?php echo esc_html( $member_count ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
+				<span class="members-count-g">+<?php echo esc_html( $member_count ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss' ) ); ?>
 			</span>
 			<?php
 		}
