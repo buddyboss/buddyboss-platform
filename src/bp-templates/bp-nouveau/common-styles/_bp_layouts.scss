@@ -465,3 +465,9 @@
 		top: 32px;
 	}
 }
+
+// Adminbar Forum Edir link styles
+#wpadminbar #wp-admin-bar-edit-forumn > .ab-item:before {
+	content: "\f464";
+	top: 2px;
+}
