@@ -785,7 +785,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		// Cover Image.
-		$data['cover_url'] = (
+		$data['cover_url']        = (
 			empty( bp_disable_cover_image_uploads() )
 			? bp_attachments_get_attachment(
 				'url',
@@ -796,6 +796,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			)
 			: false
 		);
+		$data['cover_is_default'] = ! bp_attachments_get_user_has_cover_image( $user->ID );
 
 		// Fallback.
 		if ( false === $data['member_types'] ) {
@@ -1220,6 +1221,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$schema['properties']['cover_url'] = array(
 			'description' => __( 'Cover images URL for the member.', 'buddyboss' ),
 			'type'        => 'string',
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'readonly'    => true,
+		);
+
+		$schema['properties']['cover_is_default'] = array(
+			'description' => __( 'Whether to check member has default cover image or not.', 'buddyboss' ),
+			'type'        => 'boolean',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
 		);

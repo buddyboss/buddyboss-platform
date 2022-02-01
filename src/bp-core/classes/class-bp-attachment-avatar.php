@@ -215,6 +215,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		$args['item_id'] = (int) $args['item_id'];
+		$item_type       = isset( $args['item_type'] ) ? $args['item_type'] : null;
 
 		/**
 		 * Original file is a relative path to the image
@@ -246,9 +247,10 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		// Delete the existing avatar files for the object.
 		$existing_avatar = bp_core_fetch_avatar(
 			array(
-				'object'  => $args['object'],
-				'item_id' => $args['item_id'],
-				'html'    => false,
+				'object'    => $args['object'],
+				'item_id'   => $args['item_id'],
+				'item_type' => $item_type,
+				'html'      => false,
 			)
 		);
 
@@ -261,6 +263,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 				array(
 					'object'      => $args['object'],
 					'item_id'     => $args['item_id'],
+					'item_type'   => $item_type,
 					'avatar_path' => $avatar_folder_dir,
 				)
 			);

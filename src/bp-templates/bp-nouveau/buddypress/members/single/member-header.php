@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Header
+ * The template for users header
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/member-header.php.
+ *
+ * @since   BuddyPress 1.0.0
+ * @version 1.0.0
  */
 ?>
 

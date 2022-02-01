@@ -392,7 +392,7 @@ module.exports = function (grunt) {
 			},
 			exec: {
 				cli: {
-					command: 'git add .; git commit -am "grunt release build";',
+					command: 'git add . && git commit -am "grunt release build"',
 					cwd: '.',
 					stdout: false
 				},
