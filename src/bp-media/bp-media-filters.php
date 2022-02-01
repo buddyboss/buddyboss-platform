@@ -588,9 +588,14 @@ function bp_media_update_media_privacy( $album ) {
 
 				$attachment_id    = $media_obj->attachment_id;
 				$main_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 				if ( ! empty( $main_activity_id ) ) {
 					$activity_ids[] = $main_activity_id;
+				}
+
+				if ( ! empty( $video_main_activity_id ) ) {
+					$activity_ids[] = $video_main_activity_id;
 				}
 			}
 		}
