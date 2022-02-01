@@ -1022,9 +1022,37 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else {
+								var fileErrorCount = 0;
+								if (
+									!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
+									bp.Nouveau.Activity.postForm.dropzone.files.length !== 0
+								) {
+									$.each( bp.Nouveau.Activity.postForm.dropzone.files, function ( key, value ) {
+										if ( 'error' === value.status  ) {
+											fileErrorCount++;
+										}
+									} );
+								}
+								var errorMessage;
+								if ( fileErrorCount > 1 ) {
+									errorMessage = BP_Nouveau.media.multipleErrorOnFile;
+									Backbone.trigger( 'onError', ( errorMessage ) );
+								} else {
+									errorMessage = file.name + '<br>' + ( response ? response : '' );
+									Backbone.trigger( 'onError', ( errorMessage ) );
+								}
 							}
 						} else {
-							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
+							if (
+								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
+								bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
+								bp.Nouveau.Activity.postForm.dropzone_options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
+							) {
+								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ) );
+							} else {
+								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
+							}
 							this.removeFile( file );
 						}
 					}

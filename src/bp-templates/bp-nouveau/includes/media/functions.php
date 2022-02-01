@@ -144,10 +144,11 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
-		'media_dict_file_exceeded'           => sprintf( __( 'You are only allowed to upload %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
+		'media_dict_file_exceeded'           => sprintf( __( 'You can upload a maximum of %s photos to a post.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
+		'multipleErrorOnFile'                => sprintf( '%s<br>%s', esc_html__( 'There was a problem uploading some of your photos.', 'buddyboss' ), esc_html__( 'Click on a file to see the error.', 'buddyboss' ) ),
 	);
 
 	if ( bp_is_single_album() ) {
