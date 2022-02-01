@@ -981,6 +981,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry {
   flex: none !important;
   max-width: initial !important;
+  margin-bottom: 15px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry .item-avatar {
