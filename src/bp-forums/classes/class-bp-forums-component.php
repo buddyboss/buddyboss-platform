@@ -126,7 +126,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// Setup meta title.
 			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 999, 1 );
 			// Admin bar menu for forum.
-			add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 99 );
+			add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
 
 			parent::setup_actions();
 		}
