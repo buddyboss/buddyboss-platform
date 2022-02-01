@@ -742,8 +742,8 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 					'disabled'    => true,
 					'value'       => bb_get_profile_cover_image_width(),
 					'options'     => array(
-						'default' => 'Default',
-						'full'    => 'Full Width',
+						'default' => esc_html__( 'Default', 'buddyboss' ),
+						'full'    => esc_html__( 'Full Width', 'buddyboss' ),
 					),
 				)
 			);
@@ -760,13 +760,14 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 					'disabled'    => true,
 					'value'       => bb_get_profile_cover_image_height(),
 					'options'     => array(
-						'small' => 'Small',
-						'large' => 'Large',
+						'small' => esc_html__( 'Small', 'buddyboss' ),
+						'large' => esc_html__( 'Large', 'buddyboss' ),
 					),
 				)
 			);
 		?>
 	</div>
+	<p class="description"><?php esc_html_e( 'Changing your size of your cover images will reposition cover images already uploaded by your members', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1074,10 +1075,11 @@ function bp_admin_setting_callback_default_group_cover_size() {
 					'id'          => 'bp-cover-group-width',
 					'label'       => esc_html__( 'Width', 'buddyboss' ),
 					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
+					'value'       => bb_get_group_cover_image_width(),
 					'disabled'    => true,
 					'options'     => array(
-						'default' => 'Default',
-						'full'    => 'Full Width',
+						'default' => esc_html__( 'Default', 'buddyboss' ),
+						'full'    => esc_html__( 'Full Width', 'buddyboss' ),
 					),
 				)
 			);
@@ -1091,15 +1093,17 @@ function bp_admin_setting_callback_default_group_cover_size() {
 					'id'          => 'bp-cover-group-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
 					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
+					'value'       => bb_get_group_cover_image_height(),
 					'disabled'    => true,
 					'options'     => array(
-						'small' => 'Small',
-						'large' => 'Large',
+						'small' => esc_html__( 'Small', 'buddyboss' ),
+						'large' => esc_html__( 'Large', 'buddyboss' ),
 					),
 				)
 			);
 		?>
 	</div>
+	<p class="description"><?php esc_html_e( 'Changing your size of your cover images will reposition cover images already uploaded by your members', 'buddyboss' ); ?></p>
 	<?php
 }
 

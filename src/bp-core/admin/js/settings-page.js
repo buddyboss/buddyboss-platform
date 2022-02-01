@@ -1138,7 +1138,7 @@ window.bp = window.bp || {};
 							function( response ) {
 								$this.html( $this.data( 'remove' ) );
 
-								// Update each avatars of the page
+								// Update each avatars of the page.
 								$( '.default-profile-avatar-custom .' + avatarObject + '-' + response.item_id + '-avatar' ).each(
 									function() {
 										$( this ).prop( 'src', response.avatar );
@@ -1481,7 +1481,68 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Show/hide web/app preview
+			// Confirmed box appears when change profile sizes options.
+			var is_confirmed_show = false;
+
+			let bpCoverProfileWidth  = $( 'select[name="bp-cover-profile-width"] option:selected' ).val();
+			let bpCoverProfileHeight = $( 'select[name="bp-cover-profile-height"] option:selected' ).val();
+			$( '#bp_member_avatar_settings' ).on(
+				'change',
+				'select[name="bp-cover-profile-width"], select[name="bp-cover-profile-height"]',
+				function(e) {
+					e.preventDefault();
+
+					is_confirmed_show = true;
+					if ( 'bp-cover-profile-width' === $( this ).attr( 'name' ) && bpCoverProfileWidth === $( this ).val() ) {
+						is_confirmed_show = false;
+					} else if ( 'bp-cover-profile-height' === $( this ).attr( 'name' ) && bpCoverProfileHeight === $( this ).val() ) {
+						is_confirmed_show = false;
+					}
+				}
+			);
+
+			let bpCoverGroupWidth  = $( 'select[name="bp-cover-group-width"] option:selected' ).val();
+			let bpCoverGroupHeight = $( 'select[name="bp-cover-group-height"] option:selected' ).val();
+			$( '#bp_groups_avatar_settings' ).on(
+				'change',
+				'select[name="bp-cover-group-width"], select[name="bp-cover-group-height"]',
+				function(e) {
+					e.preventDefault();
+
+					is_confirmed_show = true;
+					if ( 'bp-cover-group-width' === $( this ).attr( 'name' ) && bpCoverGroupWidth === $( this ).val() ) {
+						is_confirmed_show = false;
+					} else if ( 'bp-cover-group-height' === $( this ).attr( 'name' ) && bpCoverGroupHeight === $( this ).val() ) {
+						is_confirmed_show = false;
+					}
+				}
+			);
+
+			$( 'body.buddyboss_page_bp-settings' ).on(
+				'click',
+				'input[name="submit"]',
+				function(e) {
+
+					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length || $( '#bp_groups_avatar_settings' ).length ) ) {
+
+						let coverWarning = 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?';
+						if ( $( '#bp_groups_avatar_settings' ).length ) {
+							coverWarning = 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?';
+						}
+
+						if (  confirm( coverWarning ) ) {
+							return true;
+						} else {
+							e.preventDefault();
+							return false;
+						}
+					}
+
+					return true;
+				}
+			);
+
+			// Show/hide web/app preview.
 			$( '.preview-switcher .button' ).on(
 				'click',
 				function( event ) {
