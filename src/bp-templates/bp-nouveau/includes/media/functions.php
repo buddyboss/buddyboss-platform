@@ -129,13 +129,13 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_media'                     => bp_is_messages_media_support_enabled() && bb_user_can_create_media(),
 		'messages_media_active'              => bp_is_messages_media_support_enabled(),
-		'dropzone_media_message'             => __( 'Drop images here to upload', 'buddyboss' ),
+		'dropzone_media_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Photos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
 		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
 		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'               => __( "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.", 'buddyboss' ),
+		'dictFileTooBig'                     => __( 'File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.', 'buddyboss' ),
 		'cover_photo_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
 		'cover_photo_size_error_description' => __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
 		'maxFiles'                           => bp_media_allowed_upload_media_per_batch(),
@@ -146,6 +146,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'move_to_id_popup'                   => $move_to_id_popup,
 		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
+		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
+		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {

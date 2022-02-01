@@ -563,3 +563,34 @@ function bp_email_remove_widgets_panel( $components ) {
 }
 
 add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
+
+/**
+ * Set default avatar to customise email template.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $avatar Default avatar.
+ * @return string The default avatar URL based on backend setting.
+ */
+function bb_email_customizer_default_avatar( $avatar = '' ) {
+
+	if ( empty( $avatar ) ) {
+		$show_avatar                 = bp_get_option( 'show_avatars' );
+		$profile_avatar_type         = bb_get_profile_avatar_type();
+		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
+
+		if ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar = get_avatar_url(
+				'',
+				array(
+					'size' => 300,
+				)
+			);
+		}
+	}
+
+	return $avatar;
+}
+
+add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
+add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );
