@@ -10,7 +10,7 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-post-case-privacy">
-	<div id="bp-activity-privacy-point" class="{{data.privacy}}">
+	<div id="bp-activity-privacy-point" class="{{data.privacy}}" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Set by album privacy', 'buddyboss' ); ?>">
 		<span class="privacy-point-icon"></span>
 		<span class="bp-activity-privacy-status">
 			<# if ( data.privacy === 'public' ) {  #>
