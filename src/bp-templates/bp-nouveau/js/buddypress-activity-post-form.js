@@ -73,6 +73,11 @@ window.bp = window.bp || {};
 				setTimeout( function() {
 					$( '.activity-update-form.modal-popup #whats-new' ).blur();
 					$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+					// Post activity hide modal
+					var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+					if ( $singleActivityFormWrap.length ) {
+						$singleActivityFormWrap.hide();
+					}
 				},0);
 			});
 
@@ -483,6 +488,13 @@ window.bp = window.bp || {};
 						}
 					}
 
+					// Do not allow the edit privacy if activity is belongs to any folder/album.
+					if ( ! bp.privacyEditable && 'groups' !== activity_data.object ) {
+						self.postForm.$el.addClass( 'bp-activity-edit--privacy-idle' );
+					} else {
+						self.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
+					}
+
 					Backbone.trigger('editactivity');
 				},
 				0
@@ -796,6 +808,13 @@ window.bp = window.bp || {};
 			},
 
 			close: function ( e ) {
+				// Reset Global variable after edit activity.
+				bp.privacyEditable = true;
+				bp.album_id        = 0;
+				bp.folder_id       = 0;
+				bp.group_id        = 0;
+				bp.privacy         = 'public';
+
 				e.preventDefault();
 				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 				this.model.set( 'privacy_modal', 'general' );
@@ -808,6 +827,9 @@ window.bp = window.bp || {};
 				
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
+
+				// Update privacy editable state class
+				this.$el.closest( '#whats-new-form' ).removeClass( 'bp-activity-edit--privacy-idle' );
 
 				// Post activity hide modal
 				var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
@@ -2824,7 +2846,7 @@ window.bp = window.bp || {};
 			},
 
 			privacyTarget: function ( e ) {
-				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) ) {
+				if ( this.$el.find( '#bp-activity-privacy-point' ).hasClass('bp-activity-edit-group') || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ) || ! bp.privacyEditable ) {
 					return false;
 				}
 				e.preventDefault();
@@ -3859,7 +3881,7 @@ window.bp = window.bp || {};
 
 			displayFull: function ( event ) {
 
-				this.model.on('change:video change:document change:media change:gif_data', this.postValidate, this);
+				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 
 				// Remove feedback.
 				var self = this;
@@ -4000,6 +4022,11 @@ window.bp = window.bp || {};
 							setTimeout( function() {
 								$( '.activity-update-form.modal-popup #whats-new' ).blur();
 								$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+								// Post activity hide modal
+								var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+								if ( $singleActivityFormWrap.length ) {
+									$singleActivityFormWrap.hide();
+								}
 							},0);
 						}
 					}

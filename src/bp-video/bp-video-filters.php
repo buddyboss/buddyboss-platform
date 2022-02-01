@@ -1530,22 +1530,22 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 			$video_ids = explode( ',', $video_ids );
 			$video_ids = array_unique( $video_ids );
+			$album_id  = 0;
 
 			foreach ( $video_ids as $video_id ) {
 
-			    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
 					continue;
 				}
 
-				$video        = new BP_Video( $video_id );
-				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
-				$thumb        = '';
-
+				$video               = new BP_Video( $video_id );
+				$get_existing        = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+				$thumb               = '';
 				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
 
 				if ( $get_existing && $attachment_thumb_id ) {
 					$thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
-                }
+				}
 
 				if ( $get_existing && '' === $thumb ) {
 					$file = get_attached_file( $get_existing );
@@ -1554,7 +1554,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 						$data  = file_get_contents( $file ); // phpcs:ignore
 						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 					}
-                }
+				}
 
 				$activity['video'][] = array(
 					'id'          => $video_id,
@@ -1571,6 +1571,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'menu_order'  => $video->menu_order,
 					'video_count' => count( $video_ids ),
 				);
+
+				if ( 0 === $album_id && (int) $video->album_id > 0 ) {
+					$album_id                     = $video->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 	}
