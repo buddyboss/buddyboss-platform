@@ -53,7 +53,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				return false;
 			}
 
-			$args = apply_filters( 'bb_admin_setting_field_' . $args['id'], $args );
+			$args = apply_filters( 'bb_admin_setting_field_' . sanitize_title( $args['id'] ), $args );
 
 			$this->field = bp_parse_args(
 				$args,
@@ -74,6 +74,8 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				),
 				'bb_admin_setting_fields'
 			);
+
+			$this->render_field();
 		}
 
 		/**

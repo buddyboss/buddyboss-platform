@@ -733,36 +733,38 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 	?>
 	<div class="">
 		<?php
-			$cover_profile_width = new BP_Admin_Setting_Fields(
+			new BP_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-profile-width',
 					'label'       => esc_html__( 'Width', 'buddyboss' ),
 					'description' => esc_html__( 'Select the width of profile cover images in profile headers.', 'buddyboss' ),
 					'disabled'    => true,
+					'value'       => bb_get_profile_cover_image_width(),
 					'options'     => array(
-						'' => 'Default',
+						'default' => 'Default',
+						'full'    => 'Full Width',
 					),
 				)
 			);
-			$cover_profile_width->render_field();
 		?>
 	</div>
 	<div class="">
 		<?php
-			$cover_profile_height = new BP_Admin_Setting_Fields(
+			new BP_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-profile-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
 					'description' => esc_html__( 'Select the height of profile cover images in profile headers and member directories.', 'buddyboss' ),
 					'disabled'    => true,
+					'value'       => bb_get_profile_cover_image_height(),
 					'options'     => array(
-						'' => 'Small',
+						'small' => 'Small',
+						'large' => 'Large',
 					),
 				)
 			);
-			$cover_profile_height->render_field();
 		?>
 	</div>
 	<?php
@@ -1066,7 +1068,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 	?>
 	<div class="">
 		<?php
-			$cover_group_width = new BP_Admin_Setting_Fields(
+			new BP_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-group-width',
@@ -1074,16 +1076,16 @@ function bp_admin_setting_callback_default_group_cover_size() {
 					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
 					'disabled'    => true,
 					'options'     => array(
-						'' => 'Default',
+						'default' => 'Default',
+						'full'    => 'Full Width',
 					),
 				)
 			);
-			$cover_group_width->render_field();
 		?>
 	</div>
 	<div class="">
 		<?php
-			$cover_group_height = new BP_Admin_Setting_Fields(
+			new BP_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-group-height',
@@ -1091,11 +1093,11 @@ function bp_admin_setting_callback_default_group_cover_size() {
 					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
 					'disabled'    => true,
 					'options'     => array(
-						'' => 'Small',
+						'small' => 'Small',
+						'large' => 'Large',
 					),
 				)
 			);
-			$cover_group_height->render_field();
 		?>
 	</div>
 	<?php
@@ -1407,16 +1409,16 @@ function bp_form_option( $option, $default = '', $slug = false ) {
 	echo bp_get_form_option( $option, $default, $slug );
 }
 
-	/**
-	 * Return settings API option
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param string $option  Form option to return.
-	 * @param string $default Form option default.
-	 * @param bool   $slug    Form option slug.
-	 * @return string
-	 */
+/**
+ * Return settings API option
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param string $option  Form option to return.
+ * @param string $default Form option default.
+ * @param bool   $slug    Form option slug.
+ * @return string
+ */
 function bp_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Get the option and sanitize it.

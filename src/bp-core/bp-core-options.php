@@ -1980,13 +1980,13 @@ function bb_feed_not_allowed_comment_post_types() {
  */
 function bp_enable_private_rest_apis( $default = false ) {
 	global $bp;
-	
+
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
 	} else {
 		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
 	}
-	
+
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
@@ -2008,7 +2008,7 @@ function bp_enable_private_rest_apis( $default = false ) {
  * @return string Private REST APIs public content.
  */
 function bb_enable_private_rest_apis_public_content( $default = '' ) {
-	
+
 	/**
 	 * Filters Private REST APIs public content.
 	 *
@@ -2032,13 +2032,13 @@ function bb_enable_private_rest_apis_public_content( $default = '' ) {
  */
 function bp_enable_private_rss_feeds( $default = false ) {
 	global $bp;
-	
+
 	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
 		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
 	} else {
 		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
 	}
-	
+
 	/**
 	 * Filters whether private REST apis for site is enabled.
 	 *
@@ -2060,7 +2060,7 @@ function bp_enable_private_rss_feeds( $default = false ) {
  * @return string Private RSS Feeds public content.
  */
 function bb_enable_private_rss_feeds_public_content( $default = '' ) {
-	
+
 	/**
 	 * Filters Private REST APIs public content.
 	 *
@@ -2273,4 +2273,60 @@ function bb_get_default_custom_upload_group_cover() {
 	 * @param string $value Default custom upload group cover URL.
 	 */
 	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
+}
+
+/**
+ * Get profile cover image width.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'default'.
+ *
+ * @return string Return profile cover image width.
+ */
+function bb_get_profile_cover_image_width( $default = 'default' ) {
+	return bp_get_option( 'bp-cover-profile-width', $default );
+}
+
+/**
+ * Get profile cover image height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'small'.
+ *
+ * @return string Return profile cover image height.
+ */
+function bb_get_profile_cover_image_height( $default = 'small' ) {
+	return bp_get_option( 'bp-cover-profile-height', $default );
+}
+
+/**
+ * Get group cover image width.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'default'.
+ *
+ * @return string Return group cover image width.
+ */
+function bb_get_group_cover_image_width( $default = 'default' ) {
+	return bp_get_option( 'bp-cover-group-width', $default );
+}
+
+/**
+ * Get group cover image height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'small'.
+ *
+ * @return string Return group cover image height.
+ */
+function bb_get_group_cover_image_height( $default = 'small' ) {
+	return bp_get_option( 'bp-cover-group-height', $default );
 }
