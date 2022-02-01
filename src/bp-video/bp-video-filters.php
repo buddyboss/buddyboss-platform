@@ -1525,7 +1525,6 @@ function bp_video_get_edit_activity_data( $activity ) {
 			$video_ids = $video_id;
 		}
 
-
 		if ( ! empty( $video_ids ) ) {
 			$activity['video'] = array();
 
