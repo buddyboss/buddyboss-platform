@@ -111,7 +111,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled() && bb_user_can_create_video(),
 		'messages_video_active'              => bp_is_messages_video_support_enabled(),
-		'dropzone_video_message'             => __( 'Drop videos here to upload', 'buddyboss' ),
+		'dropzone_video_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Videos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'dropzone_video_thumbnail_message'   => __( 'Upload thumbnail', 'buddyboss' ),
 		'video_select_error'                 => __( 'This file type is not supported for video uploads.', 'buddyboss' ),
 		'empty_video_type'                   => __( 'Empty video file will not be uploaded.', 'buddyboss' ),
@@ -132,6 +132,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
 		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
 		'generating_thumb'                   => 'Generating thumbnail…',
+		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_video_album() ) {

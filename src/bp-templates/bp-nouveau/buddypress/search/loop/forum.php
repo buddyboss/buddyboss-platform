@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the forum
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/forum.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $forum_id    = get_the_ID();
 $total_topic = bbp_get_forum_topic_count( $forum_id );
 $total_reply = bbp_get_forum_reply_count( $forum_id );

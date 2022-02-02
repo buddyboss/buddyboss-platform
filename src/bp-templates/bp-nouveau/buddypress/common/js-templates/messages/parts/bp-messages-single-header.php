@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages single header template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-single-header.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-single-header">
 	<#    var other_recipients = _.reject(data.recipients.members, function(item) {    return item.is_you;    });
 	var current_user = _.find(data.recipients.members, function(item) {    return item.is_you == true;    });

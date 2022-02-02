@@ -2,7 +2,10 @@
 /**
  * BP Nouveau Group's Private Message template.
  *
- * @since BuddyBoss 1.5.7
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/messages/private-message.php.
+ *
+ * @since   BuddyBoss 1.5.7
+ * @version 1.5.7
  */
 
 $args = array(
@@ -134,18 +137,22 @@ if ( 0 === $total_count ) {
 						<input type="hidden" id="group_message_content_hidden" name="group_message_content_hidden" value="">
 						<div id="whats-new-attachments">
 							<?php if ( bp_is_active( 'media' ) ) : ?>
-								<div class="dropzone closed" id="bp-group-messages-post-media-uploader"></div>
+								<div class="dropzone closed media-dropzone" id="bp-group-messages-post-media-uploader"></div>
 								<input name="bp_group_messages_media" id="bp_group_messages_media" type="hidden" value=""/>
 								<div class="forum-post-media-template" style="display:none;">
-									<div class="dz-preview dz-file-preview">
+									<div class="dz-preview">
 										<div class="dz-image">
 											<img data-dz-thumbnail/>
 										</div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+										<div class="dz-details">
+											<div class="dz-filename"><span data-dz-name></span></div>
+											<div class="dz-size" data-dz-size></div>
+										</div>
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon bb-icon-camera-fill"></i>
-											<svg class="dz-progress-ring" width="62" height="62">
-												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354"
-														stroke-dashoffset="185"/>
+											<svg class="dz-progress-ring" width="54" height="54">
+												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
 										</div>
 										<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -163,7 +170,7 @@ if ( 0 === $total_count ) {
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) : ?>
-								<div class="dropzone closed" id="bp-group-messages-post-video-uploader"></div>
+								<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 								<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
 								<div class="forum-post-video-template" style="display:none;">
 									<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -172,9 +179,8 @@ if ( 0 === $total_count ) {
 										</div>
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon bb-icon-video-fill"></i>
-											<svg class="dz-progress-ring" width="62" height="62">
-												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29" cx="31" cy="31" stroke-dasharray="182.212, 182.212"
-														stroke-dashoffset="182"/>
+											<svg class="dz-progress-ring" width="54" height="54">
+												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
 										</div>
 										<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
@@ -203,19 +209,20 @@ if ( 0 === $total_count ) {
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) ) : ?>
-								<div class="dropzone closed" id="bp-group-messages-post-document-uploader"></div>
+								<div class="dropzone closed document-dropzone" id="bp-group-messages-post-document-uploader"></div>
 								<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 								<div class="forum-post-document-template" style="display:none;">
 									<div class="dz-preview dz-file-preview">
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 										<div class="dz-details">
+											<div class="dz-icon"><span class="bb-icon-file"></span></div>
 											<div class="dz-filename"><span data-dz-name></span></div>
 											<div class="dz-size" data-dz-size></div>
 										</div>
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon bb-icon-attach-fill"></i>
-											<svg class="dz-progress-ring" width="62" height="62">
-												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="29.5" cx="31" cy="31" stroke-dasharray="185.354, 185.354"
-														stroke-dashoffset="185"/>
+											<svg class="dz-progress-ring" width="54" height="54">
+												<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 											</svg>
 										</div>
 										<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -260,7 +267,7 @@ if ( 0 === $total_count ) {
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
-									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a photo', 'buddyboss' ); ?>">
+									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
@@ -270,14 +277,14 @@ if ( 0 === $total_count ) {
 							if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) :
 								?>
 								<div class="post-elements-buttons-item post-video video-support">
-									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a video', 'buddyboss' ); ?>">
+									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 										<i class="bb-icon bb-icon-video-alt"></i>
 									</a>
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
-									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach a document', 'buddyboss' ); ?>">
+									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-attach"></span>
 									</a>
 								</div>
@@ -285,7 +292,7 @@ if ( 0 === $total_count ) {
 							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
-										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Post a GIF', 'buddyboss' ); ?>">
+										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
 											<span class="bb-icon bb-icon-gif"></span>
 										</a>
 										<div class="gif-media-search-dropdown">
@@ -306,7 +313,7 @@ if ( 0 === $total_count ) {
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( 0, bp_loggedin_user_id(), 0, 0, 'message' ) ) : ?>
-								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
+								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 							<?php endif; ?>
 							<div id="group-messages-new-submit" class="submit">
 								<select name="group-messages-type" class="group-messages-type">
