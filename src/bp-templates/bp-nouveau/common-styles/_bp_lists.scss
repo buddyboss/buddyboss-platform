@@ -267,15 +267,28 @@
 	}
 
 	&:not(.grid) {
+		display: flex;
+		flex-flow: column;
 
 		.only-grid-view {
 			display: none;
 		}
 
 		.item-entry {
+			border-bottom: 0;
+			margin: 0;
+			padding: 0;
+
+			.list-wrap {
+				display: flex;
+				background: #fafafa;
+				border: 1px solid #eee;
+				padding: 15px;
+			}
 
 			.item-avatar {
 				margin-right: 5px;
+				width: auto;
 			}
 
 			.item {
@@ -293,6 +306,10 @@
 			.item-block {
 				flex: 0 0 32%;
 				padding-right: 15px;
+
+				.last-activity {
+					margin-bottom: 0;
+				}
 			}
 
 			.group-members-wrap {
@@ -332,6 +349,7 @@
 				border: 2px solid #fff;
 				border-radius: 50%;
 				float: left;
+				max-width: 100%;
 			}
 
 			.bb-icon {
