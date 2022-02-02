@@ -56,34 +56,38 @@ bp_nouveau_before_loop(); ?>
 
 				<div class="item">
 
-					<div class="item-block">
+					<div class="group-item-wrap">
 
-						<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
+						<div class="item-block">
 
-						<?php if ( bp_nouveau_group_has_meta() ) : ?>
+							<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-							<p class="item-meta group-details only-list-view"><?php bp_nouveau_group_meta(); ?></p>
-							<p class="item-meta group-details only-grid-view">
-							<?php
-								$meta = bp_nouveau_get_group_meta();
-								echo $meta['status'];
-							?>
+							<?php if ( bp_nouveau_group_has_meta() ) : ?>
+
+								<p class="item-meta group-details only-list-view"><?php bp_nouveau_group_meta(); ?></p>
+								<p class="item-meta group-details only-grid-view">
+								<?php
+									$meta = bp_nouveau_get_group_meta();
+									echo $meta['status'];
+								?>
+								</p>
+							<?php endif; ?>
+
+							<p class="last-activity item-meta">
+								<?php
+								printf(
+									/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+									__( 'active %s', 'buddyboss' ),
+									bp_get_group_last_active()
+								);
+								?>
 							</p>
-						<?php endif; ?>
 
-						<p class="last-activity item-meta">
-							<?php
-							printf(
-								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-								__( 'active %s', 'buddyboss' ),
-								bp_get_group_last_active()
-							);
-							?>
-						</p>
+						</div>
+
+						<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
 
 					</div>
-
-					<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
