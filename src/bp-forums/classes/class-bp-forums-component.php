@@ -430,7 +430,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		/**
 		 * Admin bar menu for forum and topic.
 		 *
-		 * @since [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_forums_admin_bar_menu() {
 			global $wp_admin_bar;
