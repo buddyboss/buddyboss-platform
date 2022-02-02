@@ -87,11 +87,15 @@ bp_nouveau_before_loop(); ?>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
-					<div class="group-members-wrap">
-						<?php bb_groups_loop_members(); ?>
-					</div>
+					<div class="group-footer-wrap">
 
-					<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
+						<div class="group-members-wrap">
+							<?php bb_groups_loop_members(); ?>
+						</div>
+
+						<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
+
+					</div>
 
 				</div>
 
