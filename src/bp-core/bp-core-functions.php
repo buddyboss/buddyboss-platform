@@ -1142,13 +1142,10 @@ function bp_core_current_time( $gmt = true, $type = 'mysql' ) {
  *
  * This function will return an English representation of the time elapsed
  * since a given date.
- * eg: 2 hours and 50 minutes
+ * eg: 2 hours
  * eg: 4 days
- * eg: 4 weeks and 6 days
+ * eg: 4 weeks
  *
- * Note that fractions of minutes are not represented in the return string. So
- * an interval of 3 minutes will be represented by "3 minutes ago", as will an
- * interval of 3 minutes 59 seconds.
  *
  * @since BuddyPress 1.0.0
  *
@@ -1158,7 +1155,7 @@ function bp_core_current_time( $gmt = true, $type = 'mysql' ) {
  * @param int|bool   $newer_date Optional. Unix timestamp of date to compare older
  *                               date to. Default: false (current time).
  * @return string String representing the time since the older date, eg
- *         "2 hours and 50 minutes".
+ *         "2 hours".
  */
 function bp_core_time_since( $older_date, $newer_date = false ) {
 
@@ -1235,10 +1232,10 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		$output = $unknown_text;
 
 		/**
-		 * We only want to output two chunks of time here, eg:
-		 * x years, xx months
-		 * x days, xx hours
-		 * so there's only two bits of calculation below:
+		 * We only want to output only one chunk of time here, eg:
+		 * x years
+		 * x days
+		 * so there's only one bit of calculation below:
 		 */
 	} else {
 
@@ -1246,9 +1243,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		 * Initializing the count variable to avoid undefined notice
 		 */
 		$count  = 0;
-		$count2 = 0;
 
-		// Step one: the first chunk.
 		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
 			$seconds = $chunks[ $i ];
 
@@ -1268,65 +1263,29 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? __( "a year", 'buddyboss' ) : sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
 					break;
 				case 30 * DAY_IN_SECONDS:
-					$output = sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? __( "a month", 'buddyboss' ) : sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
 					break;
 				case WEEK_IN_SECONDS:
-					$output = sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? __( "a week", 'buddyboss' ) : sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
 					break;
 				case DAY_IN_SECONDS:
-					$output = sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? __( "a day", 'buddyboss' ) : sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
 					break;
 				case HOUR_IN_SECONDS:
-					$output = sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? __( "an hour", 'buddyboss' ) : sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
 					break;
 				case MINUTE_IN_SECONDS:
-					$output = sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? __( "a minute", 'buddyboss' ) : sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
 					break;
 				default:
-					$output = sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
-			}
-
-			// Step two: the second chunk
-			// A quirk in the implementation means that this
-			// condition fails in the case of minutes and seconds.
-			// We've left the quirk in place, since fractions of a
-			// minute are not a useful piece of information for our
-			// purposes.
-			if ( $i + 2 < $j ) {
-				$seconds2 = $chunks[ $i + 1 ];
-				$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
-
-				// Add to output var.
-				if ( 0 != $count2 ) {
-					$output .= _x( ',', 'Separator in time since', 'buddyboss' ) . ' ';
-
-					switch ( $seconds2 ) {
-						case 30 * DAY_IN_SECONDS:
-							$output .= sprintf( _n( '%s month', '%s months', $count2, 'buddyboss' ), $count2 );
-							break;
-						case WEEK_IN_SECONDS:
-							$output .= sprintf( _n( '%s week', '%s weeks', $count2, 'buddyboss' ), $count2 );
-							break;
-						case DAY_IN_SECONDS:
-							$output .= sprintf( _n( '%s day', '%s days', $count2, 'buddyboss' ), $count2 );
-							break;
-						case HOUR_IN_SECONDS:
-							$output .= sprintf( _n( '%s hour', '%s hours', $count2, 'buddyboss' ), $count2 );
-							break;
-						case MINUTE_IN_SECONDS:
-							$output .= sprintf( _n( '%s minute', '%s minutes', $count2, 'buddyboss' ), $count2 );
-							break;
-						default:
-							$output .= sprintf( _n( '%s second', '%s seconds', $count2, 'buddyboss' ), $count2 );
-					}
-				}
+					$output = $count < 2 ? __( "a second", 'buddyboss' ) : sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) $count && ! (int) $count2 ) {
+			if ( ! (int) $count ) {
 				$output = $right_now_text;
 			}
 		}
