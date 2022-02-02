@@ -75,6 +75,19 @@ window.bp = window.bp || {};
 					$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
 				},0);
 			});
+			
+			$( document ).on( 'click', '.activity-form #whats-new-attachments .dz-error', function () {
+				$( '.activity-form #whats-new-attachments .dz-error' ).removeClass( 'dz-single-error' );
+				$( this ).addClass( 'dz-single-error' );
+				var mediaName         = $( this ).find( '.dz-details .dz-filename span' ).html();
+				var mediaErrorMessage = $( this ).find( '.dz-error-message span' ).html();
+				var errorMessage;
+				if ( '' !== mediaName ) {
+					errorMessage = mediaName + '<br>';
+				}
+				errorMessage = errorMessage + mediaErrorMessage;
+				Backbone.trigger( 'onError', ( errorMessage ) );
+			} );
 
 			Backbone.trigger('mediaprivacy');
 		},
@@ -488,6 +501,12 @@ window.bp = window.bp || {};
 				0
 			);
 
+		},
+		
+		removeErrorClass: function () {
+			if ( $( '.activity-form #whats-new-attachments .dz-error' ).hasClass('dz-single-error') ) {
+				$( '.activity-form #whats-new-attachments .dz-error' ).removeClass( 'dz-single-error' );
+			}
 		},
 
 		/**
@@ -1006,6 +1025,7 @@ window.bp = window.bp || {};
 									self.model.unset( 'media' );	
 								}
 								
+								bp.Nouveau.Activity.postForm.removeErrorClass();
 								if ( response.data.menu_order_error_count > 1 ) { // Error on more then one file .
 									Backbone.trigger( 'onError', BP_Nouveau.media.multipleErrorOnFile );
 								} else { // Error on single file.
@@ -1025,6 +1045,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
 					function ( file, response ) {
+						bp.Nouveau.Activity.postForm.removeErrorClass();
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
