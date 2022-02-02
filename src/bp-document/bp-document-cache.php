@@ -19,6 +19,15 @@ defined( 'ABSPATH' ) || exit;
 function bp_document_clear_cache_for_document( $document ) {
 	wp_cache_delete( $document->id, 'bp_document' );
 	wp_cache_delete( 'bb_document_activity_' . $document->id, 'bp_document' ); // Used in bb_moderation_get_media_record_by_id().
+
+	$group_id = ! empty( $document->group_id ) ? $document->group_id : false;
+
+	if ( $group_id ) {
+		wp_cache_delete( 'bp_total_document_for_group_' . $group_id, 'bp' );
+	}
+
+	bp_core_reset_incrementor( 'bp_document' );
+	bp_core_reset_incrementor( 'bp_document_folder' );
 }
 add_action( 'bp_document_after_save', 'bp_document_clear_cache_for_document' );
 
