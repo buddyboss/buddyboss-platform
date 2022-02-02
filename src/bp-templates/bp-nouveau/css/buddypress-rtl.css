@@ -16775,6 +16775,19 @@ img.emojioneemoji {
   background-color: #f8f8f8;
 }
 
+.dropzone.media-dropzone .dz-preview .dz-image {
+  position: relative;
+}
+
+.dropzone.media-dropzone .dz-preview .dz-image img {
+  width: auto;
+  margin: 0 auto;
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+
 .dropzone .dz-preview.dz-error {
   background-color: #f8f8f8;
 }

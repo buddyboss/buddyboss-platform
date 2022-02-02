@@ -2174,6 +2174,22 @@ img.emojioneemoji {
 			background-color: #f8f8f8;
 		}
 	}
+
+	.dz-preview {
+
+		.dz-image {
+			position: relative;
+
+			img {
+				width: auto;
+				margin: 0 auto;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+		}
+	}
 }
 
 // Dropzone Error
