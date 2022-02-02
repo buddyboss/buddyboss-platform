@@ -16804,6 +16804,10 @@ img.emojioneemoji {
   display: none;
 }
 
+.dropzone.media-dropzone .dz-preview.dz-error.dz-single-error .dz-image {
+  border-width: 2px;
+}
+
 .dropzone.media-dropzone .dz-preview.dz-error .dz-details {
   display: block;
   position: absolute;

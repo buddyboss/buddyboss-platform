@@ -2251,6 +2251,13 @@ img.emojioneemoji {
 
 	}
 
+	&.dz-single-error {
+
+		.dz-image {
+			border-width: 2px;
+		}
+	}
+
 	.dz-details {
 		display: block;
 		position: absolute;
