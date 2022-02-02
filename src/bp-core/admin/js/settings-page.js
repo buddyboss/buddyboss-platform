@@ -1484,8 +1484,8 @@ window.bp = window.bp || {};
 			// Confirmed box appears when change profile sizes options.
 			var is_confirmed_show = false;
 
-			let bpCoverProfileWidth  = $( 'select[name="bp-cover-profile-width"] option:selected' ).val();
-			let bpCoverProfileHeight = $( 'select[name="bp-cover-profile-height"] option:selected' ).val();
+			var bpCoverProfileWidth  = $( 'select[name="bp-cover-profile-width"] option:selected' ).val();
+			var bpCoverProfileHeight = $( 'select[name="bp-cover-profile-height"] option:selected' ).val();
 			$( '#bp_member_avatar_settings' ).on(
 				'change',
 				'select[name="bp-cover-profile-width"], select[name="bp-cover-profile-height"]',
@@ -1501,8 +1501,8 @@ window.bp = window.bp || {};
 				}
 			);
 
-			let bpCoverGroupWidth  = $( 'select[name="bp-cover-group-width"] option:selected' ).val();
-			let bpCoverGroupHeight = $( 'select[name="bp-cover-group-height"] option:selected' ).val();
+			var bpCoverGroupWidth  = $( 'select[name="bp-cover-group-width"] option:selected' ).val();
+			var bpCoverGroupHeight = $( 'select[name="bp-cover-group-height"] option:selected' ).val();
 			$( '#bp_groups_avatar_settings' ).on(
 				'change',
 				'select[name="bp-cover-group-width"], select[name="bp-cover-group-height"]',
@@ -1525,12 +1525,12 @@ window.bp = window.bp || {};
 
 					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length || $( '#bp_groups_avatar_settings' ).length ) ) {
 
-						let coverWarning = 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?';
+						var coverWarningMessage = BP_ADMIN.cover_size_alert.profile;
 						if ( $( '#bp_groups_avatar_settings' ).length ) {
-							coverWarning = 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?';
+							coverWarningMessage = BP_ADMIN.cover_size_alert.group;
 						}
 
-						if (  confirm( coverWarning ) ) {
+						if (  confirm( coverWarningMessage ) ) {
 							return true;
 						} else {
 							e.preventDefault();
