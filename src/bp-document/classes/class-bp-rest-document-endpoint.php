@@ -1343,7 +1343,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					! empty( $get_activity->id ) &&
 					(
 						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
+						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 					)
 				) {
 					$data['hide_activity_actions'] = true;
@@ -2318,7 +2318,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2594,7 +2594,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2753,7 +2753,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;

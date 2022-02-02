@@ -214,9 +214,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	}
 
 	// Notify the immediate reply author if not the current reply author
-	if ( ! empty( $reply_to ) && ( $author_id !== $reply_to_item_id ) && ( $author_id !== $topic_author_id ) ) {
-		$args['user_id']			= $reply_to_item_id;
-		$args['secondary_item_id']	= $topic_author_id; // Changed $secondary_item_id to $topic_author_id based on the BBPress changes.
+	if ( ! empty( $reply_to ) && ( $author_id !== $reply_to_item_id ) ) {
+		$args['user_id']           = $reply_to_item_id;
+		$args['secondary_item_id'] = $secondary_item_id;
 
 		bp_notifications_add_notification( $args );
 	}

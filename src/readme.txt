@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 5.6.20
-Stable tag: 1.8.3
+Stable tag: 1.8.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,55 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.8.6 =
+* Profiles - Provided WordPress, BuddyBoss, and Custom option to change default profile avatar image
+* Profiles - Provided BuddyBoss and Custom option to change default profile cover image
+* Groups - Provided BuddyBoss and Custom option to change default group avatar and cover image
+* Activity - significantly enhanced activity form interface with modal layout
+* Private Network - Provided option to restrict REST APIs and RSS feed public access
+* Media - Fixed generating thumbnail infinite loading issue for uploaded video
+* Media - Fixed portrait video thumbnail wrong size issues
+* Network Search - Fixed search issue with ampersand character in group and activities
+* REST API - Provided default cover and avatar image API support for profile and group
+* REST API - Provided caching support in the APIs for restrict Rest API and RSS feed option
+* REST API - Fixed activity like and comment parameter issue in the API
+* REST API - Fixed forum reply permission issue in the API
+
+= 1.8.5 =
+* Profiles - Fixed profile type search settings to show when the Network Search component is active
+* Profiles - Fixed exported data to show profile type field value to name instead of id
+* Groups - Fixed changing group photo updates user avatar temporarily in the header
+* Forums - Fixed discussion reply notification issue showing wrong member name
+* Activity - Fixed public URL link preview issue for private network
+* Media - Fixed bunch of non-translatable strings related to the media component
+* Media - Fixed missing 'video-js-rtl.min.css' file error when a site using RTL language
+* Text Editor - Fixed HTML copy paste issue
+* LearnDash - Code refactoring to fix warnings and notices
+* REST API - Fixed sign up user exists endpoint error message status code in the API
+* REST API - Fixed activity uploaded media order in the API
+
+= 1.8.4 =
+* Groups - Fixed group private messages screen, members load more issue on scroll
+* Groups - Fixed sub-group issue where parent get unassigned on description update
+* Groups - Fixed hidden group email invite issue takes to 404
+* Groups - Fixed @mention issue not working when user mention name updated
+* Groups - Fixed @mention issue using wrong user mention name
+* Forums - Fixed discussion title tag issue to be consistent with or without group
+* Forums - Fixed discussion reply formatting issue in the email
+* Forums - Fixed activity 'Read more' link issue not taking to a specific reply
+* Forums - Fixed discussion notification issue on reply
+* Forums - Fixed discussion email notification invalid links issue
+* Activity - Fixed @mention double space issue
+* Activity - Fixed @mention duplicate queries performance issues
+* Activity - Fixed inconsistent video preview issue for a forum reply
+* Profiles - Fixed members count format issue on load
+* Media - Fixed undefined png image issue with emojis dropdown
+* Messages - Fixed critical issue on messages screen when connection component disabled
+* Notifications - Fixed invalid notification title issue on the discussion page
+* REST API - Added component pages details in the API
+* REST API - Fixed group type with special character issue in the API
+* REST API - Fixed custom profile tab link issue in the API
 
 = 1.8.3 =
 * Messages - Improved logic to send group messages by processing members and notifications in the background

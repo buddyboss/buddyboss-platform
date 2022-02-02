@@ -1419,7 +1419,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					! empty( $get_activity->id ) &&
 					(
 						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
-						|| empty( $get_activity->secondary_item_id ) || empty( $get_activity->item_id )
+						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
 					)
 				) {
 					$data['hide_activity_actions'] = true;
@@ -2223,7 +2223,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -2752,7 +2752,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
@@ -3118,7 +3118,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $medias['medias'] ) ) {
 			return;
