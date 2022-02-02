@@ -2643,7 +2643,7 @@ table tbody td .bb-description {
 
 .bb-grid-style-outer {
   display: flex;
-  width: 270px;
+  width: 180px;
   justify-content: space-between;
 }
 
@@ -2695,10 +2695,6 @@ table tbody td .bb-description {
   left: 22px;
 }
 
-.bb-grid-style-outer .bb-grid-style .option.opt-right:after {
-  right: 8px;
-}
-
 .bb-grid-style-outer .bb-grid-style .option span {
   font-size: 14px;
   color: #999;
@@ -2706,7 +2702,6 @@ table tbody td .bb-description {
 }
 
 .bb-grid-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
-.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-right:checked:checked + .option:before,
 .bb-grid-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before {
   border-color: #2370b1;
 }

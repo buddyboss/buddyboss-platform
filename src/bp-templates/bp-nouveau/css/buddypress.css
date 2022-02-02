@@ -1095,6 +1095,7 @@ a.layout-grid-view {
   border: 2px solid #fff;
   border-radius: 50%;
   float: left;
+  max-width: 100%;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-01 14:15:59+00:00\n"
+"POT-Creation-Date: 2022-02-02 13:07:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3141,11 +3141,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1235
 #: bp-core/admin/bp-core-admin-settings.php:1615
 #: bp-core/admin/bp-core-admin-settings.php:1735
-#: bp-core/admin/bp-core-admin-settings.php:1975
-#: bp-core/admin/bp-core-admin-settings.php:2053
-#: bp-core/admin/bp-core-admin-settings.php:2092
-#: bp-core/admin/bp-core-admin-settings.php:2119
-#: bp-core/admin/bp-core-admin-settings.php:2259
+#: bp-core/admin/bp-core-admin-settings.php:1974
+#: bp-core/admin/bp-core-admin-settings.php:2052
+#: bp-core/admin/bp-core-admin-settings.php:2091
+#: bp-core/admin/bp-core-admin-settings.php:2118
+#: bp-core/admin/bp-core-admin-settings.php:2258
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:515
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:571
@@ -3702,150 +3702,150 @@ msgstr ""
 msgid "Grid Style"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1915
+#: bp-core/admin/bp-core-admin-settings.php:1914
 msgid ""
 "Select the style of the of grid layouts. Group avatars and cover images "
 "will only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1950
+#: bp-core/admin/bp-core-admin-settings.php:1949
 msgid ""
 "Select which elements show in group directories. Cover images will only "
 "display in grid view and group descriptions will only display in list view."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1993
+#: bp-core/admin/bp-core-admin-settings.php:1992
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1994
+#: bp-core/admin/bp-core-admin-settings.php:1993
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2001
+#: bp-core/admin/bp-core-admin-settings.php:2000
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2028
+#: bp-core/admin/bp-core-admin-settings.php:2027
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2067
+#: bp-core/admin/bp-core-admin-settings.php:2066
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2135
+#: bp-core/admin/bp-core-admin-settings.php:2134
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2136
+#: bp-core/admin/bp-core-admin-settings.php:2135
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2154
+#: bp-core/admin/bp-core-admin-settings.php:2153
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2162
+#: bp-core/admin/bp-core-admin-settings.php:2161
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2180
+#: bp-core/admin/bp-core-admin-settings.php:2179
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2181
+#: bp-core/admin/bp-core-admin-settings.php:2180
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2195
+#: bp-core/admin/bp-core-admin-settings.php:2194
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2196
+#: bp-core/admin/bp-core-admin-settings.php:2195
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2211
+#: bp-core/admin/bp-core-admin-settings.php:2210
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2212
+#: bp-core/admin/bp-core-admin-settings.php:2211
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2213
+#: bp-core/admin/bp-core-admin-settings.php:2212
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2214
+#: bp-core/admin/bp-core-admin-settings.php:2213
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2215
+#: bp-core/admin/bp-core-admin-settings.php:2214
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2216
+#: bp-core/admin/bp-core-admin-settings.php:2215
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2217
+#: bp-core/admin/bp-core-admin-settings.php:2216
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2218
+#: bp-core/admin/bp-core-admin-settings.php:2217
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2219
+#: bp-core/admin/bp-core-admin-settings.php:2218
 msgid "5 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2320
+#: bp-core/admin/bp-core-admin-settings.php:2319
 msgid "Restrict REST APIs access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2326
+#: bp-core/admin/bp-core-admin-settings.php:2325
 #. translators: Registration link.
 msgid "Login and %s APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2329
+#: bp-core/admin/bp-core-admin-settings.php:2328
 #: bp-core/admin/settings/bp-admin-setting-general.php:48
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 msgid "Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2350
+#: bp-core/admin/bp-core-admin-settings.php:2349
 #. translators: Settings link.
 msgid ""
 "Your BuddyBoss App is currently public. To restrict access to REST APIs for "
 "logged-out members, please enable \"Private App\" in the %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2353
+#: bp-core/admin/bp-core-admin-settings.php:2352
 msgid "BuddyBoss App's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2381
+#: bp-core/admin/bp-core-admin-settings.php:2380
 msgid ""
 "Enter REST API endpoints URLs or URI fragments (e.g. "
 "wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
 "one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2395
+#: bp-core/admin/bp-core-admin-settings.php:2394
 msgid "Restrict RSS Feeds access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2407
+#: bp-core/admin/bp-core-admin-settings.php:2406
 msgid ""
 "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
 "publicly visible always. Enter one endpoint URL or URI per line. "
@@ -12410,22 +12410,6 @@ msgid ""
 "discussion</a>"
 msgstr ""
 
-#: bp-forums/bp-forumns-adminbar.php:45 bp-forums/forums/template.php:56
-msgid "Edit Forum"
-msgstr ""
-
-#: bp-forums/bp-forumns-adminbar.php:68
-msgid "Edit Forum %s"
-msgstr ""
-
-#: bp-forums/bp-forumns-adminbar.php:72
-msgid "%s Forum"
-msgstr ""
-
-#: bp-forums/bp-forumns-adminbar.php:80 bp-groups/bp-groups-adminbar.php:80
-msgid "Edit Forum Settings"
-msgstr ""
-
 #: bp-forums/classes/class-bbpress.php:121
 #: bp-forums/classes/class-bbpress.php:129
 #: bp-search/classes/class-bp-search-core.php:127
@@ -14233,6 +14217,10 @@ msgstr ""
 #: bp-forums/forums/template.php:54
 #: bp-forums/templates/default/bbpress/form-forum.php:33
 msgid "Create New Forum"
+msgstr ""
+
+#: bp-forums/forums/template.php:56
+msgid "Edit Forum"
 msgstr ""
 
 #: bp-forums/forums/template.php:58 bp-forums/forums/template.php:59
@@ -16849,6 +16837,10 @@ msgstr ""
 
 #: bp-groups/bp-groups-adminbar.php:72
 msgid "%s Group"
+msgstr ""
+
+#: bp-groups/bp-groups-adminbar.php:80
+msgid "Edit Forum Settings"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:186
