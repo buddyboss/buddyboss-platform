@@ -929,15 +929,13 @@ a.layout-grid-view {
   display: none;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover {
-  margin: -15px -20px 0;
-}
-
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover a {
   position: relative;
   display: block;
   height: 100%;
   padding-top: 52.56%;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover img {
@@ -948,10 +946,12 @@ a.layout-grid-view {
   bottom: 0;
   object-fit: cover;
   height: 100%;
+  width: 100%;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap {
   padding-top: 0;
+  border-radius: 4px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item {
@@ -1095,6 +1095,7 @@ a.layout-grid-view {
   border: 2px solid #fff;
   border-radius: 50%;
   float: left;
+  max-width: 100%;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {

@@ -171,13 +171,14 @@
 	}
 
 	.bs-group-cover {
-		margin: -15px -20px 0;
 
 		a {
 			position: relative;
 			display: block;
 			height: 100%;
 			padding-top: 52.56%;
+			border-radius: 4px 4px 0 0;
+			overflow: hidden;
 		}
 
 		img {
@@ -188,12 +189,14 @@
 			bottom: 0;
 			object-fit: cover;
 			height: 100%;
+			width: 100%;
 		}
 
 	}
 
 	.list-wrap {
 		padding-top: 0;
+		border-radius: 4px;
 
 		.item {
 			padding: 0 15px;
