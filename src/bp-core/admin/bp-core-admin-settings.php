@@ -1905,7 +1905,6 @@ function bb_admin_setting_group_grid_style() {
 					'options'     => array(
 						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
 						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
-						'right' 	=> array('label' => 'Right', 'class' => 'option opt-right' ),
 					),
 				)
 			);
