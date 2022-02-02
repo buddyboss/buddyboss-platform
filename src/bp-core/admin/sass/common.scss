@@ -2815,7 +2815,7 @@ table tbody td .bb-description {
 
 .bb-grid-style-outer {
 	display: flex;
-	width: 270px;
+	width: 180px;
 	justify-content: space-between;
 
 	.bb-grid-style {
@@ -2872,14 +2872,6 @@ table tbody td .bb-description {
 
 			}
 
-			&.opt-right {
-
-				&:after {
-					right: 8px;
-				}
-
-			}
-
 			span {
 				font-size: 14px;
 				color: #999;
@@ -2889,7 +2881,6 @@ table tbody td .bb-description {
 		}
 
 		#bb-group-grid-style-left:checked:checked + .option,
-		#bb-group-grid-style-right:checked:checked + .option,
 		#bb-group-grid-style-centered:checked:checked + .option {
 
 			&:before {
