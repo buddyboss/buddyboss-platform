@@ -3614,7 +3614,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		);
 	}
 
-	$must_use_bp_mail = apply_filters( 'bp_email_use_bp_mail', false );
+	$must_use_bp_mail = apply_filters( 'bp_email_use_bp_mail', true );
 
 	if ( $must_use_bp_mail ) {
 
