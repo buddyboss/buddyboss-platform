@@ -182,6 +182,7 @@ add_action( 'bp_folders_deleted_folders', 'bp_document_clear_cache_for_deleted_f
  * @return bool True on success, false on failure.
  */
 function bp_document_folder_reset_cache_incrementor() {
+	bp_core_reset_incrementor( 'bp_document' );
 	return bp_core_reset_incrementor( 'bp_document_folder' );
 }
 add_action( 'bp_folder_delete', 'bp_document_folder_reset_cache_incrementor' );
