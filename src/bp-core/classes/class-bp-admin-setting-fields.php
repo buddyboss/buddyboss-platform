@@ -262,16 +262,21 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $key => $label ) {
+					echo ( isset( $this->field['opt_wrapper'] ) && $this->field['opt_wrapper'] === true ) ? "<div class='bb-" . str_replace( ' ', '-', strtolower( $this->field['label'] ) ) . "'>" : '';
 					?>
-
 					<input type="radio" name="<?php echo esc_attr( $this->field['name'] ); ?>" class="regular-text <?php echo esc_attr( $this->field['class'] ); ?>" id="<?php echo esc_attr( $this->field['id'] . $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $this->field['value'] ); ?> <?php disabled( $this->field['disabled'] ); ?>>
 
-					<?php if ( ! empty( $label ) ) { ?>
+					<?php if ( is_array( $label ) ) { ?>
+						<label for="<?php echo esc_attr( $this->field['id'] . $key ); ?>" class="<?php echo ( isset( $label['class'] ) ) ? $label['class'] : ''; ?>">
+							<?php echo wp_kses_post( $label['label'] ); ?>
+						</label>
+					<?php } elseif ( ! empty( $label ) ) { ?>
 						<label for="<?php echo esc_attr( $this->field['id'] . $key ); ?>">
 							<?php echo wp_kses_post( $label ); ?>
 						</label>
 						<?php
 					}
+					echo ( isset( $this->field['opt_wrapper'] ) && $this->field['opt_wrapper'] === true ) ? '</div>' : '';
 				}
 			}
 

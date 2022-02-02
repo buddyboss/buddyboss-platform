@@ -1692,10 +1692,10 @@ function bb_update_to_1_8_7() {
 		update_option( 'old_buddyboss_theme_options', $buddyboss_theme_options );
 	}
 
-	$profile_cover_width  = isset( $buddyboss_theme_options['buddyboss_profile_cover_width'] ) ?? get_option( 'buddyboss_profile_cover_width' );
-	$profile_cover_height = isset( $buddyboss_theme_options['buddyboss_profile_cover_height'] ) ?? get_option( 'buddyboss_profile_cover_height' );
-	$group_cover_width    = isset( $buddyboss_theme_options['buddyboss_group_cover_width'] ) ?? get_option( 'buddyboss_group_cover_width' );
-	$group_cover_height   = isset( $buddyboss_theme_options['buddyboss_group_cover_height'] ) ?? get_option( 'buddyboss_group_cover_height' );
+	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? get_option( 'buddyboss_profile_cover_width' );
+	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? get_option( 'buddyboss_profile_cover_height' );
+	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? get_option( 'buddyboss_group_cover_width' );
+	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? get_option( 'buddyboss_group_cover_height' );
 
 	if ( ! empty( $profile_cover_width ) ) {
 		delete_option( 'bp-cover-profile-width' );
