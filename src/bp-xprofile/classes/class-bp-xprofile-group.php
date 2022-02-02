@@ -767,7 +767,6 @@ class BP_XProfile_Group {
 	public static function fetch_default_visibility_levels() {
 		global $wpdb;
 
-		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 		$default_visibility_levels = wp_cache_get( 'default_visibility_levels', 'bp_xprofile' );
 
 		if ( false === $default_visibility_levels ) {
@@ -786,14 +785,16 @@ class BP_XProfile_Group {
 				$profile_table = $bp->table_prefix . 'bp_xprofile_fields';
 			}
 
-			$levels = $wpdb->get_results( "SELECT posts.id, 
-       GROUP_CONCAT(postmeta.meta_key ORDER BY posts.id) meta_keys, 
-       GROUP_CONCAT(postmeta.meta_value ORDER BY posts.id) meta_values 
-FROM {$profile_table} as posts
-INNER JOIN {$profile_meta_table} as postmeta on posts.id = postmeta.object_id
-WHERE ( postmeta.meta_key = 'default_visibility' OR postmeta.meta_key = 'allow_custom_visibility' )
-GROUP BY posts.id
-ORDER BY posts.id" );
+			$levels = $wpdb->get_results(
+				"SELECT xf.id,
+				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
+				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values
+				FROM {$profile_table} as xf
+				INNER JOIN {$profile_meta_table} as xm on xf.id = xm.object_id
+				WHERE ( xm.meta_key = 'default_visibility' OR xm.meta_key = 'allow_custom_visibility' )
+				GROUP BY xf.id
+				ORDER BY xf.id"
+			);
 
 			$default_visibility_levels = array();
 
@@ -802,13 +803,14 @@ ORDER BY posts.id" );
 
 				foreach ( $levels as $level ) {
 
-					$meta_keys = explode( ',', $level->meta_keys );
-					$meta_keys = json_decode( str_replace( '_visibility', '', wp_json_encode( $meta_keys ) ), true );
+					$meta_keys   = explode( ',', $level->meta_keys );
+					$meta_values = explode( ',', $level->meta_values );
 
-					$meta_values                             = explode( ',', $level->meta_values );
+					$meta_keys                               = json_decode( str_replace( '_visibility', '', wp_json_encode( $meta_keys ) ), true );
 					$default_visibility_levels[ $level->id ] = array_combine( $meta_keys, $meta_values );
 				}
 			}
+
 			wp_cache_set( 'default_visibility_levels', $default_visibility_levels, 'bp_xprofile' );
 		}
 
