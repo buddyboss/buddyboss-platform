@@ -1005,6 +1005,12 @@ window.bp = window.bp || {};
 								if ( self.media.length === response.data.menu_order_error_count ) {
 									self.model.unset( 'media' );	
 								}
+								
+								if ( response.data.menu_order_error_count > 1 ) { // Error on more then one file .
+									Backbone.trigger( 'onError', BP_Nouveau.media.multipleErrorOnFile );
+								} else { // Error on single file.
+									Backbone.trigger( 'onError', message );
+								}
 								return _results;
 							}
 
@@ -1023,6 +1029,7 @@ window.bp = window.bp || {};
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else {
+								// File accepted but error on file.
 								var fileErrorCount = 0;
 								if (
 									!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
@@ -1035,15 +1042,16 @@ window.bp = window.bp || {};
 									} );
 								}
 								var errorMessage;
-								if ( fileErrorCount > 1 ) {
+								if ( fileErrorCount > 1 ) { // Error on more then one file .
 									errorMessage = BP_Nouveau.media.multipleErrorOnFile;
 									Backbone.trigger( 'onError', ( errorMessage ) );
-								} else {
+								} else { // Error on single file.
 									errorMessage = file.name + '<br>' + ( response ? response : '' );
 									Backbone.trigger( 'onError', ( errorMessage ) );
 								}
 							}
 						} else {
+							// If uploaded file will more than limit.
 							if (
 								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
 								bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
@@ -4589,12 +4597,12 @@ window.bp = window.bp || {};
 			},
 
 			onError: function ( error, type ) {
-				var erroType = type || 'error';
+				var errorType = type || 'error';
 				this.model.unset( 'errors' );
 				this.model.set(
 					'errors',
 					{
-						type: erroType,
+						type: errorType,
 						value: error
 					}
 				);
