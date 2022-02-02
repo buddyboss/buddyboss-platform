@@ -1585,6 +1585,9 @@ window.bp = window.bp || {};
 								node = _ref[ _i ];
 								_results.push( node.textContent = message );
 							}
+							response.data.menu_order_error_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview.dz-error' ).length;
+							bp.Nouveau.Activity.postForm.removeErrorClass();
+							bp.Nouveau.Activity.postForm.displayMediaError( response.data.menu_order_error_count, self );
 							return _results;
 						}
 					}
@@ -1604,12 +1607,36 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
 					function ( file, response ) {
+						bp.Nouveau.Activity.postForm.removeErrorClass();
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							} else {
+								// File accepted but error on file.
+								var fileErrorCount = 0;
+								if (
+									!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
+									bp.Nouveau.Activity.postForm.dropzone.files.length !== 0
+								) {
+									bp.Nouveau.Activity.postForm.dropzone.files.filter( function ( item ) {
+										if ( 'undefined' !== typeof item.previewElement.className && item.previewElement.className.includes( 'dz-error' ) ) {
+											fileErrorCount++;
+										}
+									} );
+								}
+								bp.Nouveau.Activity.postForm.displayMediaError( fileErrorCount, self );
 							}
 						} else {
-							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) + '<div>' ) );
+							// If uploaded file will more than limit.
+							if (
+								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
+								bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
+								bp.Nouveau.Activity.postForm.dropzone_options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
+							) {
+								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ), 'info' );
+							} else {
+								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_video_type + '. ' + ( response ? response : '' ) + '</div>' ) );
+							}
 							this.removeFile( file );
 						}
 					}
@@ -1618,6 +1645,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
+						var dropzone_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
 						if ( self.video.length ) {
 							for ( var i in self.video ) {
 								if ( file.id === self.video[ i ].id ) {
@@ -1627,6 +1655,12 @@ window.bp = window.bp || {};
 									self.video.splice( i, 1 );
 									self.model.set( 'video', self.video );
 								}
+							}
+							
+							if ( 0 === dropzone_error_count ) {
+								self.model.unset( 'errors' );
+							} else {
+								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
 							}
 						}
 
@@ -1643,7 +1677,13 @@ window.bp = window.bp || {};
 							}
 
 							self.model.unset( 'video' );
-							if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
+							if (
+								$( '#message-feedabck' ).hasClass( 'noMediaError' ) ||
+								(
+									$( '#message-feedabck' ).hasClass( 'bp-feedback error' ) &&
+									0 === dropzone_error_count
+								)
+							) {
 								self.model.unset( 'errors' );
 							}
 						}
