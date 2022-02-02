@@ -767,6 +767,7 @@ class BP_XProfile_Group {
 	public static function fetch_default_visibility_levels() {
 		global $wpdb;
 
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 		$default_visibility_levels = wp_cache_get( 'default_visibility_levels', 'bp_xprofile' );
 
 		if ( false === $default_visibility_levels ) {
@@ -779,23 +780,38 @@ class BP_XProfile_Group {
 				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
 			}
 
-			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
-
-			// Arrange so that the field id is the key and the visibility level the value.
-			$default_visibility_levels = array();
-			foreach ( $levels as $level ) {
-				switch ( $level->meta_key ) {
-					case 'default_visibility':
-						$default_visibility_levels[ $level->object_id ]['default'] = $level->meta_value;
-						break;
-					case 'allow_custom_visibility':
-						$default_visibility_levels[ $level->object_id ]['allow_custom'] = $level->meta_value;
-						break;
-				}
+			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_fields ) ) {
+				$profile_table = $bp->profile->table_name_fields;
+			} else {
+				$profile_table = $bp->table_prefix . 'bp_xprofile_fields';
 			}
 
+			$levels = $wpdb->get_results( "SELECT posts.id, 
+       GROUP_CONCAT(postmeta.meta_key ORDER BY posts.id) meta_keys, 
+       GROUP_CONCAT(postmeta.meta_value ORDER BY posts.id) meta_values 
+FROM {$profile_table} as posts
+INNER JOIN {$profile_meta_table} as postmeta on posts.id = postmeta.object_id
+WHERE ( postmeta.meta_key = 'default_visibility' OR postmeta.meta_key = 'allow_custom_visibility' )
+GROUP BY posts.id
+ORDER BY posts.id" );
+
+			$default_visibility_levels = array();
+
+			// Arrange so that the field id is the key and the visibility level the value.
+			if ( ! empty( $levels ) ) {
+
+				foreach ( $levels as $level ) {
+
+					$meta_keys = explode( ',', $level->meta_keys );
+					$meta_keys = json_decode( str_replace( '_visibility', '', wp_json_encode( $meta_keys ) ), true );
+
+					$meta_values                             = explode( ',', $level->meta_values );
+					$default_visibility_levels[ $level->id ] = array_combine( $meta_keys, $meta_values );
+				}
+			}
 			wp_cache_set( 'default_visibility_levels', $default_visibility_levels, 'bp_xprofile' );
 		}
+
 
 		return $default_visibility_levels;
 	}
