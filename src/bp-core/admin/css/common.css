@@ -2643,15 +2643,14 @@ table tbody td .bb-description {
 
 .bb-grid-style-outer {
   display: flex;
-  width: 180px;
-  justify-content: space-between;
 }
 
 .bb-grid-style-outer .bb-grid-style {
   display: flex;
-  width: 85px;
+  width: 115px;
   flex-direction: column;
   text-align: center;
+  margin-right: 15px;
 }
 
 .bb-grid-style-outer .bb-grid-style input[type="radio"] {
@@ -2664,35 +2663,43 @@ table tbody td .bb-description {
   position: relative;
   display: flex;
   flex-direction: column;
+  color: #999;
 }
 
 .bb-grid-style-outer .bb-grid-style .option:before {
-  content: " ";
-  height: 80px;
-  width: 80px;
-  background: #f0f0f1;
+  content: "";
+  height: 115px;
+  width: 100%;
+  background: #f9f9f9;
   display: flex;
   border-radius: 5px;
   border: 2px solid #ccd0d4;
   transition: all 0.3s ease;
+  box-sizing: border-box;
+  margin-bottom: 5px;
 }
 
 .bb-grid-style-outer .bb-grid-style .option:after {
-  content: " ";
-  width: 40px;
-  height: 20px;
-  border-radius: 2px;
-  background: #c3c4c7;
+  content: "";
+  background-size: cover !important;
   position: absolute;
-  top: 55px;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  border-radius: 3px;
+  bottom: 30px;
 }
 
 .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
-  left: 8px;
+  background: url(../../images/bb-group-directory-left.png) no-repeat center;
+}
+
+html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
+  background: url(../../images/bb-group-directory-left.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-grid-style .option.opt-centered:after {
-  left: 22px;
+  background: url(../../images/bb-group-directory-center.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-grid-style .option span {

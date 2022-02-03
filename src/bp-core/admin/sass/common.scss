@@ -2815,14 +2815,13 @@ table tbody td .bb-description {
 
 .bb-grid-style-outer {
 	display: flex;
-	width: 180px;
-	justify-content: space-between;
 
 	.bb-grid-style {
 		display: flex;
-		width: 85px;
+		width: 115px;
 		flex-direction: column;
 		text-align: center;
+		margin-right: 15px;
 
 		input[type="radio"] {
 			opacity: 0;
@@ -2834,42 +2833,43 @@ table tbody td .bb-description {
 			position: relative;
 			display: flex;
 			flex-direction: column;
+			color: #999;
 
 			&:before {
-				content: " ";
-				height: 80px;
-				width: 80px;
-				background: #f0f0f1;
+				content: "";
+				height: 115px;
+				width: 100%;
+				background: #f9f9f9;
 				display: flex;
 				border-radius: 5px;
 				border: 2px solid #ccd0d4;
 				transition: all 0.3s ease;
+				box-sizing: border-box;
+				margin-bottom: 5px;
 			}
 
 			&:after {
-				content: " ";
-				width: 40px;
-				height: 20px;
-				border-radius: 2px;
-				background: #c3c4c7;
+				content: "";
+				background-size: cover !important;
 				position: absolute;
-				top: 55px;
+				top: 6px;
+				left: 6px;
+				right: 6px;
+				border-radius: 3px;
+				bottom: 30px;
 			}
 
-			&.opt-left {
+			&.opt-left:after {
+				background: url(../../images/bb-group-directory-left.png) no-repeat center;
 
-				&:after {
-					left: 8px;
+				html[dir="rtl"] & {
+					background: url(../../images/bb-group-directory-right.png) no-repeat center;
 				}
 
 			}
 
-			&.opt-centered {
-
-				&:after {
-					left: 22px;
-				}
-
+			&.opt-centered:after {
+				background: url(../../images/bb-group-directory-center.png) no-repeat center;
 			}
 
 			span {
