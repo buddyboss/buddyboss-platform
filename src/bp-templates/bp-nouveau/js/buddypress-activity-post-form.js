@@ -1085,7 +1085,6 @@ window.bp = window.bp || {};
 								bp.Nouveau.Activity.postForm.displayMediaError( fileErrorCount, self );
 							}
 						} else {
-							this.removeFile( file );
 							// If uploaded file will more than limit.
 							if (
 								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
@@ -1097,8 +1096,9 @@ window.bp = window.bp || {};
 							) {
 								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ), 'info' );
 							} else {
-								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
+								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + ' ' + ( response ? response : '' ) + '</div>' ) );
 							}
+							this.removeFile( file );
 						}
 					}
 				);
@@ -1121,7 +1121,9 @@ window.bp = window.bp || {};
 							if ( 0 === dropzone_error_count ) {
 								self.model.unset( 'errors' );
 							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+								if ( file && 'error' !== file.status ) { // Only call when we click on remove on file.
+									bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+								}
 							}
 							
 							// Unset media if all uploaded media has error
@@ -1351,7 +1353,6 @@ window.bp = window.bp || {};
 								bp.Nouveau.Activity.postForm.displayMediaError( fileErrorCount, self );
 							}
 					} else {
-							this.removeFile( file );
 							// If uploaded file will more than limit.
 							if (
 								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
@@ -1363,8 +1364,9 @@ window.bp = window.bp || {};
 							) {
 								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ), 'info' );
 							} else {
-								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_file_type + '. ' + ( response ? response : '' ) + '</div>' ) );
+								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_file_type + ' ' + ( response ? response : '' ) + '</div>' ) );
 							}
+							this.removeFile( file );
 						}
 					}
 				);
@@ -1387,7 +1389,9 @@ window.bp = window.bp || {};
 							if ( 0 === dropzone_error_count ) {
 								self.model.unset( 'errors' );
 							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+								if ( file && 'error' !== file.status ) { // Only call when we click on remove on file.
+									bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+								}
 							}
 						}
 
@@ -1628,7 +1632,7 @@ window.bp = window.bp || {};
 								bp.Nouveau.Activity.postForm.displayMediaError( fileErrorCount, self );
 							}
 						} else {
-							this.removeFile( file );
+
 							// If uploaded file will more than limit.
 							if (
 								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
@@ -1640,8 +1644,9 @@ window.bp = window.bp || {};
 							) {
 								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ), 'info' );
 							} else {
-								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + '. ' + ( response ? response : '' ) + '</div>' ) );
+								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.video.invalid_video_type + ' ' + ( response ? response : '' ) + '</div>' ) );
 							}
+							this.removeFile( file );
 						}
 					}
 				);
@@ -1664,7 +1669,9 @@ window.bp = window.bp || {};
 							if ( 0 === dropzone_error_count ) {
 								self.model.unset( 'errors' );
 							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+								if ( file && 'error' !== file.status ) { // Only call when we click on remove on file.
+									bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+								}
 							}
 						}
 
