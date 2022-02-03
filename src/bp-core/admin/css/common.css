@@ -2634,11 +2634,11 @@ table tbody td .bb-description {
   margin-bottom: 0;
 }
 
-#bp_notification_settings_automatic table.form-table,
-#bp_notification_settings_automatic table.form-table tbody,
-#bp_notification_settings_automatic table.form-table tr,
-#bp_notification_settings_automatic table.form-table th,
-#bp_notification_settings_automatic table.form-table td {
+#bp_notification_settings_automatic table.render-dynamic-notification,
+#bp_notification_settings_automatic table.render-dynamic-notification tbody,
+#bp_notification_settings_automatic table.render-dynamic-notification tr,
+#bp_notification_settings_automatic table.render-dynamic-notification th,
+#bp_notification_settings_automatic table.render-dynamic-notification td {
   display: block;
 }
 
