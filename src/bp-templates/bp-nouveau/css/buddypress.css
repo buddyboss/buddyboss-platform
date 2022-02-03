@@ -12050,7 +12050,7 @@ button[data-bp-tooltip] {
   top: 32px;
 }
 
-#wpadminbar #wp-admin-bar-edit-forumn > .ab-item:before {
+#wpadminbar #wp-admin-bar-edit-forum > .ab-item:before {
   content: "\f464";
   top: 2px;
 }
