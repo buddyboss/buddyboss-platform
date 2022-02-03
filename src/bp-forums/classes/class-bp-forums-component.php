@@ -434,7 +434,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 */
 		public function bb_forums_admin_bar_menu() {
 			global $wp_admin_bar;
-			if ( bp_is_single_item() && bp_is_group() && bp_current_action() === 'forum' && ! bp_is_group_forum_topic() ) {
+			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && ! bp_is_group_forum_topic() ) {
 				$query = new WP_Query(
 					array(
 						'name'      => get_query_var( 'name' ),
@@ -453,7 +453,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					$forum_id = bbp_get_forum_id();
 				}
 			}
-			if ( bp_is_single_item() && bp_is_group() && bp_current_action() === 'forum' && bp_is_group_forum_topic() ) {
+			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && bp_is_group_forum_topic() ) {
 				$query = new WP_Query(
 					array(
 						'name'      => bp_action_variable( 1 ),
@@ -476,7 +476,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				$wp_admin_bar->add_menu(
 					array(
 						'parent' => '',
-						'id'     => 'edit-forumn',
+						'id'     => 'edit-forum',
 						'title'  => __( 'Edit Forum', 'buddyboss' ),
 						'href'   => get_edit_post_link( $forum_id ),
 					)
