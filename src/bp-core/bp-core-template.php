@@ -4590,6 +4590,93 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	}
 
 	return false;
+}
 
+/**
+ * Get user followers count.
+ *
+ * @param int|null $user_id user id to get followers count. If user id is null then get current logged-in user id.
+ *                 Default false.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_followers_count( $user_id = false ) {
+
+	if ( ! function_exists( 'bp_is_active' ) && ! function_exists( 'bp_is_activity_follow_active' ) ) {
+		return;
+	}
+
+	$is_follow_active = bp_is_active( 'activity' ) && function_exists('bp_is_activity_follow_active') && bp_is_activity_follow_active();
+
+	if ( $user_id == false ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( $is_follow_active && is_user_logged_in() ) {
+		$total_followers = 0;
+		$follower_ids    = bp_get_follower_ids( array( 'user_id' => $user_id ) );
+
+		if ( ! empty( $follower_ids ) ) {
+			$total_followers = sizeof( explode( ',', $follower_ids ) );
+		}
+
+		if ( $total_followers == 0 ) {
+			$followers = __( '<b>0</b> followers', 'buddyboss' );
+		} elseif ( $total_followers == 1 ) {
+			$followers = __( '<b>1</b> follower', 'buddyboss' );
+		} else {
+			$followers = sprintf( __( '<b>%s</b> followers', 'buddyboss' ), $total_followers );
+		}
+		?>
+
+		<div class="followers-wrap"><?php echo $followers; ?></div>
+		<?php
+	}
+}
+
+/**
+ * Get user following count.
+ *
+ * @param int|null $user_id user id to get following count. If user id is null then get current logged-in user id.
+ *                 Default false.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_following_count( $user_id = false ) {
+
+	if ( ! function_exists( 'bp_is_active' ) && ! function_exists( 'bp_is_activity_follow_active' ) ) {
+		return;
+	}
+
+	$is_follow_active = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
+
+	if ( $user_id == false ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( $is_follow_active && is_user_logged_in() ) {
+		$total_following = 0;
+		$following_ids   = bp_get_following_ids( array( 'user_id' => $user_id ) );
+
+		if ( ! empty( $following_ids ) ) {
+			$total_following = sizeof( explode( ',', $following_ids ) );
+		}
+
+		if ( $total_following == 0 ) {
+			$following = __( '<b>0</b> following', 'buddyboss' );
+		} elseif ( $total_following == 1 ) {
+			$following = __( '<b>1</b> following', 'buddyboss' );
+		} else {
+			$following = sprintf( __( '<b>%s</b> following', 'buddyboss' ), $total_following );
+		}
+		?>
+
+		<div class="following-wrap"><?php echo $following; ?></div>
+		<?php
+	}
 }
 
