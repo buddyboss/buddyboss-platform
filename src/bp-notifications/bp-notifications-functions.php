@@ -842,6 +842,61 @@ add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 
 add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
 
 /**
+ * Function to verify that notifications background process enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_notifications_background_enabled() {
+	return class_exists( 'BP_Notifications_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+}
+
+/**
+ * Add notification using background process.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $user_ids
+ * @param int    $item_id
+ * @param int    $secondary_item_id
+ * @param string $component_name
+ * @param string $component_action
+ * @param string $date_notified
+ * @param bool   $is_new
+ */
+function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true ) {
+	if (
+		empty( $user_ids ) ||
+		empty( $item_id ) ||
+		empty( $secondary_item_id ) ||
+		empty( $component_name ) ||
+		empty( $component_action )
+	) {
+		return;
+	}
+
+	if ( empty( $date_notified ) ) {
+		$date_notified = bp_core_current_time();
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $user_id,
+				'item_id'           => $item_id,
+				'secondary_item_id' => $secondary_item_id,
+				'component_name'    => $component_name,
+				'component_action'  => $component_action,
+				'date_notified'     => $date_notified,
+				'is_new'            => (int) $is_new,
+			)
+		);
+	}
+
+}
+
+/**
  * Check and re-start the background process if queue is not empty.
  *
  * @since BuddyBoss [BBVERSION]
