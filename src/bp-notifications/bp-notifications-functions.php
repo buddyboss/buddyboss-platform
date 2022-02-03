@@ -840,3 +840,17 @@ function bb_heartbeat_on_screen_notifications( $response = array(), $data = arra
 // Heartbeat receive for on-screen notification.
 add_filter( 'heartbeat_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
 add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications', 11, 2 );
+
+/**
+ * Check and re-start the background process if queue is not empty.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_notifications_handle_cron_health_check() {
+	global $bb_notifications_background_updater;
+	if ( $bb_notifications_background_updater->is_updating() ) {
+		$bb_notifications_background_updater->handle_cron_healthcheck();
+	}
+}
+
+add_action( 'bb_init_notifications_background_updater', 'bb_notifications_handle_cron_health_check' );
