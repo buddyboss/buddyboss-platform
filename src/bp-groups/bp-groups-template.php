@@ -1433,6 +1433,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 		$group =& $groups_template->group;
 	}
 
+	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
 	/**
 	 * Filters the excerpt of a group description.
 	 *
@@ -1441,7 +1442,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 	 * @param string $value Excerpt of a group description.
 	 * @param object $group Object for group whose description is made into an excerpt.
 	 */
-	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length ), $group );
+	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length, array( 'ending' => $group_link ) ), $group );
 }
 
 /**
