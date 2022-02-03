@@ -196,14 +196,20 @@
 
 	.list-wrap {
 		padding-top: 0;
-		border-radius: 3px;
 
 		.item {
 			padding: 0 15px;
 
 			.item-block {
+				display: -webkit-box;
+				display: -ms-flexbox;
 				display: flex;
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				-ms-flex-flow: column;
 				flex-flow: column;
+				-webkit-box-align: start;
+				-ms-flex-align: start;
 				align-items: flex-start;
 
 				* {
@@ -244,7 +250,6 @@
 		}
 
 		.group-avatar-wrap {
-			margin-left: 15px;
 
 			img.avatar {
 				width: auto;
@@ -259,18 +264,36 @@
 
 	&.grid {
 
-		.item-entry .group-avatar-wrap img.avatar {
+		.only-list-view {
+			display: none;
+		}
+
+		&.bb-cover-enabled .group-avatar-wrap img.avatar {
 			margin-top: -47px;
 		}
 
-		.only-list-view {
-			display: none;
+		.group-avatar-wrap {
+			margin-left: 15px;
+
+			img.avatar {
+				margin-top: 10px;
+			}
+
+		}
+
+		.list-wrap {
+			border-radius: 3px;
 		}
 
 	}
 
 	&:not(.grid) {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-ms-flex-flow: column;
 		flex-flow: column;
 
 		.only-grid-view {
@@ -282,11 +305,20 @@
 			margin: 0;
 			padding: 0;
 
+			&:first-child .list-wrap {
+				border-radius: 3px 3px 0 0;
+			}
+
+			&:last-child .list-wrap {
+				border-radius: 0 0 3px 3px;
+			}
+
 			.list-wrap {
 				display: flex;
 				background: #fafafa;
 				border: 1px solid #eee;
 				padding: 15px;
+				border-radius: 0;
 			}
 
 			.item-avatar {
@@ -328,9 +360,12 @@
 
 			}
 
+			&.group-no-avatar .item {
+				width: 100%;
+			}
+
 			.item-block {
 				padding-right: 15px;
-				margin-bottom: 10px;
 
 				.last-activity {
 					margin-bottom: 0;
@@ -340,6 +375,11 @@
 			.item-desc {
 				flex: 1;
 				padding-right: 20px;
+				margin-top: 10px;
+
+				&:empty {
+					display: none;
+				}
 
 				p {
 					font-size: 14px;
@@ -349,6 +389,9 @@
 			}
 
 			.group-footer-wrap {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
 				-webkit-box-pack: justify;
 				-ms-flex-pack: justify;
 				justify-content: space-between;
@@ -359,6 +402,8 @@
 	}
 
 	.bs-group-members {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
 		margin-bottom: 15px;
 
@@ -389,8 +434,14 @@
 				border-radius: 50%;
 				background-color: #f9f9f9;
 				border: 2px solid #fff;
+				display: -webkit-box;
+				display: -ms-flexbox;
 				display: flex;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
 				align-items: center;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
 				justify-content: center;
 			}
 
@@ -399,6 +450,8 @@
 	}
 
 	.footer-button-wrap {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
 
 		.action {

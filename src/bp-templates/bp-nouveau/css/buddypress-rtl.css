@@ -951,7 +951,6 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap {
   padding-top: 0;
-  border-radius: 3px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item {
@@ -959,8 +958,15 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column;
   flex-flow: column;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
   align-items: flex-start;
 }
 
@@ -995,10 +1001,6 @@ a.layout-grid-view {
   text-align: initial;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list li.item-entry .group-avatar-wrap {
-  margin-right: 15px;
-}
-
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry .group-avatar-wrap img.avatar {
   width: auto;
   max-width: 75px;
@@ -1006,16 +1008,33 @@ a.layout-grid-view {
   border-radius: 0;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list.grid .item-entry .group-avatar-wrap img.avatar {
-  margin-top: -47px;
-}
-
 .buddypress-wrap ul.bp-list.groups-dir-list.grid .only-list-view {
   display: none;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list.grid.bb-cover-enabled .group-avatar-wrap img.avatar {
+  margin-top: -47px;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list.grid .group-avatar-wrap {
+  margin-right: 15px;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list.grid .group-avatar-wrap img.avatar {
+  margin-top: 10px;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list.grid .list-wrap {
+  border-radius: 3px;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column;
   flex-flow: column;
 }
 
@@ -1029,11 +1048,20 @@ a.layout-grid-view {
   padding: 0;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry:first-child .list-wrap {
+  border-radius: 3px 3px 0 0;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry:last-child .list-wrap {
+  border-radius: 0 0 3px 3px;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .list-wrap {
   display: flex;
   background: #fafafa;
   border: 1px solid #eee;
   padding: 15px;
+  border-radius: 0;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item-avatar {
@@ -1074,9 +1102,12 @@ a.layout-grid-view {
   margin-bottom: 0;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry.group-no-avatar .item {
+  width: 100%;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item-block {
   padding-left: 15px;
-  margin-bottom: 10px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item-block .last-activity {
@@ -1086,6 +1117,11 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item-desc {
   flex: 1;
   padding-left: 20px;
+  margin-top: 10px;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item-desc:empty {
+  display: none;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item-desc p {
@@ -1094,12 +1130,17 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .group-footer-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin-bottom: 15px;
 }
@@ -1132,12 +1173,20 @@ a.layout-grid-view {
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
