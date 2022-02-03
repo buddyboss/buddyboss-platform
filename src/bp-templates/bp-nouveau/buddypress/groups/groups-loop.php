@@ -64,8 +64,7 @@ bp_nouveau_before_loop(); ?>
 
 							<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-								<p class="item-meta group-details only-list-view"><?php bp_nouveau_group_meta(); ?></p>
-								<p class="item-meta group-details only-grid-view">
+								<p class="item-meta group-details">
 								<?php
 									$meta = bp_nouveau_get_group_meta();
 									echo $meta['status'];
