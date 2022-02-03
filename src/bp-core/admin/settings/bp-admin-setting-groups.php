@@ -183,7 +183,13 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style
 		$args = array();
 		$args['class'] = 'group-gride-style group-layout-options';
-		$this->add_field( 'bb-group-grid-style', __( 'Grid Style', 'buddyboss' ), 'bb_admin_setting_group_grid_style',  'radio', $args );
+		$field_title = sprintf(
+			__( 'Grid Style %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
+			'<br/><span>',
+			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
+			'</span>'
+		);
+		$this->add_field( 'bb-group-grid-style', $field_title, 'bb_admin_setting_group_grid_style',  'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Elements
 		$args = [
