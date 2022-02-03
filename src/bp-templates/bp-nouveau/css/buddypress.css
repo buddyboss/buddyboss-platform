@@ -16858,6 +16858,10 @@ img.emojioneemoji {
   text-align: center;
 }
 
+.dropzone.document-dropzone .dz-preview.dz-error.dz-single-error .dz-details {
+  border-width: 2px;
+}
+
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details {
   border-color: #ef3e46;
   background-color: transparent;
@@ -16884,6 +16888,10 @@ img.emojioneemoji {
 .dropzone.video-dropzone .dz-preview.dz-error.dz-file-preview .dz-remove,
 .dropzone.video-dropzone .dz-preview.dz-error.dz-complete.dz-file-preview .dz-remove {
   background-color: transparent;
+}
+
+.dropzone.video-dropzone .dz-preview.dz-error.dz-single-error .dz-details {
+  border-width: 2px;
 }
 
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details {
