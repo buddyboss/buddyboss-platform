@@ -196,7 +196,7 @@
 
 	.list-wrap {
 		padding-top: 0;
-		border-radius: 4px;
+		border-radius: 3px;
 
 		.item {
 			padding: 0 15px;
@@ -329,8 +329,8 @@
 			}
 
 			.item-block {
-				flex: 0 0 32%;
 				padding-right: 15px;
+				margin-bottom: 10px;
 
 				.last-activity {
 					margin-bottom: 0;
@@ -367,6 +367,7 @@
 			float: left;
 			margin-right: -6px;
 			position: relative;
+			z-index: 1;
 
 			a {
 				text-decoration: none;
