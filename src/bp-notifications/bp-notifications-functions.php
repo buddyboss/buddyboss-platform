@@ -881,6 +881,11 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 	}
 
 	foreach ( $user_ids as $user_id ) {
+
+		if ( empty( $user_id ) ) {
+			continue;
+		}
+
 		bp_notifications_add_notification(
 			array(
 				'user_id'           => $user_id,

@@ -182,7 +182,6 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
  * @param BP_Messages_Message $message Message object.
  */
 function bp_messages_message_sent_add_notification( $message ) {
-
 	if ( ! empty( $message->recipients ) ) {
 		if (
 				function_exists( 'bb_notifications_background_enabled' ) &&
@@ -190,8 +189,8 @@ function bp_messages_message_sent_add_notification( $message ) {
 				count( $message->recipients ) > 20
 		) {
 			global $bb_notifications_background_updater;
-			$recipients       = (array) $message->recipients;
-			$user_ids = wp_list_pluck( $recipients, 'user_id' );
+			$recipients = (array) $message->recipients;
+			$user_ids   = wp_list_pluck( $recipients, 'user_id' );
 			$bb_notifications_background_updater->data(
 					array(
 							array(
