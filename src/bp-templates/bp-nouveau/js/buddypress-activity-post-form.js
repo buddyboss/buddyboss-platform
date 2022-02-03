@@ -523,6 +523,8 @@ window.bp = window.bp || {};
 					errorMessage = errorMessage + mediaErrorMessage;
 					Backbone.trigger( 'onError', errorMessage );
 				}
+			} else {
+				self.model.unset( 'errors' );
 			}
 		},
 
@@ -1045,6 +1047,11 @@ window.bp = window.bp || {};
 								bp.Nouveau.Activity.postForm.removeErrorClass();
 								bp.Nouveau.Activity.postForm.displayMediaError( response.data.menu_order_error_count, self );
 								return _results;
+							} else {
+								// Upload corrupt file - Upload big image size - Upload valid file then remove big image size error and display corrupt file error.
+								response.data.menu_order_error_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview.dz-error' ).length;
+								bp.Nouveau.Activity.postForm.removeErrorClass();
+								bp.Nouveau.Activity.postForm.displayMediaError( response.data.menu_order_error_count, self );
 							}
 
 							
