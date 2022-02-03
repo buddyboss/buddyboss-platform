@@ -199,7 +199,13 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 				[ 'element_name' => 'join-buttons', 'element_label' => __( 'Join Buttons', 'buddyboss' )]
 			]
 		];
-		$this->add_field( 'bb-group-elements', __( 'Elements', 'buddyboss' ), 'bb_admin_setting_group_elements', 'checkbox', $args );
+		$field_title = sprintf(
+			__( 'Elements %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
+			'<br/><span>',
+			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
+			'</span>'
+		);
+		$this->add_field( 'bb-group-elements', $field_title, 'bb_admin_setting_group_elements', 'checkbox', $args );
 
 
 		/**
