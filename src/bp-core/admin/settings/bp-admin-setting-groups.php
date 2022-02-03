@@ -185,7 +185,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$args['class'] = 'group-gride-style group-layout-options';
 		$field_title = sprintf(
 			__( 'Grid Style %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
-			'<br/><span>',
+			'<br/><span class="bb-head-notice">',
 			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
 			'</span>'
 		);
@@ -207,7 +207,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		];
 		$field_title = sprintf(
 			__( 'Elements %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
-			'<br/><span>',
+			'<br/><span class="bb-head-notice">',
 			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
 			'</span>'
 		);

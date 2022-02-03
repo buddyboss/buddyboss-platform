@@ -2647,47 +2647,47 @@ table tbody td .bb-description {
 
 .bb-grid-style-outer .bb-grid-style {
   display: flex;
-  width: 115px;
   flex-direction: column;
-  text-align: center;
   margin-left: 15px;
+  text-align: center;
+  width: 115px;
 }
 
 .bb-grid-style-outer .bb-grid-style input[type="radio"] {
+  height: 0;
   opacity: 0;
   visibility: hidden;
-  height: 0;
 }
 
 .bb-grid-style-outer .bb-grid-style .option {
-  position: relative;
   display: flex;
-  flex-direction: column;
   color: #999;
+  flex-direction: column;
+  position: relative;
 }
 
 .bb-grid-style-outer .bb-grid-style .option:before {
-  content: "";
-  height: 115px;
-  width: 100%;
   background: #f9f9f9;
-  display: flex;
-  border-radius: 5px;
   border: 2px solid #ccd0d4;
-  transition: all 0.3s ease;
+  border-radius: 5px;
   box-sizing: border-box;
+  content: "";
+  display: flex;
+  height: 115px;
   margin-bottom: 5px;
+  transition: all 0.3s ease;
+  width: 100%;
 }
 
 .bb-grid-style-outer .bb-grid-style .option:after {
-  content: "";
   background-size: cover !important;
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  left: 6px;
+  content: "";
   border-radius: 3px;
   bottom: 30px;
+  right: 6px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
 }
 
 .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
@@ -2695,7 +2695,7 @@ table tbody td .bb-description {
 }
 
 html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
-  background: url(../../images/bb-group-directory-left.png) no-repeat center;
+  background: url(../../images/bb-group-directory-right.png) no-repeat center;
 }
 
 .bb-grid-style-outer .bb-grid-style .option.opt-centered:after {
@@ -2703,12 +2703,28 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
 }
 
 .bb-grid-style-outer .bb-grid-style .option span {
-  font-size: 14px;
   color: #999;
+  font-size: 14px;
   line-height: 2;
 }
 
 .bb-grid-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
 .bb-grid-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before {
   border-color: #2370b1;
+}
+
+.bb-head-notice {
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  color: #999;
+  display: inline-block;
+  margin-top: 10px;
+  max-width: 150px;
+  padding: 5px 10px;
+}
+
+.bb-head-notice a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
 }
