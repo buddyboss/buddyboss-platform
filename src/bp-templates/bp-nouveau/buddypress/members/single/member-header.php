@@ -12,10 +12,10 @@ remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_bu
 
 if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) : ?>
 
-	<div id="cover-image-container1" class="item-header-wrap">
+	<div id="cover-image-container" class="item-header-wrap">
 
 		<?php $class = bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img'; ?>
-		<div id="item-header-cover-image" class="<?php esc_attr_e( $class ); ?>">
+		<div id="item-header-cover-image" class="<?php echo esc_attr( $class ); ?>">
 
 			<div id="item-header-avatar">
 				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>

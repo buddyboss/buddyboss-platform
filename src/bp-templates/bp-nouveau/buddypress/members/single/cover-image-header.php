@@ -63,7 +63,7 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 
 		<?php $class = bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img'; ?>
 
-		<div id="item-header-cover-image" class="item-header-wrap <?php esc_attr_e( $class ); ?>">
+		<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( $class ); ?>">
 
 			<div id="item-header-avatar">
 				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
