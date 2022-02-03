@@ -23,13 +23,18 @@ class BP_RankMath_Title implements IPaper {
 	 * @return string
 	 */
 	public function title() {
-		if ( bp_is_user() ) {
+		if ( bp_is_user() && bp_is_current_component( 'xprofile' ) ) {
 			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
 			if ( empty( $title ) ) {
 				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
 			}
 		} else {
-			$title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : __( 'Social Group', 'buddyboss' );
+			$action = bp_current_action();
+			$title  = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : esc_html__( 'Social Group', 'buddyboss' );
+			if ( 'admin' === $action ) {
+				$action = esc_html__( 'Manage', 'buddyboss' );
+			}
+			$title = ucfirst( $action ) . ' - ' . $title;
 		}
 
 		return $title . ' - ' . bp_get_site_name();
@@ -92,8 +97,11 @@ function bp_helper_rankmath_group_page_support( $title ) {
 	}
 
 	if (
-		bp_is_active( 'groups' ) && ! empty( buddypress()->groups->current_group )
-		|| bp_is_user()
+		bp_is_active( 'groups' ) &&
+		(
+			! empty( buddypress()->groups->current_group ) ||
+			bp_is_current_component( 'groups' )
+		)
 	) {
 		$group_page = new BP_RankMath_Title();
 		$title      = $group_page->title();
