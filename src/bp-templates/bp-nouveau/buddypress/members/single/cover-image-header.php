@@ -18,18 +18,19 @@ $cover_image_url          = bp_attachments_get_attachment(
 		'item_id'    => $displayed_user->id,
 	)
 );
+$has_default_cover        = bb_attachment_get_cover_image_class( $displayed_user->id, 'user' );
 
 if ( ! empty( $cover_image_url ) ) {
 	$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
 	$has_cover_image      = ' has-cover-image';
 	if ( '' !== $cover_image_position ) {
-		$has_cover_image_position = 'has-position';
+		$has_cover_image_position = ' has-position';
 	}
 }
 ?>
 
 <div id="cover-image-container">
-	<div id="header-cover-image" class="<?php echo esc_attr( $has_cover_image_position . $has_cover_image ); ?>">
+	<div id="header-cover-image" class="<?php echo esc_attr( $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
 		<?php
 		if ( ! empty( $cover_image_url ) ) {
 			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( '' !== $cover_image_position ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : '' ) . ( '' !== $cover_image_position ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : '' ) . ' alt="" />';
@@ -40,7 +41,7 @@ if ( ! empty( $cover_image_url ) ) {
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 
-			<?php if ( ! empty( $cover_image_url ) ) { ?>
+			<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( $displayed_user->id ) ) { ?>
 				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-move"></i>
 				</a>
@@ -109,13 +110,15 @@ if ( ! empty( $cover_image_url ) ) {
 			);
 			?>
 
-			<?php bp_nouveau_member_header_bubble_buttons(
+			<?php
+			bp_nouveau_member_header_bubble_buttons(
 				array(
 					'container'         => 'div',
 					'button_element'    => 'button',
 					'container_classes' => array( 'bb_more_options' ),
 				)
-			); ?>
+			);
+			?>
 
 		</div><!-- #item-header-content -->
 	</div><!-- #item-header-cover-image -->

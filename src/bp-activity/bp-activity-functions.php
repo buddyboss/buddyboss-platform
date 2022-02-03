@@ -5698,7 +5698,7 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 /**
  * Function will use for how many groups to display at a time in the activity post form.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.6
  *
  * @return int
  */

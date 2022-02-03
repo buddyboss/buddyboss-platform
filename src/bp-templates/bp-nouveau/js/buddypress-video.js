@@ -42,7 +42,9 @@ window.bp = window.bp || {};
 
 			var bodySelector = $( 'body' );
 
-			this.thumbnail_xhr = null;
+			this.thumbnail_xhr          = null;
+			this.thumbnail_interval     = null;
+			this.thumbnail_max_interval = 6;
 
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
@@ -1090,44 +1092,70 @@ window.bp = window.bp || {};
 
 					$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
 
-					this.thumbnail_xhr = $.ajax(
-						{
-							type: 'POST',
-							url: BP_Nouveau.ajaxurl,
-							data: data,
-							success: function ( response ) {
-								if ( response.success ) {
-
-									var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
-									if ( response.data.default_images ) {
-										ulSelector.html( '' );
-										ulSelector.html( response.data.default_images );
-									}
-
-									if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-										ulSelector.html( '' );
-									}
-									// ulSelector.closest( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
-									if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
-										$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
-										if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
-											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
-											$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
-										}
-
-									} else if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
-										$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
-									}
-
-								}
-							}
-						}
-					);
+					this.getEditVideoThumbnail( data );
+					this.thumbnail_interval = setInterval( bp.Nouveau.Video.getEditVideoThumbnail, 6000, data );
 				} else {
 					$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
 					$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
 				}
 			}
+		},
+
+		getEditVideoThumbnail: function ( data ) {
+
+			// Check if max interval exceed then stop ajax request.
+			if ( 0 === bp.Nouveau.Video.thumbnail_max_interval ) {
+				clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+			}
+
+			bp.Nouveau.Video.thumbnail_xhr = $.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					cache: false,
+					success: function ( response ) {
+						if ( response.success ) {
+
+							bp.Nouveau.Video.thumbnail_max_interval--;
+
+							// Check if thumbnail is generated then stop ajax request.
+							if ( 'yes' === response.data.ffmpeg_generated ) {
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+							}
+
+							var ulSelector = $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' );
+							if ( response.data.default_images ) {
+								ulSelector.html( '' );
+								ulSelector.html( response.data.default_images );
+							}
+
+							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
+								ulSelector.html( '' );
+							}
+
+							if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
+								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
+								if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
+									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
+									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-loader animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
+								}
+
+							} else if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
+								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
+							}
+
+						} else {
+							// If found any error from the response then stop ajax request.
+							clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+						}
+					},
+					error: function () {
+						// If found any error from server then stop ajax request.
+						clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+					}
+				}
+			);
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
@@ -1157,6 +1185,9 @@ window.bp = window.bp || {};
 			$( '.bp-video-thumbnail-uploader' ).find( '.bp-video-thumbnail-submit' ).addClass( 'is-disabled' );
 			$( '.bp-video-thumbnail-uploader' ).removeClass( 'opened-edit-thumbnail' );
 			$( window ).scroll();
+
+			// If close popup then stop ajax request.
+			clearTimeout( bp.Nouveau.Video.thumbnail_interval );
 		},
 
 		openAlbumUploader: function ( event ) {

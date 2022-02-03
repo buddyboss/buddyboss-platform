@@ -920,7 +920,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 				$group_link               = 'javascript:void(0);';
-				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
 				$legacy_user_avatar_name  = '-avatar2';
 
@@ -968,7 +968,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$groups_table             = $prefix . 'bp_groups';
 					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 					$group_link               = 'javascript:void(0);';
-					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+					$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 					$legacy_group_avatar_name = '-groupavatar-full';
 					$legacy_user_avatar_name  = '-avatar2';
 
@@ -1924,7 +1924,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$groups_table             = $prefix . 'bp_groups';
 			$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 			$group_link               = 'javascript:void(0);';
-			$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+			$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 			$legacy_group_avatar_name = '-groupavatar-full';
 			$legacy_user_avatar_name  = '-avatar2';
 
@@ -1987,7 +1987,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 				$group_link               = 'javascript:void(0);';
-				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
 				$legacy_user_avatar_name  = '-avatar2';
 
@@ -2173,7 +2173,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 				$group_link               = 'javascript:void(0);';
-				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
 				$legacy_user_avatar_name  = '-avatar2';
 

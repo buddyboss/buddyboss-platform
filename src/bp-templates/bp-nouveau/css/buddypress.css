@@ -917,6 +917,42 @@ a.layout-grid-view {
   }
 }
 
+.bp-list.groups-list:not(.grid) .only-grid-view {
+  display: none;
+}
+
+.bp-list.groups-list .group-list {
+  padding-top: 0;
+}
+
+.bp-list.groups-list .group-list-header {
+  position: relative;
+  padding: 15px 0;
+}
+
+.bp-list.groups-list .group-list-header .item-avatar {
+  position: relative;
+  z-index: 1;
+}
+
+.bp-list.groups-list .group-list-header .bs-group-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.bp-list.groups-list .group-list-header .bs-group-cover img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 @media screen and (min-width: 32em) {
   #activity-stream {
     clear: both;
@@ -6303,7 +6339,7 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #buddypress #header-cover-image {
-  background-color: #555;
+  background-color: #fff;
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -15334,6 +15370,11 @@ body.login .login-popup .mfp-close:hover {
   opacity: 0;
 }
 
+.bb-item-cover-wrap.bb-video-cover-wrap img {
+  min-width: auto;
+  max-height: 100%;
+}
+
 .bb-item-thumb {
   position: relative;
   z-index: 1;
@@ -21301,9 +21342,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .video-thumbnail-custom img {
   height: 100%;
-  width: 100%;
+  width: auto;
+  margin: 0 auto;
+  display: block;
   min-height: 120px;
-  object-fit: cover;
   border-radius: 4px;
 }
 
@@ -21422,10 +21464,12 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image img {
   max-width: inherit;
-  object-fit: cover;
-  width: 100%;
   cursor: pointer;
   border-radius: 5px;
+  height: 100%;
+  width: auto;
+  margin: 0 auto;
+  display: block;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-remove:after {
@@ -21538,11 +21582,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li img {
-  object-fit: cover;
   min-height: 155px;
   max-height: 155px;
   border-radius: 5px;
-  width: 100%;
+  width: auto;
+  height: 100%;
+  margin: 0 auto;
+  display: block;
 }
 
 .bp-video-thumbnail-uploader {
@@ -21968,6 +22014,8 @@ div.dropzone.dz-started .dz-default.dz-message {
 }
 
 .dropzone.video-dropzone .dz-video-thumbnail img {
+  display: block;
+  margin: 0 auto;
   height: 100%;
   width: 100%;
   object-fit: cover;

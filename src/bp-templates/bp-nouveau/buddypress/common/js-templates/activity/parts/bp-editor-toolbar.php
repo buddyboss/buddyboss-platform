@@ -4,8 +4,8 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-editor-toolbar.php.
  *
- * @since   BuddyBoss [BBVERSION]
- * @version [BBVERSION]
+ * @since   BuddyBoss 1.8.6
+ * @version 1.8.6
  */
 
 ?>
