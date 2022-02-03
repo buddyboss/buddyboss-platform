@@ -138,6 +138,54 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
+
+		// Group Headers.
+		$this->add_section( 'bp_groups_headers_settings', esc_html__( 'Group Headers', 'buddyboss' ), '', 'bp_group_headers_tutorial' );
+
+		// Header Styles.
+		$field_title = sprintf(
+			__( 'Header Style %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
+			'<br/><span>',
+			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
+			'</span>'
+		);
+		$this->add_field( 'bp-group-header-style', $field_title, 'bp_admin_setting_callback_group_header_style', 'string' );
+
+		// enable or disable group header elements.
+		$args = array(
+			'class'    => 'group-elements',
+			'elements' => array(
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Group Type', 'buddyboss' )
+				),
+				array(
+					'element_name'  => 'last-activity', 
+					'element_label' => __( 'Last Activity', 'buddyboss' )
+				),
+				array(
+					'element_name'  => 'group-description', 
+					'element_label' => __( 'Group Description', 'buddyboss' )
+				),
+				array(
+					'element_name'  => 'group-organizers', 
+					'element_label' => __( 'Group Organizers', 'buddyboss' )
+				),
+				array(
+					'element_name'  => 'group-privacy', 
+					'element_label' => __( 'Group Privacy', 'buddyboss' )
+				)
+			)
+		);
+
+		$field_title = sprintf(
+			__( 'Elements %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
+			'<br/><span>',
+			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
+			'</span>'
+		);
+		$this->add_field( 'bb-group-elements', $field_title, 'bb_admin_setting_group_elements', 'checkbox', $args );
+
 		// Register Group Types sections.
 		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ), '', 'bp_group_types_tutorial' );
 

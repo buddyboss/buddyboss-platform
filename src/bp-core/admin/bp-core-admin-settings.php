@@ -2342,3 +2342,93 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
 	<?php
 }
+
+/** Group Headers Section ************************************************************/
+
+/**
+ * Link to Group Headers Settings tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_group_headers_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => '',
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Headers
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_group_header_style() {
+	?>
+	<div class="bb-grid-header-styles-outer">
+		<?php
+			$cover_profile_width = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'radio',
+					'id'          => 'bp-group-header-style-',
+					'name'        => 'bp-group-header-style',
+					'label'       => esc_html__( 'Header Style', 'buddyboss' ),
+					'disabled'    => true,
+					'opt_wrapper' => true,
+					'value'       => 'left',
+					'options'     => array(
+						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
+						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered'),
+					),
+				)
+			);
+			$cover_profile_width->render_field();
+		?>
+	</div>
+		<p class="description"><?php _e( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Headers
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_group_elements( $args ) {
+	?>
+		<div class='bb-group-elements'>
+			<?php
+				foreach ( $args['elements'] as $element ) {
+					$element_name        = $element['element_name'];
+					$cover_group_element = new BP_Admin_Setting_Fields(
+						array(
+							'type'        => 'checkbox',
+							'id'          => 'bb-group-element-' . $element_name,
+							'label'       => $element['element_label'],
+							'disabled'    => true,
+							'value'       => 1,
+						)
+					);
+					?>
+					<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
+						<?php $cover_group_element->render_field(); ?>
+					</div>
+					<?php
+				}
+			?>
+		</div>
+		<p class="description"><?php _e( 'Select which elements to show in your group headers.', 'buddyboss' ); ?></p>
+		<?php
+}
