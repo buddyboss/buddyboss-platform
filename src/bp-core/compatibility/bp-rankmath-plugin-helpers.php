@@ -30,7 +30,7 @@ class BP_RankMath_Title implements IPaper {
 			}
 		} else {
 			$action = bp_current_action();
-			$title  = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : esc_html__( 'Groups', 'buddyboss' );
+			$title  = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : get_the_title() ;
 			if ( 'admin' === $action ) {
 				$action = esc_html__( 'Manage', 'buddyboss' );
 			}
