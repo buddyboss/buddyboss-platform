@@ -1045,19 +1045,19 @@ window.bp = window.bp || {};
 								}
 								
 								bp.Nouveau.Activity.postForm.removeErrorClass();
-								bp.Nouveau.Activity.postForm.displayMediaError( response.data.menu_order_error_count, self );
+								file.error = true;
+								file.error_message = message;
 								return _results;
-							} else {
-								// Upload corrupt file - Upload big image size - Upload valid file then remove big image size error and display corrupt file error.
-								response.data.menu_order_error_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview.dz-error' ).length;
-								bp.Nouveau.Activity.postForm.removeErrorClass();
-								bp.Nouveau.Activity.postForm.displayMediaError( response.data.menu_order_error_count, self );
 							}
 
 							
 						} else {
-							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback + '</div>' ) );
-							this.removeFile( file );
+							//if ( 0 !== file.size ) {
+								file.error = true;
+								file.error_message = BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback;
+							//} else {
+								//this.removeFile( file );
+							//}
 						}
 					}
 				);
@@ -1071,34 +1071,12 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else {
 								// File accepted but error on file.
-								var fileErrorCount = 0;
-								if (
-									!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
-									bp.Nouveau.Activity.postForm.dropzone.files.length !== 0
-								) {
-									bp.Nouveau.Activity.postForm.dropzone.files.filter( function ( item ) {
-										if ( 'undefined' !== typeof item.previewElement.className && item.previewElement.className.includes( 'dz-error' ) ) {
-											fileErrorCount++;
-										}
-									} );
-								}
-								bp.Nouveau.Activity.postForm.displayMediaError( fileErrorCount, self );
+								file.error = true;
+								file.error_message =  response;
 							}
 						} else {
-							this.removeFile( file );
-							// If uploaded file will more than limit.
-							if (
-								!_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) &&
-								bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
-								(
-									'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
-									bp.Nouveau.Activity.postForm.dropzone.options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
-								)
-							) {
-								Backbone.trigger( 'onError', ( '<div>' + ( response ? response : '' ) + '</div>' ), 'info' );
-							} else {
-								Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + ' ' + ( response ? response : '' ) + '</div>' ) );
-							}
+								file.error = true;
+								file.error_message =  BP_Nouveau.media.invalid_media_type + ' ' + ( response ? response : '' );
 						}
 					}
 				);
@@ -1112,16 +1090,11 @@ window.bp = window.bp || {};
 								if ( file.id === self.media[ i ].id ) {
 									if ( ! _.isUndefined( self.media[ i ].saved ) && ! self.media[ i ].saved ) {
 										bp.Nouveau.Media.removeAttachment( file.id );
+										bp.Nouveau.Activity.postForm.dropzone.maxFileError = false;
 									}
 									self.media.splice( i, 1 );
 									self.model.set( 'media', self.media );
 								}
-							}
-
-							if ( 0 === dropzone_error_count ) {
-								self.model.unset( 'errors' );
-							} else {
-								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
 							}
 							
 							// Unset media if all uploaded media has error
@@ -1150,9 +1123,51 @@ window.bp = window.bp || {};
 								self.model.unset( 'errors' );
 							}
 						}
+						
+						if ( 'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.maxFileError &&
+						     true !== bp.Nouveau.Activity.postForm.dropzone.maxFileError ) {
+							if ( 0 === dropzone_error_count ) {
+								self.model.unset( 'errors' );
+							} else {
+								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
+							}
+						}
 					}
 				);
-
+				
+				bp.Nouveau.Activity.postForm.dropzone.on(
+					'complete',
+					function ( file ) {
+						var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( item => true === item.error ).length;
+						if ( 0 !== errorCount ) {
+							if (
+								'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.files &&
+								bp.Nouveau.Activity.postForm.dropzone.files.length !== 0 &&
+								'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
+								bp.Nouveau.Activity.postForm.dropzone.options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
+							) {
+								bp.Nouveau.Activity.postForm.dropzone.maxFileError = true;
+								Backbone.trigger( 'onError', ( '<div>' + ( bp.Nouveau.Activity.postForm.dropzone.options.dictMaxFilesExceeded ) + '</div>' ), 'info' );
+							} else {
+								if ( errorCount > 1 ) { // Error on more then one file .
+									Backbone.trigger( 'onError', BP_Nouveau.media.multipleErrorOnFile );
+								} else { // Error on single file.
+										if ( true === file.error ) {
+											var mediaName = file.name;
+											var mediaErrorMessage = file.error_message;
+											var errorMessage;
+											if ( '' !== mediaName ) {
+												errorMessage = mediaName + '<br>';
+											}
+											errorMessage = errorMessage + mediaErrorMessage;
+											Backbone.trigger( 'onError', errorMessage );
+										}
+								}
+							}
+						}
+					}
+				);
+				
 				self.$el.find( '#activity-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
 			}
