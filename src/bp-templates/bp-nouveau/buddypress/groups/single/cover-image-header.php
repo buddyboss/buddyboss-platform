@@ -91,16 +91,16 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 						<div class="bp-group-parent-wrap flex align-items-center">
 							<?php bp_group_list_parents(); ?>
 							<div class="bp-parent-group-title-wrap">
-								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( groups_get_group( $parent_id ) ) ); ?>"><?php echo wp_kses( bp_get_group_name( groups_get_group( $parent_id ) ) ); ?></a>
+								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( groups_get_group( $parent_id ) ) ); ?>"><?php echo wp_kses_post( bp_get_group_name( groups_get_group( $parent_id ) ) ); ?></a>
 								<i class="bb-icon-chevron-right"></i>
-								<span class="bp-current-group-title"><?php echo esc_attr( bp_get_group_name() ); ?></span>
+								<span class="bp-current-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></span>
 							</div>
 						</div>
 					<?php } ?>
 				<?php endif; ?>
 
 				<div class="flex align-items-center bp-group-title-wrap">
-					<h2 class="bb-bp-group-title"><?php echo esc_attr( bp_get_group_name() ); ?></h2>
+					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
 					<?php if ( function_exists( 'bp_get_group_status_description' ) ) { ?>
 						<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 					<?php } ?>

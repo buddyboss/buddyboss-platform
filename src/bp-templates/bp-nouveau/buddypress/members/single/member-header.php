@@ -30,10 +30,10 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 				<div class="flex">
 					<div class="bb-user-content-wrap">
 						<div class="flex align-items-center member-title-wrap">
-							<h2 class="user-nicename"><?php echo bp_core_get_user_displayname( bp_displayed_user_id() ); ?></h2>
+							<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_displayed_user_id() ) ); ?></h2>
 							<?php
 							if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-								echo bp_get_user_member_type( bp_displayed_user_id() );
+								echo wp_kses_post( bp_get_user_member_type( bp_displayed_user_id() ) );
 							}
 							?>
 						</div>
@@ -64,11 +64,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 									<?php bb_get_followers_count(); ?>
 									<?php bb_get_following_count(); ?>
 								</div>
-								<?php echo bp_get_user_social_networks_urls(); ?>
+								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
 						<?php } else { ?>
 							<div class="flex align-items-center">
-								<?php echo bp_get_user_social_networks_urls(); ?>
+								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
 						<?php } ?>
 					</div>
