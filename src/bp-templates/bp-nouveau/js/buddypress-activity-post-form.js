@@ -1166,7 +1166,7 @@ window.bp = window.bp || {};
 				
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'complete',
-					function ( file ) {
+					function () {
 						var queuedFiles    = bp.Nouveau.Activity.postForm.dropzone.getQueuedFiles().length;
 						var uploadingFiles = bp.Nouveau.Activity.postForm.dropzone.getUploadingFiles().length;
 						if (
@@ -1203,7 +1203,9 @@ window.bp = window.bp || {};
 							});
 						} else {
 							if ( 0 === queuedFiles && 0 === uploadingFiles ) {
-								var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( item => true === item.error ).length;
+								var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( function ( item ) {
+									return true === item.error;
+								}).length;
 								if ( 0 !== errorCount && true !== bp.Nouveau.Activity.postForm.dropzone.maxFileError ) {
 									bp.Nouveau.Activity.postForm.displayMediaError( errorCount, self );
 								}
