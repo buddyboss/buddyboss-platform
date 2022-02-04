@@ -31,13 +31,13 @@ class BP_RankMath_Title implements IPaper {
 		} else {
 			$action = bp_current_action();
 			$title  = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : esc_html__( 'Social Group', 'buddyboss' );
-			if( 'admin' === $action ) {
+			if ( 'admin' === $action ) {
 				$action = esc_html__( 'Manage', 'buddyboss' );
 			}
-			if( 'my-groups' === $action ) {
+			if ( 'my-groups' === $action ) {
 				$action = esc_html__( 'Groups', 'buddyboss' );
 			}
-			if( isset( $action ) && !empty( $action ) ) {
+			if ( isset( $action ) && ! empty( $action ) ) {
 				$title = ucfirst( $action ) . ' - ' . $title;
 			}
 		}
