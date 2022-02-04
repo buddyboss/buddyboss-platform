@@ -162,7 +162,7 @@
 .buddypress-wrap ul.bp-list.groups-dir-list {
 	display: -ms-grid;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(275px, 25%));
+	grid-template-columns: repeat(auto-fit, minmax(275px, 100%));
 	-ms-flex-pack: distribute;
 	justify-content: space-around;
 
@@ -463,6 +463,14 @@
 
 		}
 
+	}
+
+	@include medium-small-up() {
+		grid-template-columns: repeat(auto-fit, minmax(275px, 50%));
+	}
+
+	@include large-up() {
+		grid-template-columns: repeat(auto-fit, minmax(275px, 33.3333%));
 	}
 
 }

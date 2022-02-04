@@ -920,7 +920,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list {
   display: -ms-grid;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(275px, 25%));
+  grid-template-columns: repeat(auto-fit, minmax(275px, 100%));
   -ms-flex-pack: distribute;
   justify-content: space-around;
 }
@@ -1196,6 +1196,18 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap .action .generic-button {
   float: left;
+}
+
+@media screen and (min-width: 32em) {
+  .buddypress-wrap ul.bp-list.groups-dir-list {
+    grid-template-columns: repeat(auto-fit, minmax(275px, 50%));
+  }
+}
+
+@media screen and (min-width: 75em) {
+  .buddypress-wrap ul.bp-list.groups-dir-list {
+    grid-template-columns: repeat(auto-fit, minmax(275px, 33.3333%));
+  }
 }
 
 @media screen and (min-width: 32em) {
