@@ -86,7 +86,7 @@ window.bp = window.bp || {};
 					errorMessage = mediaName + '<br>';
 				}
 				errorMessage = errorMessage + mediaErrorMessage;
-				Backbone.trigger( 'onError', ( errorMessage ) );
+				Backbone.trigger( 'onError', '<div>' + errorMessage + '</div>' );
 			} );
 
 			Backbone.trigger('mediaprivacy');
@@ -512,7 +512,13 @@ window.bp = window.bp || {};
 		displayMediaError: function ( count, self ) {
 			if ( 0 !== count ) {
 				if ( count > 1 ) { // Error on more then one file .
-					Backbone.trigger( 'onError', BP_Nouveau.media.multipleErrorOnFile );
+					self.model.set(
+						'errors',
+						{
+							type: 'error',
+							value: '<div>' + BP_Nouveau.media.multipleErrorOnFile + '</div>'
+						}
+					);
 				} else { // Error on single file.
 					var mediaName         = self.$el.find( '.dz-preview.dz-error .dz-details .dz-filename span' ).html();
 					var mediaErrorMessage = self.$el.find( '.dz-preview.dz-error .dz-error-message span' ).html();
@@ -521,8 +527,16 @@ window.bp = window.bp || {};
 						errorMessage = mediaName + '<br>';
 					}
 					errorMessage = errorMessage + mediaErrorMessage;
-					Backbone.trigger( 'onError', errorMessage );
+					self.model.set(
+						'errors',
+						{
+							type: 'error',
+							value: '<div>' + errorMessage + '</div>'
+						}
+					);
 				}
+				// Disable post submit button
+				$( '#whats-new-form' ).addClass( 'focus-in--empty' );
 			} else {
 				self.model.unset( 'errors' );
 			}
@@ -1133,8 +1147,14 @@ window.bp = window.bp || {};
 							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles > bp.Nouveau.Activity.postForm.dropzone.files.length
 						) {
 							self.$el.find('.dropzone.open').removeClass('test');
+							// If error is not related to multiple file then set false.
+							bp.Nouveau.Activity.postForm.dropzone.maxFileError = false;
 							if ( 0 === dropzone_error_count ) {
 								self.model.unset( 'errors' );
+								if ( 0 !== bp.Nouveau.Activity.postForm.dropzone.files.length ) {
+									// Enable post submit button
+									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+								}
 							} else {
 								bp.Nouveau.Activity.postForm.displayMediaError( dropzone_error_count, self );
 							}
@@ -1162,8 +1182,15 @@ window.bp = window.bp || {};
 							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
 							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles < bp.Nouveau.Activity.postForm.dropzone.files.length
 						) {
+							// If error is related to multiple file then set true.
 							bp.Nouveau.Activity.postForm.dropzone.maxFileError = true;
-							Backbone.trigger( 'onError', ( '<div>' + ( bp.Nouveau.Activity.postForm.dropzone.options.dictMaxFilesExceeded ) + '</div>' ), 'info' );
+							self.model.set(
+								'errors',
+								{
+									type: 'info',
+									value: '<div>' + bp.Nouveau.Activity.postForm.dropzone.options.dictMaxFilesExceeded + '</div>'
+								}
+							);
 							var $this = this;
 							bp.Nouveau.Activity.postForm.dropzone.files.map( function ( item, key ) {
 								if ( key >= bp.Nouveau.Activity.postForm.dropzone.options.maxFiles ) {
@@ -1174,11 +1201,7 @@ window.bp = window.bp || {};
 							if ( 0 === queuedFiles && 0 === uploadingFiles ) {
 								var errorCount = bp.Nouveau.Activity.postForm.dropzone.files.filter( item => true === item.error ).length;
 								if ( 0 !== errorCount && true !== bp.Nouveau.Activity.postForm.dropzone.maxFileError ) {
-									if ( errorCount > 1 ) { // Error on more then one file .
-										Backbone.trigger( 'onError', BP_Nouveau.media.multipleErrorOnFile );
-									} else { // Error on single file.
-										bp.Nouveau.Activity.postForm.displayMediaError( errorCount, self );
-									}
+									bp.Nouveau.Activity.postForm.displayMediaError( errorCount, self );
 								}
 							}
 						}
