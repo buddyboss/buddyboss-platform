@@ -1146,7 +1146,9 @@ window.bp = window.bp || {};
 							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
 							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles > bp.Nouveau.Activity.postForm.dropzone.files.length
 						) {
-							self.$el.find('.dropzone.open').removeClass('bb-max-files-reached');
+							if ( self.$el.find( '.dropzone.open' ).hasClass( 'bb-max-files-reached' ) ) {
+								self.$el.find('.dropzone.open').removeClass('bb-max-files-reached');
+							}
 							// If error is not related to multiple file then set false.
 							bp.Nouveau.Activity.postForm.dropzone.maxFileError = false;
 							if ( 0 === dropzone_error_count ) {
