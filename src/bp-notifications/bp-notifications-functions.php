@@ -982,7 +982,7 @@ function bb_notification_exclude_group_message_notification( $component_names ) 
 
 	if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
 		if ( in_array( 'messages', $component_names, true ) ) {
-			unset( $component_names['messages'] );
+			unset( $component_names[ array_search( 'messages', $component_names ) ] );
 		}
 	}
 
