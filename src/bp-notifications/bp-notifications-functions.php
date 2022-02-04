@@ -615,12 +615,14 @@ function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
 
 	$count = wp_cache_get( $user_id, 'bp_notifications_unread_count' );
 	if ( false === $count ) {
+		add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 		$count = BP_Notifications_Notification::get_total_count(
 			array(
 				'user_id' => $user_id,
 				'is_new'  => true,
 			)
 		);
+		remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 		wp_cache_set( $user_id, $count, 'bp_notifications_unread_count' );
 	}
 
@@ -965,4 +967,25 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	}
 
 	return $excluded_actions;
+}
+
+/**
+ * Exclude the message count from the notifications.
+ *
+ * @param array $component_names Component names.
+ *
+ * @since BuddtyBoss [BBVERSION]
+ *
+ * @return array Return the component name.
+ */
+function bb_notification_exclude_group_message_notification( $component_names ) {
+
+	if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
+		if ( in_array( 'messages', $component_names, true ) ) {
+			unset( $component_names['messages'] );
+		}
+	}
+
+	return $component_names;
+
 }
