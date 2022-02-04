@@ -125,6 +125,8 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			add_action( 'bp_init', array( $this, 'setup_components' ), 7 );
 			// Setup meta title.
 			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 999, 1 );
+			// Admin bar menu for forum.
+			add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
 
 			parent::setup_actions();
 		}
@@ -423,6 +425,135 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			}
 
 			return $title;
+		}
+
+		/**
+		 * Admin bar menu for forum and topic.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_forums_admin_bar_menu() {
+			global $wp_admin_bar;
+			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && ! bp_is_group_forum_topic() ) {
+				$query = new WP_Query(
+					array(
+						'name'      => get_query_var( 'name' ),
+						'post_type' => bbp_get_forum_post_type(),
+						'orderby'   => 'ID',
+						'order'     => 'ASC',
+					)
+				);
+				$forum = isset( $query->post ) ? $query->post : '';
+				if ( empty( $forum ) ) {
+					return;
+				}
+				$forum_id = isset( $forum->ID ) ? $forum->ID : '';
+			} else {
+				if ( bbp_is_single_forum() ) {
+					$forum_id = bbp_get_forum_id();
+				}
+			}
+			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && bp_is_group_forum_topic() ) {
+				$query = new WP_Query(
+					array(
+						'name'      => bp_action_variable( 1 ),
+						'post_type' => bbp_get_topic_post_type(),
+						'orderby'   => 'ID',
+						'order'     => 'ASC',
+					)
+				);
+				$topic = isset( $query->post ) ? $query->post : '';
+				if ( empty( $topic ) ) {
+					return;
+				}
+				$topic_id = isset( $topic->ID ) ? $topic->ID : '';
+			} else {
+				if ( bbp_is_single_topic() ) {
+					$topic_id = bbp_get_topic_id();
+				}
+			}
+			if ( ! empty( $forum_id ) ) {
+				$wp_admin_bar->add_menu(
+					array(
+						'parent' => '',
+						'id'     => 'edit-forum',
+						'title'  => __( 'Edit Forum', 'buddyboss' ),
+						'href'   => get_edit_post_link( $forum_id ),
+					)
+				);
+			}
+			if ( ! empty( $topic_id ) ) {
+				$menu_id = 'discussion';
+				$wp_admin_bar->add_menu(
+					array(
+						'title' => esc_html__( 'Edit Discussion', 'buddyboss' ),
+						'id'    => $menu_id,
+						'href'  => bbp_get_topic_edit_url( $topic_id ),
+					)
+				);
+				$wp_admin_bar->add_menu(
+					array(
+						'parent' => $menu_id,
+						'title'  => ! bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss' ) : esc_html__( 'Close Discussion', 'buddyboss' ),
+						'id'     => 'open-' . $menu_id,
+						'href'   => wp_nonce_url(
+							add_query_arg(
+								array(
+									'action'   => 'bbp_toggle_topic_close',
+									'topic_id' => $topic_id,
+								)
+							),
+							'close-topic_' . $topic_id
+						),
+					)
+				);
+				$wp_admin_bar->add_menu(
+					array(
+						'parent' => $menu_id,
+						'title'  => esc_html__( 'Merge Discussion', 'buddyboss' ),
+						'id'     => 'merge-' . $menu_id,
+						'href'   => add_query_arg(
+							array(
+								'action' => 'merge',
+							),
+							bbp_get_topic_edit_url( $topic_id )
+						),
+					)
+				);
+				$wp_admin_bar->add_menu(
+					array(
+						'parent' => $menu_id,
+						'title'  => esc_html__( 'Move to Trash', 'buddyboss' ),
+						'id'     => 'trash-' . $menu_id,
+						'href'   => wp_nonce_url(
+							add_query_arg(
+								array(
+									'action'     => 'bbp_toggle_topic_trash',
+									'sub_action' => 'trash',
+									'topic_id'   => $topic_id,
+								)
+							),
+							'trash-' . bbp_get_topic_post_type() . '_' . $topic_id
+						),
+					)
+				);
+				$wp_admin_bar->add_menu(
+					array(
+						'parent' => $menu_id,
+						'title'  => esc_html__( 'Mark as Spam', 'buddyboss' ),
+						'id'     => 'spam-' . $menu_id,
+						'href'   => wp_nonce_url(
+							add_query_arg(
+								array(
+									'action'   => 'bbp_toggle_topic_spam',
+									'topic_id' => $topic_id,
+								)
+							),
+							'spam-topic_' . $topic_id
+						),
+					)
+				);
+			}
 		}
 	}
 endif;
