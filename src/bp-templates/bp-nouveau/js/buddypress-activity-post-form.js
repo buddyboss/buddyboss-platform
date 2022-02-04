@@ -4034,9 +4034,10 @@ window.bp = window.bp || {};
 			postValidate: function () {
 				var $whatsNew = this.$el.find( '#whats-new' );
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+				var dropzone_error_check = this.$el.find( '.dz-preview.dz-error' ).length;
 				content     = content.replace( /&nbsp;/g, ' ' );
 				
-				if ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
+				if ( dropzone_error_check === 0 && ( $( $.parseHTML( content ) ).text().trim() !== '' || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) ) {
 					this.$el.removeClass( 'focus-in--empty' );
 				} else {
 					this.$el.addClass( 'focus-in--empty' );
@@ -4143,7 +4144,10 @@ window.bp = window.bp || {};
 									}
 
 									// Enable post submit button
-									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+									var dropzone_error_check = self.$el.find( '.dz-preview.dz-error' ).length;
+									if ( dropzone_error_check === 0 ) {
+										$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+									}
 								},
 							}
 						}
