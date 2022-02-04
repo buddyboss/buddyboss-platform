@@ -692,6 +692,8 @@ window.bp = window.bp || {};
 			// Buttons.
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 
 			$( document ).on( 'keyup', this, this.keyUp );
@@ -1927,6 +1929,61 @@ window.bp = window.bp || {};
 				}
 
 				target.removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event.
+				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+			}
+		},
+
+		/**
+		 * [buttonHover description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		 buttonHover: function ( event ) {
+			var target = $( event.currentTarget ), action = target.data( 'bp-btn-action' ),
+				item       = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
+				object     = item.data( 'bp-item-component' );
+
+			// Simply let the event fire if we don't have needed values.
+			if ( ! action || ! item_id || ! object ) {
+				return event;
+			}
+
+			// Stop event propagation.
+			event.preventDefault();
+
+			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+
+				// support for buddyboss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					target.attr( 'data-balloon', target.data( 'title' ) );
+				} else {
+					target.text( target.data( 'title' ) );
+				}
+
+				target.removeClass( 'bp-toggle-action-button' );
+				return false;
+			}
+		},
+
+		/**
+		 * [buttonHoverout description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		 buttonHoverout: function ( event ) {
+			var target = $( event.currentTarget );
+
+			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
+
+				// support for buddyboss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
+				} else {
+					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
+				}
+
 				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
 		},
