@@ -1173,7 +1173,9 @@ window.bp = window.bp || {};
 							'undefined' !== typeof bp.Nouveau.Activity.postForm.dropzone.options.maxFiles &&
 							bp.Nouveau.Activity.postForm.dropzone.options.maxFiles <= bp.Nouveau.Activity.postForm.dropzone.files.length
 						) {
-							self.$el.find( '.dropzone.open' ).addClass( 'bb-max-files-reached' );
+							if ( ! self.$el.find( '.dropzone.open' ).hasClass( 'dz-max-files-reached' ) ) {
+								self.$el.find( '.dropzone.open' ).addClass( 'bb-max-files-reached' );
+							}
 						}
 						
 						if (
