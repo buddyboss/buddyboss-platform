@@ -1962,6 +1962,7 @@ window.bp = window.bp || {};
 				}
 
 				target.removeClass( 'bp-toggle-action-button' );
+				target.addClass( 'bp-toggle-action-button-hover' );
 				return false;
 			}
 		},
@@ -1975,7 +1976,7 @@ window.bp = window.bp || {};
 		 buttonHoverout: function ( event ) {
 			var target = $( event.currentTarget );
 
-			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
+			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
@@ -1984,6 +1985,7 @@ window.bp = window.bp || {};
 					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
 				}
 
+				target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
 				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
 		},
