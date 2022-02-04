@@ -974,7 +974,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
  *
  * @param array $component_names Component names.
  *
- * @since BuddtyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @return array Return the component name.
  */
