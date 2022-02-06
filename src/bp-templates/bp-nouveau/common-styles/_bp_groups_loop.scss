@@ -75,6 +75,50 @@
 
 }
 
+//Leave group confirmation popups
+.bb-leave-group-popup {
+
+	.modal-container {
+		padding-bottom: 0;
+	}
+
+	.bb-model-header {
+		background-color: #fff;
+		box-shadow: inset 0 -1px 0 #e7e9eb;
+
+		h3 {
+			margin: 0;
+		}
+
+	}
+
+	.bb-leave-group-content {
+		padding: 20px 0;
+
+		p {
+			margin-bottom: 0;
+		}
+
+	}
+
+	.bb-model-footer {
+		background: #fafafa;
+		box-shadow: inset 0 1px 0 #e7e9eb;
+		display: block;
+		margin: 0 -30px;
+		padding: 15px 30px;
+		text-align: right;
+
+		.bb-close-leave-group {
+			color: #92949d;
+			margin-right: 20px;
+		}
+
+	}
+
+}
+
+
 // If BP Dir Navs or user screen main navs are selected as vertical
 // We need to just adjust the loop item elements a little
 // to cope with the decreased width.

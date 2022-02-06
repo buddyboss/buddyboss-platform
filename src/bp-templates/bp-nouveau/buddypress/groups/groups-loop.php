@@ -110,6 +110,32 @@ bp_nouveau_before_loop(); ?>
 
 	</ul>
 
+	<!-- Leave Group confirmation popup -->
+	<div class="bb-leave-group-popup" style="display: none">
+		<transition name="modal">
+			<div class="modal-mask bb-white bbm-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><span class="target_name">Leave Group</span></h4>
+							<a class="bb-close-leave-group bb-model-close-button" href="#">
+								<span class="bb-icon bb-icon-close"></span>
+							</a>
+						</header>
+						<div class="bb-leave-group-content">
+							<p>Are you sure you want to leave <span class="bb-group-name"></span></p>
+						</div>
+						<footer class="bb-model-footer flex align-items-center">
+							<a class="bb-close-leave-group" href="#">Cancel</a>
+							<a class="button push-right bb-confirm-leave-group" href="#">Confirm</a>
+						</footer>
+
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div> <!-- .bb-leave-group-popup -->
+
 	<?php bp_nouveau_pagination( 'bottom' ); ?>
 
 <?php else : ?>
