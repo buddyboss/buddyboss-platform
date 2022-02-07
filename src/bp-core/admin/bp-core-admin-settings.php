@@ -733,7 +733,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 	?>
 	<div class="">
 		<?php
-			new BP_Admin_Setting_Fields(
+			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-profile-width',
@@ -751,7 +751,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 	</div>
 	<div class="">
 		<?php
-			new BP_Admin_Setting_Fields(
+			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-profile-height',
@@ -1069,7 +1069,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 	?>
 	<div class="">
 		<?php
-			new BP_Admin_Setting_Fields(
+			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-group-width',
@@ -1087,7 +1087,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 	</div>
 	<div class="">
 		<?php
-			new BP_Admin_Setting_Fields(
+			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
 					'id'          => 'bp-cover-group-height',
@@ -1988,7 +1988,7 @@ function bb_admin_setting_group_grid_style() {
 ?>
 	<div class="bb-grid-style-outer">
 		<?php
-			$cover_profile_width = new BP_Admin_Setting_Fields(
+			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'radio',
 					'id'          => 'bb-group-grid-style-',
@@ -2002,7 +2002,6 @@ function bb_admin_setting_group_grid_style() {
 					),
 				)
 			);
-			$cover_profile_width->render_field();
 		?>
 	</div>
 	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
@@ -2023,18 +2022,17 @@ function bb_admin_setting_group_elements( $args ) {
 	echo "<div class='bb-group-elements'>";
 	foreach ($args['elements'] as $element) {
 		$element_name = $element['element_name'];
-		$cover_profile_width = new BP_Admin_Setting_Fields(
-			array(
-				'type'        => 'checkbox',
-				'id'          => 'bb-group-element-' . $element_name,
-				'label'       => $element['element_label'],
-				'disabled'    => true,
-				'value'       => $element_name,
-			)
-		);
 	?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
-			<?php $cover_profile_width->render_field(); ?>
+			<?php new BB_Admin_Setting_Fields(
+					array(
+							'type'        => 'checkbox',
+							'id'          => 'bb-group-element-' . $element_name,
+							'label'       => $element['element_label'],
+							'disabled'    => true,
+							'value'       => $element_name,
+					)
+			); ?>
 		</div>
 	<?php
 	}

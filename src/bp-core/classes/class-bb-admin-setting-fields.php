@@ -9,14 +9,14 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
+if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 
 	/**
 	 * Load BuddyBoss plugin admin area.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BP_Admin_Setting_Fields {
+	class BB_Admin_Setting_Fields {
 
 		/**
 		 * Contain field attributes to render in the admin setting page.
