@@ -2256,6 +2256,13 @@ img.emojioneemoji {
 
 	}
 
+	&.dz-single-error {
+
+		.dz-image {
+			border-width: 2px;
+		}
+	}
+
 	.dz-details {
 		display: block;
 		position: absolute;
@@ -2269,6 +2276,13 @@ img.emojioneemoji {
 
 //Document Dropzone when error
 .dropzone.document-dropzone .dz-preview.dz-error {
+
+	&.dz-single-error {
+
+		.dz-details {
+			border-width: 2px;
+		}
+	}
 
 	&.dz-preview .dz-details {
 		border-color: #ef3e46;
@@ -2302,6 +2316,13 @@ img.emojioneemoji {
 	&.dz-file-preview .dz-remove,
 	&.dz-complete.dz-file-preview .dz-remove {
 		background-color: transparent;
+	}
+
+	&.dz-single-error {
+
+		.dz-details {
+			border-width: 2px;
+		}
 	}
 
 	&.dz-preview .dz-details {
