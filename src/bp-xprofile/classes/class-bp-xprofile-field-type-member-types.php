@@ -254,17 +254,16 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * @return string profile type name.
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
-
-		if ( is_int( $field_value ) ) {
-			$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
-			if ( '' === $member_type_name || false === $member_type_name ) {
-				return esc_html__( '---', 'buddyboss' );
-			}
-
-			return $member_type_name;
+		if ( empty( $field_value ) || ! is_int( $field_value ) ) {
+			return $field_value;
 		}
 
-		return $field_value;
+		$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
 
+		if ( '' === $member_type_name || false === $member_type_name ) {
+			return esc_html__( '---', 'buddyboss' );
+		}
+
+		return $member_type_name;
 	}
 }
