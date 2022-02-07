@@ -290,7 +290,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		 */
 		private function render_checkbox_field() {
 			?>
-			<input type="checkbox" name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" value="1" class="regular-text <?php echo esc_attr( $this->field['class'] ); ?>" <?php disabled( $this->field['disabled'] ); ?> <?php checked( true, $this->field['value'] ); ?>>
+			<input type="checkbox" name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" value="<?php echo $this->field['value']; ?>" class="regular-text <?php echo esc_attr( $this->field['class'] ); ?>" <?php disabled( $this->field['disabled'] ); ?> <?php checked( $this->field['selected'], $this->field['value'] ); ?>>
 
 			<?php if ( ! empty( $this->field['label'] ) ) { ?>
 				<label for="<?php echo esc_attr( $this->field['id'] ); ?>">
