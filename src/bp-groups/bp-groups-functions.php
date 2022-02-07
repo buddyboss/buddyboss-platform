@@ -4546,8 +4546,10 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			);
 			?>
 			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
-				<img src="<?php echo $avatar; ?>"
-					alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+					<img src="<?php echo $avatar; ?>"
+						alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
+				</a>
 			</span>
 			<?php
 		}
