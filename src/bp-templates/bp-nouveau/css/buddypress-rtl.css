@@ -984,6 +984,24 @@ a.layout-grid-view {
   text-decoration: none;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta {
+  clear: none;
+  display: inline;
+  float: none;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta + .item-meta.last-activity:before,
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta .group-visibility + .group-type:before {
+  background-color: #8d8f97;
+  border-radius: 100%;
+  content: "";
+  display: inline-block;
+  height: 4px;
+  margin: 0 3px 0 5px;
+  vertical-align: middle;
+  width: 4px;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry {
   flex: none !important;
   max-width: initial !important;
