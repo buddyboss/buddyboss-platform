@@ -3599,6 +3599,30 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   max-width: 100%;
 }
 
+.activity-video-preview .activity-link-preview-container {
+  border: 0;
+}
+
+.activity-video-preview .activity-link-preview-container .activity-link-preview-title {
+  margin: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt {
+  width: 100%;
+}
+
+.activity-video-preview .activity-link-preview-excerpt > p {
+  margin-bottom: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt .bb-video-wrapper {
+  margin-bottom: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt iframe {
+  width: 100%;
+}
+
 .activity-link-preview-image {
   margin-bottom: 10px;
 }
