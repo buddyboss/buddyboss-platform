@@ -1180,7 +1180,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', __( 'sometime', 'buddyboss' ) );
+	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is right now.
@@ -1189,7 +1189,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', __( 'right now', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( "a second", 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1198,11 +1198,12 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$ago_text = apply_filters( 'bp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) );
+	$ago_text = apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
 		YEAR_IN_SECONDS,
+		YEAR_IN_SECONDS / 6,
 		30 * DAY_IN_SECONDS,
 		WEEK_IN_SECONDS,
 		DAY_IN_SECONDS,
@@ -1263,25 +1264,30 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? __( "a year", 'buddyboss' ) : sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( "a year", 'buddyboss' ) : sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
+					break;
+				case YEAR_IN_SECONDS / 6:
+					$month_seconds = floor( $since / ( 30 * DAY_IN_SECONDS ) );
+					$output = sprintf( _n( '%s month', '%s months', $month_seconds, 'buddyboss' ), $month_seconds );
 					break;
 				case 30 * DAY_IN_SECONDS:
-					$output = $count < 2 ? __( "a month", 'buddyboss' ) : sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
+					$week_seconds = floor( $since / WEEK_IN_SECONDS );
+					$output = $count < 2 ? sprintf( _n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ), $week_seconds ) : sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
 					break;
 				case WEEK_IN_SECONDS:
-					$output = $count < 2 ? __( "a week", 'buddyboss' ) : sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( "a week", 'buddyboss' ) : sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
 					break;
 				case DAY_IN_SECONDS:
-					$output = $count < 2 ? __( "a day", 'buddyboss' ) : sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( "a day", 'buddyboss' ) : sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
 					break;
 				case HOUR_IN_SECONDS:
-					$output = $count < 2 ? __( "an hour", 'buddyboss' ) : sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( "an hour", 'buddyboss' ) : sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
 					break;
 				case MINUTE_IN_SECONDS:
-					$output = $count < 2 ? __( "a minute", 'buddyboss' ) : sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( "a minute", 'buddyboss' ) : sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
 					break;
 				default:
-					$output = $count < 2 ? __( "a second", 'buddyboss' ) : sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? $right_now_text : sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
 			}
 
 			// No output, so happened right now.
@@ -1292,9 +1298,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	if ( $output != $right_now_text ) {
-		$output = sprintf( $ago_text, $output );
-	}
+	$output = sprintf( $ago_text, $output );
 
 	/**
 	 * Filters the English-language representation of the time elapsed since a given date.
