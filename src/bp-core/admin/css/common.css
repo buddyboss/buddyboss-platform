@@ -36,6 +36,8 @@ TABLE OF CONTENTS:
 10.0 On-screen Notifications
 11.0 Notices UI
 12.0 Profile Photo
+13.0 Group Directories Enhancement
+14.0 BB Pro Active/Inactive Notices
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -2635,7 +2637,7 @@ table tbody td .bb-description {
 }
 
 /*------------------------------------------------------------------------------
- * 12.0 Group Directories Enhancement
+ * 13.0 Group Directories Enhancement
  *----------------------------------------------------------------------------*/
 .bb-group-element {
   margin-bottom: 10px;
@@ -2713,6 +2715,9 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
   border-color: #2370b1;
 }
 
+/*------------------------------------------------------------------------------
+ * 14.0 BB Pro Active/Inactive Notices
+ *----------------------------------------------------------------------------*/
 .bb-head-notice {
   background-color: #f6f6f6;
   border-radius: 4px;
@@ -2727,4 +2732,33 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
   color: inherit;
   font-weight: 700;
   text-decoration: none;
+}
+
+.bb-pro-inactive > th:before {
+  content: "\e97c";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  margin-right: 5px;
+  vertical-align: top;
+  display: inline-block;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.bb-pro-inactive > td {
+  opacity: 0.3;
+}
+
+.bb-pro-inactive > td,
+.bb-pro-inactive > td * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.bb-pro-active > th:before {
+  display: none;
+}
+
+.bb-pro-active .bb-head-notice {
+  display: none;
 }
