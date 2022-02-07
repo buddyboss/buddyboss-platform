@@ -1935,7 +1935,7 @@ function bb_admin_setting_group_elements( $args ) {
 				'id'          => 'bb-group-element-' . $element_name,
 				'label'       => $element['element_label'],
 				'disabled'    => true,
-				'value'       => 1,
+				'value'       => $element_name,
 			)
 		);
 	?>
