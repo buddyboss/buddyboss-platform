@@ -1069,9 +1069,7 @@ window.bp = window.bp || {};
 							
 						} else {
 							file.error = true;
-							if ( 0 === file.size ) {
-								file.previewElement.classList.add( 'dz-error' );
-							}
+							file.previewElement.classList.add( 'dz-error' );
 							$( file.previewElement ).find( '.dz-error-message span' ).html( response.data.feedback );
 						}
 					}
