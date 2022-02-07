@@ -148,7 +148,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
-		'multipleErrorOnFile'                => sprintf( '%s<br>%s', esc_html__( 'There was a problem uploading some of your photos.', 'buddyboss' ), esc_html__( 'Click on a file to see the error.', 'buddyboss' ) ),
+		'multipleErrorOnFile'                => sprintf( '%s<br>%s', esc_html__( 'There was a problem uploading some of your files.', 'buddyboss' ), esc_html__( 'Click on a file to see the error.', 'buddyboss' ) ),
 	);
 
 	if ( bp_is_single_album() ) {
