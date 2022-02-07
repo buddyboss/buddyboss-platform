@@ -34,7 +34,7 @@ bp_nouveau_before_loop(); ?>
 			<div class="list-wrap">
 
 				<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
-					<?php if ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('cover-images') ) { ?>
+					<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('cover-images') ) ) { ?>
 					<?php
 					$group_cover_image_url = bp_attachments_get_attachment(
 						'url',
@@ -51,7 +51,7 @@ bp_nouveau_before_loop(); ?>
 				<?php } ?>
 
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-					<?php if ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('avatars') ) { ?>
+					<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('avatars') ) ) { ?>
 					<div class="item-avatar">
 						<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
 					</div>
