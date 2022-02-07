@@ -741,17 +741,17 @@ function bp_get_group_type( $group = false ) {
 		if ( 'public' == $group->status ) {
 
 			$group_visibility = __( 'Public', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = __( 'Hidden', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = __( 'Private', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
@@ -759,11 +759,11 @@ function bp_get_group_type( $group = false ) {
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = '<span class="group-visibility public">' . __( 'Public Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
 		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . __( 'Hidden Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
 		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . __( 'Private Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 		}
@@ -1433,6 +1433,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 		$group =& $groups_template->group;
 	}
 
+	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
 	/**
 	 * Filters the excerpt of a group description.
 	 *
@@ -1441,7 +1442,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 	 * @param string $value Excerpt of a group description.
 	 * @param object $group Object for group whose description is made into an excerpt.
 	 */
-	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length ), $group );
+	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length, array( 'ending' => $group_link ) ), $group );
 }
 
 /**
@@ -4207,11 +4208,11 @@ function bp_group_join_button( $group = false ) {
 			}
 
 			if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
+				$button_text = apply_filters( 'bp_group_organizer_label_text', get_group_role_label( $group->id, 'organizer_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
 			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'moderator_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
+				$button_text = apply_filters( 'bp_group_moderator_label_text', get_group_role_label( $group->id, 'moderator_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
 			} else {
-				$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'member_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
+				$button_text = apply_filters( 'bp_group_member_label_text', get_group_role_label( $group->id, 'member_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
 			}
 
 			// Setup button attributes.

@@ -381,6 +381,84 @@ window.bp = window.bp || {};
 					);
 			}
 
+			// Hide/show group element cover image
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var cover_image_element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
+
+				if (cover_image_element.checked) {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-cover-image-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element avatars
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var avatar_element = document.getElementById( 'bp-disable-group-avatar-uploads' );
+
+				if (avatar_element.checked) {
+					$( '.bb-group-elements .bb-group-element-avatars' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-avatar-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-avatars' ).show();
+							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element group type
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_types' ).length ) {
+
+				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
+
+				if (group_type_element.checked) {
+					$( '.bb-group-elements .bb-group-element-group-type' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-type-creation',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-group-type' ).show();
+							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each(
@@ -693,7 +771,11 @@ window.bp = window.bp || {};
 				);
 
 				if ( 'list_grid' === groupView ) {
+					$( '.group-gride-style' ).show();
 					$( '.group-default-layout' ).show();
+				} else if ( 'grid' === groupView ) {
+					$( '.group-gride-style' ).show();
+					$( '.group-default-layout' ).hide();
 				} else {
 					$( '.group-default-layout' ).hide();
 				}
@@ -710,7 +792,11 @@ window.bp = window.bp || {};
 						groupView = $( this ).val();
 
 						if ( 'list_grid' === groupView ) {
+							$( '.group-gride-style' ).show();
 							$( '.group-default-layout' ).show();
+						} else if ( 'grid' === groupView ) {
+							$( '.group-gride-style' ).show();
+							$( '.group-default-layout' ).hide();
 						} else {
 							$( '.group-default-layout' ).hide();
 						}

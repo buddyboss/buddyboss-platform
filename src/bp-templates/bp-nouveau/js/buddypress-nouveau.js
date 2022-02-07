@@ -692,6 +692,10 @@ window.bp = window.bp || {};
 			// Buttons.
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
+			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
+			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 
 			$( document ).on( 'keyup', this, this.keyUp );
@@ -1762,6 +1766,26 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			//show popup if it is leave_group action
+			var leave_group_popup = $( '.bb-leave-group-popup' );
+			var leave_group = $( target ).closest( '.item-entry' );
+			var leave_group_anchor = leave_group.find( '.groups-title' ).html();
+			var group_section = $( '.groups-list' );
+			if( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if( leave_group_popup.length ) {
+					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( leave_group_anchor );
+					leave_group_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'true' );
+					return false;
+				}
+			} else {
+				group_section.find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
+				group_section.find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
+				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html('');
+				leave_group_popup.hide();
+			}
+
 			// Find the required wpnonce string.
 			// if  button element set we'll have our nonce set on a data attr.
 			// Check the value & if exists split the string to obtain the nonce string.
@@ -1929,6 +1953,93 @@ window.bp = window.bp || {};
 				target.removeClass( 'bp-toggle-action-button-clicked' ); // remove class to detect event.
 				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
+		},
+
+		/**
+		 * [buttonHover description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		 buttonHover: function ( event ) {
+			var target = $( event.currentTarget ), action = target.data( 'bp-btn-action' ),
+				item       = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
+				object     = item.data( 'bp-item-component' );
+
+			// Simply let the event fire if we don't have needed values.
+			if ( ! action || ! item_id || ! object ) {
+				return event;
+			}
+
+			// Stop event propagation.
+			event.preventDefault();
+
+			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+
+				// support for buddyboss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					target.attr( 'data-balloon', target.data( 'title' ) );
+				} else {
+					target.text( target.data( 'title' ) );
+				}
+
+				target.removeClass( 'bp-toggle-action-button' );
+				target.addClass( 'bp-toggle-action-button-hover' );
+				return false;
+			}
+		},
+
+		/**
+		 * [buttonHoverout description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		 buttonHoverout: function ( event ) {
+			var target = $( event.currentTarget );
+
+			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
+
+				// support for buddyboss theme for button actions and icons and texts.
+				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
+					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
+				} else {
+					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
+				}
+
+				target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
+				target.addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
+			}
+		},
+
+		/**
+		 * [Leave Group Action]
+		 * 
+		 * @param event
+		 * 
+		 */
+		 leaveGroupAction: function ( event ) {
+			event.preventDefault();
+			var group_section = $( '.groups-list' );
+			group_section.find( '[data-current-anchor="true"]').trigger( 'click' );
+		},
+
+		/**
+		 * [Leave Group Close]
+		 * 
+		 * @param event
+		 * 
+		 */
+		 leaveGroupClose: function ( event ) {
+			event.preventDefault();
+			var target = $( event.currentTarget );
+			var group_section = $( '.groups-list' );
+			var leave_group_popup = $( target ).closest( '.bb-leave-group-popup' );
+
+			group_section.find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
+			group_section.find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
+			leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html('');
+			leave_group_popup.hide();
 		},
 
 		/**

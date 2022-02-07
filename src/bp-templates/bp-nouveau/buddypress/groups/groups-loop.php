@@ -17,11 +17,13 @@ bp_nouveau_before_loop(); ?>
 	</div>
 <?php endif; ?>
 
+<?php $cover_class = bp_disable_group_cover_image_uploads() ? 'bb-cover-disabled' : 'bb-cover-enabled'; ?>
+
 <?php if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) : ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?>">
+	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class; ?> groups-dir-list">
 
 	<?php
 	while ( bp_groups() ) :
@@ -29,57 +31,76 @@ bp_nouveau_before_loop(); ?>
 		?>
 
 		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
-			<div class="list-wrap group-list">
+			<div class="list-wrap">
 
-				<div class="group-list-header">
-					<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
-						<?php
-						$group_cover_image_url = bp_attachments_get_attachment(
-							'url',
-							array(
-								'object_dir' => 'groups',
-								'item_id'    => bp_get_group_id(),
-							)
-						);
-						$has_default_cover     = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
-						?>
+				<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
+					<?php
+					$group_cover_image_url = bp_attachments_get_attachment(
+						'url',
+						array(
+							'object_dir' => 'groups',
+							'item_id'    => bp_get_group_id(),
+						)
+					);
+					$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
+					?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
-					<?php } ?>
 
-					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-						<div class="item-avatar">
-							<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
-						</div>
-					<?php endif; ?>
-				</div>
+				<?php } ?>
+
+				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
+					<div class="item-avatar">
+						<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
+					</div>
+				<?php endif; ?>
 
 				<div class="item">
 
-					<div class="item-block">
+					<div class="group-item-wrap">
 
-						<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
+						<div class="item-block">
 
-						<?php if ( bp_nouveau_group_has_meta() ) : ?>
+							<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-							<p class="item-meta group-details"><?php bp_nouveau_group_meta(); ?></p>
+								<div class="item-meta-wrap">
 
-						<?php endif; ?>
+									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-						<p class="last-activity item-meta">
-							<?php
-							printf(
-								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-								__( 'active %s', 'buddyboss' ),
-								bp_get_group_last_active()
-							);
-							?>
-						</p>
+										<p class="item-meta group-details">
+										<?php
+											$meta = bp_nouveau_get_group_meta();
+											echo $meta['status'];
+										?>
+										</p>
+									<?php endif; ?>
+
+									<p class="last-activity item-meta"><?php
+										printf(
+											/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+											__( 'active %s', 'buddyboss' ),
+											bp_get_group_last_active()
+										);
+									?></p>
+
+								</div>
+
+						</div>
+
+						<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
 
 					</div>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
-					<?php bp_nouveau_groups_loop_buttons(); ?>
+					<div class="group-footer-wrap">
+
+						<div class="group-members-wrap">
+							<?php bb_groups_loop_members(); ?>
+						</div>
+
+						<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
+
+					</div>
 
 				</div>
 
@@ -90,6 +111,32 @@ bp_nouveau_before_loop(); ?>
 	<?php endwhile; ?>
 
 	</ul>
+
+	<!-- Leave Group confirmation popup -->
+	<div class="bb-leave-group-popup" style="display: none">
+		<transition name="modal">
+			<div class="modal-mask bb-white bbm-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><span class="target_name"><?php _e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<a class="bb-close-leave-group bb-model-close-button" href="#">
+								<span class="bb-icon bb-icon-close"></span>
+							</a>
+						</header>
+						<div class="bb-leave-group-content">
+							<p><?php _e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+						</div>
+						<footer class="bb-model-footer flex align-items-center">
+							<a class="bb-close-leave-group" href="#"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php _e( 'Confirm', 'buddyboss' ); ?></a>
+						</footer>
+
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div> <!-- .bb-leave-group-popup -->
 
 	<?php bp_nouveau_pagination( 'bottom' ); ?>
 

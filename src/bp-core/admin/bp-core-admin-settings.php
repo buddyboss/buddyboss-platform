@@ -1980,6 +1980,71 @@ function bp_admin_setting_group_layout_default_option() {
 }
 
 /**
+ * Admin Settings for Settings > Groups > Group Directories > Grid style
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_group_grid_style() {
+?>
+	<div class="bb-grid-style-outer">
+		<?php
+			$cover_profile_width = new BP_Admin_Setting_Fields(
+				array(
+					'type'        => 'radio',
+					'id'          => 'bb-group-grid-style-',
+					'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
+					'disabled'    => true,
+					'opt_wrapper' => true,
+					'value'       => 'centered',
+					'options'     => array(
+						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
+						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
+					),
+				)
+			);
+			$cover_profile_width->render_field();
+		?>
+	</div>
+	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+<?php
+}
+
+/**
+ * Allow Platform default group element setting field
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bb_admin_setting_group_elements( $args ) {
+
+	echo "<div class='bb-group-elements'>";
+	foreach ($args['elements'] as $element) {
+		$element_name = $element['element_name'];
+		$cover_profile_width = new BP_Admin_Setting_Fields(
+			array(
+				'type'        => 'checkbox',
+				'id'          => 'bb-group-element-' . $element_name,
+				'label'       => $element['element_label'],
+				'disabled'    => true,
+				'value'       => $element_name,
+			)
+		);
+	?>
+		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
+			<?php $cover_profile_width->render_field(); ?>
+		</div>
+	<?php
+	}
+	echo '</div>';
+	echo '<p class="description">';
+	echo _e( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
+	echo '</p>';
+}
+
+/**
  * Link to Group Directories tutorial
  *
  * @since BuddyBoss 1.2.0
