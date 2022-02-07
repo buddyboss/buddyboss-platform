@@ -3404,7 +3404,7 @@ function bp_get_active_member_types( $args = array() ) {
 		'member_types'
 	);
 
-	$cache_key = 'bp_get_active_member_types_' . md5( serialize( $args ) );
+	$cache_key = 'bp_get_active_member_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
@@ -4591,11 +4591,11 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 function bp_get_xprofile_member_type_field_id() {
 	global $wpdb;
 
-	static $get_parent_id_of_member_types_field = null;
+	static $get_parent_id_of_member_types_field = false;
 
-	if ( null === $get_parent_id_of_member_types_field ) {
+	if ( false === $get_parent_id_of_member_types_field ) {
 		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+		$get_parent_id_of_member_types_field = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
 	}
 
 	return (int) $get_parent_id_of_member_types_field;
@@ -4607,12 +4607,12 @@ function bp_get_xprofile_member_type_field_id() {
  * @return string|null
  */
 function bp_get_xprofile_gender_type_field_id() {
-	static $get_parent_id_of_gender_types_field = null;
+	static $get_parent_id_of_gender_types_field = false;
 
-	if ( null === $get_parent_id_of_gender_types_field ) {
+	if ( false === $get_parent_id_of_gender_types_field ) {
 		global $wpdb;
 		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$get_parent_id_of_gender_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+		$get_parent_id_of_gender_types_field = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
 	}
 
 	return (int) $get_parent_id_of_gender_types_field;

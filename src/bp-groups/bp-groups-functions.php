@@ -849,7 +849,7 @@ function groups_get_group_members( $args = array() ) {
 			'populate_extras' => $r['populate_extras'],
 		);
 
-		$cache_key = 'bp_groups_get_group_members_' . md5( serialize( $group_member_args ) );
+		$cache_key = 'bp_groups_get_group_members_' . md5( maybe_serialize( $group_member_args ) );
 		if ( ! isset( $cache[ $cache_key ] ) ) {
 			// Perform the group member query (extends BP_User_Query).
 			$members = new BP_Group_Member_Query( $group_member_args );
@@ -3673,7 +3673,7 @@ function bp_get_active_group_types( $args = array() ) {
 		'group_types'
 	);
 
-	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+	$group_cache_key = 'bp_get_active_group_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $group_cache[ $group_cache_key ] ) ) {
 		return $group_cache[ $group_cache_key ];
@@ -4060,8 +4060,9 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
  * @return mixed
  */
 function bp_group_get_group_type_id( $group_type = '' ) {
+	static $cache = array();
 
-	$args             = array(
+	$args = array(
 		'post_type'  => 'bp-group-type',
 		'meta_query' => array(
 			array(
@@ -4070,11 +4071,18 @@ function bp_group_get_group_type_id( $group_type = '' ) {
 			),
 		),
 	);
-	$group_type_query = new WP_Query( $args );
 
-	$posts = $group_type_query->posts;
+	$cache_key = md5( maybe_serialize( $args ) );
 
-	$id = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	} else {
+		$group_type_query = new WP_Query( $args );
+		$posts            = $group_type_query->posts;
+		$id               = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+
+		$cache[ $cache_key ] = $id;
+	}
 
 	return $id;
 }

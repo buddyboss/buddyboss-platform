@@ -4911,7 +4911,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  * @since BuddyBoss 1.3.2
  */
 function bp_core_parse_url( $url ) {
-	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );
