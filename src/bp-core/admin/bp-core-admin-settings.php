@@ -1936,6 +1936,7 @@ function bb_admin_setting_group_elements( $args ) {
 				'label'       => $element['element_label'],
 				'disabled'    => true,
 				'value'       => $element_name,
+				'selected'	  => $element_name
 			)
 		);
 	?>
