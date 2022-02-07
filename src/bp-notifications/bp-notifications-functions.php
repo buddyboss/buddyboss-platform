@@ -844,7 +844,7 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications',
 /**
  * Function to verify that notifications background process enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0.1
  *
  * @return bool
  */
@@ -855,7 +855,7 @@ function bb_notifications_background_enabled() {
 /**
  * Add notification using background process.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0.1
  *
  * @param array  $user_ids
  * @param int    $item_id
@@ -904,7 +904,7 @@ function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_i
 /**
  * Check and re-start the background process if queue is not empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0.1
  */
 function bb_notifications_handle_cron_health_check() {
 	global $bb_notifications_background_updater;

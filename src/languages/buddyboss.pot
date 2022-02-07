@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform (Beta) 1.9.0\n"
+"Project-Id-Version: BuddyBoss Platform (Beta) 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-28 07:32:48+00:00\n"
+"POT-Creation-Date: 2022-02-07 13:36:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -431,7 +431,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:860
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1321
-#: bp-xprofile/classes/class-bp-xprofile-group.php:841
+#: bp-xprofile/classes/class-bp-xprofile-group.php:859
 msgid "Update"
 msgstr ""
 
@@ -569,7 +569,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1188
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1231
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1518
-#: bp-xprofile/classes/class-bp-xprofile-group.php:948
+#: bp-xprofile/classes/class-bp-xprofile-group.php:966
 msgid "Cancel"
 msgstr ""
 
@@ -857,7 +857,7 @@ msgstr ""
 #: bp-forums/groups.php:1564 bp-friends/bp-friends-notifications.php:262
 #: bp-groups/bp-groups-notifications.php:1241
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:284
-#: bp-messages/bp-messages-notifications.php:303
+#: bp-messages/bp-messages-notifications.php:330
 #: bp-templates/bp-nouveau/includes/functions.php:1195
 #: bp-templates/bp-nouveau/includes/functions.php:1261
 #: bp-templates/bp-nouveau/includes/functions.php:1327
@@ -874,7 +874,7 @@ msgstr ""
 #: bp-forums/groups.php:1565 bp-friends/bp-friends-notifications.php:263
 #: bp-groups/bp-groups-notifications.php:1242
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:291
-#: bp-messages/bp-messages-notifications.php:304
+#: bp-messages/bp-messages-notifications.php:331
 #: bp-templates/bp-nouveau/includes/functions.php:1203
 #: bp-templates/bp-nouveau/includes/functions.php:1269
 #: bp-templates/bp-nouveau/includes/functions.php:1335
@@ -898,7 +898,7 @@ msgstr ""
 #: bp-groups/bp-groups-notifications.php:1301
 #: bp-groups/bp-groups-notifications.php:1317
 #: bp-groups/bp-groups-notifications.php:1337
-#: bp-messages/bp-messages-notifications.php:315
+#: bp-messages/bp-messages-notifications.php:342
 msgid "Yes, send email"
 msgstr ""
 
@@ -912,7 +912,7 @@ msgstr ""
 #: bp-groups/bp-groups-notifications.php:1307
 #: bp-groups/bp-groups-notifications.php:1323
 #: bp-groups/bp-groups-notifications.php:1343
-#: bp-messages/bp-messages-notifications.php:321
+#: bp-messages/bp-messages-notifications.php:348
 msgid "No, do not send email"
 msgstr ""
 
@@ -978,7 +978,7 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:1195
 #: bp-groups/bp-groups-template.php:920
 #: bp-groups/classes/class-bp-groups-list-table.php:598
-#: bp-messages/bp-messages-functions.php:1192
+#: bp-messages/bp-messages-functions.php:1195
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:924
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:973
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1934
@@ -3909,9 +3909,9 @@ msgstr ""
 #: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:883
 #: bp-core/classes/class-bp-email-tokens.php:417 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1426 bp-groups/bp-groups-admin.php:2082
-#: bp-groups/bp-groups-functions.php:4110
-#: bp-groups/bp-groups-functions.php:4129
-#: bp-groups/bp-groups-functions.php:4146 bp-groups/bp-groups-template.php:5461
+#: bp-groups/bp-groups-functions.php:4118
+#: bp-groups/bp-groups-functions.php:4137
+#: bp-groups/bp-groups-functions.php:4154 bp-groups/bp-groups-template.php:5461
 #: bp-groups/classes/class-bp-groups-component.php:645
 #: bp-groups/classes/class-bp-groups-component.php:974
 #: bp-groups/classes/class-bp-groups-list-table.php:439
@@ -4564,7 +4564,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1016
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1022
 #: bp-messages/bp-messages-notifications.php:30
-#: bp-messages/bp-messages-notifications.php:302
+#: bp-messages/bp-messages-notifications.php:329
 #: bp-messages/classes/class-bp-messages-component.php:214
 #: bp-messages/classes/class-bp-messages-component.php:221
 #: bp-messages/classes/class-bp-messages-component.php:237
@@ -5683,7 +5683,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:1086
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1338
-#: bp-xprofile/classes/class-bp-xprofile-group.php:857
+#: bp-xprofile/classes/class-bp-xprofile-group.php:875
 msgid "Profile Fields"
 msgstr ""
 
@@ -13721,7 +13721,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
 msgstr ""
 
-#: bp-forums/common/functions.php:2153 bp-forums/common/template.php:1158
+#: bp-forums/common/functions.php:2193 bp-forums/common/template.php:1158
 msgid ""
 "Conditional query tags do not work before the query is run. Before then, "
 "they always return false."
@@ -13729,9 +13729,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:43 bp-groups/bp-groups-admin.php:1481
 #: bp-groups/bp-groups-functions.php:1339
-#: bp-groups/bp-groups-functions.php:4112
-#: bp-groups/bp-groups-functions.php:4131
-#: bp-groups/bp-groups-functions.php:4148
+#: bp-groups/bp-groups-functions.php:4120
+#: bp-groups/bp-groups-functions.php:4139
+#: bp-groups/bp-groups-functions.php:4156
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:321
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:337
 #. translators: user role
@@ -13740,9 +13740,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2533
 #: bp-groups/bp-groups-admin.php:1482 bp-groups/bp-groups-functions.php:1347
-#: bp-groups/bp-groups-functions.php:4114
-#: bp-groups/bp-groups-functions.php:4133
-#: bp-groups/bp-groups-functions.php:4150
+#: bp-groups/bp-groups-functions.php:4122
+#: bp-groups/bp-groups-functions.php:4141
+#: bp-groups/bp-groups-functions.php:4158
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:322
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:338
 #. translators: user role
@@ -14515,9 +14515,9 @@ msgstr ""
 
 #: bp-forums/replies/functions.php:2499 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1483 bp-groups/bp-groups-functions.php:1355
-#: bp-groups/bp-groups-functions.php:4116
-#: bp-groups/bp-groups-functions.php:4135
-#: bp-groups/bp-groups-functions.php:4152
+#: bp-groups/bp-groups-functions.php:4124
+#: bp-groups/bp-groups-functions.php:4143
+#: bp-groups/bp-groups-functions.php:4160
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:323
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:339
 #: bp-members/bp-members-functions.php:3887
@@ -14745,7 +14745,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-media.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-document.php:16
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-media.php:19
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:37
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:38
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:147
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:216
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:70
@@ -14890,7 +14890,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1487
-#: bp-xprofile/classes/class-bp-xprofile-group.php:923
+#: bp-xprofile/classes/class-bp-xprofile-group.php:941
 msgid "Submit"
 msgstr ""
 
@@ -16322,7 +16322,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1468
 #: bp-templates/bp-nouveau/includes/functions.php:1520
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1296
-#: bp-xprofile/classes/class-bp-xprofile-group.php:829
+#: bp-xprofile/classes/class-bp-xprofile-group.php:847
 msgid "Save"
 msgstr ""
 
@@ -16489,9 +16489,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1257 bp-groups/bp-groups-admin.php:1269
 #: bp-groups/bp-groups-admin.php:1281 bp-groups/bp-groups-admin.php:1293
 #: bp-groups/bp-groups-admin.php:1420 bp-groups/bp-groups-admin.php:2026
-#: bp-groups/bp-groups-functions.php:4106
-#: bp-groups/bp-groups-functions.php:4125
-#: bp-groups/bp-groups-functions.php:4142
+#: bp-groups/bp-groups-functions.php:4114
+#: bp-groups/bp-groups-functions.php:4133
+#: bp-groups/bp-groups-functions.php:4150
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:441
 msgid "Organizers"
 msgstr ""
@@ -16591,9 +16591,9 @@ msgid "Enter a comma-separated list of user logins."
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1423 bp-groups/bp-groups-admin.php:2054
-#: bp-groups/bp-groups-functions.php:4108
-#: bp-groups/bp-groups-functions.php:4127
-#: bp-groups/bp-groups-functions.php:4144
+#: bp-groups/bp-groups-functions.php:4116
+#: bp-groups/bp-groups-functions.php:4135
+#: bp-groups/bp-groups-functions.php:4152
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:442
 msgid "Moderators"
 msgstr ""
@@ -22065,7 +22065,7 @@ msgid_plural "You have %s new private messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-messages/bp-messages-notifications.php:311
+#: bp-messages/bp-messages-notifications.php:338
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:629
 msgid "A member sends you a new message"
 msgstr ""
@@ -28232,7 +28232,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:170 bp-xprofile/bp-xprofile-admin.php:178
 #: bp-xprofile/bp-xprofile-admin.php:376
-#: bp-xprofile/classes/class-bp-xprofile-group.php:828
+#: bp-xprofile/classes/class-bp-xprofile-group.php:846
 msgid "New Field Set"
 msgstr ""
 
@@ -28248,7 +28248,7 @@ msgid "Add New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:280
-#: bp-xprofile/classes/class-bp-xprofile-group.php:840
+#: bp-xprofile/classes/class-bp-xprofile-group.php:858
 msgid "Edit Field Set"
 msgstr ""
 
@@ -29151,6 +29151,10 @@ msgstr ""
 msgid "Please make sure to add some <a href=\"%s\">profile types</a> first."
 msgstr ""
 
+#: bp-xprofile/classes/class-bp-xprofile-field-type-member-types.php:264
+msgid "---"
+msgstr ""
+
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:28
 msgid "Multi Select"
 msgstr ""
@@ -29308,34 +29312,34 @@ msgstr ""
 msgid "Please make sure you give the group a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:877
+#: bp-xprofile/classes/class-bp-xprofile-group.php:895
 msgid "Field Set Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:882
+#: bp-xprofile/classes/class-bp-xprofile-group.php:900
 msgid "Field Set Description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:887
+#: bp-xprofile/classes/class-bp-xprofile-group.php:905
 #. translators: accessibility text
 msgid "Add description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:979
+#: bp-xprofile/classes/class-bp-xprofile-group.php:997
 msgid "Repeater Set"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:981
+#: bp-xprofile/classes/class-bp-xprofile-group.php:999
 msgid ""
 "Allow the profile fields within this set to be repeated again and again, so "
 "the user can add multiple instances of their data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:983
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1001
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:984
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1002
 msgid "Enabled"
 msgstr ""
 
