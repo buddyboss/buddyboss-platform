@@ -511,7 +511,7 @@ window.bp = window.bp || {};
 		
 		displayMediaError: function ( count, self ) {
 			if ( 0 !== count ) {
-				if ( count > 1 ) { // Error on more then one file .
+				if ( count > 1 ) { // Error on more than one file.
 					self.model.set(
 						'errors',
 						{
