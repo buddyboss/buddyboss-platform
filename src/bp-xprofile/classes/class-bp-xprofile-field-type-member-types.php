@@ -255,12 +255,16 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
 
-		$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
+		if ( is_int( $field_value ) ) {
+			$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
+			if ( '' === $member_type_name || false === $member_type_name ) {
+				return esc_html__( '---', 'buddyboss' );
+			}
 
-		if ( '' === $member_type_name || false === $member_type_name ) {
-			return '---';
+			return $member_type_name;
 		}
 
-		return $member_type_name;
+		return $field_value;
+
 	}
 }
