@@ -16922,6 +16922,10 @@ img.emojioneemoji {
   display: none;
 }
 
+.dropzone.media-dropzone .dz-preview.dz-error.dz-single-error .dz-image {
+  border-width: 2px;
+}
+
 .dropzone.media-dropzone .dz-preview.dz-error .dz-details {
   display: block;
   position: absolute;
@@ -16929,6 +16933,10 @@ img.emojioneemoji {
   right: 10px;
   left: 10px;
   text-align: center;
+}
+
+.dropzone.document-dropzone .dz-preview.dz-error.dz-single-error .dz-details {
+  border-width: 2px;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details {
@@ -16957,6 +16965,10 @@ img.emojioneemoji {
 .dropzone.video-dropzone .dz-preview.dz-error.dz-file-preview .dz-remove,
 .dropzone.video-dropzone .dz-preview.dz-error.dz-complete.dz-file-preview .dz-remove {
   background-color: transparent;
+}
+
+.dropzone.video-dropzone .dz-preview.dz-error.dz-single-error .dz-details {
+  border-width: 2px;
 }
 
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details {
@@ -22435,12 +22447,12 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone .dz-preview.dz-error .dz-error-message {
-  display: block;
+  display: none;
   line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
-  opacity: 1;
+  opacity: 0;
   pointer-events: auto;
 }
 
@@ -22448,7 +22460,6 @@ body > .open-popup.video-error-popup {
   pointer-events: none;
   z-index: 100;
   position: absolute;
-  display: block;
   display: none;
   opacity: 0;
   -webkit-transition: opacity 0.3s ease;
@@ -22766,7 +22777,8 @@ body > .open-popup.video-error-popup {
   font-size: 13px !important;
 }
 
-.dropzone.dz-max-files-reached .dz-default.dz-message {
+.dropzone.dz-max-files-reached .dz-default.dz-message,
+.dropzone.bb-max-files-reached .dz-default.dz-message {
   display: none;
 }
 

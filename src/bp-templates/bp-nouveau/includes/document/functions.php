@@ -91,7 +91,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'                => $group_id,
 		'target_text'                     => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_file_type'               => __( 'Unable to upload the file.', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message'       => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Files', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
@@ -105,7 +105,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'sidebar_download_text'           => __( 'Download', 'buddyboss' ),
 		'sidebar_view_text'               => __( 'View', 'buddyboss' ),
 		'create_folder'                   => __( 'Create Folder', 'buddyboss' ),
-		'document_dict_file_exceeded'     => sprintf( __( 'You are allowed to upload only %s documents at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_document_per_batch() ) ),
+		'document_dict_file_exceeded'     => sprintf( __( 'You can upload a maximum of %s documents to a post.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_document_per_batch() ) ),
 		'can_manage_document'             => ( is_user_logged_in() && bb_user_can_create_document() ),
 	);
 
