@@ -17,13 +17,21 @@ bp_nouveau_before_loop(); ?>
 	</div>
 <?php endif; ?>
 
-<?php $cover_class = bp_disable_group_cover_image_uploads() ? 'bb-cover-disabled' : 'bb-cover-enabled'; ?>
+<?php
+
+	$cover_class		= ( bp_disable_group_cover_image_uploads() || ( function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('cover-images') ) ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
+	$meta_privacy		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-privacy') ? 'meta-privacy-hidden' : '';
+	$meta_group_type	= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-type') ? 'meta-group-type-hidden' : '';
+	$group_members		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('members') ? 'group-members-hidden' : '';
+	$group_alignment	= bp_get_option('bb-group-directory-layout-grid-style', 'centered');
+
+?>
 
 <?php if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) : ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class; ?> groups-dir-list">
+	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class . ' ' . $group_alignment ?> groups-dir-list">
 
 	<?php
 	while ( bp_groups() ) :
@@ -70,7 +78,7 @@ bp_nouveau_before_loop(); ?>
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-										<p class="item-meta group-details">
+										<p class="item-meta group-details <?php echo $meta_privacy . ' ' . $meta_group_type; ?>">
 										<?php
 											$meta = bp_nouveau_get_group_meta();
 											echo $meta['status'];
@@ -78,32 +86,35 @@ bp_nouveau_before_loop(); ?>
 										</p>
 									<?php endif; ?>
 
-									<p class="last-activity item-meta"><?php
-										printf(
-											/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-											__( 'active %s', 'buddyboss' ),
-											bp_get_group_last_active()
-										);
-									?></p>
+									<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('last-activity') ) ) { ?>
+										<p class="last-activity item-meta"><?php
+											printf(
+												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+												__( 'active %s', 'buddyboss' ),
+												bp_get_group_last_active()
+											);
+										?></p>
+									<?php } ?>
 
 								</div>
 
 						</div>
 
-						<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
+						<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('group-descriptions') ) ) { ?>
+							<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
+						<?php } ?>
 
 					</div>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
-					<div class="group-footer-wrap">
-
+					<div class="group-footer-wrap <?php echo $group_members; ?>">
 						<div class="group-members-wrap">
 							<?php bb_groups_loop_members(); ?>
 						</div>
-
-						<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
-
+						<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('join-buttons') ) ) { ?>
+							<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
+						<?php } ?>
 					</div>
 
 				</div>
