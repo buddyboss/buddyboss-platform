@@ -2014,6 +2014,9 @@ window.bp = window.bp || {};
 
 		/**
 		 * [Leave Group Action]
+		 * 
+		 * @param event
+		 * 
 		 */
 		 leaveGroupAction: function ( event ) {
 			event.preventDefault();
@@ -2023,6 +2026,9 @@ window.bp = window.bp || {};
 
 		/**
 		 * [Leave Group Close]
+		 * 
+		 * @param event
+		 * 
 		 */
 		 leaveGroupClose: function ( event ) {
 			event.preventDefault();

@@ -117,17 +117,17 @@ bp_nouveau_before_loop(); ?>
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name">Leave Group</span></h4>
+							<h4><span class="target_name"><?php _e( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content">
-							<p>Are you sure you want to leave <span class="bb-group-name"></span></p>
+							<p><?php _e( 'Are you sure you want to leave', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group" href="#">Cancel</a>
-							<a class="button push-right bb-confirm-leave-group" href="#">Confirm</a>
+							<a class="bb-close-leave-group" href="#"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php _e( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 
 					</div>
