@@ -247,8 +247,26 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></a>
 										<?php
 									} elseif ( ! empty( $registered_emails ) ) {
+										$url = ( count( $registered_emails ) === 1 ) ?
+											bp_get_admin_url(
+												add_query_arg(
+													array(
+														'post_type' => bp_get_email_post_type(),
+														'taxonomy' => bp_get_email_tax_type(),
+														'term' => current( $registered_emails ),
+													),
+													'edit.php'
+												)
+											) : add_query_arg(
+												array(
+													'post_type' => bp_get_email_post_type(),
+													'taxonomy' => bp_get_email_tax_type(),
+													'terms'    => implode( ',', $registered_emails ),
+												),
+												'edit.php'
+											);
 										?>
-										<a class="email-info" href="#"><?php esc_html_e( 'Email Template', 'buddyboss' ); ?></a>
+										<a class="email-info" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Email Template', 'buddyboss' ); ?></a>
 										<?php
 									}
 									?>
