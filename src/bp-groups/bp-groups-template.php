@@ -759,11 +759,11 @@ function bp_get_group_type( $group = false ) {
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = '<span class="group-visibility public">' . __( 'Public Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
 		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . __( 'Hidden Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
 		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . __( 'Private Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 		}
