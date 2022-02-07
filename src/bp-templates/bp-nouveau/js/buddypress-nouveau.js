@@ -1774,6 +1774,7 @@ window.bp = window.bp || {};
 			if( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
 				if( leave_group_popup.length ) {
 					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( leave_group_anchor );
+					group_section.find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); //Add clicked class mannually to run function.
 					leave_group_popup.show();
 					$( target ).attr( 'data-current-anchor', 'true' );
 					$( target ).attr( 'data-popup-shown', 'true' );
@@ -2021,6 +2022,7 @@ window.bp = window.bp || {};
 		 leaveGroupAction: function ( event ) {
 			event.preventDefault();
 			var group_section = $( '.groups-list' );
+			group_section.find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
 			group_section.find( '[data-current-anchor="true"]').trigger( 'click' );
 		},
 
