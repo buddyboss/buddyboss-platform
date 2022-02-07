@@ -506,15 +506,15 @@ class BP_Core_Suspend {
 			$user_id = array( $user_id );
 		}
 
-		$user_id = array_filter( $user_id );
+		$user_id = wp_parse_id_list( $user_id );
 		if ( empty( $user_id ) ) {
 			return false;
 		}
 
-		$cache_key = 'bb_check_user_suspend_user_' . BP_Suspend_Member::$type . '_' . md5( serialize( $user_id ) );
+		$cache_key = 'bb_check_user_suspend_user_' . BP_Suspend_Member::$type . '_' . md5( maybe_serialize( $user_id ) );
 		$result    = wp_cache_get( $cache_key, 'bb' );
 
-		if ( null === $result ) {
+		if ( false === $result ) {
 			$user_ids = sprintf( 'item_id IN(\'%s\')', implode( "','", $user_id ) );
 			$result   = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE {$user_ids} AND item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
 			wp_cache_set( $cache_key, $result, 'bb' );

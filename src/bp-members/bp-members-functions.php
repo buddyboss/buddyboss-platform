@@ -3404,7 +3404,7 @@ function bp_get_active_member_types( $args = array() ) {
 		'member_types'
 	);
 
-	$cache_key = 'bp_get_active_member_types_' . md5( serialize( $args ) );
+	$cache_key = 'bp_get_active_member_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];

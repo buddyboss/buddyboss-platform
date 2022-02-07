@@ -849,7 +849,7 @@ function groups_get_group_members( $args = array() ) {
 			'populate_extras' => $r['populate_extras'],
 		);
 
-		$cache_key = 'bp_groups_get_group_members_' . md5( serialize( $group_member_args ) );
+		$cache_key = 'bp_groups_get_group_members_' . md5( maybe_serialize( $group_member_args ) );
 		if ( ! isset( $cache[ $cache_key ] ) ) {
 			// Perform the group member query (extends BP_User_Query).
 			$members = new BP_Group_Member_Query( $group_member_args );
@@ -3673,7 +3673,7 @@ function bp_get_active_group_types( $args = array() ) {
 		'group_types'
 	);
 
-	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+	$group_cache_key = 'bp_get_active_group_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $group_cache[ $group_cache_key ] ) ) {
 		return $group_cache[ $group_cache_key ];
