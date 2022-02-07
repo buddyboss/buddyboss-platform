@@ -181,7 +181,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 		// Admin Settings for Settings > Groups > Group Directories > Default View.
 		$args          = array();
-		$args['class'] = 'group-default-layout group-layout-options ' . $pro_class;
+		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style
@@ -197,7 +197,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		// Admin Settings for Settings > Groups > Group Directories > Elements
 		$args = [
-			'class' => 'group-elements',
+			'class' => 'group-elements ' . $pro_class,
 			'elements' => [
 				[ 'element_name' => 'cover-images', 'element_label' => __( 'Cover Images', 'buddyboss' )],
 				[ 'element_name' => 'avatars', 'element_label' => __( 'Avatars', 'buddyboss' )],
