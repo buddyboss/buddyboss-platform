@@ -22357,12 +22357,12 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone .dz-preview.dz-error .dz-error-message {
-  display: block;
+  display: none;
   line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
-  opacity: 1;
+  opacity: 0;
   pointer-events: auto;
 }
 
@@ -22370,7 +22370,6 @@ body > .open-popup.video-error-popup {
   pointer-events: none;
   z-index: 100;
   position: absolute;
-  display: block;
   display: none;
   opacity: 0;
   -webkit-transition: opacity 0.3s ease;
