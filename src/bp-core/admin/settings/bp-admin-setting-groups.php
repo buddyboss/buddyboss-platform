@@ -175,14 +175,18 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
+		$pro_class = 'bb-pro-inactive';
+		if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
+			$pro_class = 'bb-pro-active';
+		}
 		// Admin Settings for Settings > Groups > Group Directories > Default View.
 		$args          = array();
-		$args['class'] = 'group-default-layout group-layout-options';
+		$args['class'] = 'group-default-layout group-layout-options ' . $pro_class;
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style
 		$args = array();
-		$args['class'] = 'group-gride-style group-layout-options';
+		$args['class'] = 'group-gride-style group-layout-options ' . $pro_class;
 		$field_title = sprintf(
 			__( 'Grid Style %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
 			'<br/><span class="bb-head-notice">',
