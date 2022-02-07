@@ -1419,30 +1419,6 @@ function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 }
 
 /**
- * Checks if default platform group element is enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $element Group element
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- *
- * @return bool Is group element enabled or not
- */
-function bb_platform_group_element_enable( $element, $default = true ) {
-
-	$group_elements = bp_get_option( 'bb-group-elements', array() );
-	/**
-	 * Filters whether specified $element should be enabled or no.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Whether or not the group element enable or not.
-	 */
-	return (bool) apply_filters( 'bp_platform_group_element_enable', (bool) in_array( $element, $group_elements ) );
-}
-
-/**
  * Is the Registration enabled?
  *
  * @since BuddyBoss 1.0.0
