@@ -259,12 +259,12 @@
 }
 
 .dropzone .dz-preview.dz-error .dz-error-message {
-	display: none; // Hide single media eror messages since moved in main notices feedback area
+	display: none; // Hide single media error messages since moved in main notices feedback area
 	line-height: 1.35;
 }
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
-	opacity: 0; // Hide single media eror messages since moved in main notices feedback area
+	opacity: 0; // Hide single media error messages since moved in main notices feedback area
 	pointer-events: auto;
 }
 
