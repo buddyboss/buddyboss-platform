@@ -731,7 +731,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 function bp_admin_setting_callback_default_profile_cover_size() {
 
 	?>
-	<div class="">
+	<div class="image-width-height">
 		<?php
 			new BB_Admin_Setting_Fields(
 				array(
@@ -749,7 +749,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 			);
 		?>
 	</div>
-	<div class="">
+	<div class="image-width-height">
 		<?php
 			new BB_Admin_Setting_Fields(
 				array(
@@ -1067,7 +1067,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 function bp_admin_setting_callback_default_group_cover_size() {
 
 	?>
-	<div class="">
+	<div class="image-width-height">
 		<?php
 			new BB_Admin_Setting_Fields(
 				array(
@@ -1085,7 +1085,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 			);
 		?>
 	</div>
-	<div class="">
+	<div class="image-width-height">
 		<?php
 			new BB_Admin_Setting_Fields(
 				array(
