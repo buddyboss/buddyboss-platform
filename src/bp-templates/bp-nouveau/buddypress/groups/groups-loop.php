@@ -62,25 +62,27 @@ bp_nouveau_before_loop(); ?>
 
 							<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-							<?php if ( bp_nouveau_group_has_meta() ) : ?>
+								<div class="item-meta-wrap">
 
-								<p class="item-meta group-details">
-								<?php
-									$meta = bp_nouveau_get_group_meta();
-									echo $meta['status'];
-								?>
-								</p>
-							<?php endif; ?>
+									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-							<p class="last-activity item-meta">
-								<?php
-								printf(
-									/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-									__( 'active %s', 'buddyboss' ),
-									bp_get_group_last_active()
-								);
-								?>
-							</p>
+										<p class="item-meta group-details">
+										<?php
+											$meta = bp_nouveau_get_group_meta();
+											echo $meta['status'];
+										?>
+										</p>
+									<?php endif; ?>
+
+									<p class="last-activity item-meta"><?php
+										printf(
+											/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+											__( 'active %s', 'buddyboss' ),
+											bp_get_group_last_active()
+										);
+									?></p>
+
+								</div>
 
 						</div>
 

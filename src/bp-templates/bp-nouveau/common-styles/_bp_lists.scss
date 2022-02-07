@@ -231,6 +231,25 @@
 
 		}
 
+		.item-meta-wrap .item-meta {
+			clear: none;
+			display: inline;
+			float: none;
+
+			+ .item-meta.last-activity:before,
+			.group-visibility + .group-type:before {
+				background-color: #8d8f97;
+				border-radius: 100%;
+				content: "";
+				display: inline-block;
+				height: 4px;
+				margin: 0 5px 0 3px;
+				vertical-align: middle;
+				width: 4px;
+			}
+
+		}
+
 	}
 
 	li.item-entry {
