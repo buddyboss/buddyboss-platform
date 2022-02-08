@@ -34,8 +34,8 @@
 								<div class="media-uploader-wrapper">
 									<div class="dropzone document-dropzone" id="media-uploader"></div>
 									<div class="uploader-post-document-template" style="display:none;">
-										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 										<div class="dz-preview dz-file-preview">
+											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 											<div class="dz-details">
 												<div class="dz-icon"><span class="bb-icon-file"></span></div>
 												<div class="dz-filename"><span data-dz-name></span></div>

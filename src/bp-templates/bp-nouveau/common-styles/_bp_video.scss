@@ -1472,6 +1472,18 @@ div.dropzone.dz-started {
 
 }
 
+.video-type-navs.main-navs {
+	border-bottom: 1px solid #e7e9ec;
+}
+
+#video-stream {
+	margin-top: 20px;
+
+	.video-list.bp-list {
+		margin-top: 0;
+	}
+}
+
 //Video Uploader
 .dropzone.video-dropzone {
 
