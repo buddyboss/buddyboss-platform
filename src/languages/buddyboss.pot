@@ -14741,7 +14741,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-media.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-document.php:16
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-media.php:19
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:37
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:38
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:147
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:216
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/public-message.php:70
@@ -24471,6 +24471,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:18
 msgid "Remove Preview"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:13
+msgid "Set by album privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:24
