@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Media Albums
+ * The template for media albums
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/media/albums.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>

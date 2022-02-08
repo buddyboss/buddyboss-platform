@@ -1,4 +1,15 @@
-<?php $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
+<?php
+/**
+ * Template for displaying the search results of the topic ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/sfwd-topic-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
+$total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_sfwd-topic">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), get_permalink() ));?>">
 		<div class="item-avatar">
