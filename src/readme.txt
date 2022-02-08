@@ -57,6 +57,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.8.7 =
+* Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled
+* Activity - Fixed critical issue to restrict photos and videos privacy update when uploaded to a specific album
+* Activity - Fixed small UI issue showing text close to ellipsis icon
+* Activity - Fixed @mention issue with space when user created from the dashboard
+* Activity - Fixed activity form upload UX issue with preview
+* Activity - Fixed activity form preview URL issue not rendered on paste
+* Media - Fixed documents directory screen small UI issues
+* Media - Fixed videos directory screen small UI issues
+* Media - Fixed edit action not working issue in media popup
+* Media - small improvement for video upload progress logic
+* Moderation - Fixed moderation markup issue in email customizer
+* REST API - Fixed group message thread permission issue in the API
+* REST API - Fixed media edit issue in the API
+* REST API - Fixed default avatar issue in the API when group avatar is disabled
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+
 = 1.8.6 =
 * Profiles - Provided WordPress, BuddyBoss, and Custom option to change default profile avatar image
 * Profiles - Provided BuddyBoss and Custom option to change default profile cover image
