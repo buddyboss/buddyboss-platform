@@ -1,3 +1,14 @@
+<?php
+/**
+ * Template for displaying the search results of the member
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/member.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
 <li <?php bp_member_class( array( 'item-entry', 'bp-search-item' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
 	<div class="list-wrap">
 		<div class="item-avatar">
