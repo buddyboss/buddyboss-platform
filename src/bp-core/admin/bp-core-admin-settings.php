@@ -1903,7 +1903,7 @@ function bb_admin_setting_group_grid_style() {
 					'opt_wrapper' => true,
 					'value'       => 'left',
 					'options'     => array(
-						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
+						'left' 		=> array('label' => is_rtl() ? 'Right' : 'Left', 'class' => 'option opt-left'),
 						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
 					),
 				)
