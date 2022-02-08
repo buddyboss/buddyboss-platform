@@ -285,6 +285,17 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					),
 				)
 			);
+
+			$active_tab = bp_core_get_admin_active_tab();
+
+			if ( 'bp-xprofile' === $active_tab || 'bp-groups' === $active_tab ) {
+
+				wp_enqueue_style( 'thickbox' );
+				wp_enqueue_script( 'media-upload' );
+
+				// Get Avatar Uploader.
+				bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
+			}
 		}
 
 		/**

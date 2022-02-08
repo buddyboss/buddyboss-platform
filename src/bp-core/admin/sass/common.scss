@@ -230,7 +230,7 @@ TABLE OF CONTENTS:
 	color: #32373c;
 }
 
-@media screen and ( max-width: 782px ) {
+@media screen and (max-width: 782px) {
 
 	#bp-admin-component-form .wp-list-table.plugins .plugin-title {
 		display: block;
@@ -2804,4 +2804,125 @@ table tbody td .bb-description {
 	color: #999;
 	margin-top: 6px;
 	margin-bottom: 0;
+}
+
+#bp_notification_settings_automatic {
+
+	table.render-dynamic-notification,
+	table.render-dynamic-notification tbody,
+	table.render-dynamic-notification tr,
+	table.render-dynamic-notification th,
+	table.render-dynamic-notification td {
+		display: block;
+	}
+
+	table.form-table {
+
+		.notes-hidden-header {
+
+			> th {
+				display: none;
+
+				+ td {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+		}
+
+		.no-padding {
+			padding: 0;
+		}
+
+		tbody tr {
+			margin-bottom: 20px;
+
+			th {
+				margin-bottom: 15px;
+			}
+
+		}
+	}
+
+	.field-set {
+		margin-top: 10px;
+		background-color: #f6f6f8;
+		border: 1px solid #ccd0d4;
+		border-radius: 3px;
+
+		.field-block {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: flex-start;
+			padding: 15px;
+
+			+ .field-block {
+				border-top: 1px solid #ccd0d4;
+			}
+
+			.no-email-info {
+				margin-right: 15px;
+				margin-left: auto;
+				background-color: #ffdcdc;
+				border-radius: 5px;
+				padding: 5px 10px;
+				color: #8c0202;
+				font-size: 11px;
+				text-decoration: none;
+			}
+
+			.email-info {
+				margin-right: 15px;
+				margin-left: auto;
+				border-radius: 5px;
+				padding: 5px 10px;
+				font-size: 11px;
+				text-decoration: none;
+				background-color: rgb(223, 229, 234);
+			}
+
+			.notification-defaults {
+				padding: 3px 0;
+				cursor: pointer;
+			}
+
+			input[type="checkbox"] {
+				margin-top: 0;
+			}
+
+			.manage-defaults {
+				margin-top: 15px;
+				justify-content: flex-end;
+				width: 100%;
+				display: flex;
+
+				.field-wrap {
+					margin-left: 15px;
+					min-width: 58px;
+					text-align: center;
+				}
+			}
+
+			.manage-defaults-hide {
+				display: none;
+			}
+		}
+	}
+}
+
+.bb-bottom-notice {
+	margin: 2.2em -2.8em -2.2em;
+	background: #f6f6f8;
+	padding: 2.2em 2.8em;
+	border-radius: 0 0 5px 5px;
+	border-top: 1px solid #ccd0d4;
+}
+
+.bp-admin-card .form-table .bb-lab-notice {
+	background: #f6f6f8;
+	padding: 1.2em;
+	margin-top: 1.2em;
+	border-radius: 0px;
+	border: 1px solid #ccd0d4;
 }

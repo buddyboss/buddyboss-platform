@@ -5799,7 +5799,7 @@ function bb_restricate_rss_feed() {
 		strpos( $actual_link, 'admin-ajax.php' ) === false &&
 		strpos( $actual_link, 'wp-json' ) === false
 	) {
-		$request_url = untrailingslashit( $actual_link );
+		$request_url      = untrailingslashit( $actual_link );
 		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
@@ -7181,7 +7181,6 @@ function bb_render_manual_notification() {
 		<?php
 	}
 }
-
 
 /**
  * Remove all the unfiltered html from the string.

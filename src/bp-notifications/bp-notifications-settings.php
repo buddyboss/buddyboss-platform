@@ -198,7 +198,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 	$email_url            = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() );
 
 	if ( ! empty( $all_notifications ) ) {
-		echo '<table class="form-table"><tbody>';
+		echo '<table class="form-table render-dynamic-notification"><tbody>';
 		foreach ( $all_notifications as $field_group ) {
 			?>
 			<tr class="child-no-padding">
@@ -246,6 +246,28 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 										?>
 											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></a>
 										<?php
+									} elseif ( ! empty( $registered_emails ) ) {
+										$url = ( count( $registered_emails ) === 1 ) ?
+											bp_get_admin_url(
+												add_query_arg(
+													array(
+														'post_type' => bp_get_email_post_type(),
+														'taxonomy' => bp_get_email_tax_type(),
+														'term' => current( $registered_emails ),
+													),
+													'edit.php'
+												)
+											) : add_query_arg(
+												array(
+													'post_type' => bp_get_email_post_type(),
+													'taxonomy' => bp_get_email_tax_type(),
+													'terms'    => implode( ',', $registered_emails ),
+												),
+												'edit.php'
+											);
+										?>
+										<a class="email-info" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Email Template', 'buddyboss' ); ?></a>
+										<?php
 									}
 									?>
 
@@ -286,6 +308,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 		}
 		echo '</tbody></table>';
 	}
+
+	echo bb_admin_setting_callback_on_screen_hide_group_messages_notifications();
 }
 
 /**
@@ -331,6 +355,31 @@ function bb_activate_notification( $field, $checked ) {
 	<input name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="hidden" value="no" />
 	<input class="bb-notification-checkbox" id="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][main]" type="checkbox" value="yes" <?php checked( $checked, 1 ); ?> />
 	<label class="notification-label" for="bb_enabled_notification_<?php echo esc_attr( $field['key'] ); ?>"><?php echo esc_html( $label ); ?></label>
+
+	<?php
+}
+
+/**
+ * Enable on-screen notification.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_admin_setting_callback_on_screen_hide_group_messages_notifications() {
+	?>
+	<table class="form-table">
+		<tbody>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Hide Messaging Notifications', 'buddyboss' ); ?></th>
+				<td>
+					<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 0 ) ); ?> />
+					<label for="hide_message_notification"><?php esc_html_e( 'Hide group and private messages from notifications', 'buddyboss' ); ?></label>
+					<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
 	<?php
 }

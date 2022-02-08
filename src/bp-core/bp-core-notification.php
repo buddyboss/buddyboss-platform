@@ -20,53 +20,54 @@ add_action( 'bb_core_before_install', 'bb_core_default_install_emails' );
  * @param array $default_components Default component lists.
  */
 function bb_core_default_install_emails( $default_components ) {
-	if ( array_key_exists( 'activity', $default_components ) && ! empty( $default_components['activity'] ) ) {
-		if ( file_exists( buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php' ) ) {
-			require buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php';
-		}
 
-		if ( class_exists( 'BP_Activity_Notification' ) ) {
-			BP_Activity_Notification::instance();
-		}
+	// Load Activity notification file.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php' ) ) {
+		require buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php';
 	}
 
-	if ( array_key_exists( 'groups', $default_components ) && ! empty( $default_components['groups'] ) ) {
-		if ( file_exists( buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php' ) ) {
-			require buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php';
-		}
-
-		if ( class_exists( 'BP_Groups_Notification' ) ) {
-			BP_Groups_Notification::instance();
-		}
+	// Called Activity Notification class.
+	if ( class_exists( 'BP_Activity_Notification' ) ) {
+		BP_Activity_Notification::instance();
 	}
 
-	if ( array_key_exists( 'friends', $default_components ) && ! empty( $default_components['friends'] ) ) {
-		if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
-			require buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php';
-		}
-
-		if ( class_exists( 'BP_Friends_Notification' ) ) {
-			BP_Friends_Notification::instance();
-		}
+	// Load Groups notification file.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php' ) ) {
+		require buddypress()->plugin_dir . 'bp-groups/classes/class-bp-groups-notification.php';
 	}
 
-	if ( array_key_exists( 'forums', $default_components ) && ! empty( $default_components['forums'] ) ) {
-		if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
-			require buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php';
-		}
-
-		if ( class_exists( 'BP_Forums_Notification' ) ) {
-			BP_Forums_Notification::instance();
-		}
+	// Called Groups Notification class.
+	if ( class_exists( 'BP_Groups_Notification' ) ) {
+		BP_Groups_Notification::instance();
 	}
 
-	if ( array_key_exists( 'messages', $default_components ) && ! empty( $default_components['messages'] ) ) {
-		if ( file_exists( buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php' ) ) {
-			require buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php';
-		}
+	// Load Friends notification file.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
+		require buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php';
+	}
 
-		if ( class_exists( 'BP_Messages_Notification' ) ) {
-			BP_Messages_Notification::instance();
-		}
+	// Called Friends Notification class.
+	if ( class_exists( 'BP_Friends_Notification' ) ) {
+		BP_Friends_Notification::instance();
+	}
+
+	// Load Forums notification file.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-friends/classes/class-bp-friends-notification.php' ) ) {
+		require buddypress()->plugin_dir . 'bp-forums/classes/class-bp-forums-notification.php';
+	}
+
+	// Called Forums Notification class.
+	if ( class_exists( 'BP_Forums_Notification' ) ) {
+		BP_Forums_Notification::instance();
+	}
+
+	// Load Messages notification file.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php' ) ) {
+		require buddypress()->plugin_dir . 'bp-messages/classes/class-bp-messages-notification.php';
+	}
+
+	// Called Messages Notification class.
+	if ( class_exists( 'BP_Messages_Notification' ) ) {
+		BP_Messages_Notification::instance();
 	}
 }

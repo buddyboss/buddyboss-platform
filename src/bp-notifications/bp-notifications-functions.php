@@ -966,3 +966,32 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 
 	return $excluded_actions;
 }
+
+/**
+ * Exclude the messages notifications.
+ *
+ * @param array $component_names Component names.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Return the component name.
+ */
+function bb_notification_exclude_group_message_notification( $component_names ) {
+
+	$hide_message_notification = (bool) bp_get_option( 'hide_message_notification', 0 );
+
+	if (
+		function_exists( 'bb_enabled_legacy_email_preference' ) &&
+		! bb_enabled_legacy_email_preference() &&
+		true === $hide_message_notification &&
+		in_array( 'messages', $component_names, true )
+	) {
+		unset( $component_names[ array_search( 'messages', $component_names, true ) ] );
+	}
+
+	return $component_names;
+
+}
+// Hide messages notifications from the notifications list.
+add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+

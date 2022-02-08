@@ -745,10 +745,8 @@ function bp_profile_photos_tutorial() {
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
-
-	<?php
-}
+	</p><?php
+		}
 
 /** Group Photos ************************************************************/
 
@@ -2481,6 +2479,23 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 			esc_html__( 'View Tutorial', 'buddyboss' )
 		)
 	);
+	?>
+
+	<p class="display-notice bb-lab-notice">
+		<strong><?php esc_html_e( 'Note to Developers' ); ?></strong>
+		<br/>
+		<?php
+		printf(
+			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
+			sprintf(
+				'<a href="%s">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
+				esc_url( '#' )
+			)
+		)
+		?>
+	</p>
+
+	<?php
 
 }
 
