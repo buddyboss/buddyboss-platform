@@ -23,7 +23,7 @@ bp_nouveau_before_loop(); ?>
 	$meta_privacy		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-privacy') ? 'meta-privacy-hidden' : '';
 	$meta_group_type	= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-type') ? 'meta-group-type-hidden' : '';
 	$group_members		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('members') ? 'group-members-hidden' : '';
-	$group_alignment	= bp_get_option('bb-group-directory-layout-grid-style', 'centered');
+	$group_alignment	= function_exists('bb_platform_group_grid_style') ? bb_platform_group_grid_style( 'left' )  : 'left';
 
 ?>
 
