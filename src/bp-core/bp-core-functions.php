@@ -6765,14 +6765,14 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 }
 
 /**
- * Remove all the unfilter html from the string.
+ * Remove all the unfiltered html from the string.
  *
- * @param string $content Given String
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content Given string.
  *
  * @return string
- * @since BuddyBoss [BBVERSION]
  */
 function bb_core_remove_unfiltered_html( $content ) {
-
 	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
 }
