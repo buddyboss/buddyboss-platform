@@ -2482,7 +2482,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 	?>
 
 	<p class="display-notice bb-lab-notice">
-		<strong><?php esc_html_e( 'Note to Developers' ); ?></strong>
+		<strong><?php esc_html_e( 'Note to Developers', 'buddyboss' ); ?></strong>
 		<br/>
 		<?php
 		printf(
