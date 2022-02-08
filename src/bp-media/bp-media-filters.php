@@ -588,9 +588,14 @@ function bp_media_update_media_privacy( $album ) {
 
 				$attachment_id    = $media_obj->attachment_id;
 				$main_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 				if ( ! empty( $main_activity_id ) ) {
 					$activity_ids[] = $main_activity_id;
+				}
+
+				if ( ! empty( $video_main_activity_id ) ) {
+					$activity_ids[] = $video_main_activity_id;
 				}
 			}
 		}
@@ -2320,11 +2325,10 @@ function bp_media_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity media data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with media if media saved otherwise no media.
  *
@@ -2336,11 +2340,20 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 		// Fetch media ids of activity.
 		$media_ids = bp_activity_get_meta( $activity['id'], 'bp_media_ids', true );
+		$media_id  = bp_activity_get_meta( $activity['id'], 'bp_media_id', true );
+
+		if ( ! empty( $media_id ) && ! empty( $media_ids ) ) {
+			$media_ids = $media_ids . ',' . $media_id;
+		} elseif ( ! empty( $media_id ) && empty( $media_ids ) ) {
+			$media_ids = $media_id;
+		}
 
 		if ( ! empty( $media_ids ) ) {
 			$activity['media'] = array();
 
 			$media_ids = explode( ',', $media_ids );
+			$media_ids = array_unique( $media_ids );
+			$album_id  = 0;
 
 			foreach ( $media_ids as $media_id ) {
 
@@ -2362,6 +2375,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
 				);
+
+				if ( 0 === $album_id && $media->album_id > 0 ) {
+					$album_id                     = $media->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
 			}
 		}
 
@@ -2381,6 +2399,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 	return $activity;
 }
+
 /**
  * Added activity entry class for media.
  *
