@@ -172,11 +172,15 @@
 
 	.bs-group-cover {
 
+		&.cover-large a {
+			padding-top: 145px;
+		}
+
 		a {
 			position: relative;
 			display: block;
 			height: 100%;
-			padding-top: 52.56%;
+			padding-top: 95px;
 			border-radius: 3px 3px 0 0;
 			overflow: hidden;
 		}

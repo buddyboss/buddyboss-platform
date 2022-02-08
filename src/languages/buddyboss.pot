@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-08 14:47:42+00:00\n"
+"POT-Creation-Date: 2022-02-08 14:59:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -552,7 +552,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:30
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:27
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:146
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:146
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:147
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:60
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:88
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:26
@@ -2061,7 +2061,7 @@ msgstr ""
 #: bp-members/bp-members-template.php:1016
 #: bp-members/bp-members-template.php:1690
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1475
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:93
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:94
 #. translators: last active format.
 #. translators: %s = last activity timestamp (e.g. "active 1 hour ago")
 msgid "active %s"
@@ -8196,7 +8196,7 @@ msgid "Visit Group"
 msgstr ""
 
 #: bp-core/classes/class-bp-email-tokens.php:443
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:137
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:138
 msgid "Leave Group"
 msgstr ""
 
@@ -21376,7 +21376,7 @@ msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:2531
 #: bp-moderation/screens/block-member-form.php:76
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:147
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:148
 msgid "Confirm"
 msgstr ""
 
@@ -25139,7 +25139,7 @@ msgstr ""
 msgid "Group creation menu"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:143
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:144
 msgid "Are you sure you want to leave "
 msgstr ""
 

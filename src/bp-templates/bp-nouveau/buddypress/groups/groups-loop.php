@@ -19,6 +19,7 @@ bp_nouveau_before_loop(); ?>
 
 <?php
 
+	$group_cover_height = bb_get_group_cover_image_height();
 	$cover_class		= ( bp_disable_group_cover_image_uploads() || ( function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('cover-images') ) ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
 	$meta_privacy		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-privacy') ? 'meta-privacy-hidden' : '';
 	$meta_group_type	= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-type') ? 'meta-group-type-hidden' : '';
@@ -53,7 +54,7 @@ bp_nouveau_before_loop(); ?>
 					);
 					$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
 					?>
-						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
+						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ) . ' cover-' . $group_cover_height ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 
 					<?php } ?>
 				<?php } ?>
