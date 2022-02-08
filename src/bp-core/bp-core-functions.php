@@ -1197,6 +1197,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
+	/* translator: 1. The time since the older date */
 	$ago_text = apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) );
 
 	// Array of time period chunks.
@@ -1263,30 +1264,66 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a year', 'buddyboss' ) : sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a year', 'buddyboss' ) : sprintf(
+						/* translators: The display years count from the older date. */
+						_n( '%s year', '%s years', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case YEAR_IN_SECONDS / 6:
 					$month_seconds = floor( $since / ( 30 * DAY_IN_SECONDS ) );
-					$output        = sprintf( _n( '%s month', '%s months', $month_seconds, 'buddyboss' ), $month_seconds );
+					$output        = sprintf(
+						/* translators: The display months count from the older date. */
+						_n( '%s month', '%s months', $month_seconds, 'buddyboss' ),
+						$month_seconds
+					);
 					break;
 				case 30 * DAY_IN_SECONDS:
 					$week_seconds = floor( $since / WEEK_IN_SECONDS );
-					$output       = $count < 2 ? sprintf( _n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ), $week_seconds ) : sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
+					$output       = $count < 2 ? sprintf(
+						/* translators: The display weeks count from the older date. */
+						_n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ),
+						$week_seconds
+					) : sprintf(
+						/* translators: The display months count from the older date. */
+						_n( '%s month', '%s months', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case WEEK_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a week', 'buddyboss' ) : sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a week', 'buddyboss' ) : sprintf(
+						/* translators: The display weeks count from the older date. */
+						_n( '%s week', '%s weeks', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case DAY_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a day', 'buddyboss' ) : sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a day', 'buddyboss' ) : sprintf(
+						/* translators: The display days count from the older date. */
+						_n( '%s day', '%s days', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case HOUR_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'an hour', 'buddyboss' ) : sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'an hour', 'buddyboss' ) : sprintf(
+						/* translators: The display hours count from the older date.. */
+						_n( '%s hour', '%s hours', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case MINUTE_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a minute', 'buddyboss' ) : sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a minute', 'buddyboss' ) : sprintf(
+						/* translators: The display minutes count from the older date. */
+						_n( '%s minute', '%s minutes', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				default:
-					$output = $count < 2 ? $right_now_text : sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? $right_now_text : sprintf(
+						/* translators: The display seconds count from the older date.. */
+						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+						$count
+					);
 			}
 
 			// No output, so happened right now.
