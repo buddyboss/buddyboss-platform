@@ -449,7 +449,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				}
 				$forum_id = isset( $forum->ID ) ? $forum->ID : '';
 			} else {
-				if ( bbp_is_single_forum() ) {
+				if ( is_single() && bbp_is_single_forum() ) {
 					$forum_id = bbp_get_forum_id();
 				}
 			}
@@ -468,7 +468,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				}
 				$topic_id = isset( $topic->ID ) ? $topic->ID : '';
 			} else {
-				if ( bbp_is_single_topic() ) {
+				if ( is_single() && bbp_is_single_topic() ) {
 					$topic_id = bbp_get_topic_id();
 				}
 			}
@@ -491,22 +491,24 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						'href'  => bbp_get_topic_edit_url( $topic_id ),
 					)
 				);
-				$wp_admin_bar->add_menu(
-					array(
-						'parent' => $menu_id,
-						'title'  => ! bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss' ) : esc_html__( 'Close Discussion', 'buddyboss' ),
-						'id'     => 'open-' . $menu_id,
-						'href'   => wp_nonce_url(
-							add_query_arg(
-								array(
-									'action'   => 'bbp_toggle_topic_close',
-									'topic_id' => $topic_id,
-								)
+				if ( ! bbp_is_topic_trash( $topic_id ) && ! bbp_is_topic_spam( $topic_id ) ) {
+					$wp_admin_bar->add_menu(
+						array(
+							'parent' => $menu_id,
+							'title'  => ! bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss' ) : esc_html__( 'Close Discussion', 'buddyboss' ),
+							'id'     => 'open-' . $menu_id,
+							'href'   => wp_nonce_url(
+								add_query_arg(
+									array(
+										'action'   => 'bbp_toggle_topic_close',
+										'topic_id' => $topic_id,
+									)
+								),
+								'close-topic_' . $topic_id
 							),
-							'close-topic_' . $topic_id
-						),
-					)
-				);
+						)
+					);
+				}
 				$wp_admin_bar->add_menu(
 					array(
 						'parent' => $menu_id,
@@ -520,39 +522,64 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 						),
 					)
 				);
-				$wp_admin_bar->add_menu(
-					array(
-						'parent' => $menu_id,
-						'title'  => esc_html__( 'Move to Trash', 'buddyboss' ),
-						'id'     => 'trash-' . $menu_id,
-						'href'   => wp_nonce_url(
-							add_query_arg(
-								array(
-									'action'     => 'bbp_toggle_topic_trash',
-									'sub_action' => 'trash',
-									'topic_id'   => $topic_id,
-								)
+				if ( ! bbp_is_topic_spam( $topic_id ) ) {
+					if ( bbp_is_topic_trash( $topic_id ) || EMPTY_TRASH_DAYS ) {
+						$wp_admin_bar->add_menu(
+							array(
+								'parent' => $menu_id,
+								'title'  => bbp_is_topic_trash( $topic_id ) ? esc_html__( 'Restore from Trash', 'buddyboss' ) : esc_html__( 'Move to Trash', 'buddyboss' ),
+								'id'     => 'trash-' . $menu_id,
+								'href'   => wp_nonce_url(
+									add_query_arg(
+										array(
+											'action'     => 'bbp_toggle_topic_trash',
+											'sub_action' => bbp_is_topic_trash( $topic_id ) ? 'untrash' : 'trash',
+											'topic_id'   => $topic_id,
+										)
+									),
+									bbp_is_topic_trash( $topic_id ) ? 'untrash-' . bbp_get_topic_post_type() . '_' . $topic_id : 'trash-' . bbp_get_topic_post_type() . '_' . $topic_id
+								),
+							)
+						);
+					}
+					if ( bbp_is_topic_trash( $topic_id ) || ! EMPTY_TRASH_DAYS ) {
+						$wp_admin_bar->add_menu(
+							array(
+								'parent' => $menu_id,
+								'title'  => esc_html__( 'Delete', 'buddyboss' ),
+								'id'     => 'delete-' . $menu_id,
+								'href'   => wp_nonce_url(
+									add_query_arg(
+										array(
+											'action'     => 'bbp_toggle_topic_trash',
+											'sub_action' => 'delete',
+											'topic_id'   => $topic_id,
+										)
+									),
+									'delete-' . bbp_get_topic_post_type() . '_' . $topic_id
+								),
+							)
+						);
+					}
+				}
+				if ( ! bbp_is_topic_trash( $topic_id ) ) {
+					$wp_admin_bar->add_menu(
+						array(
+							'parent' => $menu_id,
+							'title'  => bbp_is_topic_spam( $topic_id ) ? esc_html__( 'Mark as Unspam', 'buddyboss' ) : esc_html__( 'Mark as Spam', 'buddyboss' ),
+							'id'     => 'spam-' . $menu_id,
+							'href'   => wp_nonce_url(
+								add_query_arg(
+									array(
+										'action'   => 'bbp_toggle_topic_spam',
+										'topic_id' => $topic_id,
+									)
+								),
+								'spam-topic_' . $topic_id
 							),
-							'trash-' . bbp_get_topic_post_type() . '_' . $topic_id
-						),
-					)
-				);
-				$wp_admin_bar->add_menu(
-					array(
-						'parent' => $menu_id,
-						'title'  => esc_html__( 'Mark as Spam', 'buddyboss' ),
-						'id'     => 'spam-' . $menu_id,
-						'href'   => wp_nonce_url(
-							add_query_arg(
-								array(
-									'action'   => 'bbp_toggle_topic_spam',
-									'topic_id' => $topic_id,
-								)
-							),
-							'spam-topic_' . $topic_id
-						),
-					)
-				);
+						)
+					);
+				}
 			}
 		}
 	}
