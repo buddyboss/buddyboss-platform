@@ -213,6 +213,7 @@
 				align-items: flex-start;
 
 				* {
+					line-height: 1.4;
 					padding: 0;
 					text-align: left;
 				}
@@ -248,6 +249,17 @@
 				width: 4px;
 			}
 
+			&.meta-privacy-hidden .group-visibility,
+			&.meta-group-type-hidden .group-type,
+			&.meta-privacy-hidden .group-type:before,
+			&.meta-privacy-hidden.meta-group-type-hidden + .last-activity:before {
+				display: none;
+			}
+
+		}
+
+		.group-footer-wrap.group-members-hidden .group-members-wrap {
+			display: none;
 		}
 
 	}

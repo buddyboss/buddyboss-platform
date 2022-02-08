@@ -2022,7 +2022,7 @@ function bb_admin_setting_group_elements( $args ) {
 	echo "<div class='bb-group-elements'>";
 	foreach ($args['elements'] as $element) {
 		$element_name = $element['element_name'];
-	?>
+		?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
 			<?php new BB_Admin_Setting_Fields(
 					array(
@@ -2034,7 +2034,7 @@ function bb_admin_setting_group_elements( $args ) {
 					)
 			); ?>
 		</div>
-	<?php
+		<?php
 	}
 	echo '</div>';
 	echo '<p class="description">';

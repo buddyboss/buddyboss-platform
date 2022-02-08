@@ -971,6 +971,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block * {
+  line-height: 1.4;
   padding: 0;
   text-align: right;
 }
@@ -1000,6 +1001,17 @@ a.layout-grid-view {
   margin: 0 3px 0 5px;
   vertical-align: middle;
   width: 4px;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta.meta-privacy-hidden .group-visibility,
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta.meta-group-type-hidden .group-type,
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta.meta-privacy-hidden .group-type:before,
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta.meta-privacy-hidden.meta-group-type-hidden + .last-activity:before {
+  display: none;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .group-footer-wrap.group-members-hidden .group-members-wrap {
+  display: none;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry {
