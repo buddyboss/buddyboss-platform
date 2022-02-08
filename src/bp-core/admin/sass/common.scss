@@ -2723,10 +2723,15 @@ h2.has_tutorial_btn {
 		-webkit-box-align: stretch;
 		-ms-flex-align: stretch;
 		align-items: stretch;
-		min-height: 90px;
-		max-height: 90px;
+		min-height: 80px;
+		max-height: 80px;
 		background-color: #ccc;
 		overflow: hidden;
+
+		&.large-image {
+			min-height: 130px;
+			max-height: 130px;
+		}
 	}
 
 	.preview-item-avatar {
