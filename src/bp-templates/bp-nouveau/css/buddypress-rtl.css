@@ -3180,7 +3180,7 @@ input.search-query-input {
 }
 
 .activity-list .bp-activity-head {
-  margin-left: 25px;
+  margin-left: 35px;
 }
 
 .activity-list .bb-activity-more-options-wrap {
@@ -20749,7 +20749,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
