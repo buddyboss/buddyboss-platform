@@ -23,6 +23,7 @@ bp_nouveau_before_loop(); ?>
 	$meta_privacy    = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
 	$meta_group_type = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
 	$group_members   = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
+	$join_button	 = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
 	$group_alignment = bb_platform_group_grid_style( 'left' );
 
 ?>
@@ -110,7 +111,7 @@ bp_nouveau_before_loop(); ?>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
-					<div class="group-footer-wrap <?php echo $group_members; ?>">
+					<div class="group-footer-wrap <?php echo $group_members . ' ' . $join_button; ?>">
 						<div class="group-members-wrap">
 							<?php bb_groups_loop_members(); ?>
 						</div>
