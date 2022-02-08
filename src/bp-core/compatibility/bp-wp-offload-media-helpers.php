@@ -269,7 +269,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Copy file to local when thumbnail is not available.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.7
 	 */
 	public function bb_offload_download_add_back_to_local() {
 		add_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
@@ -278,7 +278,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Remove the filter to copy file to local when thumbnail is not available.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.7
 	 */
 	public function bb_offload_download_remove_back_to_local() {
 		remove_filter( 'as3cf_get_attached_file_copy_back_to_local', '__return_true' );
