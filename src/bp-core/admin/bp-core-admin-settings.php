@@ -761,7 +761,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 					'type'        => 'select',
 					'id'          => 'bp-cover-profile-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
-					'description' => esc_html__( 'Select the height of profile cover images in profile headers and member directories.', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of profile cover images in profile headers.', 'buddyboss' ),
 					'disabled'    => true,
 					'value'       => bb_get_profile_cover_image_height(),
 					'options'     => array(
