@@ -5501,7 +5501,7 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 	/**
 	 * Action to perform before regenerating attachment thumbnails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.7
 	 */
 	do_action( 'bp_core_before_regenerate_attachment_thumbnails' );
 
@@ -5520,7 +5520,7 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 	/**
 	 * Action to perform after regenerating attachment thumbnails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.8.7
 	 */
 	do_action( 'bp_core_after_regenerate_attachment_thumbnails' );
 }
@@ -6769,7 +6769,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 /**
  * Remove all the unfiltered html from the string.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.7
  *
  * @param string $content Given string.
  *

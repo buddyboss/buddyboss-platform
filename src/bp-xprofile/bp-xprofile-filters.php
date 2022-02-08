@@ -1265,7 +1265,7 @@ function bb_xprofile_repair_user_nicknames_callback() {
 /**
  * The user_nickname make compatible with BuddyBoss when user created from the backend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.7
  *
  * @param array   $meta Default meta values and keys for the user.
  * @param WP_User $user User object.
@@ -1292,7 +1292,7 @@ function bb_validate_user_nickname_on_user_register( array $meta, WP_User $user,
 /**
  * Validate user_nickname when user updated from the backend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.8.7
  *
  * @param WP_Error $errors WP_Error object (passed by reference).
  * @param bool     $update Whether this is a user update.
