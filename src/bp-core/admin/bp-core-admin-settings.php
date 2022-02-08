@@ -745,8 +745,9 @@ function bp_profile_photos_tutorial() {
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p><?php
-		}
+	</p>
+	<?php
+}
 
 /** Group Photos ************************************************************/
 
@@ -1516,7 +1517,7 @@ function bp_feed_settings_callback_platform( $args ) {
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
-    <?php
+	<?php
 
 }
 
@@ -1784,7 +1785,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
  * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
- *
  */
 function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
@@ -1799,7 +1799,6 @@ function bp_admin_setting_callback_register_show_confirm_email() {
  * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
- *
  */
 function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
@@ -1914,7 +1913,6 @@ function bp_group_directories_tutorial() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
@@ -1949,7 +1947,6 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_page_url() {
 	?>
@@ -2456,7 +2453,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 						),
 						admin_url( 'admin.php' )
 					)
-                )
+				)
 			)
 		);
 	}
@@ -2482,10 +2479,11 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 	?>
 
 	<p class="display-notice bb-lab-notice">
-		<strong><?php esc_html_e( 'Note to Developers' ); ?></strong>
+		<strong><?php esc_html_e( 'Note to Developers', 'buddyboss' ); ?></strong>
 		<br/>
 		<?php
 		printf(
+			/* translators: Tutorial link. */
 			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
 			sprintf(
 				'<a href="%s">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
