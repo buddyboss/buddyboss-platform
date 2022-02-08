@@ -4557,7 +4557,12 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 		if ( $total - sizeof( $members ) != 0 ) {
 			$member_count = $total - sizeof( $members );
 			?>
-			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+<?php echo esc_html( $member_count ); printf( _n( ' member', ' members', $member_count, 'buddyboss' ) ); ?>">
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
+			<?php
+			echo esc_html( $member_count );
+			printf( _n( ' member', ' members', $member_count, 'buddyboss' ) );
+			?>
+			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
 					<span class="bb-icon bb-icon-menu-dots-h"></span>
 				</a>
@@ -4568,7 +4573,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 		?>
 		</span>
 		<?php
-		
+
 	}
 
 }

@@ -19,11 +19,11 @@ bp_nouveau_before_loop(); ?>
 
 <?php
 
-	$cover_class		= !bb_platform_group_element_enable('cover-images') ? 'bb-cover-disabled' : 'bb-cover-enabled';
-	$meta_privacy		= !bb_platform_group_element_enable('group-privacy') ? 'meta-privacy-hidden' : '';
-	$meta_group_type	= !bb_platform_group_element_enable('group-type') ? 'meta-group-type-hidden' : '';
-	$group_members		= !bb_platform_group_element_enable('members') ? 'group-members-hidden' : '';
-	$group_alignment	= bb_platform_group_grid_style( 'left' );
+	$cover_class     = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
+	$meta_privacy    = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
+	$meta_group_type = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
+	$group_members   = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
+	$group_alignment = bb_platform_group_grid_style( 'left' );
 
 ?>
 
@@ -31,7 +31,7 @@ bp_nouveau_before_loop(); ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class . ' ' . $group_alignment ?> groups-dir-list">
+	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class . ' ' . $group_alignment; ?> groups-dir-list">
 
 	<?php
 	while ( bp_groups() ) :
@@ -42,24 +42,24 @@ bp_nouveau_before_loop(); ?>
 			<div class="list-wrap">
 
 				<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
-					<?php if ( bb_platform_group_element_enable('cover-images') ) { ?>
-					<?php
-					$group_cover_image_url = bp_attachments_get_attachment(
-						'url',
-						array(
-							'object_dir' => 'groups',
-							'item_id'    => bp_get_group_id(),
-						)
-					);
-					$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
-					?>
+					<?php if ( bb_platform_group_element_enable( 'cover-images' ) ) { ?>
+						<?php
+						$group_cover_image_url = bp_attachments_get_attachment(
+							'url',
+							array(
+								'object_dir' => 'groups',
+								'item_id'    => bp_get_group_id(),
+							)
+						);
+						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
+						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 
 					<?php } ?>
 				<?php } ?>
 
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-					<?php if ( bb_platform_group_element_enable('avatars') )  { ?>
+					<?php if ( bb_platform_group_element_enable( 'avatars' ) ) { ?>
 					<div class="item-avatar">
 						<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
 					</div>
@@ -86,21 +86,23 @@ bp_nouveau_before_loop(); ?>
 										</p>
 									<?php endif; ?>
 
-									<?php if ( bb_platform_group_element_enable('last-activity') ) { ?>
-										<p class="last-activity item-meta"><?php
+									<?php if ( bb_platform_group_element_enable( 'last-activity' ) ) { ?>
+										<p class="last-activity item-meta">
+										<?php
 											printf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
 												__( 'active %s', 'buddyboss' ),
 												bp_get_group_last_active()
 											);
-										?></p>
+										?>
+										</p>
 									<?php } ?>
 
 								</div>
 
 						</div>
 
-						<?php if ( bb_platform_group_element_enable('group-descriptions') ) { ?>
+						<?php if ( bb_platform_group_element_enable( 'group-descriptions' ) ) { ?>
 							<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
 						<?php } ?>
 
@@ -112,7 +114,7 @@ bp_nouveau_before_loop(); ?>
 						<div class="group-members-wrap">
 							<?php bb_groups_loop_members(); ?>
 						</div>
-						<?php if ( bb_platform_group_element_enable('join-buttons') ) { ?>
+						<?php if ( bb_platform_group_element_enable( 'join-buttons' ) ) { ?>
 							<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
 						<?php } ?>
 					</div>

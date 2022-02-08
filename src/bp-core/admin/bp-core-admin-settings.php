@@ -1518,7 +1518,7 @@ function bp_feed_settings_callback_platform( $args ) {
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
-    <?php
+	<?php
 
 }
 
@@ -1786,7 +1786,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
  * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
- *
  */
 function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
@@ -1801,7 +1800,6 @@ function bp_admin_setting_callback_register_show_confirm_email() {
  * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
- *
  */
 function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
@@ -1891,7 +1889,7 @@ function bp_admin_setting_group_layout_default_option() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_group_grid_style() {
-?>
+	?>
 	<div class="bb-grid-style-outer">
 		<?php
 			new BB_Admin_Setting_Fields(
@@ -1903,15 +1901,21 @@ function bb_admin_setting_group_grid_style() {
 					'opt_wrapper' => true,
 					'value'       => 'left',
 					'options'     => array(
-						'left' 		=> array('label' => is_rtl() ? 'Right' : 'Left', 'class' => 'option opt-left'),
-						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
+						'left'     => array(
+							'label' => is_rtl() ? 'Right' : 'Left',
+							'class' => 'option opt-left',
+						),
+						'centered' => array(
+							'label' => 'Centered',
+							'class' => 'option opt-centered',
+						),
 					),
 				)
 			);
 		?>
 	</div>
 	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
-<?php
+	<?php
 }
 
 /**
@@ -1926,24 +1930,24 @@ function bb_admin_setting_group_grid_style() {
 function bb_admin_setting_group_elements( $args ) {
 
 	echo "<div class='bb-group-elements'>";
-	foreach ($args['elements'] as $element) {
+	foreach ( $args['elements'] as $element ) {
 		$element_name = $element['element_name'];
-	?>
+		?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
 			<?php
 			new BB_Admin_Setting_Fields(
 				array(
-					'type'        => 'checkbox',
-					'id'          => 'bb-group-element-' . $element_name,
-					'label'       => $element['element_label'],
-					'disabled'    => true,
-					'value'       => $element_name,
-					'selected'	  => $element_name
+					'type'     => 'checkbox',
+					'id'       => 'bb-group-element-' . $element_name,
+					'label'    => $element['element_label'],
+					'disabled' => true,
+					'value'    => $element_name,
+					'selected' => $element_name,
 				)
 			);
 			?>
 		</div>
-	<?php
+		<?php
 	}
 	echo '</div>';
 	echo '<p class="description">';
@@ -1982,7 +1986,6 @@ function bp_group_directories_tutorial() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
@@ -2017,7 +2020,6 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_page_url() {
 	?>
