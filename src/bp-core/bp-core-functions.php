@@ -5905,14 +5905,14 @@ function bb_moderation_suspend_record_exist( $id ) {
 	$suspend_table = "{$wpdb->prefix}bp_suspend";
 
 	$cache_key = 'bb_suspend_' . $id;
-	$record    = wp_cache_get( $cache_key, 'bb' );
+	$record    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 	if ( false === $record ) {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$record = $wpdb->get_row( $suspend_record_sql );
-		wp_cache_set( $cache_key, $record, 'bb' );
+		wp_cache_set( $cache_key, $record, 'bp_moderation' );
 	}
 
 	return $record;

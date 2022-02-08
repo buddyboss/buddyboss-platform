@@ -553,12 +553,12 @@ function bb_moderation_clear_suspend_cache( $moderation_data ) {
 	// Needs to flush all cache with other component as well.
 	wp_cache_flush();
 
-//	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-//	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-//	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-//	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . md5( serialize( $moderation_data['item_id'] ) ), 'bb' );
-//	wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-//	wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+//	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . md5( serialize( $moderation_data['item_id'] ) ), 'bp_moderation' );
+//	wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+//	wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
 }
 
 add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
@@ -577,7 +577,7 @@ add_action( 'bb_suspend_before_remove_suspend', 'bp_core_clear_cache' );
 function bb_moderation_clear_delete_cache( $suspend_record ) {
 
 	if ( ! empty( $suspend_record->id ) ) {
-		wp_cache_delete( 'bb_suspend_' . $suspend_record->id, 'bb' );
+		wp_cache_delete( 'bb_suspend_' . $suspend_record->id, 'bp_moderation' );
 	}
 
 	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
@@ -587,11 +587,11 @@ function bb_moderation_clear_delete_cache( $suspend_record ) {
 	// Needs to flush all cache with other component as well.
 	wp_cache_flush();
 
-//	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-//	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-//	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-//	wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . md5( serialize( $suspend_record->user_id ) ), 'bb' );
-//	wp_cache_delete( 'bb_get_recode_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+//	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . md5( serialize( $suspend_record->user_id ) ), 'bp_moderation' );
+//	wp_cache_delete( 'bb_get_recode_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
 }
 
 add_action( 'bp_moderation_after_save', 'bb_moderation_clear_delete_cache' );
@@ -621,16 +621,16 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 	// Needs to flush all cache with other component as well.
 	wp_cache_flush();
 
-//	wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bb' );
-//	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bb' );
-//	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bb' );
-//	wp_cache_delete( 'bb_get_recode_' . $content_type . '_' . $content_id, 'bb' );
-//	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . md5( serialize( $content_id ) ), 'bb' );
-//	wp_cache_delete( 'bb_is_content_reported_hidden_' . $content_type . '_' . $content_id, 'bb' );
+//	wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_get_recode_' . $content_type . '_' . $content_id, 'bp_moderation' );
+//	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . md5( serialize( $content_id ) ), 'bp_moderation' );
+//	wp_cache_delete( 'bb_is_content_reported_hidden_' . $content_type . '_' . $content_id, 'bp_moderation' );
 //
 //	$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 //	if ( ! empty( $blocked_user ) ) {
-//		wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bb' );
+//		wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bp_moderation' );
 //	}
 
 }
