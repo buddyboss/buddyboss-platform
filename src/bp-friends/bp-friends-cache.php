@@ -62,8 +62,6 @@ function bp_friends_clear_bp_friends_friendships_cache( $friendship_id, $initiat
 
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $initiator_user_id, 'bp_friends_friendships_for_user' );
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $friend_user_id, 'bp_friends_friendships_for_user' );
-	wp_cache_delete( 'get_random_friends_' . $initiator_user_id, 'bp_friends_friendships_for_user' );
-	wp_cache_delete( 'get_random_friends_' . $friend_user_id, 'bp_friends_friendships_for_user' );
 }
 add_action( 'friends_friendship_requested', 'bp_friends_clear_bp_friends_friendships_cache', 10, 3 );
 add_action( 'friends_friendship_accepted', 'bp_friends_clear_bp_friends_friendships_cache', 10, 3 );
@@ -90,8 +88,6 @@ function bp_friends_clear_bp_friends_friendships_cache_remove( $friendship_id, B
 
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $friendship->initiator_user_id, 'bp_friends_friendships_for_user' );
 	wp_cache_delete( 'get_friendship_ids_for_user_' . $friendship->friend_user_id, 'bp_friends_friendships_for_user' );
-	wp_cache_delete( 'get_random_friends_' . $friendship->initiator_user_id, 'bp_friends_friendships_for_user' );
-	wp_cache_delete( 'get_random_friends_' . $friendship->friend_user_id, 'bp_friends_friendships_for_user' );
 }
 add_action( 'friends_friendship_withdrawn', 'bp_friends_clear_bp_friends_friendships_cache_remove', 10, 2 );
 add_action( 'friends_friendship_rejected', 'bp_friends_clear_bp_friends_friendships_cache_remove', 10, 2 );
