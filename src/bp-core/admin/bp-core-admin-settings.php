@@ -1901,7 +1901,7 @@ function bb_admin_setting_group_grid_style() {
 					'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
 					'disabled'    => true,
 					'opt_wrapper' => true,
-					'value'       => 'centered',
+					'value'       => 'left',
 					'options'     => array(
 						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
 						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
