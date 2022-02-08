@@ -86,7 +86,6 @@ add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_description', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_group_description', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_group_description_excerpt', 'bb_core_remove_unfiltered_html', 99 );
-
 add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_description_before_save', 'bb_core_remove_unfiltered_html', 99 );
 
