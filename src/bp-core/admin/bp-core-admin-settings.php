@@ -687,6 +687,11 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
 		$app_cover_preview = $web_cover_preview;
 	}
+
+	$cover_height_class = '';
+	if ( 'large' === bb_get_profile_cover_image_height() ) {
+		$cover_height_class = 'large-image';
+	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
@@ -699,7 +704,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 				<?php endif; ?>
 			</div>
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( $cover_height_class ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
@@ -1020,6 +1025,11 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'groups' );
 		$app_cover_preview = $web_cover_preview;
 	}
+
+	$cover_height_class = '';
+	if ( 'large' === bb_get_group_cover_image_height() ) {
+		$cover_height_class = 'large-image';
+	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
@@ -1033,7 +1043,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 			</div>
 
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( $cover_height_class ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
@@ -1985,7 +1995,7 @@ function bp_admin_setting_group_layout_default_option() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_group_grid_style() {
-?>
+	?>
 	<div class="bb-grid-style-outer">
 		<?php
 			new BB_Admin_Setting_Fields(
@@ -1997,15 +2007,21 @@ function bb_admin_setting_group_grid_style() {
 					'opt_wrapper' => true,
 					'value'       => 'centered',
 					'options'     => array(
-						'left' 		=> array('label' => 'Left', 'class' => 'option opt-left'),
-						'centered' 	=> array('label' => 'Centered', 'class' => 'option opt-centered' ),
+						'left'     => array(
+							'label' => 'Left',
+							'class' => 'option opt-left',
+						),
+						'centered' => array(
+							'label' => 'Centered',
+							'class' => 'option opt-centered',
+						),
 					),
 				)
 			);
 		?>
 	</div>
 	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
-<?php
+	<?php
 }
 
 /**
@@ -2020,19 +2036,21 @@ function bb_admin_setting_group_grid_style() {
 function bb_admin_setting_group_elements( $args ) {
 
 	echo "<div class='bb-group-elements'>";
-	foreach ($args['elements'] as $element) {
+	foreach ( $args['elements'] as $element ) {
 		$element_name = $element['element_name'];
 		?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
-			<?php new BB_Admin_Setting_Fields(
-					array(
-							'type'        => 'checkbox',
-							'id'          => 'bb-group-element-' . $element_name,
-							'label'       => $element['element_label'],
-							'disabled'    => true,
-							'value'       => $element_name,
-					)
-			); ?>
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'     => 'checkbox',
+					'id'       => 'bb-group-element-' . $element_name,
+					'label'    => $element['element_label'],
+					'disabled' => true,
+					'value'    => $element_name,
+				)
+			);
+			?>
 		</div>
 		<?php
 	}

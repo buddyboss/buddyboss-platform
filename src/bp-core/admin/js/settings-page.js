@@ -381,7 +381,7 @@ window.bp = window.bp || {};
 					);
 			}
 
-			// Hide/show group element cover image
+			// Hide/show group element cover image.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
 				var cover_image_element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
@@ -407,7 +407,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Hide/show group element avatars
+			// Hide/show group element avatars.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
 				var avatar_element = document.getElementById( 'bp-disable-group-avatar-uploads' );
@@ -433,7 +433,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Hide/show group element group type
+			// Hide/show group element group type.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_types' ).length ) {
 
 				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
@@ -466,9 +466,9 @@ window.bp = window.bp || {};
 						var post_type = $( this ).data( 'post_type' );
 
 						if ( true === this.checked ) {
-							  $( '.bp-feed-post-type-comment-' + post_type )
-							 .closest( 'tr' )
-							 .show();
+							$( '.bp-feed-post-type-comment-' + post_type )
+							.closest( 'tr' )
+							.show();
 						}
 					}
 				);
@@ -1584,6 +1584,15 @@ window.bp = window.bp || {};
 					} else if ( 'bp-cover-profile-height' === $( this ).attr( 'name' ) && bpCoverProfileHeight === $( this ).val() ) {
 						is_confirmed_show = false;
 					}
+
+					// Add class to preview section for browser only.
+					if ( 'bp-cover-profile-height' === $( this ).attr( 'name' ) ) {
+						if ( 'small' === $( this ).val() ) {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+						} else {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						}
+					}
 				}
 			);
 
@@ -1600,6 +1609,15 @@ window.bp = window.bp || {};
 						is_confirmed_show = false;
 					} else if ( 'bp-cover-group-height' === $( this ).attr( 'name' ) && bpCoverGroupHeight === $( this ).val() ) {
 						is_confirmed_show = false;
+					}
+
+					// Add class to preview section for browser only.
+					if ( 'bp-cover-group-height' === $( this ).attr( 'name' ) ) {
+						if ( 'small' === $( this ).val() ) {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+						} else {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						}
 					}
 				}
 			);
