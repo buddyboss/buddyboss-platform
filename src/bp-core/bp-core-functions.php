@@ -6763,3 +6763,16 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		'is_buddyboss_app_plugin_active' => $is_buddyboss_app_plugin_active,
 	);
 }
+
+/**
+ * Remove all the unfilter html from the string.
+ *
+ * @param string $content Given String
+ *
+ * @return string
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_remove_unfiltered_html( $content ) {
+
+	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
+}
