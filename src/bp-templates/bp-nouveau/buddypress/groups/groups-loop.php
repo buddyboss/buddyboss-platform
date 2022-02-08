@@ -19,11 +19,11 @@ bp_nouveau_before_loop(); ?>
 
 <?php
 
-	$cover_class		= ( bp_disable_group_cover_image_uploads() || ( function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('cover-images') ) ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
-	$meta_privacy		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-privacy') ? 'meta-privacy-hidden' : '';
-	$meta_group_type	= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('group-type') ? 'meta-group-type-hidden' : '';
-	$group_members		= function_exists('bb_platform_group_element_enable') && !bb_platform_group_element_enable('members') ? 'group-members-hidden' : '';
-	$group_alignment	= function_exists('bb_platform_group_grid_style') ? bb_platform_group_grid_style( 'left' )  : 'left';
+	$cover_class		= !bb_platform_group_element_enable('cover-images') ? 'bb-cover-disabled' : 'bb-cover-enabled';
+	$meta_privacy		= !bb_platform_group_element_enable('group-privacy') ? 'meta-privacy-hidden' : '';
+	$meta_group_type	= !bb_platform_group_element_enable('group-type') ? 'meta-group-type-hidden' : '';
+	$group_members		= !bb_platform_group_element_enable('members') ? 'group-members-hidden' : '';
+	$group_alignment	= bb_platform_group_grid_style( 'left' );
 
 ?>
 
@@ -42,7 +42,7 @@ bp_nouveau_before_loop(); ?>
 			<div class="list-wrap">
 
 				<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
-					<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('cover-images') ) ) { ?>
+					<?php if ( bb_platform_group_element_enable('cover-images') ) { ?>
 					<?php
 					$group_cover_image_url = bp_attachments_get_attachment(
 						'url',
@@ -59,7 +59,7 @@ bp_nouveau_before_loop(); ?>
 				<?php } ?>
 
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-					<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('avatars') ) ) { ?>
+					<?php if ( bb_platform_group_element_enable('avatars') )  { ?>
 					<div class="item-avatar">
 						<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
 					</div>
@@ -86,7 +86,7 @@ bp_nouveau_before_loop(); ?>
 										</p>
 									<?php endif; ?>
 
-									<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('last-activity') ) ) { ?>
+									<?php if ( bb_platform_group_element_enable('last-activity') ) { ?>
 										<p class="last-activity item-meta"><?php
 											printf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
@@ -100,7 +100,7 @@ bp_nouveau_before_loop(); ?>
 
 						</div>
 
-						<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('group-descriptions') ) ) { ?>
+						<?php if ( bb_platform_group_element_enable('group-descriptions') ) { ?>
 							<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
 						<?php } ?>
 
@@ -112,7 +112,7 @@ bp_nouveau_before_loop(); ?>
 						<div class="group-members-wrap">
 							<?php bb_groups_loop_members(); ?>
 						</div>
-						<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('join-buttons') ) ) { ?>
+						<?php if ( bb_platform_group_element_enable('join-buttons') ) { ?>
 							<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
 						<?php } ?>
 					</div>
