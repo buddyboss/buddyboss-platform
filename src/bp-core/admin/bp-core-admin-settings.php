@@ -1317,16 +1317,16 @@ function bp_form_option( $option, $default = '', $slug = false ) {
 	echo bp_get_form_option( $option, $default, $slug );
 }
 
-	/**
-	 * Return settings API option
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param string $option  Form option to return.
-	 * @param string $default Form option default.
-	 * @param bool   $slug    Form option slug.
-	 * @return string
-	 */
+/**
+ * Return settings API option
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param string $option  Form option to return.
+ * @param string $default Form option default.
+ * @param bool   $slug    Form option slug.
+ * @return string
+ */
 function bp_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Get the option and sanitize it.
@@ -1894,7 +1894,7 @@ function bb_admin_setting_group_grid_style() {
 ?>
 	<div class="bb-grid-style-outer">
 		<?php
-			$cover_profile_width = new BP_Admin_Setting_Fields(
+			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'radio',
 					'id'          => 'bb-group-grid-style-',
@@ -1908,7 +1908,6 @@ function bb_admin_setting_group_grid_style() {
 					),
 				)
 			);
-			$cover_profile_width->render_field();
 		?>
 	</div>
 	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
@@ -1929,19 +1928,20 @@ function bb_admin_setting_group_elements( $args ) {
 	echo "<div class='bb-group-elements'>";
 	foreach ($args['elements'] as $element) {
 		$element_name = $element['element_name'];
-		$cover_profile_width = new BP_Admin_Setting_Fields(
-			array(
-				'type'        => 'checkbox',
-				'id'          => 'bb-group-element-' . $element_name,
-				'label'       => $element['element_label'],
-				'disabled'    => true,
-				'value'       => $element_name,
-				'selected'	  => $element_name
-			)
-		);
 	?>
 		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
-			<?php $cover_profile_width->render_field(); ?>
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'checkbox',
+					'id'          => 'bb-group-element-' . $element_name,
+					'label'       => $element['element_label'],
+					'disabled'    => true,
+					'value'       => $element_name,
+					'selected'	  => $element_name
+				)
+			);
+			?>
 		</div>
 	<?php
 	}

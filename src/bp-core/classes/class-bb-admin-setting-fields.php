@@ -9,14 +9,14 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
+if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 
 	/**
 	 * Load BuddyBoss plugin admin area.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BP_Admin_Setting_Fields {
+	class BB_Admin_Setting_Fields {
 
 		/**
 		 * Contain field attributes to render in the admin setting page.
@@ -53,7 +53,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				return false;
 			}
 
-			$args = apply_filters( 'bb_admin_setting_field_' . $args['id'], $args );
+			$args = apply_filters( 'bb_admin_setting_field_' . sanitize_title( $args['id'] ), $args );
 
 			$this->field = bp_parse_args(
 				$args,
@@ -74,6 +74,8 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				),
 				'bb_admin_setting_fields'
 			);
+
+			$this->render_field();
 		}
 
 		/**
@@ -259,12 +261,12 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $key => $label ) {
-					echo ( isset( $this->field['opt_wrapper'] ) && $this->field['opt_wrapper'] === true ) ? "<div class='bb-" . str_replace( ' ', '-', strtolower( $this->field['label'] ) ) . "'>" : '';
+					echo ( isset( $this->field['opt_wrapper'] ) && true === $this->field['opt_wrapper'] ) ? "<div class='bb-" . esc_attr( str_replace( ' ', '-', strtolower( $this->field['label'] ) ) ) . "'>" : '';
 					?>
 					<input type="radio" name="<?php echo esc_attr( $this->field['name'] ); ?>" class="regular-text <?php echo esc_attr( $this->field['class'] ); ?>" id="<?php echo esc_attr( $this->field['id'] . $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key, $this->field['value'] ); ?> <?php disabled( $this->field['disabled'] ); ?>>
 
 					<?php if ( is_array( $label ) ) { ?>
-						<label for="<?php echo esc_attr( $this->field['id'] . $key ); ?>" class="<?php echo ( isset( $label['class'] ) ) ? $label['class'] : ''; ?>">
+						<label for="<?php echo esc_attr( $this->field['id'] . $key ); ?>" class="<?php echo ( isset( $label['class'] ) ) ? esc_attr( $label['class'] ) : ''; ?>">
 							<?php echo wp_kses_post( $label['label'] ); ?>
 						</label>
 					<?php } elseif ( ! empty( $label ) ) { ?>
@@ -273,7 +275,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 						</label>
 						<?php
 					}
-					echo ( isset( $this->field['opt_wrapper'] ) && $this->field['opt_wrapper'] === true ) ? '</div>' : '';
+					echo ( isset( $this->field['opt_wrapper'] ) && true === $this->field['opt_wrapper'] ) ? '</div>' : '';
 				}
 			}
 
@@ -287,7 +289,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 		 */
 		private function render_checkbox_field() {
 			?>
-			<input type="checkbox" name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" value="<?php echo $this->field['value']; ?>" class="regular-text <?php echo esc_attr( $this->field['class'] ); ?>" <?php disabled( $this->field['disabled'] ); ?> <?php checked( $this->field['selected'], $this->field['value'] ); ?>>
+			<input type="checkbox" name="<?php echo esc_attr( $this->field['name'] ); ?>" id="<?php echo esc_attr( $this->field['id'] ); ?>" value="<?php echo esc_attr( $this->field['value'] ); ?>" class="regular-text <?php echo esc_attr( $this->field['class'] ); ?>" <?php disabled( $this->field['disabled'] ); ?> <?php checked( $this->field['selected'], $this->field['value'] ); ?>>
 
 			<?php if ( ! empty( $this->field['label'] ) ) { ?>
 				<label for="<?php echo esc_attr( $this->field['id'] ); ?>">
@@ -312,7 +314,7 @@ if ( ! class_exists( 'BP_Admin_Setting_Fields' ) ) :
 				foreach ( $options as $option_value => $option_label ) {
 
 					$checked = '';
-					if ( in_array( $option_value, $this->field['value'], false ) || isset( $this->field['value'][ $option_value ] ) ) {
+					if ( in_array( $option_value, $this->field['value'], true ) || isset( $this->field['value'][ $option_value ] ) ) {
 						$checked = "checked='checked'";
 					}
 					?>

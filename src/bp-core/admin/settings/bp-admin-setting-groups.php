@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	/**
@@ -96,6 +95,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
 		$default_cover_type = bb_get_default_group_cover_type();
 
+		$pro_class = 'bb-pro-inactive';
+		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+			$pro_class = 'bb-pro-active';
+		}
+
 		// Group Settings.
 		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
 
@@ -175,48 +179,55 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
-		$pro_class = 'bb-pro-inactive';
-		if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
-			$pro_class = 'bb-pro-active';
-		}
 		// Admin Settings for Settings > Groups > Group Directories > Default View.
 		$args          = array();
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
 
-		// Admin Settings for Settings > Groups > Group Directories > Grid Style
-		$args = array();
+		// Admin Settings for Settings > Groups > Group Directories > Grid Style.
+		$args          = array();
 		$args['class'] = 'group-gride-style group-layout-options ' . $pro_class;
-		$field_title = sprintf(
-			__( 'Grid Style %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
-			'<br/><span class="bb-head-notice">',
-			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
-			'</span>'
-		);
-		$this->add_field( 'bb-group-grid-style', $field_title, 'bb_admin_setting_group_grid_style',  'radio', $args );
+		$this->add_field( 'bb-group-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
 
-		// Admin Settings for Settings > Groups > Group Directories > Elements
-		$args = [
-			'class' => 'group-elements ' . $pro_class,
-			'elements' => [
-				[ 'element_name' => 'cover-images', 'element_label' => __( 'Cover Images', 'buddyboss' )],
-				[ 'element_name' => 'avatars', 'element_label' => __( 'Avatars', 'buddyboss' )],
-				[ 'element_name' => 'group-privacy', 'element_label' => __( 'Group Privacy', 'buddyboss' )],
-				[ 'element_name' => 'group-type', 'element_label' => __( 'Group Type', 'buddyboss' )],
-				[ 'element_name' => 'last-activity', 'element_label' => __( 'Last Activity', 'buddyboss' )],
-				[ 'element_name' => 'members', 'element_label' => __( 'Members', 'buddyboss' )],
-				[ 'element_name' => 'group-descriptions', 'element_label' => __( 'Group Descriptions', 'buddyboss' )],
-				[ 'element_name' => 'join-buttons', 'element_label' => __( 'Join Buttons', 'buddyboss' )]
-			]
-		];
-		$field_title = sprintf(
-			__( 'Elements %1$s Install  %2$s to unlock %3$s', 'buddyboss' ),
-			'<br/><span class="bb-head-notice">',
-			'<a target="_blank" href="https://www.buddyboss.com/platform">BuddyBoss Platform Pro</a>',
-			'</span>'
+		// Admin Settings for Settings > Groups > Group Directories > Elements.
+		$args = array(
+			'class'    => 'group-elements ' . $pro_class,
+			'elements' => array(
+				array(
+					'element_name'  => 'cover-images',
+					'element_label' => __( 'Cover Images', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'avatars',
+					'element_label' => __( 'Avatars', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-privacy',
+					'element_label' => __( 'Group Privacy', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Group Type', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'last-activity',
+					'element_label' => __( 'Last Activity', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'members',
+					'element_label' => __( 'Members', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-descriptions',
+					'element_label' => __( 'Group Descriptions', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'join-buttons',
+					'element_label' => __( 'Join Buttons', 'buddyboss' ),
+				),
+			),
 		);
-		$this->add_field( 'bb-group-elements', $field_title, 'bb_admin_setting_group_elements', 'checkbox', $args );
-
+		$this->add_field( 'bb-group-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.
@@ -239,7 +250,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	public function bb_group_default_custom_group_avatar_upload_dir( $upload_dir = array() ) {
 		$bp_params = array();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['bp_params'] ) && ! empty( $_POST['bp_params'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
 			$bp_params = array_map( 'sanitize_text_field', $_POST['bp_params'] );
 		}
 
