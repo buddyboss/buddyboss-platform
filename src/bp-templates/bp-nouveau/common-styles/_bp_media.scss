@@ -4855,8 +4855,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	}
 
-	> #bp-ajax-loader {
-		margin: 20px;
+	> #bp-ajax-loader,
+	> .bp-feedback.bp-messages {
+		margin: -1px;
 	}
 }
 
