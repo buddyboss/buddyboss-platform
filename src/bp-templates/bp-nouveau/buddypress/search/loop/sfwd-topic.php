@@ -1,4 +1,15 @@
-<?php $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
+<?php
+/**
+ * Template for displaying the search results of the topic
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/sfwd-topic.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
+$total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 <li class="bp-search-item bp-search-item_sfwd-topic">
 	<div class="list-wrap">
 		<div class="item-avatar">

@@ -2580,8 +2580,18 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table = $prefix . 'bp_groups';
 					// phpcs:ignore
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
-					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+					$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+					$group_avatar = function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
+
+					if ( empty( $group_avatar ) ) {
+						$group_avatar = get_avatar_url(
+							'',
+							array(
+								'size' => 300,
+							)
+						);
+					}
+
 					$legacy_group_avatar_name = '-groupavatar-full';
 					$legacy_user_avatar_name  = '-avatar2';
 

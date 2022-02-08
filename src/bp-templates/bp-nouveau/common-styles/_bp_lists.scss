@@ -157,6 +157,46 @@
 
 	} // close li
 
+	&.groups-list {
+
+		&:not(.grid) .only-grid-view {
+			display: none;
+		}
+
+		.group-list {
+			padding-top: 0;
+		}
+
+		.group-list-header {
+			position: relative;
+			padding: 15px 0;
+
+			.item-avatar {
+				position: relative;
+				z-index: 1;
+			}
+
+			.bs-group-cover {
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+
+				img {
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+
+			}
+		}
+	}
+
 } // close .bp-list
 
 // Ensure there's space between parent act list wrapper and filters bar

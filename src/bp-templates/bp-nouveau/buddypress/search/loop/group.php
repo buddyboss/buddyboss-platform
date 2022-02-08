@@ -1,3 +1,14 @@
+<?php
+/**
+ * Template for displaying the search results of the group
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/group.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
 <li <?php bp_group_class( array( 'item-entry bp-search-item bp-search-item_group' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 	<div class="list-wrap">
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
