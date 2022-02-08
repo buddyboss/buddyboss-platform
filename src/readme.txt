@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.8.7 =
 * Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled
+* Groups - Fixed group title and description critical security issue
 * Activity - Fixed critical issue to restrict photos and videos privacy update when uploaded to a specific album
 * Activity - Fixed small UI issue showing text close to ellipsis icon
 * Activity - Fixed @mention issue with space when user created from the dashboard
