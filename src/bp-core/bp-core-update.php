@@ -355,7 +355,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18651 ) {
-			bb_update_to_1_8_7();
+			bb_update_to_1_8_8();
 		}
 	}
 
@@ -1680,7 +1680,7 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_8_7() {
+function bb_update_to_1_8_8() {
 	global $buddyboss_theme_options;
 
 	/* Check if options are empty */

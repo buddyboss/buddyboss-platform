@@ -4608,9 +4608,9 @@ function bb_get_followers_count( $user_id = false ) {
 		return;
 	}
 
-	$is_follow_active = bp_is_active( 'activity' ) && function_exists('bp_is_activity_follow_active') && bp_is_activity_follow_active();
+	$is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
 
-	if ( $user_id == false ) {
+	if ( false === $user_id ) {
 		$user_id = bp_displayed_user_id();
 	}
 
@@ -4619,19 +4619,23 @@ function bb_get_followers_count( $user_id = false ) {
 		$follower_ids    = bp_get_follower_ids( array( 'user_id' => $user_id ) );
 
 		if ( ! empty( $follower_ids ) ) {
-			$total_followers = sizeof( explode( ',', $follower_ids ) );
+			$total_followers = count( explode( ',', $follower_ids ) );
 		}
 
-		if ( $total_followers == 0 ) {
+		if ( 0 === $total_followers ) {
 			$followers = __( '<b>0</b> followers', 'buddyboss' );
-		} elseif ( $total_followers == 1 ) {
+		} elseif ( 1 === $total_followers ) {
 			$followers = __( '<b>1</b> follower', 'buddyboss' );
 		} else {
-			$followers = sprintf( __( '<b>%s</b> followers', 'buddyboss' ), $total_followers );
+			$followers = sprintf(
+				/* translators: Total followers count. */
+				__( '<b>%s</b> followers', 'buddyboss' ),
+				$total_followers
+			);
 		}
 		?>
 
-		<div class="followers-wrap"><?php echo $followers; ?></div>
+		<div class="followers-wrap"><?php echo wp_kses_post( $followers ); ?></div>
 		<?php
 	}
 }
@@ -4654,7 +4658,7 @@ function bb_get_following_count( $user_id = false ) {
 
 	$is_follow_active = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
 
-	if ( $user_id == false ) {
+	if ( false === $user_id ) {
 		$user_id = bp_displayed_user_id();
 	}
 
@@ -4663,19 +4667,23 @@ function bb_get_following_count( $user_id = false ) {
 		$following_ids   = bp_get_following_ids( array( 'user_id' => $user_id ) );
 
 		if ( ! empty( $following_ids ) ) {
-			$total_following = sizeof( explode( ',', $following_ids ) );
+			$total_following = count( explode( ',', $following_ids ) );
 		}
 
-		if ( $total_following == 0 ) {
+		if ( 0 === $total_following ) {
 			$following = __( '<b>0</b> following', 'buddyboss' );
-		} elseif ( $total_following == 1 ) {
+		} elseif ( 1 === $total_following ) {
 			$following = __( '<b>1</b> following', 'buddyboss' );
 		} else {
-			$following = sprintf( __( '<b>%s</b> following', 'buddyboss' ), $total_following );
+			$following = sprintf(
+				/* translators: Total following count. */
+				__( '<b>%s</b> following', 'buddyboss' ),
+				$total_following
+			);
 		}
 		?>
 
-		<div class="following-wrap"><?php echo $following; ?></div>
+		<div class="following-wrap"><?php echo wp_kses_post( $following ); ?></div>
 		<?php
 	}
 }
