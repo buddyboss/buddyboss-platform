@@ -964,6 +964,10 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	}
 
 	$group      = bp_messages_get_meta( $id, 'group_id', true );
+	$post_group = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT );
+	if ( ! $group && isset( $post_group ) ) {
+		$group = $post_group;
+	}
 	$group_name = bp_get_group_name( groups_get_group( $group ) );
 
 	// check if it has enough recipients to use batch emails.
@@ -990,7 +994,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 									'message'     => stripslashes( $message ),
 									'sender.name' => $sender_name,
 									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-									'group.name'  => $group_name
+									'group.name'  => $group_name,
 								),
 							),
 						),
@@ -1020,32 +1024,6 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 				'notification_type' => 'group-message-email',
 			);
 
-		$group      = bp_messages_get_meta( $id, 'group_id', true );
-		$post_group = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT );
-		if ( ! $group && isset( $post_group ) ) {
-			$group = $post_group;
-		}
-		$group_name = bp_get_group_name( groups_get_group( $group ) );
-
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-			$all_recipients[] = array(
-				'email_type' => 'group-message-email',
-				'recipient'  => $ud,
-				'arguments'  => array(
-					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message'     => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'group.name'  => $group_name,
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-					),
-				),
-			);
-
-		} else {
 			bp_send_email(
 				'group-message-email',
 				$ud,
