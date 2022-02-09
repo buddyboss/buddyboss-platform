@@ -6516,21 +6516,21 @@ function bp_get_group_has_avatar( $group_id = false ) {
 		$group_id = bp_get_current_group_id();
 	}
 
-	$avatar_args = array(
-		'item_id' => $group_id,
-		'object'  => 'group',
-		'no_grav' => true,
-		'html'    => false,
-		'type'    => 'thumb',
+	$group_avatar = bp_core_fetch_avatar(
+		array(
+			'item_id' => $group_id,
+			'object'  => 'group',
+			'no_grav' => true,
+			'html'    => false,
+			'type'    => 'thumb',
+		)
 	);
 
-	$group_avatar = bp_core_fetch_avatar( $avatar_args );
-
-	if ( bp_core_avatar_default( 'local', $avatar_args ) === $group_avatar ) {
-		return false;
+	if ( false !== strpos( $group_avatar, '/' . $group_id . '/' ) ) {
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 /**

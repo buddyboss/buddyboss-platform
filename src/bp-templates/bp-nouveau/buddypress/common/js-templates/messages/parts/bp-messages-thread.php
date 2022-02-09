@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages thread template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-thread.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-thread">
 	<#
 	var other_recipients = _.reject(data.recipients, function(item) {

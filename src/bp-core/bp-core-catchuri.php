@@ -1156,7 +1156,12 @@ function bp_private_network_template_redirect() {
 		$id                  = isset( $current_page_object->ID ) ? $current_page_object->ID : get_the_ID();
 		$id                  = ( ! empty( $id ) ) ? $id : 0;
 		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
-
+		$actual_link         = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		// If feed then return.
+		if ( strpos( $actual_link, '/feed/' ) !== false ||
+		     strpos( $actual_link, 'feed=' ) !== false ) { // if permalink has ? then need to check with feed=.
+			return;
+		}
 		/**
 		 * Filter to check custom registration is enable or not.
 		 *
@@ -1176,7 +1181,6 @@ function bp_private_network_template_redirect() {
 			}
 
 			$allow_custom_registration = bp_allow_custom_registration();
-			$actual_link               = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			if ( $allow_custom_registration ) {
 				if ( untrailingslashit( $actual_link ) === untrailingslashit( bp_custom_register_page_url() ) ) {
 					return;
@@ -1206,8 +1210,10 @@ function bp_private_network_template_redirect() {
 						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 						$un_trailing_slash_it_url = untrailingslashit( $url );
 
-						// Check if strict match
-						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						// Check if embed.
+						if ( $request_url === $un_trailing_slash_it_url . '/embed' ) {
+							return;
+						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 							return;
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );
@@ -1243,8 +1249,6 @@ function bp_private_network_template_redirect() {
 					if ( ! bp_is_register_page() && ! $activate && $terms !== $id && $privacy !== $id ) {
 
 						if ( class_exists( 'woocommerce' ) ) {
-
-							$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
 								if ( $is_enable_custom_registration ) {
@@ -1298,7 +1302,6 @@ function bp_private_network_template_redirect() {
 				} else {
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						if ( $actual_link !== wc_lostpassword_url() ) {
 							if ( $is_enable_custom_registration ) {
 
@@ -1337,8 +1340,6 @@ function bp_private_network_template_redirect() {
 			} else {
 
 				if ( class_exists( 'woocommerce' ) ) {
-
-					$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
 						if ( $is_enable_custom_registration ) {
