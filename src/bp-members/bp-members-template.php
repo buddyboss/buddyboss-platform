@@ -361,12 +361,12 @@ function bp_has_members( $args = array() ) {
 
 	if ( empty( $member_type ) ) {
 		$member_type = bp_get_current_member_type();
-    } elseif ( is_array( $member_type ) ) {
-	    $member_type = array_merge( $member_type, bp_get_current_member_type() );
-    } elseif ( '' !== $member_type ) {
+	} elseif ( is_array( $member_type ) ) {
+		$member_type = array_merge( $member_type, bp_get_current_member_type() );
+	} elseif ( '' !== $member_type ) {
 		$member_type = explode( ',', $member_type );
 		$member_type = array_merge( $member_type, bp_get_current_member_type() );
-    }
+	}
 
 	$search_terms_default = null;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'members' );
@@ -379,13 +379,13 @@ function bp_has_members( $args = array() ) {
 	$args = bp_parse_args( $args, array() );
 	// Exclude Member Types
 	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) && empty( $args['member_type'] ) ) ) {
-	    // get all excluded member types.
-	    $bp_member_type_ids = bp_get_removed_member_types();
-	    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
-		    foreach ( $bp_member_type_ids as $single ) {
-			    $member_type__not_in[] = $single['name'];
-		    }
-	    }
+		// get all excluded member types.
+		$bp_member_type_ids = bp_get_removed_member_types();
+		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+			foreach ( $bp_member_type_ids as $single ) {
+				$member_type__not_in[] = $single['name'];
+			}
+		}
 	}
 
 	// Type: active ( default ) | random | newest | popular | online | alphabetical.
@@ -2056,10 +2056,10 @@ function bp_signup_page() {
 function bp_get_signup_page() {
 	if ( bp_has_custom_signup_page() && ! bp_allow_custom_registration() ) {
 		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
-	} else if ( bp_has_custom_signup_page() && bp_allow_custom_registration() && '' === bp_custom_register_page_url() ) {
+	} elseif ( bp_has_custom_signup_page() && bp_allow_custom_registration() && '' === bp_custom_register_page_url() ) {
 		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
-	} else if ( bp_allow_custom_registration() && '' !== bp_custom_register_page_url() ) {
-	    $page = bp_custom_register_page_url();
+	} elseif ( bp_allow_custom_registration() && '' !== bp_custom_register_page_url() ) {
+		$page = bp_custom_register_page_url();
 	} else {
 		$page = bp_get_root_domain() . '/wp-signup.php';
 	}
@@ -2781,4 +2781,100 @@ function bp_get_signup_confirm_email_value() {
 	 * @param string $value Email address submitted during signup.
 	 */
 	return apply_filters( 'bp_get_signup_confirm_email_value', $value );
+}
+
+/**
+ * Get user followers count.
+ *
+ * @param int|null $user_id user id to get followers count. If user id is null then get current logged-in user id.
+ *                 Default false.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_followers_count( $user_id = false ) {
+
+	if ( ! function_exists( 'bp_is_active' ) && ! function_exists( 'bp_is_activity_follow_active' ) ) {
+		return;
+	}
+
+	$is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
+
+	if ( false === $user_id ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( $is_follow_active && is_user_logged_in() ) {
+		$total_followers = 0;
+		$follower_ids    = bp_get_follower_ids( array( 'user_id' => $user_id ) );
+
+		if ( ! empty( $follower_ids ) ) {
+			$total_followers = count( explode( ',', $follower_ids ) );
+		}
+
+		if ( 0 === $total_followers ) {
+			$followers = __( '<b>0</b> followers', 'buddyboss' );
+		} elseif ( 1 === $total_followers ) {
+			$followers = __( '<b>1</b> follower', 'buddyboss' );
+		} else {
+			$followers = sprintf(
+			/* translators: Total followers count. */
+				__( '<b>%s</b> followers', 'buddyboss' ),
+				$total_followers
+			);
+		}
+		?>
+
+		<div class="followers-wrap"><?php echo wp_kses_post( $followers ); ?></div>
+		<?php
+	}
+}
+
+/**
+ * Get user following count.
+ *
+ * @param int|null $user_id user id to get following count. If user id is null then get current logged-in user id.
+ *                 Default false.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_following_count( $user_id = false ) {
+
+	if ( ! function_exists( 'bp_is_active' ) && ! function_exists( 'bp_is_activity_follow_active' ) ) {
+		return;
+	}
+
+	$is_follow_active = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
+
+	if ( false === $user_id ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( $is_follow_active && is_user_logged_in() ) {
+		$total_following = 0;
+		$following_ids   = bp_get_following_ids( array( 'user_id' => $user_id ) );
+
+		if ( ! empty( $following_ids ) ) {
+			$total_following = count( explode( ',', $following_ids ) );
+		}
+
+		if ( 0 === $total_following ) {
+			$following = __( '<b>0</b> following', 'buddyboss' );
+		} elseif ( 1 === $total_following ) {
+			$following = __( '<b>1</b> following', 'buddyboss' );
+		} else {
+			$following = sprintf(
+			/* translators: Total following count. */
+				__( '<b>%s</b> following', 'buddyboss' ),
+				$total_following
+			);
+		}
+		?>
+
+		<div class="following-wrap"><?php echo wp_kses_post( $following ); ?></div>
+		<?php
+	}
 }

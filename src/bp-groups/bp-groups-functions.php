@@ -4568,8 +4568,36 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 		?>
 		</span>
 		<?php
-		
+
 	}
 
+}
+
+/**
+ * Get group cover image width.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'default'.
+ *
+ * @return string Return group cover image width.
+ */
+function bb_get_group_cover_image_width( $default = 'default' ) {
+	return bp_get_option( 'bp-cover-group-width', $default );
+}
+
+/**
+ * Get group cover image height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'small'.
+ *
+ * @return string Return group cover image height.
+ */
+function bb_get_group_cover_image_height( $default = 'small' ) {
+	return bp_get_option( 'bp-cover-group-height', $default );
 }
 
