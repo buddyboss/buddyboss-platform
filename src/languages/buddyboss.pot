@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-01-30 19:53:26+00:00\n"
+"POT-Creation-Date: 2022-02-09 15:50:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18806,6 +18806,7 @@ msgid "Export is ready."
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:188
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
 msgid "Completed"
 msgstr ""
 
@@ -19357,6 +19358,7 @@ msgid "Group courses menu"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-progress.php:10
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
 msgid "Complete"
 msgstr ""
 
@@ -25605,8 +25607,8 @@ msgstr ""
 msgid "%s's Profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
-msgid "%s Complete"
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:31
+msgid "%"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/capabilities.php:14
