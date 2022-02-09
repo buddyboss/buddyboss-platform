@@ -435,38 +435,32 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		public function bb_forums_admin_bar_menu() {
 			global $wp_admin_bar;
 			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && ! bp_is_group_forum_topic() ) {
-				$query = new WP_Query(
-					array(
-						'name'      => get_query_var( 'name' ),
-						'post_type' => bbp_get_forum_post_type(),
-						'orderby'   => 'ID',
-						'order'     => 'ASC',
-					)
+				$args  = array(
+					'name'        => get_query_var( 'name' ),
+					'post_type'   => bbp_get_forum_post_type(),
+					'numberposts' => 1,
 				);
-				$forum = isset( $query->post ) ? $query->post : '';
+				$forum = get_posts( $args );
 				if ( empty( $forum ) ) {
 					return;
 				}
-				$forum_id = isset( $forum->ID ) ? $forum->ID : '';
+				$forum_id = isset( $forum[0] ) && isset( $forum[0]->ID ) ? $forum[0]->ID : '';
 			} else {
 				if ( is_single() && bbp_is_single_forum() ) {
 					$forum_id = bbp_get_forum_id();
 				}
 			}
 			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && bp_is_group_forum_topic() ) {
-				$query = new WP_Query(
-					array(
-						'name'      => bp_action_variable( 1 ),
-						'post_type' => bbp_get_topic_post_type(),
-						'orderby'   => 'ID',
-						'order'     => 'ASC',
-					)
+				$args  = array(
+					'name'        => bp_action_variable( 1 ),
+					'post_type'   => bbp_get_topic_post_type(),
+					'numberposts' => 1,
 				);
-				$topic = isset( $query->post ) ? $query->post : '';
+				$topic = get_posts( $args );
 				if ( empty( $topic ) ) {
 					return;
 				}
-				$topic_id = isset( $topic->ID ) ? $topic->ID : '';
+				$topic_id = isset( $topic[0] ) && isset( $topic[0]->ID ) ? $topic[0]->ID : '';
 			} else {
 				if ( is_single() && bbp_is_single_topic() ) {
 					$topic_id = bbp_get_topic_id();
