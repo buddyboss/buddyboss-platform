@@ -1197,7 +1197,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	/* translator: 1. The time since the older date */
+	/* translators: The time since the older date. */
 	$ago_text = apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) );
 
 	// Array of time period chunks.
