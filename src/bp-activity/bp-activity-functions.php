@@ -5415,14 +5415,15 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		return false;
 	}
 
-	$can_edit_privacy = true;
-	$album_id         = 0;
-	$folder_id        = 0;
-	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
-	$group_name       = '';
+	$can_edit_privacy        = true;
+	$album_id                = 0;
+	$folder_id               = 0;
+	$group_id                = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name              = '';
+	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
 
-	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
-	if ( ! empty( $album_activity_id ) ) {
+	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
 		$album_id = $album_activity_id;
 	}
 
