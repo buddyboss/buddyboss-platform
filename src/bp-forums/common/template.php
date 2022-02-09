@@ -1491,7 +1491,7 @@ function bbp_dropdown( $args = '' ) {
 	 * @return string The dropdown
 	 */
 function bbp_get_dropdown( $args = '' ) {
-
+	static $bbp_get_dropdown_cache = array();
 	/** Arguments */
 
 	// Parse arguments against default values
@@ -1537,24 +1537,30 @@ function bbp_get_dropdown( $args = '' ) {
 	}
 
 	/** Setup variables */
-
-	$retval = '';
-	$posts  = get_posts(
-		array(
-			'post_type'              => $r['post_type'],
-			'post_status'            => $r['post_status'],
-			'exclude'                => $r['exclude'],
-			'post_parent'            => $r['post_parent'],
-			'numberposts'            => $r['numberposts'],
-			'orderby'                => $r['orderby'],
-			'order'                  => $r['order'],
-			'walker'                 => $r['walker'],
-			'disable_categories'     => $r['disable_categories'],
-			'suppress_filters'       => false,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		)
+	$retval    = '';
+	$post_args = array(
+		'post_type'              => $r['post_type'],
+		'post_status'            => $r['post_status'],
+		'exclude'                => $r['exclude'],
+		'post_parent'            => $r['post_parent'],
+		'numberposts'            => $r['numberposts'],
+		'orderby'                => $r['orderby'],
+		'order'                  => $r['order'],
+		'walker'                 => $r['walker'],
+		'disable_categories'     => $r['disable_categories'],
+		'suppress_filters'       => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 	);
+
+	$cache_key = 'bbp_get_dropdown_' . md5( maybe_serialize( $post_args ) );
+	if ( ! isset( $bbp_get_dropdown_cache[ $cache_key ] ) ) {
+		$posts = get_posts( $post_args );
+
+		$bbp_get_dropdown_cache[ $cache_key ] = $posts;
+	} else {
+		$posts = $bbp_get_dropdown_cache[ $cache_key ];
+	}
 
 	/** Drop Down */
 
