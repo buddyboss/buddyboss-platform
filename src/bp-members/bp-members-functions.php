@@ -3321,7 +3321,7 @@ function bp_member_type_post_by_type( $member_type ) {
 	static $member_type_post = array();
 	global $wpdb;
 
-	$cache_key	= 'bb_member_type_post_by_type_' . sanitize_title( $member_type );
+	$cache_key = 'bb_member_type_post_by_type_' . sanitize_title( $member_type );
 
 	if ( isset( $member_type_post[ $cache_key ] ) ) {
 		return $member_type_post[ $cache_key ];

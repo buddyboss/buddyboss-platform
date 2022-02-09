@@ -96,7 +96,7 @@ add_action( 'bp_core_user_updated_last_activity', 'bp_members_reset_activity_cac
  *
  * @param int $post_id post ID.
  */
-function bp_members_clear_member_type_cache_on_update( $post_id ) {
+function bb_members_clear_member_type_cache_on_update( $post_id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
@@ -122,7 +122,7 @@ function bp_members_clear_member_type_cache_on_update( $post_id ) {
 	wp_cache_delete( 'bp_get_hidden_member_types_cache', 'bp_member_member_type' ); // Use with this function bp_get_hidden_member_types
 }
 
-add_action( 'save_post', 'bp_members_clear_member_type_cache_on_update' );
+add_action( 'save_post', 'bb_members_clear_member_type_cache_on_update' );
 
 /**
  * Clear the member_type cache when member type post is deleted.
@@ -131,7 +131,7 @@ add_action( 'save_post', 'bp_members_clear_member_type_cache_on_update' );
  *
  * @param int $post_id post ID.
  */
-function bp_members_clear_member_type_cache_before_delete( $post_id ) {
+function bb_members_clear_member_type_cache_before_delete( $post_id ) {
 	global $wpdb;
 
 	$post = get_post( $post_id );
@@ -146,4 +146,4 @@ function bp_members_clear_member_type_cache_before_delete( $post_id ) {
 	wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 }
 
-add_action( 'before_delete_post', 'bp_members_clear_member_type_cache_before_delete' );
+add_action( 'before_delete_post', 'bb_members_clear_member_type_cache_before_delete' );
