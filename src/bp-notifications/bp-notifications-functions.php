@@ -857,13 +857,13 @@ function bb_notifications_background_enabled() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array  $user_ids
- * @param int    $item_id
- * @param int    $secondary_item_id
- * @param string $component_name
- * @param string $component_action
- * @param string $date_notified
- * @param bool   $is_new
+ * @param array  $user_ids          User ids.
+ * @param int    $item_id           Item id.
+ * @param int    $secondary_item_id Secondary item id.
+ * @param string $component_name    Notification component name.
+ * @param string $component_action  Notification component action.
+ * @param string $date_notified     Notification date.
+ * @param bool   $is_new            Setup the notification is unread or read.
  */
 function bb_add_background_notifications( $user_ids, $item_id, $secondary_item_id, $component_name, $component_action, $date_notified = '', $is_new = true ) {
 	if (
