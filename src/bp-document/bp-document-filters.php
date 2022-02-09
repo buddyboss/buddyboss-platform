@@ -221,14 +221,14 @@ function bp_document_activity_append_document( $content, $activity ) {
 function bp_document_activity_comment_entry( $comment_id ) {
 
 	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
-	
+
 	if ( empty( $document_ids ) ) {
 		return;
 	}
-	
+
 	$comment  = new BP_Activity_Activity( $comment_id );
 	$activity = new BP_Activity_Activity( $comment->item_id );
-	
+
 	$args = array(
 		'include'  => $document_ids,
 		'order_by' => 'menu_order',
@@ -236,7 +236,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
 		'user_id'  => false,
 		'privacy'  => array(),
 	);
-	
+
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_document_support_enabled() ) {
 			$args['privacy'][] = 'comment';
@@ -257,12 +257,12 @@ function bp_document_activity_comment_entry( $comment_id ) {
 			$args['album_id'] = 'existing-document';
 		}
 	}
-	
+
 	$args['privacy'][] = 'comment';
 	if ( ! isset( $args['album_id'] ) ) {
 		$args['album_id'] = 'existing-document';
 	}
-	
+
 	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
@@ -1795,11 +1795,10 @@ function bp_document_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity document data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with document if document saved otherwise no documents.
  *
@@ -1811,13 +1810,22 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 		// Fetch document ids of activity.
 		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity['id'], 'bp_document_id', true );
+
+		if ( ! empty( $document_id ) && ! empty( $document_ids ) ) {
+			$document_ids = $document_ids . ',' . $document_id;
+		} elseif ( ! empty( $document_id ) && empty( $document_ids ) ) {
+			$document_ids = $document_id;
+		}
 
 		if ( ! empty( $document_ids ) ) {
 			$activity['document'] = array();
 
 			$document_ids = explode( ',', $document_ids );
+			$document_ids = array_unique( $document_ids );
+			$folder_id    = 0;
 
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
 					continue;
 				}
@@ -1826,8 +1834,8 @@ function bp_document_get_edit_activity_data( $activity ) {
 				$size = 0;
 				$file = get_attached_file( $document->attachment_id );
 				if ( $file && file_exists( $file ) ) {
-				    $size = filesize( $file );
-                }
+					$size = filesize( $file );
+				}
 
 				$activity['document'][] = array(
 					'id'          => $document_id,
@@ -1842,6 +1850,12 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
 				);
+
+				if ( 0 === $folder_id && $document->folder_id > 0 ) {
+					$folder_id                    = $document->folder_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 
