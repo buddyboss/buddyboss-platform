@@ -369,7 +369,13 @@ class BP_Friends_Friendship {
 
 		$bp = buddypress();
 
-		$friendship_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d OR friend_user_id = %d) ORDER BY date_created DESC", $user_id, $user_id ) );
+		$cache_key      = 'get_friendship_ids_for_user_' . $user_id;
+		$friendship_ids = wp_cache_get( $cache_key, 'bp_friends_friendships_for_user' );
+
+		if ( false === $friendship_ids ) {
+			$friendship_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d OR friend_user_id = %d) ORDER BY date_created DESC", $user_id, $user_id ) );
+			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
+		}
 
 		return $friendship_ids;
 	}
@@ -886,22 +892,32 @@ class BP_Friends_Friendship {
 	 */
 	public static function get_random_friends( $user_id, $total_friends = 5 ) {
 		global $wpdb;
+		static $cache = array();
 
-		$bp      = buddypress();
-		$fids    = array();
+		$bp   = buddypress();
+		$fids = array();
+
+		$cache_key = $user_id . '_' . $total_friends;
+		if ( isset( $cache[ $cache_key ] ) ) {
+			return $cache[ $cache_key ];
+		}
+
+		// phpcs:ignore
 		$sql     = $wpdb->prepare( "SELECT friend_user_id, initiator_user_id FROM {$bp->friends->table_name} WHERE (friend_user_id = %d || initiator_user_id = %d) && is_confirmed = 1 ORDER BY rand() LIMIT %d", $user_id, $user_id, $total_friends );
-		$results = $wpdb->get_results( $sql );
+		$results = $wpdb->get_results( $sql ); // phpcs:ignore
 
-		for ( $i = 0, $count = count( $results ); $i < $count; ++$i ) {
-			$fids[] = ( $results[ $i ]->friend_user_id == $user_id ) ? $results[ $i ]->initiator_user_id : $results[ $i ]->friend_user_id;
+		for ( $i = 0, $count = count( $results ); $i < $count; ++ $i ) {
+			$fids[] = ( (int) $results[ $i ]->friend_user_id === (int) $user_id ) ? $results[ $i ]->initiator_user_id : $results[ $i ]->friend_user_id;
 		}
 
 		// Remove duplicates.
 		if ( count( $fids ) > 0 ) {
-			return array_flip( array_flip( $fids ) );
+			$cache[ $cache_key ] = array_flip( array_flip( $fids ) );
 		} else {
-			return false;
+			$cache[ $cache_key ] = false;
 		}
+
+		return $cache[ $cache_key ];
 	}
 
 	/**
