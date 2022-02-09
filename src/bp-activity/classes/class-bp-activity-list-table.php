@@ -662,24 +662,24 @@ class BP_Activity_List_Table extends WP_List_Table {
 		// Reply - JavaScript only; implemented by AJAX.
 		if ( 'spam' != $item_status ) {
 			if ( $this->can_comment( $item ) ) {
-				$actions['reply'] = sprintf( '<a href="#" class="reply hide-if-no-js">%s</a>', __( 'Reply', 'buddyboss' ) );
+				$actions['reply'] = sprintf( '<a href="#" class="reply hide-if-no-js">%s</a>', esc_html__( 'Reply', 'buddyboss' ) );
 			} else {
-				$actions['reply'] = sprintf( '<span class="form-input-tip">%s</span>', __( 'Replies disabled', 'buddyboss' ) );
+				$actions['reply'] = sprintf( '<span class="form-input-tip">%s</span>', esc_html__( 'Replies disabled', 'buddyboss' ) );
 			}
 
 			// Edit.
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', $edit_url, __( 'Edit', 'buddyboss' ) );
+			$actions['edit'] = sprintf( '<a href="%s">%s</a>', $edit_url, esc_html__( 'Edit', 'buddyboss' ) );
 		}
 
 		// Spam/unspam.
 		if ( 'spam' == $item_status ) {
-			$actions['unspam'] = sprintf( '<a href="%s">%s</a>', $ham_url, __( 'Not Spam', 'buddyboss' ) );
+			$actions['unspam'] = sprintf( '<a href="%s">%s</a>', $ham_url, esc_html__( 'Not Spam', 'buddyboss' ) );
 		} else {
-			$actions['spam'] = sprintf( '<a href="%s">%s</a>', $spam_url, __( 'Spam', 'buddyboss' ) );
+			$actions['spam'] = sprintf( '<a href="%s">%s</a>', $spam_url, esc_html__( 'Spam', 'buddyboss' ) );
 		}
 
 		// Delete.
-		$actions['delete'] = sprintf( '<a href="%s" onclick="%s">%s</a>', $delete_url, "javascript:return confirm('" . esc_js( __( 'Are you sure?', 'buddyboss' ) ) . "'); ", __( 'Delete Permanently', 'buddyboss' ) );
+		$actions['delete'] = sprintf( '<a href="%s" onclick="%s">%s</a>', $delete_url, "javascript:return confirm('" . esc_js( esc_html__( 'Are you sure?', 'buddyboss' ) ) . "'); ", esc_html__( 'Delete Permanently', 'buddyboss' ) );
 
 		// Start timestamp.
 		echo '<div class="submitted-on">';
@@ -704,7 +704,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 					/* translators: 1: activity date, 2: activity time */
 					__( '%1$s at %2$s', 'buddyboss' ),
 					date_i18n( bp_get_option( 'date_format' ), strtotime( $item['date_recorded'] ) ),
-					get_date_from_gmt( $item['date_recorded'], bp_get_option( 'time_format' ) )
+					date_i18n( bp_get_option( 'time_format' ), strtotime( $item['date_recorded'] ) )
 				)
 			)
 		);
