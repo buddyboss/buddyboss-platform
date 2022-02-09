@@ -6697,8 +6697,8 @@ function bb_register_notification_email_templates( $notification_type = '' ) {
 
 	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
 
-	if ( ! empty( $notification_emails ) && isset( $notification_emails[ $notification_type ] ) ) {
-		return $notification_emails[ $notification_type ];
+	if ( ! empty( $notification_emails ) && ! empty( $notification_type ) ) {
+		return ( isset( $notification_emails[ $notification_type ] ) ? $notification_emails[ $notification_type ] : array() );
 	}
 
 	return $notification_emails;
