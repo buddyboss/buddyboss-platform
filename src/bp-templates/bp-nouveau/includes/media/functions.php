@@ -261,7 +261,18 @@ function bp_nouveau_get_media_directory_nav_items() {
  * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_media_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_media_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'media_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'media_get_media_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {

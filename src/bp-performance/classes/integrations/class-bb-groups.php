@@ -92,6 +92,16 @@ class BB_Groups extends Integration_Abstract {
 			'update_option_bp-disable-group-cover-image-uploads' => 3,
 			'update_option_bp-default-group-cover-type'          => 3,
 			'update_option_bp-default-custom-group-cover'        => 3,
+
+			// For Group Media/Album Support.
+			'update_option_bp_media_group_media_support'    => 3,
+			'update_option_bp_media_group_albums_support'   => 3,
+
+			// For Group Document Support.
+			'update_option_bp_media_group_document_support' => 3,
+
+			// For Group Video Support.
+			'update_option_bp_video_group_video_support'    => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -527,5 +537,49 @@ class BB_Groups extends Integration_Abstract {
 		Cache::instance()->purge_by_component( 'app_page' );
 		Cache::instance()->purge_by_component( 'sfwd-' );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Upload media option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_media_group_media_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Upload album option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_media_group_albums_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Upload document option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_media_group_document_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When group video option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_video_group_video_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
 	}
 }
