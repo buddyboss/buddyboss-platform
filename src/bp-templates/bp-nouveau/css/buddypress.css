@@ -960,14 +960,16 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
+  -ms-flex-align: flex-start;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  align-items: flex-start;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-flex-flow: column;
   flex-flow: column;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block * {
@@ -1035,6 +1037,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry .item-avatar {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -1073,6 +1076,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -1099,6 +1103,9 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .list-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   background: #fafafa;
   border: 1px solid #eee;
@@ -1114,9 +1121,11 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
-  -webkit-box-align: center;
   -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
@@ -1175,6 +1184,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .group-footer-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
@@ -1183,13 +1193,19 @@ a.layout-grid-view {
 
 @media screen and (max-width: 1000px) {
   .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item {
-    flex-flow: column;
+    flex-direction: column;
+    -ms-flex-align: flex-start;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
     align-items: flex-start;
   }
   .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item .group-footer-wrap {
+    -ms-flex-align: flex-start;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
     align-items: flex-start;
     margin-bottom: 15px;
-    flex-flow: column;
+    flex-direction: column;
   }
   .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item .footer-button-wrap,
   .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .item .group-members-wrap {
@@ -1214,6 +1230,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   margin-bottom: 15px;
   padding-right: 15px;
@@ -1249,9 +1266,11 @@ a.layout-grid-view {
   border: 2px solid #fff;
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
-  -webkit-box-align: center;
   -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -1265,6 +1284,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
 }
 
@@ -7041,6 +7061,61 @@ body.guillotine-dragging * {
 
 .groups-header .bb_more_options {
   display: inline-block;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image {
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-avatar {
+  margin-right: 0;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image .group-item-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image .group-item-actions .bp-title {
+  margin-right: 10px;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image .groups-meta.action {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  position: static;
+  max-width: inherit;
+  width: 100%;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image .groups-meta.action .generic-button {
+  margin: 0;
 }
 
 @media screen and (min-width: 783px) {

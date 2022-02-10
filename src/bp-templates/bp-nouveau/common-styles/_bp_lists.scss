@@ -159,6 +159,7 @@
 
 } // close .bp-list
 
+//Group Lists
 .buddypress-wrap ul.bp-list.groups-dir-list {
 	display: -ms-grid;
 	display: grid;
@@ -201,16 +202,13 @@
 			padding: 0 15px;
 
 			.item-block {
-				display: -webkit-box;
-				display: -ms-flexbox;
-				display: flex;
+
+				@include dis-flex;
+				@include flex-align(flex-start);
 				-webkit-box-orient: vertical;
 				-webkit-box-direction: normal;
 				-ms-flex-flow: column;
 				flex-flow: column;
-				-webkit-box-align: start;
-				-ms-flex-align: start;
-				align-items: flex-start;
 
 				* {
 					line-height: 1.4;
@@ -221,7 +219,7 @@
 			}
 
 			.list-title {
-				margin: 15px 0 5px;
+				margin: $marg-med 0 $marg-xsml;
 				font-size: 20px;
 
 				a {
@@ -284,12 +282,11 @@
 	li.item-entry {
 		flex: none !important;
 		max-width: initial !important;
-		margin-bottom: 15px;
+		margin-bottom: $marg-med;
 
 		.item-avatar {
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
+
+			@include dis-flex;
 			-webkit-box-pack: start;
 			-ms-flex-pack: start;
 			justify-content: flex-start;
@@ -310,6 +307,7 @@
 
 	}
 
+	//Group Lists Grid
 	&.grid {
 
 		.only-list-view {
@@ -321,10 +319,10 @@
 		}
 
 		.group-avatar-wrap {
-			margin-left: 15px;
+			margin-left: $marg-med;
 
 			img.avatar {
-				margin-top: 15px;
+				margin-top: $marg-med;
 			}
 
 		}
@@ -335,10 +333,10 @@
 
 	}
 
+	//Group Lists List
 	&:not(.grid) {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
+
+		@include dis-flex;
 		-webkit-box-orient: vertical;
 		-webkit-box-direction: normal;
 		-ms-flex-flow: column;
@@ -362,7 +360,8 @@
 			}
 
 			.list-wrap {
-				display: flex;
+
+				@include dis-flex;
 				background: #fafafa;
 				border: 1px solid #eee;
 				padding: 15px;
@@ -370,17 +369,14 @@
 			}
 
 			.item-avatar {
-				margin-right: 5px;
+				margin-right: $marg-xsml;
 				width: auto;
 			}
 
 			.item {
-				display: -webkit-box;
-				display: -ms-flexbox;
-				display: flex;
-				-webkit-box-align: center;
-				-ms-flex-align: center;
-				align-items: center;
+
+				@include dis-flex;
+				@include flex-align(center);
 				-webkit-box-pack: justify;
 				-ms-flex-pack: justify;
 				justify-content: space-between;
@@ -400,7 +396,7 @@
 				}
 
 				.group-members-wrap {
-					margin-right: 15px;
+					margin-right: $marg-med;
 				}
 
 				.footer-button-wrap .generic-button {
@@ -424,7 +420,7 @@
 			.item-desc {
 				flex: 1;
 				padding-right: 20px;
-				margin-top: 5px;
+				margin-top: $marg-xsml;
 
 				&:empty {
 					display: none;
@@ -438,9 +434,8 @@
 			}
 
 			.group-footer-wrap {
-				display: -webkit-box;
-				display: -ms-flexbox;
-				display: flex;
+
+				@include dis-flex;
 				-webkit-box-pack: justify;
 				-ms-flex-pack: justify;
 				justify-content: space-between;
@@ -449,18 +444,20 @@
 			@media screen and (max-width: 1000px) {
 
 				.item {
-					flex-flow: column;
-					align-items: flex-start;
+					flex-direction: column;
+
+					@include flex-align(flex-start);
 
 					.group-footer-wrap {
-						align-items: flex-start;
-						margin-bottom: 15px;
-						flex-flow: column;
+
+						@include flex-align(flex-start);
+						margin-bottom: $marg-med;
+						flex-direction: column;
 					}
 
 					.footer-button-wrap,
 					.group-members-wrap {
-						margin-top: 10px;
+						margin-top: $marg-sml;
 					}
 
 				}
@@ -471,7 +468,7 @@
 
 				.item-avatar {
 					width: 100%;
-					margin-bottom: 10px;
+					margin-bottom: $marg-sml;
 				}
 
 				.list-wrap {
@@ -491,10 +488,9 @@
 	}
 
 	.bs-group-members {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		margin-bottom: 15px;
+
+		@include dis-flex;
+		margin-bottom: $marg-med;
 		padding-right: 15px;
 
 		.bs-group-member {
@@ -524,12 +520,9 @@
 				border-radius: 50%;
 				background-color: #f9f9f9;
 				border: 2px solid #fff;
-				display: -webkit-box;
-				display: -ms-flexbox;
-				display: flex;
-				-webkit-box-align: center;
-				-ms-flex-align: center;
-				align-items: center;
+
+				@include dis-flex;
+				@include flex-align(center);
 				-webkit-box-pack: center;
 				-ms-flex-pack: center;
 				justify-content: center;
@@ -545,9 +538,8 @@
 	}
 
 	.footer-button-wrap {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
+
+		@include dis-flex;
 
 		.action {
 			width: 100%;

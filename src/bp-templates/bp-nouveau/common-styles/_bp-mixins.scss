@@ -250,6 +250,15 @@
 
 // Flexbox Mixins
 
+// Display Flex
+
+@mixin dis-flex() {
+	display: -webkit-box; // older
+	display: -ms-flexbox; // older
+	display: -webkit-flex; // current prefix
+	display: flex; // current specs
+}
+
 // Set display to box flex & set the direction and wrapping behavior
 // shorthand for flex-direction & flex wrap - default ( row wrap )
 
