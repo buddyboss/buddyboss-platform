@@ -9112,7 +9112,245 @@ body .bp-messages-user-threads {
 }
 
 /*__ General __*/
-/*__ Email notifications __*/
+.notification_info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.notification_info .notification_learn_more {
+  display: none;
+}
+
+.notification_info .notification_type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 33.33%;
+}
+
+.notification_info .notification_type:not(:last-child) {
+  padding-left: 20px;
+}
+
+.notification_info .notification_type_icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.notification_info .notification_type_icon .bb-icon {
+  font-size: 40px;
+}
+
+.notification_info .notification_type .notification_type_info h3,
+.notification_info .notification_type .notification_type_info p {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 900px) {
+  .notification_info {
+    flex-direction: column;
+  }
+  .notification_info .notification_learn_more {
+    display: block;
+    margin-bottom: 0;
+  }
+  .notification_info .notification_learn_more.show {
+    margin-bottom: 15px;
+  }
+  .notification_info .notification_type {
+    display: none;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .notification_info .notification_type.show {
+    display: flex;
+  }
+}
+
+.main-notification-settings {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.main-notification-settings:first-of-type {
+  margin-bottom: 15px;
+}
+
+.main-notification-settings thead {
+  background-color: #ededed;
+}
+
+.main-notification-settings thead .title {
+  padding-right: 20px;
+  border-right: 1px solid #ccc;
+  font-weight: 400;
+  width: 100%;
+}
+
+.main-notification-settings thead .app {
+  border-left: 1px solid #ccc;
+  padding-left: 20px;
+}
+
+.main-notification-settings .title {
+  vertical-align: middle;
+}
+
+.main-notification-settings th {
+  min-width: 95px;
+  padding: 10px;
+  vertical-align: middle;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.main-notification-settings .disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.main-notification-settings .disabled input[type="checkbox"] {
+  opacity: 0;
+}
+
+.main-notification-settings input[type="checkbox"]:disabled {
+  opacity: 0;
+}
+
+.main-notification-settings tbody .title {
+  font-size: 14px;
+  color: #a3a5a9;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.main-notification-settings tbody td {
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+.main-notification-settings tbody td:first-child {
+  padding-right: 0;
+  width: 100%;
+}
+
+.main-notification-settings tbody td.notification_no_option {
+  text-align: center;
+}
+
+.main-notification-settings tbody .notification_heading td {
+  border-bottom: 0;
+  padding: 15px 0 0 0;
+}
+
+.main-notification-settings .email,
+.main-notification-settings .web,
+.main-notification-settings .app {
+  min-width: 95px;
+}
+
+@media screen and (min-width: 901px) {
+  .main-notification-settings .bb-mobile-setting {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .main-notification-settings {
+    display: block;
+  }
+  .main-notification-settings .bb-mobile-setting {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    margin-right: 10px;
+  }
+  .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor {
+    float: left;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #d7dce5;
+    border-radius: 3px;
+    padding: 5px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor:after {
+    content: "\e826";
+    color: #d7dce5;
+    font-size: 22px;
+    font-family: "bb-icons";
+    /* stylelint-disable-line */
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .main-notification-settings .bb-mobile-setting ul {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    display: none;
+    margin: 0;
+    padding: 10px 4px 0;
+    width: 150px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #d3d4d6;
+    box-sizing: border-box;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05), 0 6px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  .main-notification-settings .bb-mobile-setting ul li {
+    width: 100%;
+    padding: 0 8px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting.active ul {
+    display: block;
+    z-index: 1;
+  }
+  .main-notification-settings tbody,
+  .main-notification-settings thead,
+  .main-notification-settings tr {
+    display: block;
+  }
+  .main-notification-settings tbody td {
+    display: none;
+  }
+  .main-notification-settings tbody td:first-child {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .main-notification-settings thead th {
+    display: none;
+  }
+  .main-notification-settings thead th.title {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+}
+
+/*__ notifications __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
 /**

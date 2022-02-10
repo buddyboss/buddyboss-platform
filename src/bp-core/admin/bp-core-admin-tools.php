@@ -238,16 +238,18 @@ function bp_repair_community_submenu_page() {
 					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
 
 					<div class="checkbox">
-						<?php foreach ( bp_admin_repair_list() as $item ) : ?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>">
+						<?php foreach ( bp_admin_repair_list() as $item ) :
+							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
+                            ?>
+							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo ( true === $disabled ? 'disabled' : '' ); ?>">
 								<input
 										type="checkbox"
 										class="checkbox"
 										name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
 										value="<?php echo esc_attr( $item[0] ); ?>"
 									<?php
-									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
-										echo 'checked';}
+									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) { echo 'checked'; }
+                                    disabled( $disabled );
 									?>
 								/> <?php echo esc_html( $item[1] ); ?></label>
 						<?php endforeach; ?>
@@ -382,11 +384,20 @@ function bp_admin_repair_list() {
 	}
 
 	// Emails:
+	// - install missing emails.
+	$repair_list[99] = array(
+		'bp-missing-emails',
+		esc_html__( 'Install Missing emails (restore missing emails from defaults).', 'buddyboss' ),
+		'bp_admin_install_emails',
+		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ),
+	);
+
 	// - reinstall emails.
 	$repair_list[100] = array(
 		'bp-reinstall-emails',
-		__( 'Reinstall emails (delete and restore from defaults).', 'buddyboss' ),
+		esc_html__( 'Reset emails (delete and restore from defaults).', 'buddyboss' ),
 		'bp_admin_reinstall_emails',
+		( isset( $_GET['tool'] ) && 'bp-missing-emails' === $_GET['tool'] ),
 	);
 
 	// Check whether member type is enabled.
@@ -900,6 +911,87 @@ function bp_core_admin_available_tools_intro() {
 		</p>
 	</div>
 	<?php
+}
+
+/**
+ * Install Missing emails from defaults.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bp_admin_install_emails() {
+	$switched = false;
+
+	// Switch to the root blog, where the email posts live.
+	if ( ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
+		bp_register_taxonomies();
+
+		$switched = true;
+	}
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$emails          = bp_email_get_schema();
+	$descriptions    = bp_email_get_type_schema();
+	$installed_email = 0;
+
+	// Add these emails to the database.
+	foreach ( $emails as $id => $email ) {
+		if (
+			term_exists( $id, bp_get_email_tax_type() ) &&
+			get_terms(
+				array(
+					'taxonomy' => bp_get_email_tax_type(),
+					'slug'     => $id,
+					'fields'   => 'count',
+				)
+			) > 0
+		) {
+			continue;
+		}
+
+		// Some emails are multisite-only.
+		if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
+		}
+
+		$installed_email ++;
+	}
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
+
+	return array(
+		'status'  => 1,
+		'message' => sprintf(
+		    /* translator: %d: Number of emails installed */
+			esc_html__( '%d Emails have been successfully installed.', 'buddyboss' ),
+			$installed_email
+		),
+	);
 }
 
 /**

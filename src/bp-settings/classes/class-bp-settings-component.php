@@ -160,10 +160,11 @@ class BP_Settings_Component extends BP_Component {
 			'user_has_access' => $access,
 		);
 
+		$data = bb_core_notification_preferences_data();
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
-			'name'            => __( 'Email Preferences', 'buddyboss' ),
+			'name'            => $data['menu_title'],
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -257,10 +258,11 @@ class BP_Settings_Component extends BP_Component {
 
 			// Notifications - only add the tab when there is something to display there.
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$data           = bb_core_notification_preferences_data();
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notifications',
-					'title'    => __( 'Email Preferences', 'buddyboss' ),
+					'title'    => $data['menu_title'],
 					'href'     => trailingslashit( $settings_link . 'notifications' ),
 					'position' => 20,
 				);

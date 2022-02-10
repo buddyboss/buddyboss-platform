@@ -99,7 +99,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 	}
 
 	if ( 'bbp_new_at_mention' === $action ) {
-		$topic_id    = bbp_get_reply_topic_id( $item_id );
+		$topic_id = bbp_get_reply_topic_id( $item_id );
 
 		if ( empty( $topic_id ) ) {
 			$topic_id = $item_id;
@@ -245,12 +245,18 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				continue;
 			}
 
-			$args['user_id']          = $user_id;
-			$args['component_action'] = 'bbp_new_at_mention';
+			$args['user_id']           = $user_id;
+			$args['component_action']  = 'bbp_new_at_mention';
 			$args['secondary_item_id'] = get_current_user_id();
 
 			// If forum is not accesible to user, do not send notification.
-			$can_access = bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) );
+			$can_access = bbp_user_can_view_forum(
+				array(
+					'user_id'         => $user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => true,
+				)
+			);
 
 			/**
 			 * Filters bbPress' ability to send notifications for @mentions.
@@ -261,7 +267,6 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 			 * @param int $forum_id ID of forum.
 			 *
 			 * @since BuddyBoss 1.2.9
-			 *
 			 */
 			if ( ! apply_filters( 'bbp_forums_at_name_do_notifications', $can_access, $usernames, $user_id, $forum_id ) ) {
 				continue;
@@ -279,8 +284,8 @@ add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
  *
  * @since BuddyBoss 1.2.8
  *
- * @param int   $topic_id
- * @param int   $forum_id
+ * @param int $topic_id
+ * @param int $forum_id
  */
 function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 	// If our temporary variable doesn't exist, stop now.
@@ -312,10 +317,16 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				continue;
 			}
 
-			$args['user_id']          = $user_id;
+			$args['user_id'] = $user_id;
 
 			// If forum is not accesible to user, do not send notification.
-			$can_access = bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) );
+			$can_access = bbp_user_can_view_forum(
+				array(
+					'user_id'         => $user_id,
+					'forum_id'        => $forum_id,
+					'check_ancestors' => true,
+				)
+			);
 
 			/**
 			 * Filters bbPress' ability to send notifications for @mentions.
@@ -326,7 +337,6 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 			 * @param int $forum_id ID of forum.
 			 *
 			 * @since BuddyBoss 1.2.9
-			 *
 			 */
 			if ( ! apply_filters( 'bbp_forums_at_name_do_notifications', $can_access, $usernames, $user_id, $forum_id ) ) {
 				continue;

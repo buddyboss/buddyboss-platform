@@ -56,7 +56,7 @@ final class BP_Settings_Export extends BP_Export {
 		$item_id      = "{$this->exporter_name}-{$group_id}";
 
 		/**
-		 * Email Preferences
+		 * Notification Preferences
 		 */
 
 		$notification_settings = $this->get_notification_settings();
@@ -86,9 +86,11 @@ final class BP_Settings_Export extends BP_Export {
 
 		$notification_data = apply_filters( 'buddyboss_bp_gdpr_notification_settings_after_data_prepare', $notification_data, $user );
 
+		$data = bb_core_notification_preferences_data();
+
 		$export_items[] = array(
 			'group_id'    => $group_id . '_notification',
-			'group_label' => __( 'Email Preferences', 'buddyboss' ),
+			'group_label' => $data['menu_title'],
 			'item_id'     => 'bp_notification_settings',
 			'data'        => $notification_data,
 		);

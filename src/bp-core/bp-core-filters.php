@@ -2055,3 +2055,29 @@ function bb_member_enabled_gravatar( $no_grav, $params ) {
 	return $no_grav;
 }
 add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 );
+
+/**
+ * Filter the admin emails by notification preference.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ */
+function bb_filter_admin_emails( $query ) {
+	if (
+		is_admin() &&
+		$query->get( 'post_type' ) === bp_get_email_post_type() &&
+		! empty( $_GET['terms'] ) // phpcs:ignore
+	) {
+		$taxquery = array(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'field'    => 'slug',
+				'terms'    => explode( ',', $_GET['terms'] ), // phpcs:ignore
+			),
+		);
+
+		$query->set( 'tax_query', $taxquery );
+	}
+}
+add_action( 'pre_get_posts', 'bb_filter_admin_emails' );

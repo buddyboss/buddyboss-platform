@@ -709,6 +709,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
 			// @todo: used for bp-performance will enable in feature.
             // require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
@@ -800,6 +801,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' === $_GET['tab'] ) {
+				wp_enqueue_style( 'bp-hello-css' );
+				wp_enqueue_script( 'bp-hello-js' );
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET ) && isset( $_GET['post_type'] ) && bp_get_email_post_type() === $_GET['post_type'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
