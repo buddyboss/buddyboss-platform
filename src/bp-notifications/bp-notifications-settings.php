@@ -33,7 +33,10 @@ function bb_notification_get_settings_sections() {
 			'notice'            => (
 				false === bb_enabled_legacy_email_preference() ?
 				sprintf(
-					__( 'You can register your own notifications types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
+					wp_kses_post(
+							/* translators: Tutorial link. */
+						__( 'You can register your own notifications types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' )
+					),
 					'<a href="' .
 					esc_url(
 						bp_get_admin_url(
