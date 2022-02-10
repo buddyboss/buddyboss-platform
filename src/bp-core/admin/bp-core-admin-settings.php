@@ -2498,7 +2498,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 }
 
 /**
- * Buddyboss Labs settings section callback.
+ * BuddyBoss Labs settings section callback.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -2506,7 +2506,7 @@ function bb_labs_notification_preferences_info_section_callback() {
 	?>
 
 	<p>
-	<?php
+		<?php
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
@@ -2514,16 +2514,18 @@ function bb_labs_notification_preferences_info_section_callback() {
 					'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s">support portal</a>.',
 					'buddyboss'
 				),
-				add_query_arg(
-					array(
-						'page' => 'bp-pages',
-					),
-					admin_url( 'admin.php' )
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-pages',
+						),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
-	?>
-		</p>
+		?>
+	</p>
 
 	<?php
 }
