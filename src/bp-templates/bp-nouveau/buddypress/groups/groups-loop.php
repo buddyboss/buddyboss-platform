@@ -79,7 +79,7 @@ bp_nouveau_before_loop(); ?>
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-										<p class="item-meta group-details <?php echo $meta_privacy . ' ' . $meta_group_type; ?>">
+										<p class="item-meta group-details <?php echo esc_attr( $meta_privacy . ' ' . $meta_group_type ); ?>">
 										<?php
 											$meta = bp_nouveau_get_group_meta();
 											echo $meta['status'];
