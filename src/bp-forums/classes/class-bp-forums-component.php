@@ -472,6 +472,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'name'        => bp_action_variable( 1 ),
 					'post_type'   => bbp_get_topic_post_type(),
 					'numberposts' => 1,
+					'post_status' => array( 'publish', 'trash', 'closed', 'spam' ),
 				);
 				$topic = get_posts( $args );
 				if ( empty( $topic ) ) {
