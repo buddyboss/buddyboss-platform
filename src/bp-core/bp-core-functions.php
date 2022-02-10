@@ -6864,7 +6864,8 @@ function bb_check_email_type_registered( string $notification_type ) {
  *
  * @param int $default Default false.
  *
- * @return bool Is media profile media support enabled or not
+ * @return bool Is media profile media support enabled or not.
+ *
  * @since BuddyBoss [BBVERSION]
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
