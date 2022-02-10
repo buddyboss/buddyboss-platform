@@ -145,7 +145,7 @@ bp_nouveau_before_loop(); ?>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
 							<a class="bb-close-leave-group" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php _e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 
 					</div>
