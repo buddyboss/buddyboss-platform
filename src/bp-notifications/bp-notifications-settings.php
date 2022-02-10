@@ -90,7 +90,7 @@ function bb_automatic_notifications_tutorial() {
 /**
  * Get settings fields by section.
  *
- * @param string $section_id
+ * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
  * @since BuddyBoss [BBVERSION]
@@ -112,6 +112,7 @@ function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
  * Get all the settings fields.
  *
  * @return array
+ *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_notification_get_settings_fields() {
@@ -312,7 +313,21 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 		echo '</tbody></table>';
 	}
 
-	echo bb_admin_setting_callback_on_screen_hide_group_messages_notifications();
+	?>
+	<table class="form-table">
+		<tbody>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Hide Messaging Notifications', 'buddyboss' ); ?></th>
+			<td>
+				<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 0 ) ); ?> />
+				<label for="hide_message_notification"><?php esc_html_e( 'Hide group and private messages from notifications', 'buddyboss' ); ?></label>
+				<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<?php
 }
 
 /**
@@ -362,27 +377,3 @@ function bb_activate_notification( $field, $checked ) {
 	<?php
 }
 
-/**
- * Enable on-screen notification.
- *
- * @since BuddyBoss 1.7.0
- *
- * @return void
- */
-function bb_admin_setting_callback_on_screen_hide_group_messages_notifications() {
-	?>
-	<table class="form-table">
-		<tbody>
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Hide Messaging Notifications', 'buddyboss' ); ?></th>
-				<td>
-					<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 0 ) ); ?> />
-					<label for="hide_message_notification"><?php esc_html_e( 'Hide group and private messages from notifications', 'buddyboss' ); ?></label>
-					<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<?php
-}
