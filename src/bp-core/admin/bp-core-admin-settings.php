@@ -2342,6 +2342,7 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
  * Register the labs settings section.
  *
  * @since BuddyBoss [BBVERSION]
+ *
  * @return array
  */
 function bb_labs_get_settings_sections() {
@@ -2361,10 +2362,11 @@ function bb_labs_get_settings_sections() {
 /**
  * Get settings fields by section.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss [BBVERSION]
  */
 function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -2382,8 +2384,9 @@ function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all the settings fields.
  *
- * @return array
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_labs_get_settings_fields() {
 
@@ -2422,7 +2425,8 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		printf(
 			'<p class="bp-new-notice-panel-notice">%s</p>',
 			sprintf(
-				__( 'This feature requires the %s component to be enabled.', 'buddyboss' ),
+				/* translators: Components page link. */
+				wp_kses_post( __( 'This feature requires the %s component to be enabled.', 'buddyboss' ) ),
 				'<strong><a href="' . esc_url(
 					add_query_arg(
 						array( 'page' => 'bp-components' ),
@@ -2444,7 +2448,10 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
-				__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' ),
+				wp_kses_post(
+					/* translators: Notification settings link. */
+					__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' )
+				),
 				esc_url(
 					add_query_arg(
 						array(
