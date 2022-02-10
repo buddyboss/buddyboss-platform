@@ -135,7 +135,7 @@ bp_nouveau_before_loop(); ?>
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php _e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
