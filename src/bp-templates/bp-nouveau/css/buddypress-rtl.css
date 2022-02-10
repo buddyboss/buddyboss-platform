@@ -7072,7 +7072,8 @@ body.guillotine-dragging * {
 }
 
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-avatar {
-  margin-left: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-content {
@@ -7085,6 +7086,7 @@ body.guillotine-dragging * {
   -webkit-box-align: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
 }
 
 .groups-header #cover-image-container.centered #item-header-cover-image .group-item-actions {
@@ -7110,7 +7112,7 @@ body.guillotine-dragging * {
   display: -webkit-flex;
   display: flex;
   position: static;
-  max-width: inherit;
+  max-width: initial;
   width: 100%;
 }
 

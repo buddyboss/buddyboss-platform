@@ -113,6 +113,8 @@
 		display: inline-block;
 	}
 
+
+	//group header centered
 	#cover-image-container.centered {
 
 		#item-header-cover-image {
@@ -121,13 +123,15 @@
 			flex-direction: column;
 
 			#item-header-avatar {
-				margin-right: 0;
+				margin-right: auto;
+				margin-left: auto;
 			}
 
 			#item-header-content {
 
 				@include center-vert;
 				flex-direction: column;
+				width: 100%;
 			}
 
 			.group-item-actions {
@@ -147,7 +151,7 @@
 
 				@include dis-flex;
 				position: static;
-				max-width: inherit;
+				max-width: initial;
 				width: 100%;
 
 				.generic-button {
