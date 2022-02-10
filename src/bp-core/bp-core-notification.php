@@ -4,7 +4,8 @@
  *
  * @package    BuddyBoss\Core
  * @subpackage Core
- * @since      BuddyBoss [BBVERSION]
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Friends
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 
 defined( 'ABSPATH' ) || exit;
