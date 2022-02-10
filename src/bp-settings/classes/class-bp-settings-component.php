@@ -258,10 +258,11 @@ class BP_Settings_Component extends BP_Component {
 
 			// Notifications - only add the tab when there is something to display there.
 			if ( has_action( 'bp_notification_settings' ) ) {
+				$data           = bb_core_notification_preferences_data();
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notifications',
-					'title'    => __( 'Notification Preferences', 'buddyboss' ),
+					'title'    => $data['menu_title'],
 					'href'     => trailingslashit( $settings_link . 'notifications' ),
 					'position' => 20,
 				);
