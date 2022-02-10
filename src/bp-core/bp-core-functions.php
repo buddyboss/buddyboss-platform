@@ -5497,6 +5497,14 @@ function bp_core_is_empty_directory( $dir ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
+
+	/**
+	 * Action to perform before regenerating attachment thumbnails.
+	 *
+	 * @since BuddyBoss 1.8.7
+	 */
+	do_action( 'bp_core_before_regenerate_attachment_thumbnails' );
+
 	if ( function_exists( 'wp_get_original_image_path' ) ) {
 		$fullsizepath = wp_get_original_image_path( $attachment_id );
 	} else {
@@ -5508,6 +5516,13 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 	}
 	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 	wp_update_attachment_metadata( $attachment_id, $new_metadata );
+
+	/**
+	 * Action to perform after regenerating attachment thumbnails.
+	 *
+	 * @since BuddyBoss 1.8.7
+	 */
+	do_action( 'bp_core_after_regenerate_attachment_thumbnails' );
 }
 
 /**
@@ -6747,4 +6762,17 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 		'is_buddyboss_theme_active'      => $is_buddyboss_theme_active,
 		'is_buddyboss_app_plugin_active' => $is_buddyboss_app_plugin_active,
 	);
+}
+
+/**
+ * Remove all the unfiltered html from the string.
+ *
+ * @since BuddyBoss 1.8.7
+ *
+ * @param string $content Given string.
+ *
+ * @return string
+ */
+function bb_core_remove_unfiltered_html( $content ) {
+	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
 }
