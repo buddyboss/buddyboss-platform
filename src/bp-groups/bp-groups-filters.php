@@ -81,9 +81,6 @@ add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_video_scope', 10
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
 
-// Load Group Notifications.
-add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
-
 add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_description', 'bb_core_remove_unfiltered_html', 99 );
@@ -91,6 +88,9 @@ add_filter( 'bp_get_group_description', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_group_description_excerpt', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_description_before_save', 'bb_core_remove_unfiltered_html', 99 );
+
+// Load Group Notifications.
+add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.

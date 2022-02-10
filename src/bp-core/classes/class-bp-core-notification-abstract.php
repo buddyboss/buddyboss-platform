@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -171,6 +171,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param array $notifications List of notifications.
 	 *
 	 * @return array
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notifications( array $notifications ) {
@@ -384,6 +385,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param int    $priority          Priority of the group.
 	 *
 	 * @return void
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
@@ -405,6 +407,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param bool   $default                  Default status.
 	 *
 	 * @return void
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_preference( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
@@ -425,6 +428,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $notification_type Notification Type key.
 	 *
 	 * @return void
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification( string $component, string $component_action, string $notification_type ) {

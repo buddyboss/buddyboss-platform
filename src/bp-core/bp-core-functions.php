@@ -6517,6 +6517,19 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 }
 
 /**
+ * Remove all the unfiltered html from the string.
+ *
+ * @since BuddyBoss 1.8.7
+ *
+ * @param string $content Given string.
+ *
+ * @return string
+ */
+function bb_core_remove_unfiltered_html( $content ) {
+	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
+}
+
+/**
  * Check the notification is enabled for the user ot not.
  *
  * @since BuddyBoss [BBVERSION]
@@ -6708,8 +6721,8 @@ function bb_register_notification_email_templates( $notification_type = '' ) {
 
 	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
 
-	if ( ! empty( $notification_emails ) && isset( $notification_emails[ $notification_type ] ) ) {
-		return $notification_emails[ $notification_type ];
+	if ( ! empty( $notification_emails ) && ! empty( $notification_type ) ) {
+		return ( isset( $notification_emails[ $notification_type ] ) ? $notification_emails[ $notification_type ] : array() );
 	}
 
 	return $notification_emails;
@@ -6875,7 +6888,8 @@ function bb_check_email_type_registered( string $notification_type ) {
  *
  * @param int $default Default false.
  *
- * @return bool Is media profile media support enabled or not
+ * @return bool Is media profile media support enabled or not.
+ *
  * @since BuddyBoss [BBVERSION]
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
@@ -7205,15 +7219,3 @@ function bb_render_manual_notification() {
 	}
 }
 
-/**
- * Remove all the unfiltered html from the string.
- *
- * @since BuddyBoss 1.8.7
- *
- * @param string $content Given string.
- *
- * @return string
- */
-function bb_core_remove_unfiltered_html( $content ) {
-	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
-}

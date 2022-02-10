@@ -745,8 +745,9 @@ function bp_profile_photos_tutorial() {
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p><?php
-		}
+	</p>
+	<?php
+}
 
 /** Group Photos ************************************************************/
 
@@ -1516,7 +1517,7 @@ function bp_feed_settings_callback_platform( $args ) {
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
-    <?php
+	<?php
 
 }
 
@@ -1784,7 +1785,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
  * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
- *
  */
 function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
@@ -1799,7 +1799,6 @@ function bp_admin_setting_callback_register_show_confirm_email() {
  * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
- *
  */
 function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
@@ -1914,7 +1913,6 @@ function bp_group_directories_tutorial() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
@@ -1949,7 +1947,6 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_page_url() {
 	?>
@@ -2345,6 +2342,7 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
  * Register the labs settings section.
  *
  * @since BuddyBoss [BBVERSION]
+ *
  * @return array
  */
 function bb_labs_get_settings_sections() {
@@ -2364,10 +2362,11 @@ function bb_labs_get_settings_sections() {
 /**
  * Get settings fields by section.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss [BBVERSION]
  */
 function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -2385,8 +2384,9 @@ function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all the settings fields.
  *
- * @return array
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_labs_get_settings_fields() {
 
@@ -2425,7 +2425,8 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		printf(
 			'<p class="bp-new-notice-panel-notice">%s</p>',
 			sprintf(
-				__( 'This feature requires the %s component to be enabled.', 'buddyboss' ),
+				/* translators: Components page link. */
+				wp_kses_post( __( 'This feature requires the %s component to be enabled.', 'buddyboss' ) ),
 				'<strong><a href="' . esc_url(
 					add_query_arg(
 						array( 'page' => 'bp-components' ),
@@ -2447,7 +2448,10 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
-				__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' ),
+				wp_kses_post(
+					/* translators: Notification settings link. */
+					__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' )
+				),
 				esc_url(
 					add_query_arg(
 						array(
@@ -2456,7 +2460,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 						),
 						admin_url( 'admin.php' )
 					)
-                )
+				)
 			)
 		);
 	}
@@ -2486,6 +2490,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 		<br/>
 		<?php
 		printf(
+			/* translators: Tutorial link. */
 			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
 			sprintf(
 				'<a href="%s">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
@@ -2500,7 +2505,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 }
 
 /**
- * Buddyboss Labs settings section callback.
+ * BuddyBoss Labs settings section callback.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -2508,24 +2513,29 @@ function bb_labs_notification_preferences_info_section_callback() {
 	?>
 
 	<p>
-	<?php
+		<?php
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
-				__(
-					'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s">support portal</a>.',
-					'buddyboss'
+				wp_kses_post(
+				/* translators: Support portal. */
+					__(
+						'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s">support portal</a>.',
+						'buddyboss'
+					)
 				),
-				add_query_arg(
-					array(
-						'page' => 'bp-pages',
-					),
-					admin_url( 'admin.php' )
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-pages',
+						),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
-	?>
-		</p>
+		?>
+	</p>
 
 	<?php
 }
