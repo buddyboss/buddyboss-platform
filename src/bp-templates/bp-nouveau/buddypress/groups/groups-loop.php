@@ -141,7 +141,7 @@ bp_nouveau_before_loop(); ?>
 							</a>
 						</header>
 						<div class="bb-leave-group-content">
-							<p><?php _e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
 							<a class="bb-close-leave-group" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
