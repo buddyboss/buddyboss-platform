@@ -1914,7 +1914,7 @@ function bb_admin_setting_group_grid_style() {
 			);
 		?>
 	</div>
-	<p class="description"><?php esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
