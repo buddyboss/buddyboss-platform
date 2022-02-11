@@ -1914,7 +1914,7 @@ function bb_admin_setting_group_grid_style() {
 			);
 		?>
 	</div>
-	<p class="description"><?php echo esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html_e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1928,24 +1928,26 @@ function bb_admin_setting_group_grid_style() {
 function bb_admin_setting_group_elements( $args ) {
 
 	echo "<div class='bb-group-elements'>";
-	foreach ( $args['elements'] as $element ) {
-		$element_name = $element['element_name'];
-		?>
-		<div class="bb-group-element bb-group-element-<?php echo esc_attr( $element_name ); ?>">
-			<?php
-			new BB_Admin_Setting_Fields(
-				array(
-					'type'     => 'checkbox',
-					'id'       => 'bb-group-element-' . $element_name,
-					'label'    => $element['element_label'],
-					'disabled' => true,
-					'value'    => $element_name,
-					'selected' => $element_name,
-				)
-			);
+	if ( ! empty( $args[ 'elements' ] ) ) {
+		foreach ( $args['elements'] as $element ) {
+			$element_name = $element['element_name'];
 			?>
-		</div>
-		<?php
+			<div class="bb-group-element bb-group-element-<?php echo esc_attr( $element_name ); ?>">
+				<?php
+				new BB_Admin_Setting_Fields(
+					array(
+						'type'     => 'checkbox',
+						'id'       => 'bb-group-element-' . $element_name,
+						'label'    => $element['element_label'],
+						'disabled' => true,
+						'value'    => $element_name,
+						'selected' => $element_name,
+					)
+				);
+				?>
+			</div>
+			<?php
+		}
 	}
 	echo '</div>';
 	echo '<p class="description">';
