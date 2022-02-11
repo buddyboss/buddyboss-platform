@@ -3880,7 +3880,7 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
-
+				this.$el.parent().addClass('loading');
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 
 				// Remove feedback.
@@ -3935,7 +3935,7 @@ window.bp = window.bp || {};
 				}
 				// this.$el.addClass('loading');
 				//console.log( this.$el );
-				this.$el.parent().addClass('loading');
+				
 				// this.$el.addClass('loading');
 				// return;
 				// debugger;
