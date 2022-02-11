@@ -6163,29 +6163,32 @@ form.ac-form .ac-reply-content input {
   padding-bottom: 0;
 }
 
-.bb-leave-group-popup .modal-container {
+.bb-action-popup .modal-container {
   padding-bottom: 0;
 }
 
-.bb-leave-group-popup .bb-model-header {
+.bb-action-popup .bb-model-header {
   background-color: #fff;
   border-bottom: 1px solid #e7e9eb;
   box-shadow: none;
 }
 
-.bb-leave-group-popup .bb-model-header h3 {
+.bb-action-popup .bb-model-header h3 {
   margin: 0;
 }
 
-.bb-leave-group-popup .bb-leave-group-content {
-  padding: 20px 0;
+.bb-action-popup .bb-action-popup-content {
+  margin: 0 -30px;
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  padding: 20px 30px;
 }
 
-.bb-leave-group-popup .bb-leave-group-content p {
+.bb-action-popup .bb-action-popup-content p {
   margin-bottom: 0;
 }
 
-.bb-leave-group-popup .bb-model-footer {
+.bb-action-popup .bb-model-footer {
   background: #fafafa;
   border-top: 1px solid #e7e9eb;
   border-radius: 0 0 4px 4px;
@@ -6195,7 +6198,7 @@ form.ac-form .ac-reply-content input {
   text-align: left;
 }
 
-.bb-leave-group-popup .bb-model-footer .bb-close-leave-group {
+.bb-action-popup .bb-model-footer .bb-close-leave-group {
   color: #92949d;
   margin-left: 20px;
 }
@@ -21237,7 +21240,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
