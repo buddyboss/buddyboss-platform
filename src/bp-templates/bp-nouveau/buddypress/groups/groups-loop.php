@@ -141,17 +141,17 @@ bp_nouveau_before_loop(); ?>
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_attr__( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php echo esc_attr__( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content">
-							<p><?php esc_attr__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+							<p><?php echo esc_attr__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group" href="#"><?php esc_attr__( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_attr__( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group" href="#"><?php echo esc_attr__( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php echo esc_attr__( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 
 					</div>
