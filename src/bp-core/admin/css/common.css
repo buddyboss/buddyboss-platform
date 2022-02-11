@@ -2767,19 +2767,19 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after, html
   line-height: 2;
 }
 
-.bb-grid-style-outer .bb-grid-style #bb-group-heaedr-style-left:checked:checked + .option:before,
+.bb-grid-style-outer .bb-grid-style #bb-group-header-style-left:checked:checked + .option:before,
 .bb-grid-style-outer .bb-grid-style #bb-group-header-style-centered:checked:checked + .option:before,
 .bb-grid-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
 .bb-grid-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before,
-.bb-grid-style-outer .bb-header-style #bb-group-heaedr-style-left:checked:checked + .option:before,
+.bb-grid-style-outer .bb-header-style #bb-group-header-style-left:checked:checked + .option:before,
 .bb-grid-style-outer .bb-header-style #bb-group-header-style-centered:checked:checked + .option:before,
 .bb-grid-style-outer .bb-header-style #bb-group-grid-style-left:checked:checked + .option:before,
 .bb-grid-style-outer .bb-header-style #bb-group-grid-style-centered:checked:checked + .option:before,
-.bb-header-style-outer .bb-grid-style #bb-group-heaedr-style-left:checked:checked + .option:before,
+.bb-header-style-outer .bb-grid-style #bb-group-header-style-left:checked:checked + .option:before,
 .bb-header-style-outer .bb-grid-style #bb-group-header-style-centered:checked:checked + .option:before,
 .bb-header-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
 .bb-header-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before,
-.bb-header-style-outer .bb-header-style #bb-group-heaedr-style-left:checked:checked + .option:before,
+.bb-header-style-outer .bb-header-style #bb-group-header-style-left:checked:checked + .option:before,
 .bb-header-style-outer .bb-header-style #bb-group-header-style-centered:checked:checked + .option:before,
 .bb-header-style-outer .bb-header-style #bb-group-grid-style-left:checked:checked + .option:before,
 .bb-header-style-outer .bb-header-style #bb-group-grid-style-centered:checked:checked + .option:before {
