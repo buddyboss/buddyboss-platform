@@ -84,7 +84,7 @@ bp_nouveau_before_loop(); ?>
 										<p class="item-meta group-details <?php echo esc_attr( $meta_privacy . ' ' . $meta_group_type ); ?>">
 										<?php
 											$meta = bp_nouveau_get_group_meta();
-											echo esc_attr( $meta['status'] );
+											echo $meta['status'];
 										?>
 										</p>
 									<?php endif; ?>

@@ -4568,8 +4568,8 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			?>
 			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
 			<?php
-			echo esc_html( $member_count );
-			printf( _n( ' member', ' members', $member_count, 'buddyboss' ) );
+			/* translators: Group member count. */
+			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
 			?>
 			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
