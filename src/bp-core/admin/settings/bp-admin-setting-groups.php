@@ -138,7 +138,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
 
 			$args          = array();
-			$args['class'] = 'group-cover-options avatar-options ' . $pro_class . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$args['class'] = 'group-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
 			$this->add_field( 'bp-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_group_cover_size', 'string', $args );
 
 			$args          = array();
@@ -191,12 +191,12 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style.
 		$args          = array();
-		$args['class'] = 'group-gride-style group-layout-options ' . $pro_class;
+		$args['class'] = 'group-gride-style group-layout-options ' . esc_attr( $pro_class );
 		$this->add_field( 'bb-group-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Elements.
 		$args = array(
-			'class'    => 'group-elements ' . $pro_class,
+			'class'    => 'group-elements ' . esc_attr( $pro_class ),
 			'elements' => array(
 				array(
 					'element_name'  => 'cover-images',
