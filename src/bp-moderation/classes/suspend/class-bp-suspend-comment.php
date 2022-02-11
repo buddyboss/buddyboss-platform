@@ -462,7 +462,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	private function check_is_hidden( $comment_id ) {
 
-		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type ) ) {
 			return true;
 		}
 
