@@ -1243,20 +1243,27 @@ class BP_Messages_Thread {
 				bp_displayed_user_id() :
 				bp_loggedin_user_id();
 
-		$bp     = buddypress();
-		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
+		$bp = buddypress();
 
-		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
-		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
+		// phpcs:ignore
+		$is_unread = $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count > 0", $user_id, $thread_id ) );
 
-		/**
-		 * Fires when messages thread was marked as read.
-		 *
-		 * @since BuddyPress 2.8.0
-		 *
-		 * @param int $thread_id The message thread ID.
-		 */
-		do_action( 'messages_thread_mark_as_read', $thread_id );
+		if ( ! empty( $is_unread ) ) {
+			// phpcs:ignore
+			$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
+
+			wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
+			wp_cache_delete( $user_id, 'bp_messages_unread_count' );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @since BuddyPress 2.8.0
+			 *
+			 * @param int $thread_id The message thread ID.
+			 */
+			do_action( 'messages_thread_mark_as_read', $thread_id );
+		}
 
 		return $retval;
 	}
