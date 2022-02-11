@@ -758,7 +758,7 @@ window.bp = window.bp || {};
 			}
 
 			// For Group layout options.
-			var groupSelectorType = $( '.group-layout-options' );
+			var groupSelectorType = $( '.group-layout-options:not(.group-header-style)' );
 			if ( groupSelectorType.length ) {
 
 				var groupSelectorOptions = $( 'select[name=bp-group-layout-format]' );
