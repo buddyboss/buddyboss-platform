@@ -3933,9 +3933,9 @@ window.bp = window.bp || {};
 						)
 					);
 				}
-				this.$el.addClass('loading');
+				// this.$el.addClass('loading');
 				//console.log( this.$el );
-				//this.$el.parent().addClass('loading');
+				this.$el.parent().addClass('loading');
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 				// this.$el.addClass('loading');
 				// return;
@@ -4016,8 +4016,8 @@ window.bp = window.bp || {};
 				}
 
 				this.activityHideModalEvent();
-				// this.$el.parent().removeClass('loading');
-				this.$el.removeClass('loading');
+				this.$el.parent().removeClass('loading');
+				// this.$el.removeClass('loading');
 			},
 
 			activityHideModalEvent: function () {
