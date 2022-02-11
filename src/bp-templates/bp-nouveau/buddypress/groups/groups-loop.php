@@ -135,7 +135,7 @@ $group_alignment = bb_platform_group_grid_style( 'left' );
 	</ul>
 
 	<!-- Leave Group confirmation popup -->
-	<div class="bb-leave-group-popup" style="display: none">
+	<div class="bb-leave-group-popup bb-action-popup" style="display: none">
 		<transition name="modal">
 			<div class="modal-mask bb-white bbm-model-wrap">
 				<div class="modal-wrapper">
@@ -146,7 +146,7 @@ $group_alignment = bb_platform_group_grid_style( 'left' );
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
 						</header>
-						<div class="bb-leave-group-content">
+						<div class="bb-leave-group-content bb-action-popup-content">
 							<p><?php echo esc_attr__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
