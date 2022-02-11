@@ -111,6 +111,42 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
+		// Group Headers.
+		$this->add_section( 'bp_groups_headers_settings', esc_html__( 'Group Headers', 'buddyboss' ), '', 'bp_group_headers_tutorial' );
+
+		// Admin Settings for Settings > Groups > Group Headers > Header Style.
+		$args          = array();
+		$args['class'] = 'group-header-style group-layout-options ' . esc_attr( $pro_class );
+		$this->add_field( 'bb-group-header-style', esc_html__( 'Header Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_header_style', 'radio', $args );
+
+		// Admin Settings for Settings > Groups > Group Headers > Elements.
+		$args = array(
+			'class'    => 'group-headers-elements ' . esc_attr( $pro_class ),
+			'elements' => array(
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Group Type', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Last Activity', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Group Description', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Group Organizers', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => __( 'Group Privacy', 'buddyboss' ),
+				),
+			),
+		);
+		$this->add_field( 'bb-group-headers-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_headers_elements', 'checkbox', $args );
+
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );
 
