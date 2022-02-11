@@ -7827,7 +7827,7 @@ function bb_platform_group_element_enable( $element ) {
 }
 
 /**
- * get group grid style setting
+ * Get group grid style setting
  *
  * @since [BBVERSION]
  *

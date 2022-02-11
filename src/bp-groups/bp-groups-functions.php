@@ -4510,7 +4510,7 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $group_id ID of the group.
+ * @param int   $group_id ID of the group.
  * @param array $role roles of the group.
  * @return string members list html.
  */
@@ -4563,8 +4563,8 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			<?php
 		}
 
-		if ( $total - sizeof( $members ) != 0 ) {
-			$member_count = $total - sizeof( $members );
+		if ( $total - count( $members ) !== 0 ) {
+			$member_count = $total - count( $members );
 			?>
 			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
 			<?php

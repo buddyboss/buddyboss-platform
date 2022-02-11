@@ -6,6 +6,8 @@
  *
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
+ *
+ * @package BuddyBoss\Core
  */
 
 bp_nouveau_before_loop(); ?>
@@ -23,7 +25,7 @@ bp_nouveau_before_loop(); ?>
 	$meta_privacy    = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
 	$meta_group_type = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
 	$group_members   = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
-	$join_button	 = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
+	$join_butto      = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
 	$group_alignment = bb_platform_group_grid_style( 'left' );
 
 ?>
@@ -32,7 +34,7 @@ bp_nouveau_before_loop(); ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo $cover_class . ' ' . $group_alignment; ?> groups-dir-list">
+	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo esc_attr( $cover_class . ' ' . $group_alignment ); ?> groups-dir-list">
 
 	<?php
 	while ( bp_groups() ) :
@@ -79,10 +81,10 @@ bp_nouveau_before_loop(); ?>
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-										<p class="item-meta group-details <?php echo $meta_privacy . ' ' . $meta_group_type; ?>">
+										<p class="item-meta group-details <?php echo esc_attr( $meta_privacy . ' ' . $meta_group_type ); ?>">
 										<?php
 											$meta = bp_nouveau_get_group_meta();
-											echo $meta['status'];
+											echo esc_attr( $meta['status'] );
 										?>
 										</p>
 									<?php endif; ?>
@@ -92,8 +94,8 @@ bp_nouveau_before_loop(); ?>
 										<?php
 											printf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-												__( 'active %s', 'buddyboss' ),
-												bp_get_group_last_active()
+												esc_attr__( 'active %s', 'buddyboss' ),
+												esc_attr( bp_get_group_last_active() )
 											);
 										?>
 										</p>
@@ -111,7 +113,7 @@ bp_nouveau_before_loop(); ?>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 
-					<div class="group-footer-wrap <?php echo $group_members . ' ' . $join_button; ?>">
+					<div class="group-footer-wrap <?php echo esc_attr( $group_members . ' ' . $join_button ); ?>">
 						<div class="group-members-wrap">
 							<?php bb_groups_loop_members(); ?>
 						</div>
@@ -137,17 +139,17 @@ bp_nouveau_before_loop(); ?>
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php _e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php esc_attr__( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content">
-							<p><?php _e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+							<p><?php esc_attr__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group" href="#"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php _e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group" href="#"><?php esc_attr__( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_attr__( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 
 					</div>

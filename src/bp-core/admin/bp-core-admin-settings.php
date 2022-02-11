@@ -1914,7 +1914,7 @@ function bb_admin_setting_group_grid_style() {
 			);
 		?>
 	</div>
-	<p class="description"><?php esc_attr( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1923,9 +1923,7 @@ function bb_admin_setting_group_grid_style() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $args array
- *
- * @uses checked() To display the checked attribute
+ * @param array $args Field options.
  */
 function bb_admin_setting_group_elements( $args ) {
 
@@ -1951,7 +1949,7 @@ function bb_admin_setting_group_elements( $args ) {
 	}
 	echo '</div>';
 	echo '<p class="description">';
-	echo esc_attr( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
+	echo esc_attr__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
 	echo '</p>';
 }
 
