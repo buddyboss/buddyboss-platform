@@ -3881,6 +3881,7 @@ window.bp = window.bp || {};
 
 			displayFull: function ( event ) {
 				this.$el.parent().addClass('loading');
+				debugger;
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 
 				// Remove feedback.
