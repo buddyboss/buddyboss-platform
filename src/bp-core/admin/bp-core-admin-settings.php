@@ -1990,6 +1990,77 @@ function bp_admin_setting_group_layout_default_option() {
 }
 
 /**
+ * Admin Settings for Settings > Groups > Group Headers > Header style
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_group_header_style() {
+	?>
+	<div class="bb-header-style-outer">
+		<?php
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-group-header-style-',
+				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? 'Right' : 'Left',
+						'class' => 'option opt-left',
+					),
+					'centered' => array(
+						'label' => 'Centered',
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
+		?>
+	</div>
+	<p class="description"><?php echo esc_attr__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow Platform default group header elements setting field
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Field options.
+ */
+function bb_admin_setting_group_headers_elements( $args ) {
+
+	echo "<div class='bb-group-headers-elements'>";
+	foreach ( $args['elements'] as $element ) {
+		$element_name = $element['element_name'];
+		?>
+		<div class="bb-group-headers-element bb-group-headers-element-<?php echo esc_attr( $element_name ); ?>">
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'     => 'checkbox',
+					'id'       => 'bb-group-headers-element-' . $element_name,
+					'label'    => $element['element_label'],
+					'disabled' => true,
+					'value'    => $element_name,
+					'selected' => $element_name,
+				)
+			);
+			?>
+		</div>
+		<?php
+	}
+	echo '</div>';
+	echo '<p class="description">';
+	echo esc_attr__( 'Select which elements to show in your group headers.', 'buddyboss' );
+	echo '</p>';
+
+}
+
+/**
  * Admin Settings for Settings > Groups > Group Directories > Grid style
  *
  * @since BuddyBoss [BBVERSION]
@@ -2020,7 +2091,7 @@ function bb_admin_setting_group_grid_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
