@@ -10,6 +10,8 @@
  * @package BuddyBoss\Core
  */
 
+use function Symfony\Component\VarDumper\Dumper\esc;
+
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_group_directory_type() ) : ?>
@@ -84,7 +86,7 @@ bp_nouveau_before_loop(); ?>
 										<p class="item-meta group-details <?php echo esc_attr( $meta_privacy . ' ' . $meta_group_type ); ?>">
 										<?php
 											$meta = bp_nouveau_get_group_meta();
-											echo $meta['status'];
+											echo wp_kses_post( $meta['status'] );
 										?>
 										</p>
 									<?php endif; ?>
@@ -95,7 +97,7 @@ bp_nouveau_before_loop(); ?>
 											printf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
 												esc_attr__( 'active %s', 'buddyboss' ),
-												esc_attr( bp_get_group_last_active() )
+												wp_kses_post( bp_get_group_last_active() )
 											);
 										?>
 										</p>
