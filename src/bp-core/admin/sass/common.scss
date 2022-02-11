@@ -459,6 +459,10 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
 }
 
+.bp-admin-card.section-bp_groups_headers_settings h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/regular/window-maximize.svg);
+}
+
 .bp-admin-card.section-bp_groups_types h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/cubes.svg);
 	background-size: 20px 20px;
@@ -2847,10 +2851,12 @@ table tbody td .bb-description {
 	margin-bottom: 10px;
 }
 
-.bb-grid-style-outer {
+.bb-grid-style-outer,
+.bb-header-style-outer {
 	display: flex;
 
-	.bb-grid-style {
+	.bb-grid-style,
+	.bb-header-style {
 		display: flex;
 		flex-direction: column;
 		margin-right: 15px;
@@ -2914,6 +2920,8 @@ table tbody td .bb-description {
 
 		}
 
+		#bb-group-heaedr-style-left:checked:checked + .option,
+		#bb-group-header-style-centered:checked:checked + .option,
 		#bb-group-grid-style-left:checked:checked + .option,
 		#bb-group-grid-style-centered:checked:checked + .option {
 
