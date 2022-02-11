@@ -3915,6 +3915,8 @@ window.bp = window.bp || {};
 					}
 				);
 
+				this.$el.parent().addClass('loading');
+
 				// Backcompat custom fields.
 				if ( true === BP_Nouveau.activity.params.backcompat ) {
 					this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
@@ -3934,8 +3936,7 @@ window.bp = window.bp || {};
 					);
 				}
 				
-				this.$el.parent().addClass('loading');
-				return;
+
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
@@ -4013,7 +4014,6 @@ window.bp = window.bp || {};
 
 				this.activityHideModalEvent();
 				this.$el.parent().removeClass('loading');
-				// this.$el.removeClass('loading');
 			},
 
 			activityHideModalEvent: function () {
