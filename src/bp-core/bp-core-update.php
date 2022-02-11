@@ -353,6 +353,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18401 ) {
 			bb_update_to_1_8_6();
 		}
+
+		if ( $raw_db_version < 18651 ) {
+			bb_update_to_1_8_8();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1668,4 +1672,48 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
 		'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
 		'error'   => false,
 	);
+}
+
+/**
+ * Update routine.
+ * Migrate the cover sizes from the theme option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_1_8_8() {
+	global $buddyboss_theme_options;
+
+	/* Check if options are empty */
+	if ( empty( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		update_option( 'old_buddyboss_theme_options', $buddyboss_theme_options );
+	}
+
+	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? get_option( 'buddyboss_profile_cover_width' );
+	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? get_option( 'buddyboss_profile_cover_height' );
+	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? get_option( 'buddyboss_group_cover_width' );
+	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? get_option( 'buddyboss_group_cover_height' );
+
+	if ( ! empty( $profile_cover_width ) ) {
+		delete_option( 'bp-cover-profile-width' );
+		add_option( 'bp-cover-profile-width', $profile_cover_width );
+	}
+
+	if ( ! empty( $profile_cover_height ) ) {
+		delete_option( 'bp-cover-profile-height' );
+		add_option( 'bp-cover-profile-height', $profile_cover_height );
+	}
+
+	if ( ! empty( $group_cover_width ) ) {
+		delete_option( 'bp-cover-group-width' );
+		add_option( 'bp-cover-group-width', $group_cover_width );
+	}
+
+	if ( ! empty( $group_cover_height ) ) {
+		delete_option( 'bp-cover-group-height' );
+		add_option( 'bp-cover-group-height', $group_cover_height );
+	}
 }

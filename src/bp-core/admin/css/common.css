@@ -2484,6 +2484,26 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   bottom: 0;
 }
 
+.avatar-options .image-width-height > label {
+  min-width: 80px;
+  display: inline-block;
+}
+
+.avatar-options .image-width-height .description {
+  margin-left: 85px;
+  margin-bottom: 15px;
+}
+
+@media screen and (max-width: 782px) {
+  .avatar-options .image-width-height > label {
+    min-width: auto;
+    margin-bottom: 10px;
+  }
+  .avatar-options .image-width-height .description {
+    margin-left: 0;
+  }
+}
+
 .buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-uploader-progress div.error {
   margin: 5px 0 2px;
 }
@@ -2533,10 +2553,15 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
   align-items: stretch;
-  min-height: 90px;
-  max-height: 90px;
+  min-height: 80px;
+  max-height: 80px;
   background-color: #ccc;
   overflow: hidden;
+}
+
+.preview_avatar_cover .preview-item-cover.large-image {
+  min-height: 130px;
+  max-height: 130px;
 }
 
 .preview_avatar_cover .preview-item-avatar {

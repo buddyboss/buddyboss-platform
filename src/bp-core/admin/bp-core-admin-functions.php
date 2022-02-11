@@ -3314,10 +3314,9 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  */
 function bb_get_pro_label_notice() {
 	return sprintf(
-	/* translators: 1. HTML tags with class. 2. URL. 3. HTML tags close. */
-		__( '%1$s Install <a target="_blank" href="%2$s">BuddyBoss Platform Pro</a> to unlock %3$s', 'buddyboss' ),
-		'<br/><span class="bb-head-notice">',
-		esc_url( 'https://www.buddyboss.com/platform' ),
-		'</span>'
+		'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform">%2$s</a> %3$s</span>',
+		esc_html__( 'Install', 'buddyboss' ),
+		esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+		esc_html__( 'to unlock', 'buddyboss' ),
 	);
 }

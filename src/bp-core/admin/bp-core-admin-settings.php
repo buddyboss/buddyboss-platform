@@ -687,6 +687,11 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
 		$app_cover_preview = $web_cover_preview;
 	}
+
+	$cover_height_class = '';
+	if ( 'large' === bb_get_profile_cover_image_height() ) {
+		$cover_height_class = 'large-image';
+	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
@@ -699,7 +704,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 				<?php endif; ?>
 			</div>
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( $cover_height_class ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
@@ -720,6 +725,54 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 
 	</div>
 	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
+	<?php
+}
+
+/**
+ * Default profile cover sizes settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_profile_cover_size() {
+
+	?>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-profile-width',
+					'label'       => esc_html__( 'Width', 'buddyboss' ),
+					'description' => esc_html__( 'Select the width of profile cover images in profile headers.', 'buddyboss' ),
+					'disabled'    => true,
+					'value'       => bb_get_profile_cover_image_width(),
+					'options'     => array(
+						'default' => esc_html__( 'Default', 'buddyboss' ),
+						'full'    => esc_html__( 'Full Width', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-profile-height',
+					'label'       => esc_html__( 'Height', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of profile cover images in profile headers.', 'buddyboss' ),
+					'disabled'    => true,
+					'value'       => bb_get_profile_cover_image_height(),
+					'options'     => array(
+						'small' => esc_html__( 'Small', 'buddyboss' ),
+						'large' => esc_html__( 'Large', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Changing your size of your cover images will reposition cover images already uploaded by your members', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -972,6 +1025,11 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'groups' );
 		$app_cover_preview = $web_cover_preview;
 	}
+
+	$cover_height_class = '';
+	if ( 'large' === bb_get_group_cover_image_height() ) {
+		$cover_height_class = 'large-image';
+	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
@@ -985,7 +1043,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 			</div>
 
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( $cover_height_class ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
@@ -1008,6 +1066,54 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 	</div>
 	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
+	<?php
+}
+
+/**
+ * Default group cover sizes settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_admin_setting_callback_default_group_cover_size() {
+
+	?>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-group-width',
+					'label'       => esc_html__( 'Width', 'buddyboss' ),
+					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
+					'value'       => bb_get_group_cover_image_width(),
+					'disabled'    => true,
+					'options'     => array(
+						'default' => esc_html__( 'Default', 'buddyboss' ),
+						'full'    => esc_html__( 'Full Width', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bp-cover-group-height',
+					'label'       => esc_html__( 'Height', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
+					'value'       => bb_get_group_cover_image_height(),
+					'disabled'    => true,
+					'options'     => array(
+						'small' => esc_html__( 'Small', 'buddyboss' ),
+						'large' => esc_html__( 'Large', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Changing your size of your cover images will reposition cover images already uploaded by your members', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1892,29 +1998,29 @@ function bb_admin_setting_group_grid_style() {
 	?>
 	<div class="bb-grid-style-outer">
 		<?php
-			new BB_Admin_Setting_Fields(
-				array(
-					'type'        => 'radio',
-					'id'          => 'bb-group-grid-style-',
-					'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
-					'disabled'    => true,
-					'opt_wrapper' => true,
-					'value'       => 'left',
-					'options'     => array(
-						'left'     => array(
-							'label' => is_rtl() ? 'Right' : 'Left',
-							'class' => 'option opt-left',
-						),
-						'centered' => array(
-							'label' => 'Centered',
-							'class' => 'option opt-centered',
-						),
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-group-grid-style-',
+				'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? 'Right' : 'Left',
+						'class' => 'option opt-left',
 					),
-				)
-			);
+					'centered' => array(
+						'label' => 'Centered',
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
 		?>
 	</div>
-	<p class="description"><?php esc_attr( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1923,9 +2029,7 @@ function bb_admin_setting_group_grid_style() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $args array
- *
- * @uses checked() To display the checked attribute
+ * @param array $args Field options.
  */
 function bb_admin_setting_group_elements( $args ) {
 
@@ -1951,7 +2055,7 @@ function bb_admin_setting_group_elements( $args ) {
 	}
 	echo '</div>';
 	echo '<p class="description">';
-	echo esc_attr( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
+	echo esc_attr__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
 	echo '</p>';
 }
 
