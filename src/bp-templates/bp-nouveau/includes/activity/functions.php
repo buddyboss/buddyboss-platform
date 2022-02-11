@@ -623,12 +623,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
-
-// remove wp version number from scripts and styles
-function bp_remove_css_js_version( $src ) {
-	if( strpos( $src, '?ver=' ) )
-		$src = remove_query_arg( 'ver', $src );
-	return $src;
-}
-add_filter( 'style_loader_src', 'bp_remove_css_js_version', 9999 );
-add_filter( 'script_loader_src', 'bp_remove_css_js_version', 9999 );
