@@ -3936,6 +3936,7 @@ window.bp = window.bp || {};
 				this.$el.addClass('loading');
 				//console.log( this.$el );
 				//this.$el.parent().addClass('loading');
+				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 				// this.$el.addClass('loading');
 				return;
 				//debugger;
@@ -3944,7 +3945,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
-				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+				// this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) &&
