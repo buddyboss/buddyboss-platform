@@ -3933,12 +3933,9 @@ window.bp = window.bp || {};
 						)
 					);
 				}
-				// this.$el.addClass('loading');
-				//console.log( this.$el );
+				
 				this.$el.parent().addClass('loading');
-				// this.$el.addClass('loading');
-				// return;
-				// debugger;
+				return;
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
