@@ -128,19 +128,19 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 					'element_label' => __( 'Group Type', 'buddyboss' ),
 				),
 				array(
-					'element_name'  => 'group-type',
+					'element_name'  => 'group-activity',
 					'element_label' => __( 'Last Activity', 'buddyboss' ),
 				),
 				array(
-					'element_name'  => 'group-type',
+					'element_name'  => 'group-description',
 					'element_label' => __( 'Group Description', 'buddyboss' ),
 				),
 				array(
-					'element_name'  => 'group-type',
+					'element_name'  => 'group-organizers',
 					'element_label' => __( 'Group Organizers', 'buddyboss' ),
 				),
 				array(
-					'element_name'  => 'group-type',
+					'element_name'  => 'group-privacy',
 					'element_label' => __( 'Group Privacy', 'buddyboss' ),
 				),
 			),
