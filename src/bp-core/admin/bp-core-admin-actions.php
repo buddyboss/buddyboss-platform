@@ -289,7 +289,7 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 }
 
 /**
- * deregister edit-comments.js file from BB CPT that does not support comments.
+ * deregister edit-comments.js file from BB CPT create/edit page that does not support comments.
  * 
  * @since BuddyBoss [BBVERSION]
  *
