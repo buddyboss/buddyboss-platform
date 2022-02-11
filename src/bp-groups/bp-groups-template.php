@@ -7822,6 +7822,42 @@ function bp_group_get_video_album_status( $group_id = false ) {
  * @param string $element Group element.
  * @return bool Is group element enabled or not
  */
+function bb_platform_group_headers_element_enable( $element ) {
+
+	if ( function_exists( 'bb_platform_pro_group_headers_element_enable' ) ) {
+		return bb_platform_pro_group_headers_element_enable( $element );
+	}
+
+	return true;
+}
+
+/**
+ * Get group grid style setting
+ *
+ * @since [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: left.
+ *
+ * @return string grid style for group directory
+ */
+function bb_platform_group_header_style( $default = 'left' ) {
+
+	if ( function_exists( 'bb_platform_pro_group_header_style' ) ) {
+		return bb_platform_pro_group_header_style( $default );
+	}
+
+	return $default;
+}
+
+/**
+ * Checks if default platform group element is enabled.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $element Group element.
+ * @return bool Is group element enabled or not
+ */
 function bb_platform_group_element_enable( $element ) {
 
 	if ( function_exists( 'bb_platform_pro_group_element_enable' ) ) {
