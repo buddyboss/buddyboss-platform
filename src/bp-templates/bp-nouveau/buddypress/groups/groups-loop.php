@@ -50,11 +50,11 @@ $group_alignment = bb_platform_group_grid_style( 'left' );
 						<?php if ( bb_platform_group_element_enable( 'cover-images' ) ) { ?>
 							<?php
 							$group_cover_image_url = bp_attachments_get_attachment(
-									'url',
-									array(
-											'object_dir' => 'groups',
-											'item_id'    => bp_get_group_id(),
-									)
+								'url',
+								array(
+									'object_dir' => 'groups',
+									'item_id'    => bp_get_group_id(),
+								)
 							);
 							$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
 							?>
@@ -95,9 +95,9 @@ $group_alignment = bb_platform_group_grid_style( 'left' );
 										<p class="last-activity item-meta">
 											<?php
 											printf(
-											/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-													esc_attr__( 'active %s', 'buddyboss' ),
-													wp_kses_post( bp_get_group_last_active() )
+												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+												esc_attr__( 'active %s', 'buddyboss' ),
+												wp_kses_post( bp_get_group_last_active() )
 											);
 											?>
 										</p>
