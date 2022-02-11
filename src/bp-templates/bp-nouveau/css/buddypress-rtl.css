@@ -2836,6 +2836,31 @@ input.search-query-input {
   }
 }
 
+.activity-update-form form.loading:before {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  margin: 0 auto;
+}
+
+.activity-update-form form.loading #activity-header,
+.activity-update-form form.loading .whats-new-form-header,
+.activity-update-form form.loading #editor-toolbar,
+.activity-update-form form.loading #whats-new-privacy-stage,
+.activity-update-form form.loading #activity-form-submit-wrapper {
+  opacity: 0;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.2 - Activity Entries
