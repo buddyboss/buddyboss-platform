@@ -4510,7 +4510,7 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $group_id ID of the group.
+ * @param int   $group_id ID of the group.
  * @param array $role roles of the group.
  * @return string members list html.
  */
@@ -4556,28 +4556,31 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			?>
 			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
 				<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-					<img src="<?php echo $avatar; ?>"
+					<img src="<?php echo esc_url( $avatar ); ?>"
 						alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
 				</a>
 			</span>
 			<?php
 		}
 
-		if ( $total - sizeof( $members ) != 0 ) {
-			$member_count = $total - sizeof( $members );
+		if ( $total - count( $members ) !== 0 ) {
+			$member_count = $total - count( $members );
 			?>
-			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+<?php echo esc_attr( $member_count ); printf( _n( ' member', ' members', $member_count, 'buddyboss' ) ); ?>">
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
+			<?php
+			/* translators: Group member count. */
+			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
+			?>
+			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
 					<span class="bb-icon bb-icon-menu-dots-h"></span>
 				</a>
 			</span>
 			<?php
 		}
-
 		?>
 		</span>
 		<?php
-
 	}
 
 }

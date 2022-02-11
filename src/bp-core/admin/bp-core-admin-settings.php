@@ -1998,29 +1998,29 @@ function bb_admin_setting_group_grid_style() {
 	?>
 	<div class="bb-grid-style-outer">
 		<?php
-			new BB_Admin_Setting_Fields(
-				array(
-					'type'        => 'radio',
-					'id'          => 'bb-group-grid-style-',
-					'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
-					'disabled'    => true,
-					'opt_wrapper' => true,
-					'value'       => 'centered',
-					'options'     => array(
-						'left'     => array(
-							'label' => 'Left',
-							'class' => 'option opt-left',
-						),
-						'centered' => array(
-							'label' => 'Centered',
-							'class' => 'option opt-centered',
-						),
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-group-grid-style-',
+				'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? 'Right' : 'Left',
+						'class' => 'option opt-left',
 					),
-				)
-			);
+					'centered' => array(
+						'label' => 'Centered',
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
 		?>
 	</div>
-	<p class="description"><?php _e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2029,9 +2029,7 @@ function bb_admin_setting_group_grid_style() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $args array
- *
- * @uses checked() To display the checked attribute
+ * @param array $args Field options.
  */
 function bb_admin_setting_group_elements( $args ) {
 
@@ -2039,7 +2037,7 @@ function bb_admin_setting_group_elements( $args ) {
 	foreach ( $args['elements'] as $element ) {
 		$element_name = $element['element_name'];
 		?>
-		<div class="bb-group-element bb-group-element-<?php echo $element_name; ?>">
+		<div class="bb-group-element bb-group-element-<?php echo esc_attr( $element_name ); ?>">
 			<?php
 			new BB_Admin_Setting_Fields(
 				array(
@@ -2048,6 +2046,7 @@ function bb_admin_setting_group_elements( $args ) {
 					'label'    => $element['element_label'],
 					'disabled' => true,
 					'value'    => $element_name,
+					'selected' => $element_name,
 				)
 			);
 			?>
@@ -2056,7 +2055,7 @@ function bb_admin_setting_group_elements( $args ) {
 	}
 	echo '</div>';
 	echo '<p class="description">';
-	echo _e( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
+	echo esc_attr__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
 	echo '</p>';
 }
 

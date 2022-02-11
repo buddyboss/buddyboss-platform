@@ -262,8 +262,25 @@
 
 		}
 
-		.group-footer-wrap.group-members-hidden .group-members-wrap {
-			display: none;
+		.group-footer-wrap {
+
+			&.group-members-hidden {
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+
+				.group-members-wrap {
+					display: none;
+				}
+
+			}
+
+			&.group-join-button-hidden {
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+			}
+
 		}
 
 	}
@@ -482,6 +499,7 @@
 		display: -ms-flexbox;
 		display: flex;
 		margin-bottom: 15px;
+		padding-right: 15px;
 
 		.bs-group-member {
 			max-width: 26px;

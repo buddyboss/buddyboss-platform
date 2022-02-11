@@ -1014,8 +1014,20 @@ a.layout-grid-view {
   display: none;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .group-footer-wrap.group-members-hidden {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .group-footer-wrap.group-members-hidden .group-members-wrap {
   display: none;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .group-footer-wrap.group-join-button-hidden {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry {
@@ -1208,6 +1220,7 @@ a.layout-grid-view {
   display: -ms-flexbox;
   display: flex;
   margin-bottom: 15px;
+  padding-right: 15px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {

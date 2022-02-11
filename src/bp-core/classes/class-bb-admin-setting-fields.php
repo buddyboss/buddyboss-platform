@@ -132,7 +132,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		 *
 		 * @return bool True if field is supported otherwise false.
 		 */
-		private function is_field_supported(): bool {
+		private function is_field_supported() {
 			if ( ! empty( $this->field['type'] ) && in_array( $this->field['type'], $this->supported_fields, true ) ) {
 				return true;
 			}

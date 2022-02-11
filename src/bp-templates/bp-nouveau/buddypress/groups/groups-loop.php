@@ -6,25 +6,29 @@
  *
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
+ *
+ * @package BuddyBoss\Core
  */
+
+use function Symfony\Component\VarDumper\Dumper\esc;
 
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_group_directory_type() ) : ?>
 	<div class="bp-feedback info">
-	<span class="bp-icon" aria-hidden="true"></span>
-	<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
 	</div>
 <?php endif; ?>
 
 <?php
 
-	$cover_class     = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
-	$meta_privacy    = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
-	$meta_group_type = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
-	$group_members   = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
-	$join_button	 = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
-	$group_alignment = bb_platform_group_grid_style( 'left' );
+$cover_class     = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
+$meta_privacy    = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
+$meta_group_type = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
+$group_members   = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
+$join_butto      = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
+$group_alignment = bb_platform_group_grid_style( 'left' );
 
 ?>
 
@@ -34,97 +38,99 @@ bp_nouveau_before_loop(); ?>
 
 	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo esc_attr( $cover_class . ' ' . $group_alignment ); ?> groups-dir-list">
 
-	<?php
-	while ( bp_groups() ) :
-		bp_the_group();
-		?>
+		<?php
+		while ( bp_groups() ) :
+			bp_the_group();
+			?>
 
-		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
-			<div class="list-wrap">
+			<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
+				<div class="list-wrap">
 
-				<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
-					<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('cover-images') ) ) { ?>
-					<?php
-					$group_cover_image_url = bp_attachments_get_attachment(
-						'url',
-						array(
-							'object_dir' => 'groups',
-							'item_id'    => bp_get_group_id(),
-						)
-					);
-					$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
-					?>
-						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ) . ' cover-' . $group_cover_height ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
+					<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
+						<?php if ( bb_platform_group_element_enable( 'cover-images' ) ) { ?>
+							<?php
+							$group_cover_image_url = bp_attachments_get_attachment(
+									'url',
+									array(
+											'object_dir' => 'groups',
+											'item_id'    => bp_get_group_id(),
+									)
+							);
+							$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
+							?>
+							<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 
+						<?php } ?>
 					<?php } ?>
-				<?php } ?>
 
-				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-					<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('avatars') ) ) { ?>
-					<div class="item-avatar">
-						<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
-					</div>
-					<?php } ?>
-				<?php endif; ?>
+					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
+						<?php if ( bb_platform_group_element_enable( 'avatars' ) ) { ?>
+							<div class="item-avatar">
+								<a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
+							</div>
+						<?php } ?>
+					<?php endif; ?>
 
-				<div class="item">
+					<div class="item">
 
-					<div class="group-item-wrap">
+						<div class="group-item-wrap">
 
-						<div class="item-block">
+							<div class="item-block">
 
-							<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
+								<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
 								<div class="item-meta-wrap">
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
 										<p class="item-meta group-details <?php echo esc_attr( $meta_privacy . ' ' . $meta_group_type ); ?>">
-										<?php
+											<?php
 											$meta = bp_nouveau_get_group_meta();
-											echo esc_attr( $meta['status'] );
-										?>
+											echo wp_kses_post( $meta['status'] );
+											?>
 										</p>
 									<?php endif; ?>
 
-									<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('last-activity') ) ) { ?>
-										<p class="last-activity item-meta"><?php
+									<?php if ( bb_platform_group_element_enable( 'last-activity' ) ) { ?>
+										<p class="last-activity item-meta">
+											<?php
 											printf(
-												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-												__( 'active %s', 'buddyboss' ),
-												bp_get_group_last_active()
+											/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+													esc_attr__( 'active %s', 'buddyboss' ),
+													wp_kses_post( bp_get_group_last_active() )
 											);
-										?></p>
+											?>
+										</p>
 									<?php } ?>
 
 								</div>
 
+							</div>
+
+							<?php if ( bb_platform_group_element_enable( 'group-descriptions' ) ) { ?>
+								<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
+							<?php } ?>
+
 						</div>
 
-						<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('group-descriptions') ) ) { ?>
-							<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
-						<?php } ?>
+						<?php bp_nouveau_groups_loop_item(); ?>
+
+						<div class="group-footer-wrap <?php echo esc_attr( $group_members . ' ' . $join_button ); ?>">
+							<div class="group-members-wrap">
+								<?php bb_groups_loop_members(); ?>
+							</div>
+							<?php if ( bb_platform_group_element_enable( 'join-buttons' ) ) { ?>
+								<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
+							<?php } ?>
+						</div>
 
 					</div>
 
-					<?php bp_nouveau_groups_loop_item(); ?>
-
-					<div class="group-footer-wrap <?php echo $group_members; ?>">
-						<div class="group-members-wrap">
-							<?php bb_groups_loop_members(); ?>
-						</div>
-						<?php if ( ! function_exists('bb_platform_group_element_enable') || ( function_exists('bb_platform_group_element_enable') && bb_platform_group_element_enable('join-buttons') ) ) { ?>
-							<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
-						<?php } ?>
-					</div>
 
 				</div>
+			</li>
 
-
-			</div>
-		</li>
-
-	<?php endwhile; ?>
+		<?php endwhile; ?>
 
 	</ul>
 
@@ -135,17 +141,17 @@ bp_nouveau_before_loop(); ?>
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php esc_attr__( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content">
-							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+							<p><?php esc_attr__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group" href="#"><?php esc_attr__( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_attr__( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 
 					</div>

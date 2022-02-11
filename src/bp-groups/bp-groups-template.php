@@ -412,7 +412,7 @@ function bp_has_groups( $args = '' ) {
 
 	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
 		$parent_id = 0;
-    }
+	}
 
 	$show_hidden = true;
 	if ( ! empty( bp_displayed_user_id() ) && ! empty( bp_current_user_id() ) && bp_displayed_user_id() === bp_current_user_id() ) {
@@ -759,11 +759,11 @@ function bp_get_group_type( $group = false ) {
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
+			$type = '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
+			$type = '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . "</span>";
+			$type = '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 		}
@@ -7826,7 +7826,7 @@ function bb_platform_group_element_enable( $element ) {
 }
 
 /**
- * get group grid style setting
+ * Get group grid style setting
  *
  * @since [BBVERSION]
  *
