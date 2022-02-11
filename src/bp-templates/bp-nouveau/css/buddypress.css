@@ -2836,6 +2836,23 @@ input.search-query-input {
   }
 }
 
+#bp-nouveau-activity-form.loading {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 10px 0;
+  background-color: rgba(250, 251, 253, 0.9);
+  box-shadow: 0 6px 24px 0 rgba(20, 39, 69, 0.101961);
+  z-index: 999991;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100%;
+  overflow: auto;
+}
+
 .activity-update-form.loading:before {
   content: "\e838";
   font-family: "bb-icons";
