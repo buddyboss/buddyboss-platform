@@ -73,23 +73,23 @@ function bp_admin_setting_callback_admin_admin_bar() {
  */
 function bp_admin_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62792,
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62792,
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -138,23 +138,23 @@ function bp_admin_setting_callback_private_network_public_content() {
  */
 function bp_privacy_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62793,
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62793,
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -195,23 +195,23 @@ function bp_admin_setting_callback_blogforum_comments() {
  */
 function bp_posts_in_activity_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62823,
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62823,
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -221,7 +221,7 @@ function bp_posts_in_activity_tutorial() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_setting_callback_heartbeat() {
-	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not
+	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not.
 	wp_remote_get( bp_core_get_user_domain( bp_loggedin_user_id() ) );
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 	?>
@@ -360,23 +360,23 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
  */
 function bp_activity_settings_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62822,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62822,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -783,23 +783,23 @@ function bp_admin_setting_callback_default_profile_cover_size() {
  */
 function bp_profile_photos_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 125202,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 125202,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -815,15 +815,17 @@ function bp_group_avatar_tutorial() {
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62811,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62811,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
@@ -1117,6 +1119,107 @@ function bp_admin_setting_callback_default_group_cover_size() {
 	<?php
 }
 
+/**
+ * Link to Profile Headers tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_profile_headers_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+			<?php
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 62802,
+							),
+							'admin.php'
+						)
+					)
+				);
+			?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Profile headers style options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_profile_headers_style() {
+	?>
+	<div class="bb-grid-style-outer">
+		<?php
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-profile-headers-style-',
+				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? 'Right' : 'Left',
+						'class' => 'option opt-left',
+					),
+					'centered' => array(
+						'label' => 'Centered',
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select the style of your profile headers. Profile cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow Platform default profile header element setting field
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Field options.
+ */
+function bb_admin_setting_profile_header_elements( $args ) {
+
+	$profile_header_elements = function_exists( 'bb_get_profile_header_elements' ) ? bb_get_profile_header_elements() : array();
+	?>
+	<div class='bb-profile-header-elements'>
+		<?php
+		if ( ! empty( $profile_header_elements ) ) {
+			foreach ( $profile_header_elements as $element ) {
+				?>
+				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+					<?php
+					new BB_Admin_Setting_Fields(
+						array(
+							'type'     => 'checkbox',
+							'id'       => 'bb-profile-header-element-' . $element['element_name'],
+							'label'    => $element['element_label'],
+							'disabled' => true,
+							'value'    => $element['element_name'],
+							'selected' => $element['element_name'],
+						)
+					);
+					?>
+				</div>
+				<?php
+			}
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which elements show in your profile headers.', 'buddyboss' ); ?></p>
+	<?php
+}
+
 /** Group Settings ************************************************************/
 
 /**
@@ -1167,23 +1270,23 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
  */
 function bp_group_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62811,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62811,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1258,23 +1361,23 @@ function bp_admin_setting_callback_group_auto_join() {
  */
 function bp_group_types_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62816,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62816,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1324,23 +1427,23 @@ function bp_admin_setting_callback_group_restrict_invites() {
  */
 function bp_group_hierarchies_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62817,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62817,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1407,7 +1510,7 @@ function bp_core_admin_buddyboss_app() {
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
 			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 		</div>
-		<?php
+	<?php
 }
 
 /**
@@ -1545,7 +1648,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 		value="1"
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
-	<label for="<?php echo $option_name; ?>">
+	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
@@ -1647,12 +1750,14 @@ function bp_admin_setting_callback_register() {
 					'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
 					'buddyboss'
 				),
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-invites',
-					),
-					admin_url( 'admin.php' )
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-invites',
+						),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
@@ -1704,23 +1809,23 @@ function bp_admin_setting_callback_enable_profile_gravatar() {
  */
 function bp_email_invites_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62838,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62838,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1824,23 +1929,23 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
  */
 function bp_profile_names_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 72340,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 72340,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2066,23 +2171,23 @@ function bb_admin_setting_group_elements( $args ) {
  */
 function bp_group_directories_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => '83107',
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => '83107',
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2109,11 +2214,13 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 					'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
 					'buddyboss'
 				),
-				add_query_arg(
-					array(
-						'page' => 'bp-pages',
-					),
-					admin_url( 'admin.php' )
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-pages',
+						),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
@@ -2131,7 +2238,7 @@ function bp_admin_setting_callback_register_page_url() {
 	<?php
 	printf(
 		'<p class="description">%s</p>',
-		sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+		sprintf( esc_html__( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
 	);
 }
 
@@ -2142,23 +2249,23 @@ function bp_admin_setting_callback_register_page_url() {
  */
 function bp_admin_registration_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 86158,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 86158,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2181,23 +2288,23 @@ function bp_admin_setting_callback_group_messages() {
  */
 function bp_admin_moderation_block_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 121711,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 121711,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2208,23 +2315,23 @@ function bp_admin_moderation_block_setting_tutorial() {
  */
 function bp_admin_moderation_report_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 121712,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 121712,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2348,23 +2455,23 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
  */
 function bp_admin_on_screen_notification_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 124801,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 124801,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
