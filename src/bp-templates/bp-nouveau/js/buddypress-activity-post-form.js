@@ -3938,7 +3938,7 @@ window.bp = window.bp || {};
 				this.$el.parent().addClass('loading');
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 				// this.$el.addClass('loading');
-				// return;
+				return;
 				// debugger;
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
