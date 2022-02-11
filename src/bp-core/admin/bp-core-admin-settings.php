@@ -803,6 +803,33 @@ function bp_profile_photos_tutorial() {
 	<?php
 }
 
+/** Group Headers ************************************************************/
+
+/**
+ * Link to Group Headers Settings tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_group_headers_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62811, // TODO : need to be update Tutorial
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
 /** Group Photos ************************************************************/
 
 /**
