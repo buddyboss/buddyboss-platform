@@ -1162,7 +1162,7 @@ function bb_admin_setting_profile_headers_style() {
 				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
 				'disabled'    => true,
 				'opt_wrapper' => true,
-				'value'       => 'left',
+				'value'       => bb_get_profile_header_layout_style(),
 				'options'     => array(
 					'left'     => array(
 						'label' => is_rtl() ? 'Right' : 'Left',
@@ -1205,7 +1205,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 							'id'       => 'bb-profile-header-element-' . $element['element_name'],
 							'label'    => $element['element_label'],
 							'disabled' => true,
-							'value'    => $element['element_name'],
+							'value'    => bb_enabled_profile_header_layout_element( $element['element_name'] ) ? $element['element_name'] : '',
 							'selected' => $element['element_name'],
 						)
 					);

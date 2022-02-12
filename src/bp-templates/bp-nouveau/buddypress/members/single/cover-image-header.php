@@ -68,6 +68,7 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 
 			<div id="item-header-avatar">
 				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
+					<?php bb_current_user_status( bp_displayed_user_id() ); ?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-edit-thin"></i>
 					</a>
@@ -91,7 +92,7 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 
 						<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
 
-						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_nouveau_member_has_meta() ) : ?>
+						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_get_last_activity() || bb_get_member_joined_date() ) : ?>
 							<div class="item-meta">
 								<?php
 								$nickname_field_id = bp_xprofile_nickname_field_id();
@@ -102,7 +103,7 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 									<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
 								<?php endif; ?>
 
-								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields, true ) ) : ?>
+								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_get_last_activity() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields, true ) ) : ?>
 									<span class="separator">&bull;</span>
 								<?php endif; ?>
 
@@ -110,8 +111,18 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 								bp_nouveau_member_hook( 'before', 'in_header_meta' );
 								bp_nouveau_member_hook( 'before', 'header_meta' );
 
-								if ( bp_nouveau_member_has_meta() ) :
-									bp_nouveau_member_meta();
+								if ( bp_get_last_activity() ) :
+									echo wp_kses_post( bp_get_last_activity() );
+								endif;
+								?>
+
+								<?php if ( bp_get_last_activity() && bb_get_member_joined_date() ) : ?>
+									<span class="separator">&bull;</span>
+								<?php endif; ?>
+
+								<?php
+								if ( bb_get_member_joined_date() ) :
+									echo wp_kses_post( bb_get_member_joined_date() );
 								endif;
 								?>
 

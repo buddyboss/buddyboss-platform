@@ -19,6 +19,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 			<div id="item-header-avatar">
 				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
+					<?php bb_current_user_status( bp_displayed_user_id() ); ?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-edit-thin"></i>
 					</a>
@@ -40,21 +41,33 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 						<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
 
-						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_nouveau_member_has_meta() ) : ?>
+						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_get_last_activity() || bb_get_member_joined_date() ) : ?>
 							<div class="item-meta">
 								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) : ?>
 									<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
 								<?php endif; ?>
 
-								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() ) : ?>
+								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_get_last_activity() ) : ?>
 									<span class="separator">&bull;</span>
 								<?php endif; ?>
 
-								<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
+								<?php
+								bp_nouveau_member_hook( 'before', 'header_meta' );
 
-								<?php if ( bp_nouveau_member_has_meta() ) : ?>
-									<?php bp_nouveau_member_meta(); ?>
+								if ( bp_get_last_activity() ) :
+									echo wp_kses_post( bp_get_last_activity() );
+								endif;
+								?>
+
+								<?php if ( bp_get_last_activity() && bb_get_member_joined_date() ) : ?>
+									<span class="separator">&bull;</span>
 								<?php endif; ?>
+
+								<?php
+								if ( bb_get_member_joined_date() ) :
+									echo wp_kses_post( bb_get_member_joined_date() );
+								endif;
+								?>
 							</div>
 						<?php endif; ?>
 
