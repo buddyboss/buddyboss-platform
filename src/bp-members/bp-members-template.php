@@ -2814,14 +2814,23 @@ function bb_get_followers_count( $user_id = false ) {
 		}
 
 		if ( 0 === $total_followers ) {
-			$followers = __( '<b>0</b> followers', 'buddyboss' );
+			$followers = sprintf(
+				/* translators: Follower string. */
+				'<strong>0</strong> %1$s',
+				esc_html__( 'followers', 'buddyboss' ),
+			);
 		} elseif ( 1 === $total_followers ) {
-			$followers = __( '<b>1</b> follower', 'buddyboss' );
+			$followers = sprintf(
+				/* translators: Follower string. */
+				'<strong>0</strong> %1$s',
+				esc_html__( 'follower', 'buddyboss' ),
+			);
 		} else {
 			$followers = sprintf(
-			/* translators: Total followers count. */
-				__( '<b>%s</b> followers', 'buddyboss' ),
-				$total_followers
+				/* translators: 1: Total followers count. 2: Follower string. */
+				'<strong>%1$s</strong> %2$s',
+				$total_followers,
+				esc_html__( 'followers', 'buddyboss' ),
 			);
 		}
 		?>
@@ -2862,14 +2871,23 @@ function bb_get_following_count( $user_id = false ) {
 		}
 
 		if ( 0 === $total_following ) {
-			$following = __( '<b>0</b> following', 'buddyboss' );
+			$following = sprintf(
+				/* translators: Following string. */
+				'<strong>0</strong> %1$s',
+				esc_html__( 'following', 'buddyboss' ),
+			);
 		} elseif ( 1 === $total_following ) {
-			$following = __( '<b>1</b> following', 'buddyboss' );
+			$following = sprintf(
+				/* translators: Following string. */
+				'<strong>1</strong> %1$s',
+				esc_html__( 'following', 'buddyboss' ),
+			);
 		} else {
 			$following = sprintf(
-			/* translators: Total following count. */
-				__( '<b>%s</b> following', 'buddyboss' ),
-				$total_following
+				/* translators: 1: Total following count. 2: Following string. */
+				'<strong>%1$s</strong> %2$s',
+				$total_following,
+				esc_html__( 'following', 'buddyboss' ),
 			);
 		}
 		?>
