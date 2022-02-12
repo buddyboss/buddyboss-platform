@@ -1158,7 +1158,7 @@ function bb_admin_setting_profile_headers_style() {
 		new BB_Admin_Setting_Fields(
 			array(
 				'type'        => 'radio',
-				'id'          => 'bb-profile-headers-style-',
+				'id'          => 'bb-profile-headers-style',
 				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
 				'disabled'    => true,
 				'opt_wrapper' => true,

@@ -95,10 +95,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
 		$default_cover_type = bb_get_default_group_cover_type();
 
-		$pro_class = 'bb-pro-inactive';
-		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
-			$pro_class = 'bb-pro-active';
-		}
+		$pro_class = bb_get_pro_fields_class();
 
 		// Group Settings.
 		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );

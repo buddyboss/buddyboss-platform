@@ -23,7 +23,7 @@ function bb_get_profile_header_elements() {
 	$elements = array();
 
 	$elements[] = array(
-		'element_name'  => 'group-descriptions',
+		'element_name'  => 'online-status',
 		'element_label' => esc_html__( 'Online Status', 'buddyboss' ),
 	);
 

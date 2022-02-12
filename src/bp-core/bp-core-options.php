@@ -87,6 +87,20 @@ function bp_get_default_options() {
 		// Profile cover image height.
 		'bp-cover-profile-height'                    => 'small',
 
+		// Profile header layout style.
+		'bb-profile-headers-layout-style'            => 'left',
+
+		// Profile header layout elements.
+		'bb-profile-headers-layout-elements'         => array(
+			'online-status',
+			'profile-type',
+			'member-handle',
+			'joined-date',
+			'last-active',
+			'followers',
+			'following',
+		),
+
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
 
@@ -2260,8 +2274,6 @@ function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
  *
  * @since BuddyBoss 1.8.6
  *
- * @param string|null $default Optional. Fallback value if not found in the database.
- *                             Default: null.
  * @return string Return default custom upload group cover URL.
  */
 function bb_get_default_custom_upload_group_cover() {

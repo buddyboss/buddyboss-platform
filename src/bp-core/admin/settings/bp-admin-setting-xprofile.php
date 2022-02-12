@@ -165,10 +165,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function register_fields() {
 
-		$pro_class = 'bb-pro-inactive';
-		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
-			$pro_class = 'bb-pro-active';
-		}
+		$pro_class = bb_get_pro_fields_class();
 
 		// Section for Profile Names.
 		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ), '', 'bp_profile_names_tutorial' );
