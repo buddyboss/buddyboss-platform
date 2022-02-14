@@ -3941,18 +3941,18 @@ window.bp = window.bp || {};
 				}
 				
 				// Attach buttons.
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
-					// Global.
-					bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
-					this.views.add(
-						new bp.Views.FormButtons(
-							{
-								collection: bp.Nouveau.Activity.postForm.buttons,
-								model: this.model
-							}
-						)
-					);
-				}
+				// if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
+				// 	// Global.
+				// 	bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
+				// 	this.views.add(
+				// 		new bp.Views.FormButtons(
+				// 			{
+				// 				collection: bp.Nouveau.Activity.postForm.buttons,
+				// 				model: this.model
+				// 			}
+				// 		)
+				// 	);
+				// }
 				// this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
 				// bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
