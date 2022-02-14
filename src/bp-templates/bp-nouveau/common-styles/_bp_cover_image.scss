@@ -163,9 +163,19 @@
 		}
 
 		.group-item-actions {
+
+			@include center-vert();
+			-webkit-box-orient: horizontal;
+			-webkit-box-direction: normal;
+			-ms-flex-direction: row;
+			flex-direction: row;
 			margin: 0;
 			max-width: 100%;
 			text-align: left;
+
+			.bp-title {
+				margin-right: $marg-xsml;
+			}
 
 			.moderators-lists .user-list,
 			.moderators-lists .user-list ul {

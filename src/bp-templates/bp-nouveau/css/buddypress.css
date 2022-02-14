@@ -1237,7 +1237,8 @@ a.layout-grid-view {
   display: -webkit-flex;
   display: flex;
   margin-bottom: 15px;
-  padding-right: 15px;
+  padding-right: 10px;
+  margin-right: 5px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {
@@ -6893,9 +6894,25 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-cover-image #item-header-content .group-item-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
   margin: 0;
   max-width: 100%;
   text-align: left;
+}
+
+#item-header-cover-image #item-header-content .group-item-actions .bp-title {
+  margin-right: 5px;
 }
 
 #item-header-cover-image #item-header-content .group-item-actions .moderators-lists .user-list,
