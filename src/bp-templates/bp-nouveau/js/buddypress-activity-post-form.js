@@ -3892,7 +3892,7 @@ window.bp = window.bp || {};
 
 			displayFull: function ( event ) {
 				console.time();
-				$('#bp-nouveau-activity-form').attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
+				//$('#bp-nouveau-activity-form').attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
 				// $('#bp-nouveau-activity-form').addClass( 'loading' );
 				//return;
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
@@ -3950,7 +3950,6 @@ window.bp = window.bp || {};
 					);
 				}
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
-				$('#whats-new-form').addClass('loading');
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
@@ -4031,7 +4030,7 @@ window.bp = window.bp || {};
 				//this.$el.parent().removeClass( 'loading' );
 				//$('#bp-nouveau-activity-form').removeClass( 'loading' );
 				console.timeEnd();
-				$('#bp-nouveau-activity-form').removeAttr( 'style' );
+				//$('#bp-nouveau-activity-form').removeAttr( 'style' );
 			},
 
 			activityHideModalEvent: function () {
