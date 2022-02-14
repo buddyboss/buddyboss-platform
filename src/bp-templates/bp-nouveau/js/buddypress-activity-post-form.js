@@ -61,6 +61,8 @@ window.bp = window.bp || {};
 			this.postForm = new bp.Views.PostForm();
 
 			// Add it to views.
+			//console.log( this );
+			// $('#bp-nouveau-activity-form').addClass( 'loading' );
 			this.views.add( { id: 'post_form', view: this.postForm } );
 
 			// Display it.
@@ -3880,7 +3882,8 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
-
+				$('#bp-nouveau-activity-form').addClass( 'loading' );
+				//return;
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 
 				// Remove feedback.
@@ -3915,7 +3918,7 @@ window.bp = window.bp || {};
 					}
 				);
 				
-				this.$el.parent().addClass( 'loading' );
+				// this.$el.parent().addClass( 'loading' );
 
 				// Backcompat custom fields.
 				if ( true === BP_Nouveau.activity.params.backcompat ) {
