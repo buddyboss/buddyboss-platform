@@ -4016,22 +4016,22 @@ window.bp = window.bp || {};
 				console.log('13');
 				console.log(new Date().getTime());
 				// Wrap Toolbar and submit Wrapper into footer.
-				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
-
-				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
-					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
-				} else {
-					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
-					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
-						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
-							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
-						}
-					});
-					//Hide mention dropdown while window resized
-					$( window ).on( 'resize', function() {
-						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
-					});
-				}
+				// $( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+				//
+				// if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+				// 	$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
+				// } else {
+				// 	$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
+				// 	$( '.whats-new-scroll-view' ).on( 'scroll', function() {
+				// 		if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
+				// 			$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+				// 		}
+				// 	});
+				// 	//Hide mention dropdown while window resized
+				// 	$( window ).on( 'resize', function() {
+				// 		$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+				// 	});
+				// }
 				console.log('14');
 				console.log(new Date().getTime());
 				//this.updateMultiMediaOptions();
