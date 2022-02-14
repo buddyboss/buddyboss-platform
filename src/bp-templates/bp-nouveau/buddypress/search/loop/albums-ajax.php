@@ -2,7 +2,10 @@
 /**
  * Albums search ajax Template
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/albums-ajax.php.
+ *
  * @package BuddyBoss\Core
+ * @version 1.0.0
  */
 
 global $media_album_template;
@@ -34,7 +37,7 @@ $albums_link = bp_get_album_link();
 					printf(
 						// translators: Photos count.
 						esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
-						esc_attr( number_format_i18n( $media_album_template->album->media['total'] ) )
+						esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
 					);
 					?>
 					</span> <!-- Get the count of photos in that album -->
@@ -46,7 +49,7 @@ $albums_link = bp_get_album_link();
 							printf(
 							// translators: Photos count.
 								esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
-								esc_attr( number_format_i18n( $media_album_template->album->media['total_video'] ) )
+								esc_attr( bp_core_number_format( $media_album_template->album->media['total_video'] ) )
 							);
 							?>
 						</span> <!-- Get the count of photos in that album -->

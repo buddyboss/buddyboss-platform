@@ -1674,58 +1674,82 @@ function bp_activity_media_add( $media ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
 						$media->group_id = $comment_activity->item_id;
-						$media->privacy  = 'grouponly';
+						$media->privacy  = 'comment';
+						$media->album_id = 0;
 					}
 				}
 			}
 
-			$args = array(
-				'hide_sitewide' => true,
-				'privacy'       => 'media',
-			);
-
-			// Create activity only if not created previously.
-			if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['item_id'] = $media->group_id;
-				$args['type']    = 'activity_update';
-				$current_group   = groups_get_group( $media->group_id );
-				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-				$activity_id     = groups_record_activity( $args );
+			// Check when new activity coment is empty then set privacy comment - 2121.
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$activity_id     = $bp_new_activity_comment;
+				$media->privacy  = 'comment';
+				$media->album_id = 0;
 			} else {
-				$activity_id = bp_activity_post_update( $args );
+
+				$args = array(
+					'hide_sitewide' => true,
+					'privacy'       => 'media',
+				);
+
+				// Create activity only if not created previously.
+				if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
+					$args['item_id'] = $media->group_id;
+					$args['type']    = 'activity_update';
+					$current_group   = groups_get_group( $media->group_id );
+					$args['action']  = sprintf(
+					/* translators: 1. User Link. 2. Group link. */
+						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
+						bp_core_get_userlink( $media->user_id ),
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+					);
+					$activity_id = groups_record_activity( $args );
+				} else {
+					$activity_id = bp_activity_post_update( $args );
+				}
 			}
 
 			if ( $activity_id ) {
 
-				// save media activity id in media
+				// save media activity id in media.
 				$media->activity_id = $activity_id;
 				$media->save();
 
-				// update activity meta
+				// update activity meta.
 				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
 				bp_activity_update_meta( $activity_id, 'bp_media_id', $media->id );
 
-				// save attachment meta for activity
+				// save attachment meta for activity.
 				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
 
 				if ( $parent_activity_id ) {
 
-					$media_activity                    = new BP_Activity_Activity( $activity_id );
-					$media_activity->secondary_item_id = $parent_activity_id;
-					$media_activity->save();
+					// If new activity comment is empty - 2121.
+					if ( empty( $bp_new_activity_comment ) ) {
+						$media_activity                    = new BP_Activity_Activity( $activity_id );
+						$media_activity->secondary_item_id = $parent_activity_id;
+						$media_activity->save();
+					}
 
-					// save parent activity id in attachment meta
+					// save parent activity id in attachment meta.
 					update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
 				}
 			}
 		} else {
+
 			if ( $parent_activity_id ) {
 
-				// save media activity id in media
+				// If the media posted in activity comment then set the activity id to comment id.- 2121.
+				if ( ! empty( $bp_new_activity_comment ) ) {
+					$parent_activity_id = $bp_new_activity_comment;
+					$media->privacy     = 'comment';
+				}
+
+				// save media activity id in media.
 				$media->activity_id = $parent_activity_id;
 				$media->save();
 
-				// save parent activity id in attachment meta
+				// save parent activity id in attachment meta.
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
 			}
 		}
@@ -2013,25 +2037,39 @@ function bp_activity_document_add( $document ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
 						$document->group_id = $comment_activity->item_id;
-						$document->privacy  = 'grouponly';
+						$document->privacy  = 'comment';
+						$document->album_id = 0;
 					}
 				}
 			}
 
-			$args = array(
-				'hide_sitewide' => true,
-				'privacy'       => 'document',
-			);
-
-			// Create activity if not created previously.
-			if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['item_id'] = $document->group_id;
-				$args['type']    = 'activity_update';
-				$current_group   = groups_get_group( $document->group_id );
-				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-				$activity_id     = groups_record_activity( $args );
+			// Check when new activity coment is empty then set privacy comment - 2121.
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$activity_id        = $bp_new_activity_comment;
+				$document->privacy  = 'comment';
+				$document->album_id = 0;
 			} else {
-				$activity_id = bp_activity_post_update( $args );
+
+				$args = array(
+					'hide_sitewide' => true,
+					'privacy'       => 'document',
+				);
+
+				// Create activity only if not created previously.
+				if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
+					$args['item_id'] = $document->group_id;
+					$args['type']    = 'activity_update';
+					$current_group   = groups_get_group( $document->group_id );
+					$args['action']  = sprintf(
+					/* translators: 1. User Link. 2. Group link. */
+						__( '%1$s posted an update in the group %2$s', 'buddyboss' ),
+						bp_core_get_userlink( $document->user_id ),
+						'<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>'
+					);
+					$activity_id = groups_record_activity( $args );
+				} else {
+					$activity_id = bp_activity_post_update( $args );
+				}
 			}
 
 			if ( $activity_id ) {
@@ -2047,23 +2085,34 @@ function bp_activity_document_add( $document ) {
 				// save attachment meta for activity.
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
-				if ( ! empty( $parent_activity_id ) ) {
-					$document_activity                    = new BP_Activity_Activity( $activity_id );
-					$document_activity->secondary_item_id = $parent_activity_id;
-					$document_activity->save();
+				if ( $parent_activity_id ) {
+
+					// If new activity comment is empty - 2121.
+					if ( empty( $bp_new_activity_comment ) ) {
+						$document_activity                    = new BP_Activity_Activity( $activity_id );
+						$document_activity->secondary_item_id = $parent_activity_id;
+						$document_activity->save();
+					}
 
 					// save parent activity id in attachment meta.
 					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 				}
 			}
 		} else {
+
 			if ( $parent_activity_id ) {
 
-				// save document activity id
+				// If the document posted in activity comment then set the activity id to comment id.- 2121.
+				if ( ! empty( $bp_new_activity_comment ) ) {
+					$parent_activity_id = $bp_new_activity_comment;
+					$document->privacy  = 'comment';
+				}
+
+				// save document activity id in document.
 				$document->activity_id = $parent_activity_id;
 				$document->save();
 
-				// save parent activity id in attachment meta
+				// save parent activity id in attachment meta.
 				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 			}
 		}
@@ -2302,7 +2351,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  */
 function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
-	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity', 'video_get_activity' );
+	$exclude_action_arr = array( 'media_get_media_description', 'media_get_activity', 'document_get_document_description', 'document_get_activity', 'video_get_video_description', 'video_get_activity' );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, true ) ) {
@@ -2328,13 +2377,13 @@ function bp_blogs_activity_content_set_temp_content() {
 	global $activities_template;
 
 	$activity = $activities_template->activity;
-	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$content = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $content, 'WP_Post' ) ) {
 			$activities_template->activity->content = '&#8203;';
 		}
-	} elseif( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
+	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$activities_template->activity->content = '&#8203;';
 	}
 
@@ -2362,8 +2411,8 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$post_title  = sprintf( '<a class="bb-post-title-link" href="%s"><span class="bb-post-title">%s</span></a>', esc_url( get_permalink( $blog_post->ID ) ), esc_html( $blog_post->post_title ) );
 			$content     = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( get_the_excerpt( $blog_post->ID ) ) ) );
 			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
+				$content = str_replace( ' [&hellip;]', '&hellip;', $content );
+				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
 				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$iframe  = $matches[0];
@@ -2474,7 +2523,7 @@ function bb_activity_has_comment_access( $retval ) {
  *
  * @return boolean
  */
-function bb_activity_has_comment_reply_access( $can_comment, $comment ) { 
+function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	if ( empty( $comment ) ) {
 		return $can_comment;
 	}
@@ -2906,6 +2955,27 @@ function bp_activity_edit_update_video( $video_ids ) {
 	}
 
 	return $video_ids;
+}
+
+/**
+ * Function will remove like and comment button for the media/document activity.
+ *
+ * @param array $buttons     Array of buttons.
+ * @param int   $activity_id Activity ID.
+ *
+ * @return mixed
+ *
+ * @since BuddyBoss 1.7.8
+ */
+function bb_nouveau_get_activity_entry_buttons_callback( $buttons, $activity_id ) {
+	$buttons['activity_favorite']            = '';
+	$buttons['activity_conversation']        = '';
+	$buttons['activity_report']              = '';
+	$buttons['activity_comment_reply']       = '';
+	$buttons['activity_edit']                = '';
+	$buttons['activity_delete']              = '';
+	$buttons['activity_state_comment_class'] = 'activity-state-no-comments';
+	return $buttons;
 }
 
 /**

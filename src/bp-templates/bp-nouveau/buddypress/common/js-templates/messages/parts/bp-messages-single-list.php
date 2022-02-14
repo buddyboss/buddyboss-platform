@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages single list template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-single-list.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-single-list">
 
 	<# if ( data.message_from && 'group' === data.message_from ) { #>
@@ -37,14 +48,14 @@
 					<# if ( data.sender_is_you ) { #>
 					<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
 					<# } else { #>
-					<strong class="bp-user-deleted">{{data.sender_name}}</strong>
+					<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
 					<# } #>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
 						<# if ( data.sender_is_you ) { #>
 							<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
 						<# } else { #>
-							<strong>{{data.sender_name}}</strong>
+							<strong>{{{data.sender_name}}}</strong>
 						<# } #>
 					</a>
 				<# } #>
@@ -65,7 +76,7 @@
 
 			<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 				<div class="message-metadata bp-suspended-meta">
-					<strong>{{data.sender_name}}</strong>
+					<strong>{{{data.sender_name}}}</strong>
 				</div>
 				<div class="bp-message-content-wrap bp-suspended-content">{{{data.content}}}</div>
 			<# } else { #>

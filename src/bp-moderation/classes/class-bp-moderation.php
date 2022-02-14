@@ -1208,7 +1208,6 @@ class BP_Moderation {
 				foreach ( $admins as $admin ) {
 					bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
 				}
-
 			} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 
 				$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
@@ -1244,7 +1243,6 @@ class BP_Moderation {
 				foreach ( $admins as $admin ) {
 					bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
 				}
-
 			}
 
 			unset( $_GET['username_visible'] );
