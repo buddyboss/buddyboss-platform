@@ -67,6 +67,7 @@ window.bp = window.bp || {};
 			
 			$( document ).on( 'focus', '#whats-new', function( event ) {
 				console.log('call');
+				$('#bp-nouveau-activity-form').addClass( 'loading' );
 				var data = new bp.Views.PostForm();
 				data.displayFull( event );
 			});
@@ -3889,7 +3890,7 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
-				$('#bp-nouveau-activity-form').addClass( 'loading' );
+				// $('#bp-nouveau-activity-form').addClass( 'loading' );
 				//return;
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 
