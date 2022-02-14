@@ -1243,7 +1243,8 @@ class BP_Messages_Thread {
 				bp_displayed_user_id() :
 				bp_loggedin_user_id();
 
-		$bp = buddypress();
+		$bp     = buddypress();
+		$retval = false;
 
 		// phpcs:ignore
 		$is_unread = $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count > 0", $user_id, $thread_id ) );
