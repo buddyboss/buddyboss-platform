@@ -224,7 +224,7 @@ add_filter( 'bp_email_set_subject', 'bp_invites_member_invite_filter_subject', 9
 function bp_invites_member_invite_filter_content( $content, $email ) {
 
 	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content = bp_get_member_invites_wildcard_replace( wp_kses( $_POST['bp_member_invites_custom_content'], bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+		$content = bp_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
@@ -253,7 +253,7 @@ add_filter( 'bp_email_set_content_html', 'bp_invites_member_invite_filter_conten
 function bp_invites_member_invite_filter_content_plaintext( $content, $email ) {
 
 	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content = bp_get_member_invites_wildcard_replace( wp_kses( $_POST['bp_member_invites_custom_content'], bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+		$content = bp_get_member_invites_wildcard_replace( wp_kses( stripslashes( $_POST['bp_member_invites_custom_content'] ), bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
