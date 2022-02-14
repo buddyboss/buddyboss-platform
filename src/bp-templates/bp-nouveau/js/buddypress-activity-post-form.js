@@ -4026,7 +4026,7 @@ window.bp = window.bp || {};
 				this.activityHideModalEvent();
 				//this.$el.parent().removeClass( 'loading' );
 				//$('#bp-nouveau-activity-form').removeClass( 'loading' );
-				$('#bp-nouveau-activity-form').removeAttr( 'style' );
+				//$('#bp-nouveau-activity-form').removeAttr( 'style' );
 			},
 
 			activityHideModalEvent: function () {
