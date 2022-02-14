@@ -67,7 +67,7 @@ window.bp = window.bp || {};
 			
 			$( document ).on( 'focus', '#whats-new', function( event ) {
 				console.log('call');
-				$('#bp-nouveau-activity-form').addClass( 'loading' );
+				$('#bp-nouveau-activity-form').addClass( 'loading' ).attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
 				var data = new bp.Views.PostForm();
 				data.displayFull( event );
 			});
