@@ -1165,7 +1165,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	
+
 	$reply_content = wp_kses_post( bbp_get_reply_content( $reply_id ) );
 
 	$reply_url     = bbp_get_reply_url( $reply_id );
@@ -1237,7 +1237,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			}
 
 			// Bail if member opted out of receiving this email.
-			if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
+			if ( false === bb_is_notification_enabled( $user_id, 'notification_forums_following_reply' ) ) {
 				continue;
 			}
 
@@ -1395,7 +1395,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 			}
 
 			// Bail if member opted out of receiving this email.
-			if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
+			if ( false === bb_is_notification_enabled( $user_id, 'notification_forums_following_topic' ) ) {
 				continue;
 			}
 
@@ -2225,7 +2225,7 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		}
 
 		// Bail if member opted out of receiving this email.
-		if ( 'no' === bp_get_user_meta( $user_id, $meta_key, true ) ) {
+		if ( false === bb_is_notification_enabled( $user_id, $meta_key ) ) {
 			continue;
 		}
 
