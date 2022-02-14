@@ -3923,7 +3923,7 @@ window.bp = window.bp || {};
 				);
 				
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
-				$('#activity-form-submit-wrapper').addClass( 'loading' );
+				$('#whats-new-form-footer').addClass( 'loading' );
 				
 				$( event.target ).css(
 					{
@@ -4032,7 +4032,7 @@ window.bp = window.bp || {};
 
 				this.activityHideModalEvent();
 				// this.$el.parent().removeClass( 'loading' );
-				$('#activity-form-submit-wrapper').removeClass( 'loading' );
+				$('#whats-new-form-footer').removeClass( 'loading' );
 				//$('#bp-nouveau-activity-form').removeClass( 'loading' );
 				console.timeEnd();
 				//$('#bp-nouveau-activity-form').removeAttr( 'style' );
