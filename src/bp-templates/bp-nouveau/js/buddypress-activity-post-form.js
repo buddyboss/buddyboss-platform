@@ -3892,6 +3892,9 @@ window.bp = window.bp || {};
 
 			displayFull: function ( event ) {
 				console.time();
+				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+				console.timeEnd();
+				return;
 				//$('#bp-nouveau-activity-form').attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
 				// $('#bp-nouveau-activity-form').addClass( 'loading' );
 				//return;
@@ -3936,9 +3939,9 @@ window.bp = window.bp || {};
 				// $('#whats-new-form').addClass( 'loading' );
 
 				// Backcompat custom fields.
-				if ( true === BP_Nouveau.activity.params.backcompat ) {
-					this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
-				}
+				// if ( true === BP_Nouveau.activity.params.backcompat ) {
+				// 	this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
+				// }
 				
 				// Attach buttons.
 				// if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
@@ -3962,42 +3965,42 @@ window.bp = window.bp || {};
 
 				//this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-				if ( ! _.isUndefined( BP_Nouveau.media ) &&
-					! _.isUndefined( BP_Nouveau.media.emoji ) &&
-					(
-						( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
-						( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
-					)
-				) {
-
-					$( '#whats-new' ).emojioneArea(
-						{
-							standalone: true,
-							hideSource: false,
-							container: '#editor-toolbar > .post-emoji',
-							autocomplete: false,
-							pickerPosition: 'bottom',
-							hidePickerOnBlur: true,
-							useInternalCDN: false,
-							events: {
-								emojibtn_click: function () {
-									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
-									if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
-										var sel = window.getSelection && window.getSelection();
-										if (sel && sel.rangeCount > 0) {
-											window.activityCaretPosition = sel.getRangeAt(0);
-										}
-									} else {
-										window.activityCaretPosition = document.selection.createRange();
-									}
-
-									// Enable post submit button
-									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-								},
-							}
-						}
-					);
-				}
+				// if ( ! _.isUndefined( BP_Nouveau.media ) &&
+				// 	! _.isUndefined( BP_Nouveau.media.emoji ) &&
+				// 	(
+				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
+				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
+				// 	)
+				// ) {
+				//
+				// 	$( '#whats-new' ).emojioneArea(
+				// 		{
+				// 			standalone: true,
+				// 			hideSource: false,
+				// 			container: '#editor-toolbar > .post-emoji',
+				// 			autocomplete: false,
+				// 			pickerPosition: 'bottom',
+				// 			hidePickerOnBlur: true,
+				// 			useInternalCDN: false,
+				// 			events: {
+				// 				emojibtn_click: function () {
+				// 					$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
+				// 					if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
+				// 						var sel = window.getSelection && window.getSelection();
+				// 						if (sel && sel.rangeCount > 0) {
+				// 							window.activityCaretPosition = sel.getRangeAt(0);
+				// 						}
+				// 					} else {
+				// 						window.activityCaretPosition = document.selection.createRange();
+				// 					}
+				//
+				// 					// Enable post submit button
+				// 					$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+				// 				},
+				// 			}
+				// 		}
+				// 	);
+				// }
 
 				// Wrap Toolbar and submit Wrapper into footer.
 				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
