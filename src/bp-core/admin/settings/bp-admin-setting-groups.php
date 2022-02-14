@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	/**
@@ -96,6 +95,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
 		$default_cover_type = bb_get_default_group_cover_type();
 
+		$pro_class = 'bb-pro-inactive';
+		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+			$pro_class = 'bb-pro-active';
+		}
+
 		// Group Settings.
 		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
 
@@ -134,7 +138,12 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-default-custom-group-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_group_custom_cover', 'string', $args );
 
 			$args          = array();
+			$args['class'] = 'group-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bp-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_group_cover_size', 'string', $args );
+
+			$args          = array();
 			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
+
 			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
@@ -180,6 +189,51 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
 
+		// Admin Settings for Settings > Groups > Group Directories > Grid Style.
+		$args          = array();
+		$args['class'] = 'group-gride-style group-layout-options ' . esc_attr( $pro_class );
+		$this->add_field( 'bb-group-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
+
+		// Admin Settings for Settings > Groups > Group Directories > Elements.
+		$args = array(
+			'class'    => 'group-elements ' . esc_attr( $pro_class ),
+			'elements' => array(
+				array(
+					'element_name'  => 'cover-images',
+					'element_label' => esc_html__( 'Cover Images', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'avatars',
+					'element_label' => esc_html__( 'Avatars', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-privacy',
+					'element_label' => esc_html__( 'Group Privacy', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-type',
+					'element_label' => esc_html__( 'Group Type', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'last-activity',
+					'element_label' => esc_html__( 'Last Activity', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'members',
+					'element_label' => esc_html__( 'Members', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'group-descriptions',
+					'element_label' => esc_html__( 'Group Descriptions', 'buddyboss' ),
+				),
+				array(
+					'element_name'  => 'join-buttons',
+					'element_label' => esc_html__( 'Join Buttons', 'buddyboss' ),
+				),
+			),
+		);
+		$this->add_field( 'bb-group-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
+
 		/**
 		 * Fires to register Groups tab settings fields and section.
 		 *
@@ -201,7 +255,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	public function bb_group_default_custom_group_avatar_upload_dir( $upload_dir = array() ) {
 		$bp_params = array();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['bp_params'] ) && ! empty( $_POST['bp_params'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
 			$bp_params = array_map( 'sanitize_text_field', $_POST['bp_params'] );
 		}
 

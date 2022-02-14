@@ -4590,6 +4590,5 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	}
 
 	return false;
-
 }
 

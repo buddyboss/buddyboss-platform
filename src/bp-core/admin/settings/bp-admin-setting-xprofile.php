@@ -61,9 +61,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		$bp_nouveau_appearance                             = bp_get_option( 'bp_nouveau_appearance', array() );
-		$bp_nouveau_appearance['user_front_page']          = isset( $_POST['bp-enable-member-dashboard'] ) ? $_POST['bp-enable-member-dashboard'] : 0;
-		$bp_nouveau_appearance['user_front_page_redirect'] = isset( $_POST['bp-enable-member-dashboard-redirect'] ) ? $_POST['bp-enable-member-dashboard-redirect'] : 0;
+		$bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
+		$bp_nouveau_appearance['user_front_page'] = isset( $_POST['bp-enable-member-dashboard'] ) ? sanitize_text_field( wp_unslash( $_POST['bp-enable-member-dashboard'] ) ) : 0;
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
+		$bp_nouveau_appearance['user_front_page_redirect'] = isset( $_POST['bp-enable-member-dashboard-redirect'] ) ? sanitize_text_field( wp_unslash( $_POST['bp-enable-member-dashboard-redirect'] ) ) : 0;
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		$bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
@@ -118,8 +120,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 */
 		if ( ! isset( $bb_default_custom_profile_avatar ) || ( empty( $bb_default_custom_profile_avatar ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
 
-			$bp_disable_avatar_uploads_before_saving   = $bp_disable_avatar_uploads_after_saving;
-			$bp_enable_profile_gravatar_before_saving  = $bp_enable_profile_gravatar_after_saving;
+			$bp_disable_avatar_uploads_before_saving  = $bp_disable_avatar_uploads_after_saving;
+			$bp_enable_profile_gravatar_before_saving = $bp_enable_profile_gravatar_after_saving;
 
 			if ( 'WordPress' === $profile_avatar_type_before_saving ) {
 				$bp_disable_avatar_uploads_before_saving   = '1';
@@ -162,6 +164,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * Register setting fields.
 	 */
 	public function register_fields() {
+
+		$pro_class = 'bb-pro-inactive';
+		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+			$pro_class = 'bb-pro-active';
+		}
 
 		// Section for Profile Names.
 		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ), '', 'bp_profile_names_tutorial' );
@@ -238,6 +245,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom' . ( ( ! $is_disabled_cover && 'custom' === $default_cover_type ) ? '' : ' bp-hide' );
 			$this->add_field( 'bp-default-custom-profile-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'profile-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bp-default-profile-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_profile_cover_size', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
@@ -667,7 +678,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bb_xprofile_default_custom_profile_avatar_upload_dir( $upload_dir = array() ) {
 		$bp_params = array();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['bp_params'] ) && ! empty( $_POST['bp_params'] ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
 			$bp_params = array_map( 'sanitize_text_field', $_POST['bp_params'] );
 		}
 

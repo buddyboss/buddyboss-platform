@@ -693,6 +693,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$bp = buddypress();
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
+			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
@@ -710,7 +711,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
 			// @todo: used for bp-performance will enable in feature.
-            // require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
+			// require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
 
 		/**

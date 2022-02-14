@@ -36,6 +36,8 @@ TABLE OF CONTENTS:
 10.0 On-screen Notifications
 11.0 Notices UI
 12.0 Profile Photo
+13.0 Group Directories Enhancement
+14.0 BB Pro Active/Inactive Notices
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -2482,6 +2484,26 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   bottom: 0;
 }
 
+.avatar-options .image-width-height > label {
+  min-width: 80px;
+  display: inline-block;
+}
+
+.avatar-options .image-width-height .description {
+  margin-right: 85px;
+  margin-bottom: 15px;
+}
+
+@media screen and (max-width: 782px) {
+  .avatar-options .image-width-height > label {
+    min-width: auto;
+    margin-bottom: 10px;
+  }
+  .avatar-options .image-width-height .description {
+    margin-right: 0;
+  }
+}
+
 .buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-uploader-progress div.error {
   margin: 5px 0 2px;
 }
@@ -2531,10 +2553,15 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
   align-items: stretch;
-  min-height: 90px;
-  max-height: 90px;
+  min-height: 80px;
+  max-height: 80px;
   background-color: #ccc;
   overflow: hidden;
+}
+
+.preview_avatar_cover .preview-item-cover.large-image {
+  min-height: 130px;
+  max-height: 130px;
 }
 
 .preview_avatar_cover .preview-item-avatar {
@@ -2632,4 +2659,131 @@ table tbody td .bb-description {
   color: #999;
   margin-top: 6px;
   margin-bottom: 0;
+}
+
+/*------------------------------------------------------------------------------
+ * 13.0 Group Directories Enhancement
+ *----------------------------------------------------------------------------*/
+.bb-group-element {
+  margin-bottom: 10px;
+}
+
+.bb-grid-style-outer {
+  display: flex;
+}
+
+.bb-grid-style-outer .bb-grid-style {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  text-align: center;
+  width: 115px;
+}
+
+.bb-grid-style-outer .bb-grid-style input[type="radio"] {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-grid-style-outer .bb-grid-style .option {
+  display: flex;
+  color: #999;
+  flex-direction: column;
+  position: relative;
+}
+
+.bb-grid-style-outer .bb-grid-style .option:before {
+  background: #f9f9f9;
+  border: 2px solid #ccd0d4;
+  border-radius: 5px;
+  box-sizing: border-box;
+  content: "";
+  display: flex;
+  height: 115px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.bb-grid-style-outer .bb-grid-style .option:after {
+  background-size: cover !important;
+  content: "";
+  border-radius: 3px;
+  bottom: 30px;
+  right: 6px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
+}
+
+.bb-grid-style-outer .bb-grid-style .option.opt-left:after {
+  background: url(../../images/bb-group-directory-left.png) no-repeat center;
+}
+
+html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
+  background: url(../../images/bb-group-directory-right.png) no-repeat center;
+}
+
+.bb-grid-style-outer .bb-grid-style .option.opt-centered:after {
+  background: url(../../images/bb-group-directory-center.png) no-repeat center;
+}
+
+.bb-grid-style-outer .bb-grid-style .option span {
+  color: #999;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
+.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before {
+  border-color: #2370b1;
+}
+
+/*------------------------------------------------------------------------------
+ * 14.0 BB Pro Active/Inactive Notices
+ *----------------------------------------------------------------------------*/
+.bb-head-notice {
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  color: #999;
+  display: inline-block;
+  margin-top: 10px;
+  max-width: 150px;
+  padding: 5px 10px;
+}
+
+.bb-head-notice a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bb-pro-inactive > th:before {
+  content: "\e97c";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  margin-left: 5px;
+  vertical-align: top;
+  display: inline-block;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.bb-pro-inactive > td {
+  opacity: 0.3;
+}
+
+.bb-pro-inactive > td,
+.bb-pro-inactive > td * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.bb-pro-active > th:before {
+  display: none;
+}
+
+.bb-pro-active .bb-head-notice {
+  display: none;
 }

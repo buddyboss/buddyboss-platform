@@ -3304,3 +3304,19 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	 */
 	return apply_filters( 'bp_core_get_moderation_admin_tabs', $tabs );
 }
+
+/**
+ * Get label with platform pro notice if the platform is not active or not validate.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_pro_label_notice() {
+	return sprintf(
+		'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform">%2$s</a> %3$s</span>',
+		esc_html__( 'Install', 'buddyboss' ),
+		esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+		esc_html__( 'to unlock', 'buddyboss' ),
+	);
+}

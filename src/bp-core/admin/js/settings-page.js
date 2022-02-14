@@ -381,6 +381,84 @@ window.bp = window.bp || {};
 					);
 			}
 
+			// Hide/show group element cover image.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var cover_image_element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
+
+				if (cover_image_element.checked) {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-cover-image-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element avatars.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var avatar_element = document.getElementById( 'bp-disable-group-avatar-uploads' );
+
+				if (avatar_element.checked) {
+					$( '.bb-group-elements .bb-group-element-avatars' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-avatar-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-avatars' ).show();
+							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element group type.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_types' ).length ) {
+
+				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
+
+				if (group_type_element.checked) {
+					$( '.bb-group-elements .bb-group-element-group-type' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-type-creation',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-group-type' ).show();
+							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each(
@@ -388,9 +466,9 @@ window.bp = window.bp || {};
 						var post_type = $( this ).data( 'post_type' );
 
 						if ( true === this.checked ) {
-							  $( '.bp-feed-post-type-comment-' + post_type )
-							 .closest( 'tr' )
-							 .show();
+							$( '.bp-feed-post-type-comment-' + post_type )
+							.closest( 'tr' )
+							.show();
 						}
 					}
 				);
@@ -693,7 +771,11 @@ window.bp = window.bp || {};
 				);
 
 				if ( 'list_grid' === groupView ) {
+					$( '.group-gride-style' ).show();
 					$( '.group-default-layout' ).show();
+				} else if ( 'grid' === groupView ) {
+					$( '.group-gride-style' ).show();
+					$( '.group-default-layout' ).hide();
 				} else {
 					$( '.group-default-layout' ).hide();
 				}
@@ -710,7 +792,11 @@ window.bp = window.bp || {};
 						groupView = $( this ).val();
 
 						if ( 'list_grid' === groupView ) {
+							$( '.group-gride-style' ).show();
 							$( '.group-default-layout' ).show();
+						} else if ( 'grid' === groupView ) {
+							$( '.group-gride-style' ).show();
+							$( '.group-default-layout' ).hide();
 						} else {
 							$( '.group-default-layout' ).hide();
 						}
@@ -1138,7 +1224,7 @@ window.bp = window.bp || {};
 							function( response ) {
 								$this.html( $this.data( 'remove' ) );
 
-								// Update each avatars of the page
+								// Update each avatars of the page.
 								$( '.default-profile-avatar-custom .' + avatarObject + '-' + response.item_id + '-avatar' ).each(
 									function() {
 										$( this ).prop( 'src', response.avatar );
@@ -1481,7 +1567,86 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Show/hide web/app preview
+			// Confirmed box appears when change profile sizes options.
+			var is_confirmed_show = false;
+
+			var bpCoverProfileWidth  = $( 'select[name="bp-cover-profile-width"] option:selected' ).val();
+			var bpCoverProfileHeight = $( 'select[name="bp-cover-profile-height"] option:selected' ).val();
+			$( '#bp_member_avatar_settings' ).on(
+				'change',
+				'select[name="bp-cover-profile-width"], select[name="bp-cover-profile-height"]',
+				function(e) {
+					e.preventDefault();
+
+					is_confirmed_show = true;
+					if ( 'bp-cover-profile-width' === $( this ).attr( 'name' ) && bpCoverProfileWidth === $( this ).val() ) {
+						is_confirmed_show = false;
+					} else if ( 'bp-cover-profile-height' === $( this ).attr( 'name' ) && bpCoverProfileHeight === $( this ).val() ) {
+						is_confirmed_show = false;
+					}
+
+					// Add class to preview section for browser only.
+					if ( 'bp-cover-profile-height' === $( this ).attr( 'name' ) ) {
+						if ( 'small' === $( this ).val() ) {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+						} else {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						}
+					}
+				}
+			);
+
+			var bpCoverGroupWidth  = $( 'select[name="bp-cover-group-width"] option:selected' ).val();
+			var bpCoverGroupHeight = $( 'select[name="bp-cover-group-height"] option:selected' ).val();
+			$( '#bp_groups_avatar_settings' ).on(
+				'change',
+				'select[name="bp-cover-group-width"], select[name="bp-cover-group-height"]',
+				function(e) {
+					e.preventDefault();
+
+					is_confirmed_show = true;
+					if ( 'bp-cover-group-width' === $( this ).attr( 'name' ) && bpCoverGroupWidth === $( this ).val() ) {
+						is_confirmed_show = false;
+					} else if ( 'bp-cover-group-height' === $( this ).attr( 'name' ) && bpCoverGroupHeight === $( this ).val() ) {
+						is_confirmed_show = false;
+					}
+
+					// Add class to preview section for browser only.
+					if ( 'bp-cover-group-height' === $( this ).attr( 'name' ) ) {
+						if ( 'small' === $( this ).val() ) {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+						} else {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						}
+					}
+				}
+			);
+
+			$( 'body.buddyboss_page_bp-settings' ).on(
+				'click',
+				'input[name="submit"]',
+				function(e) {
+
+					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length || $( '#bp_groups_avatar_settings' ).length ) ) {
+
+						var coverWarningMessage = BP_ADMIN.cover_size_alert.profile;
+						if ( $( '#bp_groups_avatar_settings' ).length ) {
+							coverWarningMessage = BP_ADMIN.cover_size_alert.group;
+						}
+
+						if (  confirm( coverWarningMessage ) ) {
+							return true;
+						} else {
+							e.preventDefault();
+							return false;
+						}
+					}
+
+					return true;
+				}
+			);
+
+			// Show/hide web/app preview.
 			$( '.preview-switcher .button' ).on(
 				'click',
 				function( event ) {
