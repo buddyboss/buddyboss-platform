@@ -1980,6 +1980,7 @@ window.bp = window.bp || {};
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data( 'title' ) );
+					target.find( 'span' ).text( target.data( 'title' ) );
 				} else {
 					target.text( target.data( 'title' ) );
 				}
@@ -2004,6 +2005,7 @@ window.bp = window.bp || {};
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
+					target.find( 'span' ).text( target.data( 'title-displayed' ) );
 				} else {
 					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
 				}
@@ -2015,9 +2017,9 @@ window.bp = window.bp || {};
 
 		/**
 		 * [Leave Group Action]
-		 * 
+		 *
 		 * @param event
-		 * 
+		 *
 		 */
 		 leaveGroupAction: function ( event ) {
 			event.preventDefault();
@@ -2028,9 +2030,9 @@ window.bp = window.bp || {};
 
 		/**
 		 * [Leave Group Close]
-		 * 
+		 *
 		 * @param event
-		 * 
+		 *
 		 */
 		 leaveGroupClose: function ( event ) {
 			event.preventDefault();
@@ -2817,7 +2819,7 @@ window.bp = window.bp || {};
 				editorWrap.data('childerWith', buttonsWidth);
 				if( buttonsWidth > editorWrap.width() ) {
 					if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length === 0 ) {
-						editorWrap.find( '.medium-editor-toolbar-actions' ).append( '<li class="medium-editor-action-more"><button class="medium-editor-action medium-editor-action-more-button"><b></b></button><ul></ul></li>' );	
+						editorWrap.find( '.medium-editor-toolbar-actions' ).append( '<li class="medium-editor-action-more"><button class="medium-editor-action medium-editor-action-more-button"><b></b></button><ul></ul></li>' );
 					}
 					editorWrap.find( '.medium-editor-action-more').show();
 					buttonsWidth += editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).outerWidth();
@@ -2829,7 +2831,7 @@ window.bp = window.bp || {};
 							buttonsWidth -= $( this ).outerWidth();
 							editorWrap.find( '.medium-editor-action-more > ul').prepend( $( this ).parent() );
 						}
-						
+
 					});
 				}
 			} else { // If space is available then append <li> to parent again
