@@ -64,7 +64,14 @@ window.bp = window.bp || {};
 			//console.log( this );
 			// $('#bp-nouveau-activity-form').addClass( 'loading' );
 			this.views.add( { id: 'post_form', view: this.postForm } );
-
+			
+			$( document ).on( 'focus', '#whats-new', function( event ) {
+				console.log('call');
+				var data = new bp.Views.PostForm();
+				data.displayFull( event );
+			});
+			
+			
 			// Display it.
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
@@ -3813,7 +3820,7 @@ window.bp = window.bp || {};
 			},
 
 			events: {
-				'focus #whats-new': 'displayFull',
+				//'focus #whats-new': 'displayFull',
 				'input #whats-new': 'postValidate',
 				'reset': 'resetForm',
 				'submit': 'postUpdate',
@@ -4015,7 +4022,8 @@ window.bp = window.bp || {};
 				}
 
 				this.activityHideModalEvent();
-				this.$el.parent().removeClass( 'loading' );
+				//this.$el.parent().removeClass( 'loading' );
+				$('#bp-nouveau-activity-form').removeClass( 'loading' );
 			},
 
 			activityHideModalEvent: function () {
