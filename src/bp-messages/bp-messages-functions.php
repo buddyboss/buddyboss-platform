@@ -1463,7 +1463,10 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 	// Send an email to all recipient.
 	foreach ( $recipients as $recipient ) {
 
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+		if (
+			$sender_id == $recipient->user_id ||
+			false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
+		) {
 			continue;
 		}
 
