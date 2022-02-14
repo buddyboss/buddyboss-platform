@@ -1093,11 +1093,17 @@ class BP_Messages_Thread {
 		}
 
 		// Set up SQL array.
-		$sql           = array();
-		$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
-		$sql['from']   = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
-		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
-		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
+		$sql = array();
+
+		if ( ! empty( $r['having_sql'] ) ) {
+			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
+		} else {
+			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
+		}
+
+		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
+		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
+		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
 		/**
 		 * Filters the Where SQL statement.
@@ -1243,7 +1249,8 @@ class BP_Messages_Thread {
 				bp_displayed_user_id() :
 				bp_loggedin_user_id();
 
-		$bp = buddypress();
+		$bp     = buddypress();
+		$retval = false;
 
 		// phpcs:ignore
 		$is_unread = $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count > 0", $user_id, $thread_id ) );
