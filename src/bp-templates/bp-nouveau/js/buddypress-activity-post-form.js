@@ -3888,6 +3888,8 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
+				console.log('start');
+				console.log(new Date().getTime());
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 				
 				// Remove feedback.
@@ -3940,6 +3942,9 @@ window.bp = window.bp || {};
 						)
 					);
 				}
+				
+				console.log('1');
+				console.log(new Date().getTime());
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
@@ -3984,13 +3989,16 @@ window.bp = window.bp || {};
 						}
 					);
 				}
-
+				console.log('2');
+				console.log(new Date().getTime());
 				// Wrap Toolbar and submit Wrapper into footer.
 				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
 
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+					console.log('if');
 					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
 				} else {
+					console.log('else');
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
 					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
 						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
@@ -4002,7 +4010,8 @@ window.bp = window.bp || {};
 						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
 					});
 				}
-
+				console.log('3');
+				console.log(new Date().getTime());
 				this.updateMultiMediaOptions();
 
 				//Trigger Media click
@@ -4017,6 +4026,8 @@ window.bp = window.bp || {};
 				}
 
 				this.activityHideModalEvent();
+				console.log('End');
+				console.log(new Date().getTime());
 			},
 
 			activityHideModalEvent: function () {
