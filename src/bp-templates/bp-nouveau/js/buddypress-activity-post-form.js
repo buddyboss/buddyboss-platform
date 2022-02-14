@@ -3932,7 +3932,7 @@ window.bp = window.bp || {};
 					}
 				);
 				
-				this.$el.parent().addClass( 'loading' );
+				// this.$el.parent().addClass( 'loading' );
 				// $('#whats-new-form').addClass( 'loading' );
 
 				// Backcompat custom fields.
