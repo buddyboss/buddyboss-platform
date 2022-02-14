@@ -3937,82 +3937,83 @@ window.bp = window.bp || {};
 				}
 
 				// Attach buttons.
-				// if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
-				// 	// Global.
-				// 	bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
-				// 	this.views.add(
-				// 		new bp.Views.FormButtons(
-				// 			{
-				// 				collection: bp.Nouveau.Activity.postForm.buttons,
-				// 				model: this.model
-				// 			}
-				// 		)
-				// 	);
-				// }
-				//
-				// bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
-				// this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
-				// bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
-				// this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
-
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
+					// Global.
+					bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
+					this.views.add(
+						new bp.Views.FormButtons(
+							{
+								collection: bp.Nouveau.Activity.postForm.buttons,
+								model: this.model
+							}
+						)
+					);
+				}
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-				// if ( ! _.isUndefined( BP_Nouveau.media ) &&
-				// 	! _.isUndefined( BP_Nouveau.media.emoji ) &&
-				// 	(
-				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
-				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
-				// 	)
-				// ) {
-				//
-				// 	$( '#whats-new' ).emojioneArea(
-				// 		{
-				// 			standalone: true,
-				// 			hideSource: false,
-				// 			container: '#editor-toolbar > .post-emoji',
-				// 			autocomplete: false,
-				// 			pickerPosition: 'bottom',
-				// 			hidePickerOnBlur: true,
-				// 			useInternalCDN: false,
-				// 			events: {
-				// 				emojibtn_click: function () {
-				// 					$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
-				// 					if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
-				// 						var sel = window.getSelection && window.getSelection();
-				// 						if (sel && sel.rangeCount > 0) {
-				// 							window.activityCaretPosition = sel.getRangeAt(0);
-				// 						}
-				// 					} else {
-				// 						window.activityCaretPosition = document.selection.createRange();
-				// 					}
-				//
-				// 					// Enable post submit button
-				// 					$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-				// 				},
-				// 			}
-				// 		}
-				// 	);
-				// }
-				//
-				// // Wrap Toolbar and submit Wrapper into footer.
-				// $( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
-				//
-				// if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
-				// 	$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
-				// } else {
-				// 	$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
-				// 	$( '.whats-new-scroll-view' ).on( 'scroll', function() {
-				// 		if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
-				// 			$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
-				// 		}
-				// 	});
-				// 	//Hide mention dropdown while window resized
-				// 	$( window ).on( 'resize', function() {
-				// 		$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
-				// 	});
-				// }
-				//
-				// this.updateMultiMediaOptions();
+				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+
+				//this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+
+				if ( ! _.isUndefined( BP_Nouveau.media ) &&
+					! _.isUndefined( BP_Nouveau.media.emoji ) &&
+					(
+						( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
+						( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
+					)
+				) {
+
+					$( '#whats-new' ).emojioneArea(
+						{
+							standalone: true,
+							hideSource: false,
+							container: '#editor-toolbar > .post-emoji',
+							autocomplete: false,
+							pickerPosition: 'bottom',
+							hidePickerOnBlur: true,
+							useInternalCDN: false,
+							events: {
+								emojibtn_click: function () {
+									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
+									if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
+										var sel = window.getSelection && window.getSelection();
+										if (sel && sel.rangeCount > 0) {
+											window.activityCaretPosition = sel.getRangeAt(0);
+										}
+									} else {
+										window.activityCaretPosition = document.selection.createRange();
+									}
+
+									// Enable post submit button
+									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+								},
+							}
+						}
+					);
+				}
+
+				// Wrap Toolbar and submit Wrapper into footer.
+				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+
+				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
+				} else {
+					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
+					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
+						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
+							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+						}
+					});
+					//Hide mention dropdown while window resized
+					$( window ).on( 'resize', function() {
+						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+					});
+				}
+
+				this.updateMultiMediaOptions();
 
 				//Trigger Media click
 				if( window.activityMediaAction !== null ) {
