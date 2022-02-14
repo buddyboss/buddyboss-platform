@@ -1209,8 +1209,9 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
  *
  * @since bbPress (r4944)
  *
- * @param int $reply_id Reply id to update
- * @param int $reply_to Optional. Reply to id
+ * @param int $reply_id Reply id to update.
+ * @param int $reply_to Optional. Reply to id.
+ *
  * @uses bbp_get_reply_id() To get the reply id
  * @uses update_post_meta() To update the reply to meta
  * @uses apply_filters() Calls 'bbp_update_reply_to' with the reply id and
@@ -1219,18 +1220,18 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
  */
 function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
 
-	// Validation
+	// Validation.
 	$reply_id = bbp_get_reply_id( $reply_id );
-	$reply_to = bbp_validate_reply_to( $reply_to );
+	$reply_to = bbp_validate_reply_to( $reply_to, $reply_id );
 
-	// Update or delete the `reply_to` postmeta
+	// Update or delete the `reply_to` postmeta.
 	if ( ! empty( $reply_id ) ) {
 
-		// Update the reply to
+		// Update the reply to.
 		if ( ! empty( $reply_to ) ) {
 			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 
-			// Delete the reply to
+			// Delete the reply to.
 		} else {
 			delete_post_meta( $reply_id, '_bbp_reply_to' );
 		}
