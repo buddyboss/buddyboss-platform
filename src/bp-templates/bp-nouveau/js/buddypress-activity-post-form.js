@@ -61,19 +61,8 @@ window.bp = window.bp || {};
 			this.postForm = new bp.Views.PostForm();
 
 			// Add it to views.
-			//console.log( this );
-			// $('#bp-nouveau-activity-form').addClass( 'loading' );
 			this.views.add( { id: 'post_form', view: this.postForm } );
-			
-			// $( document ).on( 'focus', '#whats-new', function( event ) {
-			// 	console.log('call');
-			// 	//$('#bp-nouveau-activity-form').addClass( 'loading' ).attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
-			// 	$('#bp-nouveau-activity-form').addClass('modal-popup').attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
-			// 	var data = new bp.Views.PostForm();
-			// 	data.displayFull( event );
-			// });
-			
-			
+
 			// Display it.
 			this.postForm.inject( '#bp-nouveau-activity-form' );
 
@@ -3868,6 +3857,14 @@ window.bp = window.bp || {};
 				);
 
 				this.model.on( 'change:errors', this.displayFeedback, this );
+				
+				var $this = this;
+				$( document ).ready( function ( e ) {
+					console.log( '1111111' );
+					$this.displayFull( e );
+					console.log( '222222' );
+					$this.resetForm();
+				} );
 			},
 
 			postValidate: function () {
