@@ -132,6 +132,9 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 						</div><!-- //.group_description -->
 				<?php endif; ?>
 
+				<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+
+
 				<?php
 				bp_get_template_part( 'groups/single/parts/header-item-actions' );
 				bp_nouveau_group_header_buttons();

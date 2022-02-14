@@ -162,6 +162,20 @@
 
 		}
 
+		#item-header-content > .bp-group-type {
+			display: block;
+			text-align: center;
+			width: 100%;
+		}
+
+	}
+
+	#cover-image-container {
+
+		&:not(.centered) #item-header-content > .bp-group-type {
+			display: none;
+		}
+
 	}
 
 	@media screen and (min-width: 783px) {

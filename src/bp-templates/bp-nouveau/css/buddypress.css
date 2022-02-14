@@ -6668,6 +6668,10 @@ body.register .registration-popup .mfp-close:hover {
   padding-bottom: 0.7em;
 }
 
+.single-headers .item-meta.last-activity {
+  margin-bottom: 0;
+}
+
 .single-headers ul {
   list-style: none;
   margin: 0;
@@ -7177,6 +7181,16 @@ body.guillotine-dragging * {
 
 .groups-header #cover-image-container.centered #item-header-cover-image .groups-meta.action .generic-button {
   margin: 0;
+}
+
+.groups-header #cover-image-container.centered #item-header-content > .bp-group-type {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.groups-header #cover-image-container:not(.centered) #item-header-content > .bp-group-type {
+  display: none;
 }
 
 @media screen and (min-width: 783px) {
