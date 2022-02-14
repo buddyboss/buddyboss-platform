@@ -4227,7 +4227,7 @@ function bp_get_group_join_button( $group = false ) {
 			'link_text'         => $button_text,
 			'link_class'        => 'group-button leave-group bp-toggle-action-button',
 			'button_attr'       => array(
-				'data-title'           => __( 'Leave group', 'buddyboss' ),
+				'data-title'           => esc_html__( 'Leave group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
 			),
 		);
@@ -4253,7 +4253,7 @@ function bp_get_group_join_button( $group = false ) {
 					'wrapper_class'     => 'group-button ' . $group->status,
 					'wrapper_id'        => 'groupbutton-' . $group->id,
 					'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'join' ), 'groups_join_group' ),
-					'link_text'         => __( 'Join group', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Join group', 'buddyboss' ),
 					'link_class'        => 'group-button join-group',
 				);
 				break;
@@ -4270,7 +4270,7 @@ function bp_get_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => add_query_arg( 'redirect_to', bp_get_group_permalink( $group ), bp_get_group_accept_invite_link( $group ) ),
-						'link_text'         => __( 'Accept Invitation', 'buddyboss' ),
+						'link_text'         => esc_html__( 'Accept Invitation', 'buddyboss' ),
 						'link_class'        => 'group-button accept-invite',
 					);
 
@@ -4285,7 +4285,7 @@ function bp_get_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button pending ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => bp_get_group_permalink( $group ),
-						'link_text'         => __( 'Request Sent', 'buddyboss' ),
+						'link_text'         => esc_html__( 'Request Sent', 'buddyboss' ),
 						'link_class'        => 'group-button pending membership-requested',
 					);
 
@@ -4312,7 +4312,7 @@ function bp_get_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => __( 'Join group', 'buddyboss' ),
+								'link_text'         => esc_html__( 'Join group', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						} else {
@@ -4324,7 +4324,7 @@ function bp_get_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => __( 'Request Access', 'buddyboss' ),
+								'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						}
@@ -4337,7 +4337,7 @@ function bp_get_group_join_button( $group = false ) {
 							'wrapper_class'     => 'group-button ' . $group->status,
 							'wrapper_id'        => 'groupbutton-' . $group->id,
 							'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-							'link_text'         => __( 'Request Access', 'buddyboss' ),
+							'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
 							'link_class'        => 'group-button request-membership',
 						);
 					}
