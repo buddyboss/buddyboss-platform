@@ -3891,12 +3891,15 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
+				console.log('start');
 				console.time();
 				$('#bp-nouveau-activity-form').attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
 				//$('#bp-nouveau-activity-form').addClass( 'loading' );
-
+				console.log('1');
+				console.time();
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
-
+				console.log('2');
+				console.time();
 				// Remove feedback.
 				var self = this;
 				_.each(
@@ -3908,11 +3911,13 @@ window.bp = window.bp || {};
 						}
 					}
 				);
-
+				console.log('3');
+				console.time();
 				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
 				}
-
+				console.log('4');
+				console.time();
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
@@ -3921,6 +3926,9 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+				
+				console.log('5');
+				console.time();
 
 				$( event.target ).css(
 					{
@@ -3928,13 +3936,19 @@ window.bp = window.bp || {};
 						height: 'auto'
 					}
 				);
+				console.log('6');
+				console.time();
 				
 				this.$el.parent().addClass( 'loading' );
+				console.log('7');
+				console.time();
 
 				// Backcompat custom fields.
 				if ( true === BP_Nouveau.activity.params.backcompat ) {
 					this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
 				}
+				console.log('8');
+				console.time();
 
 				// Attach buttons.
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
@@ -3949,14 +3963,20 @@ window.bp = window.bp || {};
 						)
 					);
 				}
+				console.log('9');
+				console.time();
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				console.log('10');
+				console.time();
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
-
+				console.log('11');
+				console.time();
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
-
+				console.log('12');
+				console.time();
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) &&
 					(
@@ -3993,7 +4013,8 @@ window.bp = window.bp || {};
 						}
 					);
 				}
-
+				console.log('13');
+				console.time();
 				// Wrap Toolbar and submit Wrapper into footer.
 				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
 
@@ -4011,23 +4032,31 @@ window.bp = window.bp || {};
 						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
 					});
 				}
-
+				console.log('14');
+				console.time();
 				this.updateMultiMediaOptions();
-
+				console.log('15');
+				console.time();
 				//Trigger Media click
 				if( window.activityMediaAction !== null ) {
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
 				}
-
+				console.log('16');
+				console.time();
 				//Add Overlay
 				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
 					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
-
+				console.log('17');
+				console.time();
 				this.activityHideModalEvent();
+				console.log('18');
+				console.time();
 				this.$el.parent().removeClass( 'loading' );
 				$('#bp-nouveau-activity-form').removeAttr( 'style' );
+				console.log('19');
+				console.time();
 			},
 
 			activityHideModalEvent: function () {
