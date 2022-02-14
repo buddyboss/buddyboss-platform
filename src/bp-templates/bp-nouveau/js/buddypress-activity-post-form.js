@@ -4030,7 +4030,7 @@ window.bp = window.bp || {};
 				}
 
 				this.activityHideModalEvent();
-				//this.$el.parent().removeClass( 'loading' );
+				this.$el.parent().removeClass( 'loading' );
 				//$('#bp-nouveau-activity-form').removeClass( 'loading' );
 				console.timeEnd();
 				//$('#bp-nouveau-activity-form').removeAttr( 'style' );
