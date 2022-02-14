@@ -3951,8 +3951,14 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
+				console.log('2');
+				console.log(new Date().getTime());
+				
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
+				console.log('3');
+				console.log(new Date().getTime());
+				
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) &&
 					(
@@ -3989,7 +3995,7 @@ window.bp = window.bp || {};
 						}
 					);
 				}
-				console.log('2');
+				console.log('4');
 				console.log(new Date().getTime());
 				// Wrap Toolbar and submit Wrapper into footer.
 				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
@@ -4010,7 +4016,7 @@ window.bp = window.bp || {};
 						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
 					});
 				}
-				console.log('3');
+				console.log('5');
 				console.log(new Date().getTime());
 				this.updateMultiMediaOptions();
 
