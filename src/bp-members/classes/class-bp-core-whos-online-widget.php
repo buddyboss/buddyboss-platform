@@ -100,7 +100,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			<?php
             $online_count = $members_template->total_member_count;
             if ( $online_count > (int) $settings['max_members'] ) { ?>
-                <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+                <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
 		<?php else : ?>
@@ -144,7 +144,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			<?php
 			$connection_count = $members_template->total_member_count;
 			if ( $connection_count > (int) $settings['max_members'] ) { ?>
-                <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+                <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
 		<?php else : ?>
@@ -352,7 +352,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		<?php
 		$online_count = $members_template->total_member_count;
 		if ( $online_count > $number  ) { ?>
-            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 		<?php } ?>
 
 	<?php else : ?>
@@ -396,7 +396,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		<?php
 		$connection_count = $members_template->total_member_count;
 		if ( $connection_count > $number ) { ?>
-            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 		<?php } ?>
 
 	<?php else : ?>

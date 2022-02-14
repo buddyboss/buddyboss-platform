@@ -100,7 +100,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 					<?php endwhile; ?>
 
 				</div>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 
 			<?php else : ?>
 
@@ -234,7 +234,7 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 			<?php endwhile; ?>
 
 		</div>
-		<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+		<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 
 	<?php else : ?>
 
