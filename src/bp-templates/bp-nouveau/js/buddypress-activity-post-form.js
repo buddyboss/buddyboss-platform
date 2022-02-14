@@ -3918,14 +3918,14 @@ window.bp = window.bp || {};
 				}
 				console.log('4');
 				console.log(new Date().getTime());
-				_.each(
-					this.views._views[ '' ],
-					function ( view, index ) {
-						if ( index > 4 ) {
-							view.close(); //Remove Toolbar shown in default view
-						}
-					}
-				);
+				// _.each(
+				// 	this.views._views[ '' ],
+				// 	function ( view, index ) {
+				// 		if ( index > 4 ) {
+				// 			view.close(); //Remove Toolbar shown in default view
+				// 		}
+				// 	}
+				// );
 				
 				console.log('5');
 				console.log(new Date().getTime());
@@ -3966,8 +3966,8 @@ window.bp = window.bp || {};
 				console.log('9');
 				console.log(new Date().getTime());
 
-				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
-				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				// bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+				// this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				console.log('10');
 				console.log(new Date().getTime());
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
@@ -3977,42 +3977,42 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 				console.log('12');
 				console.log(new Date().getTime());
-				if ( ! _.isUndefined( BP_Nouveau.media ) &&
-					! _.isUndefined( BP_Nouveau.media.emoji ) &&
-					(
-						( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
-						( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
-					)
-				) {
-
-					$( '#whats-new' ).emojioneArea(
-						{
-							standalone: true,
-							hideSource: false,
-							container: '#editor-toolbar > .post-emoji',
-							autocomplete: false,
-							pickerPosition: 'bottom',
-							hidePickerOnBlur: true,
-							useInternalCDN: false,
-							events: {
-								emojibtn_click: function () {
-									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
-									if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
-										var sel = window.getSelection && window.getSelection();
-										if (sel && sel.rangeCount > 0) {
-											window.activityCaretPosition = sel.getRangeAt(0);
-										}
-									} else {
-										window.activityCaretPosition = document.selection.createRange();
-									}
-
-									// Enable post submit button
-									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-								},
-							}
-						}
-					);
-				}
+				// if ( ! _.isUndefined( BP_Nouveau.media ) &&
+				// 	! _.isUndefined( BP_Nouveau.media.emoji ) &&
+				// 	(
+				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
+				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
+				// 	)
+				// ) {
+				//
+				// 	$( '#whats-new' ).emojioneArea(
+				// 		{
+				// 			standalone: true,
+				// 			hideSource: false,
+				// 			container: '#editor-toolbar > .post-emoji',
+				// 			autocomplete: false,
+				// 			pickerPosition: 'bottom',
+				// 			hidePickerOnBlur: true,
+				// 			useInternalCDN: false,
+				// 			events: {
+				// 				emojibtn_click: function () {
+				// 					$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
+				// 					if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
+				// 						var sel = window.getSelection && window.getSelection();
+				// 						if (sel && sel.rangeCount > 0) {
+				// 							window.activityCaretPosition = sel.getRangeAt(0);
+				// 						}
+				// 					} else {
+				// 						window.activityCaretPosition = document.selection.createRange();
+				// 					}
+				//
+				// 					// Enable post submit button
+				// 					$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+				// 				},
+				// 			}
+				// 		}
+				// 	);
+				// }
 				console.log('13');
 				console.log(new Date().getTime());
 				// Wrap Toolbar and submit Wrapper into footer.
@@ -4034,20 +4034,20 @@ window.bp = window.bp || {};
 				}
 				console.log('14');
 				console.log(new Date().getTime());
-				this.updateMultiMediaOptions();
+				//this.updateMultiMediaOptions();
 				console.log('15');
 				console.log(new Date().getTime());
 				//Trigger Media click
-				if( window.activityMediaAction !== null ) {
-					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
-					window.activityMediaAction = null;
-				}
+				// if( window.activityMediaAction !== null ) {
+				// 	$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+				// 	window.activityMediaAction = null;
+				// }
 				console.log('16');
 				console.log(new Date().getTime());
 				//Add Overlay
-				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
-					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
-				}
+				// if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
+				// 	$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
+				// }
 				console.log('17');
 				console.log(new Date().getTime());
 				this.activityHideModalEvent();
