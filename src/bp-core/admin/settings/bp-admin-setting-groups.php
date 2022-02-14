@@ -200,35 +200,35 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			'elements' => array(
 				array(
 					'element_name'  => 'cover-images',
-					'element_label' => __( 'Cover Images', 'buddyboss' ),
+					'element_label' => esc_html__( 'Cover Images', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'avatars',
-					'element_label' => __( 'Avatars', 'buddyboss' ),
+					'element_label' => esc_html__( 'Avatars', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'group-privacy',
-					'element_label' => __( 'Group Privacy', 'buddyboss' ),
+					'element_label' => esc_html__( 'Group Privacy', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'group-type',
-					'element_label' => __( 'Group Type', 'buddyboss' ),
+					'element_label' => esc_html__( 'Group Type', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'last-activity',
-					'element_label' => __( 'Last Activity', 'buddyboss' ),
+					'element_label' => esc_html__( 'Last Activity', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'members',
-					'element_label' => __( 'Members', 'buddyboss' ),
+					'element_label' => esc_html__( 'Members', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'group-descriptions',
-					'element_label' => __( 'Group Descriptions', 'buddyboss' ),
+					'element_label' => esc_html__( 'Group Descriptions', 'buddyboss' ),
 				),
 				array(
 					'element_name'  => 'join-buttons',
-					'element_label' => __( 'Join Buttons', 'buddyboss' ),
+					'element_label' => esc_html__( 'Join Buttons', 'buddyboss' ),
 				),
 			),
 		);
