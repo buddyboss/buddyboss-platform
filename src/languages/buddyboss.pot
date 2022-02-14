@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-11 09:56:05+00:00\n"
+"POT-Creation-Date: 2022-02-14 09:17:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5033,7 +5033,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:15
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:13
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:37
-#: bp-templates/bp-nouveau/buddypress/notifications/on-screen.php:32
+#: bp-templates/bp-nouveau/buddypress/notifications/on-screen.php:33
 #: bp-templates/bp-nouveau/buddypress/video/theatre.php:16
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:455
 msgid "Close"
@@ -8198,13 +8198,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -14413,7 +14413,7 @@ msgstr ""
 #: bp-forums/replies/functions.php:2524 bp-members/bp-members-functions.php:554
 #: bp-messages/bp-messages-template.php:1801
 #: bp-messages/bp-messages-template.php:2066
-#: bp-messages/classes/class-bp-messages-thread.php:1510
+#: bp-messages/classes/class-bp-messages-thread.php:1524
 msgid "Deleted User"
 msgstr ""
 
@@ -22529,7 +22529,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1501
+#: bp-messages/classes/class-bp-messages-thread.php:1515
 msgid "%s Recipients"
 msgstr ""
 
@@ -23170,15 +23170,15 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:656
+#: bp-moderation/bp-moderation-filters.php:655
 msgid "Repair moderation data."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:682
+#: bp-moderation/bp-moderation-filters.php:681
 msgid "%s moderation item updated successfully."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:692
+#: bp-moderation/bp-moderation-filters.php:691
 msgid "Moderation update complete!"
 msgstr ""
 
@@ -30055,14 +30055,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
