@@ -86,8 +86,8 @@ function bp_nouveau_after_members_directory_content() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param string $when   'before' or 'after'
- * @param string $suffix Use it to add terms at the end of the hook name
+ * @param string $when   'before' or 'after'.
+ * @param string $suffix Use it to add terms at the end of the hook name.
  */
 function bp_nouveau_member_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
@@ -96,7 +96,7 @@ function bp_nouveau_member_hook( $when = '', $suffix = '' ) {
 		$hook[] = $when;
 	}
 
-	// It's a member hook
+	// It's a member hook.
 	$hook[] = 'member';
 
 	if ( $suffix ) {
@@ -133,11 +133,11 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 	if ( bp_is_user() ) {
 		$args['type'] = 'profile';
 	} else {
-		$args['type'] = 'header';// we have no real need for this 'type' on header actions
+		$args['type'] = 'header';// we have no real need for this 'type' on header actions.
 	}
 
 	$members_buttons = bp_nouveau_get_members_buttons( $args );
-	$output          = join( ' ', array_slice( $members_buttons, 0, 3 ) );
+	$output          = join( ' ', array_slice( $members_buttons, 0, 1 ) );
 
 	/**
 	 * On the member's header we need to reset the group button's global
@@ -187,7 +187,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 	}
 
 	$members_buttons = bp_nouveau_get_members_buttons( $args );
-	$output          = join( ' ', array_slice( $members_buttons, 3 ) );
+	$output          = join( ' ', array_slice( $members_buttons, 1 ) );
 
 	/**
 	 * On the member's header we need to reset the group button's global
@@ -265,13 +265,13 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
-	/**
-	 * Get the action buttons for the displayed user profile
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @return array
-	 */
+/**
+ * Get the action buttons for the displayed user profile
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return array
+ */
 function bp_nouveau_get_members_buttons( $args ) {
 	$buttons = array();
 	$type    = ( ! empty( $args['type'] ) ) ? $args['type'] : '';
@@ -323,7 +323,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		$icons          = ' icons';
 	}
 
-	// If we pass through parent classes add them to $button array
+	// If we pass through parent classes add them to $button array.
 	$parent_class = '';
 	if ( ! empty( $args['parent_attr']['class'] ) ) {
 		$parent_class = $args['parent_attr']['class'];
@@ -332,7 +332,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 	$bp_force_friendship_to_message = bp_force_friendship_to_message();
 
 	if ( bp_is_active( 'friends' ) ) {
-		// It's the member's connection requests screen
+		// It's the member's connection requests screen.
 		if ( 'friendship_request' === $type ) {
 			$buttons = array(
 				'accept_friendship' => array(
@@ -371,7 +371,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				),
 			);
 
-			// If button element set add nonce link to data attr
+			// If button element set add nonce link to data attr.
 			if ( 'button' === $button_element ) {
 				$buttons['accept_friendship']['button_attr']['data-bp-nonce'] = bp_get_friend_accept_request_link();
 				$buttons['reject_friendship']['button_attr']['data-bp-nonce'] = bp_get_friend_reject_request_link();
@@ -380,7 +380,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				$buttons['reject_friendship']['button_attr']['href'] = bp_get_friend_reject_request_link();
 			}
 
-			// It's any other members screen
+			// It's any other members screen.
 		} else {
 			/*
 			 * This filter workaround is waiting for a core adaptation
@@ -427,7 +427,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					}
 				}
 
-				// If button element set add nonce link to data attr
+				// If button element set add nonce link to data attr.
 				if ( 'button' === $button_element && 'awaiting_response' !== $button_args['id'] ) {
 					$buttons['member_friendship']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
 				} else {
@@ -440,7 +440,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		}
 	}
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) { // add follow button
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) { // add follow button.
 
 		/*
 		 * This filter workaround is waiting for a core adaptation
@@ -485,7 +485,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 				}
 			}
 
-			// If button element set add nonce link to data attr
+			// If button element set add nonce link to data attr.
 			if ( 'button' === $button_element ) {
 				$buttons['member_follow']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
 			} else {
@@ -633,7 +633,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 			}
 		}
 
-		// If button element set add nonce link to data attr
+		// If button element set add nonce link to data attr.
 		if ( 'button' === $button_element ) {
 			$buttons['member_switch']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
 		} else {
@@ -674,12 +674,12 @@ function bp_nouveau_get_members_buttons( $args ) {
 		return $buttons;
 	}
 
-		// It's the first entry of the loop, so build the Group and sort it
+		// It's the first entry of the loop, so build the Group and sort it.
 	if ( ! isset( bp_nouveau()->members->member_buttons ) || ! is_a( bp_nouveau()->members->member_buttons, 'BP_Buttons_Group' ) ) {
 		$sort                                 = true;
 		bp_nouveau()->members->member_buttons = new BP_Buttons_Group( $buttons_group );
 
-		// It's not the first entry, the order is set, we simply need to update the Buttons Group
+		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
 		bp_nouveau()->members->member_buttons->update( $buttons_group );
@@ -874,7 +874,7 @@ function bp_nouveau_member_header_template_part() {
 	 */
 	do_action( 'bp_before_member_header' );
 
-	// Get the template part for the header
+	// Get the template part for the header.
 	bp_nouveau_member_get_template_part( $template );
 
 	/**

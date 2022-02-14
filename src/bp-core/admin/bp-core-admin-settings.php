@@ -1205,8 +1205,8 @@ function bb_admin_setting_profile_header_elements( $args ) {
 							'id'       => 'bb-profile-header-element-' . $element['element_name'],
 							'label'    => $element['element_label'],
 							'disabled' => true,
-							'value'    => bb_enabled_profile_header_layout_element( $element['element_name'] ) ? $element['element_name'] : '',
-							'selected' => $element['element_name'],
+							'selected' => bb_enabled_profile_header_layout_element( $element['element_name'] ) ? $element['element_name'] : '',
+							'value'    => $element['element_name'],
 						)
 					);
 					?>
