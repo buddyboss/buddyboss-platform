@@ -2836,8 +2836,8 @@ input.search-query-input {
   }
 }
 
-#bp-nouveau-activity-form.loading {
-  background-color: rgba(250, 251, 253, 0.9);
+.activity-update-form.loading {
+  background-color: #ef3e46; /* rgba(250, 251, 253, 0.9); */
   height: 100%;
   left: 0;
   max-height: 100%;
