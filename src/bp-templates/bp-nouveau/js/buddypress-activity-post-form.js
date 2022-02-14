@@ -3955,10 +3955,10 @@ window.bp = window.bp || {};
 				}
 				// this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
-				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
-				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
-				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+				// bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+				// this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				// bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				// this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				//this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
