@@ -4024,15 +4024,15 @@ window.bp = window.bp || {};
 				} else {
 					console.log('else');
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
-					// $( '.whats-new-scroll-view' ).on( 'scroll', function() {
-					// 	if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
-					// 		$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
-					// 	}
-					// });
+					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
+						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
+							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+						}
+					});
 					//Hide mention dropdown while window resized
-					// $( window ).on( 'resize', function() {
-					// 	$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
-					// });
+					$( window ).on( 'resize', function() {
+						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+					});
 				}
 				console.log('14');
 				console.log(new Date().getTime());
