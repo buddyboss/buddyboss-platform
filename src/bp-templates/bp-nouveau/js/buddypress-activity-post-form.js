@@ -3929,7 +3929,7 @@ window.bp = window.bp || {};
 					}
 				);
 				
-				this.$el.parent().addClass( 'loading' );
+				this.$el.parent().addClass( 'loading modal-popup' ).closest( 'body' ).addClass( 'activity-modal-open' ); // add some class to form so that DOM knows about focus.
 
 				// Backcompat custom fields.
 				if ( true === BP_Nouveau.activity.params.backcompat ) {
