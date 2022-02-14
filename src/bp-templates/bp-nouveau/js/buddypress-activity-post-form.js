@@ -3950,6 +3950,7 @@ window.bp = window.bp || {};
 					);
 				}
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+				$('#whats-new-form').addClass('loading');
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );

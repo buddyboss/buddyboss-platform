@@ -24395,3 +24395,20 @@ span.icons:before {
   font-size: 24px;
   pointer-events: none;
 }
+
+form.loading:after {
+  animation: spin 3s infinite linear;
+  -webkit-animation: spin 3s infinite linear;
+  content: "\e838";
+  display: inline-block;
+  font-family: "bb-icons";
+  font-size: 18px;
+  left: 50%;
+  line-height: 1;
+  margin-left: 10px;
+  position: absolute;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  vertical-align: middle;
+}
