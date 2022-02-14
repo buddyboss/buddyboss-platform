@@ -3895,18 +3895,6 @@ window.bp = window.bp || {};
 				//$('#bp-nouveau-activity-form').attr('style', 'background-color: #ef3e46;height: 100%;left: 0;max-height: 100%;position: fixed;padding: 10px 0;top: 0;width: 100%;z-index: 999991;');
 				// $('#bp-nouveau-activity-form').addClass( 'loading' );
 				//return;
-				this.views.add(
-					[
-						new bp.Views.FormSubmitWrapper( { model: this.model } ),
-						// new bp.Views.FormButtons(
-						// 	{
-						// 		collection: bp.Nouveau.Activity.postForm.buttons,
-						// 		model: this.model
-						// 	}
-						// )
-					]
-				);
-				
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 
 				// Remove feedback.
@@ -3921,22 +3909,20 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// if ( 6 !== this.views._views[ '' ].length ) {
-				// 	return;
-				// }
+				if ( 6 !== this.views._views[ '' ].length ) {
+					return;
+				}
 				
-				// this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
-
-				// _.each(
-				// 	this.views._views[ '' ],
-				// 	function ( view, index ) {
-				// 		if ( index > 4 ) {
-				// 			view.close(); //Remove Toolbar shown in default view
-				// 		}
-				// 	}
-				// );
+				_.each(
+					this.views._views[ '' ],
+					function ( view, index ) {
+						if ( index > 4 ) {
+							view.close(); //Remove Toolbar shown in default view
+						}
+					}
+				);
 				
-				// this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
 				$( event.target ).css(
 					{
@@ -3953,24 +3939,24 @@ window.bp = window.bp || {};
 				}
 				
 				// Attach buttons.
-				// if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
-				// 	// Global.
-				// 	bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
-				// 	this.views.add(
-				// 		new bp.Views.FormButtons(
-				// 			{
-				// 				collection: bp.Nouveau.Activity.postForm.buttons,
-				// 				model: this.model
-				// 			}
-				// 		)
-				// 	);
-				// }
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
+					// Global.
+					bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
+					this.views.add(
+						new bp.Views.FormButtons(
+							{
+								collection: bp.Nouveau.Activity.postForm.buttons,
+								model: this.model
+							}
+						)
+					);
+				}
 				// this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-				// bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
-				// this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
-				// bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
-				// this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				//this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
