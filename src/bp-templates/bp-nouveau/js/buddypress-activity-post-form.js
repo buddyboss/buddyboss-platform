@@ -3923,6 +3923,7 @@ window.bp = window.bp || {};
 				);
 				
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+				console.timeEnd();
 				return;
 				$( event.target ).css(
 					{
