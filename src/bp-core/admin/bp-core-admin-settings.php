@@ -2035,11 +2035,11 @@ function bb_admin_setting_group_header_style() {
 				'value'       => 'left',
 				'options'     => array(
 					'left'     => array(
-						'label' => is_rtl() ? 'Right' : 'Left',
+						'label' => is_rtl() ? esc_html__( 'Right', 'buddyboss' ) : esc_html__ ( 'Left', 'buddyboss' ),
 						'class' => 'option opt-left',
 					),
 					'centered' => array(
-						'label' => 'Centered',
+						'label' => esc_html__ ( 'Centered', 'buddyboss' ),
 						'class' => 'option opt-centered',
 					),
 				),
@@ -2047,7 +2047,7 @@ function bb_admin_setting_group_header_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_attr__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2082,7 +2082,7 @@ function bb_admin_setting_group_headers_elements( $args ) {
 	}
 	echo '</div>';
 	echo '<p class="description">';
-	echo esc_attr__( 'Select which elements to show in your group headers.', 'buddyboss' );
+	echo esc_html__( 'Select which elements to show in your group headers.', 'buddyboss' );
 	echo '</p>';
 
 }
@@ -2106,11 +2106,11 @@ function bb_admin_setting_group_grid_style() {
 				'value'       => 'left',
 				'options'     => array(
 					'left'     => array(
-						'label' => is_rtl() ? 'Right' : 'Left',
+						'label' => is_rtl() ? esc_html__( 'Right', 'buddyboss' ): esc_html__( 'Left', 'buddyboss' ),
 						'class' => 'option opt-left',
 					),
 					'centered' => array(
-						'label' => 'Centered',
+						'label' => esc_html__( 'Centered', 'buddyboss' ),
 						'class' => 'option opt-centered',
 					),
 				),
@@ -2118,7 +2118,7 @@ function bb_admin_setting_group_grid_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_attr__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2153,7 +2153,7 @@ function bb_admin_setting_group_elements( $args ) {
 	}
 	echo '</div>';
 	echo '<p class="description">';
-	echo esc_attr__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
+	echo esc_html__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
 	echo '</p>';
 }
 
