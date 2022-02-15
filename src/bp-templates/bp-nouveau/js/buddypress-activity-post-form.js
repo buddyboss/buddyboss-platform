@@ -4084,8 +4084,13 @@ window.bp = window.bp || {};
 				console.log(new Date().getTime());
 				//Trigger Media click
 				if( window.activityMediaAction !== null ) {
+					console.log('if');
+					console.log('6 if');
+					console.log(new Date().getTime());
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
+					console.log('6 if 2');
+					console.log(new Date().getTime());
 				}
 				console.log('7');
 				console.log(new Date().getTime());
@@ -4617,7 +4622,7 @@ window.bp = window.bp || {};
 						}
 						console.log( new Date().getTime() );
 						console.log( ' before emogi add ');
-						//bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+						bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
 						console.log( new Date().getTime() );
 						// check emoji is enable in profile or not.
 						if ( BP_Nouveau.media.emoji.profile === false ) {
