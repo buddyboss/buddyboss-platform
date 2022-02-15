@@ -3998,7 +3998,7 @@ window.bp = window.bp || {};
 				console.log('4');
 				console.log(new Date().getTime());
 				// Wrap Toolbar and submit Wrapper into footer.
-				$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+				//$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
 
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
 					console.log('if');
