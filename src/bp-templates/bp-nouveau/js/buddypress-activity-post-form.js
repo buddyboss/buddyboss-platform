@@ -4080,18 +4080,21 @@ window.bp = window.bp || {};
 				console.log('5');
 				console.log(new Date().getTime());
 				this.updateMultiMediaOptions();
-
+				console.log('6');
+				console.log(new Date().getTime());
 				//Trigger Media click
 				if( window.activityMediaAction !== null ) {
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
 				}
-
+				console.log('7');
+				console.log(new Date().getTime());
 				//Add Overlay
 				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
 					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
-
+				console.log('8');
+				console.log(new Date().getTime());
 				this.activityHideModalEvent();
 				console.log('End');
 				console.log(new Date().getTime());
