@@ -113,7 +113,6 @@
 		display: inline-block;
 	}
 
-
 	//group header centered
 	#cover-image-container.centered {
 
@@ -156,10 +155,10 @@
 				@include dis-flex;
 				@include flex-align(center);
 				flex-direction: row;
-				width: 100%;
+				width: auto;
 
 				.bp-title {
-					margin-right: $marg-sml;
+					margin-right: $marg-med;
 				}
 
 			}
@@ -208,8 +207,16 @@
 
 	#cover-image-container {
 
-		&:not(.centered) #item-header-content > .bp-group-type {
-			display: none;
+		&:not(.centered) #item-header-content {
+
+			> .bp-group-type {
+				display: none;
+			}
+
+			.bp-group-title-wrap .bp-group-type {
+				display: block;
+			}
+
 		}
 
 		#item-header-content {
@@ -242,6 +249,14 @@
 				.bb_more_options {
 					position: static !important;
 					margin-left: $marg-xsml;
+					margin-bottom: 0;
+				}
+
+				.bp-group-status {
+
+					@include align-self(center);
+					margin: 0;
+
 				}
 
 			}
@@ -287,6 +302,40 @@
 				padding-bottom: $marg-med;
 			}
 		}
+
+		#cover-image-container {
+
+			#item-header-content {
+				flex: 0 0 100%;
+				text-align: center;
+
+				.group-actions-wrap {
+
+					@include center-vert();
+					flex-direction: column;
+
+					.bp-title {
+						margin-right: $marg-med;
+					}
+
+					.moderators-lists {
+						margin-bottom: 0;
+					}
+
+				}
+
+				.group-actions-absolute {
+					position: static;
+				}
+
+			}
+
+			&.centered #item-header-content .group-actions-wrap .group-item-actions {
+				justify-content: center;
+			}
+
+		}
+
 	}
 
 	@media screen and (max-width: 380px) {
