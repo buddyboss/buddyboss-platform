@@ -3972,7 +3972,8 @@ window.bp = window.bp || {};
 				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
 				// 	)
 				// ) {
-				//
+				// 	console.log('emoji');
+				// 	console.log(new Date().getTime());
 				// 	$( '#whats-new' ).emojioneArea(
 				// 		{
 				// 			standalone: true,
@@ -3984,6 +3985,8 @@ window.bp = window.bp || {};
 				// 			useInternalCDN: false,
 				// 			events: {
 				// 				emojibtn_click: function () {
+				// 					console.log('emojibtn_click');
+				// 					console.log(new Date().getTime());
 				// 					$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
 				// 					if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
 				// 						var sel = window.getSelection && window.getSelection();
@@ -4051,18 +4054,66 @@ window.bp = window.bp || {};
 				console.log(new Date().getTime());
 				this.updateMultiMediaOptions();
 
+				console.log('6');
+				console.log(new Date().getTime());
 				//Trigger Media click
 				if( window.activityMediaAction !== null ) {
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
 				}
-
+				console.log('7');
+				console.log(new Date().getTime());
 				//Add Overlay
 				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
 					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
-
+				console.log('8');
+				console.log(new Date().getTime());
 				this.activityHideModalEvent();
+				
+				console.log('9');
+				console.log(new Date().getTime());
+				
+				if ( ! _.isUndefined( BP_Nouveau.media ) &&
+				     ! _.isUndefined( BP_Nouveau.media.emoji ) &&
+				     (
+					     ( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
+					     ( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
+				     )
+				) {
+					console.log('emoji');
+					console.log(new Date().getTime());
+					$( '#whats-new' ).emojioneArea(
+						{
+							standalone: true,
+							hideSource: false,
+							container: '#editor-toolbar > .post-emoji',
+							autocomplete: false,
+							pickerPosition: 'bottom',
+							hidePickerOnBlur: true,
+							useInternalCDN: false,
+							events: {
+								emojibtn_click: function () {
+									console.log('emojibtn_click');
+									console.log(new Date().getTime());
+									$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
+									if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
+										var sel = window.getSelection && window.getSelection();
+										if (sel && sel.rangeCount > 0) {
+											window.activityCaretPosition = sel.getRangeAt(0);
+										}
+									} else {
+										window.activityCaretPosition = document.selection.createRange();
+									}
+									
+									// Enable post submit button
+									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
+								},
+							}
+						}
+					);
+				}
+				
 				console.log('End');
 				console.log(new Date().getTime());
 			},
