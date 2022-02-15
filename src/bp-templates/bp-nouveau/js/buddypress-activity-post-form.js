@@ -4585,8 +4585,8 @@ window.bp = window.bp || {};
 							document.dispatchEvent( event );
 						} else {
 							console.log( ' else 1 else ');
-							//$( '#whats-new-toolbar .post-media.media-support' ).addClass('show');
-							$( '#whats-new-toolbar .post-media.media-support' ).show();
+							$( '#whats-new-toolbar .post-media.media-support' ).addClass('show');
+							//$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
 						// check media is enable in profile or not.
@@ -4597,8 +4597,8 @@ window.bp = window.bp || {};
 							document.dispatchEvent( documentEvent );
 						} else {
 							console.log( ' else 2 else ');
-							//$( '#whats-new-toolbar .post-media.document-support' ).addClass('show');
-							$( '#whats-new-toolbar .post-media.document-support' ).show();
+							$( '#whats-new-toolbar .post-media.document-support' ).addClass('show');
+							//$( '#whats-new-toolbar .post-media.document-support' ).show();
 						}
 
 						// check video is enable in groups or not.
@@ -4609,8 +4609,8 @@ window.bp = window.bp || {};
 							document.dispatchEvent( videosCloseEvent );
 						} else {
 							console.log( ' else 3 else ');
-							//$( '#whats-new-toolbar .post-video.video-support' ).addClass('show');
-							$( '#whats-new-toolbar .post-video.video-support' ).show();
+							$( '#whats-new-toolbar .post-video.video-support' ).addClass('show');
+							//$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
 						console.log( new Date().getTime() );
 						console.log( ' before emogi add ');
@@ -4623,7 +4623,8 @@ window.bp = window.bp || {};
 							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
 						} else {
 							console.log( ' else 4 else ');
-							$( '#editor-toolbar .post-emoji' ).show();
+							$( '#editor-toolbar .post-emoji' ).addClass('show');
+							//$( '#editor-toolbar .post-emoji' ).show();
 						}
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
