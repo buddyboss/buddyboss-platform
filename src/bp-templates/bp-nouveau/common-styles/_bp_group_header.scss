@@ -119,7 +119,10 @@
 		#item-header-cover-image {
 
 			@include flex-align(center);
-			flex-direction: column;
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			-ms-flex-flow: column;
+			flex-flow: column;
 
 			#item-header-avatar {
 				margin-right: auto;
@@ -193,11 +196,6 @@
 			justify-content: space-between;
 			position: relative;
 			width: 100%;
-
-			.bb_more_options {
-				top: 12px;
-			}
-
 		}
 
 	}
@@ -314,6 +312,7 @@
 
 					@include center-vert();
 					flex-direction: column;
+					justify-content: center;
 
 					.bp-title {
 						margin-right: $marg-med;
@@ -331,8 +330,13 @@
 
 			}
 
-			&.centered #item-header-content .group-actions-wrap .group-item-actions {
-				justify-content: center;
+			&.centered #item-header-content .group-actions-wrap {
+				display: block;
+
+				.group-item-actions {
+					justify-content: center;
+				}
+
 			}
 
 		}

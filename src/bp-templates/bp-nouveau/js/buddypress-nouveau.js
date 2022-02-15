@@ -697,6 +697,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
+			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -2872,6 +2873,29 @@ window.bp = window.bp || {};
 		isURL: function ( URL ) {
 			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 			return regexp.test( $.trim( URL ) );
+		},
+
+		/**
+		 *  Close Action Popup
+		 *  @return {function} 
+		 */
+		closeActionPopup: function() {
+			$(this).closest('.bb-action-popup').hide();
+		},
+
+		/**
+		 *  Show Action Popup
+		 *  @param  {String} Dom to open specific popup
+		 *  @return {function} 
+		 */
+		 showActionPopup: function( Dom ) {
+
+			if( Dom ) {
+				$( Dom ).show();
+			} else {
+				$('.bb-action-popup').show();
+			}
+
 		}
 
 	};
