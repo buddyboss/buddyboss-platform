@@ -3965,121 +3965,12 @@ window.bp = window.bp || {};
 				console.log('3');
 				console.log(new Date().getTime());
 				
-				// if ( ! _.isUndefined( BP_Nouveau.media ) &&
-				// 	! _.isUndefined( BP_Nouveau.media.emoji ) &&
-				// 	(
-				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
-				// 		( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
-				// 	)
-				// ) {
-				// 	console.log('emoji');
-				// 	console.log(new Date().getTime());
-				// 	$( '#whats-new' ).emojioneArea(
-				// 		{
-				// 			standalone: true,
-				// 			hideSource: false,
-				// 			container: '#editor-toolbar > .post-emoji',
-				// 			autocomplete: false,
-				// 			pickerPosition: 'bottom',
-				// 			hidePickerOnBlur: true,
-				// 			useInternalCDN: false,
-				// 			events: {
-				// 				emojibtn_click: function () {
-				// 					console.log('emojibtn_click');
-				// 					console.log(new Date().getTime());
-				// 					$( '#whats-new' )[ 0 ].emojioneArea.hidePicker();
-				// 					if (window.getSelection && document.createRange) { //Get caret position when user adds emoji
-				// 						var sel = window.getSelection && window.getSelection();
-				// 						if (sel && sel.rangeCount > 0) {
-				// 							window.activityCaretPosition = sel.getRangeAt(0);
-				// 						}
-				// 					} else {
-				// 						window.activityCaretPosition = document.selection.createRange();
-				// 					}
-				//
-				// 					// Enable post submit button
-				// 					$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
-				// 				},
-				// 			}
-				// 		}
-				// 	);
-				// }
-				console.log('4');
-				console.log(new Date().getTime());
-				// Wrap Toolbar and submit Wrapper into footer.
-				//$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
-				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) ) {
-					var parent = document.getElementsByClassName( 'focus-in--empty' );
-					var elementsCount = parent.length;
-					for ( var i = 0; i < elementsCount; i++ ) {
-						var childLen = parent[i].childNodes.length;
-						var wrap = document.createElement( 'div' );
-						wrap.className = 'whats-new-form-footer';
-						for ( var j = 0; j < childLen; j++ ) {
-							var child = parent[i].childNodes[j];
-							console.log( child.getAttribute( 'id' ) );
-							if (
-								(
-									'whats-new-toolbar' === child.getAttribute( 'id' ) ||
-									'activity-form-submit-wrapper' === child.getAttribute( 'id' )
-								) &&
-								child instanceof HTMLElement
-							) {
-								wrap.appendChild( child.cloneNode( true ) );
-								parent[i].replaceChild( wrap, child );
-							}
-						}
-					}
-				}
-				console.log('44');
-				console.log(new Date().getTime());
-				
-				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
-					console.log('if');
-					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
-				} else {
-					console.log('else');
-					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
-					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
-						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
-							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
-						}
-					});
-					//Hide mention dropdown while window resized
-					$( window ).on( 'resize', function() {
-						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
-					});
-				}
-				console.log('5');
-				console.log(new Date().getTime());
-				this.updateMultiMediaOptions();
-
-				console.log('6');
-				console.log(new Date().getTime());
-				//Trigger Media click
-				if( window.activityMediaAction !== null ) {
-					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
-					window.activityMediaAction = null;
-				}
-				console.log('7');
-				console.log(new Date().getTime());
-				//Add Overlay
-				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
-					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
-				}
-				console.log('8');
-				console.log(new Date().getTime());
-				this.activityHideModalEvent();
-				
-				console.log('9');
-				console.log(new Date().getTime());
-				
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
-				     ! _.isUndefined( BP_Nouveau.media.emoji ) &&
-				     (
-					     ( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
-					     ( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
-				     )
+					! _.isUndefined( BP_Nouveau.media.emoji ) &&
+					(
+						( ! _.isUndefined( BP_Nouveau.media.emoji.profile ) && BP_Nouveau.media.emoji.profile ) ||
+						( ! _.isUndefined( BP_Nouveau.media.emoji.groups ) && BP_Nouveau.media.emoji.groups )
+					)
 				) {
 					console.log('emoji');
 					console.log(new Date().getTime());
@@ -4105,7 +3996,7 @@ window.bp = window.bp || {};
 									} else {
 										window.activityCaretPosition = document.selection.createRange();
 									}
-									
+
 									// Enable post submit button
 									$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
 								},
@@ -4113,7 +4004,57 @@ window.bp = window.bp || {};
 						}
 					);
 				}
+				console.log('4');
+				console.log(new Date().getTime());
+				// Wrap Toolbar and submit Wrapper into footer.
+				//$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
+				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) ) {
+					console.log('44 1');
+					console.log(new Date().getTime());
+					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
+					console.log('44 2');
+					console.log(new Date().getTime());
+					$("#whats-new-toolbar").appendTo(".whats-new-form-footer");
+					$("#activity-form-submit-wrapper").appendTo(".whats-new-form-footer");
+					$('#whats-new-toolbar').remove();
+					console.log('44 4 ');
+					console.log(new Date().getTime());
+				}
+				console.log('44');
+				console.log(new Date().getTime());
 				
+				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+					console.log('if');
+					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
+				} else {
+					console.log('else');
+					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
+					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
+						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
+							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+						}
+					});
+					//Hide mention dropdown while window resized
+					$( window ).on( 'resize', function() {
+						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+					});
+				}
+				console.log('5');
+				console.log(new Date().getTime());
+				this.updateMultiMediaOptions();
+
+				//Trigger Media click
+				if( window.activityMediaAction !== null ) {
+					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+					window.activityMediaAction = null;
+				}
+
+				//Add Overlay
+				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
+					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
+				}
+
+				this.activityHideModalEvent();
 				console.log('End');
 				console.log(new Date().getTime());
 			},
@@ -4216,7 +4157,7 @@ window.bp = window.bp || {};
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				// Remove footer wrapper
-				//this.$el.find( '.whats-new-form-footer' ).remove();
+				this.$el.find( '.whats-new-form-footer' ).remove();
 
 				//Destroy Emoji Picker
 				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
