@@ -4535,9 +4535,9 @@ window.bp = window.bp || {};
 			updateMultiMediaOptions: function () {
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
-
+					console.log( ' updateMultiMediaOptions ');
 					if ( 'user' !== this.model.get( 'object' ) ) {
-
+						console.log( ' if ');
 						// check media is enable in groups or not.
 						if ( BP_Nouveau.media.group_media === false ) {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
@@ -4575,45 +4575,59 @@ window.bp = window.bp || {};
 							$( '#editor-toolbar .post-emoji' ).show();
 						}
 					} else {
-
+						console.log( ' else ');
+						console.log( new Date().getTime() );
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_media === false ) {
+							console.log( ' else 1 if ');
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).hide();
 							var event = new Event( 'activity_media_close' );
 							document.dispatchEvent( event );
 						} else {
+							console.log( ' else 1 else ');
+							//$( '#whats-new-toolbar .post-media.media-support' ).addClass('show');
 							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
 						// check media is enable in profile or not.
 						if ( BP_Nouveau.media.profile_document === false ) {
+							console.log( ' else 2 if ');
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).hide();
 							var documentEvent = new Event( 'activity_document_close' );
 							document.dispatchEvent( documentEvent );
 						} else {
+							console.log( ' else 2 else ');
+							//$( '#whats-new-toolbar .post-media.document-support' ).addClass('show');
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
 						}
 
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
+							console.log( ' else 3 if ');
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).hide();
 							var videosCloseEvent = new Event( 'activity_video_close' );
 							document.dispatchEvent( videosCloseEvent );
 						} else {
+							console.log( ' else 3 else ');
+							//$( '#whats-new-toolbar .post-video.video-support' ).addClass('show');
 							$( '#whats-new-toolbar .post-video.video-support' ).show();
 						}
-
+						console.log( new Date().getTime() );
+						console.log( ' before emogi add ');
 						bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
-
+						console.log( new Date().getTime() );
 						// check emoji is enable in profile or not.
 						if ( BP_Nouveau.media.emoji.profile === false ) {
+							console.log( ' else 4 if ');
 							$( '#editor-toolbar .post-emoji' ).hide();
 							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
 						} else {
+							console.log( ' else 4 else ');
 							$( '#editor-toolbar .post-emoji' ).show();
 						}
 					}
 					$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+					console.log( new Date().getTime() );
 				}
 			},
 
