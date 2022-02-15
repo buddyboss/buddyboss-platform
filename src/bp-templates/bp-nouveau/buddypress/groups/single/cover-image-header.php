@@ -161,7 +161,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php echo esc_attr__( 'Group Description', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Group Description', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-action-popup bb-model-close-button" href="#">
 							<span class="bb-icon bb-icon-close"></span>
 						</a>
