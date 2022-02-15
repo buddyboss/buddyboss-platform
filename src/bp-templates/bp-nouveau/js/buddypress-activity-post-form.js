@@ -3981,10 +3981,10 @@ window.bp = window.bp || {};
 					);
 				}
 
-				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+				/*bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
-				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );*/
 
 				console.log('2');
 				console.log(new Date().getTime());
