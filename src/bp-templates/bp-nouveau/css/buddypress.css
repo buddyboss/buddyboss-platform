@@ -2870,6 +2870,14 @@ input.search-query-input {
   opacity: 0;
 }
 
+.media-support-hide,
+.document-support-hide,
+.video-support-hide,
+.post-emoji-hide,
+.post-gif-hide {
+  display: none;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.2 - Activity Entries
@@ -24394,38 +24402,4 @@ span.icons:before {
 #content-report .bb-model-header .mfp-close .bb-icon {
   font-size: 24px;
   pointer-events: none;
-}
-
-form.loading:after {
-  animation: spin 3s infinite linear;
-  -webkit-animation: spin 3s infinite linear;
-  content: "\e838";
-  display: inline-block;
-  font-family: "bb-icons";
-  font-size: 18px;
-  left: 50%;
-  line-height: 1;
-  margin-left: 10px;
-  position: absolute;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  vertical-align: middle;
-}
-
-div#activity-form-submit-wrapper.loading:after {
-  animation: spin 3s infinite linear;
-  -webkit-animation: spin 3s infinite linear;
-  content: "\e838";
-  display: inline-block;
-  font-family: "bb-icons";
-  font-size: 18px;
-  /* left: 50%; */
-  line-height: 1;
-  margin-left: 10px;
-  position: absolute;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  /* top: 50%; */
-  vertical-align: middle;
 }

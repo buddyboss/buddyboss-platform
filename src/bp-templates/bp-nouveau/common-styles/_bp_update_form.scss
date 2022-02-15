@@ -1826,3 +1826,11 @@ input.search-query-input {
 .activity-update-form.loading form {
 	opacity: 0;
 }
+
+.media-support-hide,
+.document-support-hide,
+.video-support-hide,
+.post-emoji-hide,
+.post-gif-hide {
+	display: none;
+}
