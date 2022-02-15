@@ -7152,6 +7152,18 @@ body.guillotine-dragging * {
   width: 100%;
 }
 
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .group-actions-absolute {
+  position: static;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .bp-group-title-wrap .bp-group-status .group-visibility {
+  display: none;
+}
+
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .bp-group-title-wrap .bp-group-status .group-type {
+  display: block;
+}
+
 .groups-header #cover-image-container.centered #item-header-cover-image .group-item-actions {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7189,8 +7201,63 @@ body.guillotine-dragging * {
   width: 100%;
 }
 
+.groups-header #cover-image-container.centered .group-actions-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.groups-header #cover-image-container.centered .group-actions-wrap .group-actions-absolute {
+  position: static;
+}
+
+.groups-header #cover-image-container.centered .group-actions-wrap .bb_more_options {
+  top: 12px;
+}
+
 .groups-header #cover-image-container:not(.centered) #item-header-content > .bp-group-type {
   display: none;
+}
+
+.groups-header #cover-image-container #item-header-content .group-description {
+  margin-bottom: 10px;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: auto;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta {
+  display: block;
+  margin-right: 5px;
+  max-width: initial;
+  position: static;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button {
+  margin: 0 !important;
+}
+
+.groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
+  position: static !important;
+  margin-right: 5px;
 }
 
 @media screen and (min-width: 783px) {
