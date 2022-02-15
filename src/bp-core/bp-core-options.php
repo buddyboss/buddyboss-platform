@@ -133,13 +133,13 @@ function bp_get_default_options() {
 		'bp-enable-profile-gravatar'                 => false,
 
 		// Member directories elements.
-		'bb-member-directory-elements'               => array( 'online-status', 'profile-type', 'followers', 'last-active' ),
+		'bb-pro-member-directory-elements'           => array( 'online-status', 'profile-type', 'followers', 'last-active' ),
 
 		// Member directories profile actions.
-		'bb-member-profile-actions'                  => array( 'follow', 'connect', 'message' ),
+		'bb-pro-member-profile-actions'              => array( 'follow', 'connect', 'message' ),
 
 		// Member directories primary action.
-		'bb-member-profile-primary-action'           => 'none',
+		'bb-pro-member-profile-primary-action'       => '',
 
 		/* Groups ************************************************************/
 

@@ -308,22 +308,28 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args             = array();
 		$args['class']    = 'member-directory-elements ' . esc_attr( $pro_class );
 		$args['elements'] = function_exists( 'bb_get_member_directory_elements' ) ? bb_get_member_directory_elements() : array();
-		$this->add_field( 'bp-member-directory-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_directory_elements', 'string', $args );
+		$this->add_field( 'bb-member-directory-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_directory_elements', 'string', $args );
 
 		// Member profile actions.
-		$profile_actions = function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array();
+		$profile_actions          = function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array();
+		$selected_profile_actions = function_exists( 'bb_get_enabled_member_directory_profile_actions' ) ? bb_get_enabled_member_directory_profile_actions() : array();
 
 		if ( ! empty( $profile_actions ) ) {
 			$args             = array();
 			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class );
 			$args['elements'] = $profile_actions;
-			$this->add_field( 'bp-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
+			$this->add_field( 'bb-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
+
+			$profile_primary_action_class = '';
+			if ( count( $profile_actions ) < 2 || count( $selected_profile_actions ) < 2 ) {
+				$profile_primary_action_class = ' bp-hide';
+			}
 
 			// Member profile primary action.
 			$args             = array();
-			$args['class']    = 'member-directory-profile-primary-action ' . esc_attr( $pro_class );
+			$args['class']    = 'member-directory-profile-primary-action ' . esc_attr( $pro_class ) . $profile_primary_action_class;
 			$args['elements'] = $profile_actions;
-			$this->add_field( 'bp-member-profile-primary-action', esc_html__( 'Primary Action', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_primary_action', 'string', $args );
+			$this->add_field( 'bb-member-profile-primary-action', esc_html__( 'Primary Action', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_primary_action', 'string', $args );
 		}
 
 		/**

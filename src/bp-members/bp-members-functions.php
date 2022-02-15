@@ -4821,6 +4821,17 @@ function bb_enabled_member_directory_element( $element = 'online-status' ) {
 }
 
 /**
+ * Get enabled the profile actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Return selected profile actions.
+ */
+function bb_get_enabled_member_directory_profile_actions() {
+	return ( function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : function_exists( 'bb_get_member_directory_profile_actions' ) ) ? array_column( bb_get_member_directory_profile_actions(), 'element_name' ) : array();
+}
+
+/**
  * Check the member profile action is enabled or not.
  *
  * @since BuddyBoss [BBVERSION]

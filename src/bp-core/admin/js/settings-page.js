@@ -1659,6 +1659,27 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// Show/hide Profile action for member directories section.
+			$( '#bp_profile_list_settings' ).on(
+				'change',
+				'input[name="bb-pro-member-profile-actions[]"]',
+				function () {
+
+					var member_profile_actions = [];
+					$( 'input[name="bb-pro-member-profile-actions[]"]:checked' ).each(
+						function ( i, e ) {
+							member_profile_actions.push( e.value );
+						}
+					);
+
+					if ( member_profile_actions.length < 2 ) {
+						$( '.member-directory-profile-primary-action' ).addClass( 'bp-hide' );
+					} else {
+						$( '.member-directory-profile-primary-action' ).removeClass( 'bp-hide' );
+					}
+				}
+			);
+
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',
