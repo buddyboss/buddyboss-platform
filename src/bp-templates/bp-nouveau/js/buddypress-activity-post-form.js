@@ -3344,7 +3344,7 @@ window.bp = window.bp || {};
 			},
 
 			render: function () {
-				this.$el.html( this.template( this.model.toJSON() ) );
+				//this.$el.html( this.template( this.model.toJSON() ) );
 				this.$self          = this.$el.find( '#activity-gif-button' );
 				this.$gifPickerEl   = this.$el.find( '.gif-media-search-dropdown' );
 				this.$emojiPickerEl = $( '#whats-new' );
@@ -3983,8 +3983,8 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
-				/*bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
-				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );*/
+				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				console.log('2');
 				console.log(new Date().getTime());
