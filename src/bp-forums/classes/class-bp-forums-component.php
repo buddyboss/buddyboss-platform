@@ -428,6 +428,23 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		}
 
 		/**
+		 * Setup forum cache.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function setup_cache_groups() {
+			// Global groups.
+			wp_cache_add_global_groups(
+				array(
+					'bbpress_posts',
+					'bbpress_users',
+				)
+			);
+
+			parent::setup_cache_groups();
+		}
+
+		/**
 		 * Admin bar menu for forum and topic.
 		 *
 		 * @since BuddyBoss [BBVERSION]

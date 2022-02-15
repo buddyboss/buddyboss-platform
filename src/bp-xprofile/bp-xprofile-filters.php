@@ -736,9 +736,13 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * @return string
  */
 function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
-
+	static $cache;
 	if ( empty( $user_id ) ) {
 		return $full_name;
+	}
+	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
 	}
 
 	if ( ! empty( $user_id ) ) {
@@ -759,6 +763,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
+		$cache[ $cache_key ] = $full_name;
 	}
 
 	return $full_name;

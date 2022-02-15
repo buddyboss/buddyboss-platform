@@ -58,9 +58,13 @@ class BP_Blogs_Blog {
 	public function populate() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp   = buddypress();
+		$blog = wp_cache_get( $this->id, 'bp_blogs' );
 
-		$blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->blogs->table_name} WHERE id = %d", $this->id ) );
+		if ( false === $blog ) {
+			$blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->blogs->table_name} WHERE id = %d", $this->id ) );
+			wp_cache_set( $this->id, $blog, 'bp_blogs' );
+		}
 
 		$this->user_id = (int) $blog->user_id;
 		$this->blog_id = (int) $blog->blog_id;

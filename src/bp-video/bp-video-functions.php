@@ -2616,17 +2616,23 @@ function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 
 
 	$video_album_table = $bp->video->table_name_albums;
 
-	if ( 0 === $group_id ) {
-		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
-	}
+	$cache_key = 'bp_video_user_video_album_' . $user_id . '_' . $group_id;
+	$data      = wp_cache_get( $cache_key, 'bp_video_album' );
 
-	if ( $group_id > 0 ) {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
-	} else {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
-	}
+	if ( false === $data ) {
+		if ( 0 === $group_id ) {
+			$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
+		}
 
-	$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
+		if ( $group_id > 0 ) {
+			$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
+		} else {
+			$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
+		}
+
+		$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
+		wp_cache_set( $cache_key, $data, 'bp_video_album' );
+	}
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {

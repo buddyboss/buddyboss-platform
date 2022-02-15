@@ -90,8 +90,18 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 			$this->search_term = $search_term;// save it for future reference may be.
 
 			global $wpdb;
-			$sql = $this->sql( $search_term, true );
-			return $wpdb->get_var( $sql );
+			static $bbp_search_term = array();
+			$cache_key = 'bb_search_term_total_match_count_' . sanitize_title( $search_term );
+			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
+				$sql    = $this->sql( $search_term, true );
+				$result = $wpdb->get_var( $sql );
+
+				$bbp_search_term[ $cache_key ] = $result;
+			} else {
+				$result = $bbp_search_term[ $cache_key ];
+			}
+
+			return $result;
 		}
 
 		/**
