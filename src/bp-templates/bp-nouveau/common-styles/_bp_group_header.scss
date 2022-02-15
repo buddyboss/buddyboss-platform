@@ -132,10 +132,6 @@
 				flex-direction: column;
 				width: 100%;
 
-				.group-actions-absolute {
-					position: static;
-				}
-
 				.bp-group-title-wrap .bp-group-status {
 
 					.group-visibility {
@@ -182,6 +178,11 @@
 			display: block;
 			text-align: center;
 			width: 100%;
+
+			.group-visibility {
+				display: none;
+			}
+
 		}
 
 		.group-actions-wrap {
@@ -192,10 +193,6 @@
 			justify-content: space-between;
 			position: relative;
 			width: 100%;
-
-			.group-actions-absolute {
-				position: static;
-			}
 
 			.bb_more_options {
 				top: 12px;
@@ -215,6 +212,11 @@
 
 			.bp-group-title-wrap .bp-group-type {
 				display: block;
+
+				.group-visibility {
+					display: none;
+				}
+
 			}
 
 		}
@@ -229,10 +231,6 @@
 
 				@include dis-flex();
 				@include flex-align(center);
-				position: absolute;
-				right: 0;
-				top: 20px;
-				width: auto;
 
 				.groups-meta {
 					display: block;
@@ -256,6 +254,10 @@
 
 					@include align-self(center);
 					margin: 0;
+
+					.group-type {
+						display: none;
+					}
 
 				}
 
