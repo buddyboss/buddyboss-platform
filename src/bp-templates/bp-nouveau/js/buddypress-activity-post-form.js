@@ -4054,7 +4054,7 @@ window.bp = window.bp || {};
 					console.log(new Date().getTime());
 					$("#whats-new-toolbar").appendTo(".whats-new-form-footer");
 					$("#activity-form-submit-wrapper").appendTo(".whats-new-form-footer");
-					$('#whats-new-toolbar').remove();
+					$('#whats-new-form > #whats-new-toolbar').remove();
 					console.log('44 4 ');
 					console.log(new Date().getTime());
 				}
