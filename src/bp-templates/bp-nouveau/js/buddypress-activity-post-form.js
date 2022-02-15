@@ -3344,7 +3344,7 @@ window.bp = window.bp || {};
 			},
 
 			render: function () {
-				//this.$el.html( this.template( this.model.toJSON() ) );
+				this.$el.html( this.template( this.model.attributes ) );
 				this.$self          = this.$el.find( '#activity-gif-button' );
 				this.$gifPickerEl   = this.$el.find( '.gif-media-search-dropdown' );
 				this.$emojiPickerEl = $( '#whats-new' );
