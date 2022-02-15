@@ -1117,6 +1117,120 @@ function bp_admin_setting_callback_default_group_cover_size() {
 	<?php
 }
 
+/**
+ * Member directory elements options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args The array contains extra information of field.
+ */
+function bb_admin_setting_member_directory_elements( $args ) {
+	?>
+	<div class='bb-member-directory-elements'>
+		<?php
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			foreach ( $args['elements'] as $element ) {
+				?>
+				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+					<?php
+					new BB_Admin_Setting_Fields(
+						array(
+							'type'     => 'checkbox',
+							'id'       => 'bb-member-directory-element-' . $element['element_name'],
+							'label'    => $element['element_label'],
+							'disabled' => true,
+							'selected' => function_exists( 'bb_enabled_member_directory_element' ) ? bb_enabled_member_directory_element( $element['element_name'] ) ? $element['element_name'] : '' : $element['element_name'],
+							'value'    => $element['element_name'],
+						)
+					);
+					?>
+				</div>
+				<?php
+			}
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which elements show in your member directories.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Member directory profile actions options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args The array contains extra information of field.
+ */
+function bb_admin_setting_member_profile_actions( $args ) {
+	?>
+	<div class='bb-member-directory-profile-actions'>
+		<?php
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			foreach ( $args['elements'] as $profile_action ) {
+				?>
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+					<?php
+					new BB_Admin_Setting_Fields(
+						array(
+							'type'     => 'checkbox',
+							'id'       => 'bb-member-directory-profile-action-' . $profile_action['element_name'],
+							'label'    => $profile_action['element_label'],
+							'disabled' => true,
+							'selected' => function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( $profile_action['element_name'] ) ? $profile_action['element_name'] : '' : $profile_action['element_name'],
+							'value'    => $profile_action['element_name'],
+						)
+					);
+					?>
+				</div>
+				<?php
+			}
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which profile actions to enable in your member directories.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Member directory profile primary action options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args The array contains extra information of field.
+ */
+function bb_admin_setting_member_profile_primary_action( $args ) {
+	?>
+	<div class='bb-member-directory-profile-primary-action'>
+		<?php
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			?>
+			<div class="bb-member-directory-primary-action">
+				<?php
+				$options     = array();
+				$options[''] = esc_html__( 'None', 'buddyboss' );
+				foreach ( $args['elements'] as $profile_primary_action ) {
+					$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
+				}
+
+				new BB_Admin_Setting_Fields(
+					array(
+						'type'     => 'select',
+						'id'       => 'bb-member-directory-primary-action',
+						'value'    => bb_get_member_directory_primary_action(),
+						'disabled' => true,
+						'options'  => $options,
+					)
+				);
+				?>
+			</div>
+			<?php
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss' ); ?></p>
+	<?php
+}
+
 /** Group Settings ************************************************************/
 
 /**
@@ -2034,7 +2148,7 @@ function bb_admin_setting_group_grid_style() {
 function bb_admin_setting_group_elements( $args ) {
 
 	echo "<div class='bb-group-elements'>";
-	if ( ! empty( $args[ 'elements' ] ) ) {
+	if ( ! empty( $args['elements'] ) ) {
 		foreach ( $args['elements'] as $element ) {
 			$element_name = $element['element_name'];
 			?>

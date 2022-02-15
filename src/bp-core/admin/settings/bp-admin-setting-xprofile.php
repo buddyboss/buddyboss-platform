@@ -290,7 +290,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_profile_search' ), 'intval' );
 
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
+		$this->add_section( 'bp_profile_list_settings', __( 'Member Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views.
 		$this->add_field(
@@ -303,6 +303,28 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args          = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), array( $this, 'bp_admin_setting_profile_layout_default_option' ), 'radio', $args );
+
+		// Member directory elements.
+		$args             = array();
+		$args['class']    = 'member-directory-elements ' . esc_attr( $pro_class );
+		$args['elements'] = function_exists( 'bb_get_member_directory_elements' ) ? bb_get_member_directory_elements() : array();
+		$this->add_field( 'bp-member-directory-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_directory_elements', 'string', $args );
+
+		// Member profile actions.
+		$profile_actions = function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array();
+
+		if ( ! empty( $profile_actions ) ) {
+			$args             = array();
+			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class );
+			$args['elements'] = $profile_actions;
+			$this->add_field( 'bp-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
+
+			// Member profile primary action.
+			$args             = array();
+			$args['class']    = 'member-directory-profile-primary-action ' . esc_attr( $pro_class );
+			$args['elements'] = $profile_actions;
+			$this->add_field( 'bp-member-profile-primary-action', esc_html__( 'Primary Action', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_primary_action', 'string', $args );
+		}
 
 		/**
 		 * Fires to register xProfile tab settings fields and section.

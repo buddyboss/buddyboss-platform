@@ -132,6 +132,15 @@ function bp_get_default_options() {
 		// Profile Enable Gravatar.
 		'bp-enable-profile-gravatar'                 => false,
 
+		// Member directories elements.
+		'bb-member-directory-elements'               => array( 'online-status', 'profile-type', 'followers', 'last-active' ),
+
+		// Member directories profile actions.
+		'bb-member-profile-actions'                  => array( 'follow', 'connect', 'message' ),
+
+		// Member directories primary action.
+		'bb-member-profile-primary-action'           => 'none',
+
 		/* Groups ************************************************************/
 
 		// @todo Move this into the groups component

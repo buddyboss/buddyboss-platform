@@ -4806,3 +4806,47 @@ function bb_get_profile_cover_image_height( $default = 'small' ) {
 	return bp_get_option( 'bp-cover-profile-height', $default );
 }
 
+/**
+ * Check the member directory element is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $element Member directory element.
+ *                        Default: online-status.
+ *
+ * @return bool True if member directory element is enabled otherwise false.
+ */
+function bb_enabled_member_directory_element( $element = 'online-status' ) {
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_element' ) ? bb_platform_pro_enable_member_directory_element( $element ) : true;
+}
+
+/**
+ * Check the member profile action is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $element Member directory profile action.
+ *                        Default: null.
+ *
+ * @return bool True if member profile action is enabled otherwise false.
+ */
+function bb_enabled_member_directory_profile_action( $element = '' ) {
+
+	if ( empty( $element ) ) {
+		return false;
+	}
+
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_profile_action' ) ? bb_platform_pro_enable_member_directory_profile_action( $element ) : true;
+}
+
+/**
+ * Get the primary action for member directories.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return the primary action for member directories.
+ */
+function bb_get_member_directory_primary_action() {
+	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : '';
+}
+
