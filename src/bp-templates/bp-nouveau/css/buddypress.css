@@ -7256,7 +7256,6 @@ body.guillotine-dragging * {
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
-  position: static !important;
   margin-left: 5px;
   margin-bottom: 0;
 }
