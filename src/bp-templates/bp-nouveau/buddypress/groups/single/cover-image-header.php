@@ -174,3 +174,29 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 	</transition>
 </div> <!-- .bb-action-popup -->
 
+<!-- Leave Group confirmation popup -->
+<div class="bb-leave-group-popup bb-action-popup" style="display: none">
+		<transition name="modal">
+			<div class="modal-mask bb-white bbm-model-wrap">
+				<div class="modal-wrapper">
+					<div class="modal-container">
+						<header class="bb-model-header">
+							<h4><span class="target_name"><?php echo esc_html__( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<a class="bb-close-leave-group bb-model-close-button" href="#">
+								<span class="bb-icon bb-icon-close"></span>
+							</a>
+						</header>
+						<div class="bb-leave-group-content bb-action-popup-content">
+							<p><?php echo esc_html__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+						</div>
+						<footer class="bb-model-footer flex align-items-center">
+							<a class="bb-close-leave-group" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+						</footer>
+
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div> <!-- .bb-leave-group-popup -->
+
