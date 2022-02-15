@@ -4622,7 +4622,7 @@ window.bp = window.bp || {};
 						}
 						console.log( new Date().getTime() );
 						console.log( ' before emogi add ');
-						bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+						//bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
 						console.log( new Date().getTime() );
 						// check emoji is enable in profile or not.
 						if ( BP_Nouveau.media.emoji.profile === false ) {
