@@ -4085,9 +4085,13 @@ window.bp = window.bp || {};
 				//Trigger Media click
 				if( window.activityMediaAction !== null ) {
 					console.log('if');
-					console.log('6 if');
+					console.log('6 if' + window.activityMediaAction );
 					console.log(new Date().getTime());
-					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+					var event = new Event( 'activity_video_toggle' );
+					document.dispatchEvent( event );
+					//$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
+					// var mediaCloseEvent = new Event( '.activity-update-form.modal-popup #' + window.activityMediaAction );
+					// document.dispatchEvent( mediaCloseEvent );
 					window.activityMediaAction = null;
 					console.log('6 if 2');
 					console.log(new Date().getTime());
