@@ -3859,9 +3859,11 @@ window.bp = window.bp || {};
 				this.model.on( 'change:errors', this.displayFeedback, this );
 				
 				var $this = this;
-				$( document ).ready( function ( e ) {
+				$( document ).ready( function ( event ) {
 					console.log( '1111111' );
-					$this.displayFull( e );
+					console.log( event.type );
+					$( '#whats-new-form' ).closest( 'body' ).addClass( 'initial-post-form-open' );
+					$this.displayFull( event );
 					console.log( '222222' );
 					$this.resetForm();
 				} );
@@ -3888,8 +3890,12 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
-				console.log('start');
-				console.log(new Date().getTime());
+				console.log( event.type );
+				if ( 'focusin' === event.type ) {
+					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
+				}
+				console.log( 'start' );
+				console.log( new Date().getTime() );
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 				
 				// Remove feedback.
@@ -3999,7 +4005,32 @@ window.bp = window.bp || {};
 				console.log(new Date().getTime());
 				// Wrap Toolbar and submit Wrapper into footer.
 				//$( '.activity-update-form #whats-new-toolbar, .activity-update-form #activity-form-submit-wrapper' ).wrapAll( '<div class="whats-new-form-footer"></div>' );
-
+				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) ) {
+					var parent = document.getElementsByClassName( 'focus-in--empty' );
+					var elementsCount = parent.length;
+					for ( var i = 0; i < elementsCount; i++ ) {
+						var childLen = parent[i].childNodes.length;
+						var wrap = document.createElement( 'div' );
+						wrap.className = 'whats-new-form-footer';
+						for ( var j = 0; j < childLen; j++ ) {
+							var child = parent[i].childNodes[j];
+							console.log( child.getAttribute( 'id' ) );
+							if (
+								(
+									'whats-new-toolbar' === child.getAttribute( 'id' ) ||
+									'activity-form-submit-wrapper' === child.getAttribute( 'id' )
+								) &&
+								child instanceof HTMLElement
+							) {
+								wrap.appendChild( child.cloneNode( true ) );
+								parent[i].replaceChild( wrap, child );
+							}
+						}
+					}
+				}
+				console.log('44');
+				console.log(new Date().getTime());
+				
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
 					console.log('if');
 					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
@@ -4134,7 +4165,7 @@ window.bp = window.bp || {};
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 				// Remove footer wrapper
-				this.$el.find( '.whats-new-form-footer' ).remove();
+				//this.$el.find( '.whats-new-form-footer' ).remove();
 
 				//Destroy Emoji Picker
 				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
