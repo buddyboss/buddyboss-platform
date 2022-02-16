@@ -263,7 +263,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Profile elements.
 		$args             = array();
 		$args['class']    = 'profile-header-elements ' . esc_attr( $pro_class );
-		$args['elements'] = function_exists( 'bb_pro_get_profile_header_elements' ) ? bb_pro_get_profile_header_elements() : array();
+		$args['elements'] = function_exists( 'bb_get_profile_header_elements' ) ? bb_get_profile_header_elements() : array();
 		$this->add_field( 'bb-profile-headers-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_header_elements', 'checkbox', $args );
 
 		// @todo will use this later on

@@ -19,7 +19,7 @@ add_action( 'bp_init', array( 'BP_Members_Admin', 'register_members_admin' ) );
  *
  * @return array List of profile header elements.
  */
-function bb_pro_get_profile_header_elements() {
+function bb_get_profile_header_elements() {
 	$elements = array();
 
 	$elements[] = array(
@@ -68,5 +68,5 @@ function bb_pro_get_profile_header_elements() {
 	 *
 	 * @param $elements array List of profile header elements.
 	 */
-	return apply_filters( 'bb_pro_get_profile_header_elements', $elements );
+	return apply_filters( 'bb_get_profile_header_elements', $elements );
 }
