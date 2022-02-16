@@ -7072,7 +7072,10 @@ body.guillotine-dragging * {
 }
 
 .groups-header .moderators-lists #group-admins > li {
-  float: left;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
   margin: 0 0 0 -6px;
   position: relative;
   z-index: 1;
