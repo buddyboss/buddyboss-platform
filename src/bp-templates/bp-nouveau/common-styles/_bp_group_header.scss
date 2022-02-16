@@ -22,6 +22,14 @@
 		margin-top: 0;
 		display: table-cell;
 
+		#group-admins {
+
+			@include dis-flex;
+			margin-bottom: $marg-med;
+			padding-right: 10px;
+			margin-right: 5px;
+		}
+
 		.moderators-title {
 
 			@include font-size(14);
@@ -43,16 +51,53 @@
 			}
 		}
 
-		img.avatar {
+		#group-admins {
+			margin: 0 0 0 10px;
 
-			@include box-shadow-none();
-			float: none;
-			height: 30px;
-			margin: 0;
-			max-width: 100%;
-			width: 30px;
-			image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+			> li {
+				float: left;
+				margin: 0 0 0 -6px;
+				position: relative;
+				z-index: 1;
+
+				a {
+					text-decoration: none;
+				}
+
+				img {
+					border: 2px solid #fff;
+					border-radius: 50%;
+					float: left;
+					width: 26px;
+					image-rendering: -webkit-optimize-contrast;
+				}
+
+				.bb-icon {
+					height: 26px;
+					width: 26px;
+					font-size: 16px;
+					color: #c3c4c8;
+					line-height: 26px;
+					border-radius: 50%;
+					background-color: #f9f9f9;
+					border: 2px solid #fff;
+
+					@include dis-flex;
+					@include flex-align(center);
+					-webkit-box-pack: center;
+					-ms-flex-pack: center;
+					justify-content: center;
+
+					&:hover {
+						background-color: #e3e3e3;
+					}
+
+				}
+
+			}
+
 		}
+
 	} // close moderators-lists
 
 	.parent-list {

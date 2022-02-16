@@ -1258,6 +1258,7 @@ a.layout-grid-view {
   border-radius: 50%;
   float: right;
   max-width: 100%;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {
@@ -7036,6 +7037,16 @@ body.guillotine-dragging * {
   display: table-cell;
 }
 
+.groups-header .moderators-lists #group-admins {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  margin-bottom: 15px;
+  padding-left: 10px;
+  margin-left: 5px;
+}
+
 .groups-header .moderators-lists .moderators-title {
   font-size: 14px;
 }
@@ -7056,16 +7067,53 @@ body.guillotine-dragging * {
   margin: 4px 4px 0 0;
 }
 
-.groups-header .moderators-lists img.avatar {
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  float: none;
-  height: 30px;
-  margin: 0;
-  max-width: 100%;
-  width: 30px;
+.groups-header .moderators-lists #group-admins {
+  margin: 0 10px 0 0;
+}
+
+.groups-header .moderators-lists #group-admins > li {
+  float: right;
+  margin: 0 -6px 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+.groups-header .moderators-lists #group-admins > li a {
+  text-decoration: none;
+}
+
+.groups-header .moderators-lists #group-admins > li img {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  float: right;
+  width: 26px;
   image-rendering: -webkit-optimize-contrast;
+}
+
+.groups-header .moderators-lists #group-admins > li .bb-icon {
+  height: 26px;
+  width: 26px;
+  font-size: 16px;
+  color: #c3c4c8;
+  line-height: 26px;
+  border-radius: 50%;
+  background-color: #f9f9f9;
+  border: 2px solid #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.groups-header .moderators-lists #group-admins > li .bb-icon:hover {
+  background-color: #e3e3e3;
 }
 
 .groups-header .parent-list {
