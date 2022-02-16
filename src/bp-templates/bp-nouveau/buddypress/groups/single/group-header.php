@@ -17,7 +17,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 
 ?>
-<div id="cover-image-container" class="item-header-wrap">
+<div id="cover-image-container" class="item-header-wrap <?php echo bb_platform_group_header_style() ?>">
 
 	<?php $class = bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img'; ?>
 

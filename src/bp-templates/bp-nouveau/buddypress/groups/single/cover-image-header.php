@@ -26,7 +26,7 @@ $has_cover_image_position = '';
 $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
 ?>
 
-<div id="cover-image-container">
+<div id="cover-image-container" class="<?php echo bb_platform_group_header_style() ?>">
 
 	<?php
 	if ( ! empty( $group_cover_image ) ) {

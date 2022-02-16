@@ -201,11 +201,6 @@
 				@include flex-align(center);
 				flex-direction: row;
 				width: auto;
-
-				.bp-title {
-					margin-right: $marg-med;
-				}
-
 			}
 
 			.groups-meta.action {
@@ -269,6 +264,11 @@
 
 			.group-description {
 				margin-bottom: $marg-sml;
+
+				p {
+					margin-bottom: 0;
+				}
+
 			}
 
 			.group-actions-absolute {
