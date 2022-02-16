@@ -125,8 +125,10 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			add_action( 'bp_init', array( $this, 'setup_components' ), 7 );
 			// Setup meta title.
 			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 999, 1 );
-			// Admin bar menu for forum.
-			add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
+			if ( is_admin() ) {
+				// Admin bar menu for forum and discussion.
+				add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
+			}
 
 			parent::setup_actions();
 		}
