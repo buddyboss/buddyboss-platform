@@ -741,7 +741,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-profile-width',
+					'id'          => 'bb-cover-profile-width',
 					'label'       => esc_html__( 'Width', 'buddyboss' ),
 					'description' => esc_html__( 'Select the width of profile cover images in profile headers.', 'buddyboss' ),
 					'disabled'    => true,
@@ -759,7 +759,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-profile-height',
+					'id'          => 'bb-cover-profile-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
 					'description' => esc_html__( 'Select the height of profile cover images in profile headers.', 'buddyboss' ),
 					'disabled'    => true,
@@ -1084,7 +1084,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-group-width',
+					'id'          => 'bb-cover-group-width',
 					'label'       => esc_html__( 'Width', 'buddyboss' ),
 					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
 					'value'       => bb_get_group_cover_image_width(),
@@ -1102,7 +1102,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-group-height',
+					'id'          => 'bb-cover-group-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
 					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
 					'value'       => bb_get_group_cover_image_height(),
@@ -2104,7 +2104,7 @@ function bb_admin_setting_group_grid_style() {
 		new BB_Admin_Setting_Fields(
 			array(
 				'type'        => 'radio',
-				'id'          => 'bb-group-grid-style-',
+				'id'          => 'bb-group-directory-layout-grid-style-',
 				'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
 				'disabled'    => true,
 				'opt_wrapper' => true,
@@ -2137,7 +2137,7 @@ function bb_admin_setting_group_grid_style() {
 function bb_admin_setting_group_elements( $args ) {
 
 	echo "<div class='bb-group-elements'>";
-	if ( ! empty( $args[ 'elements' ] ) ) {
+	if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 		foreach ( $args['elements'] as $element ) {
 			$element_name = $element['element_name'];
 			?>
@@ -2146,7 +2146,7 @@ function bb_admin_setting_group_elements( $args ) {
 				new BB_Admin_Setting_Fields(
 					array(
 						'type'     => 'checkbox',
-						'id'       => 'bb-group-element-' . $element_name,
+						'id'       => 'bb-group-directory-layout-element-' . $element_name,
 						'label'    => $element['element_label'],
 						'disabled' => true,
 						'value'    => $element_name,
