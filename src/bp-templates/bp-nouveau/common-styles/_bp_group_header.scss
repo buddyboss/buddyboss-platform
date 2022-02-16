@@ -167,7 +167,7 @@
 				@include dis-flex;
 				position: static;
 				max-width: initial;
-				width: 100%;
+				width: auto;
 
 				.generic-button {
 					margin: 0;
@@ -326,6 +326,7 @@
 
 				.group-actions-absolute {
 					position: static;
+					justify-content: center;
 				}
 
 			}
