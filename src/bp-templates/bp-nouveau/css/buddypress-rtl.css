@@ -6205,6 +6205,10 @@ form.ac-form .ac-reply-content input {
   margin-left: 20px;
 }
 
+.bb-action-popup .bb-model-footer .push-right {
+  float: none;
+}
+
 @media screen and (min-width: 46.8em) {
   .buddypress .bp-vertical-navs .groups-list .item-avatar {
     margin-left: 3%;
