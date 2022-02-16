@@ -741,7 +741,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-profile-width',
+					'id'          => 'bb-cover-profile-width',
 					'label'       => esc_html__( 'Width', 'buddyboss' ),
 					'description' => esc_html__( 'Select the width of profile cover images in profile headers.', 'buddyboss' ),
 					'disabled'    => true,
@@ -759,7 +759,7 @@ function bp_admin_setting_callback_default_profile_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-profile-height',
+					'id'          => 'bb-cover-profile-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
 					'description' => esc_html__( 'Select the height of profile cover images in profile headers.', 'buddyboss' ),
 					'disabled'    => true,
@@ -1082,7 +1082,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-group-width',
+					'id'          => 'bb-cover-group-width',
 					'label'       => esc_html__( 'Width', 'buddyboss' ),
 					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
 					'value'       => bb_get_group_cover_image_width(),
@@ -1100,7 +1100,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
 			new BB_Admin_Setting_Fields(
 				array(
 					'type'        => 'select',
-					'id'          => 'bp-cover-group-height',
+					'id'          => 'bb-cover-group-height',
 					'label'       => esc_html__( 'Height', 'buddyboss' ),
 					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
 					'value'       => bb_get_group_cover_image_height(),

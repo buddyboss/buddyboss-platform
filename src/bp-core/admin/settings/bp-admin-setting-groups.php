@@ -95,10 +95,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
 		$default_cover_type = bb_get_default_group_cover_type();
 
-		$pro_class = 'bb-pro-inactive';
-		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
-			$pro_class = 'bb-pro-active';
-		}
+		$pro_class = bb_get_pro_fields_class();
 
 		// Group Settings.
 		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
@@ -139,7 +136,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
-			$this->add_field( 'bp-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_group_cover_size', 'string', $args );
+			$this->add_field( 'bb-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_group_cover_size', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );

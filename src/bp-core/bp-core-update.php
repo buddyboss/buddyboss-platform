@@ -1721,22 +1721,22 @@ function bb_update_to_1_8_8() {
 	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? get_option( 'buddyboss_group_cover_height' );
 
 	if ( ! empty( $profile_cover_width ) ) {
-		delete_option( 'bp-cover-profile-width' );
-		add_option( 'bp-cover-profile-width', $profile_cover_width );
+		delete_option( 'bb-pro-cover-profile-width' );
+		add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
 	}
 
 	if ( ! empty( $profile_cover_height ) ) {
-		delete_option( 'bp-cover-profile-height' );
-		add_option( 'bp-cover-profile-height', $profile_cover_height );
+		delete_option( 'bb-pro-cover-profile-height' );
+		add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
 	}
 
 	if ( ! empty( $group_cover_width ) ) {
-		delete_option( 'bp-cover-group-width' );
-		add_option( 'bp-cover-group-width', $group_cover_width );
+		delete_option( 'bb-pro-cover-group-width' );
+		add_option( 'bb-pro-cover-group-width', $group_cover_width );
 	}
 
 	if ( ! empty( $group_cover_height ) ) {
-		delete_option( 'bp-cover-group-height' );
-		add_option( 'bp-cover-group-height', $group_cover_height );
+		delete_option( 'bb-pro-cover-group-height' );
+		add_option( 'bb-pro-cover-group-height', $group_cover_height );
 	}
 }

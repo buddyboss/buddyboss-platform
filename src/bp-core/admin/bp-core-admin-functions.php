@@ -3313,10 +3313,42 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  * @return string
  */
 function bb_get_pro_label_notice() {
-	return sprintf(
-		'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform">%2$s</a> %3$s</span>',
-		esc_html__( 'Install', 'buddyboss' ),
-		esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
-		esc_html__( 'to unlock', 'buddyboss' ),
-	);
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.8', '<=' ) ) {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Update to', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' ),
+		);
+	} else {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/pro">%2$s</a> %3$s</span>',
+			esc_html__( 'Install', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' ),
+		);
+	}
+
+	return $bb_pro_notice;
+}
+
+/**
+ * Get class for buddyboss pro settings fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_pro_fields_class() {
+	$pro_class = 'bb-pro-inactive';
+	if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
+		$pro_class = 'bb-pro-active';
+	}
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.8', '<=' ) ) {
+		$pro_class = 'bb-pro-inactive';
+	}
+
+	return $pro_class;
 }

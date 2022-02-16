@@ -4789,7 +4789,7 @@ function bp_get_hidden_member_types() {
  * @return string Return profile cover image width.
  */
 function bb_get_profile_cover_image_width( $default = 'default' ) {
-	return bp_get_option( 'bp-cover-profile-width', $default );
+	return bp_get_option( 'bb-pro-cover-profile-width', $default );
 }
 
 /**
@@ -4803,6 +4803,6 @@ function bb_get_profile_cover_image_width( $default = 'default' ) {
  * @return string Return profile cover image height.
  */
 function bb_get_profile_cover_image_height( $default = 'small' ) {
-	return bp_get_option( 'bp-cover-profile-height', $default );
+	return bp_get_option( 'bb-pro-cover-profile-height', $default );
 }
 
