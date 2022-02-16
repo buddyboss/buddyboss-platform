@@ -1173,7 +1173,7 @@ function bb_admin_setting_member_profile_actions( $args ) {
 					new BB_Admin_Setting_Fields(
 						array(
 							'type'     => 'checkbox',
-							'id'       => 'bb-member-directory-profile-action-' . $profile_action['element_name'],
+							'id'       => 'bb-member-profile-action-' . $profile_action['element_name'],
 							'label'    => $profile_action['element_label'],
 							'disabled' => true,
 							'selected' => function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( $profile_action['element_name'] ) ? $profile_action['element_name'] : '' : $profile_action['element_name'],
@@ -1201,31 +1201,30 @@ function bb_admin_setting_member_profile_actions( $args ) {
 function bb_admin_setting_member_profile_primary_action( $args ) {
 	?>
 	<div class='bb-member-directory-profile-primary-action'>
-		<?php
-		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
-			?>
-			<div class="bb-member-directory-primary-action">
-				<?php
-				$options     = array();
-				$options[''] = esc_html__( 'None', 'buddyboss' );
-				foreach ( $args['elements'] as $profile_primary_action ) {
-					$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
-				}
-
-				new BB_Admin_Setting_Fields(
-					array(
-						'type'     => 'select',
-						'id'       => 'bb-member-directory-primary-action',
-						'value'    => bb_get_member_directory_primary_action(),
-						'disabled' => true,
-						'options'  => $options,
-					)
-				);
-				?>
-			</div>
+		<div class="bb-member-directory-primary-action">
 			<?php
-		}
-		?>
+			$options     = array();
+			$options[''] = esc_html__( 'None', 'buddyboss' );
+
+			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
+				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
+						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
+					}
+				}
+			}
+
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'     => 'select',
+					'id'       => 'bb-member-profile-primary-action',
+					'value'    => bb_get_member_directory_primary_action(),
+					'disabled' => true,
+					'options'  => $options,
+				)
+			);
+			?>
+		</div>
 	</div>
 	<p class="description"><?php esc_html_e( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss' ); ?></p>
 	<?php

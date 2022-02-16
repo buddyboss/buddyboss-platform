@@ -4828,7 +4828,7 @@ function bb_enabled_member_directory_element( $element = 'online-status' ) {
  * @return array Return selected profile actions.
  */
 function bb_get_enabled_member_directory_profile_actions() {
-	return ( function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : function_exists( 'bb_get_member_directory_profile_actions' ) ) ? array_column( bb_get_member_directory_profile_actions(), 'element_name' ) : array();
+	return function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : ( function_exists( 'bb_get_member_directory_profile_actions' ) ? array_column( bb_get_member_directory_profile_actions(), 'element_name' ) : array() );
 }
 
 /**
@@ -4836,18 +4836,18 @@ function bb_get_enabled_member_directory_profile_actions() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string|null $element Member directory profile action.
- *                        Default: null.
+ * @param string|null $action Member directory profile action.
+ *                            Default: null.
  *
  * @return bool True if member profile action is enabled otherwise false.
  */
-function bb_enabled_member_directory_profile_action( $element = '' ) {
+function bb_enabled_member_directory_profile_action( $action = '' ) {
 
-	if ( empty( $element ) ) {
+	if ( empty( $action ) ) {
 		return false;
 	}
 
-	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_profile_action' ) ? bb_platform_pro_enable_member_directory_profile_action( $element ) : true;
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_profile_action' ) ? bb_platform_pro_enable_member_directory_profile_action( $action ) : true;
 }
 
 /**

@@ -71,7 +71,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function initialize() {
-			// nothing
+			// nothing.
 		}
 
 		/**
@@ -142,6 +142,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 						'feedback_messages' => array(
 							0 => sprintf(
+								/* translators: 1. Cover image width. 2. Cover image height. */
 								esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 								(int) $cover_dimensions['width'],
 								(int) $cover_dimensions['height']
@@ -164,6 +165,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'json'   => true,
 						),
 					),
+					'member_directories'  => array(
+						'profile_actions' => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
+					),
 				)
 			);
 
@@ -185,7 +189,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_fields() {
-			// nothing
+			// nothing.
 		}
 
 		/**
@@ -213,14 +217,17 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function is_saving() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 			if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) {
 				return false;
 			}
 
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison, WordPress.Security.NonceVerification.Recommended
 			if ( $this->menu_page != $_GET['page'] ) {
 				return false;
 			}
 
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 			if ( $this->tab_name != $this->get_active_tab() ) {
 				return false;
 			}
@@ -243,6 +250,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
 					bp_update_option( $setting_name, $value );
 				}
@@ -292,23 +300,26 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			settings_fields( $this->tab_name );
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
 				?>
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
 				<a class="button" href="
 				<?php
-				echo bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 87474,
-						),
-						'admin.php'
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 87474,
+							),
+							'admin.php'
+						)
 					)
 				);
 				?>
-				"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+				"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 			</p>
 				<?php
 			} else {
@@ -331,6 +342,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
 			if ( ! empty( $tutorial_callback ) ) {
+				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
 
@@ -533,15 +545,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
 					echo '<h2 class=' . $has_tutorial_btn . ">{$section['title']}";
-						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
-							?>
+					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+						?>
 							 <div class="bbapp-tutorial-btn">
-								<?php
-								call_user_func( $section['tutorial_callback'], $section );
-								?>
+							<?php
+							call_user_func( $section['tutorial_callback'], $section );
+							?>
 							 </div>
 							<?php
-						}
+					}
 					echo "</h2>\n";
 				}
 

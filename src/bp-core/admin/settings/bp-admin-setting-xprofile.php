@@ -318,14 +318,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bb-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
 
 			$profile_primary_action_class = '';
-			if ( count( $profile_actions ) < 2 || count( $selected_profile_actions ) < 2 ) {
+			if ( empty( $selected_profile_actions ) ) {
 				$profile_primary_action_class = ' bp-hide';
 			}
 
 			// Member profile primary action.
-			$args             = array();
-			$args['class']    = 'member-directory-profile-primary-action ' . esc_attr( $pro_class ) . $profile_primary_action_class;
-			$args['elements'] = $profile_actions;
+			$args                      = array();
+			$args['class']             = 'member-directory-profile-primary-action ' . esc_attr( $pro_class ) . $profile_primary_action_class;
+			$args['elements']          = $profile_actions;
+			$args['selected_elements'] = $selected_profile_actions;
 			$this->add_field( 'bb-member-profile-primary-action', esc_html__( 'Primary Action', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_primary_action', 'string', $args );
 		}
 
