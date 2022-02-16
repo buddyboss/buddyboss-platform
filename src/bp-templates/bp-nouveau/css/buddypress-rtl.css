@@ -7187,7 +7187,7 @@ body.guillotine-dragging * {
   display: flex;
   position: static;
   max-width: initial;
-  width: 100%;
+  width: auto;
 }
 
 .groups-header #cover-image-container.centered #item-header-cover-image .groups-meta.action .generic-button {
@@ -7320,6 +7320,7 @@ body.guillotine-dragging * {
   }
   .groups-header #cover-image-container #item-header-content .group-actions-absolute {
     position: static;
+    justify-content: center;
   }
   .groups-header #cover-image-container.centered #item-header-content .group-actions-wrap {
     display: block;
