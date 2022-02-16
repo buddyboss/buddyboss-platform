@@ -816,6 +816,7 @@ window.bp = window.bp || {};
 				bp.privacy         = 'public';
 
 				e.preventDefault();
+				$( 'body' ).removeClass( 'initial-post-form-open' );
 				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 				this.model.set( 'privacy_modal', 'general' );
 
@@ -1342,6 +1343,7 @@ window.bp = window.bp || {};
 				this.model.set( 'video', this.video );
 				
 				if ( ! $( 'body' ).hasClass( 'initial-post-form-open' ) ) {
+					console.log( 'if load ');
 					document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
 					document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
 				}
@@ -1377,8 +1379,8 @@ window.bp = window.bp || {};
 				self.video = [];
 				self.$el.find( '#activity-post-video-uploader' ).removeClass( 'open' ).addClass( 'closed' );
 				console.log(self.$el.find( '#activity-post-video-uploader' ).attr('class'));
-				document.removeEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
-				document.removeEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
+				// document.removeEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
+				// document.removeEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
 				
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
 			},
@@ -3900,9 +3902,7 @@ window.bp = window.bp || {};
 						console.log( ' ready 1' );
 						// $this.triggerDisplayFull( event );
 						$this.displayFull( event );
-						setTimeout( function () {
-							$this.$el.closest( '.activity-update-form' ).find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
-						}, 0 );
+						$this.$el.closest( '.activity-update-form' ).find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 						//$this.resetForm();
 					}
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
@@ -3967,7 +3967,7 @@ window.bp = window.bp || {};
 				console.log('start');
 				console.log(new Date().getTime());
 				if ( 'focusin' === event.type ) {
-					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
+					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' ); //.removeClass( 'initial-post-form-open' )
 				}
 				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
 				
@@ -4075,6 +4075,7 @@ window.bp = window.bp || {};
 					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
 				this.activityHideModalEvent();
+				// $( '#whats-new-form' ).closest( 'body' ).addClass( 'initial-post-form-open' );
 				console.log('End');
 				console.log(new Date().getTime());
 			},
@@ -4185,8 +4186,6 @@ window.bp = window.bp || {};
 				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
 
 				this.updateMultiMediaOptions();
-				
-				window.activityMediaAction = null;
 			},
 
 			cleanFeedback: function () {
