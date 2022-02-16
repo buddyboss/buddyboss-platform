@@ -7245,6 +7245,7 @@ body.guillotine-dragging * {
   display: block;
   text-align: center;
   width: 100%;
+  margin-top: 0;
 }
 
 .groups-header #cover-image-container.centered #item-header-content > .bp-group-type .group-visibility {
