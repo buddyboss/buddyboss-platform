@@ -108,7 +108,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 </div><!-- .item-header-wrap -->
 
 <!-- Group description popup -->
-<div class="bb-action-popup" style="display: none">
+<div class="bb-action-popup" id="group-description-popup" style="display: none">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">

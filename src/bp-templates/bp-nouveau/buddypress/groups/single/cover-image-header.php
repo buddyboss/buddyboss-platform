@@ -164,7 +164,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 </div><!-- #cover-image-container -->
 
 <!-- Group description popup -->
-<div class="bb-action-popup" style="display: none">
+<div class="bb-action-popup" id="group-description-popup" style="display: none">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">

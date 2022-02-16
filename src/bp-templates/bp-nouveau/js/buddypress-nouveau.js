@@ -697,6 +697,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
+			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
 			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
@@ -2877,22 +2878,22 @@ window.bp = window.bp || {};
 
 		/**
 		 *  Close Action Popup
+		 *  @param  {object} event The event object.
 		 *  @return {function} 
 		 */
-		closeActionPopup: function() {
+		closeActionPopup: function( event ) {
+			event.preventDefault();
 			$(this).closest('.bb-action-popup').hide();
 		},
 
 		/**
 		 *  Show Action Popup
-		 *  @param  {String} Dom to open specific popup
-		 *  @return {function} 
+		 *  @param  {object} event The event object.
+		 *  @return {function}
 		 */
-		 showActionPopup: function( Dom ) {
-
-			var popup = Dom ? Dom : '.bb-action-popup';
-			$( popup ).show();
-
+		 showActionPopup: function( event ) {
+			event.preventDefault();
+			$( $( this ).attr('id') ).show();
 		}
 
 	};
