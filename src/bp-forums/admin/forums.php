@@ -584,7 +584,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			unset( $actions['inline hide-if-no-js'] );
 
 			// simple hack to show the forum description under the title
-			bbp_forum_content( $forum->ID );
+			echo wp_strip_all_tags( bbp_get_forum_content( $forum->ID ) );
 
 			return $actions;
 		}
