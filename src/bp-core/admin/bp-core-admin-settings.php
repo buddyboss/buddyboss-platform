@@ -1158,7 +1158,7 @@ function bb_admin_setting_profile_headers_style() {
 		new BB_Admin_Setting_Fields(
 			array(
 				'type'        => 'radio',
-				'id'          => 'bb-profile-headers-style',
+				'id'          => 'bb-profile-headers-layout-style',
 				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
 				'disabled'    => true,
 				'opt_wrapper' => true,
@@ -1189,20 +1189,18 @@ function bb_admin_setting_profile_headers_style() {
  * @param array $args Field options.
  */
 function bb_admin_setting_profile_header_elements( $args ) {
-
-	$profile_header_elements = function_exists( 'bb_get_profile_header_elements' ) ? bb_get_profile_header_elements() : array();
 	?>
 	<div class='bb-profile-header-elements'>
 		<?php
-		if ( ! empty( $profile_header_elements ) ) {
-			foreach ( $profile_header_elements as $element ) {
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			foreach ( $args['elements'] as $element ) {
 				?>
 				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
 							'type'     => 'checkbox',
-							'id'       => 'bb-profile-header-element-' . $element['element_name'],
+							'id'       => 'bb-profile-headers-layout-elements-' . $element['element_name'],
 							'label'    => $element['element_label'],
 							'disabled' => true,
 							'selected' => bb_enabled_profile_header_layout_element( $element['element_name'] ) ? $element['element_name'] : '',

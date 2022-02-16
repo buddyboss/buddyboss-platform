@@ -258,12 +258,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Profile headers style.
 		$args          = array();
 		$args['class'] = 'profile-header-style profile-header-layout-options ' . esc_attr( $pro_class );
-		$this->add_field( 'bb-profile-headers-style', esc_html__( 'Header Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_headers_style', 'radio', $args );
+		$this->add_field( 'bb-profile-headers-layout-style', esc_html__( 'Header Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_headers_style', 'radio', $args );
 
 		// Profile elements.
-		$args          = array();
-		$args['class'] = 'profile-header-elements ' . esc_attr( $pro_class );
-		$this->add_field( 'bb-profile-header-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_header_elements', 'checkbox', $args );
+		$args             = array();
+		$args['class']    = 'profile-header-elements ' . esc_attr( $pro_class );
+		$args['elements'] = function_exists( 'bb_pro_get_profile_header_elements' ) ? bb_pro_get_profile_header_elements() : array();
+		$this->add_field( 'bb-profile-headers-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_header_elements', 'checkbox', $args );
 
 		// @todo will use this later on
 		// Section for profile dashboard.

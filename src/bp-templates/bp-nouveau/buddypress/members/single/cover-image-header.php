@@ -93,9 +93,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 
 					<div class="bb-user-content-wrap">
 						<div class="flex align-items-center member-title-wrap">
-							<?php if ( $is_enabled_member_handle ) { ?>
-								<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_displayed_user_id() ) ); ?></h2>
-							<?php } ?>
+							<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_displayed_user_id() ) ); ?></h2>
 
 							<?php
 							if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
@@ -112,12 +110,12 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 								$nickname_field_id = bp_xprofile_nickname_field_id();
 								$hidden_fields     = bp_xprofile_get_hidden_fields_for_user();
 
-								if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && ! in_array( $nickname_field_id, $hidden_fields, true ) ) :
+								if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && ! in_array( $nickname_field_id, $hidden_fields, true ) && $is_enabled_member_handle ) :
 									?>
 									<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
 								<?php endif; ?>
 
-								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_get_last_activity() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields, true ) && ( $is_enabled_last_active || $is_enabled_joined_date ) ) : ?>
+								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_get_last_activity() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields, true ) && $is_enabled_member_handle && ( $is_enabled_last_active || $is_enabled_joined_date ) ) : ?>
 									<span class="separator">&bull;</span>
 								<?php endif; ?>
 

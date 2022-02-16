@@ -88,18 +88,10 @@ function bp_get_default_options() {
 		'bp-cover-profile-height'                    => 'small',
 
 		// Profile header layout style.
-		'bb-profile-headers-layout-style'            => 'left',
+		'bb-pro-profile-headers-layout-style'        => 'left',
 
 		// Profile header layout elements.
-		'bb-profile-headers-layout-elements'         => array(
-			'online-status',
-			'profile-type',
-			'member-handle',
-			'joined-date',
-			'last-active',
-			'followers',
-			'following',
-		),
+		'bb-pro-profile-headers-layout-elements'     => array( 'online-status', 'profile-type', 'member-handle', 'joined-date', 'last-active', 'followers', 'following' ),
 
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
