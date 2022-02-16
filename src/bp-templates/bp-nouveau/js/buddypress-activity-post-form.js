@@ -918,7 +918,8 @@ window.bp = window.bp || {};
 
 			open_media_uploader: function () {
 				var self = this;
-
+				console.log('open_media_uploader');
+				console.log(new Date().getTime());
 				if ( self.$el.find( '#activity-post-media-uploader' ).hasClass( 'open' ) ) {
 					return false;
 				}
@@ -1339,9 +1340,11 @@ window.bp = window.bp || {};
 			initialize: function () {
 				console.log('initialize');
 				this.model.set( 'video', this.video );
-
-				document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
-				document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
+				
+				if ( ! $( 'body' ).hasClass( 'initial-post-form-open' ) ) {
+					document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
+					document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
+				}
 			},
 
 			toggle_video_uploader: function () {
@@ -1350,13 +1353,13 @@ window.bp = window.bp || {};
 				console.log(new Date().getTime());
 				console.log( self.$el.find( '#activity-post-video-uploader' ).attr('class'));
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
-					// console.log('5');
+					console.log('5');
 					// console.log(new Date().getTime());
 					self.destroyVideo();
 					// console.log('6');
 					// console.log(new Date().getTime());
 				} else {
-					// console.log('7');
+					console.log('7');
 					// console.log(new Date().getTime());
 					self.open_video_uploader();
 				}
@@ -1373,10 +1376,10 @@ window.bp = window.bp || {};
 				}
 				self.video = [];
 				self.$el.find( '#activity-post-video-uploader' ).removeClass( 'open' ).addClass( 'closed' );
-
+				console.log(self.$el.find( '#activity-post-video-uploader' ).attr('class'));
 				document.removeEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
 				document.removeEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
-
+				
 				$( '#whats-new-attachments' ).addClass( 'empty' ).closest( '#whats-new-form' ).removeClass( 'focus-in--attm' );
 			},
 
@@ -1384,7 +1387,6 @@ window.bp = window.bp || {};
 				console.log('open_video_uploader');
 				console.log(new Date().getTime());
 				var self = this;
-				self.$el.find( '#activity-post-video-uploader' ).addClass('test');
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
 					return false;
 				}
@@ -1413,6 +1415,9 @@ window.bp = window.bp || {};
 				console.log('10');
 				console.log(new Date().getTime());
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', this.dropzone_options );
+				
+				console.log(  bp.Nouveau.Activity.postForm.dropzone );
+				console.log(  bp.Nouveau.Activity.postForm.dropzone.dropzone_options );
 				console.log('11');
 				console.log(new Date().getTime());
 				bp.Nouveau.Activity.postForm.dropzone.on(
@@ -1585,7 +1590,6 @@ window.bp = window.bp || {};
 				$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
 				console.log('12');
 				console.log( self.$el.find( '#activity-post-video-uploader' ).attr('class'));
-				console.log( $( '#whats-new-attachments' ).attr('class'));
 				console.log( $( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).attr('class'));
 				$( '#whats-new-form' ).closest( 'body' ).addClass( 'video-post-form-open' );
 				console.log('12 1');
@@ -3891,12 +3895,15 @@ window.bp = window.bp || {};
 				var $this = this;
 				$( document ).ready( function ( event ) {
 					console.log( ' ready ' );
-					//console.log( event );
 					$( '#whats-new-form' ).closest( 'body' ).addClass( 'initial-post-form-open' );
 					if ( $( 'body' ).hasClass( 'initial-post-form-open' ) ) {
 						console.log( ' ready 1' );
+						// $this.triggerDisplayFull( event );
 						$this.displayFull( event );
-						$this.resetForm();
+						setTimeout( function () {
+							$this.$el.closest( '.activity-update-form' ).find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
+						}, 0 );
+						//$this.resetForm();
 					}
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					     ! _.isUndefined( BP_Nouveau.media.emoji ) &&
@@ -4094,19 +4101,17 @@ window.bp = window.bp || {};
 			},
 
 			triggerDisplayFull: function ( event ) {
-				console.log( 'triggerDisplayFull' );
-				console.log( event );
 				event.preventDefault();
 
 				//Check for media click
 				if( $( event.target ).hasClass( 'toolbar-button' ) || $( event.target ).parent().hasClass( 'toolbar-button' ) ) {
-					console.log( 'triggerDisplayFull 1' );
 					window.activityMediaAction = $( event.target ).parent().attr( 'id' );
 				}
 				if( !this.$el.hasClass( 'focus-in' ) ){
-					console.log( 'triggerDisplayFull 2' );
 					//Set focus on "#whats-new" to trigger 'displayFull'
-					var element = this.$el.find( '#whats-new' )[0]; var element_selection = window.getSelection(); var element_range = document.createRange();
+					var element = this.$el.find( '#whats-new' )[0];
+					var element_selection = window.getSelection();
+					var element_range = document.createRange();
 					element_range.setStart( element, 0);
 					element_range.setEnd( element, 0);
 					element_selection.removeAllRanges();
@@ -4180,6 +4185,8 @@ window.bp = window.bp || {};
 				$( '.activity-form #editor-toolbar .post-emoji' ).html('');
 
 				this.updateMultiMediaOptions();
+				
+				window.activityMediaAction = null;
 			},
 
 			cleanFeedback: function () {
