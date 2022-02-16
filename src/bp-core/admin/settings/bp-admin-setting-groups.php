@@ -95,10 +95,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$is_disabled_cover  = bp_disable_group_cover_image_uploads();
 		$default_cover_type = bb_get_default_group_cover_type();
 
-		$pro_class = 'bb-pro-inactive';
-		if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
-			$pro_class = 'bb-pro-active';
-		}
+		$pro_class = bb_get_pro_fields_class();
 
 		// Group Settings.
 		$this->add_section( 'bp_groups', esc_html__( 'Group Settings', 'buddyboss' ), '', 'bp_group_setting_tutorial' );
@@ -139,7 +136,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'group-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
-			$this->add_field( 'bp-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_group_cover_size', 'string', $args );
+			$this->add_field( 'bb-default-group-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_group_cover_size', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'group-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
@@ -192,7 +189,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style.
 		$args          = array();
 		$args['class'] = 'group-gride-style group-layout-options ' . esc_attr( $pro_class );
-		$this->add_field( 'bb-group-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
+		$this->add_field( 'bb-group-directory-layout-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Elements.
 		$args = array(
@@ -232,7 +229,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 				),
 			),
 		);
-		$this->add_field( 'bb-group-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
+		$this->add_field( 'bb-group-directory-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.

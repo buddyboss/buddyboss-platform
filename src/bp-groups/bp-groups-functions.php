@@ -4596,7 +4596,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
  * @return string Return group cover image width.
  */
 function bb_get_group_cover_image_width( $default = 'default' ) {
-	return bp_get_option( 'bp-cover-group-width', $default );
+	return bp_get_option( 'bb-pro-cover-group-width', $default );
 }
 
 /**
@@ -4610,6 +4610,6 @@ function bb_get_group_cover_image_width( $default = 'default' ) {
  * @return string Return group cover image height.
  */
 function bb_get_group_cover_image_height( $default = 'small' ) {
-	return bp_get_option( 'bp-cover-group-height', $default );
+	return bp_get_option( 'bb-pro-cover-group-height', $default );
 }
 

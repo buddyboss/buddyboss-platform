@@ -81,12 +81,6 @@ function bp_get_default_options() {
 		// cover photo uploads.
 		'bp-disable-cover-image-uploads'             => false,
 
-		// Profile cover image width.
-		'bp-cover-profile-width'                     => 'default',
-
-		// Profile cover image height.
-		'bp-cover-profile-height'                    => 'small',
-
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
 
@@ -98,12 +92,6 @@ function bp_get_default_options() {
 
 		// Group cover photo uploads.
 		'bp-disable-group-cover-image-uploads'       => false,
-
-		// Group cover image width.
-		'bp-cover-group-width'                       => 'default',
-
-		// Group cover image height.
-		'bp-cover-group-height'                      => 'small',
 
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
