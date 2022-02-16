@@ -1337,7 +1337,7 @@ window.bp = window.bp || {};
 			editActivityData: null,
 
 			initialize: function () {
-
+				console.log('initialize');
 				this.model.set( 'video', this.video );
 
 				document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
@@ -1346,16 +1346,28 @@ window.bp = window.bp || {};
 
 			toggle_video_uploader: function () {
 				var self = this;
+				console.log('4');
+				console.log(new Date().getTime());
+				console.log( self.$el.find( '#activity-post-video-uploader' ).attr('class'));
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
+					// console.log('5');
+					// console.log(new Date().getTime());
 					self.destroyVideo();
+					// console.log('6');
+					// console.log(new Date().getTime());
 				} else {
+					// console.log('7');
+					// console.log(new Date().getTime());
 					self.open_video_uploader();
 				}
 			},
 
 			destroyVideo: function () {
+				console.log('destroyVideo');
+				console.log(bp.Nouveau.Activity.postForm.dropzone);
 				var self = this;
 				if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+					console.log('destroyVideo 1');
 					bp.Nouveau.Activity.postForm.dropzone.destroy();
 					self.$el.find( '#activity-post-video-uploader' ).html( '' );
 				}
@@ -1369,13 +1381,18 @@ window.bp = window.bp || {};
 			},
 
 			open_video_uploader: function () {
+				console.log('open_video_uploader');
+				console.log(new Date().getTime());
 				var self = this;
-
+				self.$el.find( '#activity-post-video-uploader' ).addClass('test');
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
 					return false;
 				}
+				console.log('9');
+				console.log(new Date().getTime());
 				self.destroyVideo();
-
+				console.log('9 1');
+				console.log(new Date().getTime());
 				this.dropzone_options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
@@ -1393,9 +1410,11 @@ window.bp = window.bp || {};
 					previewTemplate : document.getElementsByClassName( 'activity-post-video-template' )[0].innerHTML,
 					dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 				};
-
+				console.log('10');
+				console.log(new Date().getTime());
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', this.dropzone_options );
-
+				console.log('11');
+				console.log(new Date().getTime());
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'addedfile',
 					function ( file ) {
@@ -1564,6 +1583,13 @@ window.bp = window.bp || {};
 
 				self.$el.find( '#activity-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
+				console.log('12');
+				console.log( self.$el.find( '#activity-post-video-uploader' ).attr('class'));
+				console.log( $( '#whats-new-attachments' ).attr('class'));
+				console.log( $( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).attr('class'));
+				$( '#whats-new-form' ).closest( 'body' ).addClass( 'video-post-form-open' );
+				console.log('12 1');
+				console.log(new Date().getTime());
 			},
 
 			createVideoThumbnailFromUrl: function ( mock_file ) {
@@ -3450,16 +3476,20 @@ window.bp = window.bp || {};
 
 			toggleVideoSelector: function ( e ) {
 				e.preventDefault();
-
+				console.log('toggleVideoSelector');
+				console.log(new Date().getTime());
 				var parentElement = $( e.currentTarget ).closest( '.post-elements-buttons-item' );
 				if( !$( '.activity-form' ).hasClass( 'focus-in' ) || parentElement.hasClass( 'no-click' ) || parentElement.hasClass( 'disable' )) {
+					console.log( 'toggleVideoSelector return');
 					return;
 				}
-
+				console.log('toggleVideoSelector 1');
+				console.log(new Date().getTime());
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
 				this.closeGifSelector();
-
+				console.log('toggleVideoSelector 2');
+				console.log(new Date().getTime());
 				var event = new Event( 'activity_video_toggle' );
 				document.dispatchEvent( event );
 			},
@@ -3860,10 +3890,14 @@ window.bp = window.bp || {};
 				
 				var $this = this;
 				$( document ).ready( function ( event ) {
+					console.log( ' ready ' );
+					//console.log( event );
 					$( '#whats-new-form' ).closest( 'body' ).addClass( 'initial-post-form-open' );
-					$this.displayFull( event );
-					$this.resetForm();
-					
+					if ( $( 'body' ).hasClass( 'initial-post-form-open' ) ) {
+						console.log( ' ready 1' );
+						$this.displayFull( event );
+						$this.resetForm();
+					}
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					     ! _.isUndefined( BP_Nouveau.media.emoji ) &&
 					     (
@@ -3891,7 +3925,7 @@ window.bp = window.bp || {};
 										} else {
 											window.activityCaretPosition = document.selection.createRange();
 										}
-										
+
 										// Enable post submit button
 										$( '#whats-new-form' ).removeClass( 'focus-in--empty' );
 									},
@@ -3980,14 +4014,17 @@ window.bp = window.bp || {};
 						)
 					);
 				}
-
+				
+				console.log( '2' );
+				console.log( new Date().getTime() );
+				
 				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
-				console.log('2');
-				console.log(new Date().getTime());
+				console.log( '3' );
+				console.log( new Date().getTime() );
 				
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
@@ -4000,8 +4037,10 @@ window.bp = window.bp || {};
 				}
 				
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+					console.log( 'if' );
 					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
 				} else {
+					console.log( 'else' );
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
 					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
 						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
@@ -4015,13 +4054,14 @@ window.bp = window.bp || {};
 				}
 				this.updateMultiMediaOptions();
 				//Trigger Media click
-				if( window.activityMediaAction !== null ) {
-					console.log('6 if');
-					console.log(new Date().getTime());
+				if ( window.activityMediaAction !== null ) {
+					console.log( '6 if' );
+					console.log( new Date().getTime() );
+					console.log( window.activityMediaAction );
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
-					console.log('6 if 2');
-					console.log(new Date().getTime());
+					console.log( '6 if 2' );
+					console.log( new Date().getTime() );
 				}
 				//Add Overlay
 				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
@@ -4054,13 +4094,17 @@ window.bp = window.bp || {};
 			},
 
 			triggerDisplayFull: function ( event ) {
+				console.log( 'triggerDisplayFull' );
+				console.log( event );
 				event.preventDefault();
 
 				//Check for media click
 				if( $( event.target ).hasClass( 'toolbar-button' ) || $( event.target ).parent().hasClass( 'toolbar-button' ) ) {
+					console.log( 'triggerDisplayFull 1' );
 					window.activityMediaAction = $( event.target ).parent().attr( 'id' );
 				}
 				if( !this.$el.hasClass( 'focus-in' ) ){
+					console.log( 'triggerDisplayFull 2' );
 					//Set focus on "#whats-new" to trigger 'displayFull'
 					var element = this.$el.find( '#whats-new' )[0]; var element_selection = window.getSelection(); var element_range = document.createRange();
 					element_range.setStart( element, 0);
