@@ -398,10 +398,10 @@ window.bp = window.bp || {};
 					function () {
 						if ( true === this.checked ) {
 							$( '.bb-group-elements .bb-group-element-cover-images' ).show();
-							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', true );
+							$( '.bb-group-elements #bb-group-directory-layout-element-cover-images' ).prop( 'checked', true );
 						} else {
 							$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
-							$( '.bb-group-elements #bb-group-element-cover-images' ).prop( 'checked', false );
+							$( '.bb-group-elements #bb-group-directory-layout-element-cover-images' ).prop( 'checked', false );
 						}
 					}
 				);
@@ -424,10 +424,10 @@ window.bp = window.bp || {};
 					function () {
 						if ( true === this.checked ) {
 							$( '.bb-group-elements .bb-group-element-avatars' ).show();
-							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', true );
+							$( '.bb-group-elements #bb-group-directory-layout-element-avatars' ).prop( 'checked', true );
 						} else {
 							$( '.bb-group-elements .bb-group-element-avatars' ).hide();
-							$( '.bb-group-elements #bb-group-element-avatars' ).prop( 'checked', false );
+							$( '.bb-group-elements #bb-group-directory-layout-element-avatars' ).prop( 'checked', false );
 						}
 					}
 				);
@@ -450,10 +450,10 @@ window.bp = window.bp || {};
 					function () {
 						if ( true === this.checked ) {
 							$( '.bb-group-elements .bb-group-element-group-type' ).show();
-							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', true );
+							$( '.bb-group-elements #bb-group-directory-layout-element-group-type' ).prop( 'checked', true );
 						} else {
 							$( '.bb-group-elements .bb-group-element-group-type' ).hide();
-							$( '.bb-group-elements #bb-group-element-group-type' ).prop( 'checked', false );
+							$( '.bb-group-elements #bb-group-directory-layout-element-group-type' ).prop( 'checked', false );
 						}
 					}
 				);

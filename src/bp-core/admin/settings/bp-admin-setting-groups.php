@@ -189,7 +189,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style.
 		$args          = array();
 		$args['class'] = 'group-gride-style group-layout-options ' . esc_attr( $pro_class );
-		$this->add_field( 'bb-group-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
+		$this->add_field( 'bb-group-directory-layout-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Elements.
 		$args = array(
@@ -229,7 +229,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 				),
 			),
 		);
-		$this->add_field( 'bb-group-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
+		$this->add_field( 'bb-group-directory-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.

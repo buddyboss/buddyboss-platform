@@ -2735,8 +2735,8 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
   line-height: 2;
 }
 
-.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-left:checked:checked + .option:before,
-.bb-grid-style-outer .bb-grid-style #bb-group-grid-style-centered:checked:checked + .option:before {
+.bb-grid-style-outer .bb-grid-style #bb-group-directory-layout-grid-style-left:checked:checked + .option:before,
+.bb-grid-style-outer .bb-grid-style #bb-group-directory-layout-grid-style-centered:checked:checked + .option:before {
   border-color: #2370b1;
 }
 

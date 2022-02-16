@@ -2001,7 +2001,7 @@ function bb_admin_setting_group_grid_style() {
 		new BB_Admin_Setting_Fields(
 			array(
 				'type'        => 'radio',
-				'id'          => 'bb-group-grid-style-',
+				'id'          => 'bb-group-directory-layout-grid-style-',
 				'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
 				'disabled'    => true,
 				'opt_wrapper' => true,
@@ -2034,7 +2034,7 @@ function bb_admin_setting_group_grid_style() {
 function bb_admin_setting_group_elements( $args ) {
 
 	echo "<div class='bb-group-elements'>";
-	if ( ! empty( $args[ 'elements' ] ) ) {
+	if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 		foreach ( $args['elements'] as $element ) {
 			$element_name = $element['element_name'];
 			?>
@@ -2043,7 +2043,7 @@ function bb_admin_setting_group_elements( $args ) {
 				new BB_Admin_Setting_Fields(
 					array(
 						'type'     => 'checkbox',
-						'id'       => 'bb-group-element-' . $element_name,
+						'id'       => 'bb-group-directory-layout-element-' . $element_name,
 						'label'    => $element['element_label'],
 						'disabled' => true,
 						'value'    => $element_name,
