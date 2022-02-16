@@ -1845,7 +1845,14 @@ function bp_group_list_admins( $group = false ) {
 
 	if ( ! empty( $group->admins ) ) { ?>
 		<ul id="group-admins">
-			<?php foreach ( (array) $group->admins as $admin ) { ?>
+			<?php
+				$i = 0;
+				foreach ( (array) $group->admins as $admin ) {
+					$i = $i + 1;
+					if( $i > 3 ) {
+						break;
+					}
+			?>
 				<li>
 					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
 						<?php
@@ -1863,6 +1870,23 @@ function bp_group_list_admins( $group = false ) {
 							)
 						);
 						?>
+					</a>
+				</li>
+			<?php } ?>
+			<?php
+			if ( count( (array) $group->admins ) > 3 ) {
+				$member_count = count( (array) $group->admins ) - 3;
+				?>
+				<li>
+					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) . 'members' ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="+
+				<?php
+				$organizer_text = ( $member_count == 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' );
+				printf( '%s ' . $organizer_text, $member_count );
+				?>
+					">
+				<?php
+				echo '<span class="bb-icon bb-icon-menu-dots-h"></span>';
+				?>
 					</a>
 				</li>
 			<?php } ?>
