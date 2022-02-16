@@ -101,7 +101,9 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 
 				<div class="flex align-items-center bp-group-title-wrap">
 					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
-					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<?php if( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
+						<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<?php endif; ?>
 				</div>
 
 				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? bp_nouveau_group_meta()->group_type_list : ''; ?>
