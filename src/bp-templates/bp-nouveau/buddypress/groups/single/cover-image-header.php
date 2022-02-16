@@ -128,7 +128,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				<?php if ( ! bp_nouveau_groups_front_page_description() && bp_nouveau_group_has_meta( 'description' ) ) : ?>
 					<?php if( bb_platform_group_headers_element_enable( 'group-description' ) ) : ?>
 					<div class="group-description">
-						<?php bp_group_description(); ?>
+						<?php bp_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
 					<?php endif; ?>
 				<?php endif; ?>
