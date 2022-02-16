@@ -2890,11 +2890,8 @@ window.bp = window.bp || {};
 		 */
 		 showActionPopup: function( Dom ) {
 
-			if( Dom ) {
-				$( Dom ).show();
-			} else {
-				$('.bb-action-popup').show();
-			}
+			var popup = Dom ? Dom : '.bb-action-popup';
+			$( popup ).show();
 
 		}
 
