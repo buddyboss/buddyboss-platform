@@ -20305,6 +20305,13 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   font-weight: 500;
 }
 
+.moderation-popup .modal-container .bb-model-header .mfp-close {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  right: 20px;
+}
+
 .moderation-popup .modal-container .bb-model-footer {
   text-align: right;
 }
