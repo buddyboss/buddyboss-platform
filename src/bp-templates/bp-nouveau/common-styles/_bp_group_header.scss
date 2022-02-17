@@ -171,9 +171,8 @@
 			-ms-flex-flow: column;
 			flex-flow: column;
 
-			#item-header-avatar {
-				margin-right: auto;
-				margin-left: auto;
+			&:not(.bb-disable-cover-img) #item-header-avatar {
+				margin: -120px auto 0 auto;
 			}
 
 			#item-header-content {
@@ -330,6 +329,11 @@
 				padding-top: $marg-lrg;
 				padding-bottom: $marg-lrg;
 			}
+
+			&.bb-disable-cover-img #item-header-content {
+				padding-top: 0;
+			}
+
 		}
 
 		.group-item-actions {
