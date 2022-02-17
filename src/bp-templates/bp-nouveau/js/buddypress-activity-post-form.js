@@ -1342,11 +1342,13 @@ window.bp = window.bp || {};
 				console.log('initialize');
 				this.model.set( 'video', this.video );
 				
-				if ( ! $( 'body' ).hasClass( 'initial-post-form-open' ) ) {
-					console.log( 'if load ');
-					document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
-					document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
-				}
+				this.listenTo(Backbone, 'activity_video_toggle', this.toggle_video_uploader );
+				this.listenTo(Backbone, 'activity_video_close', this.destroyVideo );
+				// if ( ! $( 'body' ).hasClass( 'initial-post-form-open' ) ) {
+				// 	console.log( 'if load ');
+				// 	document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
+				// 	document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
+				// }
 			},
 
 			toggle_video_uploader: function () {
@@ -2545,8 +2547,9 @@ window.bp = window.bp || {};
 					// check video is enable in groups or not.
 					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-						var videoCloseEvent = new Event( 'activity_video_close' );
-						document.dispatchEvent( videoCloseEvent );
+						Backbone.trigger('activity_video_close');
+						// var videoCloseEvent = new Event( 'activity_video_close' );
+						// document.dispatchEvent( videoCloseEvent );
 					} else {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 					}
@@ -3200,8 +3203,9 @@ window.bp = window.bp || {};
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							var videoCloseEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videoCloseEvent );
+							Backbone.trigger('activity_video_close');
+							// var videoCloseEvent = new Event( 'activity_video_close' );
+							// document.dispatchEvent( videoCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -3238,8 +3242,9 @@ window.bp = window.bp || {};
 						// check video is enable in profile or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							var videoEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videoEvent );
+							Backbone.trigger('activity_video_close');
+							// var videoEvent = new Event( 'activity_video_close' );
+							// document.dispatchEvent( videoEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -3496,8 +3501,10 @@ window.bp = window.bp || {};
 				this.closeGifSelector();
 				console.log('toggleVideoSelector 2');
 				console.log(new Date().getTime());
-				var event = new Event( 'activity_video_toggle' );
-				document.dispatchEvent( event );
+				
+				// var event = new Event( 'activity_video_toggle' );
+				// document.dispatchEvent( event );
+				Backbone.trigger('activity_video_toggle');
 			},
 
 			closeMediaSelector: function () {
@@ -3511,8 +3518,9 @@ window.bp = window.bp || {};
 			},
 
 			closeVideoSelector: function () {
-				var event = new Event( 'activity_video_close' );
-				document.dispatchEvent( event );
+				Backbone.trigger('activity_video_close');
+				// var event = new Event( 'activity_video_close' );
+				// document.dispatchEvent( event );
 			},
 
 			closePickersOnEsc: function ( event ) {
@@ -4539,8 +4547,9 @@ window.bp = window.bp || {};
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							var videoCloseEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videoCloseEvent );
+							Backbone.trigger('activity_video_close');
+							// var videoCloseEvent = new Event( 'activity_video_close' );
+							// document.dispatchEvent( videoCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -4576,8 +4585,9 @@ window.bp = window.bp || {};
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							var videosCloseEvent = new Event( 'activity_video_close' );
-							document.dispatchEvent( videosCloseEvent );
+							// var videosCloseEvent = new Event( 'activity_video_close' );
+							// document.dispatchEvent( videosCloseEvent );
+							Backbone.trigger('activity_video_close');
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
