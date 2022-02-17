@@ -86,9 +86,14 @@
 		background-color: #fff;
 		border-bottom: 1px solid #e7e9eb;
 		box-shadow: none;
+		margin-bottom: 0;
 
 		h3 {
 			margin: 0;
+		}
+
+		.bb-close-action-popup {
+			text-decoration: none;
 		}
 
 	}

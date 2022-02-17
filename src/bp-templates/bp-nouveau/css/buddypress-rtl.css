@@ -6173,10 +6173,15 @@ form.ac-form .ac-reply-content input {
   background-color: #fff;
   border-bottom: 1px solid #e7e9eb;
   box-shadow: none;
+  margin-bottom: 0;
 }
 
 .bb-action-popup .bb-model-header h3 {
   margin: 0;
+}
+
+.bb-action-popup .bb-model-header .bb-close-action-popup {
+  text-decoration: none;
 }
 
 .bb-action-popup .bb-action-popup-content {
@@ -7334,8 +7339,8 @@ body.guillotine-dragging * {
   }
   .groups-header #item-header-cover-image #item-actions,
   .groups-header #item-header-cover-image #item-header-content {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
   .groups-header .group-item-actions {
     margin-right: 15px;
