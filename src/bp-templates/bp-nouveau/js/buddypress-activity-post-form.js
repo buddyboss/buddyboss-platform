@@ -2490,8 +2490,6 @@ window.bp = window.bp || {};
 					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
 						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 						Backbone.trigger( 'activity_media_close' );
-						// var mediaCloseEvent = new Event( 'activity_media_close' );
-						// document.dispatchEvent( mediaCloseEvent );
 					} else {
 						$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 					}
@@ -2500,8 +2498,6 @@ window.bp = window.bp || {};
 					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
 						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 						Backbone.trigger( 'activity_document_close' );
-						// var documentCloseEvent = new Event( 'activity_document_close' );
-						// document.dispatchEvent( documentCloseEvent );
 					} else {
 						$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 					}
@@ -2510,8 +2506,6 @@ window.bp = window.bp || {};
 					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 						Backbone.trigger( 'activity_video_close' );
-						// var videoCloseEvent = new Event( 'activity_video_close' );
-						// document.dispatchEvent( videoCloseEvent );
 					} else {
 						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 					}
@@ -3148,8 +3142,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.group_media === false ) {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 							Backbone.trigger( 'activity_media_close' );
-							// var mediaCloseEvent = new Event( 'activity_media_close' );
-							// document.dispatchEvent( mediaCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 						}
@@ -3158,8 +3150,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.group_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 							Backbone.trigger( 'activity_document_close' );
-							// var documentCloseEvent = new Event( 'activity_document_close' );
-							// document.dispatchEvent( documentCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 						}
@@ -3168,8 +3158,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.video.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							Backbone.trigger( 'activity_video_close' );
-							// var videoCloseEvent = new Event( 'activity_video_close' );
-							// document.dispatchEvent( videoCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -3189,8 +3177,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.profile_media === false ) {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 							Backbone.trigger( 'activity_media_close' );
-							// var event = new Event( 'activity_media_close' );
-							// document.dispatchEvent( event );
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 						}
@@ -3199,8 +3185,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.profile_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 							Backbone.trigger( 'activity_document_close' );
-							// var documentEvent = new Event( 'activity_document_close' );
-							// document.dispatchEvent( documentEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 						}
@@ -3209,8 +3193,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.video.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							Backbone.trigger( 'activity_video_close' );
-							// var videoEvent = new Event( 'activity_video_close' );
-							// document.dispatchEvent( videoEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -3417,8 +3399,6 @@ window.bp = window.bp || {};
 
 			closeGifSelector: function () {
 				Backbone.trigger( 'activity_gif_close' );
-				// var event = new Event( 'activity_gif_close' );
-				// document.dispatchEvent( event );
 			},
 
 			toggleMediaSelector: function ( e ) {
@@ -3433,8 +3413,6 @@ window.bp = window.bp || {};
 				this.closeVideoSelector();
 				
 				Backbone.trigger( 'activity_media_toggle' );
-				// var event = new Event( 'activity_media_toggle' );
-				// document.dispatchEvent( event );
 			},
 
 			toggleDocumentSelector: function ( e ) {
@@ -4468,8 +4446,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.group_media === false ) {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 							Backbone.trigger( 'activity_media_close' );
-							// var mediaCloseEvent = new Event( 'activity_media_close' );
-							// document.dispatchEvent( mediaCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 						}
@@ -4478,8 +4454,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.group_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 							Backbone.trigger( 'activity_document_close' );
-							// var documentCloseEvent = new Event( 'activity_document_close' );
-							// document.dispatchEvent( documentCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 						}
@@ -4488,8 +4462,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.video.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							Backbone.trigger( 'activity_video_close' );
-							// var videoCloseEvent = new Event( 'activity_video_close' );
-							// document.dispatchEvent( videoCloseEvent );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 						}
@@ -4508,8 +4480,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.profile_media === false ) {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 							Backbone.trigger( 'activity_media_close' );
-							// var event = new Event( 'activity_media_close' );
-							// document.dispatchEvent( event );
 						} else {
 							$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
 						}
@@ -4518,8 +4488,6 @@ window.bp = window.bp || {};
 						if ( BP_Nouveau.media.profile_document === false ) {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 							Backbone.trigger( 'activity_document_close' );
-							// var documentEvent = new Event( 'activity_document_close' );
-							// document.dispatchEvent( documentEvent );
 						} else {
 							$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
 						}
@@ -4527,8 +4495,6 @@ window.bp = window.bp || {};
 						// check video is enable in groups or not.
 						if ( BP_Nouveau.video.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							// var videosCloseEvent = new Event( 'activity_video_close' );
-							// document.dispatchEvent( videosCloseEvent );
 							Backbone.trigger( 'activity_video_close' );
 						} else {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
