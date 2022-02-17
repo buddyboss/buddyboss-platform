@@ -2893,7 +2893,7 @@ window.bp = window.bp || {};
 		 */
 		 showActionPopup: function( event ) {
 			event.preventDefault();
-			$( $( this ).attr('id') ).show();
+			$( $( event.currentTarget ).attr('href') ).show();
 		}
 
 	};
