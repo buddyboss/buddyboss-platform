@@ -920,7 +920,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list {
   display: -ms-grid;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(275px, 100%));
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
   -ms-flex-pack: distribute;
   justify-content: space-around;
 }
@@ -972,6 +972,7 @@ a.layout-grid-view {
   -webkit-box-align: start;
   -ms-flex-align: start;
   align-items: flex-start;
+  margin-bottom: 10px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block * {
@@ -1220,7 +1221,7 @@ a.layout-grid-view {
   display: -ms-flexbox;
   display: flex;
   margin-bottom: 15px;
-  padding-right: 15px;
+  margin-right: 0;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {
@@ -1278,18 +1279,6 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap .action .generic-button {
   float: left;
-}
-
-@media screen and (min-width: 32em) {
-  .buddypress-wrap ul.bp-list.groups-dir-list {
-    grid-template-columns: repeat(auto-fit, minmax(275px, 50%));
-  }
-}
-
-@media screen and (min-width: 75em) {
-  .buddypress-wrap ul.bp-list.groups-dir-list {
-    grid-template-columns: repeat(auto-fit, minmax(275px, 33.3333%));
-  }
 }
 
 @media screen and (min-width: 32em) {

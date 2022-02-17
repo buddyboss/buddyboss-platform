@@ -162,7 +162,7 @@
 .buddypress-wrap ul.bp-list.groups-dir-list {
 	display: -ms-grid;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(275px, 100%));
+	grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
 	-ms-flex-pack: distribute;
 	justify-content: space-around;
 
@@ -215,6 +215,7 @@
 				-webkit-box-align: start;
 				-ms-flex-align: start;
 				align-items: flex-start;
+				margin-bottom: $marg-sml;
 
 				* {
 					line-height: 1.4;
@@ -499,7 +500,7 @@
 		display: -ms-flexbox;
 		display: flex;
 		margin-bottom: 15px;
-		padding-right: 15px;
+		margin-right: 0;
 
 		.bs-group-member {
 			max-width: 26px;
@@ -562,14 +563,6 @@
 
 		}
 
-	}
-
-	@include medium-small-up() {
-		grid-template-columns: repeat(auto-fit, minmax(275px, 50%));
-	}
-
-	@include large-up() {
-		grid-template-columns: repeat(auto-fit, minmax(275px, 33.3333%));
 	}
 
 }
