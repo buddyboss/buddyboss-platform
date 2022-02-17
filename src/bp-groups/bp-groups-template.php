@@ -1434,7 +1434,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 	}
 
 	if ( bp_is_single_item() ) {
-		$group_link = '... <a href="#group-description-popup" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . __( 'View more', 'buddyboss' ) . '</a>';
 	} else {
 		$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
 	}
