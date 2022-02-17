@@ -701,7 +701,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
  * @return array|mixed
  */
 function bp_moderation_get_js_dependencies( $js_handles = array() ) {
-	if ( bbp_is_single_topic() ) { // Topic detail page.
+	if ( bp_is_active( 'forums' ) && bbp_is_single_topic() ) { // Topic detail page.
 		$js_handles[] = 'bp-nouveau-magnific-popup';
 	}
 
