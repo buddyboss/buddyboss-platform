@@ -6926,12 +6926,13 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-cover-image #item-header-content .group-item-actions .bp-title {
-  margin-left: 5px;
+  margin: 0 0 0 5px;
 }
 
 #item-header-cover-image #item-header-content .group-item-actions .moderators-lists .user-list,
 #item-header-cover-image #item-header-content .group-item-actions .moderators-lists .user-list ul {
   padding: 0;
+  margin-bottom: 0;
 }
 
 #item-header-avatar img {
@@ -7287,11 +7288,15 @@ body.guillotine-dragging * {
 }
 
 .groups-header #cover-image-container #item-header-content .group-description {
-  margin-bottom: 10px;
+  margin: 0 0 12px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-description p {
   margin-bottom: 0;
+}
+
+.groups-header #cover-image-container #item-header-content .last-activity {
+  margin: 0 0 12px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute {

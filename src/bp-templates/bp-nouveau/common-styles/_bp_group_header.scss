@@ -265,12 +265,16 @@
 		#item-header-content {
 
 			.group-description {
-				margin-bottom: $marg-sml;
+				margin: 0 0 12px;
 
 				p {
 					margin-bottom: 0;
 				}
 
+			}
+
+			.last-activity {
+				margin: 0 0 12px;
 			}
 
 			.group-actions-absolute {

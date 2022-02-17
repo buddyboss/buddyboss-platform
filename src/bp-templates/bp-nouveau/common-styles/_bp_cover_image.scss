@@ -174,12 +174,13 @@
 			text-align: left;
 
 			.bp-title {
-				margin-right: $marg-xsml;
+				margin: 0 $marg-xsml 0 0;
 			}
 
 			.moderators-lists .user-list,
 			.moderators-lists .user-list ul {
 				padding: 0;
+				margin-bottom: 0;
 			}
 		}
 
