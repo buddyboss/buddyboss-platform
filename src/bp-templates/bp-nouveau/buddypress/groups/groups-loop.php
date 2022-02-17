@@ -23,13 +23,18 @@ bp_nouveau_before_loop(); ?>
 
 <?php
 
-$cover_class     = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
-$meta_privacy    = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
-$meta_group_type = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
-$group_members   = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
-$join_butto      = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
-$group_alignment = bb_platform_group_grid_style( 'left' );
+$cover_class        = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
+$meta_privacy       = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
+$meta_group_type    = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
+$group_members      = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
+$join_butto         = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
+$group_alignment    = bb_platform_group_grid_style( 'left' );
+$group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_get_group_cover_image_height() : 'small';
 
+$group_cover_height_class = 'cover-large';
+if ( 'small' === $group_cover_height ) {
+	$group_cover_height_class = '';
+}
 ?>
 
 <?php if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) : ?>
@@ -58,7 +63,7 @@ $group_alignment = bb_platform_group_grid_style( 'left' );
 							);
 							$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
 							?>
-							<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
+							<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' ' . $group_cover_height_class ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 
 						<?php } ?>
 					<?php } ?>
