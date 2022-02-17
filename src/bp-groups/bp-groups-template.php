@@ -4258,7 +4258,7 @@ function bp_get_group_join_button( $group = false ) {
 				'data-title'           => __( 'Leave group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
 				'data-bb-group-name'   => esc_attr( $group->name ),
-				'data-bb-group-link'   => bp_get_group_permalink( $group )
+				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) )
 			),
 		);
 
