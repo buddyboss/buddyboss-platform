@@ -1433,7 +1433,11 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 		$group =& $groups_template->group;
 	}
 
-	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+	if ( bp_is_single_item() ) {
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+	} else {
+		$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+	}
 	/**
 	 * Filters the excerpt of a group description.
 	 *
@@ -1847,29 +1851,29 @@ function bp_group_list_admins( $group = false ) {
 		<ul id="group-admins">
 			<?php
 				$i = 0;
-				foreach ( (array) $group->admins as $admin ) {
-					$i = $i + 1;
-					if( $i > 3 ) {
-						break;
-					}
-			?>
+			foreach ( (array) $group->admins as $admin ) {
+				$i = $i + 1;
+				if ( $i > 3 ) {
+					break;
+				}
+				?>
 				<li>
 					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
-						<?php
-						echo bp_core_fetch_avatar(
-							array(
-								'item_id' => $admin->user_id,
-								'email'   => $admin->user_email,
-								'alt'     => sprintf(
-									__(
-										'Profile photo of %s',
-										'buddyboss'
-									),
-									bp_core_get_user_displayname( $admin->user_id )
+					<?php
+					echo bp_core_fetch_avatar(
+						array(
+							'item_id' => $admin->user_id,
+							'email'   => $admin->user_email,
+							'alt'     => sprintf(
+								__(
+									'Profile photo of %s',
+									'buddyboss'
 								),
-							)
-						);
-						?>
+								bp_core_get_user_displayname( $admin->user_id )
+							),
+						)
+					);
+					?>
 					</a>
 				</li>
 			<?php } ?>
