@@ -1106,6 +1106,8 @@ window.bp = window.bp || {};
 
 				self.$el.find( '#activity-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
+				console.log('open_media_uploader End');
+				console.log(new Date().getTime());
 			}
 
 		}
@@ -1327,6 +1329,8 @@ window.bp = window.bp || {};
 
 				self.$el.find( '#activity-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
+				console.log('open_document_uploader End');
+				console.log(new Date().getTime());
 			}
 
 		}
@@ -1565,6 +1569,8 @@ window.bp = window.bp || {};
 				self.$el.find( '#activity-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-attachments' ).removeClass( 'empty' ).closest( '#whats-new-form' ).addClass( 'focus-in--attm' );
 				$( '#whats-new-form' ).closest( 'body' ).addClass( 'video-post-form-open' );
+				console.log('open_video_uploader End');
+				console.log(new Date().getTime());
 			},
 
 			createVideoThumbnailFromUrl: function ( mock_file ) {
@@ -3907,6 +3913,8 @@ window.bp = window.bp || {};
 			},
 
 			displayFull: function ( event ) {
+				console.log('displayFull start');
+				console.log(new Date().getTime());
 				if ( 6 !== this.views._views[ '' ].length ) {
 					return;
 				}
@@ -4002,6 +4010,8 @@ window.bp = window.bp || {};
 					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
 				}
 				this.activityHideModalEvent();
+				console.log('displayFull End');
+				console.log(new Date().getTime());
 			},
 
 			activityHideModalEvent: function () {
