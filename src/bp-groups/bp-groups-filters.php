@@ -34,7 +34,6 @@ add_filter( 'bp_get_group_description_excerpt', 'make_clickable', 9 );
 add_filter( 'bp_get_group_name', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_permalink', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_description', 'bp_groups_filter_kses', 1 );
-add_filter( 'bp_get_group_description_excerpt', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_name_before_save', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_description_before_save', 'bp_groups_filter_kses', 1 );
 
