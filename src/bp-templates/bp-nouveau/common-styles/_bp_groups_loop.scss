@@ -76,7 +76,7 @@
 }
 
 //Leave group confirmation popups
-.bb-leave-group-popup {
+.bb-action-popup {
 
 	.modal-container {
 		padding-bottom: 0;
@@ -86,15 +86,23 @@
 		background-color: #fff;
 		border-bottom: 1px solid #e7e9eb;
 		box-shadow: none;
+		margin-bottom: 0;
 
 		h3 {
 			margin: 0;
 		}
 
+		.bb-close-action-popup {
+			text-decoration: none;
+		}
+
 	}
 
-	.bb-leave-group-content {
-		padding: 20px 0;
+	.bb-action-popup-content {
+		margin: 0 -30px;
+		max-height: calc(100vh - 220px);
+		overflow: auto;
+		padding: 20px 30px;
 
 		p {
 			margin-bottom: 0;
@@ -114,6 +122,10 @@
 		.bb-close-leave-group {
 			color: #92949d;
 			margin-right: 20px;
+		}
+
+		.push-right {
+			float: none;
 		}
 
 	}

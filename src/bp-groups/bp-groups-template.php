@@ -1433,7 +1433,11 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 		$group =& $groups_template->group;
 	}
 
-	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+	if ( bp_is_single_item() ) {
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . __( 'View more', 'buddyboss' ) . '</a>';
+	} else {
+		$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+	}
 	/**
 	 * Filters the excerpt of a group description.
 	 *
@@ -1845,24 +1849,48 @@ function bp_group_list_admins( $group = false ) {
 
 	if ( ! empty( $group->admins ) ) { ?>
 		<ul id="group-admins">
-			<?php foreach ( (array) $group->admins as $admin ) { ?>
+			<?php
+				$i = 0;
+			foreach ( (array) $group->admins as $admin ) {
+				$i = $i + 1;
+				if ( $i > 3 ) {
+					break;
+				}
+				?>
 				<li>
 					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
-						<?php
-						echo bp_core_fetch_avatar(
-							array(
-								'item_id' => $admin->user_id,
-								'email'   => $admin->user_email,
-								'alt'     => sprintf(
-									__(
-										'Profile photo of %s',
-										'buddyboss'
-									),
-									bp_core_get_user_displayname( $admin->user_id )
+					<?php
+					echo bp_core_fetch_avatar(
+						array(
+							'item_id' => $admin->user_id,
+							'email'   => $admin->user_email,
+							'alt'     => sprintf(
+								__(
+									'Profile photo of %s',
+									'buddyboss'
 								),
-							)
-						);
-						?>
+								bp_core_get_user_displayname( $admin->user_id )
+							),
+						)
+					);
+					?>
+					</a>
+				</li>
+			<?php } ?>
+			<?php
+			if ( count( (array) $group->admins ) > 3 ) {
+				$member_count = count( (array) $group->admins ) - 3;
+				?>
+				<li>
+					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) . 'members' ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="+
+				<?php
+				$organizer_text = ( $member_count == 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' );
+				printf( '%s ' . $organizer_text, $member_count );
+				?>
+					">
+				<?php
+				echo '<span class="bb-icon bb-icon-menu-dots-h"></span>';
+				?>
 					</a>
 				</li>
 			<?php } ?>
@@ -4229,6 +4257,8 @@ function bp_get_group_join_button( $group = false ) {
 			'button_attr'       => array(
 				'data-title'           => esc_html__( 'Leave group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
+				'data-bb-group-name'   => esc_attr( $group->name ),
+				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) )
 			),
 		);
 
@@ -7812,6 +7842,42 @@ function bp_group_get_video_album_status( $group_id = false ) {
 	 * @param int    $group_id      ID of the group whose status is being checked.
 	 */
 	return apply_filters( 'bp_group_get_video_album_status', $album_status, $group_id );
+}
+
+/**
+ * Checks if default platform group element is enabled.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $element Group element.
+ * @return bool Is group element enabled or not
+ */
+function bb_platform_group_headers_element_enable( $element ) {
+
+	if ( function_exists( 'bb_platform_pro_group_headers_element_enable' ) ) {
+		return bb_platform_pro_group_headers_element_enable( $element );
+	}
+
+	return true;
+}
+
+/**
+ * Get group grid style setting
+ *
+ * @since [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: left.
+ *
+ * @return string grid style for group directory
+ */
+function bb_platform_group_header_style( $default = 'left' ) {
+
+	if ( function_exists( 'bb_platform_pro_group_header_style' ) ) {
+		return bb_platform_pro_group_header_style( $default );
+	}
+
+	return $default;
 }
 
 /**

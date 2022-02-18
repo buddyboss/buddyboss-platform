@@ -803,6 +803,33 @@ function bp_profile_photos_tutorial() {
 	<?php
 }
 
+/** Group Headers ************************************************************/
+
+/**
+ * Link to Group Headers Settings tutorial
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_group_headers_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62811, // TODO : need to be update Tutorial
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
 /** Group Photos ************************************************************/
 
 /**
@@ -1990,6 +2017,77 @@ function bp_admin_setting_group_layout_default_option() {
 }
 
 /**
+ * Admin Settings for Settings > Groups > Group Headers > Header style
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_group_header_style() {
+	?>
+	<div class="bb-header-style-outer">
+		<?php
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-group-header-style-',
+				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? esc_html__( 'Right', 'buddyboss' ) : esc_html__ ( 'Left', 'buddyboss' ),
+						'class' => 'option opt-left',
+					),
+					'centered' => array(
+						'label' => esc_html__ ( 'Centered', 'buddyboss' ),
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
+		?>
+	</div>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow Platform default group header elements setting field
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Field options.
+ */
+function bb_admin_setting_group_headers_elements( $args ) {
+
+	echo "<div class='bb-group-headers-elements'>";
+	foreach ( $args['elements'] as $element ) {
+		$element_name = $element['element_name'];
+		?>
+		<div class="bb-group-headers-element bb-group-headers-element-<?php echo esc_attr( $element_name ); ?>">
+			<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'     => 'checkbox',
+					'id'       => 'bb-group-headers-element-' . $element_name,
+					'label'    => $element['element_label'],
+					'disabled' => true,
+					'value'    => $element_name,
+					'selected' => $element_name,
+				)
+			);
+			?>
+		</div>
+		<?php
+	}
+	echo '</div>';
+	echo '<p class="description">';
+	echo esc_html__( 'Select which elements to show in your group headers.', 'buddyboss' );
+	echo '</p>';
+
+}
+
+/**
  * Admin Settings for Settings > Groups > Group Directories > Grid style
  *
  * @since BuddyBoss [BBVERSION]
@@ -2008,11 +2106,11 @@ function bb_admin_setting_group_grid_style() {
 				'value'       => 'left',
 				'options'     => array(
 					'left'     => array(
-						'label' => is_rtl() ? 'Right' : 'Left',
+						'label' => is_rtl() ? esc_html__( 'Right', 'buddyboss' ): esc_html__( 'Left', 'buddyboss' ),
 						'class' => 'option opt-left',
 					),
 					'centered' => array(
-						'label' => 'Centered',
+						'label' => esc_html__( 'Centered', 'buddyboss' ),
 						'class' => 'option opt-centered',
 					),
 				),
@@ -2020,7 +2118,7 @@ function bb_admin_setting_group_grid_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_html_e( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2057,7 +2155,7 @@ function bb_admin_setting_group_elements( $args ) {
 	}
 	echo '</div>';
 	echo '<p class="description">';
-	echo esc_attr__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
+	echo esc_html__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
 	echo '</p>';
 }
 
@@ -2516,3 +2614,4 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
 	<?php
 }
+
