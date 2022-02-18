@@ -4834,3 +4834,64 @@ function bb_enabled_profile_header_layout_element( $element = 'online-status' ) 
 	return (bool) function_exists( 'bb_platform_pro_profile_header_element_enable' ) ? bb_platform_pro_profile_header_element_enable( $element ) : true;
 }
 
+/**
+ * Check the member directory element is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $element Member directory element.
+ *                        Default: online-status.
+ *
+ * @return bool True if member directory element is enabled otherwise false.
+ */
+function bb_enabled_member_directory_element( $element = 'online-status' ) {
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_element' ) ? bb_platform_pro_enable_member_directory_element( $element ) : true;
+}
+
+/**
+ * Get enabled the profile actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Return selected profile actions.
+ */
+function bb_get_enabled_member_directory_profile_actions() {
+	return function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : ( function_exists( 'bb_get_member_directory_profile_actions' ) ? array_column( bb_get_member_directory_profile_actions(), 'element_name' ) : array() );
+}
+
+/**
+ * Check the member profile action is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $action Member directory profile action.
+ *                            Default: null.
+ *
+ * @return bool True if member profile action is enabled otherwise false.
+ */
+function bb_enabled_member_directory_profile_action( $action = '' ) {
+
+	if ( empty( $action ) ) {
+		return false;
+	}
+
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_profile_action' ) ? bb_platform_pro_enable_member_directory_profile_action( $action ) : true;
+}
+
+/**
+ * Get the primary action for member directories.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return the primary action for member directories.
+ */
+function bb_get_member_directory_primary_action() {
+
+	// If enabled follow component then return follow as primary action.
+	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+		return 'follow';
+	}
+
+	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : '';
+}
+

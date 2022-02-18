@@ -1659,6 +1659,51 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// Show/hide Profile action for member directories section.
+			$( '#bp_profile_list_settings' ).on(
+				'change',
+				'.member-directory-profile-actions input[type="checkbox"]',
+				function () {
+
+					var member_profile_actions      = []; // Create an array for primary action field to hide/show.
+					var selected_member_actions_arr = []; // Create an array for primary action option.
+					$( '.member-directory-profile-actions input[type="checkbox"]:checked' ).each(
+						function ( i, e ) {
+							member_profile_actions.push( e.value );
+							selected_member_actions_arr.push( BP_ADMIN.member_directories.profile_actions.filter( function (actions) { return actions.element_name === e.value; } ) );
+						}
+					);
+
+					// Remove the options when checked/unchecked profile actions.
+					$( '.member-directory-profile-primary-action select' ).find( 'option:not(:first)' ).remove();
+					$.each(
+						selected_member_actions_arr,
+						function(key, value) {
+
+							// Add the options when checked/unchecked profile actions.
+							if ( typeof value[0] !== 'undefined' && typeof value[0].element_name !== 'undefined' && typeof value[0].element_label !== 'undefined' ) {
+								$( '.member-directory-profile-primary-action select' )
+									.append(
+										$( '<option></option>' )
+											.attr( 'value', value[0].element_name )
+											.text( value[0].element_label )
+									);
+							}
+						}
+					);
+
+					if ( 0 === member_profile_actions.length ) {
+						// Hide the primary action field if no profile actions selected.
+						$( '.member-directory-profile-primary-action' ).addClass( 'bp-hide' );
+						// Default none selected if no profile actions selected.
+						$( '.member-directory-profile-primary-action select' ).find( 'option:eq(0)' ).prop( 'selected', true );
+					} else {
+						// Show the primary action field if profile actions selected.
+						$( '.member-directory-profile-primary-action' ).removeClass( 'bp-hide' );
+					}
+				}
+			);
+
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',
