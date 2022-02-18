@@ -252,6 +252,20 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-preview-profile-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_profile_avatar_cover', 'string', $args );
 		}
 
+		// Section for Profile Headers.
+		$this->add_section( 'bp_profile_headers_settings', esc_html__( 'Profile Headers', 'buddyboss' ), '', 'bp_profile_headers_tutorial' );
+
+		// Profile headers style.
+		$args          = array();
+		$args['class'] = 'profile-header-style profile-header-layout-options ' . esc_attr( $pro_class );
+		$this->add_field( 'bb-profile-headers-layout-style', esc_html__( 'Header Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_headers_style', 'radio', $args );
+
+		// Profile elements.
+		$args             = array();
+		$args['class']    = 'profile-header-elements ' . esc_attr( $pro_class );
+		$args['elements'] = function_exists( 'bb_get_profile_header_elements' ) ? bb_get_profile_header_elements() : array();
+		$this->add_field( 'bb-profile-headers-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_header_elements', 'checkbox', $args );
+
 		// @todo will use this later on
 		// Section for profile dashboard.
 		// $this->add_section( 'bp_profile_dashboard_settings', __( 'Profile Dashboard', 'buddyboss' ) );

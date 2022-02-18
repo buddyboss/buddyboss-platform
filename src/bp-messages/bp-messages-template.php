@@ -1462,7 +1462,7 @@ function bp_get_send_message_button( $args = '' ) {
 			'message_receiver_user_id' => $receiver_user_id,
 			'wrapper_id'               => 'send-private-message',
 			'link_href'                => bp_get_send_private_message_link(),
-			'link_text'                => __( 'Message', 'buddyboss' ),
+			'link_text'                => __( 'Send Message', 'buddyboss' ),
 			'link_class'               => 'send-message',
 		)
 	);

@@ -397,11 +397,16 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'wrapper_class'       => 'friendship-button pending_friend',
 					'wrapper_id'          => 'friendship-button-' . $potential_friend_id,
 					'link_href'           => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/cancel/' . $potential_friend_id . '/', 'friends_withdraw_friendship' ),
-					'link_text'           => __( 'Cancel connection request', 'buddyboss' ),
+					'link_text'           => __( 'Request Sent', 'buddyboss' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
-					'link_class'          => 'friendship-button pending_friend requested',
-				), $button_args
+					'link_class'          => 'friendship-button pending_friend requested bp-toggle-action-button',
+					'button_attr'         => array(
+						'data-title'           => __( 'Cancel Request', 'buddyboss' ),
+						'data-title-displayed' => __( 'Request Sent', 'buddyboss' ),
+					),
+				),
+				$button_args
 			);
 			break;
 
@@ -439,7 +444,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'link_text'           => __( 'Connected', 'buddyboss' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
-					'link_class'          => 'friendship-button is_friend remove bp-toggle-action-button',
+					'link_class'          => 'friendship-button is_friend remove bp-toggle-action-button bp-toggle-action-button',
 					'button_attr'         => array(
 						'data-title'           => __( 'Remove Connection', 'buddyboss' ),
 						'data-title-displayed' => __( 'Connected', 'buddyboss' ),
