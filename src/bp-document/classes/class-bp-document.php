@@ -309,8 +309,8 @@ class BP_Document {
 			case 'menu_order':
 				break;
 
-			case 'include':
-				$r['order_by'] = 'include';
+			case 'in':
+				$r['order_by'] = 'in';
 				break;
 
 			default:
@@ -318,6 +318,11 @@ class BP_Document {
 				break;
 		}
 		$order_by = 'd.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(d.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
@@ -329,10 +334,7 @@ class BP_Document {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "d.id IN ({$in})";
-			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
-				$order_by = "FIELD(d.id, {$in})";
-				$sort     = '';
-			}
+
 			// we want to disable limit query when include document ids.
 			$r['page']     = false;
 			$r['per_page'] = false;

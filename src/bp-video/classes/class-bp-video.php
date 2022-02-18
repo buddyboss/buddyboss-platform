@@ -373,8 +373,8 @@ class BP_Video {
 			case 'menu_order':
 				break;
 
-			case 'include':
-				$r['order_by'] = 'include';
+			case 'in':
+				$r['order_by'] = 'in';
 				break;
 
 			default:
@@ -382,6 +382,11 @@ class BP_Video {
 				break;
 		}
 		$order_by = 'm.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(m.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
@@ -393,10 +398,6 @@ class BP_Video {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
-			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
-				$order_by = "FIELD(m.id, {$in})";
-				$sort     = '';
-			}
 
 			// we want to disable limit query when include video ids.
 			$r['page']     = false;

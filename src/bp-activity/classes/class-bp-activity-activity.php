@@ -724,7 +724,7 @@ class BP_Activity_Activity {
 				// populate the has_more_items flag.
 				$activity_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 			}
-			error_log( $activity_ids_sql );
+
 			/**
 			 * Filters the paged activities MySQL statement.
 			 *
