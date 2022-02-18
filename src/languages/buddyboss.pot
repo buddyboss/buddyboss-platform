@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-14 09:17:10+00:00\n"
+"POT-Creation-Date: 2022-02-18 10:05:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1000,7 +1000,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2792
 #: bp-core/bp-core-attachments.php:926
-#: bp-forums/classes/class-bp-forums-component.php:561
+#: bp-forums/classes/class-bp-forums-component.php:563
 #: bp-forums/replies/template.php:2224
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
@@ -1269,7 +1269,7 @@ msgid "Spam <span class=\"count\">(%s)</span>"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:380
-#: bp-forums/classes/class-bp-forums-component.php:581
+#: bp-forums/classes/class-bp-forums-component.php:583
 msgid "Mark as Spam"
 msgstr ""
 
@@ -1323,9 +1323,9 @@ msgstr ""
 #: bp-forums/admin.php:46 bp-forums/admin.php:231 bp-forums/admin.php:274
 #: bp-forums/classes/class-bbpress.php:451
 #: bp-forums/classes/class-bp-forums-component.php:38
-#: bp-forums/classes/class-bp-forums-component.php:193
-#: bp-forums/classes/class-bp-forums-component.php:282
-#: bp-forums/classes/class-bp-forums-component.php:333
+#: bp-forums/classes/class-bp-forums-component.php:195
+#: bp-forums/classes/class-bp-forums-component.php:284
+#: bp-forums/classes/class-bp-forums-component.php:335
 #: bp-forums/classes/class-bp-forums-notification.php:59
 #: bp-forums/common/widgets.php:728 bp-forums/core/actions.php:350
 #: bp-forums/forums/template.php:49 bp-media/bp-media-filters.php:1413
@@ -1803,8 +1803,8 @@ msgid "My Groups"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-details-endpoint.php:274
-#: bp-forums/classes/class-bp-forums-component.php:238
-#: bp-forums/classes/class-bp-forums-component.php:306
+#: bp-forums/classes/class-bp-forums-component.php:240
+#: bp-forums/classes/class-bp-forums-component.php:308
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1165
 msgid "My Favorites"
 msgstr ""
@@ -4241,7 +4241,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:226 bp-forums/admin/settings.php:247
 #: bp-forums/admin/tools.php:1773 bp-forums/admin/topics.php:676
 #: bp-forums/admin.php:237 bp-forums/admin.php:293
-#: bp-forums/classes/class-bp-forums-component.php:215
+#: bp-forums/classes/class-bp-forums-component.php:217
 #: bp-forums/forums/template.php:2818 bp-forums/groups.php:53
 #: bp-forums/templates/default/bbpress/content-statistics.php:27
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
@@ -4256,7 +4256,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:234 bp-forums/admin/settings.php:255
 #: bp-forums/admin/tools.php:1774 bp-forums/admin/topics.php:678
 #: bp-forums/admin.php:249 bp-forums/admin.php:312
-#: bp-forums/classes/class-bp-forums-component.php:226
+#: bp-forums/classes/class-bp-forums-component.php:228
 #: bp-forums/core/theme-compat.php:667 bp-forums/forums/template.php:2887
 #: bp-forums/replies/template.php:49 bp-forums/replies/template.php:50
 #: bp-forums/templates/default/bbpress/content-statistics.php:32
@@ -11010,13 +11010,13 @@ msgid "Revisions"
 msgstr ""
 
 #: bp-forums/admin/settings.php:138
-#: bp-forums/classes/class-bp-forums-component.php:238
+#: bp-forums/classes/class-bp-forums-component.php:240
 msgid "Favorites"
 msgstr ""
 
 #: bp-forums/admin/settings.php:146 bp-forums/admin/settings.php:374
-#: bp-forums/classes/class-bp-forums-component.php:251
-#: bp-forums/classes/class-bp-forums-component.php:314
+#: bp-forums/classes/class-bp-forums-component.php:253
+#: bp-forums/classes/class-bp-forums-component.php:316
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1174
 msgid "Subscriptions"
 msgstr ""
@@ -12194,49 +12194,49 @@ msgstr ""
 msgid "Search Forums&hellip;"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:215
-#: bp-forums/classes/class-bp-forums-component.php:290
+#: bp-forums/classes/class-bp-forums-component.php:217
+#: bp-forums/classes/class-bp-forums-component.php:292
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1149
 msgid "My Discussions"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:226
-#: bp-forums/classes/class-bp-forums-component.php:298
+#: bp-forums/classes/class-bp-forums-component.php:228
+#: bp-forums/classes/class-bp-forums-component.php:300
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1155
 msgid "My Replies"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:492
+#: bp-forums/classes/class-bp-forums-component.php:494
 #: bp-forums/forums/template.php:56
 msgid "Edit Forum"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:501
+#: bp-forums/classes/class-bp-forums-component.php:503
 #: bp-forums/topics/template.php:56
 msgid "Edit Discussion"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:510
+#: bp-forums/classes/class-bp-forums-component.php:512
 msgid "Open Discussion"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:510
+#: bp-forums/classes/class-bp-forums-component.php:512
 msgid "Close Discussion"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:527
+#: bp-forums/classes/class-bp-forums-component.php:529
 msgid "Merge Discussion"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:542
+#: bp-forums/classes/class-bp-forums-component.php:544
 msgid "Restore from Trash"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:542
+#: bp-forums/classes/class-bp-forums-component.php:544
 msgid "Move to Trash"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-component.php:581
+#: bp-forums/classes/class-bp-forums-component.php:583
 msgid "Mark as Unspam"
 msgstr ""
 
