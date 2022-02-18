@@ -163,13 +163,24 @@
 		}
 
 		.group-item-actions {
+
+			@include center-vert();
+			-webkit-box-orient: horizontal;
+			-webkit-box-direction: normal;
+			-ms-flex-direction: row;
+			flex-direction: row;
 			margin: 0;
 			max-width: 100%;
 			text-align: left;
 
+			.bp-title {
+				margin: 0 $marg-xsml 0 0;
+			}
+
 			.moderators-lists .user-list,
 			.moderators-lists .user-list ul {
 				padding: 0;
+				margin-bottom: 0;
 			}
 		}
 

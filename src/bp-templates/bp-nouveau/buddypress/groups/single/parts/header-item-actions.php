@@ -17,6 +17,7 @@
 
 	<?php if ( bp_current_user_can( 'groups_access_group' ) ) : ?>
 
+		<?php if( bb_platform_group_headers_element_enable( 'group-organizers' ) ) : ?>
 		<h2 class="bp-screen-reader-text"><?php printf( __( 'Group %s', 'buddyboss' ), get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ); ?></h2>
 
 		<dl class="moderators-lists">
@@ -25,6 +26,7 @@
 				<?php bp_nouveau_group_hook( 'after', 'menu_admins' ); ?>
 			</dd>
 		</dl>
+		<?php endif; ?>
 
 	<?php endif; ?>
 
