@@ -514,7 +514,8 @@ class BP_Invitation {
 				$conditions['order_by'] = "{$order_by}";
 			}
 
-			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+			// Support order by fields for generally.
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
 				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
 				$conditions['order_by'] = "FIELD(i.id, {$in})";
 			}
@@ -524,7 +525,7 @@ class BP_Invitation {
 		if ( ! empty( $args['sort_order'] ) ) {
 			$sort_order               = bp_esc_sql_order( $args['sort_order'] );
 			$conditions['sort_order'] = "{$sort_order}";
-			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
 				$conditions['sort_order'] = '';
 			}
 		}

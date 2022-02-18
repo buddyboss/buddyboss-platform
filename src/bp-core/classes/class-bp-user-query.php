@@ -359,8 +359,8 @@ class BP_User_Query {
 
 				break;
 
-			// 'include' sorts by the 'included id' users.
-			case 'include':
+			// Support order by fields for generally.
+			case 'in':
 				$this->uid_name  = 'ID';
 				$this->uid_table = $wpdb->users;
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
