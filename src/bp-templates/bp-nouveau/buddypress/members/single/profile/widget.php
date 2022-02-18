@@ -46,7 +46,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 					$user_progress_status = ( 0 === $single_section_details['completed'] && $single_section_details['total'] > 0 ) ? 'progress_not_started' : '';
 					?>
 
-					<li class="single_section_wrap
+					<li class="single_section_wrap 
 					<?php
 					echo ( $single_section_details['is_group_completed'] ) ? esc_attr( 'completed ' ) : esc_attr( 'incomplete ' );
 					echo esc_attr( $user_progress_status );
