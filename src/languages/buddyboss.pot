@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-17 09:29:53+00:00\n"
+"POT-Creation-Date: 2022-02-18 07:01:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -552,15 +552,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:30
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:27
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:146
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:153
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:60
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:203
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:158
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:61
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:210
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:147
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:88
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:26
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:27
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:37
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:54
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:55
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:36
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:27
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:27
@@ -1990,7 +1990,7 @@ msgid "New post published"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:478
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:475
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
@@ -2063,8 +2063,8 @@ msgstr ""
 #: bp-members/bp-members-template.php:1016
 #: bp-members/bp-members-template.php:1690
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1475
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:99
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:123
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:104
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:130
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:74
 #. translators: last active format.
 #. translators: %s = last activity timestamp (e.g. "active 1 hour ago")
@@ -2215,7 +2215,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:281
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:119
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:187
-#: bp-core/bp-core-functions.php:782 bp-core/bp-core-update.php:885
+#: bp-core/bp-core-functions.php:782 bp-core/bp-core-update.php:893
 msgid "Sites"
 msgstr ""
 
@@ -2975,8 +2975,8 @@ msgid "All Groups"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2804
+#: bp-core/admin/settings/bp-admin-setting-groups.php:184
 #: bp-core/admin/settings/bp-admin-setting-groups.php:187
-#: bp-core/admin/settings/bp-admin-setting-groups.php:190
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
 #: bp-groups/bp-groups-admin.php:2581 bp-groups/bp-groups-functions.php:3572
@@ -3042,16 +3042,25 @@ msgstr ""
 msgid "Reporting Categories"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3318
+#: bp-core/admin/bp-core-admin-functions.php:3320
+msgid "Update to"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3321
+msgid "BuddyBoss Platform Pro 1.2.0"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3322
+#: bp-core/admin/bp-core-admin-functions.php:3329
+msgid "to unlock"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:3327
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3319
+#: bp-core/admin/bp-core-admin-functions.php:3328
 msgid "BuddyBoss Platform Pro"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:3320
-msgid "to unlock"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:36
@@ -3159,15 +3168,15 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1368
 #: bp-core/admin/bp-core-admin-settings.php:1748
 #: bp-core/admin/bp-core-admin-settings.php:1868
-#: bp-core/admin/bp-core-admin-settings.php:2181
-#: bp-core/admin/bp-core-admin-settings.php:2257
-#: bp-core/admin/bp-core-admin-settings.php:2296
-#: bp-core/admin/bp-core-admin-settings.php:2323
-#: bp-core/admin/bp-core-admin-settings.php:2463
+#: bp-core/admin/bp-core-admin-settings.php:2183
+#: bp-core/admin/bp-core-admin-settings.php:2259
+#: bp-core/admin/bp-core-admin-settings.php:2298
+#: bp-core/admin/bp-core-admin-settings.php:2325
+#: bp-core/admin/bp-core-admin-settings.php:2465
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:526
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:582
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:664
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:523
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:579
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:661
 #: bp-core/classes/class-bp-admin-tab.php:311
 #: bp-integrations/learndash/bp-learndash-functions.php:421
 #: bp-integrations/learndash/bp-learndash-functions.php:444
@@ -3218,7 +3227,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1763
 #: bp-core/admin/bp-core-admin-settings.php:1791
 #: bp-core/admin/bp-core-admin-settings.php:1819
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:358
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:355
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
@@ -3234,7 +3243,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1773
 #: bp-core/admin/bp-core-admin-settings.php:1801
 #: bp-core/admin/bp-core-admin-settings.php:1838
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:360
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:357
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -3746,21 +3755,21 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1970
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:595
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:592
 msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1971
 #: bp-core/admin/bp-core-admin-settings.php:2002
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:596
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:627
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:593
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:624
 msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1972
 #: bp-core/admin/bp-core-admin-settings.php:2003
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:597
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:628
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:594
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:625
 msgid "List"
 msgstr ""
 
@@ -3771,7 +3780,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2032
-#: bp-core/admin/settings/bp-admin-setting-groups.php:120
+#: bp-core/admin/settings/bp-admin-setting-groups.php:117
 msgid "Header Style"
 msgstr ""
 
@@ -3801,7 +3810,7 @@ msgid "Select which elements to show in your group headers."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2103
-#: bp-core/admin/settings/bp-admin-setting-groups.php:231
+#: bp-core/admin/settings/bp-admin-setting-groups.php:228
 msgid "Grid Style"
 msgstr ""
 
@@ -3811,144 +3820,144 @@ msgid ""
 "will only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2156
+#: bp-core/admin/bp-core-admin-settings.php:2158
 msgid ""
 "Select which elements show in group directories. Cover images will only "
 "display in grid view and group descriptions will only display in list view."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2198
+#: bp-core/admin/bp-core-admin-settings.php:2200
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2199
+#: bp-core/admin/bp-core-admin-settings.php:2201
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2206
+#: bp-core/admin/bp-core-admin-settings.php:2208
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2232
+#: bp-core/admin/bp-core-admin-settings.php:2234
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2271
+#: bp-core/admin/bp-core-admin-settings.php:2273
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2339
+#: bp-core/admin/bp-core-admin-settings.php:2341
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2340
+#: bp-core/admin/bp-core-admin-settings.php:2342
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2358
+#: bp-core/admin/bp-core-admin-settings.php:2360
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2366
+#: bp-core/admin/bp-core-admin-settings.php:2368
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2384
+#: bp-core/admin/bp-core-admin-settings.php:2386
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2385
+#: bp-core/admin/bp-core-admin-settings.php:2387
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2399
+#: bp-core/admin/bp-core-admin-settings.php:2401
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2400
+#: bp-core/admin/bp-core-admin-settings.php:2402
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2415
+#: bp-core/admin/bp-core-admin-settings.php:2417
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2416
+#: bp-core/admin/bp-core-admin-settings.php:2418
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2417
+#: bp-core/admin/bp-core-admin-settings.php:2419
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2418
+#: bp-core/admin/bp-core-admin-settings.php:2420
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2419
+#: bp-core/admin/bp-core-admin-settings.php:2421
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2420
+#: bp-core/admin/bp-core-admin-settings.php:2422
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2421
+#: bp-core/admin/bp-core-admin-settings.php:2423
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2422
+#: bp-core/admin/bp-core-admin-settings.php:2424
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2423
+#: bp-core/admin/bp-core-admin-settings.php:2425
 msgid "5 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2524
+#: bp-core/admin/bp-core-admin-settings.php:2526
 msgid "Restrict REST APIs access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2530
+#: bp-core/admin/bp-core-admin-settings.php:2532
 #. translators: Registration link.
 msgid "Login and %s APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2533
+#: bp-core/admin/bp-core-admin-settings.php:2535
 #: bp-core/admin/settings/bp-admin-setting-general.php:48
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 msgid "Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2554
+#: bp-core/admin/bp-core-admin-settings.php:2556
 #. translators: Settings link.
 msgid ""
 "Your BuddyBoss App is currently public. To restrict access to REST APIs for "
 "logged-out members, please enable \"Private App\" in the %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2557
+#: bp-core/admin/bp-core-admin-settings.php:2559
 msgid "BuddyBoss App's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2585
+#: bp-core/admin/bp-core-admin-settings.php:2587
 msgid ""
 "Enter REST API endpoints URLs or URI fragments (e.g. "
 "wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
 "one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2599
+#: bp-core/admin/bp-core-admin-settings.php:2601
 msgid "Restrict RSS Feeds access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2611
+#: bp-core/admin/bp-core-admin-settings.php:2613
 msgid ""
 "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
 "publicly visible always. Enter one endpoint URL or URI per line. "
@@ -4025,9 +4034,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
 #: bp-core/admin/bp-core-admin-tools.php:120
-#: bp-core/admin/settings/bp-admin-setting-groups.php:259
+#: bp-core/admin/settings/bp-admin-setting-groups.php:256
 #: bp-core/bp-core-functions.php:783 bp-core/bp-core-template.php:561
-#: bp-core/bp-core-update.php:887 bp-core/classes/class-bp-email-tokens.php:417
+#: bp-core/bp-core-update.php:895 bp-core/classes/class-bp-email-tokens.php:417
 #: bp-forums/admin/topics.php:679 bp-groups/bp-groups-admin.php:1426
 #: bp-groups/bp-groups-admin.php:2082 bp-groups/bp-groups-functions.php:4102
 #: bp-groups/bp-groups-functions.php:4121
@@ -4087,7 +4096,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:111
 #: bp-core/admin/settings/bp-admin-setting-groups.php:24
 #: bp-core/bp-core-functions.php:781 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:886 bp-core/gdpr/class-bp-group-export.php:27
+#: bp-core/bp-core-update.php:894 bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
 #: bp-groups/bp-groups-admin.php:38 bp-groups/bp-groups-admin.php:48
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
@@ -4557,27 +4566,27 @@ msgstr ""
 msgid "Groups Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:104
+#: bp-core/admin/settings/bp-admin-setting-groups.php:101
 #: bp-core/deprecated/buddypress/2.1.php:374
 msgid "Group Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:107
+#: bp-core/admin/settings/bp-admin-setting-groups.php:104
 msgid "Group Creation"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:111
+#: bp-core/admin/settings/bp-admin-setting-groups.php:108
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:741
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:223
 msgid "Group Messages"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:115
+#: bp-core/admin/settings/bp-admin-setting-groups.php:112
 msgid "Group Headers"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:128
-#: bp-core/admin/settings/bp-admin-setting-groups.php:251
+#: bp-core/admin/settings/bp-admin-setting-groups.php:125
+#: bp-core/admin/settings/bp-admin-setting-groups.php:248
 #: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
 #: bp-groups/bp-groups-admin.php:1981 bp-groups/bp-groups-admin.php:2309
 #: bp-groups/bp-groups-functions.php:3580
@@ -4587,124 +4596,124 @@ msgstr ""
 msgid "Group Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:132
-#: bp-core/admin/settings/bp-admin-setting-groups.php:255
+#: bp-core/admin/settings/bp-admin-setting-groups.php:129
+#: bp-core/admin/settings/bp-admin-setting-groups.php:252
 #: bp-core/gdpr/class-bp-group-export.php:130
 msgid "Last Activity"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:136
+#: bp-core/admin/settings/bp-admin-setting-groups.php:133
 #: bp-core/gdpr/class-bp-group-export.php:99 bp-groups/bp-groups-admin.php:797
 #: bp-groups/bp-groups-admin.php:900
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/edit-details.php:29
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:173
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:180
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:117
 #. translators: accessibility text
 msgid "Group Description"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:140
+#: bp-core/admin/settings/bp-admin-setting-groups.php:137
 msgid "Group Organizers"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:144
-#: bp-core/admin/settings/bp-admin-setting-groups.php:247
+#: bp-core/admin/settings/bp-admin-setting-groups.php:141
+#: bp-core/admin/settings/bp-admin-setting-groups.php:244
 #: bp-groups/bp-groups-admin.php:1210
 msgid "Group Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:148
-#: bp-core/admin/settings/bp-admin-setting-groups.php:271
+#: bp-core/admin/settings/bp-admin-setting-groups.php:145
+#: bp-core/admin/settings/bp-admin-setting-groups.php:268
 msgid "Elements"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:151
+#: bp-core/admin/settings/bp-admin-setting-groups.php:148
 msgid "Group Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:154
+#: bp-core/admin/settings/bp-admin-setting-groups.php:151
 msgid "Group Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:158
+#: bp-core/admin/settings/bp-admin-setting-groups.php:155
 msgid "Default Group Avatar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:162
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:230
+#: bp-core/admin/settings/bp-admin-setting-groups.php:159
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:227
 msgid "Upload Custom Avatar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:166
+#: bp-core/admin/settings/bp-admin-setting-groups.php:163
 msgid "Group Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:170
+#: bp-core/admin/settings/bp-admin-setting-groups.php:167
 msgid "Default Group Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:174
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:247
+#: bp-core/admin/settings/bp-admin-setting-groups.php:171
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:244
 msgid "Upload Custom Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:178
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:251
+#: bp-core/admin/settings/bp-admin-setting-groups.php:175
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:248
 msgid "Cover Image Sizes"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:183
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:255
+#: bp-core/admin/settings/bp-admin-setting-groups.php:180
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:252
 msgid "Preview Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:193
+#: bp-core/admin/settings/bp-admin-setting-groups.php:190
 msgid "Auto Membership Approval"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:196
+#: bp-core/admin/settings/bp-admin-setting-groups.php:193
 msgid "Group Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:201
+#: bp-core/admin/settings/bp-admin-setting-groups.php:198
 msgid "Hierarchies"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:206
+#: bp-core/admin/settings/bp-admin-setting-groups.php:203
 msgid "Hide Subgroups"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:211
+#: bp-core/admin/settings/bp-admin-setting-groups.php:208
 msgid "Restrict Invitations"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:214
+#: bp-core/admin/settings/bp-admin-setting-groups.php:211
 msgid "Group Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:219
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:298
+#: bp-core/admin/settings/bp-admin-setting-groups.php:216
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:295
 msgid "Enabled View(s)"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:226
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:305
+#: bp-core/admin/settings/bp-admin-setting-groups.php:223
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:302
 msgid "Default View"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:239
+#: bp-core/admin/settings/bp-admin-setting-groups.php:236
 msgid "Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:243
+#: bp-core/admin/settings/bp-admin-setting-groups.php:240
 msgid "Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:263
+#: bp-core/admin/settings/bp-admin-setting-groups.php:260
 msgid "Group Descriptions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-groups.php:267
+#: bp-core/admin/settings/bp-admin-setting-groups.php:264
 msgid "Join Buttons"
 msgstr ""
 
@@ -4831,50 +4840,50 @@ msgstr ""
 msgid "Profiles"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:174
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:171
 msgid "Profile Names"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:179
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:176
 msgid "Display Name Format"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:186
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:191
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:196
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:183
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:188
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:193
 msgid "Display Name Fields"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:212
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:209
 msgid "Profile Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:214
 msgid "Profile Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:219
 msgid "Upload Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:226
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:223
 msgid "Default Profile Avatar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:235
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:232
 msgid "Enable Gravatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:239
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:236
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:243
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:240
 msgid "Default Profile Cover Image"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:267
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:270
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:273
 #: bp-members/bp-members-functions.php:3064
 #: bp-members/bp-members-functions.php:3067
 #: bp-xprofile/bp-xprofile-admin.php:1100
@@ -4883,16 +4892,16 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:278
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:275
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:283
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:280
 msgid "Default Profile Type"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:284
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:287
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:290
 #: bp-core/profile-search/bps-start.php:59
 #: bp-core/profile-search/bps-start.php:62
 #: bp-core/profile-search/bps-start.php:247
@@ -4900,53 +4909,53 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:293
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:290
 msgid "Profile Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:325
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:322
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:330
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:327
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:349
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:346
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:359
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:356
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:379
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:376
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:405
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:402
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:416
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:413
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:429
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:426
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:447
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:444
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:462
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:459
 #: bp-members/classes/class-bp-members-admin.php:1389
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:240
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:263
@@ -4958,7 +4967,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:488
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:485
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -4966,15 +4975,15 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:545
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:542
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:556
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:553
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:614
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:611
 msgid ""
 "Display profile/member directories in Grid View, List View, or allow "
 "toggling between both views."
@@ -7094,23 +7103,23 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1065
+#: bp-core/bp-core-options.php:1053
 msgid "30 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1069
+#: bp-core/bp-core-options.php:1057
 msgid "7 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1073
+#: bp-core/bp-core-options.php:1061
 msgid "1 Day"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1077
+#: bp-core/bp-core-options.php:1065
 msgid "1 Hour"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1081
+#: bp-core/bp-core-options.php:1069
 msgid "10 Minutes"
 msgstr ""
 
@@ -7240,26 +7249,26 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:884
+#: bp-core/bp-core-update.php:892
 msgid "Site-Wide Activity"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1256
+#: bp-core/bp-core-update.php:1264
 #: bp-templates/bp-nouveau/includes/video/functions.php:311
 msgid "MP4"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1264
+#: bp-core/bp-core-update.php:1272
 #: bp-templates/bp-nouveau/includes/video/functions.php:319
 msgid "WebM"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1272
+#: bp-core/bp-core-update.php:1280
 #: bp-templates/bp-nouveau/includes/video/functions.php:327
 msgid "Ogg"
 msgstr ""
 
-#: bp-core/bp-core-update.php:1280
+#: bp-core/bp-core-update.php:1288
 #: bp-templates/bp-nouveau/includes/video/functions.php:335
 msgid "Quicktime"
 msgstr ""
@@ -8262,8 +8271,8 @@ msgid "Visit Group"
 msgstr ""
 
 #: bp-core/classes/class-bp-email-tokens.php:443
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:144
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:194
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:149
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:201
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:138
 msgid "Leave Group"
 msgstr ""
@@ -8645,13 +8654,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -11641,8 +11650,8 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:1216 bp-groups/bp-groups-admin.php:1568
 #: bp-groups/classes/class-bp-group-extension.php:524
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:61
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:55
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:62
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:56
 #: bp-templates/bp-nouveau/includes/functions.php:1458
 #: bp-templates/bp-nouveau/includes/functions.php:1489
 #: bp-templates/bp-nouveau/includes/functions.php:1500
@@ -21029,30 +21038,24 @@ msgstr ""
 msgid "View As"
 msgstr ""
 
-#: bp-members/bp-members-template.php:2817
-msgid "<b>0</b> followers"
+#: bp-members/bp-members-template.php:2820
+#: bp-members/bp-members-template.php:2833
+#. translators: Follower string.
+#. translators: 1: Total followers count. 2: Follower string.
+msgid "followers"
 msgstr ""
 
-#: bp-members/bp-members-template.php:2819
-msgid "<b>1</b> follower"
+#: bp-members/bp-members-template.php:2826
+#. translators: Follower string.
+msgid "follower"
 msgstr ""
 
-#: bp-members/bp-members-template.php:2823
-#. translators: Total followers count.
-msgid "<b>%s</b> followers"
-msgstr ""
-
-#: bp-members/bp-members-template.php:2865
-msgid "<b>0</b> following"
-msgstr ""
-
-#: bp-members/bp-members-template.php:2867
-msgid "<b>1</b> following"
-msgstr ""
-
-#: bp-members/bp-members-template.php:2871
-#. translators: Total following count.
-msgid "<b>%s</b> following"
+#: bp-members/bp-members-template.php:2877
+#: bp-members/bp-members-template.php:2883
+#: bp-members/bp-members-template.php:2890
+#. translators: Following string.
+#. translators: 1: Total following count. 2: Following string.
+msgid "following"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-members-switching.php:86
@@ -21461,8 +21464,8 @@ msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:2531
 #: bp-moderation/screens/block-member-form.php:76
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:154
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:204
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:159
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:211
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:148
 msgid "Confirm"
 msgstr ""
@@ -25226,8 +25229,8 @@ msgstr ""
 msgid "Group creation menu"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:150
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:200
+#: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:155
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:207
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:144
 msgid "Are you sure you want to leave "
 msgstr ""
@@ -25325,8 +25328,8 @@ msgid "Upload Cover Photo"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-cover-image.php:36
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:50
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:45
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:51
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:46
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-cover-image.php:13
 msgid "Change Cover Photo"
 msgstr ""
@@ -25392,22 +25395,22 @@ msgstr ""
 msgid "(banned)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:56
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:50
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:57
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:51
 msgid "Reposition Cover Photo"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:62
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:56
-msgid "Drag to move cover photo"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:63
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:57
+msgid "Drag to move cover photo"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:64
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:58
 msgid "Cover photo"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:75
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:29
 msgid "Change Group Photo"
 msgstr ""
@@ -25697,7 +25700,7 @@ msgstr ""
 msgid "Sorry, no %s were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:70
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:71
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:22
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
 msgid "Change Profile Photo"
@@ -29888,15 +29891,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 

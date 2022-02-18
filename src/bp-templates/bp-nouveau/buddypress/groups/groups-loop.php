@@ -175,4 +175,3 @@ if ( 'small' === $group_cover_height ) {
 
 <?php
 bp_nouveau_after_loop();
-

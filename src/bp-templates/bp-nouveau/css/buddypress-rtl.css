@@ -920,7 +920,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list {
   display: -ms-grid;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(275px, 100%));
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
   -ms-flex-pack: distribute;
   justify-content: space-around;
 }
@@ -1300,18 +1300,6 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap .action .generic-button {
   float: right;
-}
-
-@media screen and (min-width: 32em) {
-  .buddypress-wrap ul.bp-list.groups-dir-list {
-    grid-template-columns: repeat(auto-fit, minmax(275px, 50%));
-  }
-}
-
-@media screen and (min-width: 75em) {
-  .buddypress-wrap ul.bp-list.groups-dir-list {
-    grid-template-columns: repeat(auto-fit, minmax(275px, 33.3333%));
-  }
 }
 
 @media screen and (min-width: 32em) {
@@ -21460,7 +21448,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {
