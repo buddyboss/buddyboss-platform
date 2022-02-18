@@ -27,7 +27,7 @@ $cover_class        = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb
 $meta_privacy       = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
 $meta_group_type    = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
 $group_members      = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
-$join_butto         = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
+$join_button        = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
 $group_alignment    = bb_platform_group_grid_style( 'left' );
 $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_get_group_cover_image_height() : 'small';
 
