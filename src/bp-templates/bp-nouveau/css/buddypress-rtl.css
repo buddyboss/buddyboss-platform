@@ -7216,6 +7216,10 @@ body.guillotine-dragging * {
   width: 100%;
 }
 
+.groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .group-description {
+  text-align: center;
+}
+
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-content .bp-group-title-wrap .bp-group-status .group-visibility {
   display: none;
 }
