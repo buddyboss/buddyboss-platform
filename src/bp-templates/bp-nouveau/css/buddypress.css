@@ -2836,40 +2836,6 @@ input.search-query-input {
   }
 }
 
-#bp-nouveau-activity-form.loading {
-  background-color: rgba(250, 251, 253, 0.9);
-  height: 100%;
-  left: 0;
-  max-height: 100%;
-  position: fixed;
-  padding: 10px 0;
-  top: 0;
-  width: 100%;
-  z-index: 999991;
-}
-
-.activity-update-form.loading:before {
-  animation: spin 3s infinite linear;
-  -webkit-animation: spin 3s infinite linear;
-  content: "\e838";
-  display: inline-block;
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 18px;
-  left: 50%;
-  line-height: 1;
-  margin-left: 10px;
-  position: absolute;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  vertical-align: middle;
-}
-
-.activity-update-form.loading form {
-  opacity: 0;
-}
-
 .media-support-hide,
 .document-support-hide,
 .video-support-hide,

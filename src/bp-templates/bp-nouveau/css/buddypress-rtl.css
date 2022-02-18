@@ -2836,40 +2836,6 @@ input.search-query-input {
   }
 }
 
-#bp-nouveau-activity-form.loading {
-  background-color: rgba(250, 251, 253, 0.9);
-  height: 100%;
-  right: 0;
-  max-height: 100%;
-  position: fixed;
-  padding: 10px 0;
-  top: 0;
-  width: 100%;
-  z-index: 999991;
-}
-
-.activity-update-form.loading:before {
-  animation: spin 3s infinite linear;
-  -webkit-animation: spin 3s infinite linear;
-  content: "\e838";
-  display: inline-block;
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 18px;
-  right: 50%;
-  line-height: 1;
-  margin-right: 10px;
-  position: absolute;
-  text-align: center;
-  transform: translate(50%, -50%);
-  top: 50%;
-  vertical-align: middle;
-}
-
-.activity-update-form.loading form {
-  opacity: 0;
-}
-
 .media-support-hide,
 .document-support-hide,
 .video-support-hide,
@@ -20791,7 +20757,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
