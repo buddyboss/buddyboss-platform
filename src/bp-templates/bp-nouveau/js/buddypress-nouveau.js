@@ -697,6 +697,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
+			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
+			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -1768,21 +1770,20 @@ window.bp = window.bp || {};
 
 			//show popup if it is leave_group action
 			var leave_group_popup = $( '.bb-leave-group-popup' );
-			var leave_group = $( target ).closest( '.item-entry' );
-			var leave_group_anchor = leave_group.find( '.groups-title' ).html();
-			var group_section = $( '.groups-list' );
+			var leave_group__name = $( target ).data( 'bb-group-name' );
+			var leave_group_anchor__link = $( target ).data( 'bb-group-link' );
 			if( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
 				if( leave_group_popup.length ) {
-					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( leave_group_anchor );
-					group_section.find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); //Add clicked class mannually to run function.
+					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '<a href="'+ leave_group_anchor__link +'">'+ leave_group__name +'</a>' );
+					$( 'body' ).find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); //Add clicked class manually to run function.
 					leave_group_popup.show();
 					$( target ).attr( 'data-current-anchor', 'true' );
 					$( target ).attr( 'data-popup-shown', 'true' );
 					return false;
 				}
 			} else {
-				group_section.find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
-				group_section.find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
+				$( 'body' ).find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
+				$( 'body' ).find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
 				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html('');
 				leave_group_popup.hide();
 			}
@@ -2023,9 +2024,8 @@ window.bp = window.bp || {};
 		 */
 		 leaveGroupAction: function ( event ) {
 			event.preventDefault();
-			var group_section = $( '.groups-list' );
-			group_section.find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
-			group_section.find( '[data-current-anchor="true"]').trigger( 'click' );
+			$( 'body' ).find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
+			$( 'body' ).find( '[data-current-anchor="true"]').trigger( 'click' );
 		},
 
 		/**
@@ -2037,11 +2037,10 @@ window.bp = window.bp || {};
 		 leaveGroupClose: function ( event ) {
 			event.preventDefault();
 			var target = $( event.currentTarget );
-			var group_section = $( '.groups-list' );
 			var leave_group_popup = $( target ).closest( '.bb-leave-group-popup' );
 
-			group_section.find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
-			group_section.find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
+			$( 'body' ).find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
+			$( 'body' ).find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
 			leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html('');
 			leave_group_popup.hide();
 		},
@@ -2874,6 +2873,26 @@ window.bp = window.bp || {};
 		isURL: function ( URL ) {
 			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 			return regexp.test( $.trim( URL ) );
+		},
+
+		/**
+		 *  Close Action Popup
+		 *  @param  {object} event The event object.
+		 *  @return {function} 
+		 */
+		closeActionPopup: function( event ) {
+			event.preventDefault();
+			$(this).closest('.bb-action-popup').hide();
+		},
+
+		/**
+		 *  Show Action Popup
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		 showActionPopup: function( event ) {
+			event.preventDefault();
+			$( $( event.currentTarget ).attr('href') ).show();
 		}
 
 	};

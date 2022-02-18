@@ -459,6 +459,10 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
 }
 
+.bp-admin-card.section-bp_groups_headers_settings h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/regular/window-maximize.svg);
+}
+
 .bp-admin-card.section-bp_groups_types h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/cubes.svg);
 	background-size: 20px 20px;
@@ -2843,8 +2847,86 @@ table tbody td .bb-description {
 /*------------------------------------------------------------------------------
  * 13.0 Group Directories Enhancement
  *----------------------------------------------------------------------------*/
-.bb-group-element {
+.bb-group-element,
+.bb-group-headers-element {
 	margin-bottom: 10px;
+}
+
+.bb-header-style-outer {
+	display: flex;
+
+	.bb-header-style {
+		display: flex;
+		flex-direction: column;
+		margin-right: 15px;
+		text-align: center;
+		width: 115px;
+
+		input[type="radio"] {
+			height: 0;
+			opacity: 0;
+			visibility: hidden;
+		}
+
+		.option {
+			display: flex;
+			color: #999;
+			flex-direction: column;
+			position: relative;
+
+			&:before {
+				background: #f9f9f9;
+				border: 2px solid #ccd0d4;
+				border-radius: 5px;
+				box-sizing: border-box;
+				content: "";
+				display: flex;
+				height: 115px;
+				margin-bottom: 5px;
+				transition: all 0.3s ease;
+				width: 100%;
+			}
+
+			&:after {
+				background-size: cover !important;
+				content: "";
+				border-radius: 3px;
+				bottom: 30px;
+				left: 6px;
+				position: absolute;
+				right: 6px;
+				top: 6px;
+			}
+
+			&.opt-left:after {
+				background: url(../../images/bb-group-header-left.png) no-repeat center;
+
+				html[dir="rtl"] & {
+					background: url(../../images/bb-group-header-right.png) no-repeat center;
+				}
+
+			}
+
+			&.opt-centered:after {
+				background: url(../../images/bb-group-header-center.png) no-repeat center;
+			}
+
+			span {
+				color: #999;
+				font-size: 14px;
+				line-height: 2;
+			}
+
+		}
+
+		#bb-group-header-style-left:checked:checked + .option,
+		#bb-group-header-style-centered:checked:checked + .option {
+
+			&:before {
+				border-color: #2370b1;
+			}
+		}
+	}
 }
 
 .bb-grid-style-outer {
@@ -2920,8 +3002,11 @@ table tbody td .bb-description {
 			&:before {
 				border-color: #2370b1;
 			}
+
 		}
+
 	}
+
 }
 
 /*------------------------------------------------------------------------------
