@@ -10,15 +10,16 @@
 
 $has_cover_image          = '';
 $has_cover_image_position = '';
-$displayed_user           = bp_get_displayed_user();
+$has_default_cover        = bb_attachment_get_cover_image_class( bp_displayed_user_id(), 'user' );
+$profile_cover_width      = bb_get_profile_cover_image_width();
+$profile_cover_height     = bb_get_profile_cover_image_height();
 $cover_image_url          = bp_attachments_get_attachment(
 	'url',
 	array(
 		'object_dir' => 'members',
-		'item_id'    => $displayed_user->id,
+		'item_id'    => bp_displayed_user_id(),
 	)
 );
-$has_default_cover        = bb_attachment_get_cover_image_class( $displayed_user->id, 'user' );
 
 if ( ! empty( $cover_image_url ) ) {
 	$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
@@ -28,13 +29,19 @@ if ( ! empty( $cover_image_url ) ) {
 	}
 }
 
-$profile_cover_width  = bb_get_profile_cover_image_width();
-$profile_cover_height = bb_get_profile_cover_image_height();
+$profile_header_layout_style = bb_get_profile_header_layout_style();
+$is_enabled_online_status    = bb_enabled_profile_header_layout_element( 'online-status' );
+$is_enabled_profile_type     = bb_enabled_profile_header_layout_element( 'profile-type' );
+$is_enabled_member_handle    = bb_enabled_profile_header_layout_element( 'member-handle' );
+$is_enabled_joined_date      = bb_enabled_profile_header_layout_element( 'joined-date' );
+$is_enabled_last_active      = bb_enabled_profile_header_layout_element( 'last-active' );
+$is_enabled_followers        = bb_enabled_profile_header_layout_element( 'followers' );
+$is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
 ?>
 
 <?php if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) : ?>
 
-	<div id="cover-image-container">
+	<div id="cover-image-container" class="<?php echo esc_attr( $profile_header_layout_style ); ?>">
 		<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $profile_cover_height . ' width-' . $profile_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
 			<?php
 			if ( ! empty( $cover_image_url ) ) {
@@ -47,7 +54,7 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 					<i class="bb-icon-edit-thin"></i>
 				</a>
 
-				<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( $displayed_user->id ) ) { ?>
+				<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) { ?>
 					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-move"></i>
 					</a>
@@ -68,6 +75,11 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 
 			<div id="item-header-avatar">
 				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
+					<?php
+					if ( $is_enabled_online_status ) {
+						bb_current_user_status( bp_displayed_user_id() );
+					}
+					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-edit-thin"></i>
 					</a>
@@ -82,8 +94,9 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 					<div class="bb-user-content-wrap">
 						<div class="flex align-items-center member-title-wrap">
 							<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_displayed_user_id() ) ); ?></h2>
+
 							<?php
-							if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
+							if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
 								echo wp_kses_post( bp_get_user_member_type( bp_displayed_user_id() ) );
 							}
 							?>
@@ -91,18 +104,18 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 
 						<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
 
-						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_nouveau_member_has_meta() ) : ?>
+						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_get_last_activity() || bb_get_member_joined_date() ) : ?>
 							<div class="item-meta">
 								<?php
 								$nickname_field_id = bp_xprofile_nickname_field_id();
 								$hidden_fields     = bp_xprofile_get_hidden_fields_for_user();
 
-								if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && ! in_array( $nickname_field_id, $hidden_fields, true ) ) :
+								if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && ! in_array( $nickname_field_id, $hidden_fields, true ) && $is_enabled_member_handle ) :
 									?>
 									<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
 								<?php endif; ?>
 
-								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields, true ) ) : ?>
+								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_get_last_activity() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields, true ) && $is_enabled_member_handle && ( $is_enabled_last_active || $is_enabled_joined_date ) ) : ?>
 									<span class="separator">&bull;</span>
 								<?php endif; ?>
 
@@ -110,19 +123,36 @@ $profile_cover_height = bb_get_profile_cover_image_height();
 								bp_nouveau_member_hook( 'before', 'in_header_meta' );
 								bp_nouveau_member_hook( 'before', 'header_meta' );
 
-								if ( bp_nouveau_member_has_meta() ) :
-									bp_nouveau_member_meta();
+								if ( bp_get_last_activity() && $is_enabled_last_active ) :
+									echo wp_kses_post( bp_get_last_activity() );
+								endif;
+								?>
+
+								<?php if ( bp_get_last_activity() && bb_get_member_joined_date() && $is_enabled_last_active && $is_enabled_joined_date ) : ?>
+									<span class="separator">&bull;</span>
+								<?php endif; ?>
+
+								<?php
+								if ( bb_get_member_joined_date() && $is_enabled_joined_date ) :
+									echo wp_kses_post( bb_get_member_joined_date() );
 								endif;
 								?>
 
 							</div>
 						<?php endif; ?>
 
-						<?php if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) { ?>
+						<?php if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) { ?>
 							<div class="flex align-items-top member-social">
 								<div class="flex align-items-center">
-									<?php bb_get_followers_count(); ?>
-									<?php bb_get_following_count(); ?>
+									<?php
+									if ( $is_enabled_followers ) {
+										bb_get_followers_count();
+									}
+
+									if ( $is_enabled_following ) {
+										bb_get_following_count();
+									}
+									?>
 								</div>
 								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
