@@ -891,9 +891,24 @@ window.bp = window.bp || {};
 							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 							unwrapTags: []
 						},
-						imageDragging: false
+						imageDragging: false,
+						anchor: {
+							linkValidation: true
+						}
 					}
 				);
+
+				$( document ).on ( 'keyup', '#bp-group-message-content .medium-editor-toolbar-input', function( event ) {
+
+					var URL = event.target.value;
+					
+					if ( bp.Nouveau.isURL( URL ) ) {
+						$( event.target ).removeClass('isNotValid').addClass('isValid');
+					} else {
+						$( event.target ).removeClass('isValid').addClass('isNotValid');
+					}
+
+				});
 
 				window.group_messages_editor.subscribe(
 					'editableInput',

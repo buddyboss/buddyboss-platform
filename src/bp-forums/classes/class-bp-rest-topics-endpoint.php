@@ -2666,7 +2666,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				)
 			),
 			'moderate'     => ! empty( $topic ) && current_user_can( 'moderate', $topic_id ),
-			'reply'        => ! empty( $topic ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $form_id, true ),
+			'reply'        => $this->can_reply( $topic->ID, $form_id ),
 			'trash'        => ! empty( $topic ) && current_user_can( 'delete_topic', $topic->ID ),
 		);
 	}
@@ -2848,5 +2848,30 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// Filter & return.
 		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
+	}
+
+	/**
+	 * Verify if user is able to add topic reply or not.
+	 *
+	 * @param int $topic_id Topic ID.
+	 * @param int $forum_id Forum ID.
+	 *
+	 * @return bool
+	 */
+	public function can_reply( $topic_id, $forum_id ) {
+
+		if ( empty( $topic_id ) || empty( $forum_id ) ) {
+			return false;
+		}
+
+		if ( bbp_is_user_keymaster() ) {
+			return true;
+		}
+
+		if ( ! bbp_is_topic_closed( $topic_id ) && ! bbp_is_forum_closed( $forum_id ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $forum_id, true ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

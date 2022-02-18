@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the reply
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/reply.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $reply_id = get_the_ID();
 $topic_id = bbp_get_reply_topic_id($reply_id);
 ?>

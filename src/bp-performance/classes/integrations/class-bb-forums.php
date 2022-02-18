@@ -66,45 +66,53 @@ class BB_Forums extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'save_post_forum'                       => 1, // When forum created.
-			'edit_post_forum'                       => 1, // When forum updated.
-			'trashed_post'                          => 1, // When forum trashed.
-			'untrashed_post'                        => 1, // When forum untrashed.
-			'deleted_post'                          => 1, // When forum deleted.
-			'bbp_add_user_subscription'             => 2, // When user subscribe forum.
-			'bbp_remove_user_subscription'          => 2, // When user remove forum's subscribe.
-			'bbp_new_topic'                         => 2, // When new topic created, update count and last topic id and author id.
-			'bbp_edit_topic'                        => 2, // When topic updated, update count and last topic id and author id.
-			'bbp_new_reply'                         => 3, // When new reply created, update count and last reply id and author id.
-			'bbp_edit_reply'                        => 3, // When reply updated, update count and last reply id and author id.
-			'bbp_merged_topic'                      => 3, // When topic merged, update count and last reply id and author id.
-			'bbp_post_move_reply'                   => 3, // When reply moved, update count and last reply id and author id.
-			'bbp_post_split_topic'                  => 3, // When split topic, update count and last reply id and author id.
+			'save_post_forum'                                    => 1, // When forum created.
+			'edit_post_forum'                                    => 1, // When forum updated.
+			'trashed_post'                                       => 1, // When forum trashed.
+			'untrashed_post'                                     => 1, // When forum untrashed.
+			'deleted_post'                                       => 1, // When forum deleted.
+			'bbp_add_user_subscription'                          => 2, // When user subscribe forum.
+			'bbp_remove_user_subscription'                       => 2, // When user remove forum's subscribe.
+			'bbp_new_topic'                                      => 2, // When new topic created, update count and last topic id and author id.
+			'bbp_edit_topic'                                     => 2, // When topic updated, update count and last topic id and author id.
+			'bbp_new_reply'                                      => 3, // When new reply created, update count and last reply id and author id.
+			'bbp_edit_reply'                                     => 3, // When reply updated, update count and last reply id and author id.
+			'bbp_merged_topic'                                   => 3, // When topic merged, update count and last reply id and author id.
+			'bbp_post_move_reply'                                => 3, // When reply moved, update count and last reply id and author id.
+			'bbp_post_split_topic'                               => 3, // When split topic, update count and last reply id and author id.
 
 			// Group Embed data.
-			'bp_group_admin_edit_after'             => 1, // When forum Group change form admin.
-			'groups_group_details_edited'           => 1, // When forum Group Details updated form Manage.
-			'groups_group_settings_edited'          => 1, // When forum Group setting updated form Manage.
-			'bp_group_admin_after_edit_screen_save' => 1, // When Group forums setting Manage.
-			'groups_avatar_uploaded'                => 1, // When forum Group avarar updated form Manage.
-			'groups_cover_image_uploaded'           => 1, // When forum Group cover photo uploaded form Manage.
-			'groups_cover_image_deleted'            => 1, // When forum Group cover photo deleted form Manage.
+			'bp_group_admin_edit_after'                          => 1, // When forum Group change form admin.
+			'groups_group_details_edited'                        => 1, // When forum Group Details updated form Manage.
+			'groups_group_settings_edited'                       => 1, // When forum Group setting updated form Manage.
+			'bp_group_admin_after_edit_screen_save'              => 1, // When Group forums setting Manage.
+			'groups_avatar_uploaded'                             => 1, // When forum Group avarar updated form Manage.
+			'groups_cover_image_uploaded'                        => 1, // When forum Group cover photo uploaded form Manage.
+			'groups_cover_image_deleted'                         => 1, // When forum Group cover photo deleted form Manage.
 
 			// Added moderation support.
-			'bp_suspend_groups_suspended'           => 1, // Any Group Suspended.
-			'bp_suspend_groups_unsuspended'         => 1, // Any Group Unsuspended.
-			'bp_suspend_forum_suspended'            => 1, // Any Forum Suspended.
-			'bp_suspend_forum_unsuspended'          => 1, // Any Forum Unsuspended.
-			'bp_suspend_forum_topic_suspended'      => 1, // Any Forum Topic Suspended.
-			'bp_suspend_forum_topic_unsuspended'    => 1, // Any Forum Topic Unsuspended.
-			'bp_suspend_forum_reply_suspended'      => 1, // Any Forum Reply Suspended.
-			'bp_suspend_forum_reply_unsuspended'    => 1, // Any Forum Reply Unsuspended.
+			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
+			'bp_suspend_groups_unsuspended'                      => 1, // Any Group Unsuspended.
+			'bp_suspend_forum_suspended'                         => 1, // Any Forum Suspended.
+			'bp_suspend_forum_unsuspended'                       => 1, // Any Forum Unsuspended.
+			'bp_suspend_forum_topic_suspended'                   => 1, // Any Forum Topic Suspended.
+			'bp_suspend_forum_topic_unsuspended'                 => 1, // Any Forum Topic Unsuspended.
+			'bp_suspend_forum_reply_suspended'                   => 1, // Any Forum Reply Suspended.
+			'bp_suspend_forum_reply_unsuspended'                 => 1, // Any Forum Reply Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                        => 1, // User updated on site.
-			'deleted_user'                          => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'              => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar'        => 1, // User avatar photo deleted.
+			'profile_update'                                     => 1, // User updated on site.
+			'deleted_user'                                       => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'                           => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'                     => 1, // User avatar photo deleted.
+
+			// When change/update the group avatar and cover options.
+			'update_option_bp-disable-group-avatar-uploads'      => 3,
+			'update_option_bp-default-group-avatar-type'         => 3,
+			'update_option_bp-default-custom-group-avatar'       => 3,
+			'update_option_bp-disable-group-cover-image-uploads' => 3,
+			'update_option_bp-default-group-cover-type'          => 3,
+			'update_option_bp-default-custom-group-cover'        => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -119,7 +127,7 @@ class BB_Forums extends Integration_Abstract {
 				'buddyboss/v1/forums',
 				Cache::instance()->month_in_seconds * 60,
 				array(
-					'unique_id'         => 'id',
+					'unique_id' => 'id',
 				),
 				true
 			);
@@ -549,5 +557,77 @@ class BB_Forums extends Integration_Abstract {
 	private function purge_item_cache_by_item_id( $forum_id ) {
 		Cache::instance()->purge_by_group( 'bbp-forums_' . $forum_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $forum_id ) ) );
+	}
+
+	/**
+	 * When Group Avatars option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_disable_group_avatar_uploads( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Default Group Avatar option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_group_avatar_type( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Upload Custom Avatar option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_custom_group_avatar( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Group Cover Images option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_disable_group_cover_image_uploads( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Default Group Cover Image option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_group_cover_type( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Upload Custom Cover Image option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_custom_group_cover( $old_value, $value, $option ) {
+		Cache::instance()->purge_by_component( 'bbp-forums' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
 	}
 }

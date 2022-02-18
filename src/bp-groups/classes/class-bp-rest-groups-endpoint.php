@@ -768,7 +768,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		// Avatars.
 		if ( ! empty( $schema['properties']['avatar_urls'] ) ) {
 			$data['avatar_urls'] = array(
-				'thumb' => bp_core_fetch_avatar(
+				'thumb'      => bp_core_fetch_avatar(
 					array(
 						'html'    => false,
 						'object'  => 'group',
@@ -776,7 +776,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'type'    => 'thumb',
 					)
 				),
-				'full'  => bp_core_fetch_avatar(
+				'full'       => bp_core_fetch_avatar(
 					array(
 						'html'    => false,
 						'object'  => 'group',
@@ -784,12 +784,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'type'    => 'full',
 					)
 				),
+				'is_default' => ! bp_get_group_has_avatar( $item->id ),
 			);
 		}
 
 		// Cover Image.
 		if ( ! empty( $schema['properties']['cover_url'] ) && function_exists( 'bp_get_group_cover_url' ) ) {
-			$data['cover_url'] = bp_get_group_cover_url( $item );
+			$data['cover_url']        = bp_get_group_cover_url( $item );
+			$data['cover_is_default'] = ! bp_attachments_get_group_has_cover_image( $item->id );
 		}
 
 		if ( $this->bp_rest_group_is_forum_enabled( $item ) && function_exists( 'bbpress' ) ) {
@@ -1447,6 +1449,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'context'     => array( 'embed', 'view', 'edit' ),
 			);
 
+			$avatar_properties['is_default'] = array(
+				'description' => __( 'Whether to check group has default avatar or not.', 'buddyboss' ),
+				'readonly'    => true,
+				'type'        => 'boolean',
+				'context'     => array( 'embed', 'view', 'edit' ),
+			);
+
 			$schema['properties']['avatar_urls'] = array(
 				'description' => __( 'Avatar URLs for the group.', 'buddyboss' ),
 				'type'        => 'object',
@@ -1461,6 +1470,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'description' => __( 'Cover Image URLs for the group.', 'buddyboss' ),
 				'type'        => 'string',
 				'format'      => 'uri',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
+			$schema['properties']['cover_is_default'] = array(
+				'description' => __( 'Whether to check the default cover image or not.', 'buddyboss' ),
+				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
