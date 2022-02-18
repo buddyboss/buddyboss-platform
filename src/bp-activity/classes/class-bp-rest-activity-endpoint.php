@@ -1243,6 +1243,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&& bp_is_activity_edit_enabled()
 					&& function_exists( 'bp_activity_user_can_edit' )
 					&& bp_activity_user_can_edit( $activity )
+				) && (
+					isset( $activity->privacy ) &&
+					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
 				)
 				? true
 				: false
@@ -1260,7 +1263,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// remove comment options from media/document/video activity.
-		if ( ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) ) {
+		if ( ! empty( $activity->secondary_item_id ) && ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) && 'activity_comment' !== $activity->type ) {
+			$secondary_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+			if ( ! empty( $secondary_activity->type ) && in_array( $secondary_activity->type, array( 'activity_comment' ), true ) ) {
+				$data['can_comment']  = false;
+				$data['can_edit']     = false;
+				$data['can_favorite'] = false;
+			}
+		} elseif ( ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) ) {
 			$data['can_comment']  = false;
 			$data['can_edit']     = false;
 			$data['can_favorite'] = false;

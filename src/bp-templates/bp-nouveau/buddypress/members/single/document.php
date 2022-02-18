@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Media
+ * The template for users media
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/document.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 ?>
 

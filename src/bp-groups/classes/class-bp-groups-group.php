@@ -1204,7 +1204,7 @@ class BP_Groups_Group {
 
 		$search = '';
 		if ( isset( $r['search_terms'] ) ) {
-			$search = trim( $r['search_terms'] );
+			$search = htmlspecialchars( trim( $r['search_terms'] ), ENT_NOQUOTES );
 		}
 
 		if ( $search ) {

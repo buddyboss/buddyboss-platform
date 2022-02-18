@@ -5153,7 +5153,7 @@ function bp_activity_action_parse_url() {
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => __( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
 	}
 
 	// send json success.
@@ -5417,14 +5417,15 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		return false;
 	}
 
-	$can_edit_privacy = true;
-	$album_id         = 0;
-	$folder_id        = 0;
-	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
-	$group_name       = '';
+	$can_edit_privacy        = true;
+	$album_id                = 0;
+	$folder_id               = 0;
+	$group_id                = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name              = '';
+	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
 
-	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
-	if ( ! empty( $album_activity_id ) ) {
+	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
 		$album_id = $album_activity_id;
 	}
 
@@ -5444,6 +5445,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		$group            = groups_get_group( $group_id );
 		$group_name       = bp_get_group_name( $group );
 	}
+	$group_avatar = bp_is_active( 'groups' ) ? bp_get_group_avatar_url( groups_get_group( $group_id ) ) : '';  // Add group avatar in get activity data object.
 
 	/**
 	 * Filter here to edit the activity edit data.
@@ -5465,6 +5467,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'item_id'          => $activity->item_id,
 			'object'           => $activity->component,
 			'privacy'          => $activity->privacy,
+			'group_avatar'     => $group_avatar,
 		)
 	);
 }
@@ -5693,4 +5696,15 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 	}
 
 	return false;
+}
+
+/**
+ * Function will use for how many groups to display at a time in the activity post form.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return int
+ */
+function bb_activity_post_form_groups_per_page() {
+	return apply_filters( 'bb_activity_post_form_groups_per_page', 10 );
 }

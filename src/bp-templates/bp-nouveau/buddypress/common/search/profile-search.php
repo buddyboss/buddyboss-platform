@@ -1,4 +1,13 @@
 <?php
+/**
+ * The template for profile search
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/search/profile-search.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
 $options = array(
 	'theme' => 'base',
 );
