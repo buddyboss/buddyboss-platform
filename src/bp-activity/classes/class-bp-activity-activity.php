@@ -527,8 +527,8 @@ class BP_Activity_Activity {
 			case 'is_spam':
 				break;
 
-			case 'include':
-				$r['order_by'] = 'include';
+			case 'in':
+				$r['order_by'] = 'in';
 				break;
 
 			default:
@@ -536,6 +536,11 @@ class BP_Activity_Activity {
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -552,10 +557,6 @@ class BP_Activity_Activity {
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "a.id IN ({$in})";
-			if ( ! empty( $r['order_by'] ) && 'include' === $r['order_by'] ) {
-				$order_by = "FIELD(a.id, {$in})";
-				$sort     = '';
-			}
 		}
 
 		// The filter activities by their privacy
@@ -723,7 +724,7 @@ class BP_Activity_Activity {
 				// populate the has_more_items flag.
 				$activity_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 			}
-
+			error_log( $activity_ids_sql );
 			/**
 			 * Filters the paged activities MySQL statement.
 			 *
