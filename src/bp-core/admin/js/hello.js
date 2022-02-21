@@ -126,6 +126,7 @@
 		if ( 'undefined' !== typeof BP_HELLO && 'yes' === BP_HELLO.bb_display_popup ) {
 			jQuery( document ).on( 'wp-plugin-update-success', function ( event, response ) {
 				if (
+					'undefined' !== typeof response &&
 					'wp-' + response.update + '-update-success' === event.type &&
 					'buddyboss-platform/bp-loader.php' === response.plugin
 				) {
