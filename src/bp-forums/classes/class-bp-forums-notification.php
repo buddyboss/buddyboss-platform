@@ -102,13 +102,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->groups->id,
+			'forums',
 			'bbp_new_reply',
 			'notification_forums_following_reply'
 		);
 
 		$this->register_notification(
-			buddypress()->groups->id,
+			'forums',
 			'bbp_new_at_mention',
 			'notification_forums_following_reply'
 		);
@@ -146,7 +146,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			buddypress()->groups->id,
+			'forums',
 			'bbp_new_at_mention',
 			'notification_forums_following_topic'
 		);
