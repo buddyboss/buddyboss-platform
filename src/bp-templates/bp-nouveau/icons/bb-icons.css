@@ -494,4 +494,8 @@
 .bb-icon-attach:before { content: '\e980'; }
 .bb-icon-media:before { content: '\e963'; }
 .bb-icon-sync:before { content: '\e964'; }
+.bb-icon-bullhorn:before { content: '\ebba'; }
+.bb-icon-bullhorn-filled:before { content: '\ebbb'; }
+.bb-icon-connection-waiting-filled:before { content: '\ebbc'; }
+.bb-icon-connected-filled:before { content: '\ebbd'; }
 /* stylelint-enable */
