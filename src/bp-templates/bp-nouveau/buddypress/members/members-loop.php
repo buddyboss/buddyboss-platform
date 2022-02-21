@@ -12,11 +12,11 @@ bp_nouveau_before_loop(); ?>
 
 <?php
 $message_button_args = array(
-		'link_text'   => '<i class="bb-icon-mail-small"></i>',
-		'button_attr' => array(
-				'data-balloon-pos' => 'down',
-				'data-balloon'     => __( 'Message', 'buddyboss-theme' ),
-		),
+	'link_text'   => '<i class="bb-icon-mail-small"></i>',
+	'button_attr' => array(
+		'data-balloon-pos' => 'down',
+		'data-balloon'     => __( 'Message', 'buddyboss' ),
+	),
 );
 
 $footer_buttons_class = ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) ? 'footer-buttons-on' : '';
@@ -188,7 +188,7 @@ $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element
 
 	<?php bp_nouveau_pagination( 'bottom' ); ?>
 
-<?php
+	<?php
 else :
 
 	bp_nouveau_user_feedback( 'members-loop-none' );
