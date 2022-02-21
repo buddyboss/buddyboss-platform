@@ -109,10 +109,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 					</div>
 
 					<?php
-						remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 						bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) );
 						bp_nouveau_member_header_bubble_buttons( array( 'container_classes' => array( 'bb_more_options' ) ) );
-						add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 					?>
 				</div>
 			</div><!-- #item-header-content -->

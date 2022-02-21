@@ -165,8 +165,6 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 					</div>
 
 					<?php
-					remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-
 					bp_nouveau_member_header_buttons(
 						array(
 							'container'         => 'div',
@@ -182,8 +180,6 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 							'container_classes' => array( 'bb_more_options' ),
 						)
 					);
-
-					add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 					?>
 
 				</div>
