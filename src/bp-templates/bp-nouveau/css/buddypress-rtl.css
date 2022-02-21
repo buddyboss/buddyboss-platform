@@ -7456,7 +7456,7 @@ body.buddypress.bp-user #page #primary .entry-header {
   background: #fff;
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.01);
   border-radius: 4px;
-  width: 168px;
+  width: 178px;
   padding: 5px 0;
   display: none;
   z-index: 11;
@@ -7618,18 +7618,37 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\e8c9";
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
 #buddypress .bb_more_options .bb_more_options_list button.friendship-button:before,
-#buddypress .bb_more_options .bb_more_options_list button.follow-button:before,
 #buddypress .bb_more_options .bb_more_options_list a.friendship-button:before,
-#buddypress .bb_more_options .bb_more_options_list a.follow-button:before,
 .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
-.bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
 .bb_more_options .bb_more_options_list button.friendship-button:before,
-.bb_more_options .bb_more_options_list button.follow-button:before,
-.bb_more_options .bb_more_options_list a.friendship-button:before,
-.bb_more_options .bb_more_options_list a.follow-button:before {
+.bb_more_options .bb_more_options_list a.friendship-button:before {
   content: "\e94d";
+}
+
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
+#buddypress .bb_more_options .bb_more_options_list button.follow-button:before,
+#buddypress .bb_more_options .bb_more_options_list a.follow-button:before,
+.bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
+.bb_more_options .bb_more_options_list button.follow-button:before,
+.bb_more_options .bb_more_options_list a.follow-button:before {
+  content: "\ebba";
+  font-size: 14px;
+}
+
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:hover:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:hover:before,
+#buddypress .bb_more_options .bb_more_options_list button.is_friend:hover:before,
+#buddypress .bb_more_options .bb_more_options_list button.pending_friend:hover:before,
+#buddypress .bb_more_options .bb_more_options_list a.is_friend:hover:before,
+#buddypress .bb_more_options .bb_more_options_list a.pending_friend:hover:before,
+.bb_more_options .bb_more_options_list .generic-button > button.is_friend:hover:before,
+.bb_more_options .bb_more_options_list .generic-button > button.pending_friend:hover:before,
+.bb_more_options .bb_more_options_list button.is_friend:hover:before,
+.bb_more_options .bb_more_options_list button.pending_friend:hover:before,
+.bb_more_options .bb_more_options_list a.is_friend:hover:before,
+.bb_more_options .bb_more_options_list a.pending_friend:hover:before {
+  content: "\e930";
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
@@ -7638,7 +7657,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
 .bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\e88a";
+  content: "\e8be";
 }
 
 @media screen and (max-width: 799px) {
