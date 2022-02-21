@@ -130,16 +130,19 @@
 					'wp-' + response.update + '-update-success' === event.type &&
 					'buddyboss-platform/bp-loader.php' === response.plugin
 				) {
+					var data = {
+						'action': 'bb_plugin_update',
+					};
 					jQuery.ajax(
 						{
 							type: 'POST',
 							url: BP_HELLO.ajax_url,
-							'data': {
-								'action': 'bb_plugin_update',
-							},
+							data: data,
 							success: function ( response_data ) {
-								jQuery( '#wpfooter' ).after( response_data );
-								bp_hello_open_modal();
+								if ( response_data ) {
+									jQuery( '#wpfooter' ).after( response_data );
+									bp_hello_open_modal();
+								}
 							}
 						}
 					);
