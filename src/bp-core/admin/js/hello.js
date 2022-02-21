@@ -127,8 +127,8 @@
 			jQuery( document ).on( 'wp-plugin-update-success', function ( event, response ) {
 				if (
 					'wp-' + response.update + '-update-success' === event.type &&
-					'akismet/akismet.php' === response.plugin
-				) { //buddyboss-platform/bp-loader.php
+					'buddyboss-platform/bp-loader.php' === response.plugin
+				) {
 					jQuery.ajax(
 						{
 							type: 'POST',
