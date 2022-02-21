@@ -455,7 +455,7 @@ class BP_Notifications_Notification {
 				$conditions['order_by'] = "{$order_by}";
 			}
 
-			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
 				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
 				$conditions['order_by'] = "FIELD(id, {$in})";
 			}

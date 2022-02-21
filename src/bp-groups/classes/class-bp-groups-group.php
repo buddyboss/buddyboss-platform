@@ -1373,17 +1373,13 @@ class BP_Groups_Group {
 		 * @param string $value   Parsed 'type' value for the get method.
 		 */
 		$orderby = apply_filters( 'bp_groups_get_orderby_converted_by_term', self::convert_orderby_to_order_by_term( $orderby ), $orderby, $r['type'] );
-
+		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 		// Random order is a special case.
 		if ( 'rand()' === $orderby ) {
 			$sql['orderby'] = 'ORDER BY rand()';
-		} elseif ( 'include' === $orderby ) {
-			if ( ! empty( $r['include'] ) ) {
-				$field_data     = implode( ',', array_map( 'absint', $r['include'] ) );
-				$sql['orderby'] = "ORDER BY FIELD(g.id, {$field_data})";
-			}
-		} else {
-			$sql['orderby'] = "ORDER BY {$orderby} {$order}";
+		} elseif ( ! empty( $r['include'] ) && 'in' === $orderby ) { // Support order by fields for generally.
+			$field_data     = implode( ',', array_map( 'absint', $r['include'] ) );
+			$sql['orderby'] = "ORDER BY FIELD(g.id, {$field_data})";
 		}
 
 		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $r['per_page'] != -1 ) {
@@ -1636,8 +1632,8 @@ class BP_Groups_Group {
 				$order_by_term = 'g.id';
 				break;
 
-			case 'include':
-				$order_by_term = 'include';
+			case 'in':
+				$order_by_term = 'in';
 				break;
 		}
 
