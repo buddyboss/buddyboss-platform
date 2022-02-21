@@ -1328,9 +1328,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'size'                  => '',
 			'msg_preview'           => '',
 			'attachment_data'       => ( isset( $document->attachment_data ) ? $document->attachment_data : array() ),
-			'user_nicename'         => $document->user_nicename,
-			'user_login'            => $document->user_login,
-			'display_name'          => $document->display_name,
+			'user_nicename'         => get_the_author_meta( 'user_nicename', $document->user_id ),
+			'user_login'            => get_the_author_meta( 'user_login', $document->user_id ),
+			'display_name'          => bp_core_get_user_displayname( $document->user_id ),
 			'user_permissions'      => $this->get_document_current_user_permissions( $document, $request ),
 		);
 
