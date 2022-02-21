@@ -1036,6 +1036,19 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		if ( 'no' === $notifications[ $key ] && isset( $all_actions[ $key ] ) ) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
+
+		// Add in excluded action if the settings is disabled from backend.
+		if ( isset( $default_by_admin ) && isset( $default_by_admin[$key] ) && 'no' === $default_by_admin[$key][0] ) {
+			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
+		}
+
+		// Add in excluded action if the settings is disabled from frontend topbar Enable Notification option.
+		if ( 'no' === bp_get_user_meta( $user_id, 'enable_notification', true ) ) {
+			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
+		}
+
+		$excluded_actions = array_unique( $excluded_actions );
+
 	}
 
 	return $excluded_actions;
