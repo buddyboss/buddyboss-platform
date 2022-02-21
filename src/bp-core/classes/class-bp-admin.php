@@ -787,12 +787,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			// Hello BuddyBoss App.
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
@@ -833,6 +827,22 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
 				)
 			);
+
+			// Update BuddyBoss Plugin.
+			if ( 0 === strpos( get_current_screen()->id, 'plugins' ) ) {
+				$display_popup = 'yes';
+				if ( 'yes' === $display_popup ) {
+					wp_enqueue_style( 'bp-hello-css' );
+					wp_enqueue_script( 'bb-plugin-update-js' );
+					wp_localize_script(
+						'bb-plugin-update-js',
+						'BB_UPDATE',
+						array(
+							'ajax_url'      => admin_url( 'admin-ajax.php' ),
+						)
+					);
+				}
+			}
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -1111,6 +1121,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bp-help-js'             => array(
 						'file'         => "{$url}help{$min}.js",
 						'dependencies' => array( 'jquery' ),
+						'footer'       => true,
+					),
+
+					/**
+					 * @since BuddyBoss [BBVERSION]
+					 */
+					'bb-plugin-update-js'            => array(
+						'file'         => "{$url}plugin-update{$min}.js",
+						'dependencies' => array(),
 						'footer'       => true,
 					),
 				)
