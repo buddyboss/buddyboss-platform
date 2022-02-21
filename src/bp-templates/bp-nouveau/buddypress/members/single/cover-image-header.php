@@ -157,30 +157,34 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
 						<?php } else { ?>
-							<div class="flex align-items-center">
+							<div class="flex align-items-center member-social">
 								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
 						<?php } ?>
 
-					</div>
+					</div><!-- .bb-user-content-wrap -->
 
-					<?php
-					bp_nouveau_member_header_buttons(
-						array(
-							'container'         => 'div',
-							'button_element'    => 'button',
-							'container_classes' => array( 'member-header-actions' ),
-						)
-					);
+					<div class="member-header-actions-wrap">
 
-					bp_nouveau_member_header_bubble_buttons(
-						array(
-							'container'         => 'div',
-							'button_element'    => 'button',
-							'container_classes' => array( 'bb_more_options' ),
-						)
-					);
-					?>
+						<?php
+						bp_nouveau_member_header_buttons(
+							array(
+								'container'         => 'div',
+								'button_element'    => 'button',
+								'container_classes' => array( 'member-header-actions' ),
+							)
+						);
+
+						bp_nouveau_member_header_bubble_buttons(
+							array(
+								'container'         => 'div',
+								'button_element'    => 'button',
+								'container_classes' => array( 'bb_more_options' ),
+							)
+						);
+						?>
+
+					</div><!-- .member-header-actions-wrap -->
 
 				</div>
 
@@ -191,4 +195,29 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 	<?php
 	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
 
-endif;
+endif; ?>
+
+<!-- Remove Connection confirmation popup -->
+<div class="bb-remove-connection bb-action-popup" style="display: none">
+	<transition name="modal">
+		<div class="modal-mask bb-white bbm-model-wrap">
+			<div class="modal-wrapper">
+				<div class="modal-container">
+					<header class="bb-model-header">
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
+						<a class="bb-close-remove-connection bb-model-close-button" href="#">
+							<span class="bb-icon bb-icon-close"></span>
+						</a>
+					</header>
+					<div class="bb-remove-connection-content bb-action-popup-content">
+						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-group-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+					</div>
+					<footer class="bb-model-footer flex align-items-center">
+						<a class="bb-close-remove-connection" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+					</footer>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div> <!-- .bb-remove-connection -->
