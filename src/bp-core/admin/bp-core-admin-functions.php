@@ -3375,10 +3375,9 @@ function bb_get_pro_fields_class() {
  */
 function bb_plugin_update_callback() {
 	global $bp;
-	$template_name = 'update-buddyboss.php'; //update-buddyboss-1.8.8.php
-	$plugin_path   = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/' . $template_name;
-	$path          = str_replace( '/', '\\', $plugin_path );
-	include $path;
+	$plugin_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+	$plugin_path = str_replace( '/', '\\', $plugin_path );
+	include $plugin_path;
 	wp_die();
 }
 add_action( 'wp_ajax_bb_plugin_update', 'bb_plugin_update_callback' );

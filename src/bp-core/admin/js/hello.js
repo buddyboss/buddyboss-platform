@@ -1,3 +1,4 @@
+/* globals BP_HELLO */
 /**
  * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
@@ -119,15 +120,19 @@
 	if ( document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading' ) {
 		bp_hello_open_modal();
 	} else {
+		/**
+		 * * @since BuddyBoss [BBVERSION]
+		 */
 		if ( 'undefined' !== typeof BP_HELLO && 'yes' === BP_HELLO.bb_display_popup ) {
 			jQuery( document ).on( 'wp-plugin-update-success', function ( event, response ) {
-				if ( 'wp-' + response.update + '-update-success' === event.type
-				     && 'akismet/akismet.php' === response.plugin ) { //buddyboss-platform/bp-loader.php
+				if (
+					'wp-' + response.update + '-update-success' === event.type &&
+					'akismet/akismet.php' === response.plugin
+				) { //buddyboss-platform/bp-loader.php
 					jQuery.ajax(
 						{
 							type: 'POST',
 							url: BP_HELLO.ajax_url,
-							async: false,
 							'data': {
 								'action': 'bb_plugin_update',
 							},
