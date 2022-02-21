@@ -58,7 +58,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 		background: #fff;
 		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.01);
 		border-radius: 4px;
-		width: 168px;
+		width: 178px;
 		padding: 5px 0;
 		display: none;
 		z-index: 11;
@@ -170,13 +170,22 @@ body.buddypress.bp-user #page #primary .entry-header {
 				content: "\e8c9";
 			}
 
-			&.friendship-button:before,
-			&.follow-button:before {
+			&.friendship-button:before {
 				content: "\e94d";
 			}
 
+			&.follow-button:before {
+				content: "\ebba";
+				font-size: 14px;
+			}
+
+			&.is_friend:hover:before,
+			&.pending_friend:hover:before {
+				content: "\e930";
+			}
+
 			&.view-as:before {
-				content: "\e88a";
+				content: "\e8be";
 			}
 
 		}
