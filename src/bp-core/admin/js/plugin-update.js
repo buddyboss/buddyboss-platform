@@ -1,5 +1,5 @@
 /**
- * Loads for Update plugin BuddyBoss in wp-admin when new release with major changes.
+ * Loads for Update plugin BuddyBoss in wp-admin when new release and click on update plugin and display popup is 'yes'.
  *
  * @since BuddyPress [BBVERSION]
  */
@@ -10,14 +10,11 @@
 	var bp_update_open_modal = function() {
 		var backdrop = document.getElementById( 'bp-update-backdrop' ),
 			modal    = document.getElementById( 'bp-update-container' );
-		console.log( 'bp_hello_open_modal' );
 		if ( null === backdrop ) {
 			return;
 		}
 		document.body.classList.add( 'bp-disable-scroll' );
 		
-		console.log( 'modal' );
-		console.log( modal );
 		// Show modal and overlay.
 		backdrop.style.display = '';
 		modal.style.display    = '';
@@ -118,15 +115,9 @@
 	);
 	
 	// Init modal after the screen's loaded.
-	console.log( 'test' );
 	jQuery( document ).on( 'wp-plugin-update-success', function ( event, response ) {
-		console.log( ' event.type ' + event.type );
-		console.log( 'wp-plugin-update-success ' );
-		
 		if ( 'wp-' + response.update + '-update-success' === event.type
 		     && 'akismet/akismet.php' === response.plugin ) { //buddyboss-platform/bp-loader.php
-			console.log( response );
-			console.log( BB_UPDATE.ajax_url );
 			jQuery.ajax(
 				{
 					type: 'POST',
@@ -136,7 +127,6 @@
 						'action': 'bb_plugin_update',
 					},
 					success: function ( response_data ) {
-						console.log( response_data );
 						jQuery( '#wpfooter' ).after( response_data );
 						bp_update_open_modal();
 					}

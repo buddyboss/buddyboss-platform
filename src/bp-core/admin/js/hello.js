@@ -119,6 +119,28 @@
 	if ( document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading' ) {
 		bp_hello_open_modal();
 	} else {
-		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
+		if ( 'undefined' !== typeof BP_HELLO && 'yes' === BP_HELLO.bb_display_popup ) {
+			jQuery( document ).on( 'wp-plugin-update-success', function ( event, response ) {
+				if ( 'wp-' + response.update + '-update-success' === event.type
+				     && 'akismet/akismet.php' === response.plugin ) { //buddyboss-platform/bp-loader.php
+					jQuery.ajax(
+						{
+							type: 'POST',
+							url: BP_HELLO.ajax_url,
+							async: false,
+							'data': {
+								'action': 'bb_plugin_update',
+							},
+							success: function ( response_data ) {
+								jQuery( '#wpfooter' ).after( response_data );
+								bp_hello_open_modal();
+							}
+						}
+					);
+				}
+			} );
+		} else {
+			document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
+		}
 	}
 }());

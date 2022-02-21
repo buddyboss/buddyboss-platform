@@ -833,12 +833,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$display_popup = 'yes';
 				if ( 'yes' === $display_popup ) {
 					wp_enqueue_style( 'bp-hello-css' );
-					wp_enqueue_script( 'bb-plugin-update-js' );
+					wp_enqueue_script( 'bp-hello-js' );
 					wp_localize_script(
-						'bb-plugin-update-js',
-						'BB_UPDATE',
+						'bp-hello-js',
+						'BP_HELLO',
 						array(
-							'ajax_url'      => admin_url( 'admin-ajax.php' ),
+							'ajax_url'         => admin_url( 'admin-ajax.php' ),
+							'bb_display_popup' => $display_popup,
 						)
 					);
 				}
@@ -1121,15 +1122,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bp-help-js'             => array(
 						'file'         => "{$url}help{$min}.js",
 						'dependencies' => array( 'jquery' ),
-						'footer'       => true,
-					),
-
-					/**
-					 * @since BuddyBoss [BBVERSION]
-					 */
-					'bb-plugin-update-js'            => array(
-						'file'         => "{$url}plugin-update{$min}.js",
-						'dependencies' => array(),
 						'footer'       => true,
 					),
 				)

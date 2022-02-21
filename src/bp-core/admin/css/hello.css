@@ -419,27 +419,3 @@ TABLE OF CONTENTS:
 .show-document-mime-type .mime-copy {
   display: inline-block;
 }
-
-div#bp-update-backdrop {
-  background-color: rgba(0, 0, 0, 0.8);
-  -webkit-transition: opacity 0.15s ease-out;
-  -o-transition: opacity 0.15s ease-out;
-  transition: opacity 0.15s ease-out;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9998;
-  display: block;
-}
-
-div#bp-update-container {background-color: white;
-  position: fixed;
-  top: 60px;
-  left: var(--bp-hello-container-size);
-  right: var(--bp-hello-container-size);
-  bottom: 23px;
-  z-index: 9999;
-  border-radius: 3px;
-}
