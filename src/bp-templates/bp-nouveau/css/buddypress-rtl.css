@@ -7609,7 +7609,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
   content: "\e839";
-  font-size: 16px;
+  font-size: 17px;
   color: inherit !important;
 }
 
@@ -7622,11 +7622,16 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\e8c9";
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.not_friends:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list button.not_friends:before,
 #buddypress .bb_more_options .bb_more_options_list button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list a.not_friends:before,
 #buddypress .bb_more_options .bb_more_options_list a.friendship-button:before,
+.bb_more_options .bb_more_options_list .generic-button > button.not_friends:before,
 .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+.bb_more_options .bb_more_options_list button.not_friends:before,
 .bb_more_options .bb_more_options_list button.friendship-button:before,
+.bb_more_options .bb_more_options_list a.not_friends:before,
 .bb_more_options .bb_more_options_list a.friendship-button:before {
   content: "\e94d";
 }
@@ -7641,17 +7646,17 @@ body.buddypress.bp-user #page #primary .entry-header {
   font-size: 14px;
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:hover:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list button.is_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list button.pending_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list a.is_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list a.pending_friend:hover:before,
-.bb_more_options .bb_more_options_list .generic-button > button.is_friend:hover:before,
-.bb_more_options .bb_more_options_list .generic-button > button.pending_friend:hover:before,
-.bb_more_options .bb_more_options_list button.is_friend:hover:before,
-.bb_more_options .bb_more_options_list button.pending_friend:hover:before,
-.bb_more_options .bb_more_options_list a.is_friend:hover:before,
-.bb_more_options .bb_more_options_list a.pending_friend:hover:before {
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:before,
+#buddypress .bb_more_options .bb_more_options_list button.is_friend:before,
+#buddypress .bb_more_options .bb_more_options_list button.pending_friend:before,
+#buddypress .bb_more_options .bb_more_options_list a.is_friend:before,
+#buddypress .bb_more_options .bb_more_options_list a.pending_friend:before,
+.bb_more_options .bb_more_options_list .generic-button > button.is_friend:before,
+.bb_more_options .bb_more_options_list .generic-button > button.pending_friend:before,
+.bb_more_options .bb_more_options_list button.is_friend:before,
+.bb_more_options .bb_more_options_list button.pending_friend:before,
+.bb_more_options .bb_more_options_list a.is_friend:before,
+.bb_more_options .bb_more_options_list a.pending_friend:before {
   content: "\e930";
 }
 

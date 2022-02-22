@@ -162,7 +162,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&.send-message:before {
 				content: "\e839";
-				font-size: 16px;
+				font-size: 17px;
 				color: inherit !important;
 			}
 
@@ -170,6 +170,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 				content: "\e8c9";
 			}
 
+			&.not_friends:before,
 			&.friendship-button:before {
 				content: "\e94d";
 			}
@@ -179,8 +180,8 @@ body.buddypress.bp-user #page #primary .entry-header {
 				font-size: 14px;
 			}
 
-			&.is_friend:hover:before,
-			&.pending_friend:hover:before {
+			&.is_friend:before,
+			&.pending_friend:before {
 				content: "\e930";
 			}
 
