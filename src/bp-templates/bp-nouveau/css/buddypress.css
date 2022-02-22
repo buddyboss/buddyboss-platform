@@ -6660,7 +6660,7 @@ body.register .registration-popup .mfp-close:hover {
 }
 
 .single-headers .item-meta {
-  color: #767676;
+  color: inherit;
   font-size: 14px;
   margin: 15px 0 5px;
   padding-bottom: 0.7em;
