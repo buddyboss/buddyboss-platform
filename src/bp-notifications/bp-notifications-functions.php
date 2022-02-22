@@ -1038,7 +1038,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		}
 
 		// Add in excluded action if the settings is disabled from backend.
-		if ( isset( $default_by_admin ) && isset( $default_by_admin[$key] ) && 'no' === $default_by_admin[$key][0] ) {
+		if ( isset( $default_by_admin ) && isset( $default_by_admin[ $key ] ) && 'no' === $default_by_admin[ $key ][0] ) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
 

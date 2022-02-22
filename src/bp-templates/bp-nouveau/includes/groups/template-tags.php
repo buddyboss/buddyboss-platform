@@ -1559,9 +1559,95 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
  * @since BuddyPress 4.0.0
  */
 function bp_nouveau_add_notify_group_members_checkbox() {
-	printf( '<p class="bp-controls-wrap">
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+
+		$type = 'email';
+
+		// All preferences registered.
+		$preferences = bb_register_notification_preferences();
+
+		// Saved notification from backend default settings.
+		$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+		// Enabled default notification from preferences.
+		$all_notifications = array();
+
+		$all_actions = array();
+
+		// Enabled default notification from backend.
+		$default_by_admin = array();
+
+		if ( ! empty( $preferences ) ) {
+			$preferences = array_column( $preferences, 'fields', null );
+			foreach ( $preferences as $key => $val ) {
+				$all_notifications = array_merge( $all_notifications, $val );
+			}
+		}
+
+		$all_notifications = array_map(
+			function ( $n ) use ( $type ) {
+				if (
+					! empty( $n['notifications'] ) &&
+					in_array( $type, array( 'web', 'app' ), true )
+				) {
+					$n['key'] = $n['key'] . '_' . $type;
+
+					return $n;
+				} elseif (
+					! empty( $n['email_types'] ) &&
+					'email' === $type
+				) {
+					$n['key'] = $n['key'] . '_' . $type;
+
+					return $n;
+				}
+
+			},
+			$all_notifications
+		);
+
+		$all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
+		if ( ! empty( $all_actions ) ) {
+			foreach ( $all_actions as $key => $val ) {
+				$all_actions[ $key ] = array_column( array_filter( $val ), 'component_action' );
+			}
+		}
+
+		if ( ! empty( $enabled_all_notification ) ) {
+			foreach ( $enabled_all_notification as $key => $types ) {
+				if ( isset( $types[ $type ] ) ) {
+					$default_by_admin[ $key . '_' . $type ] = $types[ $type ];
+				}
+			}
+		}
+
+		if ( isset( $default_by_admin ) && isset( $default_by_admin['notification_groups_group_updated_email'] ) && 'yes' === $default_by_admin['notification_groups_group_updated_email'] ) {
+			printf(
+				'<p class="bp-controls-wrap">
 		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
 		<label for="group-notify-members" class="bp-label-text">%s</label>
-	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
+	</p>',
+				esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+			);
+		} elseif ( isset( $default_by_admin ) && ! array_key_exists( 'notification_groups_group_updated_email', $default_by_admin ) ) {
+			printf(
+				'<p class="bp-controls-wrap">
+		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+		<label for="group-notify-members" class="bp-label-text">%s</label>
+	</p>',
+				esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+			);
+		}
+	} else {
+		printf(
+			'<p class="bp-controls-wrap">
+		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+		<label for="group-notify-members" class="bp-label-text">%s</label>
+	</p>',
+			esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+		);
+	}
+
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );
