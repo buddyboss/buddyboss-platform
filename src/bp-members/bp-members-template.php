@@ -2896,3 +2896,82 @@ function bb_get_following_count( $user_id = false ) {
 		<?php
 	}
 }
+
+
+/**
+ * Get member actions for member directories.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id Member ID.
+ * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+ *                            Default false.
+ *
+ * @return array|string Return the member actions.
+ */
+function bb_member_directories_get_profile_actions( $user_id, $button_type = false ) {
+	$buttons = array();
+
+	// Member directories profile actions.
+	$enabled_follow_action  = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'follow' );
+	$enabled_connect_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'connect' );
+	$enabled_message_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'message' );
+
+	// Member directories primary actions.
+	$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
+
+	// Is follow active or not?
+	$is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() && $enabled_follow_action;
+
+	// Follow action button.
+	$follow_button = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), array() ) : '';
+
+	// Friend action button.
+	$friend_button = ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_loggedin_user_id() !== $user_id ) ? bp_get_add_friend_button( $user_id ) : '';
+
+	// Show "Message" button or not?
+	$show_message_button = apply_filters( 'bb_member_loop_show_message_button', (bool) $enabled_message_action && bp_is_active( 'messages' ), $user_id, bp_loggedin_user_id() );
+
+	// Message action button.
+	$message_button = '';
+	if ( $show_message_button ) {
+		add_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
+		add_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
+		$message_button = bp_get_send_message_button();
+		remove_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
+		remove_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
+	}
+
+	if ( 'follow' === $primary_action_btn ) {
+		$buttons['primary']   = $follow_button;
+		$buttons['secondary'] = $friend_button . $message_button;
+	} elseif ( 'connect' === $primary_action_btn ) {
+		$buttons['primary']   = $friend_button;
+		$buttons['secondary'] = $follow_button . $message_button;
+	} elseif ( 'message' === $primary_action_btn ) {
+		$buttons['primary']   = $message_button;
+		$buttons['secondary'] = $follow_button . $friend_button;
+	} else {
+		$buttons['primary']   = '';
+		$buttons['secondary'] = $follow_button . $friend_button . $message_button;
+	}
+
+	/**
+	 * Filters the member actions for member directories.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $buttons     Member profile actions.
+	 * @param int    $user_id     Member ID.
+	 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+	 */
+	$buttons = apply_filters( 'bb_member_directories_get_profile_actions', $buttons, $user_id, $button_type );
+
+	if ( ! $button_type ) {
+		return $buttons;
+	} elseif ( 'primary' === $button_type ) {
+		return $buttons['primary'];
+	} elseif ( 'secondary' === $button_type ) {
+		return $buttons['secondary'];
+	}
+}

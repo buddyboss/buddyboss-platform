@@ -21,14 +21,6 @@ $enabled_online_status = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_profile_type  = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'profile-type' );
 $enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'followers' );
 $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
-
-// Member directories profile actions.
-$enabled_follow_action  = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'follow' );
-$enabled_connect_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'connect' );
-$enabled_message_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'message' );
-
-// Member directories primary actions.
-$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 ?>
 
 <?php if ( bp_get_current_member_type() ) : ?>
@@ -45,10 +37,6 @@ $primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' 
 		<?php
 		while ( bp_members() ) :
 			bp_the_member();
-			?>
-			<?php
-			$member_id           = bp_get_member_user_id();
-			$show_message_button = apply_filters( 'bb_member_loop_show_message_button', (bool) $enabled_message_action && bp_is_active( 'messages' ), $member_id, bp_loggedin_user_id() );
 
 			// Check if members_list_item has content.
 			ob_start();
@@ -66,89 +54,8 @@ $primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' 
 				ob_end_clean();
 			}
 
-			// Create primary and secondary buttons.
-			$primary_button    = '';
-			$secondary_buttons = '';
-
-			if ( 'follow' === $primary_action_btn ) {
-
-				// Primary button.
-				remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_icon_button' );
-				$primary_button = ( $is_follow_active && $enabled_follow_action ) ? bp_get_add_follow_button( bp_get_member_user_id(), bp_loggedin_user_id(), array() ) : '';
-				add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_icon_button' );
-
-				// Secondary buttons.
-				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-				$secondary_buttons = ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_get_member_user_id() != bp_loggedin_user_id() ) ? bp_get_add_friend_button( bp_get_member_user_id() ) : '';
-
-				if ( $show_message_button ) {
-					add_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					add_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-					$secondary_buttons .= bp_get_send_message_button();
-					remove_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					remove_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-				}
-			} elseif ( 'connect' === $primary_action_btn ) {
-
-				// Primary button.
-
-				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-				$primary_button = ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_get_member_user_id() != bp_loggedin_user_id() ) ? bp_get_add_friend_button( bp_get_member_user_id() ) : '';
-
-
-				// Secondary buttons.
-				$secondary_buttons = ( $is_follow_active && $enabled_follow_action ) ? bp_get_add_follow_button(
-					bp_get_member_user_id(),
-					bp_loggedin_user_id(),
-					array()
-				) : '';
-
-				if ( $show_message_button ) {
-					add_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					add_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-					$secondary_buttons .= bp_get_send_message_button();
-					remove_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					remove_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-				}
-			} elseif ( 'message' === $primary_action_btn ) {
-
-				// Primary button.
-				if ( $show_message_button ) {
-					add_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					add_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-					$primary_button = bp_get_send_message_button();
-					remove_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					remove_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-				}
-
-				// Secondary buttons.
-				$secondary_buttons = ( $is_follow_active && $enabled_follow_action ) ? bp_get_add_follow_button(
-					bp_get_member_user_id(),
-					bp_loggedin_user_id(),
-					array()
-				) : '';
-
-				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-				$secondary_buttons .= ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_get_member_user_id() != bp_loggedin_user_id() ) ? bp_get_add_friend_button( bp_get_member_user_id() ) : '';
-			} else {
-				// Secondary buttons.
-				$secondary_buttons = ( $is_follow_active && $enabled_follow_action ) ? bp_get_add_follow_button(
-					bp_get_member_user_id(),
-					bp_loggedin_user_id(),
-					array()
-				) : '';
-
-				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-				$secondary_buttons .= ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_get_member_user_id() != bp_loggedin_user_id() ) ? bp_get_add_friend_button( bp_get_member_user_id() ) : '';
-
-				if ( $show_message_button ) {
-					add_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					add_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-					$secondary_buttons .= bp_get_send_message_button();
-					remove_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-					remove_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-				}
-			}
+			// Primary and secondary profile action buttons.
+			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
 				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? ' has_hook_content' : ''; ?>">
@@ -188,7 +95,7 @@ $primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' 
 							<div class="button-wrap member-button-wrap only-list-view">
 								<?php
 								echo wp_kses_post( $followers_count );
-								echo wp_kses_post( $primary_button );
+								echo wp_kses_post( $profile_actions['primary'] );
 								?>
 							</div>
 
@@ -197,13 +104,13 @@ $primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' 
 							</div>
 
 							<div class="flex only-grid-view align-items-center follow-container justify-center">
-								<?php echo wp_kses_post( $primary_button ); ?>
+								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 							</div>
 						</div><!-- // .item -->
 
-						<?php if ( $secondary_buttons ) { ?>
+						<?php if ( $profile_actions['secondary'] ) { ?>
 							<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
-								<?php echo wp_kses_post( $secondary_buttons ); ?>
+								<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
 							</div>
 						<?php } ?>
 					</div>
