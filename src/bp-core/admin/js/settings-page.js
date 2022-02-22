@@ -381,6 +381,32 @@ window.bp = window.bp || {};
 					);
 			}
 
+			// Hide/show group header element group type.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
+
+				if (group_type_element.checked) {
+					$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).show();
+				} else {
+					$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-type-creation',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).show();
+							$( '.bb-group-headers-elements #bb-group-headers-element-group-type' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).hide();
+							$( '.bb-group-headers-elements #bb-group-headers-element-group-type' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Hide/show group element cover image.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
