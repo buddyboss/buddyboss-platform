@@ -180,6 +180,12 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 							)
 						);
 
+						remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+						remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+						remove_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
+						add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
+						add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
+						add_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 						bp_nouveau_member_header_bubble_buttons(
 							array(
 								'container'         => 'div',
@@ -187,6 +193,12 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 								'container_classes' => array( 'bb_more_options' ),
 							)
 						);
+						add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+						add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+						add_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
+						remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
+						remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
+						remove_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 						?>
 
 					</div><!-- .member-header-actions-wrap -->
