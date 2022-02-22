@@ -10,15 +10,16 @@
 ?>
 <div id="item-actions" class="group-item-actions">
 
-	<?php if ( bp_enable_group_hierarchies() ): ?>
+	<?php if ( bp_enable_group_hierarchies() ) : ?>
 		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></h2>
 		<?php bp_group_list_parents(); ?>
 	<?php endif; ?>
 
 	<?php if ( bp_current_user_can( 'groups_access_group' ) ) : ?>
 
-		<?php if( bb_platform_group_headers_element_enable( 'group-organizers' ) ) : ?>
-		<h2 class="bp-screen-reader-text"><?php printf( __( 'Group %s', 'buddyboss' ), get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ); ?></h2>
+		<?php if ( bb_platform_group_headers_element_enable( 'group-organizers' ) ) : ?>
+			<?php /* translators: Group %s */ ?>
+		<h2 class="bp-screen-reader-text"><?php printf( esc_html__( 'Group %s', 'buddyboss' ), esc_attr( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></h2>
 
 		<dl class="moderators-lists">
 			<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss' ); ?></dt>
