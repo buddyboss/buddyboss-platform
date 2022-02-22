@@ -6937,6 +6937,10 @@ body.no-js .single-item-header .js-self-profile-button {
   min-width: 0;
 }
 
+.users-header #item-header-cover-image #item-header-avatar .bp-member-type {
+  display: none;
+}
+
 /*
 * end cover photo block
 */
