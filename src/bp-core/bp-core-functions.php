@@ -6613,7 +6613,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		array_key_exists( $notification_type, $notifications ) &&
 		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
 		'no' !== bp_get_user_meta( $user_id, $notification_type, true ) &&
-		! array_key_exists( $default_by_admin[ $notification_type ], $default_by_admin )
+		! isset( $default_by_admin[ $notification_type ] )
 
 	) {
 		return true;
