@@ -108,25 +108,45 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 									<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 								</div>
 							<?php } ?>
-						
+
 						</div><!-- .header-meta-wrap -->
 
 					</div><!-- .bb-user-content-wrap -->
 
 					<div class="member-header-actions-wrap">
-
 						<?php
+							add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+							bp_nouveau_member_header_buttons(
+								array(
+									'container_classes' => array(
+										'member-header-actions',
+									),
+								)
+							);
+							remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+
 							remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-							bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) );
-							bp_nouveau_member_header_bubble_buttons( array( 'container_classes' => array( 'bb_more_options' ) ) );
+							remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+							remove_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
+							add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
+							add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
+							add_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
+							bp_nouveau_member_header_bubble_buttons(
+								array(
+									'container_classes' => array(
+										'bb_more_options',
+									),
+								)
+							);
 							add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+							add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+							add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+							add_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
+							remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
+							remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
+							remove_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 						?>
 					</div><!-- .member-header-actions-wrap -->
-
-					<?php
-						bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) );
-						bp_nouveau_member_header_bubble_buttons( array( 'container_classes' => array( 'bb_more_options' ) ) );
-					?>
 				</div>
 
 			</div><!-- #item-header-content -->
@@ -136,7 +156,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	<?php
 	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
 
-endif; ?>
+endif;
+?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
