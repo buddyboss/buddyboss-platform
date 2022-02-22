@@ -196,10 +196,18 @@
 	margin: 0 auto;
 }
 
-.users-header #item-header-cover-image #item-header-content {
-	flex: 1;
-	margin-top: -50px;
-	min-width: 0;
+.users-header #item-header-cover-image {
+
+	#item-header-content {
+		flex: 1;
+		margin-top: -50px;
+		min-width: 0;
+	}
+
+	#item-header-avatar .bp-member-type {
+		display: none;
+	}
+
 }
 
 /*
