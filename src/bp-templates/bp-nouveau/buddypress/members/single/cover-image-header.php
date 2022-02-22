@@ -51,7 +51,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 			?>
 			<?php if ( bp_is_my_profile() ) { ?>
 				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-edit-thin"></i>
+					<i class="bb-icon-camera"></i>
 				</a>
 
 				<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) { ?>
@@ -81,7 +81,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 					}
 					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-edit-thin"></i>
+						<i class="bb-icon-camera"></i>
 					</a>
 				<?php } ?>
 				<?php bp_displayed_user_avatar( 'type=full' ); ?>

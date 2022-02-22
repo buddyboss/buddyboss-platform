@@ -6809,7 +6809,7 @@ body.no-js .single-item-header .js-self-profile-button {
   z-index: 119;
   top: 50%;
   color: #fff;
-  background-color: rgba(134, 132, 132, 0.6);
+  background-color: rgba(0, 0, 0, 0.2);
   padding: 10px 15px;
   border-radius: 5px;
   pointer-events: none;
@@ -6824,9 +6824,9 @@ body.no-js .single-item-header .js-self-profile-button {
   z-index: 1;
   float: none;
   margin: 12px 12px 0 0;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #f9f9f9;
   color: #939597;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 13px;
   line-height: 1.6;
   padding: 6px 11px;
@@ -8531,14 +8531,14 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image,
 #item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
-  background: rgba(255, 255, 255, 0.9);
+  background: #f9f9f9;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   left: 12px;
   top: 12px;
   z-index: 3;
@@ -8553,10 +8553,10 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image > i,
 #item-header a.position-change-cover-image > i,
 #item-header a.link-change-profile-image > i {
-  font-size: 20px;
+  font-size: 18px;
 }
 
-#item-header a.link-change-cover-image > i {
+#item-header a.position-change-cover-image > i {
   font-size: 16px;
 }
 
