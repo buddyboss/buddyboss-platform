@@ -699,6 +699,8 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
+			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
+			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
 			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
@@ -1796,9 +1798,15 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
-				return false;
+			if ( 'is_friend' !== action ) {
+			
+				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
+					return false;
+				}
+
 			}
+
+			
 
 			// show popup if it is leave_group action.
 			var leave_group_popup        = $( '.bb-leave-group-popup' );
@@ -1818,6 +1826,26 @@ window.bp = window.bp || {};
 				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
 				leave_group_popup.hide();
+			}
+
+			// show popup if it is is_friend action.
+			var remove_connection_popup  = $( '.bb-remove-connection' );
+			var member__name        	 = $( target ).data( 'bb-user-name' );
+			var member_link 			 = $( target ).data( 'bb-user-link' );
+			if ( 'is_friend' === action && 'opened' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( remove_connection_popup.length ) {
+					remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '<a href="' + member_link + '">' + member__name + '</a>' );
+					$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
+					remove_connection_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'opened' );
+					return false;
+				}
+			} else {
+				$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'closed' );
+				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
+				remove_connection_popup.hide();
 			}
 
 			// Find the required wpnonce string.
@@ -2074,6 +2102,33 @@ window.bp = window.bp || {};
 			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 			$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
 			leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
+			leave_group_popup.hide();
+		},
+
+		/**
+		 * [Remove Connection Action]
+		 *
+		 * @param event
+		 */
+		 removeConnectionAction: function ( event ) {
+			event.preventDefault();
+			$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
+			$( 'body' ).find( '[data-current-anchor="true"]' ).trigger( 'click' );
+		},
+
+		/**
+		 * [Remove Connection Close]
+		 *
+		 * @param event
+		 */
+		removeConnectionClose: function ( event ) {
+			event.preventDefault();
+			var target            = $( event.currentTarget );
+			var leave_group_popup = $( target ).closest( '.bb-remove-connection' );
+
+			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+			$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'closed' );
+			leave_group_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
 			leave_group_popup.hide();
 		},
 
