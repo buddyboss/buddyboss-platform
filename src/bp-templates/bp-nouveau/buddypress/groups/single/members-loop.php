@@ -18,6 +18,7 @@ $enabled_online_status = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_profile_type  = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'profile-type' );
 $enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'followers' );
 $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
+$enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 ?>
 
 <?php if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group_role' ) ) : ?>
@@ -52,6 +53,12 @@ $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element
 				ob_end_clean();
 			}
 
+			// Member joined data.
+			$member_joined_date = bp_get_group_member_joined_since();
+
+			// Member last activity.
+			$member_last_activity = bp_get_last_activity( bp_get_member_user_id() );
+
 			// Primary and secondary profile action buttons.
 			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
 			?>
@@ -83,9 +90,25 @@ $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element
 								}
 								?>
 
-								<?php if ( $enabled_last_active ) : ?>
+								<?php if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) : ?>
 									<p class="joined item-meta">
-										<?php bp_group_member_joined_since(); ?>
+
+										<?php
+										if ( $enabled_joined_date ) :
+											echo wp_kses_post( $member_joined_date );
+										endif;
+										?>
+
+										<?php if ( ( $enabled_last_active && $member_last_activity ) && ( $enabled_joined_date && $member_joined_date ) ) : ?>
+											<span class="separator">&bull;</span>
+										<?php endif; ?>
+
+										<?php
+										if ( $enabled_last_active ) :
+											echo wp_kses_post( $member_last_activity );
+										endif;
+										?>
+
 									</p>
 								<?php endif; ?>
 							</div>

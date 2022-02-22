@@ -105,6 +105,11 @@ function bb_get_member_directory_elements() {
 		'element_label' => esc_html__( 'Last Active', 'buddyboss' ),
 	);
 
+	$elements[] = array(
+		'element_name'  => 'joined-date',
+		'element_label' => esc_html__( 'Joined Date', 'buddyboss' ),
+	);
+
 	/**
 	 * Member directory elements.
 	 *
