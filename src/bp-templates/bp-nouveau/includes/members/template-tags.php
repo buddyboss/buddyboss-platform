@@ -1113,10 +1113,17 @@ function bp_nouveau_get_wp_profile_field_data() {
  *
  * @since BuddyPress [BBVERSION]
  *
+ * @param int $user_id User ID.
+ *
  * @return string The user registered date.
  */
-function bb_get_member_joined_date() {
-	$register_date        = date_i18n( 'F Y', strtotime( get_userdata( bp_displayed_user_id() )->user_registered ) );
+function bb_get_member_joined_date( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	$register_date        = date_i18n( 'F Y', strtotime( get_userdata( $user_id )->user_registered ) );
 	$user_registered_date = sprintf(
 		/* translators: 1: User registered date. */
 		esc_html__( 'Joined %s', 'buddyboss' ),
