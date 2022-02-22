@@ -387,7 +387,7 @@ function bp_admin_repair_list() {
 	// - install missing emails.
 	$repair_list[99] = array(
 		'bp-missing-emails',
-		esc_html__( 'Install Missing emails (restore missing emails from defaults).', 'buddyboss' ),
+		esc_html__( 'Install missing emails (restore missing emails from defaults).', 'buddyboss' ),
 		'bp_admin_install_emails',
 		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ),
 	);
