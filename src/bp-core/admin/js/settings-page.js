@@ -384,9 +384,9 @@ window.bp = window.bp || {};
 			// Hide/show group header element group type.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
-				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
+				var group_type_header_element = document.getElementById( 'bp-disable-group-type-creation' );
 
-				if (group_type_element.checked) {
+				if (group_type_header_element.checked) {
 					$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).show();
 				} else {
 					$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).hide();
