@@ -1087,7 +1087,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ) {
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
 		'bp-xprofile-repeater-field-repair',
-		__( 'Repair xProfile repeater fieldset.', 'buddyboss' ),
+		__( 'Repair xProfile repeater field sets', 'buddyboss' ),
 		'bb_xprofile_repeater_field_repair_callback',
 	);
 	return $repair_list;
@@ -1202,7 +1202,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 function bb_xprofile_repair_user_nicknames( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-repair-user-nicknames',
-		__( 'Repair user nicknames.', 'buddyboss' ),
+		__( 'Repair user nicknames', 'buddyboss' ),
 		'bb_xprofile_repair_user_nicknames_callback',
 	);
 	return $repair_list;

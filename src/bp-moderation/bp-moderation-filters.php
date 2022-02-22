@@ -621,7 +621,7 @@ add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache
 function bb_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
-		__( 'Repair moderation data.', 'buddyboss' ),
+		__( 'Repair moderation data', 'buddyboss' ),
 		'bb_moderation_admin_repair_old_moderation_data',
 	);
 

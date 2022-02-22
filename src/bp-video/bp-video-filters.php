@@ -883,7 +883,7 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-video',
-			__( 'Repair video on the site.', 'buddyboss' ),
+			__( 'Repair videos on the site', 'buddyboss' ),
 			'bp_video_admin_repair_video',
 		);
 		$repair_list[] = array(

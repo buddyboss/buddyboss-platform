@@ -773,7 +773,7 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 function bp_messages_repair_items_unread_count( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-messages-unread-count',
-		__( 'Repair unread messages count on the site.', 'buddyboss' ),
+		__( 'Repair unread messages count on the site', 'buddyboss' ),
 		'bp_messages_admin_repair_unread_messages_count',
 	);
 	return $repair_list;
