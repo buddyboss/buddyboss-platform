@@ -2186,13 +2186,12 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	}
 
 	// verify nonce.
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	if ( ! wp_verify_nonce( $_POST['_bp-member-type-nonce'], 'bp-member-type-edit-member-type' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( $_POST['_bp-member-type-nonce'] ), 'bp-member-type-edit-member-type' ) ) {
 		return;
 	}
 
 	// Save data.
-	$data = isset( $_POST['bp-member-type'] ) ? $_POST['bp-member-type'] : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$data = isset( $_POST['bp-member-type'] ) ? sanitize_text_field( $_POST['bp-member-type'] ) : array();
 
 	if ( empty( $data ) ) {
 		return;
@@ -2200,7 +2199,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$error = false;
 
-	$post_title = wp_kses( $_POST['post_title'], wp_kses_allowed_html( 'strip' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$post_title = wp_kses( sanitize_text_field( $_POST['post_title'] ), wp_kses_allowed_html( 'strip' ) );
 
 	// key.
 	$key = get_post_field( 'post_name', $post_id );
@@ -2231,10 +2230,10 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$get_existing = get_post_meta( $post_id, '_bp_member_type_key', true );
 	( '' === $get_existing ) ? update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) ) : '';
 
-	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? $_POST['bp-group-type'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? $_POST['bp-group-type-auto-join'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? $_POST['bp-member-type-invite'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$enable_group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? $_POST['bp-member-type-enabled-invite'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? sanitize_text_field( $_POST['bp-group-type'] ) : '';
+	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? sanitize_text_field( $_POST['bp-group-type-auto-join'] ) : '';
+	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? sanitize_text_field( $_POST['bp-member-type-invite'] ) : '';
+	$enable_group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? sanitize_text_field( $_POST['bp-member-type-enabled-invite'] ) : '';
 
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
@@ -2344,8 +2343,7 @@ function bp_member_type_invalid_role_error_callback() {
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 
 	// Write them out to the screen.
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo $message;
+	echo esc_html( $message );
 
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection' );
@@ -2577,8 +2575,7 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	}
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 	// Write them out to the screen.
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo $message;
+	echo esc_html( $message );
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection_extended_profile' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
@@ -2627,8 +2624,7 @@ function bp_core_admin_create_background_page() {
 		$page_ids[ $_POST['page'] ] = (int) $page_id;
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( 'new_forums_page' === $_POST['page'] ) {
+		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			// Else store into the directory pages.
 		} else {
@@ -2636,8 +2632,7 @@ function bp_core_admin_create_background_page() {
 		}
 
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( 'new_forums_page' === $_POST['page'] ) {
+		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
 			$slug = get_page_uri( $page_id );
 			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );
@@ -2921,8 +2916,7 @@ function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-tools';
+	$active_tab   = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bp-tools';
 
 	/**
 	 * Filters the admin tabs to be displayed.
