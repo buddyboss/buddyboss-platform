@@ -9105,7 +9105,11 @@ body .bp-messages-user-threads {
 }
 
 .notification_info .notification_type:not(:last-child) {
-  padding-left: 20px;
+  margin-left: 20px;
+}
+
+.bb-notification-column-2 .notification_info .notification_type {
+  width: calc(50% - 10px);
 }
 
 .notification_info .notification_type_icon {
@@ -9142,6 +9146,10 @@ body .bp-messages-user-threads {
     display: none;
     width: 100%;
     margin-bottom: 12px;
+  }
+  .bb-notification-column-2 .notification_info .notification_type {
+    width: 100%;
+    margin-left: 0;
   }
   .notification_info .notification_type.show {
     display: flex;
@@ -20987,7 +20995,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {
