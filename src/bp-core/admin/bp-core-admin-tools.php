@@ -1354,8 +1354,8 @@ function bp_admin_update_activity_favourite() {
 function bp_admin_invitations_table() {
 	global $wpdb;
 
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
 	/* translators: %s: the result of the action performed by the repair tool */
 	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss' );
