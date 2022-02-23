@@ -100,7 +100,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * @return array
  */
 function bp_core_get_users( $args = '' ) {
-
+	static $bp_core_get_users = array();
 	// Parse the user query arguments.
 	$r = bp_parse_args(
 		$args,
@@ -142,7 +142,14 @@ function bp_core_get_users( $args = '' ) {
 	} else {
 
 		// Get users like we were asked to do...
-		$users = new BP_User_Query( $r );
+		$cache_key = 'bp_core_get_users_' . md5( maybe_serialize( $r ) );
+		if ( ! isset( $bp_core_get_users[ $cache_key ] ) ) {
+			$users = new BP_User_Query( $r );
+
+			$bp_core_get_users[ $cache_key ] = $users;
+		} else {
+			$users = $bp_core_get_users[ $cache_key ];
+		}
 
 		// ...but reformat the results to match bp_core_get_users() behavior.
 		$retval = array(
@@ -1280,7 +1287,15 @@ function bp_core_get_all_posts_for_user( $user_id = 0 ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	return apply_filters( 'bp_core_get_all_posts_for_user', $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = 'publish' AND post_type = 'post'", $user_id ) ) );
+	$cache_key = 'bp_get_all_posts_for_user_' . $user_id;
+	$result    = wp_cache_get( $cache_key, 'bp_member' );
+
+	if ( false === $result ) {
+		$result = apply_filters( 'bp_core_get_all_posts_for_user', $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = 'publish' AND post_type = 'post'", $user_id ) ) );
+		wp_cache_set( $cache_key, $result, 'bp_member' );
+	}
+
+	return $result;
 }
 
 /**
@@ -3303,7 +3318,14 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
  * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_member_type_post_by_type( $member_type ) {
+	static $member_type_post = array();
 	global $wpdb;
+
+	$cache_key = 'bb_member_type_post_by_type_' . sanitize_title( $member_type );
+
+	if ( isset( $member_type_post[ $cache_key ] ) ) {
+		return $member_type_post[ $cache_key ];
+	}
 
 	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
 	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
@@ -3317,7 +3339,9 @@ function bp_member_type_post_by_type( $member_type ) {
 		$post_id = $wpdb->get_var( $query );
 	}
 
-	return apply_filters( 'bp_member_type_post_by_type', $post_id );
+	$member_type_post[ $cache_key ] = apply_filters( 'bp_member_type_post_by_type', $post_id );
+
+	return $member_type_post[ $cache_key ];
 }
 
 /**
@@ -3339,7 +3363,12 @@ function bp_member_type_by_type( $type_id ) {
 		return $member_ids;
 	}
 
-	$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+	$cache_key  = 'bp_member_type_by_type_' . $type_id;
+	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
+	if ( false === $member_ids ) {
+		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
+	}
 
 	return $member_ids;
 }
@@ -3375,7 +3404,7 @@ function bp_get_active_member_types( $args = array() ) {
 		'member_types'
 	);
 
-	$cache_key = 'bp_get_active_member_types_' . md5( serialize( $args ) );
+	$cache_key = 'bp_get_active_member_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
@@ -3416,7 +3445,12 @@ function bp_get_removed_member_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_member_type_query = new WP_Query( $bp_member_type_args );
+	$bp_member_type_query = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
+
+	if ( false === $bp_member_type_query ) {
+		$bp_member_type_query = new WP_Query( $bp_member_type_args );
+		wp_cache_set( 'bp_get_removed_member_types', $bp_member_type_query, 'bp_member_member_type' );
+	}
 	if ( $bp_member_type_query->have_posts() ) :
 		while ( $bp_member_type_query->have_posts() ) :
 			$bp_member_type_query->the_post();
@@ -4557,8 +4591,12 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 function bp_get_xprofile_member_type_field_id() {
 	global $wpdb;
 
-	$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-	$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+	static $get_parent_id_of_member_types_field = false;
+
+	if ( false === $get_parent_id_of_member_types_field ) {
+		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$get_parent_id_of_member_types_field = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+	}
 
 	return (int) $get_parent_id_of_member_types_field;
 }
@@ -4569,10 +4607,13 @@ function bp_get_xprofile_member_type_field_id() {
  * @return string|null
  */
 function bp_get_xprofile_gender_type_field_id() {
-	global $wpdb;
+	static $get_parent_id_of_gender_types_field = false;
 
-	$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-	$get_parent_id_of_gender_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+	if ( false === $get_parent_id_of_gender_types_field ) {
+		global $wpdb;
+		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$get_parent_id_of_gender_types_field = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+	}
 
 	return (int) $get_parent_id_of_gender_types_field;
 }
@@ -4766,7 +4807,12 @@ function bp_get_hidden_member_types() {
 		'nopaging'       => true,
 	);
 
-	$hidden_profile_types = new WP_Query( $args );
+	$cache_key            = 'bp_get_hidden_member_types_cache';
+	$hidden_profile_types = wp_cache_get( $cache_key, 'bp_member_type' );
+	if ( false === $hidden_profile_types ) {
+		$hidden_profile_types = new WP_Query( $args );
+		wp_cache_set( $cache_key, $hidden_profile_types, 'bp_member_type' );
+	}
 
 	/**
 	 * Filters hidden profile types.

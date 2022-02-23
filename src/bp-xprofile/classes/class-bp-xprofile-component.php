@@ -469,6 +469,7 @@ class BP_XProfile_Component extends BP_Component {
 				'bp_xprofile_fields',
 				'bp_xprofile_groups',
 				'xprofile_meta',
+				'field_children_options',
 			)
 		);
 

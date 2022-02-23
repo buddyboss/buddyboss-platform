@@ -691,27 +691,6 @@ class BP_Video {
 			$videos[]          = $video;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $videos, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with video items.
-		foreach ( $videos as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$videos[ $a_index ]->user_email    = $a_user->user_email;
-				$videos[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$videos[ $a_index ]->user_login    = $a_user->user_login;
-				$videos[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $videos;
 	}
 
@@ -1283,7 +1262,12 @@ class BP_Video {
 			return false;
 		}
 
-		$activity_video_id = false;
+		$cache_key         = 'bp_video_activity_id_' . $activity_id;
+		$activity_video_id = wp_cache_get( $cache_key, 'bp_video' );
+
+		if ( ! empty( $activity_video_id ) ) {
+			return $activity_video_id;
+		}
 
 		// Check activity component enabled or not.
 		if ( bp_is_active( 'activity' ) ) {
@@ -1300,6 +1284,8 @@ class BP_Video {
 				}
 			}
 		}
+
+		wp_cache_set( $cache_key, $activity_video_id, 'bp_video' );
 
 		return $activity_video_id;
 	}
@@ -1319,7 +1305,17 @@ class BP_Video {
 			return false;
 		}
 
-		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->video->table_name} m WHERE m.activity_id = {$activity_id}" ); // phpcs:ignore
+		$cache_key           = 'bp_video_attachment_id_' . $activity_id;
+		$video_attachment_id = wp_cache_get( $cache_key, 'bp_video' );
+
+		if ( ! empty( $video_attachment_id ) ) {
+			return $video_attachment_id;
+		}
+
+		$video_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->video->table_name} WHERE activity_id = {$activity_id}" ); // phpcs:ignore
+		wp_cache_set( $cache_key, $video_attachment_id, 'bp_video' );
+
+		return $video_attachment_id;
 	}
 
 }
