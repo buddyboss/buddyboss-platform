@@ -985,7 +985,7 @@ function bp_admin_install_emails() {
 		'status'  => 1,
 		'message' => sprintf(
 		    /* translator: %d: Number of emails installed */
-			esc_html__( 'Installing missing emails &hellip; %d emails have been restored.', 'buddyboss' ),
+			esc_html__( 'Installing missing emails &hellip; %d missing emails have been installed.', 'buddyboss' ),
 			$installed_email
 		),
 	);
