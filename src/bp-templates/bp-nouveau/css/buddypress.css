@@ -7608,8 +7608,8 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
-  content: "\e839";
-  font-size: 17px;
+  content: "\e910";
+  font-size: 16px;
   color: inherit !important;
 }
 
