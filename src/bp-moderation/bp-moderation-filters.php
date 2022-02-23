@@ -652,7 +652,7 @@ add_action( 'bb_suspend_unhide_before', 'bp_core_clear_cache' );
 function bb_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
-		__( 'Repair moderation data.', 'buddyboss' ),
+		__( 'Repair moderation data', 'buddyboss' ),
 		'bb_moderation_admin_repair_old_moderation_data',
 	);
 
@@ -688,7 +688,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing moderation data &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }

@@ -9161,7 +9161,11 @@ body .bp-messages-user-threads {
 }
 
 .notification_info .notification_type:not(:last-child) {
-  padding-right: 20px;
+  margin-right: 20px;
+}
+
+.bb-notification-column-2 .notification_info .notification_type {
+  width: calc(50% - 10px);
 }
 
 .notification_info .notification_type_icon {
@@ -9198,6 +9202,10 @@ body .bp-messages-user-threads {
     display: none;
     width: 100%;
     margin-bottom: 12px;
+  }
+  .bb-notification-column-2 .notification_info .notification_type {
+    width: 100%;
+    margin-right: 0;
   }
   .notification_info .notification_type.show {
     display: flex;
