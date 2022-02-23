@@ -1,4 +1,3 @@
-/* globals BP_HELLO */
 /**
  * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
@@ -15,16 +14,19 @@
 		if ( null === backdrop ) {
 			return;
 		}
-		document.body.classList.add( 'bp-disable-scroll' );
 
-		// Show modal and overlay.
-		backdrop.style.display = '';
-		modal.style.display    = '';
+		if ( modal.classList.contains('bb-onload-modal') ) {
+			document.body.classList.add( 'bp-disable-scroll' );
+			
+			// Show modal and overlay.
+			backdrop.style.display = '';
+			modal.style.display    = '';
 
-		// Focus the "X" so bp_hello_handle_keyboard_events() works.
-		var focus_target = modal.querySelectorAll( 'a[href], button' );
-		focus_target     = Array.prototype.slice.call( focus_target );
-		focus_target[0].focus();
+			// Focus the "X" so bp_hello_handle_keyboard_events() works.
+			var focus_target = modal.querySelectorAll( 'a[href], button' );
+			focus_target     = Array.prototype.slice.call( focus_target );
+			focus_target[0].focus();
+		}
 
 		// Events.
 		modal.addEventListener( 'keydown', bp_hello_handle_keyboard_events );
@@ -120,37 +122,6 @@
 	if ( document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading' ) {
 		bp_hello_open_modal();
 	} else {
-		/**
-		 * * @since BuddyBoss [BBVERSION]
-		 */
-		if ( 'undefined' !== typeof BP_HELLO && 'yes' === BP_HELLO.bb_display_popup ) {
-			jQuery( document ).on( 'wp-plugin-update-success', function ( event, response ) {
-				if (
-					'undefined' !== typeof response &&
-					'wp-' + response.update + '-update-success' === event.type &&
-					'buddyboss-platform/bp-loader.php' === response.plugin
-				) {
-					var data = {
-						'action': 'bb_plugin_update',
-						'nonce' : BP_HELLO.nonce,
-					};
-					jQuery.ajax(
-						{
-							type: 'POST',
-							url: BP_HELLO.ajax_url,
-							data: data,
-							success: function ( response_data ) {
-								if ( response_data && true === response_data.success && response_data.data ) {
-									jQuery( '#wpfooter' ).after( response_data.data );
-									bp_hello_open_modal();
-								}
-							}
-						}
-					);
-				}
-			} );
-		} else {
-			document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
-		}
+		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
 	}
 }());

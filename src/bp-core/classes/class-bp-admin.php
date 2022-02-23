@@ -207,8 +207,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
-
-			add_action( 'wp_ajax_bb_plugin_update', array( $this, 'bb_plugin_update_callback' ) );
 		}
 
 		/**
@@ -831,22 +829,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 
 			// Update BuddyBoss Plugin.
-			if ( 0 === strpos( get_current_screen()->id, 'plugins' ) ) {
-				$display_popup = 'yes';
-				if ( 'yes' === $display_popup ) {
-					wp_enqueue_style( 'bp-hello-css' );
-					wp_enqueue_script( 'bp-hello-js' );
-					wp_localize_script(
-						'bp-hello-js',
-						'BP_HELLO',
-						array(
-							'ajax_url'         => admin_url( 'admin-ajax.php' ),
-							'nonce'            => wp_create_nonce( 'bp_plugin_update_nonce' ),
-							'bb_display_popup' => $display_popup,
-						)
-					);
-				}
-			}
+			wp_enqueue_style( 'bp-hello-css' );
+			wp_enqueue_script( 'bp-hello-js' );
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -1135,24 +1119,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			foreach ( $scripts as $id => $script ) {
 				wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
 			}
-		}
-
-		/**
-		 * Function will display plugin information after plugin update.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_plugin_update_callback() {
-			if ( ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'bp_plugin_update_nonce' ) ) {
-				return;
-			}
-			$plugin_path = $this->admin_dir . 'templates/update-buddyboss.php';
-			ob_start();
-			include $plugin_path;
-			$content = ob_get_contents();
-			ob_end_clean();
-			wp_send_json_success( $content );
-			wp_die();
 		}
 	}
 endif; // End class_exists check.
