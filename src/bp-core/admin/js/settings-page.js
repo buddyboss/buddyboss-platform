@@ -52,12 +52,13 @@ window.bp = window.bp || {};
 				$( '.btn-open-missing-email' ).trigger( 'click' );
 			}
 
+			/* jshint ignore:start */
 			var missingEmailInstallScroll = bbgetUrlParameter( 'scrollto' );
 			if ( 'bpmissingemails' === missingEmailInstallScroll ) {
 				$('html, body').animate({
 					scrollTop: $( '#bp-missing-emails' ).offset().top
 				}, 2000);
-				$( '.label-bp-missing-emails' ).css('background-color', '#0bb3275e');
+				$( '.label-bp-missing-emails' ).css('background-color', '#f15555');
 				setTimeout(function () {
 					$( '.label-bp-missing-emails' ).css('background-color', 'transparent');
 				}, 2000);
@@ -68,11 +69,12 @@ window.bp = window.bp || {};
 				$('html, body').animate({
 					scrollTop: $( '#bp-reinstall-emails' ).offset().top
 				}, 2000);
-				$( '.label-bp-reinstall-emails' ).css('background-color', '#0bb3275e');
+				$( '.label-bp-reinstall-emails' ).css('background-color', '#f15555');
 				setTimeout(function () {
 					$( '.label-bp-reinstall-emails' ).css('background-color', 'transparent');
 				}, 2000);
 			}
+			/* jshint ignore:end */
 
 			$( '[data-run-js-condition]' ).each(
 				function() {
