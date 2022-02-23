@@ -25,6 +25,7 @@ TABLE OF CONTENTS:
 	6.3 - Desktop Medium
 	6.4 - Desktop Large
 7.0 - Document Mime Type check
+8.0 - Update Modal
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -491,4 +492,21 @@ TABLE OF CONTENTS:
 	.mime-copy {
 		display: inline-block;
 	}
+}
+
+/**
+ * 8.0 - Update Modal
+ */
+
+.bb-update-modal {
+
+	ul.bp-hello-list {
+		font-size: 14px;
+	}
+
+	.video-wrapper {
+		height: auto;
+	}
+
+
 }
