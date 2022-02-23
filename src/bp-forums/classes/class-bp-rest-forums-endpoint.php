@@ -109,7 +109,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of forums IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of forums to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of forums.
-	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity} [orderby] Sort retrieved forums by parameter..
+	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity,include} [orderby] Sort retrieved forums by parameter..
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to forums assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve child pages for. Use 0 to only retrieve top-level forums.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed forums by user.
@@ -164,6 +164,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$args['orderby'] = 'post__in';
 		}
 
 		/**
@@ -950,6 +958,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					'relevance',
 					'popular',
 					'activity',
+					'include',
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
