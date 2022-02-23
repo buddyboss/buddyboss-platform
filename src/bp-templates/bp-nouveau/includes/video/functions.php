@@ -267,7 +267,18 @@ function bp_video_download_file( $attachment_id, $type = 'video' ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_nouveau_video_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_video_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) { // phpcs:ignore
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_video_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'video_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'video_get_video_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) { // phpcs:ignore
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'video' !== $activity->privacy ) {

@@ -1748,7 +1748,7 @@ function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
 function bp_groups_admin_autocomplete_handler() {
 
 	// Bail if user user shouldn't be here, or is a large network.
-	if ( ! bp_current_user_can( 'bp_moderate' ) || bp_is_large_install() ) {
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_die( -1 );
 	}
 

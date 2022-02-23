@@ -1243,6 +1243,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&& bp_is_activity_edit_enabled()
 					&& function_exists( 'bp_activity_user_can_edit' )
 					&& bp_activity_user_can_edit( $activity )
+				) && (
+					isset( $activity->privacy ) &&
+					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
 				)
 				? true
 				: false

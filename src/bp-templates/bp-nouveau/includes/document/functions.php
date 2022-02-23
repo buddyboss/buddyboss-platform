@@ -1073,7 +1073,18 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
  * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && ( bp_is_document_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+	if (
+		isset( $buttons['activity_edit'] ) &&
+		(
+			bp_is_document_component() ||
+			! bp_is_activity_component()
+		) &&
+		! empty( $_REQUEST['action'] ) && // phpcs:ignore
+		(
+			'document_get_activity' === $_REQUEST['action'] || // phpcs:ignore
+			'document_get_document_description' === $_REQUEST['action'] // phpcs:ignore
+		)
+	) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'document' !== $activity->privacy ) {

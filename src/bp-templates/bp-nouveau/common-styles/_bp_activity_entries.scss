@@ -399,7 +399,7 @@
 	}
 
 	.bp-activity-head {
-		margin-right: 25px;
+		margin-right: 35px;
 	}
 
 	.bb-activity-more-options-wrap {
@@ -861,6 +861,33 @@ ul.medium-editor-toolbar-actions {
 			max-width: 100%;
 		}
 
+	}
+}
+
+.activity-video-preview {
+
+	.activity-link-preview-container {
+		border: 0;
+
+		.activity-link-preview-title {
+			margin: 0;
+		}
+	}
+
+	.activity-link-preview-excerpt {
+		width: 100%;
+
+		> p {
+			margin-bottom: 0;
+		}
+
+		.bb-video-wrapper {
+			margin-bottom: 0;
+		}
+
+		iframe {
+			width: 100%;
+		}
 	}
 }
 
