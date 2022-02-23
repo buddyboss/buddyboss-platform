@@ -832,6 +832,10 @@ window.bp = window.bp || {};
 											} else {
 												$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools' ).remove();
 												$( '.section-repair_community .settings fieldset' ).append( '<div class="updated"><p>' + response.data.message + '</p></div>' );
+												if ( typeof response.data.records !== 'undefined' && '' !== response.data.records ) {
+													$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code' ).remove();
+													$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<code>' + response.data.records + '</code>' );
+												}
 												currentAction = currentAction + 1;
 												bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
 											}

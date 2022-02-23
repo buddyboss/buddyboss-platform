@@ -985,10 +985,14 @@ function bp_admin_install_emails() {
 
 	return array(
 		'status'  => 1,
-		'message'  => sprintf(
-		/* translators: %1$s for counts %2$s view emails url. */
-			__( 'Installing missing emails &hellip; %1$s missing emails have been installed. %2$s', 'buddyboss' ),
+		'records' => sprintf(
+		/* translators: %1$s for counts missing emails. */
+			__( '%1$s missing emails have been installed.', 'buddyboss' ),
 			$installed_email,
+		),
+		'message' => sprintf(
+		/* translators: %1$s for view emails url. */
+			__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss' ),
 			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
 		),
 	);
