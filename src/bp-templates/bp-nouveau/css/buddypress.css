@@ -6267,6 +6267,12 @@ form.ac-form .ac-reply-content input {
   }
 }
 
+#buddypress .members-list li .bb_more_options.member-dropdown {
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
 @media screen and (min-width: 32em) {
   body:not(.logged-in) .members-list .user-update {
     width: 96%;

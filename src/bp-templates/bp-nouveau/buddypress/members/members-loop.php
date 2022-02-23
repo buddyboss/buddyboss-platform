@@ -126,7 +126,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								<?php echo wp_kses_post( $followers_count ); ?>
 							</div>
 
-							<div class="flex only-grid-view align-items-center follow-container justify-center">
+							<div class="flex align-items-center primary-action justify-center">
 								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 							</div>
 						</div><!-- // .item -->
@@ -147,7 +147,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						</div>
 					</div>
 
-					<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
+					<div class="bb_more_options member-dropdown">
+						<a href="#" class="bb_more_options_action">
+							<i class="bb-icon-menu-dots-h"></i>
+						</a>
+						<div class="bb_more_options_list">	
+							<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
+						</div>
+					</div>
 				</div>
 			</li>
 

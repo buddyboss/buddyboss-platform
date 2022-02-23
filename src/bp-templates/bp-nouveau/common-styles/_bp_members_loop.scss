@@ -70,6 +70,13 @@
 	}
 } // close .buddypress-wrap
 
+// More option on memeber listing
+#buddypress .members-list li .bb_more_options.member-dropdown {
+	position: absolute;
+	right: 15px;
+	top: 5px;
+}
+
 // If logged out or if the loop item is
 // current user we don't display action buttons
 // so lets remove the update width making room
