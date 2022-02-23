@@ -448,6 +448,8 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'button_attr'         => array(
 						'data-title'           => esc_html__( 'Remove Connection', 'buddyboss' ),
 						'data-title-displayed' => esc_html__( 'Connected', 'buddyboss' ),
+						'data-bb-user-name'    => bp_core_get_user_displayname( $potential_friend_id ),
+						'data-bb-user-link'    => bp_core_get_user_domain( $potential_friend_id ),
 					),
 				),
 				$button_args

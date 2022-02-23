@@ -6267,6 +6267,12 @@ form.ac-form .ac-reply-content input {
   }
 }
 
+#buddypress .members-list li .bb_more_options.member-dropdown {
+  position: absolute;
+  left: 15px;
+  top: 5px;
+}
+
 @media screen and (min-width: 32em) {
   body:not(.logged-in) .members-list .user-update {
     width: 96%;
@@ -7608,8 +7614,8 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
-  content: "\e839";
-  font-size: 17px;
+  content: "\e910";
+  font-size: 16px;
   color: inherit !important;
 }
 

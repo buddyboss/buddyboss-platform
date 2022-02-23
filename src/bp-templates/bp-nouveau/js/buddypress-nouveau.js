@@ -1083,7 +1083,7 @@ window.bp = window.bp || {};
 				function(e) {
 					e.preventDefault();
 
-					var list     = $( this ).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
+					var list         = $( this ).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
 						items        = list.find( '.read-item' ),
 						removedItems = list.data( 'removed-items' );
 
@@ -1799,14 +1799,12 @@ window.bp = window.bp || {};
 			}
 
 			if ( 'is_friend' !== action ) {
-			
+
 				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
 					return false;
 				}
 
 			}
-
-			
 
 			// show popup if it is leave_group action.
 			var leave_group_popup        = $( '.bb-leave-group-popup' );
@@ -1829,9 +1827,9 @@ window.bp = window.bp || {};
 			}
 
 			// show popup if it is is_friend action.
-			var remove_connection_popup  = $( '.bb-remove-connection' );
-			var member__name        	 = $( target ).data( 'bb-user-name' );
-			var member_link 			 = $( target ).data( 'bb-user-link' );
+			var remove_connection_popup = $( '.bb-remove-connection' );
+			var member__name            = $( target ).data( 'bb-user-name' );
+			var member_link             = $( target ).data( 'bb-user-link' );
 			if ( 'is_friend' === action && 'opened' !== $( target ).attr( 'data-popup-shown' ) ) {
 				if ( remove_connection_popup.length ) {
 					remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '<a href="' + member_link + '">' + member__name + '</a>' );
@@ -1886,10 +1884,26 @@ window.bp = window.bp || {};
 			// Add a pending class to prevent queries while we're processing the action.
 			target.addClass( 'pending loading' );
 
+			var current_page = '';
+			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) ) {
+				current_page = 'directory';
+			} else if ( $( document.body ).hasClass( 'single' ) && $( document.body ).hasClass( 'xprofile' ) ) {
+				current_page = 'single';
+			}
+
+			var button_clicked  = 'primary';
+			var button_activity = ( 'single' === current_page ) ? target.closest( '.header-dropdown' ) : target.closest( '.footer-button-wrap' );
+
+			if ( typeof button_activity.length !== 'undefined' && button_activity.length > 0 ) {
+				button_clicked = 'secondary';
+			}
+
 			self.ajax(
 				{
 					action: object + '_' + action,
 					item_id: item_id,
+					current_page: current_page,
+					button_clicked: button_clicked,
 					_wpnonce: nonce
 				},
 				object,
@@ -2025,8 +2039,8 @@ window.bp = window.bp || {};
 		 */
 		buttonHover: function ( event ) {
 			var target = $( event.currentTarget ), action = target.data( 'bp-btn-action' ),
-				item    = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
-				object  = item.data( 'bp-item-component' );
+				item   = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
+				object = item.data( 'bp-item-component' );
 
 			// Simply let the event fire if we don't have needed values.
 			if ( ! action || ! item_id || ! object ) {
@@ -2040,7 +2054,7 @@ window.bp = window.bp || {};
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title' ) );
+					target.attr( 'data-balloon', target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ) );
 					target.find( 'span' ).html( target.data( 'title' ) );
 					target.html( target.data( 'title' ) );
 				} else {
@@ -2064,9 +2078,9 @@ window.bp = window.bp || {};
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
 
-				// support for buddyboss theme for button actions and icons and texts.
+				// support for BuddyBoss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
+					target.attr( 'data-balloon', target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ) );
 					target.find( 'span' ).html( target.data( 'title-displayed' ) );
 					target.html( target.data( 'title-displayed' ) );
 				} else {
@@ -2110,7 +2124,7 @@ window.bp = window.bp || {};
 		 *
 		 * @param event
 		 */
-		 removeConnectionAction: function ( event ) {
+		removeConnectionAction: function ( event ) {
 			event.preventDefault();
 			$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
 			$( 'body' ).find( '[data-current-anchor="true"]' ).trigger( 'click' );

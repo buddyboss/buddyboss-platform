@@ -115,7 +115,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 					<div class="member-header-actions-wrap">
 						<?php
-							add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+							add_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
 							bp_nouveau_member_header_buttons(
 								array(
 									'container_classes' => array(
@@ -123,7 +123,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 									),
 								)
 							);
-							remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+							remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
 
 							remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 							remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
@@ -138,7 +138,6 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 									),
 								)
 							);
-							add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 							add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 							add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
 							add_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
