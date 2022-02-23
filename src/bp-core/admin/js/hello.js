@@ -128,10 +128,11 @@
 				if (
 					'undefined' !== typeof response &&
 					'wp-' + response.update + '-update-success' === event.type &&
-					'buddyboss-platform/bp-loader.php' === response.plugin
+					'akismet/akismet.php' === response.plugin
 				) {
 					var data = {
 						'action': 'bb_plugin_update',
+						'nonce' : BP_HELLO.nonce,
 					};
 					jQuery.ajax(
 						{
@@ -139,8 +140,8 @@
 							url: BP_HELLO.ajax_url,
 							data: data,
 							success: function ( response_data ) {
-								if ( response_data ) {
-									jQuery( '#wpfooter' ).after( response_data );
+								if ( response_data && true === response_data.success && response_data.data ) {
+									jQuery( '#wpfooter' ).after( response_data.data );
 									bp_hello_open_modal();
 								}
 							}

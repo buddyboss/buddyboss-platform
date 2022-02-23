@@ -839,6 +839,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 						'BP_HELLO',
 						array(
 							'ajax_url'         => admin_url( 'admin-ajax.php' ),
+							'nonce'            => wp_create_nonce( 'bp_plugin_update_nonce' ),
 							'bb_display_popup' => $display_popup,
 						)
 					);
