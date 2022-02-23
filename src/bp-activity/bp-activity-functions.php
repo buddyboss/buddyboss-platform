@@ -1989,6 +1989,7 @@ function bp_activity_get( $args = '' ) {
 			'page'              => 1,            // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,        // results per page
 			'sort'              => 'DESC',       // sort ASC or DESC
+			'order_by'          => false,         // order by.
 			'display_comments'  => false,        // False for no comments. 'stream' for within stream display, 'threaded' for below each activity item.
 
 			'privacy'           => false,        // Privacy of activity
@@ -2026,6 +2027,7 @@ function bp_activity_get( $args = '' ) {
 			'per_page'          => $r['per_page'],
 			'max'               => $r['max'],
 			'sort'              => $r['sort'],
+			'order_by'          => $r['order_by'],
 			'privacy'           => $r['privacy'],
 			'search_terms'      => $r['search_terms'],
 			'meta_query'        => $r['meta_query'],
