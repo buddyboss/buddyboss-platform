@@ -47,6 +47,10 @@ window.bp = window.bp || {};
 				}
 			);
 
+			var displayInstallEMailPopup = $.bbGetParameterByName( 'popup' );
+			if ( 'yes' === displayInstallEMailPopup ) {
+				$( '.btn-open-missing-email' ).trigger( 'click' );
+			}
 
 			$( '[data-run-js-condition]' ).each(
 				function() {
@@ -1944,6 +1948,14 @@ window.bp = window.bp || {};
 		var expires     = 'expires=' + d.toUTCString();
 		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 	}
+
+	// Read a page's GET URL variables and return them as an associative array.
+
+	$.bbGetParameterByName = function(name) {
+		var results = new RegExp('[\\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+		return (results && results[1]) ? results[1] : null;
+	};
+
 	/* jshint ignore:end */
 
 }());
