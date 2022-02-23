@@ -803,7 +803,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s message threads updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -813,7 +813,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'thread update complete!', 'buddyboss' ),
+			'message' => __( 'Messages update complete!', 'buddyboss' ),
 		);
 	}
 }

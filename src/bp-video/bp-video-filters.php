@@ -989,11 +989,11 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums video privacy updated %s', 'buddyboss' ); // phpcs:ignore
+		$statement = __( 'Forums video privacy update %s', 'buddyboss' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'complete!', 'buddyboss' ) ),
 		);
 	}
 }

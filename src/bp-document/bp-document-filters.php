@@ -1575,7 +1575,7 @@ function bp_document_admin_repair_document() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 				'status'  => 'running',
@@ -1585,7 +1585,7 @@ function bp_document_admin_repair_document() {
 	} else {
 		return array(
 				'status'  => 1,
-				'message' => __( 'document update complete!', 'buddyboss' ),
+				'message' => __( 'Document update complete!', 'buddyboss' ),
 		);
 	}
 }

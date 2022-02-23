@@ -1693,7 +1693,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1703,7 +1703,7 @@ function bp_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Media update complete!', 'buddyboss' ),
+			'message' => __( 'Messages update complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1801,11 +1801,11 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
+		$statement = __( 'Forums media privacy update %s', 'buddyboss' );
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'complete!', 'buddyboss' ) ),
 		);
 	}
 }

@@ -710,7 +710,7 @@ function resync_xprofile_wordpress_fields() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Re-sync user profile data to WordPress; %s', 'buddyboss' );
+		$statement = __( 'Re-sync user profile data to WordPress... %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
@@ -761,7 +761,7 @@ function resync_wordpress_xprofile_fields() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields; %s', 'buddyboss' );
+		$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields... %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
@@ -985,7 +985,7 @@ function bp_admin_install_emails() {
 		'status'  => 1,
 		'message' => sprintf(
 		    /* translator: %d: Number of emails installed */
-			esc_html__( '%d Emails have been successfully installed.', 'buddyboss' ),
+			esc_html__( '%d emails have been successfully installed.', 'buddyboss' ),
 			$installed_email
 		),
 	);
