@@ -214,7 +214,8 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 	<?php
 	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
 
-endif; ?>
+endif;
+?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
@@ -229,7 +230,7 @@ endif; ?>
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">
-						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+						<p><?php echo esc_html__( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
 						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
