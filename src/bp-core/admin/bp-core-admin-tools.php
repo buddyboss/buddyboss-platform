@@ -1055,10 +1055,9 @@ function bp_admin_reinstall_emails() {
 
 	return array(
 		'status'  => 1,
-		'message' => __( 'Reseting emails &hellip; Complete!', 'buddyboss' ),
 		'message' => sprintf(
-		/* translators: %1$s for counts %2$s view emails url. */
-			__( 'Emails have been successfully reinstalled. %1$s', 'buddyboss' ),
+		/* translators: %1$s for view emails url. */
+			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss' ),
 			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
 		),
 	);
