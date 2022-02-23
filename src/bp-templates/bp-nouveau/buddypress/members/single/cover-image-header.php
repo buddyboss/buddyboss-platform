@@ -51,7 +51,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 			?>
 			<?php if ( bp_is_my_profile() ) { ?>
 				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-edit-thin"></i>
+					<i class="bb-icon-camera"></i>
 				</a>
 
 				<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) { ?>
@@ -81,10 +81,15 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 					}
 					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-edit-thin"></i>
+						<i class="bb-icon-camera"></i>
 					</a>
 				<?php } ?>
 				<?php bp_displayed_user_avatar( 'type=full' ); ?>
+				<?php
+				if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
+					echo wp_kses_post( bp_get_user_member_type( bp_displayed_user_id() ) );
+				}
+				?>
 			</div><!-- #item-header-avatar -->
 
 			<div id="item-header-content">
@@ -157,34 +162,48 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
 						<?php } else { ?>
-							<div class="flex align-items-center">
+							<div class="flex align-items-center member-social">
 								<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
 							</div>
 						<?php } ?>
 
-					</div>
+					</div><!-- .bb-user-content-wrap -->
 
-					<?php
-					remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+					<div class="member-header-actions-wrap">
 
-					bp_nouveau_member_header_buttons(
-						array(
-							'container'         => 'div',
-							'button_element'    => 'button',
-							'container_classes' => array( 'member-header-actions' ),
-						)
-					);
+						<?php
+						add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+						bp_nouveau_member_header_buttons(
+							array(
+								'container'         => 'div',
+								'button_element'    => 'button',
+								'container_classes' => array( 'member-header-actions' ),
+							)
+						);
+						remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
 
-					bp_nouveau_member_header_bubble_buttons(
-						array(
-							'container'         => 'div',
-							'button_element'    => 'button',
-							'container_classes' => array( 'bb_more_options' ),
-						)
-					);
+						remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+						remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+						remove_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
+						add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
+						add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
+						add_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
+						bp_nouveau_member_header_bubble_buttons(
+							array(
+								'container'         => 'div',
+								'button_element'    => 'button',
+								'container_classes' => array( 'bb_more_options' ),
+							)
+						);
+						add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
+						add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+						add_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
+						remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
+						remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
+						remove_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
+						?>
 
-					add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-					?>
+					</div><!-- .member-header-actions-wrap -->
 
 				</div>
 
@@ -195,4 +214,29 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 	<?php
 	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
 
-endif;
+endif; ?>
+
+<!-- Remove Connection confirmation popup -->
+<div class="bb-remove-connection bb-action-popup" style="display: none">
+	<transition name="modal">
+		<div class="modal-mask bb-white bbm-model-wrap">
+			<div class="modal-wrapper">
+				<div class="modal-container">
+					<header class="bb-model-header">
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
+						<a class="bb-close-remove-connection bb-model-close-button" href="#">
+							<span class="bb-icon bb-icon-close"></span>
+						</a>
+					</header>
+					<div class="bb-remove-connection-content bb-action-popup-content">
+						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+					</div>
+					<footer class="bb-model-footer flex align-items-center">
+						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+					</footer>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div> <!-- .bb-remove-connection -->

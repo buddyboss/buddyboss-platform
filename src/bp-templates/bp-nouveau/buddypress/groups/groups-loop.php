@@ -155,7 +155,7 @@ if ( 'small' === $group_cover_height ) {
 							<p><?php echo esc_html__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
 							<a class="button push-right bb-confirm-leave-group" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 

@@ -815,13 +815,15 @@ function bp_group_headers_tutorial() {
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62811, // TODO : need to be update Tutorial
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62811, // TODO : need to be update Tutorial.
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
@@ -2225,7 +2227,7 @@ function bp_admin_setting_group_layout_default_option() {
 			'<option value="%s" %s>%s</option>',
 			$key,
 			$key == $selected ? 'selected' : '',
-			$value
+			esc_attr( $value )
 		);
 	}
 	printf( '</select>' );

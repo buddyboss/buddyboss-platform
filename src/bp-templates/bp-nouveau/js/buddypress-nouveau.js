@@ -303,16 +303,19 @@ window.bp = window.bp || {};
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bp-suggestions' ).bp_mentions( bp.mentions.users );
-				$( '#whats-new' ).on( 'inserted.atwho', function () { //Get caret position when user adds mention
-					if (window.getSelection && document.createRange) {
-						var sel = window.getSelection && window.getSelection();
-						if (sel && sel.rangeCount > 0) {
-							window.activityCaretPosition = sel.getRangeAt(0);
+				$( '#whats-new' ).on(
+					'inserted.atwho',
+					function () { // Get caret position when user adds mention.
+						if (window.getSelection && document.createRange) {
+							var sel = window.getSelection && window.getSelection();
+							if (sel && sel.rangeCount > 0) {
+								window.activityCaretPosition = sel.getRangeAt( 0 );
+							}
+						} else {
+							window.activityCaretPosition = document.selection.createRange();
 						}
-					} else {
-						window.activityCaretPosition = document.selection.createRange();
 					}
-				});
+				);
 			}
 		},
 		/**
@@ -326,7 +329,7 @@ window.bp = window.bp || {};
 		hideSingleUrl: function () {
 			var _findtext  = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url       = '',
-				newString = '',
+				newString  = '',
 				startIndex = '',
 				_is_exist  = 0;
 			if ( 0 <= _findtext.indexOf( 'http://' ) ) {
@@ -696,6 +699,8 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
+			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
+			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
 			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
@@ -715,7 +720,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert );
 
-			//More Option Dropdown
+			// More Option Dropdown.
 			$( document ).on( 'click', this.toggleMoreOption.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
@@ -738,10 +743,10 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		 bbHeartbeatSend: function( event, data ) {
+		bbHeartbeatSend: function( event, data ) {
 			data.onScreenNotifications = true;
 
-			// Add an heartbeat send event to possibly any BuddyPress pages
+			// Add an heartbeat send event to possibly any BuddyPress pages.
 			$( '#buddypress' ).trigger( 'bb_heartbeat_send', data );
 		},
 
@@ -753,8 +758,8 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		bbHeartbeatTick: function(  event, data ) {
-            // Inject on-screen notification.
-			bp.Nouveau.bbInjectOnScreenNotifications(  event, data );
+			// Inject on-screen notification.
+			bp.Nouveau.bbInjectOnScreenNotifications( event, data );
 		},
 
 		/**
@@ -771,47 +776,54 @@ window.bp = window.bp || {};
 			}
 
 			var wrap          = $( '.bb-onscreen-notification' ),
-			    list          = wrap.find( '.notification-list' ),
-			    removedItems  = list.data('removed-items'),
-				animatedItems = list.data('animated-items'),
+				list          = wrap.find( '.notification-list' ),
+				removedItems  = list.data( 'removed-items' ),
+				animatedItems = list.data( 'animated-items' ),
 				newItems      = [],
-			    notifications = $( $.parseHTML( '<ul>'+data.on_screen_notifications+'</ul>' ) );
+				notifications = $( $.parseHTML( '<ul>' + data.on_screen_notifications + '</ul>' ) );
 
 			// Ignore all view notifications.
-			$.each( removedItems, function( index, id ) {
-				var removedItem = notifications.find( '[data-notification-id='+id+']' );
+			$.each(
+				removedItems,
+				function( index, id ) {
+					var removedItem = notifications.find( '[data-notification-id=' + id + ']' );
 
-				if ( removedItem.length ) {
-					removedItem.closest( '.read-item' ).remove();
+					if ( removedItem.length ) {
+						removedItem.closest( '.read-item' ).remove();
+					}
 				}
-			} );
+			);
 
 			var appendItems = notifications.find( '.read-item' );
 
-			appendItems.each( function( index, item ) {
-				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+			appendItems.each(
+				function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-				if ( '-1' == $.inArray( id, animatedItems ) ) {
-					$( item ).addClass( 'pull-animation' );
-					animatedItems.push( id );
-					newItems.push( id );
-				} else {
-					$( item ).removeClass( 'pull-animation' );
+					if ( '-1' == $.inArray( id, animatedItems ) ) {
+						$( item ).addClass( 'pull-animation' );
+						animatedItems.push( id );
+						newItems.push( id );
+					} else {
+						$( item ).removeClass( 'pull-animation' );
+					}
 				}
-			} );
+			);
 
 			// Remove brder when new item is appear.
 			if ( newItems.length ) {
-				appendItems.each( function( index, item ) {
-					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
-					if ( '-1' == $.inArray( id, newItems ) ) {
-						$( item ).removeClass( 'recent-item' );
-						var borderItems  = list.data( 'border-items' );
-						borderItems.push( id );
-						list.attr( 'data-border-items', JSON.stringify( borderItems ) );
+				appendItems.each(
+					function( index, item ) {
+						var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+						if ( '-1' == $.inArray( id, newItems ) ) {
+							$( item ).removeClass( 'recent-item' );
+							var borderItems = list.data( 'border-items' );
+							borderItems.push( id );
+							list.attr( 'data-border-items', JSON.stringify( borderItems ) );
 
+						}
 					}
-				} );
+				);
 			}
 
 			// Store animated notification id in 'animated-items' data attribute.
@@ -825,7 +837,7 @@ window.bp = window.bp || {};
 			wrap.removeClass( 'close-all-items' );
 
 			// Set class 'bb-more-item' in item when more than three notifications.
-			appendItems.eq(2).nextAll().addClass( 'bb-more-item' );
+			appendItems.eq( 2 ).nextAll().addClass( 'bb-more-item' );
 
 			if ( appendItems.length > 3 ) {
 				list.addClass( 'bb-more-than-3' );
@@ -852,21 +864,23 @@ window.bp = window.bp || {};
 		 * Remove notification border.
 		 */
 		notificationBorder: function() {
-			var wrap         = $( '.bb-onscreen-notification' ),
-				list         = wrap.find( '.notification-list' ),
-				borderItems  = list.data( 'border-items' );
-				//newItems     = [];
+			var wrap        = $( '.bb-onscreen-notification' ),
+				list        = wrap.find( '.notification-list' ),
+				borderItems = list.data( 'border-items' );
+			// newItems     = [];
 
 			// Remove border for single notificaiton after 30s later.
-			list.find( '.read-item' ).each( function( index, item ) {
-				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+			list.find( '.read-item' ).each(
+				function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-				if ( '-1' != $.inArray( id, borderItems ) ) {
-					return;
+					if ( '-1' != $.inArray( id, borderItems ) ) {
+						return;
+					}
+
+					$( item ).addClass( 'recent-item' );
 				}
-
-				$( item ).addClass( 'recent-item' );
-			} );
+			);
 
 			// Store removed notification id in 'auto-removed-items' data attribute.
 			list.attr( 'data-border-items', JSON.stringify( borderItems ) );
@@ -876,14 +890,14 @@ window.bp = window.bp || {};
 		 * Notification count in browser tab.
 		 */
 		browserTabCountNotification: function() {
-			var wrap         = $( '.bb-onscreen-notification' ),
-				list         = wrap.find( '.notification-list' ),
-				items        = list.find( '.read-item' ),
-				titleTag     = $('html').find( 'title' ),
-				title        = wrap.data( 'title-tag' );
+			var wrap     = $( '.bb-onscreen-notification' ),
+				list     = wrap.find( '.notification-list' ),
+				items    = list.find( '.read-item' ),
+				titleTag = $( 'html' ).find( 'title' ),
+				title    = wrap.data( 'title-tag' );
 
 			if ( items.length > 0 ) {
-				titleTag.text( '('+items.length+') ' + title );
+				titleTag.text( '(' + items.length + ') ' + title );
 			} else {
 				titleTag.text( title );
 			}
@@ -893,7 +907,7 @@ window.bp = window.bp || {};
 		 * Inject notification on browser tab.
 		 */
 		browserTabFlashNotification: function() {
-			var wrap = $( '.bb-onscreen-notification' ),
+			var wrap      = $( '.bb-onscreen-notification' ),
 				broserTab = wrap.data( 'broser-tab' );
 
 			// Check notification broser tab settings option.
@@ -918,20 +932,22 @@ window.bp = window.bp || {};
 				list = wrap.find( '.notification-list' );
 
 			var items        = list.find( '.read-item' ),
-				notification = items.first().find('.notification-content .bb-full-link a').text(),
-				titleTag     = $('html').find( 'title' ),
+				notification = items.first().find( '.notification-content .bb-full-link a' ).text(),
+				titleTag     = $( 'html' ).find( 'title' ),
 				title        = wrap.attr( 'data-title-tag' ),
 				flashStatus  = wrap.attr( 'data-flash-status' ),
 				flashItems   = list.data( 'flash-items' );
 
 			if ( ! document.hidden ) {
-				items.each( function( index, item ) {
-					var id = $( item ).find( '.actions .action-close' ).attr( 'data-notification-id' );
+				items.each(
+					function( index, item ) {
+						var id = $( item ).find( '.actions .action-close' ).attr( 'data-notification-id' );
 
-					if ( '-1' == $.inArray( id, flashItems ) ) {
-						flashItems.push( id );
+						if ( '-1' == $.inArray( id, flashItems ) ) {
+							flashItems.push( id );
+						}
 					}
-				} );
+				);
 
 				list.attr( 'data-flash-items', JSON.stringify( flashItems ) );
 			}
@@ -944,7 +960,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( 'default_title' === flashStatus ) {
-				titleTag.text( '('+items.length+') ' + title );
+				titleTag.text( '(' + items.length + ') ' + title );
 				var id = items.first().find( '.actions .action-close' ).attr( 'data-notification-id' );
 
 				if ( '-1' == $.inArray( id, flashItems ) ) {
@@ -962,7 +978,7 @@ window.bp = window.bp || {};
 		notificationAutoHide: function() {
 			var wrap         = $( '.bb-onscreen-notification' ),
 				list         = wrap.find( '.notification-list' ),
-				removedItems = list.data('auto-removed-items'),
+				removedItems = list.data( 'auto-removed-items' ),
 				visibility   = wrap.data( 'visibility' );
 
 			// Check notification autohide settings option.
@@ -977,21 +993,26 @@ window.bp = window.bp || {};
 			}
 
 			// Remove single notification according setting option time.
-			list.find( '.read-item' ).each( function( index, item ) {
-				var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
+			list.find( '.read-item' ).each(
+				function( index, item ) {
+					var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-				if ( '-1' != $.inArray( id, removedItems ) ) {
-					return;
-				}
-
-				removedItems.push( id );
-
-				setTimeout( function() {
-					if ( list.find( '.actions .action-close[data-notification-id='+id+']' ).length ) {
-						list.find( '.actions .action-close[data-notification-id='+id+']' ).trigger( 'click' );
+					if ( '-1' != $.inArray( id, removedItems ) ) {
+						return;
 					}
-				}, 1000*hideAfter );
-			} );
+
+					removedItems.push( id );
+
+					setTimeout(
+						function() {
+							if ( list.find( '.actions .action-close[data-notification-id=' + id + ']' ).length ) {
+								list.find( '.actions .action-close[data-notification-id=' + id + ']' ).trigger( 'click' );
+							}
+						},
+						1000 * hideAfter
+					);
+				}
+			);
 
 			// Store removed notification id in 'auto-removed-items' data attribute.
 			list.attr( 'data-auto-removed-items', JSON.stringify( removedItems ) );
@@ -1001,87 +1022,100 @@ window.bp = window.bp || {};
 		 * Click event for remove single notification.
 		 */
 		notificationRemovedAction: function() {
-			$('.bb-onscreen-notification .notification-list').on('click', '.action-close', function(e) {
-				e.preventDefault();
-				bp.Nouveau.removeOnScreenNotification( this );
-			});
+			$( '.bb-onscreen-notification .notification-list' ).on(
+				'click',
+				'.action-close',
+				function(e) {
+					e.preventDefault();
+					bp.Nouveau.removeOnScreenNotification( this );
+				}
+			);
 		},
 
 		/**
 		 * Remove single notification.
 		 */
 		removeOnScreenNotification: function( self ) {
-			var list         = $(self).closest( '.notification-list' ),
-				item         = $(self).closest( '.read-item' ),
-				id           = $(self).data( 'notification-id' ),
+			var list         = $( self ).closest( '.notification-list' ),
+				item         = $( self ).closest( '.read-item' ),
+				id           = $( self ).data( 'notification-id' ),
 				removedItems = list.data( 'removed-items' );
 
-			item.addClass('close-item');
+			item.addClass( 'close-item' );
 
-			setTimeout(function() {
-				removedItems.push(id);
+			setTimeout(
+				function() {
+					removedItems.push( id );
 
-				// Set the removed notification id in data-removed-items attribute.
-				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
-				item.remove();
-				bp.Nouveau.browserTabCountNotification();
-				bp.Nouveau.visibilityOnScreenClearButton();
+					// Set the removed notification id in data-removed-items attribute.
+					list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
+					item.remove();
+					bp.Nouveau.browserTabCountNotification();
+					bp.Nouveau.visibilityOnScreenClearButton();
 
-				// After removed get, rest of the notification.
-				var items = list.find( '.read-item' );
+					// After removed get, rest of the notification.
+					var items = list.find( '.read-item' );
 
-				if ( ! items.length ) {
-					list.closest( '.bb-onscreen-notification' ).hide();
-					return;
-				}
+					if ( ! items.length ) {
+						list.closest( '.bb-onscreen-notification' ).hide();
+						return;
+					}
 
-				if ( items.length < 4 ) {
-					list.removeClass( 'bb-more-than-3' );
-				}
+					if ( items.length < 4 ) {
+						list.removeClass( 'bb-more-than-3' );
+					}
 
-				//items.first().addClass( 'recent-item' );
-				items.slice(0, 3).removeClass( 'bb-more-item' );
+					// items.first().addClass( 'recent-item' );
+					items.slice( 0, 3 ).removeClass( 'bb-more-item' );
 
-			}, 500 );
+				},
+				500
+			);
 		},
 
 		/**
 		 * Remove all notifications.
 		 */
 		removeAllNotification: function() {
-			$('.bb-onscreen-notification .bb-remove-all-notification').on('click', '.action-close', function(e) {
-				e.preventDefault();
+			$( '.bb-onscreen-notification .bb-remove-all-notification' ).on(
+				'click',
+				'.action-close',
+				function(e) {
+					e.preventDefault();
 
-				var list         = $(this).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
-					items        = list.find( '.read-item' ),
-					removedItems = list.data( 'removed-items' );
+					var list     = $( this ).closest( '.bb-onscreen-notification' ).find( '.notification-list' ),
+						items        = list.find( '.read-item' ),
+						removedItems = list.data( 'removed-items' );
 
-				// Collect all removed notification ids.
-				items.each( function( index, item ) {
-					var id = $(item).find('.actions .action-close').data( 'notification-id' );
+					// Collect all removed notification ids.
+					items.each(
+						function( index, item ) {
+							var id = $( item ).find( '.actions .action-close' ).data( 'notification-id' );
 
-					if ( id ) {
-						removedItems.push( id );
-					}
-				} );
+							if ( id ) {
+								removedItems.push( id );
+							}
+						}
+					);
 
-				// Set all removed notification ids in data-removed-items attribute.
-				list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
-				items.remove();
-				bp.Nouveau.browserTabCountNotification();
-				bp.Nouveau.visibilityOnScreenClearButton();
-				list.closest( '.bb-onscreen-notification' ).addClass('close-all-items');
-				$('.bb-onscreen-notification').fadeOut(200);
-				list.removeClass( 'bb-more-than-3' );
-			});
+					// Set all removed notification ids in data-removed-items attribute.
+					list.attr( 'data-removed-items', JSON.stringify( removedItems ) );
+					items.remove();
+					bp.Nouveau.browserTabCountNotification();
+					bp.Nouveau.visibilityOnScreenClearButton();
+					list.closest( '.bb-onscreen-notification' ).addClass( 'close-all-items' );
+					$( '.bb-onscreen-notification' ).fadeOut( 200 );
+					list.removeClass( 'bb-more-than-3' );
+				}
+			);
 		},
 
 		/**
 		 * Set title tag in notification data attribute.
 		 */
 		setTitle: function() {
-			var title = $('html head').find( 'title' ).text();
-			$('.bb-onscreen-notification').attr( 'data-title-tag', title );
+			var title = $( 'html head' ).find( 'title' ).text();
+			$( '.bb-onscreen-notification' ).attr( 'data-title-tag', title );
 		},
 
 		/**
@@ -1093,13 +1127,13 @@ window.bp = window.bp || {};
 				items = list.find( '.read-item' );
 
 			if ( items.length > 1 ) {
-				wrap.removeClass('single-notification');
-				wrap.addClass('active-button');
-				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn(600);
+				wrap.removeClass( 'single-notification' );
+				wrap.addClass( 'active-button' );
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn( 600 );
 			} else {
-				wrap.addClass('single-notification');
-				wrap.removeClass('active-button');
-				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut(200);
+				wrap.addClass( 'single-notification' );
+				wrap.removeClass( 'active-button' );
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut( 200 );
 			}
 		},
 
@@ -1764,28 +1798,54 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
-				return false;
+			if ( 'is_friend' !== action ) {
+			
+				if ( ( undefined !== BP_Nouveau[ action + '_confirm' ] && false === window.confirm( BP_Nouveau[ action + '_confirm' ] ) ) || target.hasClass( 'pending' ) ) {
+					return false;
+				}
+
 			}
 
-			//show popup if it is leave_group action
-			var leave_group_popup = $( '.bb-leave-group-popup' );
-			var leave_group__name = $( target ).data( 'bb-group-name' );
+			
+
+			// show popup if it is leave_group action.
+			var leave_group_popup        = $( '.bb-leave-group-popup' );
+			var leave_group__name        = $( target ).data( 'bb-group-name' );
 			var leave_group_anchor__link = $( target ).data( 'bb-group-link' );
-			if( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
-				if( leave_group_popup.length ) {
-					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '<a href="'+ leave_group_anchor__link +'">'+ leave_group__name +'</a>' );
-					$( 'body' ).find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); //Add clicked class manually to run function.
+			if ( 'leave_group' === action && 'true' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( leave_group_popup.length ) {
+					leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '<a href="' + leave_group_anchor__link + '">' + leave_group__name + '</a>' );
+					$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
 					leave_group_popup.show();
 					$( target ).attr( 'data-current-anchor', 'true' );
 					$( target ).attr( 'data-popup-shown', 'true' );
 					return false;
 				}
 			} else {
-				$( 'body' ).find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
-				$( 'body' ).find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
-				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html('');
+				$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
+				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
 				leave_group_popup.hide();
+			}
+
+			// show popup if it is is_friend action.
+			var remove_connection_popup  = $( '.bb-remove-connection' );
+			var member__name        	 = $( target ).data( 'bb-user-name' );
+			var member_link 			 = $( target ).data( 'bb-user-link' );
+			if ( 'is_friend' === action && 'opened' !== $( target ).attr( 'data-popup-shown' ) ) {
+				if ( remove_connection_popup.length ) {
+					remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '<a href="' + member_link + '">' + member__name + '</a>' );
+					$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
+					remove_connection_popup.show();
+					$( target ).attr( 'data-current-anchor', 'true' );
+					$( target ).attr( 'data-popup-shown', 'opened' );
+					return false;
+				}
+			} else {
+				$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'closed' );
+				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+				remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
+				remove_connection_popup.hide();
 			}
 
 			// Find the required wpnonce string.
@@ -1963,10 +2023,10 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		 buttonHover: function ( event ) {
+		buttonHover: function ( event ) {
 			var target = $( event.currentTarget ), action = target.data( 'bp-btn-action' ),
-				item       = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
-				object     = item.data( 'bp-item-component' );
+				item    = target.closest( '[data-bp-item-id]' ), item_id = item.data( 'bp-item-id' ),
+				object  = item.data( 'bp-item-component' );
 
 			// Simply let the event fire if we don't have needed values.
 			if ( ! action || ! item_id || ! object ) {
@@ -1981,9 +2041,10 @@ window.bp = window.bp || {};
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data( 'title' ) );
-					target.find( 'span' ).text( target.data( 'title' ) );
+					target.find( 'span' ).html( target.data( 'title' ) );
+					target.html( target.data( 'title' ) );
 				} else {
-					target.text( target.data( 'title' ) );
+					target.html( target.data( 'title' ) );
 				}
 
 				target.removeClass( 'bp-toggle-action-button' );
@@ -1998,7 +2059,7 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		 buttonHoverout: function ( event ) {
+		buttonHoverout: function ( event ) {
 			var target = $( event.currentTarget );
 
 			if ( target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' ) ) {
@@ -2006,9 +2067,10 @@ window.bp = window.bp || {};
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data( 'title-displayed' ) );
-					target.find( 'span' ).text( target.data( 'title-displayed' ) );
+					target.find( 'span' ).html( target.data( 'title-displayed' ) );
+					target.html( target.data( 'title-displayed' ) );
 				} else {
-					target.text( target.data( 'title-displayed' ) ); // change text to displayed context.
+					target.html( target.data( 'title-displayed' ) ); // change text to displayed context.
 				}
 
 				target.removeClass( 'bp-toggle-action-button-hover' ); // remove class to detect event.
@@ -2020,28 +2082,53 @@ window.bp = window.bp || {};
 		 * [Leave Group Action]
 		 *
 		 * @param event
-		 *
 		 */
-		 leaveGroupAction: function ( event ) {
+		leaveGroupAction: function ( event ) {
 			event.preventDefault();
-			$( 'body' ).find( '[data-current-anchor="true"]').removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
-			$( 'body' ).find( '[data-current-anchor="true"]').trigger( 'click' );
+			$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
+			$( 'body' ).find( '[data-current-anchor="true"]' ).trigger( 'click' );
 		},
 
 		/**
 		 * [Leave Group Close]
 		 *
 		 * @param event
-		 *
 		 */
-		 leaveGroupClose: function ( event ) {
+		leaveGroupClose: function ( event ) {
 			event.preventDefault();
-			var target = $( event.currentTarget );
+			var target            = $( event.currentTarget );
 			var leave_group_popup = $( target ).closest( '.bb-leave-group-popup' );
 
-			$( 'body' ).find( '[data-current-anchor="true"]').attr( 'data-current-anchor' , 'false' );
-			$( 'body' ).find( '[data-popup-shown="true"]').attr( 'data-popup-shown' , 'false' );
-			leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html('');
+			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+			$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
+			leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
+			leave_group_popup.hide();
+		},
+
+		/**
+		 * [Remove Connection Action]
+		 *
+		 * @param event
+		 */
+		 removeConnectionAction: function ( event ) {
+			event.preventDefault();
+			$( 'body' ).find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' );
+			$( 'body' ).find( '[data-current-anchor="true"]' ).trigger( 'click' );
+		},
+
+		/**
+		 * [Remove Connection Close]
+		 *
+		 * @param event
+		 */
+		removeConnectionClose: function ( event ) {
+			event.preventDefault();
+			var target            = $( event.currentTarget );
+			var leave_group_popup = $( target ).closest( '.bb-remove-connection' );
+
+			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
+			$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'closed' );
+			leave_group_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
 			leave_group_popup.hide();
 		},
 
@@ -2676,10 +2763,10 @@ window.bp = window.bp || {};
 		 */
 		toggleMoreOption: function( event ) {
 
-			if( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+			if ( $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
 				event.preventDefault();
 
-				if( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
+				if ( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
 				} else {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
@@ -2757,7 +2844,7 @@ window.bp = window.bp || {};
 							video.muted       = true;
 							video.playsInline = true;
 							if ( videoDuration != null ) {
-								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail
+								video.currentTime = Math.floor( Math.random() * Math.floor( videoDuration ) ); // Seek random second before capturing thumbnail.
 							}
 							video.play();
 							clearInterval( timer );
@@ -2790,8 +2877,8 @@ window.bp = window.bp || {};
 		 */
 		bbWidgetMoreFollowing: function ( event ) {
 			var target = $( event.currentTarget ),
-				link = target.attr( 'href' );
-			var parts = link.split( '#' );
+				link   = target.attr( 'href' );
+			var parts  = link.split( '#' );
 			if ( parts.length > 1 ) {
 				var hash_text = parts.pop();
 				if ( hash_text && $( '[data-bp-scope="' + hash_text + '"]' ).length > 0 ) {
@@ -2803,70 +2890,87 @@ window.bp = window.bp || {};
 
 		/**
 		 *  Make Medium Editor buttons wrap.
+		 *
 		 *  @param  {JQuery node} editorWrap The jQuery node.
 		 */
-		mediumEditorButtonsWarp: function ( editorWrap ) { //Pass jQuery $(node)
-			if( editorWrap.hasClass( 'wrappingInitialised' ) ) { // Do not go through if it is initialed already
+		mediumEditorButtonsWarp: function ( editorWrap ) { // Pass jQuery $(node).
+			if ( editorWrap.hasClass( 'wrappingInitialised' ) ) { // Do not go through if it is initialed already.
 				return;
 			}
 			editorWrap.addClass( 'wrappingInitialised' );
 			var buttonsWidth = 0;
-			editorWrap.find( '.medium-editor-toolbar-actions > li' ).each( function() {
-				buttonsWidth += $( this ).outerWidth();
-			});
-			if( buttonsWidth > editorWrap.width() - 10 ) { //No need to calculate if space is available
-				editorWrap.data('childerWith', buttonsWidth);
-				if( buttonsWidth > editorWrap.width() ) {
-					if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length === 0 ) {
+			editorWrap.find( '.medium-editor-toolbar-actions > li' ).each(
+				function() {
+					buttonsWidth += $( this ).outerWidth();
+				}
+			);
+			if ( buttonsWidth > editorWrap.width() - 10 ) { // No need to calculate if space is available.
+				editorWrap.data( 'childerWith', buttonsWidth );
+				if ( buttonsWidth > editorWrap.width() ) {
+					if ( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length === 0 ) {
 						editorWrap.find( '.medium-editor-toolbar-actions' ).append( '<li class="medium-editor-action-more"><button class="medium-editor-action medium-editor-action-more-button"><b></b></button><ul></ul></li>' );
 					}
-					editorWrap.find( '.medium-editor-action-more').show();
+					editorWrap.find( '.medium-editor-action-more' ).show();
 					buttonsWidth += editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).outerWidth();
-					$( editorWrap.find('.medium-editor-action').get().reverse() ).each( function() {
-						if( $( this ).hasClass( 'medium-editor-action-more-button') ) {
-							return;
-						}
-						if( buttonsWidth > editorWrap.width() ) {
-							buttonsWidth -= $( this ).outerWidth();
-							editorWrap.find( '.medium-editor-action-more > ul').prepend( $( this ).parent() );
-						}
+					$( editorWrap.find( '.medium-editor-action' ).get().reverse() ).each(
+						function() {
+							if ( $( this ).hasClass( 'medium-editor-action-more-button' ) ) {
+								return;
+							}
+							if ( buttonsWidth > editorWrap.width() ) {
+								buttonsWidth -= $( this ).outerWidth();
+								editorWrap.find( '.medium-editor-action-more > ul' ).prepend( $( this ).parent() );
+							}
 
-					});
-				}
-			} else { // If space is available then append <li> to parent again
-				if( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length ) {
-					$( editorWrap.find('.medium-editor-action-more ul > li') ).each( function() {
-						if( buttonsWidth + 35 < editorWrap.width() ) {
-							buttonsWidth += $( this ).outerWidth();
-							$( this ).insertBefore( editorWrap.find( '.medium-editor-action-more') );
 						}
-					});
-					if( editorWrap.find( '.medium-editor-action-more ul > li').length === 0 ) {
-						editorWrap.find( '.medium-editor-action-more').hide();
+					);
+				}
+			} else { // If space is available then append <li> to parent again.
+				if ( editorWrap.find( '.medium-editor-toolbar-actions .medium-editor-action-more' ).length ) {
+					$( editorWrap.find( '.medium-editor-action-more ul > li' ) ).each(
+						function() {
+							if ( buttonsWidth + 35 < editorWrap.width() ) {
+								buttonsWidth += $( this ).outerWidth();
+								$( this ).insertBefore( editorWrap.find( '.medium-editor-action-more' ) );
+							}
+						}
+					);
+					if ( editorWrap.find( '.medium-editor-action-more ul > li' ).length === 0 ) {
+						editorWrap.find( '.medium-editor-action-more' ).hide();
 					}
 				}
 			}
 
-			$( editorWrap ).find( '.medium-editor-action-more-button' ).on( 'click', function( event ) {
-				event.preventDefault();
-				$( this ).parent( '.medium-editor-action-more').toggleClass( 'active' );
-			});
+			$( editorWrap ).find( '.medium-editor-action-more-button' ).on(
+				'click',
+				function( event ) {
+					event.preventDefault();
+					$( this ).parent( '.medium-editor-action-more' ).toggleClass( 'active' );
+				}
+			);
 
-			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on( 'click', function( event ) {
-				event.preventDefault();
-				$( this ).closest( '.medium-editor-action-more').toggleClass( 'active' );
-			});
+			$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).on(
+				'click',
+				function( event ) {
+					event.preventDefault();
+					$( this ).closest( '.medium-editor-action-more' ).toggleClass( 'active' );
+				}
+			);
 
-			$( window ).one( 'resize', function() { //Attach event once only.
-				editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized
-				$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind('click');
-				$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind('click');
-			});
+			$( window ).one(
+				'resize',
+				function() { // Attach event once only.
+					editorWrap.removeClass( 'wrappingInitialised' ); // Remove class to run trough again as screen has resized.
+					$( editorWrap ).find( '.medium-editor-action-more-button' ).unbind( 'click' );
+					$( editorWrap ).find( '.medium-editor-action-more ul .medium-editor-action' ).unbind( 'click' );
+				}
+			);
 
 		},
 
 		/**
 		 *  Check if string is a valid URL
+		 *
 		 *  @param  {String} URL The URL to check.
 		 *  @return {Boolean} Return true if it's URL or false if not.
 		 */
@@ -2877,22 +2981,24 @@ window.bp = window.bp || {};
 
 		/**
 		 *  Close Action Popup
+		 *
 		 *  @param  {object} event The event object.
-		 *  @return {function} 
+		 *  @return {function}
 		 */
 		closeActionPopup: function( event ) {
 			event.preventDefault();
-			$(this).closest('.bb-action-popup').hide();
+			$( this ).closest( '.bb-action-popup' ).hide();
 		},
 
 		/**
 		 *  Show Action Popup
+		 *
 		 *  @param  {object} event The event object.
 		 *  @return {function}
 		 */
-		 showActionPopup: function( event ) {
+		showActionPopup: function( event ) {
 			event.preventDefault();
-			$( $( event.currentTarget ).attr('href') ).show();
+			$( $( event.currentTarget ).attr( 'href' ) ).show();
 		}
 
 	};

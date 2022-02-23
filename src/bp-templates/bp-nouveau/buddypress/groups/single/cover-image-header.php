@@ -49,7 +49,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 			?>
 			<?php if ( bp_is_item_admin() ) { ?>
 				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-				<i class="bb-icon-edit-thin"></i>
+				<i class="bb-icon-camera"></i>
 			</a>
 			<?php } ?>
 
@@ -74,7 +74,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
 					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-edit-thin"></i>
+						<i class="bb-icon-camera"></i>
 					</a>
 				<?php } ?>
 				<?php bp_group_avatar(); ?>
@@ -207,7 +207,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 							<p><?php echo esc_html__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
 							<a class="button push-right bb-confirm-leave-group" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 

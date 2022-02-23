@@ -6193,7 +6193,7 @@ form.ac-form .ac-reply-content input {
   text-align: right;
 }
 
-.bb-action-popup .bb-model-footer .bb-close-leave-group {
+.bb-action-popup .bb-model-footer .bb-close-action-popup {
   color: #92949d;
   margin-right: 20px;
 }
@@ -6660,7 +6660,7 @@ body.register .registration-popup .mfp-close:hover {
 }
 
 .single-headers .item-meta {
-  color: #767676;
+  color: inherit;
   font-size: 14px;
   margin: 15px 0 5px;
   padding-bottom: 0.7em;
@@ -6809,7 +6809,7 @@ body.no-js .single-item-header .js-self-profile-button {
   z-index: 119;
   top: 50%;
   color: #fff;
-  background-color: rgba(134, 132, 132, 0.6);
+  background-color: rgba(0, 0, 0, 0.2);
   padding: 10px 15px;
   border-radius: 5px;
   pointer-events: none;
@@ -6824,9 +6824,9 @@ body.no-js .single-item-header .js-self-profile-button {
   z-index: 1;
   float: none;
   margin: 12px 12px 0 0;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #f9f9f9;
   color: #939597;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 13px;
   line-height: 1.6;
   padding: 6px 11px;
@@ -6935,6 +6935,10 @@ body.no-js .single-item-header .js-self-profile-button {
   flex: 1;
   margin-top: -50px;
   min-width: 0;
+}
+
+.users-header #item-header-cover-image #item-header-avatar .bp-member-type {
+  display: none;
 }
 
 /*
@@ -7605,7 +7609,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
   content: "\e839";
-  font-size: 16px;
+  font-size: 17px;
   color: inherit !important;
 }
 
@@ -7618,11 +7622,16 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\e8c9";
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.not_friends:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list button.not_friends:before,
 #buddypress .bb_more_options .bb_more_options_list button.friendship-button:before,
+#buddypress .bb_more_options .bb_more_options_list a.not_friends:before,
 #buddypress .bb_more_options .bb_more_options_list a.friendship-button:before,
+.bb_more_options .bb_more_options_list .generic-button > button.not_friends:before,
 .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before,
+.bb_more_options .bb_more_options_list button.not_friends:before,
 .bb_more_options .bb_more_options_list button.friendship-button:before,
+.bb_more_options .bb_more_options_list a.not_friends:before,
 .bb_more_options .bb_more_options_list a.friendship-button:before {
   content: "\e94d";
 }
@@ -7637,17 +7646,17 @@ body.buddypress.bp-user #page #primary .entry-header {
   font-size: 14px;
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:hover:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list button.is_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list button.pending_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list a.is_friend:hover:before,
-#buddypress .bb_more_options .bb_more_options_list a.pending_friend:hover:before,
-.bb_more_options .bb_more_options_list .generic-button > button.is_friend:hover:before,
-.bb_more_options .bb_more_options_list .generic-button > button.pending_friend:hover:before,
-.bb_more_options .bb_more_options_list button.is_friend:hover:before,
-.bb_more_options .bb_more_options_list button.pending_friend:hover:before,
-.bb_more_options .bb_more_options_list a.is_friend:hover:before,
-.bb_more_options .bb_more_options_list a.pending_friend:hover:before {
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:before,
+#buddypress .bb_more_options .bb_more_options_list button.is_friend:before,
+#buddypress .bb_more_options .bb_more_options_list button.pending_friend:before,
+#buddypress .bb_more_options .bb_more_options_list a.is_friend:before,
+#buddypress .bb_more_options .bb_more_options_list a.pending_friend:before,
+.bb_more_options .bb_more_options_list .generic-button > button.is_friend:before,
+.bb_more_options .bb_more_options_list .generic-button > button.pending_friend:before,
+.bb_more_options .bb_more_options_list button.is_friend:before,
+.bb_more_options .bb_more_options_list button.pending_friend:before,
+.bb_more_options .bb_more_options_list a.is_friend:before,
+.bb_more_options .bb_more_options_list a.pending_friend:before {
   content: "\e930";
 }
 
@@ -8527,14 +8536,14 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image,
 #item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
-  background: rgba(255, 255, 255, 0.9);
+  background: #f9f9f9;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   left: 12px;
   top: 12px;
   z-index: 3;
@@ -8549,10 +8558,10 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image > i,
 #item-header a.position-change-cover-image > i,
 #item-header a.link-change-profile-image > i {
-  font-size: 20px;
+  font-size: 18px;
 }
 
-#item-header a.link-change-cover-image > i {
+#item-header a.position-change-cover-image > i {
   font-size: 16px;
 }
 

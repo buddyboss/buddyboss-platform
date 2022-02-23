@@ -98,7 +98,7 @@
 	}
 
 	.item-meta {
-		color: $light-text;
+		color: inherit;
 
 		@include font-size(14);
 		margin: $marg-med 0 $marg-xsml;
