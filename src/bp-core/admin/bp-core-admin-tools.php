@@ -238,18 +238,20 @@ function bp_repair_community_submenu_page() {
 					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
 
 					<div class="checkbox">
-						<?php foreach ( bp_admin_repair_list() as $item ) :
+						<?php
+						foreach ( bp_admin_repair_list() as $item ) :
 							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
-                            ?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo ( true === $disabled ? 'disabled' : '' ); ?>">
+							?>
+							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo esc_attr( 'label-' . $item[0] ) . ( true === $disabled ? esc_attr( ' disabled' ) : '' ); ?>">
 								<input
 										type="checkbox"
 										class="checkbox"
 										name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
 										value="<?php echo esc_attr( $item[0] ); ?>"
 									<?php
-									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) { echo 'checked'; }
-                                    disabled( $disabled );
+									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
+										echo 'checked'; }
+									disabled( $disabled );
 									?>
 								/> <?php echo esc_html( $item[1] ); ?></label>
 						<?php endforeach; ?>
@@ -421,7 +423,7 @@ function bp_admin_repair_list() {
 			__( 'Update activity favorites data', 'buddyboss' ),
 			'bp_admin_update_activity_favourite',
 		);
-    }
+	}
 
 	// Invitations:
 	// - maybe create the database table and migrate any existing group invitations.
@@ -983,10 +985,11 @@ function bp_admin_install_emails() {
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf(
-		    /* translator: %d: Number of emails installed */
-			esc_html__( 'Installing missing emails &hellip; %d missing emails have been installed.', 'buddyboss' ),
-			$installed_email
+		'message'  => sprintf(
+		/* translators: %1$s for counts %2$s view emails url. */
+			__( '%1$s Emails have been successfully installed. %2$s', 'buddyboss' ),
+			$installed_email,
+			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
 		),
 	);
 }
@@ -1053,6 +1056,11 @@ function bp_admin_reinstall_emails() {
 	return array(
 		'status'  => 1,
 		'message' => __( 'Reseting emails &hellip; Complete!', 'buddyboss' ),
+		'message' => sprintf(
+		/* translators: %1$s for counts %2$s view emails url. */
+			__( 'Emails have been successfully reinstalled. %1$s', 'buddyboss' ),
+			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+		),
 	);
 }
 
@@ -1188,10 +1196,10 @@ function bp_admin_repair_nickname_value() {
  */
 function bp_admin_repair_tools_wrapper_function() {
 	$response = array(
-			'feedback' => sprintf(
-					'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-			),
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
 	);
 
 	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
@@ -1228,35 +1236,35 @@ function bp_admin_repair_tools_wrapper_function() {
 		}
 	}
 
-//	if ( 'bp-user-friends' === $type ) {
-//		$status = bp_admin_repair_friend_count();
-//	} elseif ( 'bp-group-count' === $type ) {
-//		$status = bp_admin_repair_group_count();
-//	} elseif ( 'bp-total-member-count' === $type ) {
-//		$status = bp_admin_repair_count_members();
-//	} elseif ( 'bp-last-activity' === $type ) {
-//		$status = bp_admin_repair_last_activity();
-//	} elseif ( 'bp-xprofile-fields' === $type ) {
-//		$status = repair_default_profiles_fields();
-//	} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-//		$status = resync_xprofile_wordpress_fields();
-//	} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-//		$status = resync_wordpress_xprofile_fields();
-//	} elseif ( 'bp-wordpress-update-display-name' === $type ) {
-//		$status = xprofile_update_display_names();
-//	} elseif ( 'bp-blog-records' === $type ) {
-//		$status = bp_admin_repair_blog_records();
-//	} elseif ( 'bp-reinstall-emails' === $type ) {
-//		$status = bp_admin_reinstall_emails();
-//	} elseif ( 'bp-assign-member-type' === $type ) {
-//		$status = bp_admin_assign_member_type();
-//	} elseif ( 'bp-sync-activity-favourite' === $type ) {
-//		$status = bp_admin_update_activity_favourite();
-//	} elseif ( 'bp-invitations-table' === $type ) {
-//		$status = bp_admin_invitations_table();
-//	} elseif ( 'bp-media-forum-privacy-repair' === $type ) {
-//		$status = bp_media_forum_privacy_repair();
-//	}
+	// if ( 'bp-user-friends' === $type ) {
+	// $status = bp_admin_repair_friend_count();
+	// } elseif ( 'bp-group-count' === $type ) {
+	// $status = bp_admin_repair_group_count();
+	// } elseif ( 'bp-total-member-count' === $type ) {
+	// $status = bp_admin_repair_count_members();
+	// } elseif ( 'bp-last-activity' === $type ) {
+	// $status = bp_admin_repair_last_activity();
+	// } elseif ( 'bp-xprofile-fields' === $type ) {
+	// $status = repair_default_profiles_fields();
+	// } elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
+	// $status = resync_xprofile_wordpress_fields();
+	// } elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
+	// $status = resync_wordpress_xprofile_fields();
+	// } elseif ( 'bp-wordpress-update-display-name' === $type ) {
+	// $status = xprofile_update_display_names();
+	// } elseif ( 'bp-blog-records' === $type ) {
+	// $status = bp_admin_repair_blog_records();
+	// } elseif ( 'bp-reinstall-emails' === $type ) {
+	// $status = bp_admin_reinstall_emails();
+	// } elseif ( 'bp-assign-member-type' === $type ) {
+	// $status = bp_admin_assign_member_type();
+	// } elseif ( 'bp-sync-activity-favourite' === $type ) {
+	// $status = bp_admin_update_activity_favourite();
+	// } elseif ( 'bp-invitations-table' === $type ) {
+	// $status = bp_admin_invitations_table();
+	// } elseif ( 'bp-media-forum-privacy-repair' === $type ) {
+	// $status = bp_media_forum_privacy_repair();
+	// }
 	wp_send_json_success( $status );
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );
@@ -1283,28 +1291,28 @@ function bp_admin_update_activity_favourite() {
 
 		if ( ! empty( $users ) ) {
 
-		    foreach ( $users as $user ) {
-			    $user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
-			    if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
-				    $offset ++;
-				    continue;
-			    }
-			    foreach ( $user_favs as $fav ) {
+			foreach ( $users as $user ) {
+				$user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
+				if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
+					$offset ++;
+					continue;
+				}
+				foreach ( $user_favs as $fav ) {
 
-				    // Update the users who have favorited this activity.
-				    $favorite_users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
-				    if ( empty( $favorite_users ) || ! is_array( $favorite_users ) ) {
-					    $favorite_users = array();
-				    }
-				    // Add to activity's favorited users.
-				    $favorite_users[] = $user->ID;
+					// Update the users who have favorited this activity.
+					$favorite_users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
+					if ( empty( $favorite_users ) || ! is_array( $favorite_users ) ) {
+						$favorite_users = array();
+					}
+					// Add to activity's favorited users.
+					$favorite_users[] = $user->ID;
 
-				    // Update activity meta
-				    bp_activity_update_meta( $fav, 'bp_favorite_users', array_unique( $favorite_users ) );
+					// Update activity meta
+					bp_activity_update_meta( $fav, 'bp_favorite_users', array_unique( $favorite_users ) );
 
-			    }
-			    $offset ++;
-		    }
+				}
+				$offset ++;
+			}
 
 			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
@@ -1325,7 +1333,6 @@ function bp_admin_update_activity_favourite() {
 				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 			);
 		}
-
 	} else {
 		$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
@@ -1333,7 +1340,7 @@ function bp_admin_update_activity_favourite() {
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 		);
-    }
+	}
 }
 
 
@@ -1348,8 +1355,8 @@ function bp_admin_update_activity_favourite() {
 function bp_admin_invitations_table() {
 	global $wpdb;
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 
 	/* translators: %s: the result of the action performed by the repair tool */
 	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss' );

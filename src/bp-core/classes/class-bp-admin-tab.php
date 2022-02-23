@@ -198,9 +198,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 									bp_get_admin_url(
 										add_query_arg(
 											array(
-												'page' => 'bp-repair-community',
-												'tab'  => 'bp-repair-community',
-												'tool' => 'bp-reinstall-emails',
+												'page'     => 'bp-repair-community',
+												'tab'      => 'bp-repair-community',
+												'tool'     => 'bp-reinstall-emails',
+												'scrollto' => 'bpreinstallemails',
 											),
 											'admin.php'
 										)
@@ -216,9 +217,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 									bp_get_admin_url(
 										add_query_arg(
 											array(
-												'page' => 'bp-repair-community',
-												'tab'  => 'bp-repair-community',
-												'tool' => 'bp-missing-emails',
+												'page'     => 'bp-repair-community',
+												'tab'      => 'bp-repair-community',
+												'tool'     => 'bp-missing-emails',
+												'scrollto' => 'bpmissingemails',
 											),
 											'admin.php'
 										)
