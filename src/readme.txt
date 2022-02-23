@@ -57,6 +57,21 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.9.0 =
+* Performance - Optimized core functions, loops, and SQL queries
+* Performance - Extended object caching support
+* Performance - Removed duplicate SQL queries significantly
+* Performance - Optimized a bunch of specific page and functionality performance
+* Forums - Provided edit option for forums and discussion in the WordPress toolbar
+* Activity - Show preview when link added with text
+* Activity - Improved embedded video width and UI
+* Activity - Improved activity form upload media UI
+* Profiles - Handled profile completion widget string translation issue
+* REST API - Handled caching issues in the API to improve performance
+* REST API - Provided order by and include options in the API
+* REST API - Provided moderation can report parameters in the API
+* Compatibility - Show title properly when RankMath plugin is active
+
 = 1.8.7 =
 * Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled
 * Groups - Fixed group title and description critical security issue
