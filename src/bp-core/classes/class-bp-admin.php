@@ -1137,7 +1137,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 		}
 
-
 		/**
 		 * Function will display plugin information after plugin update.
 		 *

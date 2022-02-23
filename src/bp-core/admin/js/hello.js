@@ -128,7 +128,7 @@
 				if (
 					'undefined' !== typeof response &&
 					'wp-' + response.update + '-update-success' === event.type &&
-					'akismet/akismet.php' === response.plugin
+					'buddyboss-platform/bp-loader.php' === response.plugin
 				) {
 					var data = {
 						'action': 'bb_plugin_update',
