@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.8.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-23 09:07:41+00:00\n"
+"POT-Creation-Date: 2022-02-23 09:59:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4387,12 +4387,12 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:721
 #: bp-core/admin/bp-core-admin-tools.php:772
 #: bp-core/admin/bp-core-admin-tools.php:817
-#: bp-core/admin/bp-core-admin-tools.php:1140
-#: bp-core/admin/bp-core-admin-tools.php:1183
-#: bp-core/admin/bp-core-admin-tools.php:1335
-#: bp-core/admin/bp-core-admin-tools.php:1343
-#: bp-core/admin/bp-core-admin-tools.php:1378
-#: bp-core/admin/bp-core-admin-tools.php:1394 bp-forums/admin/tools.php:297
+#: bp-core/admin/bp-core-admin-tools.php:1144
+#: bp-core/admin/bp-core-admin-tools.php:1187
+#: bp-core/admin/bp-core-admin-tools.php:1339
+#: bp-core/admin/bp-core-admin-tools.php:1347
+#: bp-core/admin/bp-core-admin-tools.php:1382
+#: bp-core/admin/bp-core-admin-tools.php:1398 bp-forums/admin/tools.php:297
 #: bp-forums/admin/tools.php:299 bp-forums/admin/tools.php:357
 #: bp-forums/admin/tools.php:359 bp-forums/admin/tools.php:400
 #: bp-forums/admin/tools.php:402 bp-forums/admin/tools.php:610
@@ -4436,8 +4436,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:711
 #: bp-core/admin/bp-core-admin-tools.php:762
 #: bp-core/admin/bp-core-admin-tools.php:807
-#: bp-core/admin/bp-core-admin-tools.php:1131
-#: bp-core/admin/bp-core-admin-tools.php:1174
+#: bp-core/admin/bp-core-admin-tools.php:1135
+#: bp-core/admin/bp-core-admin-tools.php:1178
 msgid "%s members updated successfully."
 msgstr ""
 
@@ -4470,39 +4470,42 @@ msgid "Use the %s to repair these relationships."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:993
-#. translators: %1$s for counts %2$s view emails url.
-msgid ""
-"Installing missing emails &hellip; %1$s missing emails have been installed. "
-"%2$s"
+#. translators: %1$s for counts missing emails.
+msgid "%1$s missing emails have been installed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:995
-#: bp-core/admin/bp-core-admin-tools.php:1064
+#: bp-core/admin/bp-core-admin-tools.php:998
+#. translators: %1$s for view emails url.
+msgid "Installing missing emails &hellip; Complete! %1$s"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:999
+#: bp-core/admin/bp-core-admin-tools.php:1068
 msgid "View Emails."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1063
+#: bp-core/admin/bp-core-admin-tools.php:1067
 #. translators: %1$s for view emails url.
 msgid "Reseting emails &hellip; Complete! %1$s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1086
+#: bp-core/admin/bp-core-admin-tools.php:1090
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1139
+#: bp-core/admin/bp-core-admin-tools.php:1143
 msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1182
+#: bp-core/admin/bp-core-admin-tools.php:1186
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1203 bp-forums/admin/tools.php:1953
+#: bp-core/admin/bp-core-admin-tools.php:1207 bp-forums/admin/tools.php:1953
 #: bp-forums/functions.php:869
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:546
@@ -4540,30 +4543,30 @@ msgstr ""
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1319
+#: bp-core/admin/bp-core-admin-tools.php:1323
 msgid "%s members activity favorite updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1331
-#: bp-core/admin/bp-core-admin-tools.php:1339
+#: bp-core/admin/bp-core-admin-tools.php:1335
+#: bp-core/admin/bp-core-admin-tools.php:1343
 msgid "Updating activity favorites data &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1364
+#: bp-core/admin/bp-core-admin-tools.php:1368
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Creating the database table for Invitations if it does not exist &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1365
+#: bp-core/admin/bp-core-admin-tools.php:1369
 msgid "Failed to create table!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1386
+#: bp-core/admin/bp-core-admin-tools.php:1390
 #. translators: %s: the result of the action performed by the repair tool
 msgid "Migrating existing group invitations &hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1387
+#: bp-core/admin/bp-core-admin-tools.php:1391
 msgid "Failed to migrate invitations!"
 msgstr ""
 
