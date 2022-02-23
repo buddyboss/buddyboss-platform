@@ -172,7 +172,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 					<div class="member-header-actions-wrap">
 
 						<?php
-						add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+						add_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
 						bp_nouveau_member_header_buttons(
 							array(
 								'container'         => 'div',
@@ -180,7 +180,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 								'container_classes' => array( 'member-header-actions' ),
 							)
 						);
-						remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
+						remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
 
 						remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
 						remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
@@ -192,7 +192,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 							array(
 								'container'         => 'div',
 								'button_element'    => 'button',
-								'container_classes' => array( 'bb_more_options' ),
+								'container_classes' => array( 'bb_more_options', 'header-dropdown' ),
 							)
 						);
 						add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
