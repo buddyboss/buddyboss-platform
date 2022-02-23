@@ -47,6 +47,34 @@ window.bp = window.bp || {};
 				}
 			);
 
+			var displayInstallEMailPopup = $.bbGetParameterByName( 'popup' );
+			if ( 'yes' === displayInstallEMailPopup ) {
+				$( '.btn-open-missing-email' ).trigger( 'click' );
+			}
+
+			/* jshint ignore:start */
+			var missingEmailInstallScroll = bbgetUrlParameter( 'scrollto' );
+			if ( 'bpmissingemails' === missingEmailInstallScroll ) {
+				$('html, body').animate({
+					scrollTop: $( '#bp-missing-emails' ).offset().top
+				}, 2000);
+				$( '.label-bp-missing-emails' ).css('background-color', '#f15555');
+				setTimeout(function () {
+					$( '.label-bp-missing-emails' ).css('background-color', 'transparent');
+				}, 2000);
+			}
+
+			var reInstallEmailScroll = bbgetUrlParameter( 'scrollto' );
+			if ( 'bpreinstallemails' === reInstallEmailScroll ) {
+				$('html, body').animate({
+					scrollTop: $( '#bp-reinstall-emails' ).offset().top
+				}, 2000);
+				$( '.label-bp-reinstall-emails' ).css('background-color', '#f15555');
+				setTimeout(function () {
+					$( '.label-bp-reinstall-emails' ).css('background-color', 'transparent');
+				}, 2000);
+			}
+			/* jshint ignore:end */
 
 			$( '[data-run-js-condition]' ).each(
 				function() {
@@ -1944,6 +1972,21 @@ window.bp = window.bp || {};
 		var expires     = 'expires=' + d.toUTCString();
 		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 	}
+
+	// Read a page's GET URL variables and return them as an associative array.
+
+	$.bbGetParameterByName = function(name) {
+		var results = new RegExp('[\\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+		return (results && results[1]) ? results[1] : null;
+	};
+
+	function bbgetUrlParameter(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
 	/* jshint ignore:end */
 
 }());

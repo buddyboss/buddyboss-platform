@@ -51,7 +51,11 @@
 		width: 33.33%;
 
 		&:not(:last-child) {
-			padding-right: 20px;
+			margin-right: 20px;
+		}
+
+		.bb-notification-column-2 & {
+			width: calc(50% - 10px);
 		}
 
 	}
@@ -98,6 +102,11 @@
 			display: none;
 			width: 100%;
 			margin-bottom: 12px;
+
+			.bb-notification-column-2 & {
+				width: 100%;
+				margin-right: 0;
+			}
 
 			&.show {
 				display: flex;

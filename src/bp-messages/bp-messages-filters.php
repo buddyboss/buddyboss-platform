@@ -773,7 +773,7 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 function bp_messages_repair_items_unread_count( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-messages-unread-count',
-		__( 'Repair unread messages count on the site.', 'buddyboss' ),
+		__( 'Repair unread messages count', 'buddyboss' ),
 		'bp_messages_admin_repair_unread_messages_count',
 	);
 	return $repair_list;
@@ -803,7 +803,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s message threads updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -813,7 +813,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'thread update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing unread messages count &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
