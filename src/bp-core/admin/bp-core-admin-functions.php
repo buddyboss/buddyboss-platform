@@ -3368,23 +3368,3 @@ function bb_get_pro_fields_class() {
 	return $pro_class;
 }
 
-/**
- * Function will display plugin information after plugin update.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_plugin_update_callback() {
-	global $bp;
-	if ( ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'bp_plugin_update_nonce' ) ) {
-		return;
-	}
-	$plugin_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-	$plugin_path = str_replace( '/', '\\', $plugin_path );
-	ob_start();
-	include $plugin_path;
-	$content = ob_get_contents();
-	ob_end_clean();
-	wp_send_json_success( $content );
-	wp_die();
-}
-add_action( 'wp_ajax_bb_plugin_update', 'bb_plugin_update_callback' );
