@@ -2813,3 +2813,12 @@ table tbody td .bb-description {
   border-radius: 0;
   border: 1px solid #ccd0d4;
 }
+
+.bb-lab-notice.notification-information:before {
+  content: "\e853";
+  display: inline-block;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 16px;
+  margin-right: 10px;
+}

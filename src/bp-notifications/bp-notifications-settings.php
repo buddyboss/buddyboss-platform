@@ -336,7 +336,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_notification_warning() {
-	echo '<p class="description notification-information bp-new-notice-panel">' .
+	echo '<p class="description notification-information bb-lab-notice">' .
 		sprintf(
 			wp_kses_post(
 					/* translators: 1. Notification Preferences label. 2. BuddyBoss labs. */
