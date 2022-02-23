@@ -552,6 +552,16 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
 }
 
+/* Notification */
+.bp-admin-card.section-bp_notification_settings_automatic h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
+}
+
+/* Labs */
+.bp-admin-card.section-bp_labs_settings_notifications h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
+}
+
 .bp-admin-card.section-bp_search_settings_community table,
 .bp-admin-card.section-bp_search_settings_post_types table {
   margin-bottom: 20px;
@@ -2821,4 +2831,9 @@ table tbody td .bb-description {
   /* stylelint-disable-line */
   font-size: 16px;
   margin-right: 10px;
+  line-height: 1;
+}
+
+.bb-lab-notice.notification-information:first-child {
+  margin-top: 0;
 }
