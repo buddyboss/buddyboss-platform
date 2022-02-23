@@ -54,6 +54,7 @@ function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array(
  * @return bool
  */
 function bp_xprofile_update_meta_cache( $object_ids = array() ) {
+	static $xprofile_update_meta_cache = array();
 	global $wpdb;
 
 	// Bail if no objects.
@@ -131,7 +132,14 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 	$where_sql = implode( ' OR ', $where_conditions );
 
 	// Attempt to query meta values.
-	$meta_list = $wpdb->get_results( "SELECT object_id, object_type, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE {$where_sql}" );
+	$cache_key = 'xprofile_update_meta_cache_' . md5( maybe_serialize( $uncached_object_ids ) );
+	if ( ! isset( $xprofile_update_meta_cache[ $cache_key ] ) ) {
+		$meta_list = $wpdb->get_results( "SELECT object_id, object_type, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE {$where_sql}" );
+
+		$xprofile_update_meta_cache[ $cache_key ] = $meta_list;
+	} else {
+		$meta_list = $xprofile_update_meta_cache[ $cache_key ];
+	}
 
 	// Bail if no results found.
 	if ( empty( $meta_list ) || is_wp_error( $meta_list ) ) {
@@ -184,6 +192,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 function xprofile_clear_profile_groups_object_cache( $group_obj ) {
 	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $group_obj->id, 'bp_xprofile_groups' );
+	wp_cache_delete( 'bp_xprofile_delete_for_group_' . $group_obj->id, 'bp_xprofile' );
 }
 add_action( 'xprofile_group_after_delete', 'xprofile_clear_profile_groups_object_cache' );
 add_action( 'xprofile_group_after_save', 'xprofile_clear_profile_groups_object_cache' );
@@ -205,6 +214,9 @@ function xprofile_clear_profile_field_object_cache( $field_obj ) {
 	// the global 'all' cache.
 	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $field_obj->group_id, 'bp_xprofile_groups' );
+	wp_cache_delete( 'bp_xprofile_field_get_type_' . $field_obj->id, 'bp_xprofile' );
+	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $field_obj->id, 'bp_xprofile' );
+	wp_cache_delete( 'bp_xprofile_delete_for_group_' . $field_obj->group_id, 'bp_xprofile' );
 }
 add_action( 'xprofile_fields_saved_field', 'xprofile_clear_profile_field_object_cache' );
 add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_object_cache' );
@@ -228,6 +240,9 @@ add_action( 'bp_xprofile_field_set_member_type', 'bp_xprofile_clear_member_type_
  */
 function xprofile_clear_profiledata_object_cache( $data_obj ) {
 	wp_cache_delete( "{$data_obj->user_id}:{$data_obj->field_id}", 'bp_xprofile_data' );
+	wp_cache_delete( 'bp_xprofile_field_get_type_' . $data_obj->field_id, 'bp_xprofile' );
+	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $data_obj->field_id, 'bp_xprofile' );
+	wp_cache_delete( 'bp_get_last_updated_' . $data_obj->user_id, 'bp_xprofile' );
 }
 add_action( 'xprofile_data_after_save', 'xprofile_clear_profiledata_object_cache' );
 add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cache' );
@@ -273,6 +288,8 @@ function bp_xprofile_clear_field_cache( $field ) {
 
 	wp_cache_delete( $field_id, 'bp_xprofile_fields' );
 	wp_cache_delete( $field_id, 'xprofile_meta' );
+	wp_cache_delete( 'bp_xprofile_field_get_type_' . $field_id, 'bp_xprofile' );
+	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $field_id, 'bp_xprofile' );
 }
 add_action( 'xprofile_field_after_save', 'bp_xprofile_clear_field_cache' );
 
