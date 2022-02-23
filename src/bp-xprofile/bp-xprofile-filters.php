@@ -1087,7 +1087,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ) {
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
 		'bp-xprofile-repeater-field-repair',
-		__( 'Repair xProfile repeater field sets', 'buddyboss' ),
+		__( 'Repair BuddyBoss profile repeater field sets', 'buddyboss' ),
 		'bb_xprofile_repeater_field_repair_callback',
 	);
 	return $repair_list;
@@ -1185,7 +1185,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 		return array(
 			'status'  => 1,
-			'message' => __( 'Field update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing BuddyBoss profile repeater field sets &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1257,7 +1257,7 @@ function bb_xprofile_repair_user_nicknames_callback() {
 	return array(
 		'status'  => 1,
 		'records' => $records_updated,
-		'message' => __( 'User nickname update complete!', 'buddyboss' ),
+		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss' ),
 	);
 }
 

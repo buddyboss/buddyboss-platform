@@ -457,7 +457,7 @@ function bp_admin_repair_friend_count() {
 		return;
 	}
 
-	$statement = __( 'Counting the number of connections for each user&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
@@ -518,7 +518,7 @@ function bp_admin_repair_group_count() {
 		return;
 	}
 
-	$statement = __( 'Counting the number of groups for each user&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing total groups count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
@@ -595,7 +595,7 @@ function bp_admin_repair_blog_records() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_repair_count_members() {
-	$statement = __( 'Counting the number of active members on the site&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing total members count &hellip; %s', 'buddyboss' );
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
 
@@ -613,7 +613,7 @@ function bp_admin_repair_count_members() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_repair_last_activity() {
-	$statement = __( 'Determining last activity dates for each user&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing member "last activity" data &hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
 
 	return array(
@@ -672,7 +672,7 @@ function repair_default_profiles_fields() {
 	// Remove all duplicate nick name fields.
 	$wpdb->query( $nick_name );
 
-	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing default profile set and fields &hellip; %s', 'buddyboss' );
 
 	return array(
 		'status'  => 1,
@@ -710,7 +710,7 @@ function resync_xprofile_wordpress_fields() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Re-sync user profile data to WordPress... %s', 'buddyboss' );
+		$statement = __( 'Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
@@ -761,7 +761,7 @@ function resync_wordpress_xprofile_fields() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields... %s', 'buddyboss' );
+		$statement = __( 'Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
@@ -806,7 +806,7 @@ function xprofile_update_display_names() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Update WordPress user display names&hellip; %s', 'buddyboss' );
+		$statement = __( 'Updating display name to selected format in profile settings &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
@@ -985,7 +985,7 @@ function bp_admin_install_emails() {
 		'status'  => 1,
 		'message' => sprintf(
 		    /* translator: %d: Number of emails installed */
-			esc_html__( '%d emails have been successfully installed.', 'buddyboss' ),
+			esc_html__( 'Installing missing emails &hellip; %d emails have been restored.', 'buddyboss' ),
 			$installed_email
 		),
 	);
@@ -1052,7 +1052,7 @@ function bp_admin_reinstall_emails() {
 
 	return array(
 		'status'  => 1,
-		'message' => __( 'Emails have been successfully reinstalled.', 'buddyboss' ),
+		'message' => __( 'Reseting emails &hellip; Complete!', 'buddyboss' ),
 	);
 }
 
@@ -1318,7 +1318,7 @@ function bp_admin_update_activity_favourite() {
 
 			bp_update_option( 'bp_activity_favorites', true );
 
-			$statement = __( 'Update members activity favorites&hellip; %s', 'buddyboss' );
+			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 			return array(
 				'status'  => 1,
@@ -1327,7 +1327,7 @@ function bp_admin_update_activity_favourite() {
 		}
 
 	} else {
-		$statement = __( 'Update members activity favorites&hellip; %s', 'buddyboss' );
+		$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 		return array(
 			'status'  => 1,
@@ -1352,7 +1352,7 @@ function bp_admin_invitations_table() {
 	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
 	/* translators: %s: the result of the action performed by the repair tool */
-	$statement = __( 'Creating the Invitations database table if it does not exist&hellip; %s', 'buddyboss' );
+	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed to create table!', 'buddyboss' );
 
 	bp_core_install_invitations();
@@ -1366,7 +1366,7 @@ function bp_admin_invitations_table() {
 			'message' => sprintf( $statement, $result ),
 		);
 	} else {
-		$result = __( 'Created invitations table!', 'buddyboss' );
+		$result = __( 'Complete!', 'buddyboss' );
 	}
 
 	// Migrate group invitations if needed.
@@ -1374,7 +1374,7 @@ function bp_admin_invitations_table() {
 		$bp = buddypress();
 
 		/* translators: %s: the result of the action performed by the repair tool */
-		$migrate_statement = __( 'Migrating group invitations&hellip; %s', 'buddyboss' );
+		$migrate_statement = __( 'Migrating existing group invitations &hellip; %s', 'buddyboss' );
 		$migrate_result    = __( 'Failed to migrate invitations!', 'buddyboss' );
 
 		bp_groups_migrate_invitations();
@@ -1382,7 +1382,7 @@ function bp_admin_invitations_table() {
 		// Check that there are no outstanding group invites in the group_members table.
 		$records = $wpdb->get_results( "SELECT id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND is_banned = 0" );
 		if ( empty( $records ) ) {
-			$migrate_result = __( 'Migrated invitations!', 'buddyboss' );
+			$migrate_result = __( 'Complete!', 'buddyboss' );
 
 			return array(
 				'status'  => 0,

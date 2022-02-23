@@ -1515,7 +1515,7 @@ function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 				'bp-repair-document',
-				__( 'Repair documents on the site', 'buddyboss' ),
+				__( 'Repair documents', 'buddyboss' ),
 				'bp_document_admin_repair_document',
 		);
 	}
@@ -1585,7 +1585,7 @@ function bp_document_admin_repair_document() {
 	} else {
 		return array(
 				'status'  => 1,
-				'message' => __( 'Document update complete!', 'buddyboss' ),
+				'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
