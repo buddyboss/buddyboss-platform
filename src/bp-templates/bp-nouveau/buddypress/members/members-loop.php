@@ -65,7 +65,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
-				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? ' has_hook_content' : ''; ?>">
+				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? ' has_hook_content' : ''; echo ! empty( $profile_actions['secondary'] ) ? 'secondary-buttons' : 'no-secondary-buttons'; ?>">
 
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
@@ -82,15 +82,16 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						<div class="item">
 
 							<div class="item-block">
-								<h2 class="list-title member-name">
-									<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
-								</h2>
 
 								<?php
 								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									echo '<p class="item-meta last-activity">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
+									echo '<p class="item-meta member-type">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
 								}
 								?>
+
+								<h2 class="list-title member-name">
+									<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+								</h2>
 
 								<?php if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) : ?>
 									<p class="item-meta last-activity">

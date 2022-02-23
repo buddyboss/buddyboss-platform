@@ -6253,6 +6253,54 @@ form.ac-form .ac-reply-content input {
   }
 }
 
+.buddypress-wrap .members-list li .only-list-view {
+  display: none;
+}
+
+.buddypress-wrap .members-list li .list-wrap .followers-wrap,
+.buddypress-wrap .members-list li .list-wrap .member-type {
+  font-size: 14px;
+  color: #8D8F97;
+  margin-bottom: 15px;
+}
+
+.buddypress-wrap .members-list li .list-wrap .member-type {
+  margin-bottom: 5px;
+}
+
+.buddypress-wrap .members-list li .list-wrap .member-name {
+  font-size: 20px;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.buddypress-wrap .members-list li .list-wrap .member-name a {
+  text-decoration: none;
+}
+
+.buddypress-wrap .members-list li .list-wrap .last-activity {
+  color: #8D8F97;
+  font-size: 13px;
+  margin: 0 0 12px 0;
+}
+
+.buddypress-wrap .members-list li .item .primary-action .generic-button {
+  width: 100%;
+}
+
+.buddypress-wrap .members-list li .primary-action .generic-button,
+.buddypress-wrap .members-list li .footer-button-wrap .generic-button,
+.buddypress-wrap .members-list li .member-button-wrap .generic-button {
+  padding: 0 15px;
+}
+
+.buddypress-wrap .members-list li .primary-action .generic-button > *,
+.buddypress-wrap .members-list li .footer-button-wrap .generic-button > *,
+.buddypress-wrap .members-list li .member-button-wrap .generic-button > * {
+  display: block;
+  margin-bottom: 10px;
+}
+
 @media screen and (min-width: 46.8em) {
   .buddypress-wrap .members-group-list li .joined {
     clear: right;
@@ -6267,10 +6315,18 @@ form.ac-form .ac-reply-content input {
   }
 }
 
-#buddypress .members-list li .bb_more_options.member-dropdown {
+#buddypress .members-list > li {
+  min-width: 275px;
+}
+
+#buddypress .members-list > li .bb_more_options.member-dropdown {
   position: absolute;
   left: 15px;
   top: 5px;
+}
+
+#buddypress .members-list > li .bb_more_options.member-dropdown .bb_more_options_action {
+  text-decoration: none;
 }
 
 @media screen and (min-width: 32em) {
