@@ -10,7 +10,13 @@
 
 bp_nouveau_member_hook( 'before', 'settings_template' );
 
-$data = bb_core_notification_preferences_data();
+$data  = bb_core_notification_preferences_data();
+$class = '';
+if ( bb_web_notification_enabled() && bb_app_notification_enabled() ) {
+	$class = 'bb-notification-column-3';
+} elseif ( bb_web_notification_enabled() || bb_app_notification_enabled() ) {
+	$class = 'bb-notification-column-2';
+}
 ?>
 
 <h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
@@ -19,7 +25,7 @@ $data = bb_core_notification_preferences_data();
 	<?php echo wp_kses_post( $data['screen_description'] ); ?>
 </p>
 
-<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
+<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
 
 	<?php if ( false === bb_enabled_legacy_email_preference() && ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) { ?>
 		<div class="notification_info">

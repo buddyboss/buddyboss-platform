@@ -199,7 +199,7 @@ function bb_admin_setting_callback_on_automatic_notification_information() {
 function bb_admin_setting_callback_on_automatic_notification_fields() {
 	$all_notifications    = bb_register_notification_preferences();
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	$email_url            = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() );
+	$email_url            = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() . '&display-popup=true' );
 
 	if ( ! empty( $all_notifications ) ) {
 		echo '<table class="form-table render-dynamic-notification"><tbody>';
