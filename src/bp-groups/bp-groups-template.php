@@ -1433,10 +1433,9 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 		$group =& $groups_template->group;
 	}
 
+	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 	if ( bp_is_single_item() ) {
-		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . __( 'View more', 'buddyboss' ) . '</a>';
-	} else {
-		$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'View more', 'buddyboss' ) . '</a>';
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 	}
 	/**
 	 * Filters the excerpt of a group description.
@@ -1852,25 +1851,27 @@ function bp_group_list_admins( $group = false ) {
 			<?php
 				$i = 0;
 			foreach ( (array) $group->admins as $admin ) {
-				$i = $i + 1;
+				$i++;
 				if ( $i > 3 ) {
 					break;
 				}
 				?>
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
 					<?php
-					echo bp_core_fetch_avatar(
-						array(
-							'item_id' => $admin->user_id,
-							'email'   => $admin->user_email,
-							'alt'     => sprintf(
-								__(
-									'Profile photo of %s',
-									'buddyboss'
+					echo esc_url(
+						bp_core_fetch_avatar(
+							array(
+								'item_id' => $admin->user_id,
+								'email'   => $admin->user_email,
+								'alt'     => sprintf( // translators: Profile photo of %s.
+									esc_html__(
+										'Profile photo of %s',
+										'buddyboss'
+									),
+									bp_core_get_user_displayname( $admin->user_id )
 								),
-								bp_core_get_user_displayname( $admin->user_id )
-							),
+							)
 						)
 					);
 					?>
@@ -1884,8 +1885,8 @@ function bp_group_list_admins( $group = false ) {
 				<li>
 					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) . 'members' ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="+
 				<?php
-				$organizer_text = ( $member_count == 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' );
-				printf( '%s ' . $organizer_text, $member_count );
+				$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
+				printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
 				?>
 					">
 				<?php
@@ -4231,7 +4232,7 @@ function bp_get_group_join_button( $group = false ) {
 		$is_only_admin = false;
 		// Stop sole admins from abandoning their group.
 		$group_admins = groups_get_group_admins( $group->id );
-		if ( ( 1 == count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
+		if ( ( 1 === count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
 			$is_only_admin = true;
 		}
 
@@ -4258,7 +4259,7 @@ function bp_get_group_join_button( $group = false ) {
 				'data-title'           => esc_html__( 'Leave group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
 				'data-bb-group-name'   => esc_attr( $group->name ),
-				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) )
+				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
 			),
 		);
 
@@ -4333,7 +4334,7 @@ function bp_get_group_join_button( $group = false ) {
 						$get_selected_member_type_join   = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
 						$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 
-						if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+						if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
 							$button = array(
 								'id'                => 'request_membership',
 								'component'         => 'groups',
@@ -4410,7 +4411,7 @@ function bp_group_create_button() {
 	/**
 	 * Get the Create a Group button.
 	 *
-	 * @since BuddyPress 2.0.0å
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return false|string
 	 */
