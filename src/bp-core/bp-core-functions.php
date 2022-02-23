@@ -4911,7 +4911,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  * @since BuddyBoss 1.3.2
  */
 function bp_core_parse_url( $url ) {
-	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );
@@ -5796,6 +5796,7 @@ function bb_core_get_browser() {
 	}
 
 	// Next get the name of the useragent yes seperately and for good reason.
+	$ub = '';
 	if ( preg_match( '/MSIE/i', $u_agent ) && ! preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Internet Explorer';
 		$ub    = 'MSIE';
@@ -5818,16 +5819,15 @@ function bb_core_get_browser() {
 
 	// finally get the correct version number.
 	$known   = array( 'Version', $ub, 'other' );
-	$pattern = '#(?<browser>' . join( '|', $known ) .
-			   ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+	$pattern = '#(?<browser>' . join( '|', $known ) . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 	if ( ! preg_match_all( $pattern, $u_agent, $matches ) ) {
 		// we have no matching number just continue.
 	}
 
 	// see how many we have.
 	$i = count( $matches['browser'] );
-	if ( $i != 1 ) {
-		// we will have two since we are not using 'other' argument yet
+	if ( 1 !== $i ) {
+		// we will have two since we are not using 'other' argument yet.
 		// see if version is before or after the name.
 		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
 			$version = isset( $matches['version'][0] ) ? $matches['version'][0] : '';
@@ -5839,7 +5839,7 @@ function bb_core_get_browser() {
 	}
 
 	// check if we have a number.
-	if ( $version == null || $version == '' ) {
+	if ( null === $version || '' === $version ) {
 		$version = '?';
 	}
 
@@ -5856,8 +5856,8 @@ function bb_core_get_browser() {
 /**
  * Function to check if media record is exist.
  *
- * @param int    $id   media id
- * @param string $type media type
+ * @param int    $id   media id.
+ * @param string $type media type.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -5871,13 +5871,30 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 	$document_table = "{$wpdb->prefix}bp_document";
 
 	if ( in_array( $type, array( 'media', 'video' ) ) ) {
-		$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
-		$record    = $wpdb->get_row( $media_sql );
+		$cache_key   = 'bb_' . $type . '_activity_' . $id;
+		$cache_group = 'bp_' . $type;
+		$record      = wp_cache_get( $cache_key, $cache_group );
+
+		if ( false === $record ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, Generic.Formatting.MultipleStatementAlignment.IncorrectWarning
+			$record = $wpdb->get_row( $media_sql );
+			wp_cache_set( $cache_key, $record, $cache_group );
+		}
 	}
 
 	if ( 'document' === $type ) {
-		$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
-		$record       = $wpdb->get_row( $document_sql );
+		$cache_key = 'bb_document_activity_' . $id;
+		$record    = wp_cache_get( $cache_key, 'bp_document' );
+
+		if ( false === $record ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, Generic.Formatting.MultipleStatementAlignment.IncorrectWarning
+			$record       = $wpdb->get_row( $document_sql );
+			wp_cache_set( $cache_key, $record, 'bp_document' );
+		}
 	}
 
 	return $record;
@@ -5886,7 +5903,7 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 /**
  * Function to check if suspend record is exist.
  *
- * @param int $id id
+ * @param int $id id.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -5903,8 +5920,16 @@ function bb_moderation_suspend_record_exist( $id ) {
 
 	$suspend_table = "{$wpdb->prefix}bp_suspend";
 
-	$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
-	$record             = $wpdb->get_row( $suspend_record_sql );
+	$cache_key = 'bb_suspend_' . $id;
+	$record    = wp_cache_get( $cache_key, 'bp_moderation' );
+
+	if ( false === $record ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$record = $wpdb->get_row( $suspend_record_sql );
+		wp_cache_set( $cache_key, $record, 'bp_moderation' );
+	}
 
 	return $record;
 }
@@ -5912,8 +5937,8 @@ function bb_moderation_suspend_record_exist( $id ) {
 /**
  * Function to update suspend data.
  *
- * @param object $moderated_activities suspend records
- * @param int    $offset               pagination object
+ * @param object $moderated_activities Suspend records.
+ * @param int    $offset               Pagination object.
  *
  * @since BuddyBoss 1.7.5
  *
