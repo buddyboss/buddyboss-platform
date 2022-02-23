@@ -150,12 +150,27 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					?>
 					<a href="javascript:void(0);" class="page-title-action btn-open-missing-email">
 						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
-						<?php esc_html_e( 'Email Missing', 'buddyboss' ); ?>
+						<?php
+						if ( $total_missing_count > 1 ) {
+							esc_html_e( 'Emails Missing', 'buddyboss' );
+						} else {
+							esc_html_e( 'Email Missing', 'buddyboss' );
+						}
+						?>
 					</a>
 					<div id="bp-hello-container" class="bp-hello-email" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
 						<div class="bp-hello-header">
 							<div class="bp-hello-title">
-								<h2 id="bp-hello-title" tabindex="-1"><span class="count"><?php echo esc_html( $total_missing_count ); ?> </span><?php esc_html_e( 'Email Missing', 'buddyboss' ); ?></h2>
+								<h2 id="bp-hello-title" tabindex="-1">
+									<span class="count">
+										<?php echo esc_html( $total_missing_count ); ?> </span>
+									<?php
+									if ( $total_missing_count > 1 ) {
+										esc_html_e( 'Emails Missing', 'buddyboss' );
+									} else {
+										esc_html_e( 'Email Missing', 'buddyboss' );
+									}
+									?>
 							</div>
 							<div class="bp-hello-close">
 								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
