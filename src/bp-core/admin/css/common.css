@@ -1311,7 +1311,9 @@ body.post-type-bp-email .categorydiv label {
   clear: left;
   display: block;
   line-height: 1.5;
-  margin: 0 0 1em;
+  margin: 0 0 7px;
+  padding: 3px;
+  border-radius: 3px;
 }
 
 @media screen and (max-width: 782px) {
