@@ -42,10 +42,6 @@
 				}
 			}
 
-			.only-list-view {
-				display: none;
-			}
-
 			.list-wrap {
 
 				.followers-wrap,
@@ -96,6 +92,10 @@
 			}
 
 		} // close li
+
+		&.grid li .only-list-view {
+			display: none;
+		}
 
 	} // close .members-list
 

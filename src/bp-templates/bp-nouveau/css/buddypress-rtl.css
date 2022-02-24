@@ -6277,10 +6277,6 @@ form.ac-form .ac-reply-content input {
   }
 }
 
-.buddypress-wrap .members-list li .only-list-view {
-  display: none;
-}
-
 .buddypress-wrap .members-list li .list-wrap .followers-wrap,
 .buddypress-wrap .members-list li .list-wrap .member-type {
   font-size: 14px;
@@ -6323,6 +6319,10 @@ form.ac-form .ac-reply-content input {
 .buddypress-wrap .members-list li .member-button-wrap .generic-button > * {
   display: block;
   margin-bottom: 10px;
+}
+
+.buddypress-wrap .members-list.grid li .only-list-view {
+  display: none;
 }
 
 @media screen and (min-width: 46.8em) {

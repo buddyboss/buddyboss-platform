@@ -29,7 +29,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 	<?php bp_nouveau_group_hook( 'before', 'members_list' ); ?>
 
-	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
+	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list">
 
 		<?php
 		while ( bp_group_members() ) :
@@ -83,7 +83,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 								<?php
 								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									echo '<p class="item-meta member-type">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
+									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
 								}
 								?>
 
@@ -91,8 +91,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 									<?php bp_group_member_link(); ?>
 								</h2>
 
+								<?php
+								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
+									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ) . '</p>';
+								}
+								?>
+
 								<?php if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) : ?>
-									<p class="joined item-meta">
+									<p class="item-meta last-activity">
 
 										<?php
 										if ( $enabled_joined_date ) :
