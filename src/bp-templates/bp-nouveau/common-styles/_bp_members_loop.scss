@@ -91,6 +91,22 @@
 				margin-bottom: 10px;
 			}
 
+			.item-avatar a {
+				display: inline-block;
+				position: relative;
+			}
+
+			.member-status.online {
+				background-color: $golden;
+				border: 2px solid $white;
+				border-radius: 100%;
+				position: absolute;
+				width: 12px;
+				height: 12px;
+				right: 12px;
+				top: 12px;
+			}
+
 		} // close li
 
 		&.grid li {
@@ -101,11 +117,22 @@
 
 		}
 
+		&.grid.bp-list > li .item-avatar img.avatar {
+			width: 100%;
+			max-width: 126px;
+		}
+
 		&:not(.grid) {
 
 			li {
 				margin: 0;
 				padding: 0;
+
+				.member-status.online {
+					right: 4px;
+					top: 4px;
+				}
+
 			}
 
 			.list-wrap {

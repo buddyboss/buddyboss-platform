@@ -6321,13 +6321,39 @@ form.ac-form .ac-reply-content input {
   margin-bottom: 10px;
 }
 
+.buddypress-wrap .members-list li .item-avatar a {
+  display: inline-block;
+  position: relative;
+}
+
+.buddypress-wrap .members-list li .member-status.online {
+  background-color: #edbb34;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 12px;
+  top: 12px;
+}
+
 .buddypress-wrap .members-list.grid li .only-list-view {
   display: none;
+}
+
+.buddypress-wrap .members-list.grid.bp-list > li .item-avatar img.avatar {
+  width: 100%;
+  max-width: 126px;
 }
 
 .buddypress-wrap .members-list:not(.grid) li {
   margin: 0;
   padding: 0;
+}
+
+.buddypress-wrap .members-list:not(.grid) li .member-status.online {
+  left: 4px;
+  top: 4px;
 }
 
 .buddypress-wrap .members-list:not(.grid) .list-wrap {

@@ -130,10 +130,15 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						</div><!-- // .item -->
 
 						<?php if ( $profile_actions['secondary'] ) { ?>
-							<div class="flex button-wrap member-button-wrap footer-button-wrap">
+							<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
 								<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
 							</div>
 						<?php } ?>
+
+						<div class="flex only-list-view align-items-center primary-action justify-center">
+							<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+						</div>
+
 					</div>
 
 					<div class="bp-members-list-hook">
