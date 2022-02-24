@@ -43,10 +43,12 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 		if ( bp_group_use_cover_image_header() ) {
 
 			if ( ! empty( $group_cover_image ) ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '"' . ( '' !== $group_cover_position ? ' data-top="' . esc_attr( $group_cover_position ) . '"' : '' ) . ( '' !== $group_cover_position ? ' style="top: ' . esc_attr( $group_cover_position ) . 'px"' : '' ) . ' alt="" />';
+				?>
+				<img class="header-cover-img" src="<?php echo esc_url( $group_cover_image ); ?>" <?php echo ( '' !== $group_cover_position ) ? ' data-top="' . esc_attr( $group_cover_position ) . '"' : ''; ?> <?php echo ( '' !== $group_cover_position ) ? ' style="top: ' . esc_attr( $group_cover_position ) . 'px"' : ''; ?> alt="" />
+				<?php
 			}
 			?>
+
 			<?php if ( bp_is_item_admin() ) { ?>
 				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 				<i class="bb-icon-camera"></i>
@@ -107,18 +109,12 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 					<?php endif; ?>
 				</div>
 
-				<?php
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo isset( bp_nouveau_group_meta()->group_type_list ) ? bp_nouveau_group_meta()->group_type_list : '';
-				?>
+				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : ''; ?>
 				<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
 
 				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>
 					<div class="item-meta">
-						<?php
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo bp_nouveau_group_meta()->extra;
-						?>
+						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
 				<?php endif; ?>
 

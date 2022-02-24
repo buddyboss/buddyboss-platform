@@ -366,10 +366,9 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false,
  *
  * @since BuddyPress 1.1.0
  *
- * @param int   $potential_friend_id ID of the user to whom the button
- *                                   applies. Default: value of {@link bp_get_potential_friend_id()}.
+ * @param int   $potential_friend_id ID of the user to whom the button applies. Default: value of {@link bp_get_potential_friend_id()}.
  * @param bool  $friend_status       Not currently used.
- * @param array $button_args       See {@link BP_Button class}.
+ * @param array $button_args         See {@link BP_Button class}.
  * @return false|string HTML for the Connect button.
  */
 function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {

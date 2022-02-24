@@ -58,12 +58,12 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 				</div>
 
-				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? esc_attr( bp_nouveau_group_meta()->group_type_list ) : ''; ?>
+				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : ''; ?>
 				<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
 
 				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>
 					<div class="item-meta">
-						<?php echo esc_attr( bp_nouveau_group_meta()->extra ); ?>
+						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
 				<?php endif; ?>
 
@@ -71,7 +71,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<?php
 					printf(
 						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						esc_attr__( 'active %s', 'buddyboss' ),
+						esc_html__( 'active %s', 'buddyboss' ),
 						wp_kses_post( bp_get_group_last_active() )
 					);
 					?>

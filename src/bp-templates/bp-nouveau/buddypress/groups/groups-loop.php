@@ -10,8 +10,6 @@
  * @package BuddyBoss\Core
  */
 
-use function Symfony\Component\VarDumper\Dumper\esc;
-
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_group_directory_type() ) : ?>

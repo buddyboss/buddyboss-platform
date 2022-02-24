@@ -736,36 +736,36 @@ function bp_get_group_type( $group = false ) {
 
 		$group_type = bp_groups_get_group_type( $group->id );
 		$group_type = bp_groups_get_group_type_object( $group_type );
-		$group_type = isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : '';
+		$group_type = $group_type->labels['singular_name'] ?? '';
 
 		if ( 'public' == $group->status ) {
 
-			$group_visibility = __( 'Public', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$group_visibility = esc_html__( 'Public', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
-			$group_visibility = __( 'Hidden', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$group_visibility = esc_html__( 'Hidden', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
-			$group_visibility = __( 'Private', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$group_visibility = esc_html__( 'Private', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
-			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} else {
-			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	}
 
@@ -1884,20 +1884,18 @@ function bp_group_list_admins( $group = false ) {
 				?>
 				<li>
 					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) . 'members' ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="+
-				<?php
-				$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
-				printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
-				?>
+						<?php
+						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
+						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
+						?>
 					">
-				<?php
-				echo '<span class="bb-icon bb-icon-menu-dots-h"></span>';
-				?>
+					<?php echo '<span class="bb-icon bb-icon-menu-dots-h"></span>'; ?>
 					</a>
 				</li>
 			<?php } ?>
 		</ul>
 	<?php } else { ?>
-		<span class="activity"><?php _e( 'No Organizers', 'buddyboss' ); ?></span>
+		<span class="activity"><?php esc_html_e( 'No Organizers', 'buddyboss' ); ?></span>
 	<?php } ?>
 	<?php
 }

@@ -250,8 +250,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$value = isset( $_POST[ $setting_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) : '';
 					bp_update_option( $setting_name, $value );
 				}
 			}

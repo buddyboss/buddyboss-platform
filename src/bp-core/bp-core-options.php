@@ -120,15 +120,6 @@ function bp_get_default_options() {
 		// Profile Enable Gravatar.
 		'bp-enable-profile-gravatar'                 => false,
 
-		// Member directories elements.
-		'bb-pro-member-directory-elements'           => array( 'online-status', 'profile-type', 'followers', 'last-active' ),
-
-		// Member directories profile actions.
-		'bb-pro-member-profile-actions'              => array( 'follow', 'connect', 'message' ),
-
-		// Member directories primary action.
-		'bb-pro-member-profile-primary-action'       => '',
-
 		/* Groups ************************************************************/
 
 		// @todo Move this into the groups component

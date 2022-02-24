@@ -833,7 +833,8 @@ function bp_nouveau_get_member_meta() {
 			$register_date = date_i18n( 'F Y', strtotime( get_userdata( bp_displayed_user_id() )->user_registered ) );
 
 			$meta['last_activity'] = sprintf(
-				'<span class="activity">' . __( 'Joined %s', 'buddyboss' ) . '</span>',
+				/* translators: %s: Member joined date. */
+				'<span class="activity">' . esc_html__( 'Joined %s', 'buddyboss' ) . '</span>',
 				esc_html( $register_date )
 			);
 
