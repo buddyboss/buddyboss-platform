@@ -178,6 +178,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$thread_replies = (bool) ( bbp_thread_replies() );
 		}
 
+		if ( is_array( $args['orderby'] ) ) {
+			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$args['orderby'] = 'post__in';
+		}
+
 		/**
 		 * Filter the query arguments for the request.
 		 *
@@ -2347,6 +2359,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					'modified',
 					'parent',
 					'rand',
+					'include'
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -2590,5 +2603,4 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_reply_object', $reply, $request );
 	}
-
 }

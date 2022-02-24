@@ -149,7 +149,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
-	 * @apiParam {String=active,newest,alphabetical,random,online,popular} [type=newest] Shorthand for certain orderby/order combinations.
+	 * @apiParam {String=active,newest,alphabetical,random,online,popular,include} [type=newest] Shorthand for certain orderby/order combinations.
 	 * @apiParam {Number} [user_id] Limit results to friends of a user.
 	 * @apiParam {Arrays} [user_ids] Pass IDs of users to limit result set.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
@@ -241,6 +241,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$users           = apply_filters( 'bp_ps_search_results', $users );
 				$args['include'] = implode( ',', $users );
 			}
+		} else if ( ! empty( $args['include'] ) ) {
+			$args['type'] = 'in';
 		}
 
 		if (
@@ -1261,7 +1263,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
 			'default'           => 'newest',
 			'type'              => 'string',
-			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular' ),
+			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);

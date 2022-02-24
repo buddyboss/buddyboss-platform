@@ -239,7 +239,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
 	 * @apiParam {String=asc,desc} [order=asc] Order sort attribute ascending or descending.
-	 * @apiParam {String=title,date_created,date_modified,group_id,privacy} [orderby=title] Order by a specific parameter.
+	 * @apiParam {String=title,date_created,date_modified,group_id,privacy,id,include} [orderby=title] Order by a specific parameter.
 	 * @apiParam {Number} [user_id] Limit result set to items created by a specific user (ID).
 	 * @apiParam {Number} [max] Maximum number of results to return.
 	 * @apiParam {Number} [folder_id] A unique numeric ID for the Folder.
@@ -299,7 +299,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['include'] ) ) {
-			$args['include'] = $request['include'];
+			$args['document_ids'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		if ( ! empty( $request['type'] ) ) {
@@ -1692,7 +1698,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order documents by which attribute.', 'buddyboss' ),
 			'default'           => 'title',
 			'type'              => 'string',
-			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy' ),
+			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -2327,7 +2333,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'activity' ) )
+				$this->prepare_item_for_response( $document, array( 'support' => 'activity', 'context' => 'view' ) )
 			);
 		}
 

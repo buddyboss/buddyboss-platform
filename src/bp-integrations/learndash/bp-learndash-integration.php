@@ -65,7 +65,7 @@ class BP_Learndash_Integration extends BP_Integration {
 	/**
 	 * Setup cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.0
 	 */
 	public function setup_cache_groups() {
 		// Global groups.
