@@ -1840,7 +1840,7 @@ window.bp = window.bp || {};
 					return false;
 				}
 			} else {
-				$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'closed' );
+				$( 'body' ).find( '[data-popup-shown="opened"]' ).attr( 'data-popup-shown' , 'closed' );
 				$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 				remove_connection_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
 				remove_connection_popup.hide();
@@ -2141,7 +2141,7 @@ window.bp = window.bp || {};
 			var leave_group_popup = $( target ).closest( '.bb-remove-connection' );
 
 			$( 'body' ).find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
-			$( 'body' ).find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'closed' );
+			$( 'body' ).find( '[data-popup-shown="opened"]' ).attr( 'data-popup-shown' , 'closed' );
 			leave_group_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
 			leave_group_popup.hide();
 		},

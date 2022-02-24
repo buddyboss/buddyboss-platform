@@ -172,4 +172,29 @@ else :
 
 	bp_nouveau_user_feedback( 'group-members-none' );
 
-endif;
+endif; ?>
+
+<!-- Remove Connection confirmation popup -->
+<div class="bb-remove-connection bb-action-popup" style="display: none">
+	<transition name="modal">
+		<div class="modal-mask bb-white bbm-model-wrap">
+			<div class="modal-wrapper">
+				<div class="modal-container">
+					<header class="bb-model-header">
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
+						<a class="bb-close-remove-connection bb-model-close-button" href="#">
+							<span class="bb-icon bb-icon-close"></span>
+						</a>
+					</header>
+					<div class="bb-remove-connection-content bb-action-popup-content">
+						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+					</div>
+					<footer class="bb-model-footer flex align-items-center">
+						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+					</footer>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div> <!-- .bb-remove-connection -->

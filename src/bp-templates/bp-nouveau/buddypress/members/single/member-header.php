@@ -171,7 +171,7 @@ endif;
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">
-						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-group-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
 						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
