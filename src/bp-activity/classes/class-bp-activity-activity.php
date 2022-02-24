@@ -527,11 +527,20 @@ class BP_Activity_Activity {
 			case 'is_spam':
 				break;
 
+			case 'in':
+				$r['order_by'] = 'in';
+				break;
+
 			default:
 				$r['order_by'] = 'date_recorded';
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
