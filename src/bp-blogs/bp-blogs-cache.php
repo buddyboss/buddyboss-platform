@@ -48,6 +48,7 @@ function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
 	}
 
 	wp_cache_delete( 'bp_total_blogs', 'bp' );
+	wp_cache_delete( $blog_id, 'bp_blogs' );
 }
 
 // List actions to clear object caches on.
@@ -65,3 +66,23 @@ add_action( 'bp_blogs_new_blog_comment', 'bp_core_clear_cache' );
 add_action( 'bp_blogs_new_blog_post', 'bp_core_clear_cache' );
 add_action( 'bp_blogs_new_blog', 'bp_core_clear_cache' );
 add_action( 'bp_blogs_remove_data', 'bp_core_clear_cache' );
+
+/**
+ * Clear cache while blog has been updated/deleted.
+ *
+ * @since BuddyBoss 1.9.0
+ *
+ * @param BP_Blogs_Blog $blog Instance of the class.
+ */
+function bb_blogs_clear_cache( $blog ) {
+	if ( ! empty( $blog->user_id ) ) {
+		wp_cache_delete( 'bp_blogs_of_user_' . $blog->user_id, 'bp' );
+		wp_cache_delete( 'bp_total_blogs_for_user_' . $blog->user_id, 'bp' );
+	}
+
+	if ( ! empty( $blog->id ) ) {
+		wp_cache_delete( $blog->id, 'bp_blogs' );
+	}
+}
+
+add_action( 'bp_blogs_blog_after_save', 'bb_blogs_clear_cache' );

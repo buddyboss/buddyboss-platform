@@ -1161,6 +1161,9 @@ class BP_Groups_Component extends BP_Component {
 				'group_meta',
 				'bp_groups_memberships',
 				'bp_groups_memberships_for_user',
+				'bp_group_mods',
+				'bp_groups_invitations_as_memberships',
+				'bp_groups_group_type',
 			)
 		);
 

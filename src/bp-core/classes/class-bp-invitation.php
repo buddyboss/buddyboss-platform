@@ -513,12 +513,21 @@ class BP_Invitation {
 				$order_by               = implode( ', ', $order_by_clean );
 				$conditions['order_by'] = "{$order_by}";
 			}
+
+			// Support order by fields for generally.
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
+				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
+				$conditions['order_by'] = "FIELD(i.id, {$in})";
+			}
 		}
 
 		// Sort order direction
 		if ( ! empty( $args['sort_order'] ) ) {
 			$sort_order               = bp_esc_sql_order( $args['sort_order'] );
 			$conditions['sort_order'] = "{$sort_order}";
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
+				$conditions['sort_order'] = '';
+			}
 		}
 
 		// Custom ORDER BY
@@ -800,7 +809,8 @@ class BP_Invitation {
 		// ORDER BY
 		$sql['orderby'] = self::get_order_by_sql( array(
 			'order_by'   => $r['order_by'],
-			'sort_order' => $r['sort_order']
+			'sort_order' => $r['sort_order'],
+			'id'         => $r['id'],
 		) );
 
 		// LIMIT %d, %d

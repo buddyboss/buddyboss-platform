@@ -45,10 +45,12 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 		<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $profile_cover_height . ' width-' . $profile_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
 			<?php
 			if ( ! empty( $cover_image_url ) ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( '' !== $cover_image_position ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : '' ) . ( '' !== $cover_image_position ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : '' ) . ' alt="" />';
+				?>
+				<img class="header-cover-img" src="<?php echo esc_url( $cover_image_url ); ?>" <?php echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : ''; ?> <?php echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : ''; ?> alt="" />
+				<?php
 			}
 			?>
+
 			<?php if ( bp_is_my_profile() ) { ?>
 				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-camera"></i>
@@ -172,35 +174,30 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 					<div class="member-header-actions-wrap">
 
 						<?php
-						add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
 						bp_nouveau_member_header_buttons(
 							array(
 								'container'         => 'div',
 								'button_element'    => 'button',
 								'container_classes' => array( 'member-header-actions' ),
+								'prefix_link_text'  => '<i></i>',
+								'is_tooltips'       => false,
+								'button_attr'       => array(
+									'hover_type' => 'hover',
+								),
 							)
 						);
-						remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
 
-						remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-						remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
-						remove_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
-						add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-						add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-						add_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 						bp_nouveau_member_header_bubble_buttons(
 							array(
 								'container'         => 'div',
 								'button_element'    => 'button',
-								'container_classes' => array( 'bb_more_options' ),
+								'container_classes' => array( 'bb_more_options', 'header-dropdown' ),
+								'is_tooltips'       => false,
+								'button_attr'       => array(
+									'hover_type' => 'static',
+								),
 							)
 						);
-						add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-						add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
-						add_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
-						remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-						remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-						remove_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 						?>
 
 					</div><!-- .member-header-actions-wrap -->
@@ -214,7 +211,8 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 	<?php
 	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
 
-endif; ?>
+endif;
+?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
@@ -229,7 +227,15 @@ endif; ?>
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">
-						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+						<p>
+							<?php
+							echo sprintf(
+								/* translators: %s: The member name with HTML tags. */
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+								'<span class="bb-user-name"></span>'
+							);
+							?>
+						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
 						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>

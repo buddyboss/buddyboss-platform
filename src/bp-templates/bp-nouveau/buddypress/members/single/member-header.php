@@ -115,36 +115,26 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 					<div class="member-header-actions-wrap">
 						<?php
-							add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
 							bp_nouveau_member_header_buttons(
 								array(
-									'container_classes' => array(
-										'member-header-actions',
+									'container_classes' => array( 'member-header-actions' ),
+									'prefix_link_text'  => '<i></i>',
+									'is_tooltips'       => false,
+									'button_attr'       => array(
+										'hover_type' => 'hover',
 									),
 								)
 							);
-							remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_follow_button' );
 
-							remove_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-							remove_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
-							remove_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
-							add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-							add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-							add_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 							bp_nouveau_member_header_bubble_buttons(
 								array(
-									'container_classes' => array(
-										'bb_more_options',
+									'container_classes' => array( 'bb_more_options' ),
+									'is_tooltips'       => false,
+									'button_attr'       => array(
+										'hover_type' => 'static',
 									),
 								)
 							);
-							add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-							add_filter( 'bp_get_add_friend_button', 'buddyboss_theme_bp_get_add_friend_button' );
-							add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
-							add_filter( 'bp_get_send_message_button_args', 'buddyboss_theme_bp_get_send_message_button_args' );
-							remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-							remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-							remove_filter( 'bp_get_send_message_button_args', 'bb_theme_get_member_header_dropdown_button' );
 						?>
 					</div><!-- .member-header-actions-wrap -->
 				</div>
@@ -172,7 +162,15 @@ endif;
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">
-						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-group-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+						<p>
+							<?php
+							echo sprintf(
+							/* translators: %s: The member name with HTML tags. */
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+								'<span class="bb-user-name"></span>'
+							);
+							?>
+						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
 						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>

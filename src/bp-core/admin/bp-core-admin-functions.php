@@ -2575,7 +2575,7 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	}
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 	// Write them out to the screen.
-	echo esc_html( $message );
+	echo wp_kses_post( $message );
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection_extended_profile' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );

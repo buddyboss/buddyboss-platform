@@ -42,6 +42,59 @@
 				}
 			}
 
+			.only-list-view {
+				display: none;
+			}
+
+			.list-wrap {
+
+				.followers-wrap,
+				.member-type {
+					font-size: 14px;
+					color: $light-text;
+					margin-bottom: 15px;
+				}
+
+				.member-type {
+					margin-bottom: 5px;
+				}
+
+				.member-name {
+					font-size: 20px;
+					margin: 0 0 10px 0;
+					padding: 0;
+
+					a {
+						text-decoration: none;
+					}
+
+				}
+
+				.last-activity {
+					color: $light-text;
+					font-size: 13px;
+					margin: 0 0 12px 0;
+				}
+
+			}
+
+			.item .primary-action .generic-button {
+				width: 100%;
+			}
+
+			.primary-action .generic-button,
+			.footer-button-wrap .generic-button,
+			.member-button-wrap .generic-button {
+				padding: 0 15px;
+			}
+
+			.primary-action .generic-button > *,
+			.footer-button-wrap .generic-button > *,
+			.member-button-wrap .generic-button > * {
+				display: block;
+				margin-bottom: 10px;
+			}
+
 		} // close li
 
 	} // close .members-list
@@ -69,6 +122,23 @@
 		}
 	}
 } // close .buddypress-wrap
+
+// More option on memeber listing
+#buddypress .members-list > li {
+	min-width: 275px;
+
+	.bb_more_options.member-dropdown {
+		position: absolute;
+		right: 15px;
+		top: 5px;
+
+		.bb_more_options_action {
+			text-decoration: none;
+		}
+
+	}
+
+}
 
 // If logged out or if the loop item is
 // current user we don't display action buttons

@@ -935,6 +935,8 @@ window.bp = window.bp || {};
 					uploadMultiple      : false,
 					maxFiles            : ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize         : ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+					thumbnailWidth		: 140,
+					thumbnailHeight		: 140,
 					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 					previewTemplate : document.getElementsByClassName( 'activity-post-default-template' )[0].innerHTML,
 					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -2192,7 +2194,7 @@ window.bp = window.bp || {};
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
-						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' ) {
+						if ( urlText[ i ] === ' ' || urlText[ i ] === '\n' || ( urlText[ i ] === '"' && urlText[ i + 1 ] === '>' ) ) {
 							break;
 						} else {
 							urlString += urlText[ i ];

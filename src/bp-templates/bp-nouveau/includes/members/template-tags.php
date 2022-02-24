@@ -270,11 +270,22 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
+ * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ *
  * @return array
  */
 function bp_nouveau_get_members_buttons( $args ) {
-	$buttons = array();
-	$type    = ( ! empty( $args['type'] ) ) ? $args['type'] : '';
+	$buttons                    = array();
+	$type                       = ( ! empty( $args['type'] ) ) ? $args['type'] : '';
+	$prefix_link_text           = $args['prefix_link_text'] ?? '';
+	$postfix_link_text          = $args['postfix_link_text'] ?? '';
+	$is_tooltips                = $args['is_tooltips'] ?? false;
+	$tooltips                   = $args['data-balloon'] ?? '';
+	$tooltips_pos               = $args['data-balloon-pos'] ?? '';
+	$hover_type                 = $args['button_attr']['hover_type'] ?? false;
+	$hover_data_title           = $args['button_attr']['data-title'] ?? '';
+	$hover_data_title_displayed = $args['button_attr']['data-title-displayed'] ?? '';
+	$add_pre_post_text          = $args['button_attr']['add_pre_post_text'] ?? true;
 
 	// @todo Not really sure why BP Legacy needed to do this...
 	if ( 'profile' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
@@ -329,6 +340,19 @@ function bp_nouveau_get_members_buttons( $args ) {
 		$parent_class = $args['parent_attr']['class'];
 	}
 
+	$action_button_args = array(
+		'prefix_link_text'  => $prefix_link_text,
+		'postfix_link_text' => $postfix_link_text,
+		'is_tooltips'       => $is_tooltips,
+		'data-balloon-pos'  => $tooltips_pos,
+		'button_attr'       => array(
+			'hover_type'           => $hover_type,
+			'data-title'           => $hover_data_title,
+			'data-title-displayed' => $hover_data_title_displayed,
+			'add_pre_post_text'    => $add_pre_post_text,
+		),
+	);
+
 	$bp_force_friendship_to_message = bp_force_friendship_to_message();
 
 	if ( bp_is_active( 'friends' ) ) {
@@ -341,16 +365,25 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'component'         => 'friends',
 					'must_be_logged_in' => true,
 					'parent_element'    => $parent_element,
-					'link_text'         => __( 'Accept', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
 					'parent_attr'       => array(
 						'id'    => '',
 						'class' => $parent_class,
 					),
 					'button_element'    => $button_element,
 					'button_attr'       => array(
-						'class' => 'button accept',
-						'rel'   => '',
+						'class'                => 'button accept',
+						'rel'                  => '',
+						'data-balloon'         => $is_tooltips ? $tooltips : '',
+						'data-balloon-pos'     => $tooltips_pos,
+						'hover_type'           => $hover_type,
+						'data-title'           => ! $hover_type ? '' : $hover_data_title,
+						'data-title-displayed' => ! $hover_type ? '' : $hover_data_title_displayed,
+						'add_pre_post_text'    => $add_pre_post_text,
 					),
+					'prefix_link_text'  => $prefix_link_text,
+					'postfix_link_text' => $postfix_link_text,
+					'is_tooltips'       => $is_tooltips,
 				),
 				'reject_friendship' => array(
 					'id'                => 'reject_friendship',
@@ -358,16 +391,25 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'component'         => 'friends',
 					'must_be_logged_in' => true,
 					'parent_element'    => $parent_element,
-					'link_text'         => __( 'Ignore', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Ignore', 'buddyboss' ),
 					'parent_attr'       => array(
 						'id'    => '',
 						'class' => $parent_class,
 					),
 					'button_element'    => $button_element,
 					'button_attr'       => array(
-						'class' => 'button reject',
-						'rel'   => '',
+						'class'                => 'button reject',
+						'rel'                  => '',
+						'data-balloon'         => $is_tooltips ? $tooltips : '',
+						'data-balloon-pos'     => $tooltips_pos,
+						'hover_type'           => $hover_type,
+						'data-title'           => ! $hover_type ? '' : $hover_data_title,
+						'data-title-displayed' => ! $hover_type ? '' : $hover_data_title_displayed,
+						'add_pre_post_text'    => $add_pre_post_text,
 					),
+					'prefix_link_text'  => $prefix_link_text,
+					'postfix_link_text' => $postfix_link_text,
+					'is_tooltips'       => $is_tooltips,
 				),
 			);
 
@@ -391,7 +433,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 			 */
 			add_filter( 'bp_get_add_friend_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
-			bp_get_add_friend_button( $user_id );
+			bp_get_add_friend_button( $user_id, false, $action_button_args );
 
 			remove_filter( 'bp_get_add_friend_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
@@ -419,6 +461,9 @@ function bp_nouveau_get_members_buttons( $args ) {
 						'rel'   => $button_args['link_rel'],
 						'title' => '',
 					),
+					'prefix_link_text'    => $button_args['prefix_link_text'] ?? '',
+					'postfix_link_text'   => $button_args['postfix_link_text'] ?? '',
+					'is_tooltips'         => $button_args['is_tooltips'] ?? false,
 				);
 
 				if ( ! empty( $button_args['button_attr'] ) ) {
@@ -451,7 +496,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		 */
 		add_filter( 'bp_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
-		bp_get_add_follow_button( $user_id, bp_loggedin_user_id() );
+		bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $action_button_args );
 
 		remove_filter( 'bp_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
@@ -477,6 +522,9 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'rel'   => $button_args['link_rel'],
 					'title' => '',
 				),
+				'prefix_link_text'  => $button_args['prefix_link_text'] ?? '',
+				'postfix_link_text' => $button_args['postfix_link_text'] ?? '',
+				'is_tooltips'       => $button_args['is_tooltips'] ?? false,
 			);
 
 			if ( ! empty( $button_args['button_attr'] ) ) {
@@ -497,8 +545,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		}
 	}
 
-	// Only add The public and private messages when not in a loop
-	// if ( 'profile' === $type ) {
+	// Only add The public and private messages when not in a loop.
 	if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) {
 		/*
 		 * This filter workaround is waiting for a core adaptation
@@ -529,19 +576,34 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'class' => $parent_class,
 				),
 				'button_attr'       => array(
-					'href'  => $button_args['link_href'],
-					'id'    => '',
-					'class' => $button_args['link_class'],
+					'href'                 => $button_args['link_href'],
+					'id'                   => '',
+					'class'                => $button_args['link_class'],
+					'data-balloon'         => $is_tooltips ? $tooltips : '',
+					'data-balloon-pos'     => $tooltips_pos,
+					'hover_type'           => $hover_type,
+					'data-title'           => ! $hover_type ? '' : $hover_data_title,
+					'data-title-displayed' => ! $hover_type ? '' : $hover_data_title_displayed,
+					'add_pre_post_text'    => $add_pre_post_text,
 				),
+				'prefix_link_text'  => $prefix_link_text,
+				'postfix_link_text' => $postfix_link_text,
+				'is_tooltips'       => $is_tooltips,
 			);
 			unset( bp_nouveau()->members->button_args );
 		}
 	}
 
-	if ( bp_is_active( 'messages' ) &&
-			 ( ! $bp_force_friendship_to_message ||
-			 ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $user_id ) ) )
+	if ( bp_is_active( 'messages' ) && ( ! $bp_force_friendship_to_message || ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $user_id ) ) )
 		) {
+
+		$message_button_args = array();
+		if ( ! empty( $prefix_link_text ) || ! empty( $postfix_link_text ) ) {
+			$message_button_args = array(
+				'prefix_link_text'  => $prefix_link_text,
+				'postfix_link_text' => $postfix_link_text,
+			);
+		}
 		/**
 		 * This filter workaround is waiting for a core adaptation
 		 * so that we can directly get the private messages button arguments
@@ -551,7 +613,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		 */
 		add_filter( 'bp_get_send_message_button_args', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
-		bp_get_send_message_button();
+		bp_get_send_message_button( $message_button_args );
 
 		remove_filter( 'bp_get_send_message_button_args', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
@@ -577,30 +639,39 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'class' => $parent_class,
 				),
 				'button_attr'              => array(
-					'href'  => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
-					'id'    => false,
-					'class' => $button_args['link_class'],
-					'rel'   => '',
-					'title' => '',
+					'href'                 => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
+					'id'                   => false,
+					'class'                => $button_args['link_class'],
+					'rel'                  => '',
+					'title'                => '',
+					'data-balloon'         => $is_tooltips ? $tooltips : '',
+					'data-balloon-pos'     => $tooltips_pos,
+					'hover_type'           => $hover_type,
+					'data-title'           => ! $hover_type ? '' : $hover_data_title,
+					'data-title-displayed' => ! $hover_type ? '' : $hover_data_title_displayed,
+					'add_pre_post_text'    => $add_pre_post_text,
 				),
+				'prefix_link_text'         => $prefix_link_text,
+				'postfix_link_text'        => $postfix_link_text,
+				'is_tooltips'              => $is_tooltips,
 			);
 
 			unset( bp_nouveau()->members->button_args );
 		}
 	}
 
-		/*
-		* This filter workaround is waiting for a core adaptation
-		* so that we can directly get the follow button arguments
-		* instead of the button.
-		*
-		* See https://buddypress.trac.wordpress.org/ticket/7126
-		*/
-		add_filter( 'bp_get_add_switch_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+	/*
+	* This filter workaround is waiting for a core adaptation
+	* so that we can directly get the follow button arguments
+	* instead of the button.
+	*
+	* See https://buddypress.trac.wordpress.org/ticket/7126
+	*/
+	add_filter( 'bp_get_add_switch_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
-		bp_get_add_switch_button( $user_id );
+	bp_get_add_switch_button( $user_id );
 
-		remove_filter( 'bp_get_add_switch_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+	remove_filter( 'bp_get_add_switch_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
 	if ( ! empty( bp_nouveau()->members->button_args ) ) {
 		$button_args = bp_nouveau()->members->button_args;
@@ -658,23 +729,21 @@ function bp_nouveau_get_members_buttons( $args ) {
 		);
 	}
 
-		// }
-
-		/**
-		 * Filter to add your buttons, use the position argument to choose where to insert it.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $buttons The list of buttons.
-		 * @param int    $user_id The displayed user ID.
-		 * @param string $type    Whether we're displaying a members loop or a user's page
-		 */
-		$buttons_group = apply_filters( 'bp_nouveau_get_members_buttons', $buttons, $user_id, $type );
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $buttons The list of buttons.
+	 * @param int    $user_id The displayed user ID.
+	 * @param string $type    Whether we're displaying a members loop or a user's page
+	 */
+	$buttons_group = apply_filters( 'bp_nouveau_get_members_buttons', $buttons, $user_id, $type );
 	if ( ! $buttons_group ) {
 		return $buttons;
 	}
 
-		// It's the first entry of the loop, so build the Group and sort it.
+	// It's the first entry of the loop, so build the Group and sort it.
 	if ( ! isset( bp_nouveau()->members->member_buttons ) || ! is_a( bp_nouveau()->members->member_buttons, 'BP_Buttons_Group' ) ) {
 		$sort                                 = true;
 		bp_nouveau()->members->member_buttons = new BP_Buttons_Group( $buttons_group );
@@ -685,31 +754,31 @@ function bp_nouveau_get_members_buttons( $args ) {
 		bp_nouveau()->members->member_buttons->update( $buttons_group );
 	}
 
-		$return = bp_nouveau()->members->member_buttons->get( $sort );
+	$return = bp_nouveau()->members->member_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
 	}
 
-		/**
-		 * Leave a chance to adjust the $return
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $return  The list of buttons ordered.
-		 * @param int    $user_id The displayed user ID.
-		 * @param string $type    Whether we're displaying a members loop or a user's page
-		 */
-		do_action_ref_array( 'bp_nouveau_return_members_buttons', array( &$return, $user_id, $type ) );
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $return  The list of buttons ordered.
+	 * @param int    $user_id The displayed user ID.
+	 * @param string $type    Whether we're displaying a members loop or a user's page
+	 */
+	do_action_ref_array( 'bp_nouveau_return_members_buttons', array( &$return, $user_id, $type ) );
 
-		$order = bp_nouveau_get_user_profile_actions();
+	$order = bp_nouveau_get_user_profile_actions();
 
-		uksort(
-			$return,
-			function ( $key1, $key2 ) use ( $order ) {
-				return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
-			}
-		);
+	uksort(
+		$return,
+		function ( $key1, $key2 ) use ( $order ) {
+			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+		}
+	);
 
 	return $return;
 }
@@ -764,7 +833,8 @@ function bp_nouveau_get_member_meta() {
 			$register_date = date_i18n( 'F Y', strtotime( get_userdata( bp_displayed_user_id() )->user_registered ) );
 
 			$meta['last_activity'] = sprintf(
-				'<span class="activity">' . __( 'Joined %s', 'buddyboss' ) . '</span>',
+				/* translators: %s: Member joined date. */
+				'<span class="activity">' . esc_html__( 'Joined %s', 'buddyboss' ) . '</span>',
 				esc_html( $register_date )
 			);
 

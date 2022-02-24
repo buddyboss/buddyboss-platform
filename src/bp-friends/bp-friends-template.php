@@ -360,17 +360,17 @@ function bp_is_friend( $user_id = 0 ) {
 function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
 	echo bp_get_add_friend_button( $potential_friend_id, $friend_status, $button_args );
 }
-	/**
-	 * Create the Connect button.
-	 *
-	 * @since BuddyPress 1.1.0
-	 *
-	 * @param int   $potential_friend_id ID of the user to whom the button
-	 *                                   applies. Default: value of {@link bp_get_potential_friend_id()}.
-	 * @param bool  $friend_status       Not currently used.
-	 * @param array $button_args       See {@link BP_Button class}.
-	 * @return false|string HTML for the Connect button.
-	 */
+
+/**
+ * Create the Connect button.
+ *
+ * @since BuddyPress 1.1.0
+ *
+ * @param int   $potential_friend_id ID of the user to whom the button applies. Default: value of {@link bp_get_potential_friend_id()}.
+ * @param bool  $friend_status       Not currently used.
+ * @param array $button_args         See {@link BP_Button class}.
+ * @return false|string HTML for the Connect button.
+ */
 function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
 
 	if ( empty( $potential_friend_id ) ) {
@@ -400,8 +400,9 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'link_text'           => esc_html__( 'Request Sent', 'buddyboss' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
-					'link_class'          => 'friendship-button pending_friend requested bp-toggle-action-button',
+					'link_class'          => 'friendship-button pending_friend requested',
 					'button_attr'         => array(
+						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
 						'data-title'           => esc_html__( 'Cancel Request', 'buddyboss' ),
 						'data-title-displayed' => esc_html__( 'Request Sent', 'buddyboss' ),
 					),
@@ -425,6 +426,11 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
 					'link_class'          => 'friendship-button awaiting_response_friend requested',
+					'button_attr'         => array(
+						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
+						'data-title'           => '',
+						'data-title-displayed' => '',
+					),
 				),
 				$button_args
 			);
@@ -444,8 +450,11 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'link_text'           => esc_html__( 'Connected', 'buddyboss' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
-					'link_class'          => 'friendship-button is_friend remove bp-toggle-action-button bp-toggle-action-button',
+					'link_class'          => 'friendship-button is_friend remove bp-toggle-action-button',
 					'button_attr'         => array(
+						'data-bb-user-name'    => bp_core_get_user_displayname( $potential_friend_id ),
+						'data-bb-user-link'    => bp_core_get_user_domain( $potential_friend_id ),
+						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
 						'data-title'           => esc_html__( 'Remove Connection', 'buddyboss' ),
 						'data-title-displayed' => esc_html__( 'Connected', 'buddyboss' ),
 					),
@@ -469,6 +478,11 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'add',
 					'link_class'          => 'friendship-button not_friends add',
+					'button_attr'         => array(
+						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
+						'data-title'           => '',
+						'data-title-displayed' => '',
+					),
 				),
 				$button_args
 			);
@@ -620,7 +634,7 @@ function bp_friend_friendship_id() {
 function bp_get_friend_friendship_id() {
 	global $members_template;
 
-	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() ) ) {
+	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), 'bp' ) ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}
@@ -653,7 +667,7 @@ function bp_friend_accept_request_link() {
 function bp_get_friend_accept_request_link() {
 	global $members_template;
 
-	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() ) ) {
+	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), 'bp' ) ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}
@@ -688,7 +702,7 @@ function bp_friend_reject_request_link() {
 function bp_get_friend_reject_request_link() {
 	global $members_template;
 
-	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() ) ) {
+	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), 'bp' ) ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}

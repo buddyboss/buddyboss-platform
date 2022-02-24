@@ -3948,6 +3948,30 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   max-width: 100%;
 }
 
+.activity-video-preview .activity-link-preview-container {
+  border: 0;
+}
+
+.activity-video-preview .activity-link-preview-container .activity-link-preview-title {
+  margin: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt {
+  width: 100%;
+}
+
+.activity-video-preview .activity-link-preview-excerpt > p {
+  margin-bottom: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt .bb-video-wrapper {
+  margin-bottom: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt iframe {
+  width: 100%;
+}
+
 .activity-link-preview-image {
   margin-bottom: 10px;
 }
@@ -6253,6 +6277,54 @@ form.ac-form .ac-reply-content input {
   }
 }
 
+.buddypress-wrap .members-list li .only-list-view {
+  display: none;
+}
+
+.buddypress-wrap .members-list li .list-wrap .followers-wrap,
+.buddypress-wrap .members-list li .list-wrap .member-type {
+  font-size: 14px;
+  color: #767676;
+  margin-bottom: 15px;
+}
+
+.buddypress-wrap .members-list li .list-wrap .member-type {
+  margin-bottom: 5px;
+}
+
+.buddypress-wrap .members-list li .list-wrap .member-name {
+  font-size: 20px;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.buddypress-wrap .members-list li .list-wrap .member-name a {
+  text-decoration: none;
+}
+
+.buddypress-wrap .members-list li .list-wrap .last-activity {
+  color: #767676;
+  font-size: 13px;
+  margin: 0 0 12px 0;
+}
+
+.buddypress-wrap .members-list li .item .primary-action .generic-button {
+  width: 100%;
+}
+
+.buddypress-wrap .members-list li .primary-action .generic-button,
+.buddypress-wrap .members-list li .footer-button-wrap .generic-button,
+.buddypress-wrap .members-list li .member-button-wrap .generic-button {
+  padding: 0 15px;
+}
+
+.buddypress-wrap .members-list li .primary-action .generic-button > *,
+.buddypress-wrap .members-list li .footer-button-wrap .generic-button > *,
+.buddypress-wrap .members-list li .member-button-wrap .generic-button > * {
+  display: block;
+  margin-bottom: 10px;
+}
+
 @media screen and (min-width: 46.8em) {
   .buddypress-wrap .members-group-list li .joined {
     clear: left;
@@ -6265,6 +6337,20 @@ form.ac-form .ac-reply-content input {
     font-size: 14px;
     margin: 0;
   }
+}
+
+#buddypress .members-list > li {
+  min-width: 275px;
+}
+
+#buddypress .members-list > li .bb_more_options.member-dropdown {
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
+#buddypress .members-list > li .bb_more_options.member-dropdown .bb_more_options_action {
+  text-decoration: none;
 }
 
 @media screen and (min-width: 32em) {
@@ -7608,8 +7694,8 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
-  content: "\e839";
-  font-size: 17px;
+  content: "\e910";
+  font-size: 16px;
   color: inherit !important;
 }
 
@@ -12607,6 +12693,7 @@ button[data-bp-tooltip] {
 
 .buddypress-wrap .grid.bp-list > li .item .last-activity {
   margin-top: 5px;
+  font-weight: 400;
 }
 
 .buddypress-wrap .grid.bp-list > li .item .group-desc {
@@ -17507,13 +17594,26 @@ img.emojioneemoji {
   background-color: #f8f8f8;
 }
 
+.dropzone.media-dropzone .dz-preview .dz-image {
+  position: relative;
+}
+
+.dropzone.media-dropzone .dz-preview .dz-image img {
+  width: auto;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .dropzone .dz-preview.dz-error {
   background-color: #f8f8f8;
 }
 
 .dropzone .dz-preview.dz-error .dz-error-title {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: #ef3e46;
   text-align: center;
   position: absolute;
@@ -17580,7 +17680,7 @@ img.emojioneemoji {
 .dropzone.media-dropzone .dz-preview.dz-error .dz-details {
   display: block;
   position: absolute;
-  bottom: 10px;
+  bottom: 18px;
   left: 10px;
   right: 10px;
   text-align: center;
