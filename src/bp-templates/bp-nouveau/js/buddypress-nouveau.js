@@ -2054,7 +2054,9 @@ window.bp = window.bp || {};
 
 				// support for buddyboss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ) );
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', target.data( 'title' ).replace( /<(.|\n)*?>/g, '' ) );
+					}
 					target.find( 'span' ).html( target.data( 'title' ) );
 					target.html( target.data( 'title' ) );
 				} else {
@@ -2080,7 +2082,9 @@ window.bp = window.bp || {};
 
 				// support for BuddyBoss theme for button actions and icons and texts.
 				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ) );
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', target.data( 'title-displayed' ).replace( /<(.|\n)*?>/g, '' ) );
+					}
 					target.find( 'span' ).html( target.data( 'title-displayed' ) );
 					target.html( target.data( 'title-displayed' ) );
 				} else {
