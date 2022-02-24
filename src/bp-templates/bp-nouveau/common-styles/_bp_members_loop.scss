@@ -93,8 +93,41 @@
 
 		} // close li
 
-		&.grid li .only-list-view {
-			display: none;
+		&.grid li {
+
+			.only-list-view {
+				display: none;
+			}
+
+		}
+
+		&:not(.grid) {
+
+			li {
+				margin: 0;
+				padding: 0;
+			}
+
+			.list-wrap {
+				background: $off-white;
+				border: 1px solid $bp-border-color;
+				padding: 20px;
+				position: relative;
+			}
+
+			.list-wrap-inner .item-avatar img {
+				border-radius: 50%;
+				max-width: 70px;
+			}
+
+			.only-grid-view {
+				display: none;
+			}
+
+			.member-button-wrap.footer-button-wrap {
+				display: block;
+			}
+
 		}
 
 	} // close .members-list
@@ -180,6 +213,7 @@ body:not(.logged-in) {
 	}
 
 	@include medium-max() {
+		flex-direction: column;
 
 		.bp-profile-search-widget {
 			flex: 0 0 100%;
