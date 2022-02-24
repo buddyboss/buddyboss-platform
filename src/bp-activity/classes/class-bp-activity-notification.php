@@ -54,7 +54,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_preferences_group(
+		$this->register_notification_group(
 			'activity',
 			esc_html__( 'Activity Feed', 'buddyboss' ),
 			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
@@ -69,7 +69,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for user mention.
 	 */
 	public function register_notification_for_mentions() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_activity_new_mention',
 			sprintf(
 			/* translators: %s: users mention name. */
@@ -131,7 +131,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for activity reply.
 	 */
 	public function register_notification_for_reply() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_activity_new_reply',
 			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),

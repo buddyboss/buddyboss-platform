@@ -54,7 +54,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_preferences_group(
+		$this->register_notification_group(
 			'friends',
 			esc_html__( 'Connections', 'buddyboss' ),
 			esc_html__( 'Connections Notifications', 'buddyboss' ),
@@ -69,7 +69,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for user friendship request.
 	 */
 	public function register_notification_for_friendship_request() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_friends_friendship_request',
 			esc_html__( 'A member invites you to connect', 'buddyboss' ),
 			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
@@ -107,7 +107,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for friendship accept.
 	 */
 	public function register_notification_for_friendship_accept() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_friends_friendship_accepted',
 			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),

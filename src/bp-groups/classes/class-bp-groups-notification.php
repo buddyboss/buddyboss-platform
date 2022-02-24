@@ -54,7 +54,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_preferences_group(
+		$this->register_notification_group(
 			'groups',
 			esc_html__( 'Social Groups', 'buddyboss' ),
 			esc_html__( 'Social Groups Notifications', 'buddyboss' ),
@@ -85,7 +85,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for user invites.
 	 */
 	public function register_notification_for_group_invite() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_groups_invite',
 			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
 			'',
@@ -123,7 +123,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for group update.
 	 */
 	public function register_notification_for_group_updated() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_groups_group_updated',
 			esc_html__( 'Group information is updated', 'buddyboss' ),
 			'',
@@ -155,7 +155,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for group user has been promoted as admin/mod.
 	 */
 	public function register_notification_for_group_user_promotion() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_groups_admin_promotion',
 			esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
 			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddyboss' ),
@@ -199,7 +199,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for the group membership.
 	 */
 	public function register_notification_for_group_membership_request() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_groups_membership_request',
 			esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
 			'',
@@ -237,7 +237,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for membership request has been accepted/rejected.
 	 */
 	public function register_notification_for_group_membership_request_completed() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_membership_request_completed',
 			esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
 			esc_html__( 'A member\'s request to join a group has been approved or denied', 'buddyboss' ),
@@ -301,7 +301,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for group messages
 	 */
 	public function register_notification_for_group_user_messages() {
-		$this->register_preference(
+		$this->register_notification_type(
 			'notification_group_messages_new_message',
 			esc_html__( 'A group sends you a new message', 'buddyboss' ),
 			esc_html__( 'A member receives a new group message', 'buddyboss' ),

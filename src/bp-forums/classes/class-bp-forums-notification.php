@@ -54,7 +54,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_preferences_group(
+		$this->register_notification_group(
 			'forums',
 			esc_html__( 'Forums', 'buddyboss' ),
 			esc_html__( 'Forums Notifications', 'buddyboss' ),
@@ -74,8 +74,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for replies to a discussion you are subscribed.
 	 */
 	public function register_notification_for_forums_following_reply() {
-		$this->register_preference(
-			'notification_forums_following_reply',
+		$this->register_notification_type(
+			'notification_bbp_new_forum_reply',
 			esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
 			'',
 			'forums'
@@ -113,8 +113,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * Register notification for creates discussion in a forum you are subscribed.
 	 */
 	public function register_notification_for_forums_following_topic() {
-		$this->register_preference(
-			'notification_forums_following_topic',
+		$this->register_notification_type(
+			'notification_bbp_new_forum_topic',
 			esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
 			'',
 			'forums'

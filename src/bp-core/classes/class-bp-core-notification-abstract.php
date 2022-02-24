@@ -388,7 +388,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
+	final public function register_notification_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
 			'group_label'       => $group_label,
@@ -410,7 +410,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_preference( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
+	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
 		$this->prefernces[] = array(
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
