@@ -3371,9 +3371,7 @@ function bb_display_update_plugin_information() {
 	// Check the transient to see if we've just updated the plugin.
 	if ( 'yes' === get_transient( '_bb_is_update' ) ) {
 		global $bp;
-		$plugin_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-		$plugin_path = str_replace( '/', '\\', $plugin_path );
-		include $plugin_path;
+		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
 		delete_transient( '_bb_is_update' );
 	}
 }
