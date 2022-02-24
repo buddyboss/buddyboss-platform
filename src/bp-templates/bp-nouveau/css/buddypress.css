@@ -6260,7 +6260,7 @@ form.ac-form .ac-reply-content input {
 .buddypress-wrap .members-list li .list-wrap .followers-wrap,
 .buddypress-wrap .members-list li .list-wrap .member-type {
   font-size: 14px;
-  color: #8D8F97;
+  color: #767676;
   margin-bottom: 15px;
 }
 
@@ -6279,7 +6279,7 @@ form.ac-form .ac-reply-content input {
 }
 
 .buddypress-wrap .members-list li .list-wrap .last-activity {
-  color: #8D8F97;
+  color: #767676;
   font-size: 13px;
   margin: 0 0 12px 0;
 }
@@ -12669,6 +12669,7 @@ button[data-bp-tooltip] {
 
 .buddypress-wrap .grid.bp-list > li .item .last-activity {
   margin-top: 5px;
+  font-weight: 400;
 }
 
 .buddypress-wrap .grid.bp-list > li .item .group-desc {
