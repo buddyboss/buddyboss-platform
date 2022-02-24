@@ -66,8 +66,6 @@ add_action( 'bp_admin_menu', 'bp_admin_separator' );
 // Check user nickname on backend user edit page.
 add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
-// Display plugin information after plugin successfully updated.
-add_action( 'bp_admin_init', 'bb_display_update_plugin_information' );
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
@@ -284,20 +282,5 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 
 	if ( $wpdb->get_var( $sql ) > 0 ) {
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
-	}
-}
-
-/**
- * Display plugin information after plugin successfully updated.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_display_update_plugin_information() {
-	// Check the transient to see if we've just updated the plugin
-	if ( 'yes' === get_transient( '_bb_is_update' ) ) {
-		global $bp;
-		$plugin_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-		include $plugin_path;
-		delete_transient( '_bb_is_update' );
 	}
 }

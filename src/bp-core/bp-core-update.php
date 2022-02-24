@@ -1691,7 +1691,12 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_1_8_8() {
-	set_transient( '_bb_is_update', 'yes' );
+	 // Display plugin update notice.
+	if ( function_exists( 'bb_display_update_plugin_information' ) ) {
+		set_transient( '_bb_is_update', 'yes' );
+		bb_display_update_plugin_information();
+	}
+
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
 		return;
 	}
