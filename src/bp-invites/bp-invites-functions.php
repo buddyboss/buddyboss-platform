@@ -609,7 +609,7 @@ function bp_nouveau_send_invite_content_css( $mceInit ) {
 /**
  * Query to fetch email data for invite member.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @return object $query
  */

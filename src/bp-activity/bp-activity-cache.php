@@ -84,7 +84,7 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_delet
 /**
  * Clear cached data for deleted activity items.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @param array $activities Array of activities.
  */

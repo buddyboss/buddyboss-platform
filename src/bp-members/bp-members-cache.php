@@ -92,7 +92,7 @@ add_action( 'bp_core_user_updated_last_activity', 'bp_members_reset_activity_cac
 /**
  * Clear the member_type cache when member type post is updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @param int $post_id post ID.
  */
@@ -127,7 +127,7 @@ add_action( 'save_post', 'bb_members_clear_member_type_cache_on_update' );
 /**
  * Clear the member_type cache when member type post is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @param int $post_id post ID.
  */

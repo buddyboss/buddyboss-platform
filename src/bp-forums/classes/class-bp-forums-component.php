@@ -432,7 +432,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		/**
 		 * Admin bar menu for forum and topic.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.0
 		 */
 		public function bb_forums_admin_bar_menu() {
 			global $wp_admin_bar;
@@ -583,7 +583,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		/**
 		 * Setup forum cache.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.0
 		 */
 
 		public function setup_cache_groups() {
