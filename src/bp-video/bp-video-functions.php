@@ -3877,7 +3877,7 @@ function bb_video_delete_older_symlinks() {
 
 	// Get videos previews symlink directory path.
 	$dir     = bb_video_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = 3600 * 24 * 1; // Delete the file older than 1 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -3907,12 +3907,14 @@ function bb_video_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	/**
-	 * Hook after delete older symlinks.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	do_action( 'bb_video_delete_older_symlinks' );
+	if ( ! empty( $list ) ) {
+		/**
+		 * Hook after delete older symlinks.
+		 *
+		 * @since BuddyBoss 1.7.0
+		 */
+		do_action( 'bb_video_delete_older_symlinks' );
+	}
 
 	return $list;
 

@@ -4807,7 +4807,7 @@ function bb_document_delete_older_symlinks() {
 
 	// Get documents previews symlink directory path.
 	$dir     = bp_document_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = 3600 * 24 * 1; // Delete the file older than 1 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -4837,7 +4837,9 @@ function bb_document_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	do_action( 'bb_document_delete_older_symlinks' );
+	if ( ! empty ( $list ) ) {
+		do_action( 'bb_document_delete_older_symlinks' );
+	}
 
 	return $list;
 }
