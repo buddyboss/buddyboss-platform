@@ -105,7 +105,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
-	 * @apiParam {String=id,date_notified,item_id,secondary_item_id,component_name,component_action} [order_by=id] Name of the field to order according to.
+	 * @apiParam {String=id,date_notified,item_id,secondary_item_id,component_name,component_action,include} [order_by=id] Name of the field to order according to.
 	 * @apiParam {String=ASC,DESC} [sort_order=ASC] Order sort attribute ascending or descending.
 	 * @apiParam {String} [component_name]  Limit result set to notifications associated with a specific component.
 	 * @apiParam {String} [component_action]  Limit result set to notifications associated with a specific component's action name.
@@ -134,6 +134,16 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $request['component_name'] ) ) {
 			$args['component_name'] = bp_notifications_get_registered_components();
+		}
+
+		if ( ! empty( $request['include'] ) ) {
+			$args['id'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		/**
@@ -1032,6 +1042,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'secondary_item_id',
 				'component_name',
 				'component_action',
+				'include',
 			),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',

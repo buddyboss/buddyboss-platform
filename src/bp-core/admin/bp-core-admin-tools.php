@@ -661,6 +661,9 @@ function repair_default_profiles_fields() {
 	// Remove all duplicate nick name fields.
 	$wpdb->query( $nick_name );
 
+	// Clear profile completion data
+	bp_core_xprofile_clear_all_user_progress_cache();
+
 	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
 
 	return array(

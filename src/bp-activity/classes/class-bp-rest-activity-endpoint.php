@@ -162,7 +162,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'page'              => $request['page'],
 			'per_page'          => $request['per_page'],
 			'search_terms'      => $request['search'],
-			'sort'              => $request['order'],
+			'sort'              => strtoupper( $request['order'] ),
+			'order_by'          => $request['orderby'],
 			'spam'              => $request['status'],
 			'display_comments'  => $request['display_comments'],
 			'site_id'           => $request['site_id'],
@@ -239,6 +240,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['secondary_id'] ) ) {
 			$args['filter']['secondary_id'] = $request['secondary_id'];
+		}
+
+		if ( ! empty( $args['order_by'] ) && 'include' === $args['order_by'] ) {
+			$args['order_by'] = 'in';
 		}
 
 		if ( $args['in'] ) {
@@ -1916,6 +1921,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'enum'              => array( 'asc', 'desc' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['orderby'] = array(
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'default'           => '',
+			'type'              => 'string',
+			'enum'              => array( 'id', 'include' ),
+			'sanitize_callback' => 'sanitize_key',
 		);
 
 		$params['after'] = array(
