@@ -122,18 +122,11 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								<?php endif; ?>
 							</div>
 
-							<div class="button-wrap member-button-wrap only-list-view">
-								<?php
-								echo wp_kses_post( $followers_count );
-								echo wp_kses_post( $profile_actions['primary'] );
-								?>
-							</div>
-
-							<div class="flex only-grid-view align-items-center follow-container justify-center">
+							<div class="flex align-items-center follow-container justify-center">
 								<?php echo wp_kses_post( $followers_count ); ?>
 							</div>
 
-							<div class="flex align-items-center primary-action justify-center">
+							<div class="flex only-grid-view align-items-center primary-action justify-center">
 								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 							</div>
 						</div><!-- // .item -->
@@ -143,6 +136,11 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
 							</div>
 						<?php } ?>
+
+						<div class="flex only-list-view align-items-center primary-action justify-center">
+							<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+						</div>
+
 					</div>
 
 					<div class="bp-members-list-hook">
