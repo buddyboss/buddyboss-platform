@@ -57,22 +57,22 @@ window.bp = window.bp || {};
 			if ( 'bpmissingemails' === missingEmailInstallScroll ) {
 				$('html, body').animate({
 					scrollTop: $( '#bp-missing-emails' ).offset().top
-				}, 2000);
-				$( '.label-bp-missing-emails' ).css('background-color', '#f15555');
+				}, 1500);
+				$( '.label-bp-missing-emails' ).css('background-color', '#faafaa');
 				setTimeout(function () {
 					$( '.label-bp-missing-emails' ).css('background-color', 'transparent');
-				}, 2000);
+				}, 1500);
 			}
 
 			var reInstallEmailScroll = bbgetUrlParameter( 'scrollto' );
 			if ( 'bpreinstallemails' === reInstallEmailScroll ) {
 				$('html, body').animate({
 					scrollTop: $( '#bp-reinstall-emails' ).offset().top
-				}, 2000);
-				$( '.label-bp-reinstall-emails' ).css('background-color', '#f15555');
+				}, 1500);
+				$( '.label-bp-reinstall-emails' ).css('background-color', '#faafaa');
 				setTimeout(function () {
 					$( '.label-bp-reinstall-emails' ).css('background-color', 'transparent');
-				}, 2000);
+				}, 1500);
 			}
 			/* jshint ignore:end */
 
