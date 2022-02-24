@@ -1445,7 +1445,7 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 /**
  * Send Group email into background.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @param array  $recipients   Message Recipients.
  * @param string $email_type   Email type.

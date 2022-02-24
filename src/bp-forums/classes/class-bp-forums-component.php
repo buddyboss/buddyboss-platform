@@ -125,8 +125,10 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			add_action( 'bp_init', array( $this, 'setup_components' ), 7 );
 			// Setup meta title.
 			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 999, 1 );
-			// Admin bar menu for forum.
-			add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
+			if ( current_user_can( 'administrator' ) ) {
+				// Admin bar menu for forum and discussion.
+				add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
+			}
 
 			parent::setup_actions();
 		}
@@ -426,27 +428,11 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			return $title;
 		}
-		/**
-		 * Setup forum cache.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function setup_cache_groups() {
-			// Global groups.
-			wp_cache_add_global_groups(
-				array(
-					'bbpress_posts',
-					'bbpress_users',
-				)
-			);
-
-			parent::setup_cache_groups();
-		}
 
 		/**
 		 * Admin bar menu for forum and topic.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.0
 		 */
 		public function bb_forums_admin_bar_menu() {
 			global $wp_admin_bar;
@@ -593,5 +579,24 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				}
 			}
 		}
+
+		/**
+		 * Setup forum cache.
+		 *
+		 * @since BuddyBoss 1.9.0
+		 */
+
+		public function setup_cache_groups() {
+			// Global groups.
+			wp_cache_add_global_groups(
+				array(
+					'bbpress_posts',
+					'bbpress_users',
+				)
+			);
+
+			parent::setup_cache_groups();
+		}
 	}
 endif;
+

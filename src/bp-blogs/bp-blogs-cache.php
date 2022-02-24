@@ -70,7 +70,7 @@ add_action( 'bp_blogs_remove_data', 'bp_core_clear_cache' );
 /**
  * Clear cache while blog has been updated/deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0
  *
  * @param BP_Blogs_Blog $blog Instance of the class.
  */
