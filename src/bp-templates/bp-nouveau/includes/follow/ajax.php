@@ -80,8 +80,18 @@ function bp_nouveau_ajax_followunfollow_member() {
 	// Cast fid as an integer.
 	$leader_id = (int) $_POST['item_id'];
 
-	$current_page   = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
-	$button_clicked = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
+	$current_page     = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
+	$button_clicked   = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
+	$button_arguments = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( $current_page, $button_clicked ) : array();
+
+	// Actions button arguments to display different style based on arguments.
+	$button_arguments = array_merge(
+		$button_arguments,
+		array(
+			'parent_element' => 'li',
+			'button_element' => 'button',
+		)
+	);
 
 	// Check if the user exists.
 	if ( isset( $_POST['action'] ) ) {
@@ -105,15 +115,6 @@ function bp_nouveau_ajax_followunfollow_member() {
 		)
 	);
 
-	$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
-	if ( ( 'directory' === $current_page && 'follow' === $primary_action_btn ) || 'single' === $current_page ) {
-		add_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
-
-		if ( 'single' === $current_page && 'secondary' === $button_clicked ) {
-			add_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-		}
-	}
-
 	// Trying to unfollow.
 	if ( $is_following ) {
 		if ( ! bp_stop_following(
@@ -128,10 +129,6 @@ function bp_nouveau_ajax_followunfollow_member() {
 				esc_html__( 'There was a problem when trying to unfollow this user.', 'buddyboss' )
 			);
 
-			// Remove filters.
-			remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
-			remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-
 			wp_send_json_error( $response );
 		} else {
 
@@ -139,22 +136,13 @@ function bp_nouveau_ajax_followunfollow_member() {
 				while ( bp_members() ) {
 					bp_the_member();
 
-					$follow_button = bp_get_add_follow_button(
-						$leader_id,
-						bp_loggedin_user_id(),
-						array(
-							'parent_element' => 'li',
-							'button_element' => 'button',
-						)
-					);
-
-					// Remove filters.
-					remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
-					remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-
 					wp_send_json_success(
 						array(
-							'contents' => $follow_button,
+							'contents' => bp_get_add_follow_button(
+								$leader_id,
+								bp_loggedin_user_id(),
+								$button_arguments
+							),
 						)
 					);
 				}
@@ -177,32 +165,19 @@ function bp_nouveau_ajax_followunfollow_member() {
 				esc_html__( 'There was a problem when trying to follow this user.', 'buddyboss' )
 			);
 
-			// Remove filters.
-			remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
-			remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-
 			wp_send_json_error( $response );
 		} else {
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
 
-					$follow_button = bp_get_add_follow_button(
-						$leader_id,
-						bp_loggedin_user_id(),
-						array(
-							'parent_element' => 'li',
-							'button_element' => 'button',
-						)
-					);
-
-					// Remove filters.
-					remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
-					remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
-
 					wp_send_json_success(
 						array(
-							'contents' => $follow_button,
+							'contents' => bp_get_add_follow_button(
+								$leader_id,
+								bp_loggedin_user_id(),
+								$button_arguments
+							),
 						)
 					);
 				}
@@ -215,10 +190,6 @@ function bp_nouveau_ajax_followunfollow_member() {
 			'<div class="bp-feedback error">%s</div>',
 			esc_html__( 'Request Pending', 'buddyboss' )
 		);
-
-		// Remove filters.
-		remove_filter( 'bp_get_add_follow_button', 'bb_theme_member_action_button_remove_tooltip' );
-		remove_filter( 'bp_get_add_follow_button', 'bb_theme_get_member_header_dropdown_button' );
 
 		wp_send_json_error( $response );
 	}

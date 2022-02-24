@@ -2923,37 +2923,72 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 	// Is follow active or not?
 	$is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() && $enabled_follow_action;
 
-	// Follow action button.
-	$follow_button = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), array() ) : '';
-
-	// Friend action button.
-	$friend_button = ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_loggedin_user_id() !== $user_id ) ? bp_get_add_friend_button( $user_id ) : '';
-
 	// Show "Message" button or not?
-	$show_message_button = apply_filters( 'bb_member_loop_show_message_button', (bool) $enabled_message_action && bp_is_active( 'messages' ), $user_id, bp_loggedin_user_id() );
+	$is_message_active = apply_filters( 'bb_member_loop_show_message_button', (bool) $enabled_message_action && bp_is_active( 'messages' ), $user_id, bp_loggedin_user_id() );
 
-	// Message action button.
-	$message_button = '';
-	if ( $show_message_button ) {
-		add_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-		add_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-		$message_button = bp_get_send_message_button();
-		remove_filter( 'bp_displayed_user_id', 'buddyboss_theme_member_loop_set_member_id' );
-		remove_filter( 'bp_is_my_profile', 'buddyboss_theme_member_loop_set_my_profile' );
-	}
+	// Is follow active or not?
+	$is_friend_active = ( $enabled_connect_action && bp_is_active( 'friends' ) && bp_loggedin_user_id() !== $user_id );
+
+	// Get actions button arguments to add tooltips and "<i>" tag.
+	$primary_button_args   = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments() : array();
+	$secondary_button_args = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( 'directory', 'secondary' ) : array();
 
 	if ( 'follow' === $primary_action_btn ) {
-		$buttons['primary']   = $follow_button;
-		$buttons['secondary'] = $friend_button . $message_button;
+		// Primary button.
+		$buttons['primary'] = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $primary_button_args ) : '';
+
+		// Secondary buttons.
+		$buttons['secondary'] = $is_friend_active ? bp_get_add_friend_button( $user_id, false, $secondary_button_args ) : '';
+
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['secondary'] .= bp_get_send_message_button( $secondary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
 	} elseif ( 'connect' === $primary_action_btn ) {
-		$buttons['primary']   = $friend_button;
-		$buttons['secondary'] = $follow_button . $message_button;
+		// Primary button.
+		$buttons['primary'] = $is_friend_active ? bp_get_add_friend_button( $user_id, false, $primary_button_args ) : '';
+
+		// Secondary buttons.
+		$buttons['secondary'] = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $secondary_button_args ) : '';
+
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['secondary'] .= bp_get_send_message_button( $secondary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
 	} elseif ( 'message' === $primary_action_btn ) {
-		$buttons['primary']   = $message_button;
-		$buttons['secondary'] = $follow_button . $friend_button;
+		// Primary button.
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['primary'] = bp_get_send_message_button( $primary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
+
+		// Secondary buttons.
+		$buttons['secondary']  = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $secondary_button_args ) : '';
+		$buttons['secondary'] .= $is_friend_active ? bp_get_add_friend_button( $user_id, false, $secondary_button_args ) : '';
 	} else {
-		$buttons['primary']   = '';
-		$buttons['secondary'] = $follow_button . $friend_button . $message_button;
+		// Primary button.
+		$buttons['primary'] = '';
+
+		// Secondary buttons.
+		$buttons['secondary']  = $is_follow_active ? bp_get_add_follow_button( $user_id, bp_loggedin_user_id(), $secondary_button_args ) : '';
+		$buttons['secondary'] .= $is_friend_active ? bp_get_add_friend_button( $user_id, false, $secondary_button_args ) : '';
+
+		if ( $is_message_active ) {
+			add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+			$buttons['secondary'] .= bp_get_send_message_button( $secondary_button_args );
+			remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+			remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+		}
 	}
 
 	/**

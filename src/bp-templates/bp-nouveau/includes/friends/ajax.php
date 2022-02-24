@@ -98,9 +98,18 @@ function bp_nouveau_ajax_addremove_friend() {
 	// Cast fid as an integer.
 	$friend_id = (int) $_POST['item_id'];
 
-	$current_page       = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
-	$button_clicked     = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
-	$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
+	$current_page     = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
+	$button_clicked   = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
+	$button_arguments = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( $current_page, $button_clicked ) : array();
+
+	// Actions button arguments to display different style based on arguments.
+	$button_arguments = array_merge(
+		$button_arguments,
+		array(
+			'parent_element' => 'li',
+			'button_element' => 'button',
+		)
+	);
 
 	// Check if the user exists only when the Friend ID is not a Frienship ID.
 	if ( isset( $_POST['action'] ) && 'friends_accept_friendship' !== $_POST['action'] && 'friends_reject_friendship' !== $_POST['action'] ) {
@@ -179,23 +188,12 @@ function bp_nouveau_ajax_addremove_friend() {
 		} else {
 			$is_user = bp_is_my_profile();
 
-			if ( ( 'directory' === $current_page && 'connect' === $primary_action_btn ) || 'single' === $current_page ) {
-				add_filter( 'bp_get_add_friend_button', 'bb_theme_member_action_button_remove_tooltip' );
-
-				if ( 'single' === $current_page && 'secondary' === $button_clicked ) {
-					add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-				}
-			}
-
 			if ( ! $is_user ) {
 				$response = array(
 					'contents'     => bp_get_add_friend_button(
 						$friend_id,
 						false,
-						array(
-							'parent_element' => 'li',
-							'button_element' => 'button',
-						)
+						$button_arguments
 					),
 					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
 				);
@@ -211,9 +209,6 @@ function bp_nouveau_ajax_addremove_friend() {
 				);
 			}
 
-			remove_filter( 'bp_get_add_friend_button', 'bb_theme_member_action_button_remove_tooltip' );
-			remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-
 			wp_send_json_success( $response );
 		}
 
@@ -228,27 +223,13 @@ function bp_nouveau_ajax_addremove_friend() {
 			wp_send_json_error( $response );
 		} else {
 
-			if ( ( 'directory' === $current_page && 'connect' === $primary_action_btn ) || 'single' === $current_page ) {
-				add_filter( 'bp_get_add_friend_button', 'bb_theme_member_action_button_remove_tooltip' );
-
-				if ( 'single' === $current_page && 'secondary' === $button_clicked ) {
-					add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-				}
-			}
-
 			$response = array(
 				'contents' => bp_get_add_friend_button(
 					$friend_id,
 					false,
-					array(
-						'parent_element' => 'li',
-						'button_element' => 'button',
-					)
+					$button_arguments
 				),
 			);
-
-			remove_filter( 'bp_get_add_friend_button', 'bb_theme_member_action_button_remove_tooltip' );
-			remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
 
 			wp_send_json_success( $response );
 		}
@@ -257,27 +238,13 @@ function bp_nouveau_ajax_addremove_friend() {
 	} elseif ( 'pending' === BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $friend_id ) ) {
 		if ( friends_withdraw_friendship( bp_loggedin_user_id(), $friend_id ) ) {
 
-			if ( ( 'directory' === $current_page && 'connect' === $primary_action_btn ) || 'single' === $current_page ) {
-				add_filter( 'bp_get_add_friend_button', 'bb_theme_member_action_button_remove_tooltip' );
-
-				if ( 'single' === $current_page && 'secondary' === $button_clicked ) {
-					add_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
-				}
-			}
-
 			$response = array(
 				'contents' => bp_get_add_friend_button(
 					$friend_id,
 					false,
-					array(
-						'parent_element' => 'li',
-						'button_element' => 'button',
-					)
+					$button_arguments
 				),
 			);
-
-			remove_filter( 'bp_get_add_friend_button', 'bb_theme_member_action_button_remove_tooltip' );
-			remove_filter( 'bp_get_add_friend_button', 'bb_theme_get_member_header_dropdown_button' );
 
 			wp_send_json_success( $response );
 		} else {

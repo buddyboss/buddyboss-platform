@@ -4895,3 +4895,111 @@ function bb_get_member_directory_primary_action() {
 	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : '';
 }
 
+/**
+ * Function which will return the member id if $id > 0 then it will return the original displayed id
+ * else it will return the member loop member id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $id Member ID.
+ *
+ * @return int Member ID.
+ */
+function bb_member_loop_set_member_id( $id ) {
+
+	if ( $id > 0 ) {
+
+		// This will fix the issues in theme members directory page & members connections tab send message issue.
+		if ( is_user_logged_in() && bp_loggedin_user_id() === $id ) {
+			if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} elseif ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} else {
+				return $id;
+			}
+		} else {
+			return $id;
+		}
+	}
+
+	// This will fix the issues in theme members directory page & members connections tab send message issue.
+	return bp_get_member_user_id();
+}
+
+/**
+ * Function which will return the false in even if user is in h/her own profile page in connections members listing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $my_profile The current page is profile page or not.
+ *
+ * @return bool
+ */
+function bb_member_loop_set_my_profile( $my_profile ) {
+
+	if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
+			return false;
+		}
+	}
+	if ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
+			return false;
+		}
+	}
+	return $my_profile;
+}
+
+/**
+ * Get member directories and header page button arguments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $page    The current page is member directories or header page. Default: 'directory'.
+ * @param string $clicked The button clicked from primary or secondary button. Default: 'primary'.
+ *
+ * @return array Return button arguments.
+ */
+function bb_member_get_profile_action_arguments( $page = 'directory', $clicked = 'primary' ) {
+	$button_args = array();
+	if ( 'directory' === $page ) {
+		$button_args = array(
+			'prefix_link_text' => '<i></i>',
+			'button_attr'      => array(
+				'hover_type' => 'hover',
+			),
+		);
+
+		if ( 'secondary' === $clicked ) {
+			$button_args = array_merge(
+				array(
+					'is_tooltips'      => true,
+					'data-balloon-pos' => 'up',
+				),
+				$button_args
+			);
+		}
+	} elseif ( 'single' === $page ) {
+		if ( 'primary' === $clicked ) {
+			$button_args = array(
+				'prefix_link_text' => '<i></i>',
+				'is_tooltips'      => false,
+				'button_attr'      => array(
+					'hover_type' => 'hover',
+				),
+			);
+		} elseif ( 'secondary' === $clicked ) {
+			$button_args = array(
+				'is_tooltips' => false,
+				'button_attr' => array(
+					'hover_type' => 'static',
+				),
+			);
+		}
+	}
+
+	return $button_args;
+}
