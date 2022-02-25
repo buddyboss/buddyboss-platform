@@ -159,7 +159,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						<div class="bb_more_options_list">	
 							<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
 						</div>
-					</div>
+					</div><!-- .bb_more_options -->
 				</div>
 			</li>
 
