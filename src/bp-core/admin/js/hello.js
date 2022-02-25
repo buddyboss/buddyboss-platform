@@ -130,8 +130,14 @@
 	}
 	// var link = document.getElementById( 'bb-plugin-release-link' );
 	// link.addEventListener( 'click', bp_hello_open_modal );
-	// // Load tab for release content.
-	// if ( jQuery( "#bb-release-content" ).length ) {
-	// 	jQuery( "#bb-release-content" ).tabs();
-	// }
+	// Load tab for release content.
+	if ( jQuery( '.bb-hello-tabs .bb-hello-tabs_anchor' ).length ) {
+
+		jQuery( document ).on( 'click', '.bb-hello-tabs .bb-hello-tabs_anchor', function( e ) {
+			e.preventDefault();
+			jQuery( this ).addClass( 'is_active' ).parent().siblings().find( '.bb-hello-tabs_anchor' ).removeClass( 'is_active' );
+			jQuery( jQuery(this).attr( 'href' ) ).addClass( 'is_active' ).siblings().removeClass( 'is_active' );
+		});
+
+	}
 }());
