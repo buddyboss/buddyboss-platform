@@ -46,43 +46,6 @@ defined( 'ABSPATH' ) || exit;
 				<ul class="bp-hello-list">
 					<li>
 						<?php
-						printf(
-							__( 'You\'ll need to install <a href="%1$s" target="_blank">BuddyBoss Platform Pro</a>, 
-						which you can download from your <a href="%2$s" target="_blank">BuddyBoss account</a>', 'buddyboss' ),
-							esc_url( 'https://www.buddyboss.com/pro' ),
-							esc_url( 'https://my.buddyboss.com' )
-						);
-						?>
-					</li>
-					<li><?php esc_html_e( 'Update any template overrides in your child theme to use our new templates', 'buddyboss' ); ?></li>
-				</ul>
-				<p><?php esc_html_e( 'For more information, please watch the video below:', 'buddyboss' ); ?></p>
-				<div class="video-wrapper">
-					<div class="video-container">
-						<iframe src="https://player.vimeo.com/video/338221385?byline=0&portrait=0&autoplay=0" width="560" height="315"
-							frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-						</iframe>
-					</div>
-				</div>
-			</div>
-			<div id="bb-release-changelog" class="bb-hello-tabs_content">
-				<p><?php esc_html_e( 'Changes:', 'buddyboss' ); ?></p>
-				<ul class="bp-hello-list">
-					<li><?php esc_html_e( 'New layout options', 'buddyboss' ); ?></li>
-					<li><?php esc_html_e( 'The ability to select which elements show', 'buddyboss' ); ?></li>
-					<li><?php esc_html_e( 'Numerous visual improvements suggested by customers', 'buddyboss' ); ?></li>
-				</ul>
-				<p><?php esc_html_e( 'In this release, we have implemented a number of changes to the templates of profile and group headers and directories.', 'buddyboss' ); ?></p>
-				<p><?php esc_html_e( 'By doing so, we are now able to offer:', 'buddyboss' ); ?></p>
-				<ul class="bp-hello-list">
-					<li><?php esc_html_e( 'New layout options', 'buddyboss' ); ?></li>
-					<li><?php esc_html_e( 'The ability to select which elements show', 'buddyboss' ); ?></li>
-					<li><?php esc_html_e( 'Numerous visual improvements suggested by customers', 'buddyboss' ); ?></li>
-				</ul>
-				<p><?php esc_html_e( 'To make use of these new customization options:', 'buddyboss' ); ?></p>
-				<ul class="bp-hello-list">
-					<li>
-						<?php
 						echo sprintf(
 						/* translators: 1. BuddyBoss platform pro with link. 2. BuddyBoss account with link. */
 							esc_html__( 'You\'ll need to install %1$s, which you can download from your %2$s', 'buddyboss' ),
@@ -97,8 +60,8 @@ defined( 'ABSPATH' ) || exit;
 								'<a href="%1$s" target="_blank">%2$s</a>',
 								esc_url( 'https://my.buddyboss.com' ),
 								esc_html__( 'BuddyBoss account', 'buddyboss' )
-							),
-				);
+							)
+						);
 						?>
 					</li>
 					<li><?php esc_html_e( 'Update any template overrides in your child theme to use our new templates', 'buddyboss' ); ?></li>
@@ -106,16 +69,19 @@ defined( 'ABSPATH' ) || exit;
 				<p><?php esc_html_e( 'For more information, please watch the video below:', 'buddyboss' ); ?></p>
 				<div class="video-wrapper">
 					<div class="video-container">
-						<iframe src="https://player.vimeo.com/video/338221385?byline=0&portrait=0&autoplay=0"
-							width="560"
-							height="315"
-							frameborder="0"
-							allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-							allowfullscreen>
+						<iframe src="https://player.vimeo.com/video/338221385?byline=0&portrait=0&autoplay=0" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 						</iframe>
 					</div>
 				</div>
-	</div>
-</div>
+			</div>
+			<div id="bb-release-changelog">
+				<p><?php esc_html_e( 'Changes:', 'buddyboss' ); ?></p>
+				<ul class="bp-hello-list">
+					<li><?php esc_html_e( 'New layout options', 'buddyboss' ); ?></li>
+					<li><?php esc_html_e( 'The ability to select which elements show', 'buddyboss' ); ?></li>
+					<li><?php esc_html_e( 'Numerous visual improvements suggested by customers', 'buddyboss' ); ?></li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </div>
