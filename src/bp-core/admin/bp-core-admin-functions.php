@@ -3367,11 +3367,11 @@ function bb_get_pro_fields_class() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_display_update_plugin_information() {
-	// Check the transient to see if we've just updated the plugin.
-	if ( 'yes' === get_transient( '_bb_is_update' ) ) {
-		global $bp;
-		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-		delete_transient( '_bb_is_update' );
-	}
-}
+//function bb_display_update_plugin_information() {
+//	// Check the transient to see if we've just updated the plugin.
+//	if ( 'yes' === get_transient( '_bb_is_update' ) ) {
+//		global $bp;
+//		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+//		delete_transient( '_bb_is_update' );
+//	}
+//}
