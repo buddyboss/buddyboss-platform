@@ -62,15 +62,11 @@
 	 * Close the Hello modal.
 	 */
 	var bp_hello_close_modal = function() {
-		var modal    = document.getElementById( 'bp-hello-container' );
 
 		document.getElementById( 'bp-hello-container' ).setAttribute( 'style', 'display:none' );
 		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
 
-		if ( modal.classList.contains( 'bb-update-modal' ) ) {
-			modal.classList.remove( 'bb-onload-modal' );
-		}
 	};
 
 	/**
@@ -128,8 +124,8 @@
 	} else {
 		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
 	}
-	// var link = document.getElementById( 'bb-plugin-release-link' );
-	// link.addEventListener( 'click', bp_hello_open_modal );
+	var link = document.getElementById( 'bb-plugin-release-link' );
+	link.addEventListener( 'click', bp_hello_open_modal );
 	// // Load tab for release content.
 	// if ( jQuery( "#bb-release-content" ).length ) {
 	// 	jQuery( "#bb-release-content" ).tabs();

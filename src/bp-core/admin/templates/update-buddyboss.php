@@ -10,7 +10,7 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
+$show_overview = true;
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
@@ -74,13 +74,22 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 				</div>
 			</div>
-			<div id="bb-release-changelog">
-				<p><?php esc_html_e( 'Changes:', 'buddyboss' ); ?></p>
-				<ul class="bp-hello-list">
-					<li><?php esc_html_e( 'New layout options', 'buddyboss' ); ?></li>
-					<li><?php esc_html_e( 'The ability to select which elements show', 'buddyboss' ); ?></li>
-					<li><?php esc_html_e( 'Numerous visual improvements suggested by customers', 'buddyboss' ); ?></li>
-				</ul>
+			<div id="bb-release-changelog" class="bb-release-changelog">
+				<?php
+				$cache_key    = 'bb_changelog_' . BP_PLATFORM_VERSION;
+				$bb_changelog = wp_cache_get( $cache_key, 'bp' );
+				if ( false === $bb_changelog ) {
+					$response     = wp_safe_remote_get( 'https://api.github.com/repos/buddyboss/buddyboss-platform/releases/latest' );
+					$bb_changelog = wp_remote_retrieve_body( $response );
+					wp_cache_set( $cache_key, $bb_changelog, 'bp' );
+				}
+				if ( ! is_wp_error( $bb_changelog ) && ! empty( $bb_changelog ) ) {
+					$bb_changelog_data = json_decode( $bb_changelog, true );
+					if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
+						echo wp_kses_post( $bb_changelog_data['body'] );
+					}
+				}
+				?>
 			</div>
 		</div>
 	</div>

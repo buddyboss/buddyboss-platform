@@ -212,20 +212,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/**
-		 * Display plugin information after plugin successfully updated.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_display_update_plugin_information() {
-			// Check the transient to see if we've just updated the plugin.
-			if ( 'yes' === get_transient( '_bb_is_update' ) ) {
-				global $bp;
-				include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-				//delete_transient( '_bb_is_update' );
-			}
-		}
-
-		/**
 		 * DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
 		 *
 		 * @since BuddyBoss 1.0.0
@@ -767,7 +753,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				array(
 					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
 					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>',
-					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . __( 'Release', 'buddyboss' ) . '</a>',
+					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . __( 'Release Notes', 'buddyboss' ) . '</a>',
 				)
 			);
 		}
@@ -1113,6 +1099,20 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			foreach ( $scripts as $id => $script ) {
 				wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
+			}
+		}
+
+		/**
+		 * Display plugin information after plugin successfully updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_display_update_plugin_information() {
+			// Check the transient to see if we've just updated the plugin.
+			if ( 'yes' === get_transient( '_bb_is_update' ) ) {
+				global $bp;
+				include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+				//delete_transient( '_bb_is_update' );
 			}
 		}
 	}
