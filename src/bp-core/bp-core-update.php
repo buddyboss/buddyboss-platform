@@ -363,7 +363,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18651 ) {
-			bb_update_to_1_8_8();
+			bb_update_to_1_2_0();
 		}
 	}
 
@@ -1690,7 +1690,7 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_8_8() {
+function bb_update_to_1_2_0() {
 	 // Display plugin update notice.
 	if ( function_exists( 'bb_display_update_plugin_information' ) ) {
 		set_transient( '_bb_is_update', 'yes' );
@@ -1708,7 +1708,7 @@ function bb_update_to_1_8_8() {
 	$bb_theme_version = wp_get_theme()->get( 'Version' );
 
 	// Check the theme already upto date or not.
-	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.6', '>=' ) ) {
+	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.7', '>=' ) ) {
 		return;
 	}
 

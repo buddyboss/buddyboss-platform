@@ -3323,7 +3323,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  */
 function bb_get_pro_label_notice() {
 
-	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.8', '<=' ) ) {
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
 			esc_html__( 'Update to', 'buddyboss' ),
@@ -3355,7 +3355,7 @@ function bb_get_pro_fields_class() {
 		$pro_class = 'bb-pro-active';
 	}
 
-	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.8', '<=' ) ) {
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$pro_class = 'bb-pro-inactive';
 	}
 
