@@ -80,11 +80,11 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends-request',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
@@ -118,11 +118,11 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends-request-accepted',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),

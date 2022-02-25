@@ -96,11 +96,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-invitation',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
@@ -134,11 +134,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-details-updated',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( "A group's details were updated.", 'buddyboss' ),
@@ -166,11 +166,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-member-promoted',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( "Recipient's status within a group has changed.", 'buddyboss' ),
@@ -210,11 +210,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-membership-request',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'A member has requested permission to join a group.', 'buddyboss' ),
@@ -248,11 +248,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-membership-request-accepted',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
@@ -268,11 +268,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-membership-request-rejected',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
@@ -312,11 +312,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'group-message-email',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'email_content'       => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'Recipient has received a group message.', 'buddyboss' ),

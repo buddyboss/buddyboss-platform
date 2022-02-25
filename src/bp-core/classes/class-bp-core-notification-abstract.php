@@ -453,9 +453,9 @@ abstract class BP_Core_Notification_Abstract {
 		$this->email_types[ $email_type ] = array(
 			'email_type'        => $email_type,
 			'args'              => array(
-				'post_title'   => ( $args['post_title'] ?? '' ),
-				'post_content' => ( $args['post_content'] ?? '' ),
-				'post_excerpt' => ( $args['post_excerpt'] ?? '' ),
+				'post_title'   => ( $args['email_title'] ?? '' ),
+				'post_content' => ( $args['email_content'] ?? '' ),
+				'post_excerpt' => ( $args['email_plain_content'] ?? '' ),
 				'multisite'    => ( $args['multisite'] ?? '' ),
 			),
 			'schema'            => array(

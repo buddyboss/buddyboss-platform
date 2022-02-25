@@ -79,11 +79,11 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'messages-unread',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'email_content'       => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 			),
 			array(
 				'description' => __( 'Recipient has received a private message.', 'buddyboss' ),
