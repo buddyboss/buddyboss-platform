@@ -1112,7 +1112,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( 'yes' === get_transient( '_bb_is_update' ) ) {
 				global $bp;
 				include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-				//delete_transient( '_bb_is_update' );
+				delete_transient( '_bb_is_update' );
 			}
 		}
 	}

@@ -362,8 +362,12 @@ function bp_version_updater() {
 			bb_update_to_1_8_6();
 		}
 
+		if ( $raw_db_version < 18501 ) {
+			bb_update_to_1_9_1();
+		}
+
 		if ( $raw_db_version < 18651 ) {
-			bb_update_to_1_2_0();
+			bb_update_to_1_9_2();
 		}
 	}
 
@@ -1685,12 +1689,25 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
 }
 
 /**
+ * Clear the scheduled cron job of symlink.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_1_9_1() {
+	wp_clear_scheduled_hook('bb_bb_video_deleter_older_symlink_hook');
+	wp_clear_scheduled_hook('bb_bb_document_deleter_older_symlink_hook');
+	wp_clear_scheduled_hook('bb_bb_media_deleter_older_symlink_hook');
+}
+
+/**
  * Update routine.
  * Migrate the cover sizes from the theme option.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_2_0() {
+function bb_update_to_1_9_2() {
 	 // Display plugin update notice.
 	set_transient( '_bb_is_update', 'yes' );
 
@@ -1742,9 +1759,4 @@ function bb_update_to_1_2_0() {
 		delete_option( 'bb-pro-cover-group-height' );
 		add_option( 'bb-pro-cover-group-height', $group_cover_height );
 	}
-}
-
-add_action( 'upgrader_process_complete', 'upgrader_process_complete_callback' );
-function upgrader_process_complete_callback() {
-	error_log( 'if123');
 }
