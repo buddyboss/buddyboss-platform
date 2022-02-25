@@ -1,3 +1,4 @@
+/* global BP_HELP */
 /**
  * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
@@ -7,11 +8,20 @@
 	/**
 	 * Open the Hello BuddyBoss modal.
 	 */
-	var bp_hello_open_modal = function() {
+	var bp_hello_open_modal = function( event ) {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal    = document.getElementById( 'bp-hello-container' );
+		  modal    = document.querySelector( '#bp-hello-container.bb-onload-modal' );
 
 		if ( null === backdrop ) {
+			return;
+		}
+		
+		if (
+			modal.classList.contains( 'bb-update-modal' ) &&
+			'undefined' !== typeof BP_HELP &&
+			'yes' !== BP_HELP.bb_display_auto_popup &&
+			'click' !== event.type
+		) {
 			return;
 		}
 

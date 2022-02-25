@@ -1709,7 +1709,7 @@ function bb_update_to_1_9_1() {
  */
 function bb_update_to_1_9_2() {
 	 // Display plugin update notice.
-	set_transient( '_bb_is_update', 'yes' );
+	update_option( '_bb_is_update', 'yes' );
 
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
 		return;

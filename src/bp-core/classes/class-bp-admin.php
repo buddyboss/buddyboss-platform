@@ -784,10 +784,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
-			// Hello BuddyBoss.
-			wp_enqueue_style( 'bp-hello-css' );
-			wp_enqueue_script( 'bp-hello-js' );
-
 			wp_enqueue_script( 'bp-fitvids-js' );
 
 			wp_enqueue_script( 'bp-wp-api-js' );
@@ -806,12 +802,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp-help-js',
 				'BP_HELP',
 				array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'bb_help_url'        => $bp_help_base_url,
-					'bb_help_title'      => __( 'Docs', 'buddyboss' ),
-					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					'ajax_url'              => admin_url( 'admin-ajax.php' ),
+					'bb_help_url'           => $bp_help_base_url,
+					'bb_help_title'         => __( 'Docs', 'buddyboss' ),
+					'bb_help_no_network'    => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
 				)
 			);
+
+			// Hello BuddyBoss.
+			wp_enqueue_style( 'bp-hello-css' );
+			wp_enqueue_script( 'bp-hello-js' );
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -1109,11 +1110,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 */
 		public function bb_display_update_plugin_information() {
 			// Check the transient to see if we've just updated the plugin.
-			if ( 'yes' === get_transient( '_bb_is_update' ) ) {
-				global $bp;
-				include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-				delete_transient( '_bb_is_update' );
-			}
+			global $bp;
+			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			delete_option( '_bb_is_update' );
 		}
 	}
 endif; // End class_exists check.
