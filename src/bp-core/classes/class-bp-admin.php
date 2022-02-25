@@ -208,7 +208,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
 
-			add_action( 'admin_init', array( $this, 'bb_display_update_plugin_information' ) );
+			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
 		}
 
 		/**

@@ -1949,7 +1949,7 @@ window.bp = window.bp || {};
 						$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
 					}
 					var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-						modal    = document.getElementById( 'bp-hello-container' );
+						modal    = document.querySelector( '#bp-hello-container:not(.bb-onload-modal)' );
 
 					if ( null === backdrop ) {
 						return;
@@ -1982,6 +1982,8 @@ window.bp = window.bp || {};
 					if ( ! modal_close_click && ! backdrop_click ) {
 						return;
 					}
+					
+					$( event.target ).closest( '#bp-hello-container' ).hide();
 
 					$( document ).find( '#bp-document-file-input' ).val( '' );
 					$( document ).find( '.show-document-mime-type' ).hide();

@@ -24,17 +24,17 @@ $show_overview = true;
 
 		<div class="bp-hello-title">
 			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Release Notes', 'buddyboss' ); ?></h1>
-			<span><?php echo esc_html__( 'Version', 'buddyboss' ) . ' ' . esc_html( BP_PLATFORM_VERSION ); ?></span>
+			<span class="bb-version"><?php echo esc_html__( 'Version', 'buddyboss' ) . ' ' . esc_html( BP_PLATFORM_VERSION ); ?></span>
 		</div>
+		<ul class="bb-hello-tabs">
+			<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
+			<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
+		</ul>
 	</div>
 
 	<div class="bp-hello-content">
 		<div id="bb-release-content" class="bb-release-content">
-			<ul>
-				<li><a href="#bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
-				<li><a href="#bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
-			</ul>
-			<div id="bb-release-overview">
+			<div id="bb-release-overview" class="bb-hello-tabs_content is_active">
 				<p><?php esc_html_e( 'In this release, we have implemented a number of changes to the templates of profile and group headers and directories.', 'buddyboss' ); ?></p>
 				<p><?php esc_html_e( 'By doing so, we are now able to offer:', 'buddyboss' ); ?></p>
 				<ul class="bp-hello-list">
@@ -74,7 +74,7 @@ $show_overview = true;
 					</div>
 				</div>
 			</div>
-			<div id="bb-release-changelog" class="bb-release-changelog">
+			<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog">
 				<?php
 				$cache_key    = 'bb_changelog_' . BP_PLATFORM_VERSION;
 				$bb_changelog = wp_cache_get( $cache_key, 'bp' );
