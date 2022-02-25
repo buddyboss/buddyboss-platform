@@ -128,10 +128,10 @@
 	} else {
 		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
 	}
-	var link = document.getElementById( 'bb-plugin-release-link' );
-	link.addEventListener( 'click', bp_hello_open_modal );
-	// Load tab for release content.
-	if ( jQuery( "#bb-release-content" ).length ) {
-		jQuery( "#bb-release-content" ).tabs();
-	}
+	// var link = document.getElementById( 'bb-plugin-release-link' );
+	// link.addEventListener( 'click', bp_hello_open_modal );
+	// // Load tab for release content.
+	// if ( jQuery( "#bb-release-content" ).length ) {
+	// 	jQuery( "#bb-release-content" ).tabs();
+	// }
 }());

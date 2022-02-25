@@ -61,9 +61,12 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 			// Primary and secondary profile action buttons.
 			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
+
+			// Member switch button.
+			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
-				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); echo ! empty( $profile_actions['secondary'] ) ? 'secondary-buttons' : 'no-secondary-buttons'; ?>">
+				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?>">
 
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
@@ -150,14 +153,16 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						</div>
 					</div>
 
+					<?php if ( ! empty( $member_switch_button ) ) { ?>
 					<div class="bb_more_options member-dropdown">
 						<a href="#" class="bb_more_options_action">
 							<i class="bb-icon-menu-dots-h"></i>
 						</a>
-						<div class="bb_more_options_list">	
+						<div class="bb_more_options_list">
 							<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
 						</div>
 					</div><!-- .bb_more_options -->
+					<?php } ?>
 				</div>
 			</li>
 
@@ -176,7 +181,8 @@ else :
 
 	bp_nouveau_user_feedback( 'group-members-none' );
 
-endif; ?>
+endif;
+?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
@@ -191,7 +197,15 @@ endif; ?>
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">
-						<p><?php echo _e( 'Are you sure you want to remove <span class="bb-user-name"></span> from your connections? ', 'buddyboss' ); ?></p>
+						<p>
+							<?php
+							echo sprintf(
+							/* translators: %s: The member name with HTML tags */
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+								'<span class="bb-user-name"></span>'
+							);
+							?>
+						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
 						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
