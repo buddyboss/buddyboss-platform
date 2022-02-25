@@ -3908,7 +3908,7 @@ function bb_media_delete_older_symlinks() {
 
 	// Get media previews symlink directory path.
 	$dir     = bp_media_symlink_path();
-	$max_age = 3600 * 24 * 15; // Delete the file older than 1 day.
+	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
