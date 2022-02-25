@@ -1677,7 +1677,7 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
 /**
  * Clear the scheduled cron job of symlink.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.0.1
  *
  * @return void
  */
