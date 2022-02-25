@@ -13,6 +13,20 @@ defined( 'ABSPATH' ) || exit;
 
 // If you have not any release note then set $show_overview as false.
 $show_overview = true;
+
+// Get release data based on plugin version from gitHub API.
+$cache_key    = 'bb_changelog_' . BP_PLATFORM_VERSION;
+$bb_changelog = wp_cache_get( $cache_key, 'bp' );
+if ( false === $bb_changelog ) {
+	$response     = wp_safe_remote_get( 'https://api.github.com/repos/buddyboss/buddyboss-platform/releases/tags/' . BP_PLATFORM_VERSION );
+	$bb_changelog = wp_remote_retrieve_body( $response );
+	if ( ! is_wp_error( $bb_changelog ) && ! empty( $bb_changelog ) ) {
+		$bb_changelog_data = json_decode( $bb_changelog, true );
+		if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
+			wp_cache_set( $cache_key, $bb_changelog, 'bp' );
+		}
+	}
+}
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
@@ -35,8 +49,12 @@ $show_overview = true;
 				<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
 				<?php
 			}
+			if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
+				?>
+				<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
+				<?php
+			}
 			?>
-			<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
 		</ul>
 	</div>
 
@@ -87,26 +105,16 @@ $show_overview = true;
 				</div>
 				<?php
 			}
-			?>
-			<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog <?php echo false === $show_overview ? 'is_active' : ''; ?>">
-				<?php
-				$cache_key    = 'bb_changelog_' . BP_PLATFORM_VERSION;
-				$bb_changelog = wp_cache_get( $cache_key, 'bp' );
-				if ( false === $bb_changelog ) {
-					$response     = wp_safe_remote_get( 'https://api.github.com/repos/buddyboss/buddyboss-platform/releases/latest' );
-					$bb_changelog = wp_remote_retrieve_body( $response );
-					if ( ! is_wp_error( $bb_changelog ) && ! empty( $bb_changelog ) ) {
-						$bb_changelog_data = json_decode( $bb_changelog, true );
-						if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
-							wp_cache_set( $cache_key, $bb_changelog, 'bp' );
-						}
-					}
-				}
-				if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
-					echo wp_kses_post( $bb_changelog_data['body'] );
-				}
+			if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
 				?>
-			</div>
+				<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog <?php echo false === $show_overview ? 'is_active' : ''; ?>">
+					<?php
+					echo wp_kses_post( $bb_changelog_data['body'] );
+					?>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 	</div>
 </div>
