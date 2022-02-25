@@ -544,7 +544,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . esc_attr( $section['title'] );
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
+					    wp_kses(
+						    $section['title'],
+						    array(
+							    'a' => array(
+								    'href' => array(),
+								    'rel'  => array(),
+							    ),
+						    )
+					    );
 					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
 						?>
 							<div class="bbapp-tutorial-btn">
