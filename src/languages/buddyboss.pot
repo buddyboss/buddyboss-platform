@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-25 13:25:34+00:00\n"
+"POT-Creation-Date: 2022-02-25 14:18:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -174,7 +174,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:953
 #: bp-core/admin/bp-core-admin-functions.php:972
 #: bp-core/admin/bp-core-admin-functions.php:991
-#: bp-core/admin/templates/update-buddyboss.php:35
+#: bp-core/admin/templates/update-buddyboss.php:49
 #: bp-forums/admin/forums.php:151 bp-forums/admin/replies.php:133
 #: bp-forums/admin/settings.php:1539 bp-forums/admin/topics.php:134
 #: bp-groups/bp-groups-admin.php:151 bp-groups/bp-groups-admin.php:217
@@ -3082,7 +3082,7 @@ msgid "Install"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3337
-#: bp-core/admin/templates/update-buddyboss.php:67
+#: bp-core/admin/templates/update-buddyboss.php:85
 #. translators: 1. BuddyBoss platform pro link. 2. BuddyBoss platform pro text.
 msgid "BuddyBoss Platform Pro"
 msgstr ""
@@ -5069,7 +5069,7 @@ msgstr ""
 #: bp-core/admin/templates/check-video-mime-type.php:18
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:19
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:24
-#: bp-core/admin/templates/update-buddyboss.php:22
+#: bp-core/admin/templates/update-buddyboss.php:36
 msgid "Close pop-up"
 msgstr ""
 
@@ -5079,7 +5079,7 @@ msgstr ""
 #: bp-core/admin/templates/check-video-mime-type.php:19
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:21
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
-#: bp-core/admin/templates/update-buddyboss.php:23
+#: bp-core/admin/templates/update-buddyboss.php:37
 #: bp-forums/admin/topics.php:847 bp-forums/topics/template.php:3008
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:18
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:15
@@ -5303,61 +5303,61 @@ msgstr ""
 msgid "Yes I understand, Deactivate"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:28
+#: bp-core/admin/templates/update-buddyboss.php:42
 #: bp-core/classes/class-bp-admin.php:756
 msgid "Release Notes"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:29
+#: bp-core/admin/templates/update-buddyboss.php:43
 msgid "Version"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:39
+#: bp-core/admin/templates/update-buddyboss.php:54
 msgid "Changelog"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:49
+#: bp-core/admin/templates/update-buddyboss.php:67
 msgid ""
 "In this release, we have implemented a number of changes to the templates "
 "of profile and group headers and directories."
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:50
+#: bp-core/admin/templates/update-buddyboss.php:68
 msgid "By doing so, we are now able to offer:"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:52
+#: bp-core/admin/templates/update-buddyboss.php:70
 msgid "New layout options"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:53
+#: bp-core/admin/templates/update-buddyboss.php:71
 msgid "The ability to select which elements show"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:54
+#: bp-core/admin/templates/update-buddyboss.php:72
 msgid "Numerous visual improvements suggested by customers"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:56
+#: bp-core/admin/templates/update-buddyboss.php:74
 msgid "To make use of these new customization options:"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:62
+#: bp-core/admin/templates/update-buddyboss.php:80
 #. translators: 1. BuddyBoss platform pro with link. 2. BuddyBoss account with
 #. link.
 msgid "You'll need to install %1$s, which you can download from your %2$s"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:73
+#: bp-core/admin/templates/update-buddyboss.php:91
 #. translators: 1. BuddyBoss account link. 2. BuddyBoss account text.
 msgid "BuddyBoss account"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:78
+#: bp-core/admin/templates/update-buddyboss.php:96
 msgid "Update any template overrides in your child theme to use our new templates"
 msgstr ""
 
-#: bp-core/admin/templates/update-buddyboss.php:80
+#: bp-core/admin/templates/update-buddyboss.php:98
 msgid "For more information, please watch the video below:"
 msgstr ""
 

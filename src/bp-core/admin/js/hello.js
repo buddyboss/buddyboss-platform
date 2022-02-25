@@ -19,7 +19,7 @@
 		if (
 			modal.classList.contains( 'bb-update-modal' ) &&
 			'undefined' !== typeof BP_HELP &&
-			'yes' !== BP_HELP.bb_display_auto_popup &&
+			'1' !== BP_HELP.bb_display_auto_popup &&
 			'click' !== event.type
 		) {
 			return;
