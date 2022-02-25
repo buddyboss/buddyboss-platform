@@ -125,7 +125,9 @@
 		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
 	}
 	var link    = document.getElementById( 'bb-plugin-release-link' );
-	link.addEventListener( 'click', bp_hello_open_modal );
+	if( link ) {
+		link.addEventListener( 'click', bp_hello_open_modal );
+	}
 	
 	// Load tab for release content.
 	if ( jQuery( '.bb-hello-tabs .bb-hello-tabs_anchor' ).length ) {

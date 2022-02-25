@@ -58,6 +58,7 @@ TABLE OF CONTENTS:
   font-size: 16px;
 }
 
+.bp-hello-content .bb-release-changelog ul,
 .bp-hello-content ul.bp-hello-list {
   list-style: disc;
   margin-left: 25px;
@@ -437,6 +438,7 @@ TABLE OF CONTENTS:
 /**
  * 8.0 - Update Modal
  */
+.bb-update-modal .bb-release-changelog ul,
 .bb-update-modal ul.bp-hello-list {
   font-size: 14px;
 }
