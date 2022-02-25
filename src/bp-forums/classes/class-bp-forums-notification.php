@@ -75,7 +75,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$this->register_notification_type(
-			'notification_bbp_new_forum_reply',
+			'notification_forums_following_reply',
 			esc_html__( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
 			'',
 			'forums'
@@ -90,13 +90,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_bbp_new_forum_reply',
-					'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
 			),
 			'notification_forums_following_reply'
 		);
@@ -114,7 +109,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$this->register_notification_type(
-			'notification_bbp_new_forum_topic',
+			'notification_forums_following_topic',
 			esc_html__( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
 			'',
 			'forums'
@@ -129,13 +124,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'A member has created a new forum discussion.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_bbp_new_forum_topic',
-					'message'  => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'A member has created a new forum discussion.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
 			),
 			'notification_forums_following_topic'
 		);

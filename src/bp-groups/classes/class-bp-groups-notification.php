@@ -101,13 +101,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_groups_invite',
-					'message'  => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
+				'unsubscribe_text'    =>  __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
 			),
 			'notification_groups_invite'
 		);
@@ -139,13 +134,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( "A group's details were updated.", 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_groups_group_updated',
-					'message'  => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
-				),
+				'situation_label'     =>  __( "A group's details were updated.", 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
 			),
 			'notification_groups_group_updated'
 		);
@@ -171,13 +161,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( "Recipient's status within a group has changed.", 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_groups_admin_promotion',
-					'message'  => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
-				),
+				'situation_label'     => __( "Recipient's status within a group has changed.", 'buddyboss' ),
+				'unsubscribe_text'    =>  __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
 			),
 			'notification_groups_admin_promotion'
 		);
@@ -215,13 +200,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'A member has requested permission to join a group.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_groups_membership_request',
-					'message'  => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'A member has requested permission to join a group.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
 			),
 			'notification_groups_membership_request'
 		);
@@ -253,13 +233,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_membership_request_completed',
-					'message'  => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 			),
 			'notification_membership_request_completed'
 		);
@@ -273,13 +248,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_membership_request_completed',
-					'message'  => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 			),
 			'notification_membership_request_completed'
 		);
@@ -317,13 +287,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
-			),
-			array(
-				'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
-				'unsubscribe' => array(
-					'meta_key' => 'notification_group_messages_new_message',
-					'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
-				),
+				'situation_label'     => __( 'Recipient has received a group message.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
 			),
 			'notification_group_messages_new_message'
 		);

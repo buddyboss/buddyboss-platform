@@ -446,10 +446,9 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @param string $email_type        Type of email being sent.
 	 * @param array  $args              Email arguments.
-	 * @param array  $email_schema      Email schema.
 	 * @param string $notification_type Notification Type key.
 	 */
-	final public function register_email_type( string $email_type, array $args, array $email_schema, string $notification_type ) {
+	final public function register_email_type( string $email_type, array $args, string $notification_type ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type'        => $email_type,
 			'args'              => array(
@@ -459,8 +458,11 @@ abstract class BP_Core_Notification_Abstract {
 				'multisite'    => ( $args['multisite'] ?? '' ),
 			),
 			'schema'            => array(
-				'description' => ( $email_schema['description'] ?? '' ),
-				'unsubscribe' => ( $email_schema['unsubscribe'] ?? false ),
+				'description' => ( $args['situation_label'] ?? '' ),
+				'unsubscribe' => array(
+					'meta_key' => $notification_type,
+					'message'  => ( $args['unsubscribe_text'] ?? '' ),
+				),
 			),
 			'notification_type' => $notification_type,
 		);
