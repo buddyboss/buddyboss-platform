@@ -357,6 +357,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18401 ) {
 			bb_update_to_1_8_6();
 		}
+
+		if ( $raw_db_version < 18501 ) {
+			bb_update_to_1_9_1();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1673,4 +1677,17 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
 		'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
 		'error'   => false,
 	);
+}
+
+/**
+ * Clear the scheduled cron job of symlink.
+ *
+ * @since BuddyBoss 1.9.0.1
+ *
+ * @return void
+ */
+function bb_update_to_1_9_1() {
+	wp_clear_scheduled_hook('bb_bb_video_deleter_older_symlink_hook');
+	wp_clear_scheduled_hook('bb_bb_document_deleter_older_symlink_hook');
+	wp_clear_scheduled_hook('bb_bb_media_deleter_older_symlink_hook');
 }

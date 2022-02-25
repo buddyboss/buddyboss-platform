@@ -1602,6 +1602,14 @@ function bp_core_cron_schedules( $schedules = array() ) {
 			'interval' => 30 * MINUTE_IN_SECONDS,
 			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
 		),
+		'bb_schedule_15days' => array(
+			'interval' => 15 * DAY_IN_SECONDS,
+			'display'  => __( 'Every 15 days', 'buddyboss' ),
+		),
+		'bb_schedule_30days' => array(
+			'interval' => 30 * DAY_IN_SECONDS,
+			'display'  => __( 'Every 30 days', 'buddyboss' ),
+		),
 	);
 
 	/**
