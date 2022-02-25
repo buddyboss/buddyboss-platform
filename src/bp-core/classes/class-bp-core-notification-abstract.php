@@ -388,7 +388,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_preferences_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
+	final public function register_notification_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
 		$this->prefernce_groups[] = array(
 			'group_key'         => $group_key,
 			'group_label'       => $group_label,
@@ -410,7 +410,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_preference( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
+	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
 		$this->prefernces[] = array(
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
@@ -446,21 +446,23 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @param string $email_type        Type of email being sent.
 	 * @param array  $args              Email arguments.
-	 * @param array  $email_schema      Email schema.
 	 * @param string $notification_type Notification Type key.
 	 */
-	final public function register_email_type( string $email_type, array $args, array $email_schema, string $notification_type ) {
+	final public function register_email_type( string $email_type, array $args, string $notification_type ) {
 		$this->email_types[ $email_type ] = array(
 			'email_type'        => $email_type,
 			'args'              => array(
-				'post_title'   => ( $args['post_title'] ?? '' ),
-				'post_content' => ( $args['post_content'] ?? '' ),
-				'post_excerpt' => ( $args['post_excerpt'] ?? '' ),
+				'post_title'   => ( $args['email_title'] ?? '' ),
+				'post_content' => ( $args['email_content'] ?? '' ),
+				'post_excerpt' => ( $args['email_plain_content'] ?? '' ),
 				'multisite'    => ( $args['multisite'] ?? '' ),
 			),
 			'schema'            => array(
-				'description' => ( $email_schema['description'] ?? '' ),
-				'unsubscribe' => ( $email_schema['unsubscribe'] ?? false ),
+				'description' => ( $args['situation_label'] ?? '' ),
+				'unsubscribe' => array(
+					'meta_key' => $notification_type,
+					'message'  => ( $args['unsubscribe_text'] ?? '' ),
+				),
 			),
 			'notification_type' => $notification_type,
 		);
