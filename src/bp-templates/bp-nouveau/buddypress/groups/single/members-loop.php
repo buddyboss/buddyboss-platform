@@ -61,6 +61,9 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 			// Primary and secondary profile action buttons.
 			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
+
+			// Member switch button.
+			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
 				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?>">
@@ -150,6 +153,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						</div>
 					</div>
 
+					<?php if ( ! empty( $member_switch_button ) ) { ?>
 					<div class="bb_more_options member-dropdown">
 						<a href="#" class="bb_more_options_action">
 							<i class="bb-icon-menu-dots-h"></i>
@@ -158,6 +162,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
 						</div>
 					</div><!-- .bb_more_options -->
+					<?php } ?>
 				</div>
 			</li>
 
