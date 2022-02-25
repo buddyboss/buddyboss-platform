@@ -782,26 +782,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			wp_enqueue_style( 'bp-admin-common-css' );
 
 			// Hello BuddyBoss.
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
-				wp_enqueue_style( 'bp-hello-css' );
-			}
+			wp_enqueue_style( 'bp-hello-css' );
+			wp_enqueue_script( 'bp-hello-js' );
 
 			wp_enqueue_script( 'bp-fitvids-js' );
 
@@ -827,10 +809,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
 				)
 			);
-
-			// Update BuddyBoss Plugin.
-			wp_enqueue_style( 'bp-hello-css' );
-			wp_enqueue_script( 'bp-hello-js' );
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
