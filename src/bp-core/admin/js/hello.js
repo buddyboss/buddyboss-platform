@@ -124,7 +124,7 @@
 	} else {
 		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
 	}
-	var link    = document.getElementById( 'bb-plugin-release-link' );
+	var link = document.getElementById( 'bb-plugin-release-link' );
 	if( link ) {
 		link.addEventListener( 'click', bp_hello_open_modal );
 	}
