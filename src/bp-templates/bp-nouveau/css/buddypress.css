@@ -3599,6 +3599,30 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   max-width: 100%;
 }
 
+.activity-video-preview .activity-link-preview-container {
+  border: 0;
+}
+
+.activity-video-preview .activity-link-preview-container .activity-link-preview-title {
+  margin: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt {
+  width: 100%;
+}
+
+.activity-video-preview .activity-link-preview-excerpt > p {
+  margin-bottom: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt .bb-video-wrapper {
+  margin-bottom: 0;
+}
+
+.activity-video-preview .activity-link-preview-excerpt iframe {
+  width: 100%;
+}
+
 .activity-link-preview-image {
   margin-bottom: 10px;
 }
@@ -16806,13 +16830,26 @@ img.emojioneemoji {
   background-color: #f8f8f8;
 }
 
+.dropzone.media-dropzone .dz-preview .dz-image {
+  position: relative;
+}
+
+.dropzone.media-dropzone .dz-preview .dz-image img {
+  width: auto;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .dropzone .dz-preview.dz-error {
   background-color: #f8f8f8;
 }
 
 .dropzone .dz-preview.dz-error .dz-error-title {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: #ef3e46;
   text-align: center;
   position: absolute;
@@ -16879,7 +16916,7 @@ img.emojioneemoji {
 .dropzone.media-dropzone .dz-preview.dz-error .dz-details {
   display: block;
   position: absolute;
-  bottom: 10px;
+  bottom: 18px;
   left: 10px;
   right: 10px;
   text-align: center;
