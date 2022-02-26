@@ -277,29 +277,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// @todo will use this later on
 		// $this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
 
-		// Section for profile types.
-		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ), '', array( $this, 'bp_profile_types_tutorial' ) );
-
-		// Enable/Disable profile types.
-		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_enable_disable' ), 'intval' );
-
-		// Profile Type enabled then display profile types.
-		if ( true === bp_member_type_enable_disable() ) {
-			// Enable/Disable Display on profiles.
-			$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_display_on_profile' ), 'intval' );
-		}
-
-		// Default profile type on registration.
-		if ( true === bp_member_type_enable_disable() ) {
-			$this->add_field( 'bp-member-type-default-on-registration', __( 'Default Profile Type', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_default_on_registration' ) );
-		}
-
-		// Section for profile search.
-		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ), '', array( $this, 'bp_profile_search_tutorial' ) );
-
-		// Enable/Disable profile search.
-		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_profile_search' ), 'intval' );
-
 		// Section for profile list.
 		$this->add_section( 'bp_profile_list_settings', __( 'Member Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
 
@@ -343,6 +320,29 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$args['selected_elements'] = $selected_profile_actions;
 			$this->add_field( 'bb-member-profile-primary-action', esc_html__( 'Primary Action', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_primary_action', 'string', $args );
 		}
+
+		// Section for profile types.
+		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ), '', array( $this, 'bp_profile_types_tutorial' ) );
+
+		// Enable/Disable profile types.
+		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_enable_disable' ), 'intval' );
+
+		// Profile Type enabled then display profile types.
+		if ( true === bp_member_type_enable_disable() ) {
+			// Enable/Disable Display on profiles.
+			$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_display_on_profile' ), 'intval' );
+		}
+
+		// Default profile type on registration.
+		if ( true === bp_member_type_enable_disable() ) {
+			$this->add_field( 'bp-member-type-default-on-registration', __( 'Default Profile Type', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_default_on_registration' ) );
+		}
+
+		// Section for profile search.
+		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ), '', array( $this, 'bp_profile_search_tutorial' ) );
+
+		// Enable/Disable profile search.
+		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_profile_search' ), 'intval' );
 
 		/**
 		 * Fires to register xProfile tab settings fields and section.
