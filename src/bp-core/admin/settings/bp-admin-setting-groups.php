@@ -144,33 +144,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-preview-group-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_group_avatar_cover', 'string', $args );
 		}
 
-		// Register Group Types sections.
-		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ), '', 'bp_group_types_tutorial' );
-
-		// enable or disable group types.
-		$this->add_field( 'bp-disable-group-type-creation', __( 'Group Types', 'buddyboss' ), 'bp_admin_setting_callback_group_type_creation', 'intval' );
-
-		// enable or disable group automatically approve memberships.
-		$this->add_field( 'bp-enable-group-auto-join', __( 'Auto Membership Approval', 'buddyboss' ), 'bp_admin_setting_callback_group_auto_join', 'intval' );
-
-		// Register Group Hierarchies sections.
-		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ), '', 'bp_group_hierarchies_tutorial' );
-
-		// enable or disable group hierarchies.
-		$type          = array();
-		$type['class'] = 'bp-enable-group-hierarchies';
-		$this->add_field( 'bp-enable-group-hierarchies', __( 'Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval', $type );
-
-		// Hide subgroups from the main Groups Directory.
-		$type          = array();
-		$type['class'] = 'bp-enable-group-hide-subgroups';
-		$this->add_field( 'bp-enable-group-hide-subgroups', __( 'Hide Subgroups', 'buddyboss' ), 'bp_admin_setting_callback_group_hide_subgroups', 'intval', $type );
-
-		// enable or disable restrict invites to members who already in specific parent group.
-		$type          = array();
-		$type['class'] = 'bp-enable-group-restrict-invites';
-		$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval', $type );
-
 		// Group Headers.
 		$this->add_section( 'bp_groups_headers_settings', esc_html__( 'Group Headers', 'buddyboss' ), '', 'bp_group_headers_tutorial' );
 
@@ -266,6 +239,33 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			),
 		);
 		$this->add_field( 'bb-group-directory-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_elements', 'checkbox', $args );
+
+		// Register Group Types sections.
+		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ), '', 'bp_group_types_tutorial' );
+
+		// enable or disable group types.
+		$this->add_field( 'bp-disable-group-type-creation', __( 'Group Types', 'buddyboss' ), 'bp_admin_setting_callback_group_type_creation', 'intval' );
+
+		// enable or disable group automatically approve memberships.
+		$this->add_field( 'bp-enable-group-auto-join', __( 'Auto Membership Approval', 'buddyboss' ), 'bp_admin_setting_callback_group_auto_join', 'intval' );
+
+		// Register Group Hierarchies sections.
+		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ), '', 'bp_group_hierarchies_tutorial' );
+
+		// enable or disable group hierarchies.
+		$type          = array();
+		$type['class'] = 'bp-enable-group-hierarchies';
+		$this->add_field( 'bp-enable-group-hierarchies', __( 'Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval', $type );
+
+		// Hide subgroups from the main Groups Directory.
+		$type          = array();
+		$type['class'] = 'bp-enable-group-hide-subgroups';
+		$this->add_field( 'bp-enable-group-hide-subgroups', __( 'Hide Subgroups', 'buddyboss' ), 'bp_admin_setting_callback_group_hide_subgroups', 'intval', $type );
+
+		// enable or disable restrict invites to members who already in specific parent group.
+		$type          = array();
+		$type['class'] = 'bp-enable-group-restrict-invites';
+		$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval', $type );
 
 		/**
 		 * Fires to register Groups tab settings fields and section.
