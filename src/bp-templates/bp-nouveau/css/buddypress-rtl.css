@@ -958,7 +958,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item {
-  padding: 0 15px;
+  padding: 0 20px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block {
@@ -1249,7 +1249,7 @@ a.layout-grid-view {
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {
   max-width: 26px;
   float: right;
-  margin-left: -6px;
+  margin-left: -9px;
   position: relative;
   z-index: 1;
 }
