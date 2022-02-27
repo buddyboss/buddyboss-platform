@@ -7335,6 +7335,11 @@ body.guillotine-dragging * {
   margin: -120px auto 0 auto;
 }
 
+.groups-header #cover-image-container.centered #item-header-cover-image.bb-disable-cover-img #item-header-avatar {
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-content {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7481,9 +7486,6 @@ body.guillotine-dragging * {
   .groups-header #item-header-cover-image #item-header-content {
     padding-top: 20px;
     padding-bottom: 20px;
-  }
-  .groups-header #item-header-cover-image.bb-disable-cover-img #item-header-content {
-    padding-top: 0;
   }
   .groups-header .group-item-actions {
     margin-right: 15px;
@@ -7726,20 +7728,19 @@ body.buddypress.bp-user #page #primary .entry-header {
   text-align: center;
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list button.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list a.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list a.view-as:before,
+.bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before,
 .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+.bb_more_options .bb_more_options_list button.back-to-admin:before,
 .bb_more_options .bb_more_options_list button.view-as:before,
+.bb_more_options .bb_more_options_list a.back-to-admin:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\e88a";
-  font-family: bb-icons;
+  content: "\e8be";
   font-size: 16px;
-  display: inline-block;
-  margin-left: 10px;
-  width: 20px;
-  text-align: center;
-  vertical-align: middle;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
@@ -7798,15 +7799,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list a.is_friend:before,
 .bb_more_options .bb_more_options_list a.pending_friend:before {
   content: "\e930";
-}
-
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
-#buddypress .bb_more_options .bb_more_options_list button.view-as:before,
-#buddypress .bb_more_options .bb_more_options_list a.view-as:before,
-.bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
-.bb_more_options .bb_more_options_list button.view-as:before,
-.bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\e8be";
 }
 
 @media screen and (max-width: 799px) {
@@ -8732,6 +8724,23 @@ body.register .buddypress-wrap .page ul {
 #item-header-avatar:hover a.link-change-profile-image,
 #header-cover-image:hover a.position-change-cover-image {
   opacity: 1;
+}
+
+.users-header #item-header-avatar a.link-change-profile-image {
+  top: 50%;
+  margin-right: 0;
+  transform: translate(50%, -50%);
+}
+
+.users-header #item-header-avatar:hover:before {
+  content: "";
+  position: absolute;
+  right: 3px;
+  left: 3px;
+  top: 3px;
+  bottom: 3px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
 }
 
 .social-networks-wrap span.social {

@@ -7335,6 +7335,11 @@ body.guillotine-dragging * {
   margin: -120px auto 0 auto;
 }
 
+.groups-header #cover-image-container.centered #item-header-cover-image.bb-disable-cover-img #item-header-avatar {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .groups-header #cover-image-container.centered #item-header-cover-image #item-header-content {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7481,9 +7486,6 @@ body.guillotine-dragging * {
   .groups-header #item-header-cover-image #item-header-content {
     padding-top: 20px;
     padding-bottom: 20px;
-  }
-  .groups-header #item-header-cover-image.bb-disable-cover-img #item-header-content {
-    padding-top: 0;
   }
   .groups-header .group-item-actions {
     margin-left: 15px;

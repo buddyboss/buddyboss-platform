@@ -39,6 +39,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 					</a>
 				<?php } ?>
 				<?php bp_displayed_user_avatar( 'type=full' ); ?>
+				<?php
+				if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
+					echo wp_kses_post( bp_get_user_member_type( bp_displayed_user_id() ) );
+				}
+				?>
 			</div><!-- #item-header-avatar -->
 
 			<div id="item-header-content">

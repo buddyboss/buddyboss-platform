@@ -175,6 +175,11 @@
 				margin: -120px auto 0 auto;
 			}
 
+			&.bb-disable-cover-img #item-header-avatar {
+				margin-left: auto;
+				margin-right: auto;
+			}
+
 			#item-header-content {
 
 				@include center-vert;
@@ -332,10 +337,6 @@
 			#item-header-content {
 				padding-top: $marg-lrg;
 				padding-bottom: $marg-lrg;
-			}
-
-			&.bb-disable-cover-img #item-header-content {
-				padding-top: 0;
 			}
 
 		}
