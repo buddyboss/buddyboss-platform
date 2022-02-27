@@ -3104,10 +3104,13 @@ table tbody td .bb-description {
 	border-radius: 4px;
 	color: #999;
 	display: inline-block;
-	margin-top: 10px;
-	max-width: 150px;
-	padding: 9px 14px;
+	font-size: 12px;
 	font-weight: 400;
+	line-height: 1.5;
+	margin-top: 10px;
+	max-width: 140px;
+	padding: 5px 10px;
+	width: auto;
 
 	a {
 		color: inherit;
