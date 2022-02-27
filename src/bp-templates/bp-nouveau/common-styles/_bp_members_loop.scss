@@ -97,9 +97,6 @@
 			}
 
 			.member-status.online {
-				background-color: $golden;
-				border: 2px solid $white;
-				border-radius: 100%;
 				position: absolute;
 				width: 12px;
 				height: 12px;
@@ -182,6 +179,12 @@
 		}
 	}
 } // close .buddypress-wrap
+
+.member-status {
+	background-color: $golden;
+	border: 2px solid $white;
+	border-radius: 100%;
+}
 
 // More option on memeber listing
 #buddypress .members-list > li {

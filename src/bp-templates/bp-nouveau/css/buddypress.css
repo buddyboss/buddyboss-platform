@@ -6332,9 +6332,6 @@ form.ac-form .ac-reply-content input {
 }
 
 .buddypress-wrap .members-list li .member-status.online {
-  background-color: #edbb34;
-  border: 2px solid #fff;
-  border-radius: 100%;
   position: absolute;
   width: 12px;
   height: 12px;
@@ -6393,6 +6390,12 @@ form.ac-form .ac-reply-content input {
     font-size: 14px;
     margin: 0;
   }
+}
+
+.member-status {
+  background-color: #edbb34;
+  border: 2px solid #fff;
+  border-radius: 100%;
 }
 
 #buddypress .members-list > li {
