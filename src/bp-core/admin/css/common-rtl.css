@@ -2236,6 +2236,7 @@ h2.has_tutorial_btn {
 h2.has_tutorial_btn .bbapp-tutorial-btn {
   position: absolute;
   left: 0;
+  right: initial;
   top: 5px;
   font-weight: 400;
 }
