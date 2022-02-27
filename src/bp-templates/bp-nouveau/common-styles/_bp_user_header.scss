@@ -149,7 +149,11 @@ body.buddypress.bp-user #page #primary .entry-header {
 				text-align: center;
 			}
 
-			&.back-to-admin:before,
+			&.back-to-admin:before {
+				content: "\e84c";
+				font-size: 18px;
+			}
+
 			&.view-as:before {
 				content: "\e8be";
 				font-size: 16px;

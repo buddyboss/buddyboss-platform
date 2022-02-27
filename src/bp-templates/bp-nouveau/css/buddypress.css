@@ -7728,16 +7728,21 @@ body.buddypress.bp-user #page #primary .entry-header {
   text-align: center;
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list button.back-to-admin:before,
-#buddypress .bb_more_options .bb_more_options_list button.view-as:before,
 #buddypress .bb_more_options .bb_more_options_list a.back-to-admin:before,
-#buddypress .bb_more_options .bb_more_options_list a.view-as:before,
 .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before,
-.bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
 .bb_more_options .bb_more_options_list button.back-to-admin:before,
+.bb_more_options .bb_more_options_list a.back-to-admin:before {
+  content: "\e84c";
+  font-size: 18px;
+}
+
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list button.view-as:before,
+#buddypress .bb_more_options .bb_more_options_list a.view-as:before,
+.bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
 .bb_more_options .bb_more_options_list button.view-as:before,
-.bb_more_options .bb_more_options_list a.back-to-admin:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
   content: "\e8be";
   font-size: 16px;
