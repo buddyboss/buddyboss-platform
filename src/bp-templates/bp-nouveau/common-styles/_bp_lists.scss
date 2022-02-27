@@ -279,6 +279,10 @@
 				justify-content: center;
 			}
 
+			&.group-members-hidden.group-join-button-hidden {
+				display: none !important;
+			}
+
 		}
 
 	}

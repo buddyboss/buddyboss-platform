@@ -1032,6 +1032,10 @@ a.layout-grid-view {
   justify-content: center;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .group-footer-wrap.group-members-hidden.group-join-button-hidden {
+  display: none !important;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry {
   flex: none !important;
   max-width: initial !important;
