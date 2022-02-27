@@ -37,6 +37,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-camera"></i>
 					</a>
+					<span class="link-change-overlay"></span>
 				<?php } ?>
 				<?php bp_displayed_user_avatar( 'type=full' ); ?>
 				<?php

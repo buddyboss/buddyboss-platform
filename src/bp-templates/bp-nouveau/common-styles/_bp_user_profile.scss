@@ -357,8 +357,7 @@ body.register .buddypress-wrap .page ul {
 		transform: translate(-50%, -50%);
 	}
 
-	&:hover:before {
-		content: "";
+	&:hover .link-change-overlay {
 		position: absolute;
 		left: 3px;
 		right: 3px;

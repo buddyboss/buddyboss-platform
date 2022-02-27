@@ -6396,6 +6396,7 @@ form.ac-form .ac-reply-content input {
   background-color: #edbb34;
   border: 2px solid #fff;
   border-radius: 100%;
+  z-index: 1;
 }
 
 #buddypress .members-list > li {
@@ -7326,6 +7327,21 @@ body.guillotine-dragging * {
 
 .groups-header .bb_more_options {
   display: inline-block;
+}
+
+.groups-header #item-header-avatar a.link-change-profile-image {
+  top: 50%;
+  margin: 0;
+  transform: translate(50%, -50%);
+}
+
+.groups-header #item-header-avatar:hover .link-change-overlay {
+  position: absolute;
+  right: 3px;
+  left: 3px;
+  top: 3px;
+  bottom: 3px;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .groups-header #cover-image-container.centered #item-header-cover-image {
@@ -8745,8 +8761,7 @@ body.register .buddypress-wrap .page ul {
   transform: translate(50%, -50%);
 }
 
-.users-header #item-header-avatar:hover:before {
-  content: "";
+.users-header #item-header-avatar:hover .link-change-overlay {
   position: absolute;
   right: 3px;
   left: 3px;

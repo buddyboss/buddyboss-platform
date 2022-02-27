@@ -160,6 +160,24 @@
 		display: inline-block;
 	}
 
+	#item-header-avatar {
+
+		a.link-change-profile-image {
+			top: 50%;
+			margin: 0;
+			transform: translate(-50%, -50%);
+		}
+
+		&:hover .link-change-overlay {
+			position: absolute;
+			left: 3px;
+			right: 3px;
+			top: 3px;
+			bottom: 3px;
+			background-color: rgba(0, 0, 0, 0.3);
+		}
+	}
+
 	//group header centered
 	#cover-image-container.centered {
 
