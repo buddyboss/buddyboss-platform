@@ -76,7 +76,8 @@
 		document.getElementById( 'bp-hello-container' ).setAttribute( 'style', 'display:none' );
 		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
-
+		// Close model then video should also stop.
+		jQuery( '.bb-update-modal iframe' ).attr( 'src', jQuery( '.bb-update-modal iframe' ).attr( 'src' ) );
 	};
 
 	/**

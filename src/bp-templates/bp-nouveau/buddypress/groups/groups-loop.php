@@ -99,7 +99,7 @@ if ( 'small' === $group_cover_height ) {
 											<?php
 											printf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-												esc_attr__( 'active %s', 'buddyboss' ),
+												esc_attr__( 'Active %s', 'buddyboss' ),
 												wp_kses_post( bp_get_group_last_active() )
 											);
 											?>
