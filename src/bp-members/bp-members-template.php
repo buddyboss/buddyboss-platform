@@ -1687,7 +1687,11 @@ function bp_get_last_activity( $user_id = 0 ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$last_activity = bp_core_get_last_activity( bp_get_user_last_activity( $user_id ), __( 'active %s', 'buddyboss' ) );
+	$last_activity = bp_core_get_last_activity(
+		bp_get_user_last_activity( $user_id ),
+		/* translators: %s: The last activity human-readable date. */
+		esc_html__( 'Active %s', 'buddyboss' )
+	);
 
 	/**
 	 * Filters the 'active [x days ago]' string for a user.
@@ -2799,7 +2803,7 @@ function bb_get_followers_count( $user_id = false ) {
 		return;
 	}
 
-	$is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
+	$is_follow_active = bp_is_active( 'activity' ) && bp_is_activity_follow_active();
 
 	if ( false === $user_id ) {
 		$user_id = bp_displayed_user_id();
@@ -2822,7 +2826,7 @@ function bb_get_followers_count( $user_id = false ) {
 		} elseif ( 1 === $total_followers ) {
 			$followers = sprintf(
 				/* translators: Follower string. */
-				'<strong>0</strong> %1$s',
+				'<strong>1</strong> %1$s',
 				esc_html__( 'follower', 'buddyboss' ),
 			);
 		} else {
