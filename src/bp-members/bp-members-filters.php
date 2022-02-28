@@ -666,7 +666,7 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 
 		// Difference within 5 minutes.
 		if ( 5 >= $minutes_diff ) {
-			return esc_html__( 'active now', 'buddyboss' );
+			return esc_html__( 'Active now', 'buddyboss' );
 		}
 	}
 

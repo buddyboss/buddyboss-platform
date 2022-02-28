@@ -72,7 +72,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<?php
 					printf(
 						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						esc_html__( 'active %s', 'buddyboss' ),
+						esc_html__( 'Active %s', 'buddyboss' ),
 						wp_kses_post( bp_get_group_last_active() )
 					);
 					?>

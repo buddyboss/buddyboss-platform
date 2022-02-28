@@ -4254,7 +4254,7 @@ function bp_get_group_join_button( $group = false ) {
 			'link_text'         => $button_text,
 			'link_class'        => 'group-button leave-group bp-toggle-action-button',
 			'button_attr'       => array(
-				'data-title'           => esc_html__( 'Leave group', 'buddyboss' ),
+				'data-title'           => esc_html__( 'Leave Group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
 				'data-bb-group-name'   => esc_attr( $group->name ),
 				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
@@ -4282,7 +4282,7 @@ function bp_get_group_join_button( $group = false ) {
 					'wrapper_class'     => 'group-button ' . $group->status,
 					'wrapper_id'        => 'groupbutton-' . $group->id,
 					'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'join' ), 'groups_join_group' ),
-					'link_text'         => esc_html__( 'Join group', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
 					'link_class'        => 'group-button join-group',
 				);
 				break;
@@ -5195,7 +5195,14 @@ function bp_get_group_member_joined_since( $args = array() ) {
 	 *
 	 * @param string $value Joined since time.
 	 */
-	return apply_filters( 'bp_get_group_member_joined_since', bp_core_get_last_activity( $members_template->member->date_modified, __( 'joined %s', 'buddyboss' ) ) );
+	return apply_filters(
+		'bp_get_group_member_joined_since',
+		bp_core_get_last_activity(
+			$members_template->member->date_modified,
+			/* translators: %s: Last joined date of member in the group. */
+			esc_html__( 'Joined %s', 'buddyboss' )
+		)
+	);
 }
 
 /**

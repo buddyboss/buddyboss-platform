@@ -70,7 +70,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 										<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
 									<?php endif; ?>
 
-									<?php if ( bp_get_last_activity() && bb_get_member_joined_date() && $is_enabled_joined_date ) : ?>
+									<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && $is_enabled_member_handle && $is_enabled_joined_date ) : ?>
 										<span class="separator">&bull;</span>
 									<?php endif; ?>
 
@@ -79,8 +79,8 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 										echo wp_kses_post( bb_get_member_joined_date() );
 									endif;
 									?>
-									
-									<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_get_last_activity() && $is_enabled_member_handle && ( $is_enabled_last_active || $is_enabled_joined_date ) ) : ?>
+
+									<?php if ( ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bb_get_member_joined_date() ) && bp_get_last_activity() && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) : ?>
 										<span class="separator">&bull;</span>
 									<?php endif; ?>
 
