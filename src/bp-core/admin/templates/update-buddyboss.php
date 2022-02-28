@@ -27,6 +27,9 @@ if ( false === $bb_changelog ) {
 		}
 	}
 }
+
+// If you have any video then add url here.
+$video_url = 'https://player.vimeo.com/video/338221385';
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
@@ -95,13 +98,18 @@ if ( false === $bb_changelog ) {
 						</li>
 						<li><?php esc_html_e( 'Update any template overrides in your child theme to use our new templates', 'buddyboss' ); ?></li>
 					</ul>
-					<p><?php esc_html_e( 'For more information, please watch the video below:', 'buddyboss' ); ?></p>
-					<div class="video-wrapper">
-						<div class="video-container">
-							<iframe src="https://player.vimeo.com/video/338221385?byline=0&portrait=0&autoplay=0" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-							</iframe>
+					<?php
+					if ( ! empty( $video_url ) ) {
+						?>
+						<p><?php esc_html_e( 'For more information, please watch the video below:', 'buddyboss' ); ?></p>
+						<div class="video-wrapper">
+							<div class="video-container">
+								<iframe src="<?php echo esc_url( $video_url ); ?>?byline=0&portrait=0&autoplay=0" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							</div>
 						</div>
-					</div>
+						<?php
+					}
+					?>
 				</div>
 				<?php
 			}
