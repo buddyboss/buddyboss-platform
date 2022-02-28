@@ -270,6 +270,7 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
+		static $bp_xprofile_group_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
@@ -292,6 +293,12 @@ class BP_XProfile_Group {
 				'fetch_social_network_fields'    => false,
 			)
 		);
+
+		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
+
+		if ( isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
+			return $bp_xprofile_group_ids[ $cache_key ];
+		}
 
 		// Keep track of object IDs for cache-priming.
 		$object_ids = array(
@@ -324,6 +331,7 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
+			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -335,6 +343,7 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
+			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -426,6 +435,7 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
+			$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -561,6 +571,8 @@ class BP_XProfile_Group {
 			// Reset indexes.
 			$groups = array_values( $groups );
 		}
+
+		$bp_xprofile_group_ids[ $cache_key ] = $groups;
 
 		return $groups;
 	}
@@ -767,23 +779,41 @@ class BP_XProfile_Group {
 				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
 			}
 
-			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
+			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_fields ) ) {
+				$profile_table = $bp->profile->table_name_fields;
+			} else {
+				$profile_table = $bp->table_prefix . 'bp_xprofile_fields';
+			}
+
+			$levels = $wpdb->get_results(
+				"SELECT xf.id,
+				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
+				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values
+				FROM {$profile_table} as xf
+				INNER JOIN {$profile_meta_table} as xm on xf.id = xm.object_id
+				WHERE ( xm.meta_key = 'default_visibility' OR xm.meta_key = 'allow_custom_visibility' )
+				GROUP BY xf.id
+				ORDER BY xf.id"
+			);
+
+			$default_visibility_levels = array();
 
 			// Arrange so that the field id is the key and the visibility level the value.
-			$default_visibility_levels = array();
-			foreach ( $levels as $level ) {
-				switch ( $level->meta_key ) {
-					case 'default_visibility':
-						$default_visibility_levels[ $level->object_id ]['default'] = $level->meta_value;
-						break;
-					case 'allow_custom_visibility':
-						$default_visibility_levels[ $level->object_id ]['allow_custom'] = $level->meta_value;
-						break;
+			if ( ! empty( $levels ) ) {
+
+				foreach ( $levels as $level ) {
+
+					$meta_keys   = explode( ',', $level->meta_keys );
+					$meta_values = explode( ',', $level->meta_values );
+
+					$meta_keys                               = json_decode( str_replace( '_visibility', '', wp_json_encode( $meta_keys ) ), true );
+					$default_visibility_levels[ $level->id ] = array_combine( $meta_keys, $meta_values );
 				}
 			}
 
 			wp_cache_set( 'default_visibility_levels', $default_visibility_levels, 'bp_xprofile' );
 		}
+
 
 		return $default_visibility_levels;
 	}
