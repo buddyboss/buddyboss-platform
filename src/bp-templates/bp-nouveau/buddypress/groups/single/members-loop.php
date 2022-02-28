@@ -66,7 +66,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
-				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?>">
+				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?> <?php echo ! empty( $profile_actions['primary'] ) ? esc_attr( 'primary-button' ) : esc_attr( 'no-primary-buttons' ); ?>">
 
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
@@ -138,9 +138,11 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							</div>
 						<?php } ?>
 
-						<div class="flex only-list-view align-items-center primary-action justify-center">
-							<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
-						</div>
+						<?php if ( $profile_actions['primary'] ) { ?>
+							<div class="flex only-list-view align-items-center primary-action justify-center">
+								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+							</div>
+						<?php } ?>
 
 					</div>
 
