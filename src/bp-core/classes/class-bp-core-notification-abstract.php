@@ -74,8 +74,6 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 99, 8 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
-
-		// add_action( 'bp_init', array( $this, 'register_email_template' ), 60 );
 	}
 
 	/**
@@ -316,68 +314,11 @@ abstract class BP_Core_Notification_Abstract {
 
 	/************************************ Actions ************************************/
 
-	/**
-	 * Register Email template if not exists.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function register_email_template() {
-
-		// Bail if this is an ajax request.
-		if ( defined( 'DOING_AJAX' ) ) {
-			return;
-		}
-
-		$defaults = array(
-			'post_status' => 'publish',
-			'post_type'   => bp_get_email_post_type(),
-		);
-
-		if ( ! empty( $this->email_types ) ) {
-			foreach ( $this->email_types as $id => $email ) {
-
-				if (
-					term_exists( $id, bp_get_email_tax_type() ) &&
-					get_terms(
-						array(
-							'taxonomy' => bp_get_email_tax_type(),
-							'slug'     => $id,
-							'fields'   => 'count',
-						)
-					) > 0
-				) {
-					continue;
-				}
-
-				// Some emails are multisite-only.
-				if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
-					continue;
-				}
-
-				$post_id = wp_insert_post( bp_parse_args( $email['args'], $defaults, 'install_email_' . $id ) );
-				if ( ! $post_id ) {
-					continue;
-				}
-
-				$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
-				foreach ( $tt_ids as $tt_id ) {
-					$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
-					wp_update_term(
-						(int) $term->term_id,
-						bp_get_email_tax_type(),
-						array(
-							'description' => $email['schema']['description'],
-						)
-					);
-				}
-			}
-		}
-	}
 
 	/************************************ Functions ************************************/
 
 	/**
-	 * Register preference group.
+	 * Register Notification Group.
 	 *
 	 * @param string $group_key         Group key.
 	 * @param string $group_label       Group label.
@@ -398,7 +339,7 @@ abstract class BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Register preference.
+	 * Register Notification Type.
 	 *
 	 * @param string $notification_type        Notification Type key.
 	 * @param string $notification_label       Notification label.
