@@ -349,6 +349,26 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
+.users-header #item-header-avatar {
+
+	a.link-change-profile-image {
+		top: 50%;
+		margin-left: 0;
+		transform: translate(-50%, -50%);
+	}
+
+	&:hover .link-change-overlay {
+		position: absolute;
+		left: 3px;
+		right: 3px;
+		top: 3px;
+		bottom: 3px;
+		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: 50%;
+	}
+
+}
+
 .social-networks-wrap {
 
 	span.social {

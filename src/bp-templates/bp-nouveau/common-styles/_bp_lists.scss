@@ -203,7 +203,7 @@
 		padding-top: 0;
 
 		.item {
-			padding: 0 15px;
+			padding: 0 20px;
 
 			.item-block {
 
@@ -277,6 +277,10 @@
 				-webkit-box-pack: center;
 				-ms-flex-pack: center;
 				justify-content: center;
+			}
+
+			&.group-members-hidden.group-join-button-hidden {
+				display: none !important;
 			}
 
 		}
@@ -443,6 +447,7 @@
 				-webkit-box-pack: justify;
 				-ms-flex-pack: justify;
 				justify-content: space-between;
+				margin-bottom: 0;
 			}
 
 			@media screen and (max-width: 1000px) {
@@ -501,7 +506,7 @@
 		.bs-group-member {
 			max-width: 26px;
 			float: left;
-			margin-right: -6px;
+			margin-right: -9px;
 			position: relative;
 			z-index: 1;
 

@@ -149,15 +149,14 @@ body.buddypress.bp-user #page #primary .entry-header {
 				text-align: center;
 			}
 
+			&.back-to-admin:before {
+				content: "\e84c";
+				font-size: 18px;
+			}
+
 			&.view-as:before {
-				content: "\e88a";
-				font-family: bb-icons;
+				content: "\e8be";
 				font-size: 16px;
-				display: inline-block;
-				margin-right: 10px;
-				width: 20px;
-				text-align: center;
-				vertical-align: middle;
 			}
 
 			&.send-message:before {
@@ -183,10 +182,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 			&.is_friend:before,
 			&.pending_friend:before {
 				content: "\e930";
-			}
-
-			&.view-as:before {
-				content: "\e8be";
 			}
 
 		}
