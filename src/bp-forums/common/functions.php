@@ -1235,7 +1235,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			}
 
 			// Bail if member opted out of receiving this email.
-			if ( false === bb_is_notification_enabled( $user_id, 'notification_forums_following_reply' ) ) {
+		if ( false === bb_is_notification_enabled( $user_id, 'notification_forums_following_reply' ) ) {
 				continue;
 			}
 
@@ -1380,7 +1380,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 								'bbp-new-forum-topic',
 								$topic_author,
 								'notification_forums_following_topic',
-								$args
+								$args,
 							),
 						),
 					)
@@ -1389,7 +1389,6 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 			}
 			$bb_email_background_updater->dispatch();
 		}
-
 	} else {
 		// Loop through users.
 		foreach ( (array) $user_ids as $user_id ) {
@@ -1404,12 +1403,12 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 				continue;
 			}
 
-		$unsubscribe_args = array(
-			'user_id'           => $user_id,
-			'notification_type' => 'bbp-new-forum-topic',
-		);
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => 'bbp-new-forum-topic',
+			);
 
-		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
 			// Send notification email.
 			bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
@@ -2228,10 +2227,10 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		return;
 	}
 
-	// Loop through users
+	// Loop through users.
 	foreach ( (array) $user_ids as $user_id ) {
 
-		// Don't send notifications to the person who made the post
+		// Don't send notifications to the person who made the post.
 		if ( ! empty( $sender_id ) && (int) $user_id === (int) $sender_id ) {
 			continue;
 		}

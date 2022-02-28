@@ -1004,13 +1004,12 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			}
 			$bb_email_background_updater->dispatch();
 		}
-
 	} else {
 		// Send an email to each recipient.
 		foreach ( $recipients as $recipient ) {
 
 		if (
-			$sender_id == $recipient->user_id ||
+			(int) $sender_id === (int) $recipient->user_id ||
 			false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
 		) {
 				continue;
@@ -1464,7 +1463,7 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 	foreach ( $recipients as $recipient ) {
 
 		if (
-			$sender_id == $recipient->user_id ||
+			(int) $sender_id === (int) $recipient->user_id ||
 			false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
 		) {
 			continue;
