@@ -2858,6 +2858,11 @@ table tbody td .bb-description {
 .bb-member-directory-element,
 .bb-member-directory-profile-action {
 	margin-bottom: 10px;
+
+	input[type="checkbox"] {
+		width: auto;
+	}
+
 }
 
 .bb-header-style-outer {

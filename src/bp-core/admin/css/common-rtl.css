@@ -2681,6 +2681,14 @@ table tbody td .bb-description {
   margin-bottom: 10px;
 }
 
+.bb-group-element input[type="checkbox"],
+.bb-group-headers-element input[type="checkbox"],
+.bb-profile-header-element input[type="checkbox"],
+.bb-member-directory-element input[type="checkbox"],
+.bb-member-directory-profile-action input[type="checkbox"] {
+  width: auto;
+}
+
 .bb-header-style-outer {
   display: flex;
 }
