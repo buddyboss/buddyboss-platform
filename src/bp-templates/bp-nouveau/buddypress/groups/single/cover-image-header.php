@@ -124,7 +124,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 					<?php
 					printf(
 						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						esc_attr__( 'active %s', 'buddyboss' ),
+						esc_attr__( 'Active %s', 'buddyboss' ),
 						wp_kses_post( bp_get_group_last_active() )
 					);
 					?>
