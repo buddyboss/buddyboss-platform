@@ -481,12 +481,12 @@ function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 	$show_display_popup = false;
 	// The path to our plugin's main file
 	$our_plugin = 'buddyboss-platform/bp-loader.php';
-	if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
+	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
 		foreach ( $options['plugins'] as $plugin ) {
-			if ( $plugin == $our_plugin ) {
+			if ( ! empty( $plugin ) && $plugin === $our_plugin ) {
 				update_option( '_bb_is_update', $show_display_popup );
 			}
 		}
 	}
 }
-add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback',10, 2);
+add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2);
