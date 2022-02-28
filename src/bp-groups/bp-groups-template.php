@@ -1859,19 +1859,17 @@ function bp_group_list_admins( $group = false ) {
 				<li>
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
 					<?php
-					echo esc_url(
-						bp_core_fetch_avatar(
-							array(
-								'item_id' => $admin->user_id,
-								'email'   => $admin->user_email,
-								'alt'     => sprintf( // translators: Profile photo of %s.
-									esc_html__(
-										'Profile photo of %s',
-										'buddyboss'
-									),
-									bp_core_get_user_displayname( $admin->user_id )
+					echo bp_core_fetch_avatar(
+						array(
+							'item_id' => $admin->user_id,
+							'email'   => $admin->user_email,
+							'alt'     => sprintf( // translators: Profile photo of %s.
+								esc_html__(
+									'Profile photo of %s',
+									'buddyboss'
 								),
-							)
+								bp_core_get_user_displayname( $admin->user_id )
+							),
 						)
 					);
 					?>
