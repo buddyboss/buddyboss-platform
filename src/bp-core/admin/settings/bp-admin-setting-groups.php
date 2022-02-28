@@ -181,19 +181,19 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_field( 'bb-group-headers-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_headers_elements', 'checkbox', $args );
 
 		// Section for group list.
-		$this->add_section( 'bp_group_list_settings', __( 'Group Directories', 'buddyboss' ), '', 'bp_group_directories_tutorial' );
+		$this->add_section( 'bp_group_list_settings', esc_html__( 'Group Directories', 'buddyboss' ), '', 'bp_group_directories_tutorial' );
 
 		// Admin Settings for Settings > Groups > Group Directories > Enabled Views.
 		$this->add_field(
 			'bp-group-layout-format',
-			__( 'Enabled View(s)', 'buddyboss' ),
+			esc_html__( 'Enabled View(s)', 'buddyboss' ),
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
 		// Admin Settings for Settings > Groups > Group Directories > Default View.
 		$args          = array();
 		$args['class'] = 'group-default-layout group-layout-options';
-		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
+		$this->add_field( 'bp-group-layout-default-format', esc_html__( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option', 'radio', $args );
 
 		// Admin Settings for Settings > Groups > Group Directories > Grid Style.
 		$args          = array();

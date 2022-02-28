@@ -2342,7 +2342,7 @@ function bp_member_type_invalid_role_error_callback() {
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 
 	// Write them out to the screen.
-	echo esc_html( $message );
+	echo wp_kses_post( $message );
 
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection' );
@@ -3100,7 +3100,7 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 	}
 
 	// if this "post" post type?
-	if ( 'page' != $post->post_type ) {
+	if ( 'page' !== $post->post_type ) {
 		return;
 	}
 

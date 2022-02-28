@@ -70,7 +70,7 @@ function bp_is_activation( $basename = '' ) {
 	}
 
 	// The plugin(s) being activated.
-	if ( 'activate' == $action ) {
+	if ( 'activate' === $action ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {

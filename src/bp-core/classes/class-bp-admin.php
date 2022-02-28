@@ -751,9 +751,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
-					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>',
-					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . __( 'Release Notes', 'buddyboss' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
+					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss' ) . '</a>',
 				)
 			);
 		}
@@ -804,7 +804,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				array(
 					'ajax_url'              => admin_url( 'admin-ajax.php' ),
 					'bb_help_url'           => $bp_help_base_url,
-					'bb_help_title'         => __( 'Docs', 'buddyboss' ),
+					'bb_help_title'         => esc_html__( 'Docs', 'buddyboss' ),
 					'bb_help_no_network'    => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
 					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
 				)

@@ -2279,24 +2279,26 @@ function bb_admin_setting_group_header_style() {
 function bb_admin_setting_group_headers_elements( $args ) {
 
 	echo "<div class='bb-group-headers-elements'>";
-	foreach ( $args['elements'] as $element ) {
-		$element_name = $element['element_name'];
-		?>
-		<div class="bb-group-headers-element bb-group-headers-element-<?php echo esc_attr( $element_name ); ?>">
-			<?php
-			new BB_Admin_Setting_Fields(
-				array(
-					'type'     => 'checkbox',
-					'id'       => 'bb-group-headers-element-' . $element_name,
-					'label'    => $element['element_label'],
-					'disabled' => true,
-					'value'    => $element_name,
-					'selected' => $element_name,
-				)
-			);
+	if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+		foreach ( $args['elements'] as $element ) {
+			$element_name = $element['element_name'];
 			?>
-		</div>
-		<?php
+			<div class="bb-group-headers-element bb-group-headers-element-<?php echo esc_attr( $element_name ); ?>">
+				<?php
+				new BB_Admin_Setting_Fields(
+					array(
+						'type'     => 'checkbox',
+						'id'       => 'bb-group-headers-element-' . $element_name,
+						'label'    => $element['element_label'],
+						'disabled' => true,
+						'value'    => $element_name,
+						'selected' => $element_name,
+					)
+				);
+				?>
+			</div>
+			<?php
+		}
 	}
 	echo '</div>';
 	echo '<p class="description">';

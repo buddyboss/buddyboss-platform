@@ -2917,9 +2917,9 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 	$buttons = array();
 
 	// Member directories profile actions.
-	$enabled_follow_action  = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'follow' );
-	$enabled_connect_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'connect' );
-	$enabled_message_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'message' );
+	$enabled_follow_action  = function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( 'follow' ) : true;
+	$enabled_connect_action = function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( 'connect' ) : true;
+	$enabled_message_action = function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( 'message' ) : true;
 
 	// Member directories primary actions.
 	$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';

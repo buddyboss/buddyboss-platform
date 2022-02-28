@@ -278,19 +278,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// $this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
 
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Member Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
+		$this->add_section( 'bp_profile_list_settings', esc_html__( 'Member Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views.
 		$this->add_field(
 			'bp-profile-layout-format',
-			__( 'Enabled View(s)', 'buddyboss' ),
+			esc_html__( 'Enabled View(s)', 'buddyboss' ),
 			array( $this, 'bp_admin_setting_profile_layout_type_format' )
 		);
 
 		// Admin Settings for Settings > Profiles > Profile Directories > Default View.
 		$args          = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
-		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), array( $this, 'bp_admin_setting_profile_layout_default_option' ), 'radio', $args );
+		$this->add_field( 'bp-profile-layout-default-format', esc_html__( 'Default View', 'buddyboss' ), array( $this, 'bp_admin_setting_profile_layout_default_option' ), 'radio', $args );
 
 		// Member directory elements.
 		$args             = array();
