@@ -5195,7 +5195,14 @@ function bp_get_group_member_joined_since( $args = array() ) {
 	 *
 	 * @param string $value Joined since time.
 	 */
-	return apply_filters( 'bp_get_group_member_joined_since', bp_core_get_last_activity( $members_template->member->date_modified, __( 'joined %s', 'buddyboss' ) ) );
+	return apply_filters(
+		'bp_get_group_member_joined_since',
+		bp_core_get_last_activity(
+			$members_template->member->date_modified,
+			/* translators: %s: Last joined date of member in the group. */
+			esc_html__( 'Joined %s', 'buddyboss' )
+		)
+	);
 }
 
 /**
