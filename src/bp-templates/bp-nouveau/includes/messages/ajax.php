@@ -2654,6 +2654,15 @@ function bp_nouveau_ajax_hide_thread() {
 
 	foreach ( $thread_ids as $thread_id ) {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+		/**
+		 * Fires when messages thread was marked as read.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $thread_id The message thread ID.
+		 */
+		do_action( 'messages_thread_mark_as_read', $thread_id );
 	}
 
 	// Mark each notification for each PM message as read when hide the thread.
