@@ -180,18 +180,45 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
  */
 function bp_messages_message_sent_add_notification( $message ) {
 	if ( ! empty( $message->recipients ) ) {
-		foreach ( (array) $message->recipients as $recipient ) {
-			bp_notifications_add_notification(
+		if (
+			function_exists( 'bb_notifications_background_enabled' ) &&
+			true === bb_notifications_background_enabled() &&
+			count( $message->recipients ) > 20
+		) {
+			global $bb_notifications_background_updater;
+			$recipients = (array) $message->recipients;
+			$user_ids   = wp_list_pluck( $recipients, 'user_id' );
+			$bb_notifications_background_updater->data(
 				array(
-					'user_id'           => $recipient->user_id,
-					'item_id'           => $message->id,
-					'secondary_item_id' => $message->sender_id,
-					'component_name'    => buddypress()->messages->id,
-					'component_action'  => 'new_message',
-					'date_notified'     => bp_core_current_time(),
-					'is_new'            => 1,
+					array(
+						'callback' => 'bb_add_background_notifications',
+						'args'     => array(
+							$user_ids,
+							$message->id,
+							$message->sender_id,
+							buddypress()->messages->id,
+							'new_message',
+							bp_core_current_time(),
+							true,
+						),
+					),
 				)
 			);
+			$bb_notifications_background_updater->save()->dispatch();
+		} else {
+			foreach ( (array) $message->recipients as $recipient ) {
+				bp_notifications_add_notification(
+					array(
+						'user_id'           => $recipient->user_id,
+						'item_id'           => $message->id,
+						'secondary_item_id' => $message->sender_id,
+						'component_name'    => buddypress()->messages->id,
+						'component_action'  => 'new_message',
+						'date_notified'     => bp_core_current_time(),
+						'is_new'            => 1,
+					)
+				);
+			}
 		}
 	}
 }

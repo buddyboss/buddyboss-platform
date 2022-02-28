@@ -110,6 +110,7 @@ add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_core_xprofile_update_profile_
 
 // Profile Completion Admin Actions.
 add_action( 'xprofile_fields_saved_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field added/updated in wp-admin > Profile
+add_action( 'xprofile_groups_saved_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group added/updated in wp-admin > Profile
 add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field deleted in wp-admin > profile.
 add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group deleted in wp-admin.
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
@@ -735,9 +736,13 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * @return string
  */
 function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
-
+	static $cache;
 	if ( empty( $user_id ) ) {
 		return $full_name;
+	}
+	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
 	}
 
 	if ( ! empty( $user_id ) ) {
@@ -758,6 +763,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
+		$cache[ $cache_key ] = $full_name;
 	}
 
 	return $full_name;

@@ -120,9 +120,10 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 				'count_total' => '',  // Prevents total count.
 				'type'        => 'alphabetical',
 
-				'group_id'    => absint( $this->args['group_id'] ),
-				'group_role'  => array( 'admin', 'member', 'mod' ),
-				'page'        => 1,
+				'group_id'   => absint( $this->args['group_id'] ),
+				'group_role' => array( 'admin', 'member', 'mod' ),
+				'page'       => 1,
+				'per_page'   => $this->args['limit'],
 			);
 			$group_users = new BP_Group_Member_Query( $group_query );
 
