@@ -990,7 +990,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 									'message'     => stripslashes( $message ),
 									'sender.name' => $sender_name,
 									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-									'group.name'  => $group_name
+									'group.name'  => $group_name,
 								),
 							),
 						),
@@ -1000,15 +1000,14 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			}
 			$bb_email_background_updater->dispatch();
 		}
-
 	} else {
 		// Send an email to each recipient.
 		foreach ( $recipients as $recipient ) {
 
-		if (
-			$sender_id == $recipient->user_id ||
-			false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
-		) {
+			if (
+				(int) $sender_id === (int) $recipient->user_id ||
+				false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
+			) {
 				continue;
 			}
 
@@ -1459,7 +1458,10 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 	// Send an email to all recipient.
 	foreach ( $recipients as $recipient ) {
 
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+		if (
+			(int) $sender_id === (int) $recipient->user_id ||
+			false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
+		) {
 			continue;
 		}
 
