@@ -250,6 +250,7 @@
 			text-align: center;
 			width: 100%;
 			margin-top: 0;
+			margin-bottom: 0;
 
 			.group-visibility {
 				display: none;
@@ -307,6 +308,7 @@
 
 				@include dis-flex();
 				@include flex-align(center);
+				margin-top: $marg-xsml;
 
 				.groups-meta {
 					display: block;
@@ -316,6 +318,12 @@
 
 					.generic-button {
 						margin: 0 !important;
+
+						> * {
+							min-width: auto;
+							padding: 5px 15px;
+						}
+
 					}
 
 				}
@@ -379,6 +387,11 @@
 			#item-header-content {
 				padding-bottom: $marg-med;
 			}
+
+			#item-actions {
+				margin-bottom: $marg-med;
+			}
+
 		}
 
 		#cover-image-container {
@@ -410,11 +423,21 @@
 
 			}
 
-			&.centered #item-header-content .group-actions-wrap {
-				display: block;
+			&.centered #item-header-content {
 
-				.group-item-actions {
-					justify-content: center;
+				> .bp-group-type {
+					margin-bottom: $marg-med;
+				}
+
+				.group-actions-wrap {
+					display: block;
+	
+					.group-item-actions {
+						-webkit-box-pack: center;
+						-ms-flex-pack: center;
+						justify-content: center;
+					}
+	
 				}
 
 			}
