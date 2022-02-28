@@ -2191,8 +2191,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	}
 
 	// Save data.
-	$data = isset( $_POST['bp-member-type'] ) ? sanitize_text_field( $_POST['bp-member-type'] ) : array();
-
+	$data = isset( $_POST['bp-member-type'] ) ? function_exists( 'map_deep' ) ? map_deep( wp_unslash( $_POST['bp-member-type'] ), 'sanitize_text_field' ) : $_POST['bp-member-type'] : array();
 	if ( empty( $data ) ) {
 		return;
 	}
@@ -2230,9 +2229,9 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$get_existing = get_post_meta( $post_id, '_bp_member_type_key', true );
 	( '' === $get_existing ) ? update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) ) : '';
 
-	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? sanitize_text_field( $_POST['bp-group-type'] ) : '';
-	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? sanitize_text_field( $_POST['bp-group-type-auto-join'] ) : '';
-	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? sanitize_text_field( $_POST['bp-member-type-invite'] ) : '';
+	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? array_map( 'sanitize_text_field', $_POST['bp-group-type'] ) : '';
+	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? array_map( 'sanitize_text_field', $_POST['bp-group-type-auto-join'] ) : '';
+	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? array_map( 'sanitize_text_field', $_POST['bp-member-type-invite'] ) : '';
 	$enable_group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? sanitize_text_field( $_POST['bp-member-type-enabled-invite'] ) : '';
 
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
