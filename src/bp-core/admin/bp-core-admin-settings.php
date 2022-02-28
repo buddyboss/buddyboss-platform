@@ -2251,7 +2251,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	?>
 
 	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"<?php checked( $checked_checkbox ); ?><?php disabled( $disable_field ); ?>/>
-	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST API access to only logged-in members', 'buddyboss' ); ?></label>
 	<p class="description">
 		<?php
 		printf(
@@ -2312,7 +2312,7 @@ function bb_admin_setting_callback_private_rest_apis_public_content() {
 	}
 	?>
 
-	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST API endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST API endpoint URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php disabled( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
 	<?php
 }
@@ -2326,7 +2326,7 @@ function bb_admin_setting_callback_private_rss_feeds() {
 	?>
 
 	<input id="bb-enable-private-rss-feeds" name="bb-enable-private-rss-feeds" type="checkbox" value="1" <?php checked( bp_enable_private_rss_feeds() ); ?>/>
-	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS Feeds access to only logged-in members', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS feed access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -2338,7 +2338,7 @@ function bb_admin_setting_callback_private_rss_feeds() {
 function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	?>
 
-	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php esc_html_e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one endpoint URL or URI per line. ', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php esc_html_e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
 	<?php
 }
