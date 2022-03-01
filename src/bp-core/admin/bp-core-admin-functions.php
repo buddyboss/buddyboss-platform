@@ -2229,10 +2229,14 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$get_existing = get_post_meta( $post_id, '_bp_member_type_key', true );
 	( '' === $get_existing ) ? update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) ) : '';
 
-	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? filter_input( INPUT_POST, 'bp-group-type', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) : '';
-	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? filter_input( INPUT_POST, 'bp-group-type-auto-join', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) : '';
-	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? filter_input( INPUT_POST, 'bp-member-type-invite', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) : '';
-	$enable_group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? filter_input( INPUT_POST, 'bp-member-type-enabled-invite', FILTER_DEFAULT ) : '';
+	$enable_group_type_create        = filter_input( INPUT_POST, 'bp-group-type', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$enable_group_type_create        = ! empty( $enable_group_type_create ) ? $enable_group_type_create : '';
+	$enable_group_type_auto_join     = filter_input( INPUT_POST, 'bp-group-type-auto-join', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$enable_group_type_auto_join     = ! empty( $enable_group_type_auto_join ) ? $enable_group_type_auto_join : '';
+	$enable_group_type_invite        = filter_input( INPUT_POST, 'bp-member-type-invite', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$enable_group_type_invite        = ! empty( $enable_group_type_invite ) ? $enable_group_type_invite : '';
+	$enable_group_type_enable_invite = filter_input( INPUT_POST, 'bp-member-type-enabled-invite', FILTER_DEFAULT );
+	$enable_group_type_enable_invite = ! empty( $enable_group_type_enable_invite ) ? $enable_group_type_enable_invite : '';
 
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
