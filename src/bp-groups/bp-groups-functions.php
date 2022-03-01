@@ -3729,7 +3729,7 @@ function bp_register_active_group_types() {
 						'name'          => $name,
 						'singular_name' => $singular_name,
 					),
-					'has_directory'         => strtolower( $name ),
+					'has_directory'         => $key,
 					'show_in_create_screen' => true,
 					'show_in_list'          => true,
 					'description'           => '',
