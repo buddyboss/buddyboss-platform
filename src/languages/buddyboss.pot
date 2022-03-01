@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-28 06:58:13+00:00\n"
+"POT-Creation-Date: 2022-03-01 10:18:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -431,7 +431,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:860
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1321
-#: bp-xprofile/classes/class-bp-xprofile-group.php:859
+#: bp-xprofile/classes/class-bp-xprofile-group.php:861
 msgid "Update"
 msgstr ""
 
@@ -569,7 +569,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1188
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1231
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1518
-#: bp-xprofile/classes/class-bp-xprofile-group.php:966
+#: bp-xprofile/classes/class-bp-xprofile-group.php:968
 msgid "Cancel"
 msgstr ""
 
@@ -5954,7 +5954,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:1086
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1338
-#: bp-xprofile/classes/class-bp-xprofile-group.php:875
+#: bp-xprofile/classes/class-bp-xprofile-group.php:877
 msgid "Profile Fields"
 msgstr ""
 
@@ -13680,7 +13680,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:79
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:121
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:32
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2826
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2835
 #. translators: user role
 msgid "Blocked"
 msgstr ""
@@ -14802,7 +14802,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1487
-#: bp-xprofile/classes/class-bp-xprofile-group.php:941
+#: bp-xprofile/classes/class-bp-xprofile-group.php:943
 msgid "Submit"
 msgstr ""
 
@@ -16312,7 +16312,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1486
 #: bp-templates/bp-nouveau/includes/functions.php:1538
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1296
-#: bp-xprofile/classes/class-bp-xprofile-group.php:847
+#: bp-xprofile/classes/class-bp-xprofile-group.php:849
 msgid "Save"
 msgstr ""
 
@@ -23210,7 +23210,7 @@ msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:515
 #: bp-moderation/bp-moderation-functions.php:239
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2837
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2846
 msgid "Block"
 msgstr ""
 
@@ -24728,7 +24728,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1270
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1428
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2862
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2871
 #: bp-templates/bp-nouveau/includes/video/ajax.php:187
 msgid "Load More"
 msgstr ""
@@ -27992,13 +27992,13 @@ msgstr ""
 msgid "<p class=\"joined\">Joined \"%s\"</p>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2699
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2773
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2708
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2782
 msgid "Missing thread id."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2704
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2777
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2713
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2786
 msgid "Invalid page number."
 msgstr ""
 
@@ -28642,7 +28642,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:170 bp-xprofile/bp-xprofile-admin.php:178
 #: bp-xprofile/bp-xprofile-admin.php:376
-#: bp-xprofile/classes/class-bp-xprofile-group.php:846
+#: bp-xprofile/classes/class-bp-xprofile-group.php:848
 msgid "New Field Set"
 msgstr ""
 
@@ -28658,7 +28658,7 @@ msgid "Add New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:280
-#: bp-xprofile/classes/class-bp-xprofile-group.php:858
+#: bp-xprofile/classes/class-bp-xprofile-group.php:860
 msgid "Edit Field Set"
 msgstr ""
 
@@ -29722,38 +29722,38 @@ msgstr ""
 msgid "Optional"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:678
+#: bp-xprofile/classes/class-bp-xprofile-group.php:680
 msgid "Please make sure you give the group a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:895
+#: bp-xprofile/classes/class-bp-xprofile-group.php:897
 msgid "Field Set Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:900
+#: bp-xprofile/classes/class-bp-xprofile-group.php:902
 msgid "Field Set Description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:905
+#: bp-xprofile/classes/class-bp-xprofile-group.php:907
 #. translators: accessibility text
 msgid "Add description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:997
+#: bp-xprofile/classes/class-bp-xprofile-group.php:999
 msgid "Repeater Set"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:999
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1001
 msgid ""
 "Allow the profile fields within this set to be repeated again and again, so "
 "the user can add multiple instances of their data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1001
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1003
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1002
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1004
 msgid "Enabled"
 msgstr ""
 
