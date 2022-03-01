@@ -13147,6 +13147,27 @@ fieldset div.avatar {
   background-color: #fafafa;
 }
 
+.activity-list li.bbp_topic_create .bb-content-inr-wrap ol li,
+.activity-list li.bbp_topic_create .bb-content-inr-wrap ul li,
+.activity-list li.bbp_reply_create .bb-content-inr-wrap ol li,
+.activity-list li.bbp_reply_create .bb-content-inr-wrap ul li {
+  margin: 0;
+  padding: 0;
+  list-style-type: disc;
+}
+
+.activity-list li.bbp_topic_create .bb-content-inr-wrap ol li:before,
+.activity-list li.bbp_topic_create .bb-content-inr-wrap ul li:before,
+.activity-list li.bbp_reply_create .bb-content-inr-wrap ol li:before,
+.activity-list li.bbp_reply_create .bb-content-inr-wrap ul li:before {
+  display: none;
+}
+
+.activity-list li.bbp_topic_create .bb-content-inr-wrap ol li,
+.activity-list li.bbp_reply_create .bb-content-inr-wrap ol li {
+  list-style-type: decimal;
+}
+
 .activity-list li.bbp_topic_create .bb-content-inr-wrap .activity-read-more a,
 .activity-list li.bbp_reply_create .bb-content-inr-wrap .activity-read-more a {
   text-transform: capitalize;
