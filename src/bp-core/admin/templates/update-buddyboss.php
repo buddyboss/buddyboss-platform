@@ -115,7 +115,7 @@ $video_url = 'https://player.vimeo.com/video/338221385';
 			}
 			if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
 				?>
-				<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog <?php echo false === $show_overview ? 'is_active' : ''; ?>">
+				<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog <?php echo esc_attr( false === $show_overview ? 'is_active' : '' ); ?>">
 					<?php
 					echo wp_kses_post( $bb_changelog_data['body'] );
 					?>

@@ -77,7 +77,11 @@
 		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
 		// Close model then video should also stop.
-		jQuery( '.bb-update-modal iframe' ).attr( 'src', jQuery( '.bb-update-modal iframe' ).attr( 'src' ) );
+		var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
+		if ( iframeSelector ) {
+			var iframeSrc = iframeSelector.src;
+			iframeSelector.src = iframeSrc;
+		}
 	};
 
 	/**
@@ -141,13 +145,39 @@
 	}
 	
 	// Load tab for release content.
-	if ( jQuery( '.bb-hello-tabs .bb-hello-tabs_anchor' ).length ) {
-
-		jQuery( document ).on( 'click', '.bb-hello-tabs .bb-hello-tabs_anchor', function( e ) {
-			e.preventDefault();
-			jQuery( this ).addClass( 'is_active' ).parent().siblings().find( '.bb-hello-tabs_anchor' ).removeClass( 'is_active' );
-			jQuery( jQuery(this).attr( 'href' ) ).addClass( 'is_active' ).siblings().removeClass( 'is_active' );
-		});
-
+	var tab = document.querySelectorAll( '.bb-hello-tabs_anchor' );
+	if ( tab ) {
+		for ( var i = 0; i < tab.length; i++ ) {
+			tab[i].addEventListener( 'click', onTabClick, false );
+		}
+	}
+	
+	function onTabClick ( event ) {
+		event.preventDefault();
+		// deactivate existing active tabs and tabContent
+		for ( var i = 0; i < tab.length; i++ ) {
+			tab[i].classList.remove( 'is_active' );
+		}
+		var tabContent = document.querySelectorAll( '.bb-hello-tabs_content' );
+		
+		if ( tabContent ) {
+			for ( var j = 0; j < tabContent.length; j++ ) {
+				tabContent[j].classList.remove( 'is_active' );
+			}
+		}
+		
+		// activate new tabs and tabContent
+		event.target.classList.add( 'is_active' );
+		var getHref = event.target.getAttribute( 'href' );
+		var getHrefWithoutHash = getHref.replace( '#', '', getHref );
+		// If tab change from overview to changelog then also stop video in overview tab content.
+		if ( 'bb-release-overview' !== getHref ) {
+			var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
+			if ( iframeSelector ) {
+				var iframeSrc = iframeSelector.src;
+				iframeSelector.src = iframeSrc;
+			}
+		}
+		document.getElementById( getHrefWithoutHash ).classList.add( 'is_active' );
 	}
 }());
