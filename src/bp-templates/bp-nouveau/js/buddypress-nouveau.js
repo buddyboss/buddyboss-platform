@@ -2680,8 +2680,8 @@ window.bp = window.bp || {};
 			var parts = link.split( '#' );
 			if ( parts.length > 1 ) {
 				var hash_text = parts.pop();
-				if ( hash_text && $( '[data-bp-scope="' + hash_text + '"]' ).length > 0 ) {
-					$( '[data-bp-scope="' + hash_text + '"] a' ).trigger( 'click' );
+				if ( hash_text && $( 'ul.members-nav [data-bp-scope="' + hash_text + '"]' ).length > 0 ) {
+					$( 'ul.members-nav [data-bp-scope="' + hash_text + '"] a' ).trigger( 'click' );
 					return false;
 				}
 			}
