@@ -70,7 +70,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				<img src="" alt="">
 			</div>
 			<div class="gif-image-remove gif-image-overlay">
-				<i class="bb-icon-close"></i>
+				<i class="bb-icons-l bb-icon-times"></i>
 			</div>
 		</div>
 		<input name="bbp_media_gif" id="bbp_media_gif" type="hidden" value=""/>
