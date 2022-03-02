@@ -1004,7 +1004,7 @@ a.layout-grid-view {
   content: "";
   display: inline-block;
   height: 4px;
-  margin: 0 6px 0 4px;
+  margin: 0 6px 0 5px;
   vertical-align: middle;
   width: 4px;
 }
@@ -6311,6 +6311,10 @@ form.ac-form .ac-reply-content input {
   color: #767676;
   font-size: 13px;
   margin: 0 0 12px 0;
+}
+
+.buddypress-wrap .members-list li .list-wrap .item-meta .separator {
+  margin: 0 5px;
 }
 
 .buddypress-wrap .members-list li .item .primary-action .generic-button {
