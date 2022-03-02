@@ -87,20 +87,16 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 				<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 
 				<div class="group-actions-wrap" >
-					<?php
-					bp_get_template_part( 'groups/single/parts/header-item-actions' );
-					?>
-						<div class="group-actions-absolute">
-					<?php
-					if ( function_exists( 'bp_get_group_status_description' ) ) {
-						?>
+					<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>
+					<div class="group-actions-absolute">
+						<?php if ( function_exists( 'bp_get_group_status_description' ) ) : ?>
 							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+						<?php endif; ?>
 						<?php
-					}
-						bp_nouveau_group_header_buttons();
-						bb_nouveau_group_header_bubble_buttons();
-					?>
-						</div>
+							bp_nouveau_group_header_buttons();
+							bb_nouveau_group_header_bubble_buttons();
+						?>
+					</div>
 				</div>
 
 			</div><!-- #item-header-content -->
