@@ -1193,7 +1193,7 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$register_date        = date_i18n( 'F Y', strtotime( get_userdata( $user_id )->user_registered ) );
+	$register_date        = date_i18n( 'M Y', strtotime( get_userdata( $user_id )->user_registered ) );
 	$user_registered_date = sprintf(
 		/* translators: 1: User registered date. */
 		esc_html__( 'Joined %s', 'buddyboss' ),
