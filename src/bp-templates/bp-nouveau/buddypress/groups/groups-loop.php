@@ -10,6 +10,8 @@
  * @package BuddyBoss\Core
  */
 
+add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
+
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_group_directory_type() ) : ?>
@@ -175,3 +177,5 @@ if ( 'small' === $group_cover_height ) {
 
 <?php
 bp_nouveau_after_loop();
+
+remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );

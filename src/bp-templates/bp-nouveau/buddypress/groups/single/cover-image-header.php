@@ -24,6 +24,8 @@ $group_cover_image        = bp_attachments_get_attachment(
 $has_cover_image          = '';
 $has_cover_image_position = '';
 $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
+
+add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 ?>
 
 <div id="cover-image-container" class="<?php echo esc_attr( bb_platform_group_header_style() ); ?>">
@@ -219,3 +221,6 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 		</transition>
 	</div> <!-- .bb-leave-group-popup -->
 
+
+<?php
+	remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );

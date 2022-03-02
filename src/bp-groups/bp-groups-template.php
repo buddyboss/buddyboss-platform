@@ -1433,10 +1433,6 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 		$group =& $groups_template->group;
 	}
 
-	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
-	if ( bp_is_single_item() ) {
-		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
-	}
 	/**
 	 * Filters the excerpt of a group description.
 	 *
@@ -1445,7 +1441,25 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 	 * @param string $value Excerpt of a group description.
 	 * @param object $group Object for group whose description is made into an excerpt.
 	 */
-	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length, array( 'ending' => $group_link ) ), $group );
+	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length ), $group );
+}
+
+
+/**
+ * Get an excerpt of a group description with view more link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string      $excerpt  The group being referenced.
+ * @param object|bool $group    The group being referenced.
+ * @return string Excerpt.
+ */
+function bb_get_group_description_excerpt_view_more( $excerpt, $group ) {
+	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+	if ( bp_is_single_item() ) {
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+	}
+	return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
 }
 
 /**
