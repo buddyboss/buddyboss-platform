@@ -2898,11 +2898,12 @@ window.bp = window.bp || {};
 				var group_item_id = this.model.attributes.item_id;
 				if ( this.model.attributes.privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
+					var group_avatar = whats_new_form.find( 'label[for=bp-item-opt-' + group_item_id + '] img' ).attr('src');
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
 					//display image of the group.
-					if ( this.model.attributes.link_images && false === this.model.attributes.link_images.includes( 'mystery-group' ) ) {
+					if ( group_avatar && false === group_avatar.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
-						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).html( '<img src="' + this.model.attributes.link_images + '" alt=""/>' );
+						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).html( '<img src="' + group_avatar + '" alt=""/>' );
 					} else {
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass( 'group-privacy-point-icon' ).addClass( 'privacy-point-icon' );
@@ -3126,7 +3127,6 @@ window.bp = window.bp || {};
 					);
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
-					this.model.set( 'link_images', model.get( 'avatar_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
