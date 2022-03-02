@@ -71,9 +71,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 			<?php } ?>
 		</div>
 
-		<?php $class = bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img'; ?>
-
-		<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( $class ); ?>">
+		<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
 			<div id="item-header-avatar">
 				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
