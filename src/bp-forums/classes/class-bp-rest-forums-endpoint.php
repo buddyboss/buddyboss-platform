@@ -1217,6 +1217,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				&& ! bbp_is_forum_category()
 				&& ( bbp_current_user_can_publish_topics() || bbp_current_user_can_access_anonymous_user_form() )
 				&& $this->can_access_content( $forum_id, true )
+				&& ! bbp_is_user_keymaster() ? bbp_is_forum_open( (int) $forum_id ) : true
 			),
 		);
 	}
