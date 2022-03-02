@@ -1685,6 +1685,14 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// Change preview avatar on change member header layout.
+			$( '.profile-header-style input[type="radio"], .group-header-style input[type="radio"]' ).on(
+				'change',
+				function() {
+					$( '.web-preview-wrap .preview-item-avatar' ).removeClass( 'left-image' ).removeClass( 'centered-image' ).addClass( $( this ).val() + '-image' );
+				}
+			);
+
 			// Show/hide Profile action for member directories section.
 			$( '#bp_profile_list_settings' ).on(
 				'change',
@@ -1982,7 +1990,7 @@ window.bp = window.bp || {};
 					if ( ! modal_close_click && ! backdrop_click ) {
 						return;
 					}
-					
+
 					$( event.target ).closest( '#bp-hello-container' ).hide();
 
 					$( document ).find( '#bp-document-file-input' ).val( '' );

@@ -702,7 +702,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
-				<div class="preview-item-avatar">
+				<div class="preview-item-avatar <?php echo esc_attr( bb_get_profile_header_layout_style() . '-image' ); ?>">
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="user-custom-avatar" data-wordpress-avatar="<?php echo esc_url( $wordpress_avatar_url ); ?>" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
@@ -1067,7 +1067,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
-				<div class="preview-item-avatar">
+				<div class="preview-item-avatar <?php echo esc_attr( bb_platform_group_header_style() . '-image' ); ?>">
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
