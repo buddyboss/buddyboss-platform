@@ -6323,7 +6323,7 @@ function bp_groups_header_tabs() {
 	<?php
 	if ( ! bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'recently-joined', 0 ) ) :
