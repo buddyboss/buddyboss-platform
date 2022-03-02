@@ -36,6 +36,8 @@ TABLE OF CONTENTS:
 10.0 On-screen Notifications
 11.0 Notices UI
 12.0 Profile Photo
+13.0 Group Directories Enhancement
+14.0 BB Pro Active/Inactive Notices
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -428,6 +430,10 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
 }
 
+.section-bp_profile_headers_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/regular/window-maximize.svg);
+}
+
 /* Groups */
 .bp-admin-card.section-bp_groups_avatar_settings h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera.svg);
@@ -435,6 +441,10 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_groups h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
+}
+
+.bp-admin-card.section-bp_groups_headers_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/regular/window-maximize.svg);
 }
 
 .bp-admin-card.section-bp_groups_types h2:before {
@@ -550,16 +560,6 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
-}
-
-/* Notification */
-.bp-admin-card.section-bp_notification_settings_automatic h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
-}
-
-/* Labs */
-.bp-admin-card.section-bp_labs_settings_notifications h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
@@ -1311,9 +1311,7 @@ body.post-type-bp-email .categorydiv label {
   clear: right;
   display: block;
   line-height: 1.5;
-  margin: 0 0 7px;
-  padding: 3px;
-  border-radius: 3px;
+  margin: 0 0 1em;
 }
 
 @media screen and (max-width: 782px) {
@@ -2238,6 +2236,7 @@ h2.has_tutorial_btn {
 h2.has_tutorial_btn .bbapp-tutorial-btn {
   position: absolute;
   left: 0;
+  right: initial;
   top: 5px;
   font-weight: 400;
 }
@@ -2494,6 +2493,26 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   bottom: 0;
 }
 
+.avatar-options .image-width-height > label {
+  min-width: 80px;
+  display: inline-block;
+}
+
+.avatar-options .image-width-height .description {
+  margin-right: 85px;
+  margin-bottom: 15px;
+}
+
+@media screen and (max-width: 782px) {
+  .avatar-options .image-width-height > label {
+    min-width: auto;
+    margin-bottom: 10px;
+  }
+  .avatar-options .image-width-height .description {
+    margin-right: 0;
+  }
+}
+
 .buddyboss_page_bp-settings #TB_window #TB_ajaxContent .bp-avatar-status .bp-uploader-progress div.error {
   margin: 5px 0 2px;
 }
@@ -2543,10 +2562,15 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
   align-items: stretch;
-  min-height: 90px;
-  max-height: 90px;
+  min-height: 80px;
+  max-height: 80px;
   background-color: #ccc;
   overflow: hidden;
+}
+
+.preview_avatar_cover .preview-item-cover.large-image {
+  min-height: 130px;
+  max-height: 130px;
 }
 
 .preview_avatar_cover .preview-item-avatar {
@@ -2557,6 +2581,11 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   right: 25px;
   border: 3px solid #fff;
   border-radius: 5px;
+}
+
+.preview_avatar_cover .preview-item-avatar.centered-image {
+  right: 50%;
+  transform: translateX(50%);
 }
 
 .preview_avatar_cover .preview-item-avatar img {
@@ -2596,6 +2625,14 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .preview_avatar_cover .button-group > .button:last-child:first-child {
   border-radius: 3px;
+}
+
+.profile-cover-options .preview_avatar_cover .web-preview-wrap .preview-item-avatar {
+  border-radius: 50%;
+}
+
+.profile-cover-options .preview_avatar_cover .web-preview-wrap .preview-item-avatar img {
+  border-radius: 50%;
 }
 
 .group-cover-options .preview_avatar_cover .app-preview-wrap {
@@ -2646,196 +2683,290 @@ table tbody td .bb-description {
   margin-bottom: 0;
 }
 
-.bp-hello-email .bp-hello-title .count,
-.btn-open-missing-email .count {
-  display: inline-block;
-  background-color: #2271b1;
-  color: #fff;
-  padding: 1px 6px;
-  border-radius: 4px;
-  line-height: 1.3;
-  font-size: smaller;
+/*------------------------------------------------------------------------------
+ * 13.0 Group Directories Enhancement
+ *----------------------------------------------------------------------------*/
+.bb-group-element,
+.bb-group-headers-element,
+.bb-profile-header-element,
+.bb-member-directory-element,
+.bb-member-directory-profile-action {
+  margin-bottom: 10px;
 }
 
-.btn-open-missing-email + #bp-hello-backdrop {
-  display: block;
-}
-
-.bp-hello-email .bp-hello-title .count {
-  font-size: inherit;
-  padding: 2px 10px;
-  margin-left: 10px;
-}
-
-.bp-hello-email .bp-hello-content {
-  height: auto;
-  padding: 0 23px;
-  min-height: 180px;
-  max-height: calc(100vh - 320px);
-  margin-bottom: 62px;
-}
-
-.bp-hello-email .missing-email-list ul {
-  list-style: disc;
-  margin: 25px 20px 25px 0;
-}
-
-.bp-hello-email .bb-popup-buttons {
-  position: absolute;
-  bottom: 0;
-  padding: 15px;
-  text-align: left;
-  width: calc(100% - 30px);
-  margin: 0 -23px;
-  border-top: 1px solid var(--bp-hello-color-secondary);
-  background-color: #f0f0f1;
-}
-
-@media screen and (orientation: landscape) and (max-height: 480px) {
-  .bp-hello-email .bp-hello-content {
-    min-height: 110px;
+@media screen and (max-width: 782px) {
+  .bb-group-element input[type="checkbox"],
+  .bb-group-headers-element input[type="checkbox"],
+  .bb-profile-header-element input[type="checkbox"],
+  .bb-member-directory-element input[type="checkbox"],
+  .bb-member-directory-profile-action input[type="checkbox"] {
+    width: auto;
   }
 }
 
-#bp-hello-container.bp-hello-email {
-  top: 50%;
-  bottom: initial;
-  transform: translateY(-50%);
-  margin-top: 32px;
-}
-
-#bp-hello-container.bp-hello-email .button-primary {
-  color: #fff;
-  margin-right: 10px;
-}
-
-@media screen and (max-width: 480px) {
-  #bp-hello-container.bp-hello-email .button-primary {
-    margin-right: 0;
-  }
-}
-
-#bp_notification_settings_automatic table.render-dynamic-notification,
-#bp_notification_settings_automatic table.render-dynamic-notification tbody,
-#bp_notification_settings_automatic table.render-dynamic-notification tr,
-#bp_notification_settings_automatic table.render-dynamic-notification th,
-#bp_notification_settings_automatic table.render-dynamic-notification td {
-  display: block;
-}
-
-#bp_notification_settings_automatic table.form-table .notes-hidden-header > th {
-  display: none;
-}
-
-#bp_notification_settings_automatic table.form-table .notes-hidden-header > th + td {
-  padding-right: 0;
-  padding-left: 0;
-}
-
-#bp_notification_settings_automatic table.form-table .no-padding {
-  padding: 0;
-}
-
-#bp_notification_settings_automatic table.form-table tbody tr {
-  margin-bottom: 20px;
-}
-
-#bp_notification_settings_automatic table.form-table tbody tr th {
-  margin-bottom: 15px;
-}
-
-#bp_notification_settings_automatic .field-set {
-  margin-top: 10px;
-  background-color: #f6f6f8;
-  border: 1px solid #ccd0d4;
-  border-radius: 3px;
-}
-
-#bp_notification_settings_automatic .field-set .field-block {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 15px;
-}
-
-#bp_notification_settings_automatic .field-set .field-block + .field-block {
-  border-top: 1px solid #ccd0d4;
-}
-
-#bp_notification_settings_automatic .field-set .field-block .no-email-info {
-  margin-left: 15px;
-  margin-right: auto;
-  background-color: #ffdcdc;
-  border-radius: 5px;
-  padding: 5px 10px;
-  color: #8c0202;
-  font-size: 11px;
-  text-decoration: none;
-}
-
-#bp_notification_settings_automatic .field-set .field-block .email-info {
-  margin-left: 15px;
-  margin-right: auto;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 11px;
-  text-decoration: none;
-  background-color: #dfe5ea;
-}
-
-#bp_notification_settings_automatic .field-set .field-block .notification-defaults {
-  padding: 3px 0;
-  cursor: pointer;
-}
-
-#bp_notification_settings_automatic .field-set .field-block input[type="checkbox"] {
-  margin-top: 0;
-}
-
-#bp_notification_settings_automatic .field-set .field-block .manage-defaults {
-  margin-top: 15px;
-  justify-content: flex-end;
-  width: 100%;
+.bb-header-style-outer {
   display: flex;
 }
 
-#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap {
-  margin-right: 15px;
-  min-width: 58px;
+.bb-header-style-outer .bb-header-style {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
   text-align: center;
+  width: 115px;
 }
 
-#bp_notification_settings_automatic .field-set .field-block .manage-defaults-hide {
-  display: none;
+.bb-header-style-outer .bb-header-style input[type="radio"] {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
 }
 
-.bb-bottom-notice {
-  margin: 2.2em -2.8em -2.2em;
-  background: #f6f6f8;
-  padding: 2.2em 2.8em;
-  border-radius: 0 0 5px 5px;
-  border-top: 1px solid #ccd0d4;
+.bb-header-style-outer .bb-header-style .option {
+  display: flex;
+  color: #999;
+  flex-direction: column;
+  position: relative;
 }
 
-.bp-admin-card .form-table .bb-lab-notice {
-  background: #f6f6f8;
-  padding: 1.2em;
-  margin-top: 1.2em;
+.bb-header-style-outer .bb-header-style .option:before {
+  background: #f9f9f9;
+  border: 2px solid #ccd0d4;
+  border-radius: 5px;
+  box-sizing: border-box;
+  content: "";
+  display: flex;
+  height: 115px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.bb-header-style-outer .bb-header-style .option:after {
+  background-size: cover !important;
+  content: "";
   border-radius: 3px;
-  border: 1px solid #ccd0d4;
+  bottom: 30px;
+  right: 6px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  image-rendering: -webkit-optimize-contrast;
 }
 
-.bb-lab-notice.notification-information:before {
-  content: "\e853";
+.bb-header-style-outer .bb-header-style .option.opt-left:after {
+  background: url(../../images/bb-group-header-left.png) no-repeat center;
+}
+
+html[dir="rtl"] .bb-header-style-outer .bb-header-style .option.opt-left:after {
+  background: url(../../images/bb-group-header-right.png) no-repeat center;
+}
+
+.bb-header-style-outer .bb-header-style .option.opt-centered:after {
+  background: url(../../images/bb-group-header-center.png) no-repeat center;
+}
+
+.bb-header-style-outer .bb-header-style .option span {
+  color: #999;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.bb-header-style-outer .bb-header-style #bb-group-header-style-left:checked:checked + .option:before,
+.bb-header-style-outer .bb-header-style #bb-group-header-style-centered:checked:checked + .option:before {
+  border-color: #2370b1;
+}
+
+.bb-grid-style-outer {
+  display: flex;
+}
+
+.bb-grid-style-outer .bb-grid-style {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  text-align: center;
+  width: 115px;
+}
+
+.bb-grid-style-outer .bb-grid-style input[type="radio"] {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-grid-style-outer .bb-grid-style .option {
+  display: flex;
+  color: #999;
+  flex-direction: column;
+  position: relative;
+}
+
+.bb-grid-style-outer .bb-grid-style .option:before {
+  background: #f9f9f9;
+  border: 2px solid #ccd0d4;
+  border-radius: 5px;
+  box-sizing: border-box;
+  content: "";
+  display: flex;
+  height: 115px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.bb-grid-style-outer .bb-grid-style .option:after {
+  background-size: cover !important;
+  content: "";
+  border-radius: 3px;
+  bottom: 30px;
+  right: 6px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.bb-grid-style-outer .bb-grid-style .option.opt-left:after {
+  background: url(../../images/bb-group-directory-left.png) no-repeat center;
+}
+
+html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
+  background: url(../../images/bb-group-directory-right.png) no-repeat center;
+}
+
+.bb-grid-style-outer .bb-grid-style .option.opt-centered:after {
+  background: url(../../images/bb-group-directory-center.png) no-repeat center;
+}
+
+.bb-grid-style-outer .bb-grid-style .option span {
+  color: #999;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.bb-grid-style-outer .bb-grid-style #bb-group-directory-layout-grid-style-left:checked:checked + .option:before,
+.bb-grid-style-outer .bb-grid-style #bb-group-directory-layout-grid-style-centered:checked:checked + .option:before {
+  border-color: #2370b1;
+}
+
+.bb-grid-style-outer .bb-header-style {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  text-align: center;
+  width: 115px;
+}
+
+.bb-grid-style-outer .bb-header-style input[type="radio"] {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.bb-grid-style-outer .bb-header-style .option {
+  display: flex;
+  color: #999;
+  flex-direction: column;
+  position: relative;
+}
+
+.bb-grid-style-outer .bb-header-style .option:before {
+  background: #f9f9f9;
+  border: 2px solid #ccd0d4;
+  border-radius: 5px;
+  box-sizing: border-box;
+  content: "";
+  display: flex;
+  height: 115px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.bb-grid-style-outer .bb-header-style .option:after {
+  background-size: cover !important;
+  content: "";
+  border-radius: 3px;
+  bottom: 30px;
+  right: 6px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.bb-grid-style-outer .bb-header-style .option.opt-left:after {
+  background: url(../../images/bb-profile-header-left.png) no-repeat center;
+}
+
+html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
+  background: url(../../images/bb-profile-header-right.png) no-repeat center;
+}
+
+.bb-grid-style-outer .bb-header-style .option.opt-centered:after {
+  background: url(../../images/bb-profile-header-center.png) no-repeat center;
+}
+
+.bb-grid-style-outer .bb-header-style .option span {
+  color: #999;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.bb-grid-style-outer .bb-header-style #bb-profile-headers-layout-styleleft:checked:checked + .option:before,
+.bb-grid-style-outer .bb-header-style #bb-profile-headers-layout-stylecentered:checked:checked + .option:before {
+  border-color: #2370b1;
+}
+
+/*------------------------------------------------------------------------------
+ * 14.0 BB Pro Active/Inactive Notices
+ *----------------------------------------------------------------------------*/
+.bb-head-notice {
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  color: #999;
   display: inline-block;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 10px;
+  max-width: 140px;
+  padding: 5px 10px;
+  width: auto;
+}
+
+.bb-head-notice a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bb-pro-inactive > th:before {
+  content: "\e97c";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 16px;
-  margin-left: 10px;
+  margin-left: 5px;
+  vertical-align: top;
+  display: inline-block;
   line-height: 1;
+  font-size: 14px;
 }
 
-.bb-lab-notice.notification-information:first-child {
-  margin-top: 0;
+.bb-pro-inactive > td {
+  opacity: 0.3;
+}
+
+.bb-pro-inactive > td,
+.bb-pro-inactive > td * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.bb-pro-active > th:before {
+  display: none;
+}
+
+.bb-pro-active .bb-head-notice {
+  display: none;
 }

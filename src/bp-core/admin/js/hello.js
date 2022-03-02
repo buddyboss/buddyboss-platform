@@ -1,3 +1,4 @@
+/* global BP_HELP */
 /**
  * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
@@ -7,23 +8,35 @@
 	/**
 	 * Open the Hello BuddyBoss modal.
 	 */
-	var bp_hello_open_modal = function() {
+	var bp_hello_open_modal = function( event ) {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal    = document.getElementById( 'bp-hello-container' );
+		  modal    = document.querySelector( '#bp-hello-container.bb-onload-modal' );
 
 		if ( null === backdrop ) {
 			return;
 		}
-		document.body.classList.add( 'bp-disable-scroll' );
+		
+		if (
+			modal.classList.contains( 'bb-update-modal' ) &&
+			'undefined' !== typeof BP_HELP &&
+			'1' !== BP_HELP.bb_display_auto_popup &&
+			'click' !== event.type
+		) {
+			return;
+		}
 
-		// Show modal and overlay.
-		backdrop.style.display = '';
-		modal.style.display    = '';
+		if ( modal.classList.contains( 'bb-onload-modal' ) ) {
+			document.body.classList.add( 'bp-disable-scroll' );
 
-		// Focus the "X" so bp_hello_handle_keyboard_events() works.
-		var focus_target = modal.querySelectorAll( 'a[href], button' );
-		focus_target     = Array.prototype.slice.call( focus_target );
-		focus_target[0].focus();
+			// Show modal and overlay.
+			backdrop.style.display = '';
+			modal.style.display    = '';
+
+			// Focus the "X" so bp_hello_handle_keyboard_events() works.
+			var focus_target = modal.querySelectorAll( 'a[href], button' );
+			focus_target     = Array.prototype.slice.call( focus_target );
+			focus_target[0].focus();
+		}
 
 		// Events.
 		modal.addEventListener( 'keydown', bp_hello_handle_keyboard_events );
@@ -63,7 +76,12 @@
 		document.getElementById( 'bp-hello-container' ).setAttribute( 'style', 'display:none' );
 		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
-
+		// Close model then video should also stop.
+		var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
+		if ( iframeSelector ) {
+			var iframeSrc = iframeSelector.src;
+			iframeSelector.src = iframeSrc;
+		}
 	};
 
 	/**
@@ -120,5 +138,46 @@
 		bp_hello_open_modal();
 	} else {
 		document.addEventListener( 'DOMContentLoaded', bp_hello_open_modal );
+	}
+	var link = document.getElementById( 'bb-plugin-release-link' );
+	if( link ) {
+		link.addEventListener( 'click', bp_hello_open_modal );
+	}
+	
+	// Load tab for release content.
+	var tab = document.querySelectorAll( '.bb-hello-tabs_anchor' );
+	if ( tab ) {
+		for ( var i = 0; i < tab.length; i++ ) {
+			tab[i].addEventListener( 'click', onTabClick, false );
+		}
+	}
+	
+	function onTabClick ( event ) {
+		event.preventDefault();
+		// deactivate existing active tabs and tabContent
+		for ( var i = 0; i < tab.length; i++ ) {
+			tab[i].classList.remove( 'is_active' );
+		}
+		var tabContent = document.querySelectorAll( '.bb-hello-tabs_content' );
+		
+		if ( tabContent ) {
+			for ( var j = 0; j < tabContent.length; j++ ) {
+				tabContent[j].classList.remove( 'is_active' );
+			}
+		}
+		
+		// activate new tabs and tabContent
+		event.target.classList.add( 'is_active' );
+		var getHref = event.target.getAttribute( 'href' );
+		var getHrefWithoutHash = getHref.replace( '#', '', getHref );
+		// If tab change from overview to changelog then also stop video in overview tab content.
+		if ( 'bb-release-overview' !== getHref ) {
+			var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
+			if ( iframeSelector ) {
+				var iframeSrc = iframeSelector.src;
+				iframeSelector.src = iframeSrc;
+			}
+		}
+		document.getElementById( getHrefWithoutHash ).classList.add( 'is_active' );
 	}
 }());
