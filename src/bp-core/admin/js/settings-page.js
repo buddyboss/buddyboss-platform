@@ -448,6 +448,110 @@ window.bp = window.bp || {};
 					);
 			}
 
+			// Hide/show group header element group type.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var group_type_header_element = document.getElementById( 'bp-disable-group-type-creation' );
+
+				if (group_type_header_element.checked) {
+					$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).show();
+				} else {
+					$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-type-creation',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).show();
+							$( '.bb-group-headers-elements #bb-group-headers-element-group-type' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-headers-elements .bb-group-headers-element-group-type' ).hide();
+							$( '.bb-group-headers-elements #bb-group-headers-element-group-type' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element cover image.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var cover_image_element = document.getElementById( 'bp-disable-group-cover-image-uploads' );
+
+				if (cover_image_element.checked) {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-cover-image-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).show();
+							$( '.bb-group-elements #bb-group-directory-layout-element-cover-images' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-cover-images' ).hide();
+							$( '.bb-group-elements #bb-group-directory-layout-element-cover-images' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element avatars.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
+
+				var avatar_element = document.getElementById( 'bp-disable-group-avatar-uploads' );
+
+				if (avatar_element.checked) {
+					$( '.bb-group-elements .bb-group-element-avatars' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-avatar-uploads',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-avatars' ).show();
+							$( '.bb-group-elements #bb-group-directory-layout-element-avatars' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-avatars' ).hide();
+							$( '.bb-group-elements #bb-group-directory-layout-element-avatars' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			// Hide/show group element group type.
+			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_types' ).length ) {
+
+				var group_type_element = document.getElementById( 'bp-disable-group-type-creation' );
+
+				if (group_type_element.checked) {
+					$( '.bb-group-elements .bb-group-element-group-type' ).show();
+				} else {
+					$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+				}
+
+				$( document ).on(
+					'click',
+					'#bp-disable-group-type-creation',
+					function () {
+						if ( true === this.checked ) {
+							$( '.bb-group-elements .bb-group-element-group-type' ).show();
+							$( '.bb-group-elements #bb-group-directory-layout-element-group-type' ).prop( 'checked', true );
+						} else {
+							$( '.bb-group-elements .bb-group-element-group-type' ).hide();
+							$( '.bb-group-elements #bb-group-directory-layout-element-group-type' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
 			// Activity settings.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
 				$( '.bp-feed-post-type-checkbox' ).each(
@@ -455,9 +559,9 @@ window.bp = window.bp || {};
 						var post_type = $( this ).data( 'post_type' );
 
 						if ( true === this.checked ) {
-							  $( '.bp-feed-post-type-comment-' + post_type )
-							 .closest( 'tr' )
-							 .show();
+							$( '.bp-feed-post-type-comment-' + post_type )
+							.closest( 'tr' )
+							.show();
 						}
 					}
 				);
@@ -747,7 +851,7 @@ window.bp = window.bp || {};
 			}
 
 			// For Group layout options.
-			var groupSelectorType = $( '.group-layout-options' );
+			var groupSelectorType = $( '.group-layout-options:not(.group-header-style)' );
 			if ( groupSelectorType.length ) {
 
 				var groupSelectorOptions = $( 'select[name=bp-group-layout-format]' );
@@ -760,7 +864,11 @@ window.bp = window.bp || {};
 				);
 
 				if ( 'list_grid' === groupView ) {
+					$( '.group-gride-style' ).show();
 					$( '.group-default-layout' ).show();
+				} else if ( 'grid' === groupView ) {
+					$( '.group-gride-style' ).show();
+					$( '.group-default-layout' ).hide();
 				} else {
 					$( '.group-default-layout' ).hide();
 				}
@@ -777,7 +885,11 @@ window.bp = window.bp || {};
 						groupView = $( this ).val();
 
 						if ( 'list_grid' === groupView ) {
+							$( '.group-gride-style' ).show();
 							$( '.group-default-layout' ).show();
+						} else if ( 'grid' === groupView ) {
+							$( '.group-gride-style' ).show();
+							$( '.group-default-layout' ).hide();
 						} else {
 							$( '.group-default-layout' ).hide();
 						}
@@ -1209,7 +1321,7 @@ window.bp = window.bp || {};
 							function( response ) {
 								$this.html( $this.data( 'remove' ) );
 
-								// Update each avatars of the page
+								// Update each avatars of the page.
 								$( '.default-profile-avatar-custom .' + avatarObject + '-' + response.item_id + '-avatar' ).each(
 									function() {
 										$( this ).prop( 'src', response.avatar );
@@ -1552,7 +1664,86 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Show/hide web/app preview
+			// Confirmed box appears when change profile sizes options.
+			var is_confirmed_show = false;
+
+			var bpCoverProfileWidth  = $( 'select[id="bb-cover-profile-width"] option:selected' ).val();
+			var bpCoverProfileHeight = $( 'select[id="bb-cover-profile-height"] option:selected' ).val();
+			$( '#bp_member_avatar_settings' ).on(
+				'change',
+				'select[id="bb-cover-profile-width"], select[id="bb-cover-profile-height"]',
+				function(e) {
+					e.preventDefault();
+
+					is_confirmed_show = true;
+					if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
+						is_confirmed_show = false;
+					} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
+						is_confirmed_show = false;
+					}
+
+					// Add class to preview section for browser only.
+					if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
+						if ( 'small' === $( this ).val() ) {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+						} else {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						}
+					}
+				}
+			);
+
+			var bpCoverGroupWidth  = $( 'select[id="bb-cover-group-width"] option:selected' ).val();
+			var bpCoverGroupHeight = $( 'select[id="bb-cover-group-height"] option:selected' ).val();
+			$( '#bp_groups_avatar_settings' ).on(
+				'change',
+				'select[id="bb-cover-group-width"], select[id="bb-cover-group-height"]',
+				function(e) {
+					e.preventDefault();
+
+					is_confirmed_show = true;
+					if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
+						is_confirmed_show = false;
+					} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
+						is_confirmed_show = false;
+					}
+
+					// Add class to preview section for browser only.
+					if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
+						if ( 'small' === $( this ).val() ) {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+						} else {
+							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						}
+					}
+				}
+			);
+
+			$( 'body.buddyboss_page_bp-settings' ).on(
+				'click',
+				'input[name="submit"]',
+				function(e) {
+
+					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length || $( '#bp_groups_avatar_settings' ).length ) ) {
+
+						var coverWarningMessage = BP_ADMIN.cover_size_alert.profile;
+						if ( $( '#bp_groups_avatar_settings' ).length ) {
+							coverWarningMessage = BP_ADMIN.cover_size_alert.group;
+						}
+
+						if (  confirm( coverWarningMessage ) ) {
+							return true;
+						} else {
+							e.preventDefault();
+							return false;
+						}
+					}
+
+					return true;
+				}
+			);
+
+			// Show/hide web/app preview.
 			$( '.preview-switcher .button' ).on(
 				'click',
 				function( event ) {
@@ -1562,6 +1753,59 @@ window.bp = window.bp || {};
 					$( this ).closest( '.preview-switcher-main' ).find( '.preview-block.active' ).removeClass( 'active' );
 					$( tab ).addClass( 'active' );
 					$( this ).addClass( 'button-primary' ).siblings().removeClass( 'button-primary' );
+				}
+			);
+
+			// Change preview avatar on change member header layout.
+			$( '.profile-header-style input[type="radio"], .group-header-style input[type="radio"]' ).on(
+				'change',
+				function() {
+					$( '.web-preview-wrap .preview-item-avatar' ).removeClass( 'left-image' ).removeClass( 'centered-image' ).addClass( $( this ).val() + '-image' );
+				}
+			);
+
+			// Show/hide Profile action for member directories section.
+			$( '#bp_profile_list_settings' ).on(
+				'change',
+				'.member-directory-profile-actions input[type="checkbox"]',
+				function () {
+
+					var member_profile_actions      = []; // Create an array for primary action field to hide/show.
+					var selected_member_actions_arr = []; // Create an array for primary action option.
+					$( '.member-directory-profile-actions input[type="checkbox"]:checked' ).each(
+						function ( i, e ) {
+							member_profile_actions.push( e.value );
+							selected_member_actions_arr.push( BP_ADMIN.member_directories.profile_actions.filter( function (actions) { return actions.element_name === e.value; } ) );
+						}
+					);
+
+					// Remove the options when checked/unchecked profile actions.
+					$( '.member-directory-profile-primary-action select' ).find( 'option:not(:first)' ).remove();
+					$.each(
+						selected_member_actions_arr,
+						function(key, value) {
+
+							// Add the options when checked/unchecked profile actions.
+							if ( typeof value[0] !== 'undefined' && typeof value[0].element_name !== 'undefined' && typeof value[0].element_label !== 'undefined' ) {
+								$( '.member-directory-profile-primary-action select' )
+									.append(
+										$( '<option></option>' )
+											.attr( 'value', value[0].element_name )
+											.text( value[0].element_label )
+									);
+							}
+						}
+					);
+
+					if ( 0 === member_profile_actions.length ) {
+						// Hide the primary action field if no profile actions selected.
+						$( '.member-directory-profile-primary-action' ).addClass( 'bp-hide' );
+						// Default none selected if no profile actions selected.
+						$( '.member-directory-profile-primary-action select' ).find( 'option:eq(0)' ).prop( 'selected', true );
+					} else {
+						// Show the primary action field if profile actions selected.
+						$( '.member-directory-profile-primary-action' ).removeClass( 'bp-hide' );
+					}
 				}
 			);
 
@@ -1784,7 +2028,7 @@ window.bp = window.bp || {};
 						$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
 					}
 					var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-						modal    = document.getElementById( 'bp-hello-container' );
+						modal    = document.querySelector( '#bp-hello-container:not(.bb-onload-modal)' );
 
 					if ( null === backdrop ) {
 						return;
@@ -1817,6 +2061,8 @@ window.bp = window.bp || {};
 					if ( ! modal_close_click && ! backdrop_click ) {
 						return;
 					}
+
+					$( event.target ).closest( '#bp-hello-container' ).hide();
 
 					$( document ).find( '#bp-document-file-input' ).val( '' );
 					$( document ).find( '.show-document-mime-type' ).hide();

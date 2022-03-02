@@ -69,6 +69,8 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 		}
 	}
 }
+// Change the last active display format if users active within 5 minutes then shows 'Active now'.
+add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -683,3 +685,40 @@ function bb_core_prime_mentions_results() {
 
 add_action( 'bp_activity_mentions_prime_results', 'bb_core_prime_mentions_results' );
 add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results' );
+
+/**
+ * Get member last active difference in minutes.
+ *
+ * @param string $last_activity Formatted 'active [x days ago]' string.
+ * @param int    $user_id ID of the user. Default: displayed user ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return string if time difference within minutes otherwise $last_activity.
+ */
+function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
+
+	$last_active_date = bp_get_user_last_activity( $user_id );
+	if ( empty( $last_active_date ) ) {
+		return $last_activity;
+	}
+
+	// Get Unix timestamp from datetime.
+	$time_chunks           = explode( ':', str_replace( ' ', ':', $last_active_date ) );
+	$date_chunks           = explode( '-', str_replace( ' ', '-', $last_active_date ) );
+	$last_active_timestamp = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+
+	// Difference in seconds.
+	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
+	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
+		$minutes_diff = round( $since_diff / MINUTE_IN_SECONDS );
+
+		// Difference within 5 minutes.
+		if ( 5 >= $minutes_diff ) {
+			return esc_html__( 'Active now', 'buddyboss' );
+		}
+	}
+
+	return $last_activity;
+}
+

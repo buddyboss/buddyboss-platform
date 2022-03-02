@@ -497,3 +497,26 @@ function bb_render_notification_settings() {
 		}
 	}
 }
+
+/** 
+ * Function will run after plugin successfully update.
+ *
+ * @param $upgrader_object WP_Upgrader instance.
+ * @param $options         Array of bulk item update data
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
+	$show_display_popup = false;
+	// The path to our plugin's main file
+	$our_plugin = 'buddyboss-platform/bp-loader.php';
+	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+		foreach ( $options['plugins'] as $plugin ) {
+			if ( ! empty( $plugin ) && $plugin === $our_plugin ) {
+				update_option( '_bb_is_update', $show_display_popup );
+			}
+		}
+	}
+}
+add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2);
+
