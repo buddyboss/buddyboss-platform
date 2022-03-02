@@ -82,7 +82,7 @@ if ( 'small' === $group_cover_height ) {
 
 								<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-								<div class="item-meta-wrap <?php echo bb_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type )  ? 'has-meta' : 'meta-hidden'; ?> ">
+								<div class="item-meta-wrap <?php echo bb_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type ) ? 'has-meta' : 'meta-hidden'; ?> ">
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
@@ -94,17 +94,17 @@ if ( 'small' === $group_cover_height ) {
 										</p>
 									<?php endif; ?>
 
-									<?php if ( bb_platform_group_element_enable( 'last-activity' ) ) { ?>
-										<p class="last-activity item-meta">
-											<?php
-											printf(
+									<?php
+									if ( bb_platform_group_element_enable( 'last-activity' ) ) {
+										echo '<p class="last-activity item-meta">' .
+										sprintf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-												esc_attr__( 'Active %s', 'buddyboss' ),
-												wp_kses_post( bp_get_group_last_active() )
-											);
-											?>
-										</p>
-									<?php } ?>
+											esc_attr__( 'Active %s', 'buddyboss' ),
+											wp_kses_post( bp_get_group_last_active() )
+										) .
+										'</p>';
+									}
+									?>
 
 								</div>
 
