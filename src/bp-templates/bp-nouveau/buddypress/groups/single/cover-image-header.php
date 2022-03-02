@@ -69,9 +69,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 		<?php } ?>
 	</div>
 
-	<?php $class = bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img'; ?>
-
-	<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( $class ); ?>">
+	<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
@@ -120,23 +118,27 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				<?php endif; ?>
 
 				<?php if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) : ?>
-				<p class="last-activity item-meta">
+					<p class="last-activity item-meta">
+						<?php
+						printf(
+							/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+							esc_html__( 'Active %s', 'buddyboss' ),
+							wp_kses_post( bp_get_group_last_active() )
+						);
+						?>
+					</p>
 					<?php
-					printf(
-						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						esc_html__( 'Active %s', 'buddyboss' ),
-						wp_kses_post( bp_get_group_last_active() )
-					);
-					?>
-				</p>
-				<?php endif; ?>
+				endif;
 
-				<?php if ( ! bp_nouveau_groups_front_page_description() && bp_nouveau_group_has_meta( 'description' ) ) : ?>
-					<?php if ( bb_platform_group_headers_element_enable( 'group-description' ) ) : ?>
+				if (
+					! bp_nouveau_groups_front_page_description() &&
+					bp_nouveau_group_has_meta( 'description' ) &&
+					bb_platform_group_headers_element_enable( 'group-description' )
+				) :
+					?>
 					<div class="group-description">
-						<?php bp_group_description_excerpt(); ?>
+					<?php bp_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
-					<?php endif; ?>
 				<?php endif; ?>
 
 				<?php if ( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
@@ -144,22 +146,23 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				<?php endif; ?>
 
 				<div class="group-actions-wrap" >
+					<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>
+
+					<div class="group-actions-absolute">
 					<?php
-					bp_get_template_part( 'groups/single/parts/header-item-actions' );
-					?>
-						<div class="group-actions-absolute">
-					<?php
-					if ( function_exists( 'bp_get_group_status_description' ) ) {
-						if ( bb_platform_group_headers_element_enable( 'group-privacy' ) ) {
-							?>
-							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-							<?php
-						}
+					if (
+						function_exists( 'bp_get_group_status_description' ) &&
+						bb_platform_group_headers_element_enable( 'group-privacy' )
+					) {
+						?>
+						<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+						<?php
 					}
-						bp_nouveau_group_header_buttons();
-						bb_nouveau_group_header_bubble_buttons();
+
+					bp_nouveau_group_header_buttons();
+					bb_nouveau_group_header_bubble_buttons();
 					?>
-						</div>
+					</div>
 				</div>
 
 			</div><!-- #item-header-content -->
