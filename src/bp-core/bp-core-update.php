@@ -1232,7 +1232,6 @@ function bp_update_to_1_5_5() {
 	$bp = buddypress();
 
 	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
 }
 
@@ -1425,7 +1424,6 @@ function bb_update_to_1_8_6() {
 	}
 
 	$reset_files = $_FILES;
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$reset_post = $_POST;
 
 	// Set Profile Avatar.
@@ -1719,17 +1717,17 @@ function bb_update_to_1_9_2() {
 
 	// Check if options are empty.
 	if ( empty( $buddyboss_theme_options ) ) {
-		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+		$buddyboss_theme_options = bp_get_option( 'buddyboss_theme_options', array() );
 	}
 
 	if ( ! empty( $buddyboss_theme_options ) ) {
 		update_option( 'old_buddyboss_theme_options', $buddyboss_theme_options );
 	}
 
-	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? get_option( 'buddyboss_profile_cover_width' );
-	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? get_option( 'buddyboss_profile_cover_height' );
-	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? get_option( 'buddyboss_group_cover_width' );
-	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? get_option( 'buddyboss_group_cover_height' );
+	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bp_get_option( 'buddyboss_profile_cover_width' );
+	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? bp_get_option( 'buddyboss_profile_cover_height' );
+	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? bp_get_option( 'buddyboss_group_cover_width' );
+	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? bp_get_option( 'buddyboss_group_cover_height' );
 
 	if ( ! empty( $profile_cover_width ) ) {
 		delete_option( 'bb-pro-cover-profile-width' );
