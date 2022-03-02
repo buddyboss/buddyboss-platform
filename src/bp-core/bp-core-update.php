@@ -355,11 +355,11 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 18501 ) {
-			bb_update_to_1_9_1();
+			bb_update_to_1_9_0_1();
 		}
 
 		if ( $raw_db_version < 18651 ) {
-			bb_update_to_1_9_2();
+			bb_update_to_1_9_1();
 		}
 	}
 
@@ -1684,7 +1684,7 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
  *
  * @return void
  */
-function bb_update_to_1_9_1() {
+function bb_update_to_1_9_0_1() {
 	wp_clear_scheduled_hook('bb_bb_video_deleter_older_symlink_hook');
 	wp_clear_scheduled_hook('bb_bb_document_deleter_older_symlink_hook');
 	wp_clear_scheduled_hook('bb_bb_media_deleter_older_symlink_hook');
@@ -1696,7 +1696,7 @@ function bb_update_to_1_9_1() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_1_9_2() {
+function bb_update_to_1_9_1() {
 	 // Display plugin update notice.
 	update_option( '_bb_is_update', true );
 
