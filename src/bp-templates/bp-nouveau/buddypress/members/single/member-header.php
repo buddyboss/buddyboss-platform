@@ -27,8 +27,9 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
 			<div id="item-header-avatar">
-				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
-					<?php
+				<?php
+				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
+
 					if ( $is_enabled_online_status ) {
 						bb_current_user_status( bp_displayed_user_id() );
 					}
@@ -37,9 +38,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 						<i class="bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
-				<?php } ?>
-				<?php bp_displayed_user_avatar( 'type=full' ); ?>
-				<?php
+					<?php
+				}
+
+				bp_displayed_user_avatar( 'type=full' );
+
 				if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
 					echo wp_kses_post( bp_get_user_member_type( bp_displayed_user_id() ) );
 				}
@@ -65,25 +68,28 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 							<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_get_last_activity() || bb_get_member_joined_date() ) : ?>
 								<div class="item-meta">
+
 									<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && $is_enabled_member_handle ) : ?>
 										<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
-									<?php endif; ?>
+										<?php
+									endif;
 
-									<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && $is_enabled_member_handle && $is_enabled_joined_date ) : ?>
+									if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && $is_enabled_member_handle && $is_enabled_joined_date ) :
+										?>
 										<span class="separator">&bull;</span>
-									<?php endif; ?>
+										<?php
+									endif;
 
-									<?php
 									if ( bb_get_member_joined_date() && $is_enabled_joined_date ) :
 										echo wp_kses_post( bb_get_member_joined_date() );
 									endif;
-									?>
 
-									<?php if ( ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bb_get_member_joined_date() ) && bp_get_last_activity() && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) : ?>
+									if ( ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bb_get_member_joined_date() ) && bp_get_last_activity() && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) :
+										?>
 										<span class="separator">&bull;</span>
-									<?php endif; ?>
+										<?php
+									endif;
 
-									<?php
 									bp_nouveau_member_hook( 'before', 'header_meta' );
 
 									if ( bp_get_last_activity() && $is_enabled_last_active ) :
@@ -170,7 +176,7 @@ endif;
 						<p>
 							<?php
 							echo sprintf(
-							/* translators: %s: The member name with HTML tags. */
+								/* translators: %s: The member name with HTML tags. */
 								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
 								'<span class="bb-user-name"></span>'
 							);
