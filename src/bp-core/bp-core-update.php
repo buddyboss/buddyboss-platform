@@ -1424,7 +1424,7 @@ function bb_update_to_1_8_6() {
 	}
 
 	$reset_files = $_FILES;
-	$reset_post = $_POST;
+	$reset_post  = $_POST;
 
 	// Set Profile Avatar.
 	$show_profile_avatar = bp_get_option( 'show_avatars' );
