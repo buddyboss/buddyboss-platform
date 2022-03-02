@@ -2583,6 +2583,11 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   border-radius: 5px;
 }
 
+.preview_avatar_cover .preview-item-avatar.centered-image {
+  right: 50%;
+  transform: translateX(50%);
+}
+
 .preview_avatar_cover .preview-item-avatar img {
   background-color: #f9f9f9;
 }
@@ -2620,6 +2625,14 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 
 .preview_avatar_cover .button-group > .button:last-child:first-child {
   border-radius: 3px;
+}
+
+.profile-cover-options .preview_avatar_cover .web-preview-wrap .preview-item-avatar {
+  border-radius: 50%;
+}
+
+.profile-cover-options .preview_avatar_cover .web-preview-wrap .preview-item-avatar img {
+  border-radius: 50%;
 }
 
 .group-cover-options .preview_avatar_cover .app-preview-wrap {

@@ -2752,6 +2752,11 @@ h2.has_tutorial_btn {
 		border: 3px solid #fff;
 		border-radius: 5px;
 
+		&.centered-image {
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
 		img {
 			background-color: #f9f9f9;
 		}
@@ -2795,6 +2800,15 @@ h2.has_tutorial_btn {
 
 	.button-group > .button:last-child:first-child {
 		border-radius: 3px;
+	}
+
+}
+
+.profile-cover-options .preview_avatar_cover .web-preview-wrap .preview-item-avatar {
+	border-radius: 50%;
+
+	img {
+		border-radius: 50%;
 	}
 
 }
