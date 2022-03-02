@@ -82,7 +82,7 @@ if ( 'small' === $group_cover_height ) {
 
 								<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-								<div class="item-meta-wrap">
+								<div class="item-meta-wrap <?php echo bb_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type )  ? 'has-meta' : 'meta-hidden'; ?> ">
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
