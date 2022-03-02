@@ -2493,7 +2493,6 @@ function bp_member_type_import_submenu_page() {
 	<br/>
 
 	<?php
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
 
 		if ( is_multisite() && bp_is_network_activated() ) {
@@ -2598,7 +2597,6 @@ function bp_core_admin_create_background_page() {
 		wp_send_json_error();
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( empty( $_POST['page'] ) ) {
 		wp_send_json_error();
 	}
@@ -2606,11 +2604,9 @@ function bp_core_admin_create_background_page() {
 	$page_ids    = bp_core_get_directory_page_ids( 'all' );
 	$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
 
 		$default_title = bp_core_get_directory_page_default_titles();
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$title = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
 
 		$new_page = array(
@@ -2623,7 +2619,6 @@ function bp_core_admin_create_background_page() {
 		);
 
 		$page_id = wp_insert_post( $new_page );
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$page_ids[ $_POST['page'] ] = (int) $page_id;
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.
@@ -2861,7 +2856,6 @@ function bp_core_admin_emails_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $tabs_html;
 
 	/**
@@ -2947,7 +2941,6 @@ function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
 		$i = $i + 1;
 	}
 
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $tabs_html;
 
 	/**
@@ -3196,7 +3189,6 @@ add_action( 'bp_init', 'bb_block_init_category_filter' );
 function bp_document_ajax_check_file_mime_type() {
 	$response = array();
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && ! empty( $_FILES ) ) {
 		$files = $_FILES;
 		foreach ( $files as $input => $info_arr ) {
@@ -3243,7 +3235,6 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $tabs_html;
 
 	/**

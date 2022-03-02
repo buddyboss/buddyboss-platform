@@ -57,10 +57,8 @@ function bp_is_activation( $basename = '' ) {
 	$action = false;
 
 	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$action = $_REQUEST['action'];
 	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$action = $_REQUEST['action2'];
 	}
 
@@ -71,10 +69,8 @@ function bp_is_activation( $basename = '' ) {
 
 	// The plugin(s) being activated.
 	if ( 'activate' === $action ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
 	}
 
@@ -105,10 +101,8 @@ function bp_is_deactivation( $basename = '' ) {
 	$action = false;
 
 	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$action = $_REQUEST['action'];
 	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$action = $_REQUEST['action2'];
 	}
 
@@ -119,10 +113,8 @@ function bp_is_deactivation( $basename = '' ) {
 
 	// The plugin(s) being deactivated.
 	if ( 'deactivate' == $action ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
 	}
 
@@ -1671,7 +1663,6 @@ function bb_to_1_8_6_change_overrides( $overrides ) {
 function bb_to_1_8_6_image_upload_dir( $args ) {
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( isset( $_POST['group_cover_upload'] ) ) {
 		$subdir = '/groups/0/cover-image';
 	}
