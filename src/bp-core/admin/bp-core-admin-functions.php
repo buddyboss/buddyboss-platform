@@ -3325,6 +3325,11 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  * @return string
  */
 function bb_get_pro_label_notice() {
+	static $bb_pro_notice = '';
+
+	if ( '' !== $bb_pro_notice ) {
+		return $bb_pro_notice;
+	}
 
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
@@ -3353,6 +3358,12 @@ function bb_get_pro_label_notice() {
  * @return string
  */
 function bb_get_pro_fields_class() {
+	static $pro_class = '';
+
+	if ( '' !== $pro_class ) {
+		return $pro_class;
+	}
+
 	$pro_class = 'bb-pro-inactive';
 	if ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) {
 		$pro_class = 'bb-pro-active';
