@@ -46,17 +46,18 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 			<?php
 			if ( ! empty( $cover_image_url ) ) {
 				?>
-				<img class="header-cover-img" src="<?php echo esc_url( $cover_image_url ); ?>" <?php echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : ''; ?> <?php echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : ''; ?> alt="" />
+				<img class="header-cover-img" src="<?php echo esc_url( $cover_image_url ); ?>" <?php echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : ''; ?><?php echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : ''; ?>alt=""/>
 				<?php
 			}
-			?>
-
-			<?php if ( bp_is_my_profile() ) { ?>
+			if ( bp_is_my_profile() ) {
+				?>
 				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-camera"></i>
 				</a>
 
-				<?php if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) { ?>
+				<?php
+				if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
+					?>
 					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-move"></i>
 					</a>
@@ -64,18 +65,19 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 						<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></a>
 						<span class="drag-element-helper"><i class="bb-icon-menu"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
-						<img src="<?php echo esc_url( $cover_image_url ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss' ); ?>" />
+						<img src="<?php echo esc_url( $cover_image_url ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss' ); ?>"/>
 					</div>
-				<?php } ?>
-
-			<?php } ?>
+					<?php
+				}
+			}
+			?>
 		</div>
 
 		<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
 			<div id="item-header-avatar">
-				<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
-					<?php
+				<?php
+				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
 					if ( $is_enabled_online_status ) {
 						bb_current_user_status( bp_displayed_user_id() );
 					}
@@ -84,9 +86,9 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 						<i class="bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
-				<?php } ?>
-				<?php bp_displayed_user_avatar( 'type=full' ); ?>
-				<?php
+					<?php
+				}
+				bp_displayed_user_avatar( 'type=full' );
 				if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() && $is_enabled_profile_type ) {
 					echo wp_kses_post( bp_get_user_member_type( bp_displayed_user_id() ) );
 				}
@@ -108,53 +110,42 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 							?>
 						</div>
 
-						<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
-
-						<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_get_last_activity() || bb_get_member_joined_date() ) : ?>
+						<?php
+						bp_nouveau_member_hook( 'before', 'header_meta' );
+						if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_get_last_activity() || bb_get_member_joined_date() ) : ?>
 							<div class="item-meta">
 								<?php
 								$nickname_field_id = bp_xprofile_nickname_field_id();
 								$hidden_fields     = bp_xprofile_get_hidden_fields_for_user();
-
 								if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && ! in_array( $nickname_field_id, $hidden_fields, true ) && $is_enabled_member_handle ) :
 									?>
 									<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && $is_enabled_member_handle && $is_enabled_joined_date ) : ?>
+								<?php endif;
+								if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && $is_enabled_member_handle && $is_enabled_joined_date ) : ?>
 									<span class="separator">&bull;</span>
-								<?php endif; ?>
-
-								<?php
+								<?php endif;
 								if ( bb_get_member_joined_date() && $is_enabled_joined_date ) :
 									echo wp_kses_post( bb_get_member_joined_date() );
 								endif;
-								?>
-
-								<?php if ( ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bb_get_member_joined_date() ) && bp_get_last_activity() && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) : ?>
+								if ( ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bb_get_member_joined_date() ) && bp_get_last_activity() && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) : ?>
 									<span class="separator">&bull;</span>
-								<?php endif; ?>
-
-								<?php
+								<?php endif;
 								bp_nouveau_member_hook( 'before', 'in_header_meta' );
 								bp_nouveau_member_hook( 'before', 'header_meta' );
-
 								if ( bp_get_last_activity() && $is_enabled_last_active ) :
 									echo wp_kses_post( bp_get_last_activity() );
 								endif;
 								?>
 
 							</div>
-						<?php endif; ?>
-
-						<?php if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) { ?>
+						<?php endif;
+						if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) { ?>
 							<div class="flex align-items-top member-social">
 								<div class="flex align-items-center">
 									<?php
 									if ( $is_enabled_followers ) {
 										bb_get_followers_count();
 									}
-
 									if ( $is_enabled_following ) {
 										bb_get_following_count();
 									}
