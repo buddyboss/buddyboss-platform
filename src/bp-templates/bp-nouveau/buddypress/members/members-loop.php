@@ -51,8 +51,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			if ( $enabled_followers && function_exists( 'bb_get_followers_count' ) ) {
 				ob_start();
 				bb_get_followers_count( bp_get_member_user_id() );
-				$followers_count = ob_get_contents();
-				ob_end_clean();
+				$followers_count = ob_get_clean();
 			}
 
 			// Member joined data.
