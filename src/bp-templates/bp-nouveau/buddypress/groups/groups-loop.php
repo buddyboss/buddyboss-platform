@@ -37,7 +37,12 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes() . esc_attr( $cover_class . ' ' . $group_alignment ); ?> groups-dir-list">
+	<ul id="groups-list" class="
+	<?php
+	bp_nouveau_loop_classes();
+	echo esc_attr( ' ' . $cover_class . ' ' . $group_alignment );
+	?>
+	 groups-dir-list">
 
 		<?php
 		while ( bp_groups() ) :
