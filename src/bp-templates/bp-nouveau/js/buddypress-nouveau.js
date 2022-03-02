@@ -3126,6 +3126,8 @@ window.bp = window.bp || {};
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).html( '' );
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).append( available_option );
 			});
+		},
+		/*
 		 *  Close Action Popup
 		 *
 		 *  @param  {object} event The event object.
