@@ -1095,7 +1095,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_admin_setting_callback_default_group_cover_size() {
+function bb_admin_setting_callback_default_group_cover_size() {
 
 	?>
 	<div class="image-width-height">
@@ -2442,7 +2442,7 @@ function bp_admin_setting_callback_register_page_url() {
 	<?php
 	printf(
 		'<p class="description">%s</p>',
-		sprintf( esc_html__( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+		esc_html__( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' )
 	);
 }
 
