@@ -1424,7 +1424,7 @@ function bb_update_to_1_8_6() {
 	}
 
 	$reset_files = $_FILES;
-	$reset_post = $_POST;
+	$reset_post  = $_POST;
 
 	// Set Profile Avatar.
 	$show_profile_avatar = bp_get_option( 'show_avatars' );
@@ -1685,9 +1685,9 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
  * @return void
  */
 function bb_update_to_1_9_0_1() {
-	wp_clear_scheduled_hook('bb_bb_video_deleter_older_symlink_hook');
-	wp_clear_scheduled_hook('bb_bb_document_deleter_older_symlink_hook');
-	wp_clear_scheduled_hook('bb_bb_media_deleter_older_symlink_hook');
+	wp_clear_scheduled_hook( 'bb_bb_video_deleter_older_symlink_hook' );
+	wp_clear_scheduled_hook( 'bb_bb_document_deleter_older_symlink_hook' );
+	wp_clear_scheduled_hook( 'bb_bb_media_deleter_older_symlink_hook' );
 }
 
 /**
@@ -1697,7 +1697,7 @@ function bb_update_to_1_9_0_1() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_1_9_1() {
-	 // Display plugin update notice.
+	// Display plugin update notice.
 	update_option( '_bb_is_update', true );
 
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
@@ -1721,7 +1721,7 @@ function bb_update_to_1_9_1() {
 	}
 
 	if ( ! empty( $buddyboss_theme_options ) ) {
-		bp_update_option( 'old_buddyboss_theme_options', $buddyboss_theme_options );
+		bp_update_option( 'old_buddyboss_theme_options_1_8_7', $buddyboss_theme_options );
 	}
 
 	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bp_get_option( 'buddyboss_profile_cover_width' );
