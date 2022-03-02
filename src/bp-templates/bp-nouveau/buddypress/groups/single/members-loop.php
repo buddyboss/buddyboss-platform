@@ -41,7 +41,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			ob_start();
 			bp_nouveau_member_hook( '', 'members_list_item' );
 			$members_list_item_content = ob_get_clean();
-			$member_loop_has_content = ! empty( $members_list_item_content );
+			$member_loop_has_content   = ! empty( $members_list_item_content );
 
 			// Get member followers element.
 			$followers_count = '';
@@ -203,7 +203,7 @@ endif;
 						<p>
 							<?php
 							echo sprintf(
-							/* translators: %s: The member name with HTML tags */
+								/* translators: %s: The member name with HTML tags */
 								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
 								'<span class="bb-user-name"></span>'
 							);
