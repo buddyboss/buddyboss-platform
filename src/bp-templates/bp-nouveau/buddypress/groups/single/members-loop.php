@@ -40,8 +40,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			// Check if members_list_item has content.
 			ob_start();
 			bp_nouveau_member_hook( '', 'members_list_item' );
-			$members_list_item_content = ob_get_contents();
-			ob_end_clean();
+			$members_list_item_content = ob_get_clean();
 			$member_loop_has_content = ! empty( $members_list_item_content );
 
 			// Get member followers element.
