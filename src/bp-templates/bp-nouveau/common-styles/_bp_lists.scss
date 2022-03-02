@@ -220,10 +220,6 @@
 					text-align: left;
 				}
 
-				.item-meta-wrap.has-meta {
-					min-height: 35px;
-				}
-
 			}
 
 			.list-title {
@@ -250,7 +246,7 @@
 				content: "";
 				display: inline-block;
 				height: 4px;
-				margin: 0 5px 0 3px;
+				margin: 0 6px 0 4px;
 				vertical-align: middle;
 				width: 4px;
 			}
@@ -341,6 +337,10 @@
 
 		.list-wrap {
 			border-radius: 3px;
+		}
+
+		.item-block .item-meta-wrap.has-meta {
+			min-height: 35px;
 		}
 
 	}

@@ -982,10 +982,6 @@ a.layout-grid-view {
   text-align: right;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block .item-meta-wrap.has-meta {
-  min-height: 35px;
-}
-
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .list-title {
   margin: 15px 0 5px;
   font-size: 20px;
@@ -1008,7 +1004,7 @@ a.layout-grid-view {
   content: "";
   display: inline-block;
   height: 4px;
-  margin: 0 3px 0 5px;
+  margin: 0 4px 0 6px;
   vertical-align: middle;
   width: 4px;
 }
@@ -1083,6 +1079,10 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list.grid .list-wrap {
   border-radius: 3px;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list.grid .item-block .item-meta-wrap.has-meta {
+  min-height: 35px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) {
