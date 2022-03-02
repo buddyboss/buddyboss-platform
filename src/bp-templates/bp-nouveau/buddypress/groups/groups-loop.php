@@ -35,7 +35,7 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
-	<ul id="groups-list" class="<?php bp_nouveau_loop_classes(); ?> <?php echo esc_attr( $cover_class . ' ' . $group_alignment ); ?> groups-dir-list">
+	<ul id="groups-list" class="<?php bp_nouveau_loop_classes() . esc_attr( $cover_class . ' ' . $group_alignment ); ?> groups-dir-list">
 
 		<?php
 		while ( bp_groups() ) :
@@ -60,15 +60,10 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 						<?php
 					}
-					?>
 
-					<?php
-					if ( ! bp_disable_group_avatar_uploads() ) :
-						if ( bb_platform_group_element_enable( 'avatars' ) ) { ?>
-							<div class="item-avatar"><a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a></div>
-						<?php }
-					endif;
-					?>
+					if ( ! bp_disable_group_avatar_uploads() && bb_platform_group_element_enable( 'avatars' ) ) : ?>
+						<div class="item-avatar"><a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a></div>
+					<?php endif; ?>
 
 					<div class="item">
 
@@ -78,7 +73,7 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 								<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-								<div class="item-meta-wrap <?php echo bb_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type ) ? 'has-meta' : 'meta-hidden'; ?> ">
+								<div class="item-meta-wrap <?php echo esc_attr( bb_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type ) ? 'has-meta' : 'meta-hidden' ); ?> ">
 
 									<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
@@ -88,9 +83,8 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 											echo wp_kses_post( $meta['status'] );
 											?>
 										</p>
-									<?php endif; ?>
+									<?php endif;
 
-									<?php
 									if ( bb_platform_group_element_enable( 'last-activity' ) ) {
 										echo '<p class="last-activity item-meta">' .
 										sprintf(
