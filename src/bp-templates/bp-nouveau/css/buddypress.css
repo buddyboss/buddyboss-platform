@@ -982,6 +982,10 @@ a.layout-grid-view {
   text-align: left;
 }
 
+.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .item-block .item-meta-wrap {
+  min-height: 35px;
+}
+
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .list-title {
   margin: 15px 0 5px;
   font-size: 20px;
