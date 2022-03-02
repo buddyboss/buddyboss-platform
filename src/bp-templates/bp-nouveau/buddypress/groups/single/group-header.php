@@ -36,21 +36,24 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 		<?php if ( ! bp_nouveau_groups_front_page_description() ) : ?>
 			<div id="item-header-content">
 
-				<?php if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) : ?>
-					<?php
+				<?php
+				if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) {
 					$parent_id = bp_get_parent_group_id();
 					if ( 0 !== $parent_id ) {
+						$parent_group = groups_get_group( $parent_id );
 						?>
 						<div class="bp-group-parent-wrap flex align-items-center">
 							<?php bp_group_list_parents(); ?>
 							<div class="bp-parent-group-title-wrap">
-								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( groups_get_group( $parent_id ) ) ); ?>"><?php echo wp_kses_post( bp_get_group_name( groups_get_group( $parent_id ) ) ); ?></a>
+								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( $parent_group ) ); ?>"><?php echo wp_kses_post( bp_get_group_name( $parent_group ) ); ?></a>
 								<i class="bb-icon-chevron-right"></i>
 								<span class="bp-current-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></span>
 							</div>
 						</div>
-					<?php } ?>
-				<?php endif; ?>
+						<?php
+					}
+				}
+				?>
 
 				<div class="flex align-items-center bp-group-title-wrap">
 					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
