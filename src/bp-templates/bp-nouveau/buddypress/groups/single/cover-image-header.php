@@ -124,7 +124,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 					<?php
 					printf(
 						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						esc_attr__( 'Active %s', 'buddyboss' ),
+						esc_html__( 'Active %s', 'buddyboss' ),
 						wp_kses_post( bp_get_group_last_active() )
 					);
 					?>
@@ -197,17 +197,17 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php echo esc_html__( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php echo esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon bb-icon-close"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content bb-action-popup-content">
-							<p><?php echo esc_html__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+							<p><?php echo esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php echo esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php echo esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
 
 					</div>
