@@ -11,10 +11,10 @@
 bp_nouveau_before_loop(); ?>
 
 <?php
-$footer_buttons_class = ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) ? 'footer-buttons-on' : '';
+$footer_buttons_class = ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) ? ' footer-buttons-on' : '';
 
 $is_follow_active = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
-$follow_class     = $is_follow_active ? 'follow-active' : '';
+$follow_class     = $is_follow_active ? ' follow-active' : '';
 
 // Member directories elements.
 $enabled_online_status = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'online-status' );
@@ -43,7 +43,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			ob_start();
 			bp_nouveau_member_hook( '', 'members_list_item' );
 			$members_list_item_content = ob_get_clean();
-			$member_loop_has_content = ! empty( $members_list_item_content );
+			$member_loop_has_content   = ! empty( $members_list_item_content );
 
 			// Get member followers element.
 			$followers_count = '';
@@ -66,7 +66,15 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
-				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?> <?php echo ! empty( $primary_action_btn ) ? esc_attr( 'primary-button' ) : esc_attr( 'no-primary-buttons' ); ?>">
+				<div class="list-wrap
+				<?php
+					echo esc_attr( $footer_buttons_class ) .
+						esc_attr( $follow_class ) .
+						esc_attr( true === $member_loop_has_content ? ' has_hook_content' : '' ) .
+						esc_attr( ! empty( $profile_actions['secondary'] ) ? ' secondary-buttons' : ' no-secondary-buttons' ) .
+						esc_attr( ! empty( $primary_action_btn ) ? ' primary-button' : ' no-primary-buttons' );
+				?>
+				">
 
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
@@ -104,17 +112,17 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :
 
 									echo '<p class="item-meta last-activity">';
-									if ( $enabled_joined_date ) :
+									if ( $enabled_joined_date ) {
 										echo wp_kses_post( $member_joined_date );
-										endif;
+									}
 
-									if ( ( $enabled_last_active && $member_last_activity ) && ( $enabled_joined_date && $member_joined_date ) ) :
+									if ( ( $enabled_last_active && $member_last_activity ) && ( $enabled_joined_date && $member_joined_date ) ) {
 										echo '<span class="separator">&bull;</span>';
-										endif;
+									}
 
-									if ( $enabled_last_active ) :
+									if ( $enabled_last_active ) {
 										echo wp_kses_post( $member_last_activity );
-										endif;
+									}
 									echo '</p>';
 								endif;
 								?>

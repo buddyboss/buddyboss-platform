@@ -51,7 +51,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 
 			<?php if ( bp_is_item_admin() ) { ?>
 				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-				<i class="bb-icon-camera"></i>
+					<i class="bb-icon-camera"></i>
 				</a>
 			<?php } ?>
 
@@ -140,7 +140,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				<?php endif; ?>
 
 				<?php if ( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
-				<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 				<?php endif; ?>
 
 				<div class="group-actions-wrap" >
