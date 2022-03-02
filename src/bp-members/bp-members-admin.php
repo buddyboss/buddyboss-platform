@@ -27,7 +27,7 @@ function bb_get_profile_header_elements() {
 		'element_label' => esc_html__( 'Online Status', 'buddyboss' ),
 	);
 
-	if ( bp_member_type_enable_disable() ) {
+	if ( bp_member_type_enable_disable() && bp_member_type_display_on_profile() ) {
 		$elements[] = array(
 			'element_name'  => 'profile-type',
 			'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
@@ -86,7 +86,7 @@ function bb_get_member_directory_elements() {
 		'element_label' => esc_html__( 'Online Status', 'buddyboss' ),
 	);
 
-	if ( bp_member_type_enable_disable() ) {
+	if ( bp_member_type_enable_disable() && bp_member_type_display_on_profile() ) {
 		$elements[] = array(
 			'element_name'  => 'profile-type',
 			'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
