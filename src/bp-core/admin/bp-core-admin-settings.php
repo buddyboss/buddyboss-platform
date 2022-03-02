@@ -687,11 +687,6 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 		$web_cover_preview = bb_attachments_get_default_profile_group_cover_image( 'members' );
 		$app_cover_preview = $web_cover_preview;
 	}
-
-	$cover_height_class = '';
-	if ( 'large' === bb_get_profile_cover_image_height() ) {
-		$cover_height_class = 'large-image';
-	}
 	?>
 	<div class="preview_avatar_cover has-avatar has-cover">
 
@@ -704,7 +699,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 				<?php endif; ?>
 			</div>
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover <?php echo esc_attr( $cover_height_class ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
 				<div class="preview-item-avatar">
@@ -810,7 +805,7 @@ function bp_profile_photos_tutorial() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_group_headers_tutorial() {
+function bb_group_headers_tutorial() {
 	?>
 	<p>
 		<a class="button" href="
@@ -1100,7 +1095,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_admin_setting_callback_default_group_cover_size() {
+function bb_admin_setting_callback_default_group_cover_size() {
 
 	?>
 	<div class="image-width-height">
@@ -1148,7 +1143,7 @@ function bp_admin_setting_callback_default_group_cover_size() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bp_profile_headers_tutorial() {
+function bb_profile_headers_tutorial() {
 	?>
 	<p>
 		<a class="button" href="
@@ -1193,7 +1188,7 @@ function bb_admin_setting_profile_headers_style() {
 						'class' => 'option opt-left',
 					),
 					'centered' => array(
-						'label' => 'Centered',
+						'label' => esc_html__( 'Centered', 'buddyboss' ),
 						'class' => 'option opt-centered',
 					),
 				),
@@ -1328,8 +1323,7 @@ function bb_admin_setting_member_profile_primary_action( $args ) {
 	<div class='bb-member-directory-profile-primary-action'>
 		<div class="bb-member-directory-primary-action">
 			<?php
-			$options     = array();
-			$options[''] = esc_html__( 'None', 'buddyboss' );
+			$options = array( '' => esc_html__( 'None', 'buddyboss' ) );
 
 			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
 				foreach ( $args['elements'] as $profile_primary_action ) {
@@ -2295,10 +2289,10 @@ function bb_admin_setting_group_headers_elements( $args ) {
 			<?php
 		}
 	}
-	echo '</div>';
-	echo '<p class="description">';
-	echo esc_html__( 'Select which elements to show in your group headers.', 'buddyboss' );
-	echo '</p>';
+	echo '</div>' .
+	'<p class="description">' .
+		esc_html__( 'Select which elements to show in your group headers.', 'buddyboss' ) .
+	'</p>';
 
 }
 
@@ -2368,10 +2362,10 @@ function bb_admin_setting_group_elements( $args ) {
 			<?php
 		}
 	}
-	echo '</div>';
-	echo '<p class="description">';
-	echo esc_html__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' );
-	echo '</p>';
+	echo '</div>' .
+	'<p class="description">' .
+		esc_html__( 'Select which elements show in group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ) .
+	'</p>';
 }
 
 /**
@@ -2448,7 +2442,7 @@ function bp_admin_setting_callback_register_page_url() {
 	<?php
 	printf(
 		'<p class="description">%s</p>',
-		sprintf( esc_html__( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+		esc_html__( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' )
 	);
 }
 
