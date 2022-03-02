@@ -85,8 +85,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 		<?php if ( ! bp_nouveau_groups_front_page_description() ) : ?>
 			<div id="item-header-content">
 
-				<?php if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) : ?>
-					<?php
+				<?php if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) :
 					$parent_id = bp_get_parent_group_id();
 					if ( 0 !== $parent_id ) {
 						?>
@@ -98,8 +97,8 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 								<span class="bp-current-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></span>
 							</div>
 						</div>
-					<?php } ?>
-				<?php endif; ?>
+					<?php }
+				endif; ?>
 
 				<div class="flex align-items-center bp-group-title-wrap">
 					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
@@ -108,16 +107,18 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 					<?php endif; ?>
 				</div>
 
-				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : ''; ?>
-				<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
+				<?php
+				echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : '';
+				bp_nouveau_group_hook( 'before', 'header_meta' );
+				?>
 
 				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>
 					<div class="item-meta">
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
-				<?php endif; ?>
+				<?php endif;
 
-				<?php if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) : ?>
+				if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) : ?>
 					<p class="last-activity item-meta">
 						<?php
 						printf(
@@ -139,9 +140,9 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 					<div class="group-description">
 					<?php bp_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
-				<?php endif; ?>
+				<?php endif;
 
-				<?php if ( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
+				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
 					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 				<?php endif; ?>
 
