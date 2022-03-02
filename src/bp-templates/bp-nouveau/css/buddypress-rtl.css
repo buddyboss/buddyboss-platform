@@ -989,6 +989,7 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item .list-title a {
   text-decoration: none;
+  font-size: 19px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta {
