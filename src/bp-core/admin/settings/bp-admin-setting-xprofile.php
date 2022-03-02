@@ -245,7 +245,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
-			$this->add_field( 'bb-default-profile-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bp_admin_setting_callback_default_profile_cover_size', 'string', $args );
+			$this->add_field( 'bb-default-profile-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_callback_default_profile_cover_size', 'string', $args );
 
 			$args          = array();
 			$args['class'] = 'profile-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
