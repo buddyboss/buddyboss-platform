@@ -4040,7 +4040,7 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
  */
 function bp_member_switching_get_olduser_cookie() {
 	if ( isset( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
-		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] );
 	} else {
 		return false;
 	}
@@ -4061,7 +4061,7 @@ function bp_member_switching_get_auth_cookie() {
 	}
 
 	if ( isset( $_COOKIE[ $auth_cookie_name ] ) && is_string( $_COOKIE[ $auth_cookie_name ] ) ) {
-		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) );
 	}
 	if ( ! isset( $cookie ) || ! is_array( $cookie ) ) {
 		$cookie = array();
@@ -4679,7 +4679,7 @@ function bp_members_directory_page_content() {
 
 	if ( ! empty( $page_ids['members'] ) ) {
 		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
-		echo apply_filters( 'the_content', $members_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'the_content', $members_page_content );
 	}
 }
 add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
@@ -4695,7 +4695,7 @@ function bp_activate_page_content() {
 
 	if ( ! empty( $page_ids['activate'] ) ) {
 		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
-		echo apply_filters( 'the_content', $activate_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'the_content', $activate_page_content );
 	}
 }
 add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
@@ -4711,7 +4711,7 @@ function bp_register_page_content() {
 
 	if ( ! empty( $page_ids['register'] ) ) {
 		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
-		echo apply_filters( 'the_content', $register_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'the_content', $register_page_content );
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );
