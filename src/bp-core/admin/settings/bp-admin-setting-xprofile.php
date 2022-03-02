@@ -253,7 +253,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		// Section for Profile Headers.
-		$this->add_section( 'bp_profile_headers_settings', esc_html__( 'Profile Headers', 'buddyboss' ), '', 'bp_profile_headers_tutorial' );
+		$this->add_section( 'bp_profile_headers_settings', esc_html__( 'Profile Headers', 'buddyboss' ), '', 'bb_profile_headers_tutorial' );
 
 		// Profile headers style.
 		$args          = array();

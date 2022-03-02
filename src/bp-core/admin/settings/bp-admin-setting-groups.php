@@ -145,7 +145,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 
 		// Group Headers.
-		$this->add_section( 'bp_groups_headers_settings', esc_html__( 'Group Headers', 'buddyboss' ), '', 'bp_group_headers_tutorial' );
+		$this->add_section( 'bp_groups_headers_settings', esc_html__( 'Group Headers', 'buddyboss' ), '', 'bb_group_headers_tutorial' );
 
 		// Admin Settings for Settings > Groups > Group Headers > Header Style.
 		$args          = array();
