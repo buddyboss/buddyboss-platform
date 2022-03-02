@@ -2191,7 +2191,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	}
 
 	// Save data.
-	$data = isset( $_POST['bp-member-type'] ) ? function_exists( 'map_deep' ) ? map_deep( wp_unslash( $_POST['bp-member-type'] ), 'sanitize_text_field' ) : $_POST['bp-member-type'] : array();
+	$data = isset( $_POST['bp-member-type'] ) ? function_exists( 'map_deep' ) ? map_deep( wp_unslash( $_POST['bp-member-type'] ), 'sanitize_text_field' ) : sanitize_text_field( $_POST['bp-member-type'] ) : array();
 	if ( empty( $data ) ) {
 		return;
 	}
