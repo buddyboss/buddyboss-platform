@@ -1849,7 +1849,7 @@ function bp_group_list_admins( $group = false ) {
 	if ( ! empty( $group->admins ) ) { ?>
 		<ul id="group-admins">
 			<?php
-				$i = 0;
+			$i = 0;
 			foreach ( (array) $group->admins as $admin ) {
 				$i++;
 				if ( $i > 3 ) {
