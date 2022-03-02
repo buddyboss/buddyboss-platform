@@ -300,7 +300,7 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 																																																													?>
 																">
 									<span class="ld-icon-arrow-down ld-icon"></span>
-									<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'buddyboss' ); ?></span>
+									<span class="ld-text"><?php esc_html_e( 'Expand All', 'buddyboss' ); ?></span>
 								</div> <!--/.ld-expand-button-->
 								<?php
 								// TODO @37designs Need to test this
