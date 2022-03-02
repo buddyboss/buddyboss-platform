@@ -61,11 +61,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		$bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$bp_nouveau_appearance['user_front_page'] = isset( $_POST['bp-enable-member-dashboard'] ) ? sanitize_text_field( wp_unslash( $_POST['bp-enable-member-dashboard'] ) ) : 0;
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$bp_nouveau_appearance['user_front_page_redirect'] = isset( $_POST['bp-enable-member-dashboard-redirect'] ) ? sanitize_text_field( wp_unslash( $_POST['bp-enable-member-dashboard-redirect'] ) ) : 0;
+		$bp_nouveau_appearance                             = bp_get_option( 'bp_nouveau_appearance', array() );
+		$bp_nouveau_appearance['user_front_page']          = filter_input( INPUT_POST, 'bp-enable-member-dashboard', FILTER_VALIDATE_INT );
+		$bp_nouveau_appearance['user_front_page_redirect'] = filter_input( INPUT_POST, 'bp-enable-member-dashboard-redirect', FILTER_VALIDATE_INT );
+
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		$bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
