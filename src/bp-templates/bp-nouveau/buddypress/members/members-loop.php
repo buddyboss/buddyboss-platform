@@ -62,6 +62,9 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 			// Primary and secondary profile action buttons.
 			$profile_actions = bb_member_directories_get_profile_actions( bp_get_member_user_id() );
 
+			// Member switch button.
+			$member_switch_button = bp_get_add_switch_button( bp_get_member_user_id() );
+
 			// Get Primary action.
 			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '';
 			?>
