@@ -58,12 +58,19 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 						);
 						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
 						?>
-						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
+						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
+							<a href="<?php bp_group_permalink(); ?>">
+								<?php if ( ! empty( $group_cover_image_url ) ) { ?>
+									<img src="<?php echo esc_url( $group_cover_image_url ); ?>">
+								<?php } ?>
+							</a>
+						</div>
 
 						<?php
 					}
 
-					if ( ! bp_disable_group_avatar_uploads() && bb_platform_group_element_enable( 'avatars' ) ) : ?>
+					if ( ! bp_disable_group_avatar_uploads() && bb_platform_group_element_enable( 'avatars' ) ) :
+						?>
 						<div class="item-avatar"><a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a></div>
 					<?php endif; ?>
 
@@ -85,7 +92,8 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 											echo wp_kses_post( $meta['status'] );
 											?>
 										</p>
-									<?php endif;
+										<?php
+									endif;
 
 									if ( bb_platform_group_element_enable( 'last-activity' ) ) {
 										echo '<p class="last-activity item-meta">' .
