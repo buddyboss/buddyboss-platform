@@ -539,23 +539,21 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
 					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
-					    wp_kses(
-						    $section['title'],
-						    array(
-							    'a' => array(
-								    'href' => array(),
-								    'rel'  => array(),
-							    ),
-						    )
-					    );
+						wp_kses(
+							$section['title'],
+							array(
+								'a' => array(
+									'href' => array(),
+									'rel'  => array(),
+								),
+							)
+						);
 					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
 						?>
-							<div class="bbapp-tutorial-btn">
-							<?php
-							call_user_func( $section['tutorial_callback'], $section );
-							?>
-							</div>
-							<?php
+						<div class="bbapp-tutorial-btn">
+							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+						</div>
+						<?php
 					}
 					echo "</h2>\n";
 				}
@@ -569,7 +567,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				}
 
 				echo '<table class="form-table">';
-				$this->bp_custom_do_settings_fields( $page, $section['id'] );
+					$this->bp_custom_do_settings_fields( $page, $section['id'] );
 				echo '</table></div>';
 			}
 		}
