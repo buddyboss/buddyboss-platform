@@ -19,9 +19,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 ?>
 <div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( bb_platform_group_header_style() ); ?>">
 
-	<?php $class = bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img'; ?>
-
-	<div id="item-header-cover-image" class="<?php echo esc_attr( $class ); ?>">
+	<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
