@@ -2618,7 +2618,7 @@ function bp_core_admin_create_background_page() {
 			'ping_status'    => 'closed',
 		);
 
-		$page_id = wp_insert_post( $new_page );
+		$page_id                    = wp_insert_post( $new_page );
 		$page_ids[ $_POST['page'] ] = (int) $page_id;
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.

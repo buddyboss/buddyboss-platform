@@ -1721,7 +1721,7 @@ function bb_update_to_1_9_2() {
 	}
 
 	if ( ! empty( $buddyboss_theme_options ) ) {
-		update_option( 'old_buddyboss_theme_options', $buddyboss_theme_options );
+		bp_update_option( 'old_buddyboss_theme_options', $buddyboss_theme_options );
 	}
 
 	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bp_get_option( 'buddyboss_profile_cover_width' );
@@ -1730,22 +1730,22 @@ function bb_update_to_1_9_2() {
 	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? bp_get_option( 'buddyboss_group_cover_height' );
 
 	if ( ! empty( $profile_cover_width ) ) {
-		delete_option( 'bb-pro-cover-profile-width' );
-		add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
+		bp_delete_option( 'bb-pro-cover-profile-width' );
+		bp_add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
 	}
 
 	if ( ! empty( $profile_cover_height ) ) {
-		delete_option( 'bb-pro-cover-profile-height' );
-		add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
+		bp_delete_option( 'bb-pro-cover-profile-height' );
+		bp_add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
 	}
 
 	if ( ! empty( $group_cover_width ) ) {
-		delete_option( 'bb-pro-cover-group-width' );
-		add_option( 'bb-pro-cover-group-width', $group_cover_width );
+		bp_delete_option( 'bb-pro-cover-group-width' );
+		bp_add_option( 'bb-pro-cover-group-width', $group_cover_width );
 	}
 
 	if ( ! empty( $group_cover_height ) ) {
-		delete_option( 'bb-pro-cover-group-height' );
-		add_option( 'bb-pro-cover-group-height', $group_cover_height );
+		bp_delete_option( 'bb-pro-cover-group-height' );
+		bp_add_option( 'bb-pro-cover-group-height', $group_cover_height );
 	}
 }
