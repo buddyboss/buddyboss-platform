@@ -717,9 +717,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bb_xprofile_default_custom_profile_avatar_upload_dir( $upload_dir = array() ) {
 		$bp_params = array();
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( isset( $_POST['bp_params'] ) && ! empty( $_POST['bp_params'] ) ) {
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
 			$bp_params = array_map( 'sanitize_text_field', $_POST['bp_params'] );
 		}
 

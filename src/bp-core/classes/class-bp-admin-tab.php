@@ -217,17 +217,14 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function is_saving() {
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 			if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) {
 				return false;
 			}
 
-			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison, WordPress.Security.NonceVerification.Recommended
 			if ( $this->menu_page != $_GET['page'] ) {
 				return false;
 			}
 
-			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 			if ( $this->tab_name != $this->get_active_tab() ) {
 				return false;
 			}
@@ -250,7 +247,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing
 					$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : '';
 					bp_update_option( $setting_name, $value );
 				}
@@ -300,7 +296,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			settings_fields( $this->tab_name );
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
 				?>
 			<p class="submit">
@@ -342,7 +337,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
 			if ( ! empty( $tutorial_callback ) ) {
-				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
 
