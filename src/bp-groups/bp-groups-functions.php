@@ -778,6 +778,7 @@ function groups_get_group_mods( $group_id ) {
  * @return false|array Multi-d array of 'members' list and 'count'.
  */
 function groups_get_group_members( $args = array() ) {
+	static $cache = array();
 
 	$function_args = func_get_args();
 
@@ -836,20 +837,27 @@ function groups_get_group_members( $args = array() ) {
 			}
 		}
 
-		// Perform the group member query (extends BP_User_Query).
-		$members = new BP_Group_Member_Query(
-			array(
-				'group_id'        => $r['group_id'],
-				'per_page'        => $r['per_page'],
-				'page'            => $r['page'],
-				'group_role'      => $r['group_role'],
-				'exclude'         => $r['exclude'],
-				'search_terms'    => $r['search_terms'],
-				'type'            => $r['type'],
-				'xprofile_query'  => $r['xprofile_query'],
-				'populate_extras' => $r['populate_extras'],
-			)
+		$group_member_args = array(
+			'group_id'        => $r['group_id'],
+			'per_page'        => $r['per_page'],
+			'page'            => $r['page'],
+			'group_role'      => $r['group_role'],
+			'exclude'         => $r['exclude'],
+			'search_terms'    => $r['search_terms'],
+			'type'            => $r['type'],
+			'xprofile_query'  => $r['xprofile_query'],
+			'populate_extras' => $r['populate_extras'],
 		);
+
+		$cache_key = 'bp_groups_get_group_members_' . md5( maybe_serialize( $group_member_args ) );
+		if ( ! isset( $cache[ $cache_key ] ) ) {
+			// Perform the group member query (extends BP_User_Query).
+			$members = new BP_Group_Member_Query( $group_member_args );
+
+			$cache[ $cache_key ] = $members;
+		} else {
+			$members = $cache[ $cache_key ];
+		}
 
 		// Structure the return value as expected by the template functions.
 		$retval = array(
@@ -3670,7 +3678,7 @@ function bp_get_active_group_types( $args = array() ) {
 		'group_types'
 	);
 
-	$group_cache_key = 'bp_get_active_group_types_' . md5( serialize( $args ) );
+	$group_cache_key = 'bp_get_active_group_types_' . md5( maybe_serialize( $args ) );
 
 	if ( isset( $group_cache[ $group_cache_key ] ) ) {
 		return $group_cache[ $group_cache_key ];
@@ -3972,6 +3980,7 @@ function bp_group_ids_array_flatten( $array ) {
  * @return array
  */
 function bp_groups_get_excluded_group_types() {
+	static $bp_group_type_query = null;
 
 	$bp_group_type_ids  = array();
 	$post_type          = bp_groups_get_group_type_post_type();
@@ -3987,7 +3996,10 @@ function bp_groups_get_excluded_group_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	if ( null === $bp_group_type_query ) {
+		$bp_group_type_query = new WP_Query( $bp_group_type_args );
+	}
+
 	if ( $bp_group_type_query->have_posts() ) :
 		while ( $bp_group_type_query->have_posts() ) :
 			$bp_group_type_query->the_post();
@@ -4053,8 +4065,9 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
  * @return mixed
  */
 function bp_group_get_group_type_id( $group_type = '' ) {
+	static $cache = array();
 
-	$args             = array(
+	$args = array(
 		'post_type'  => 'bp-group-type',
 		'meta_query' => array(
 			array(
@@ -4063,11 +4076,18 @@ function bp_group_get_group_type_id( $group_type = '' ) {
 			),
 		),
 	);
-	$group_type_query = new WP_Query( $args );
 
-	$posts = $group_type_query->posts;
+	$cache_key = md5( maybe_serialize( $args ) );
 
-	$id = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	} else {
+		$group_type_query = new WP_Query( $args );
+		$posts            = $group_type_query->posts;
+		$id               = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+
+		$cache[ $cache_key ] = $id;
+	}
 
 	return $id;
 }
