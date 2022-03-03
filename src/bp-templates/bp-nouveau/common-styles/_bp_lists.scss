@@ -161,14 +161,9 @@
 
 //Group Lists
 .buddypress-wrap ul.bp-list.groups-dir-list {
-	display: -ms-grid;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
-	-ms-flex-pack: distribute;
-	justify-content: space-around;
 
-	&:before {
-		display: none; // this is a hack to get the grid to work
+	> li {
+		min-width: 275px;
 	}
 
 	.bs-group-cover {
@@ -289,8 +284,6 @@
 	}
 
 	li.item-entry {
-		flex: none !important;
-		max-width: initial !important;
 		margin-bottom: $marg-med;
 
 		.item-avatar {
@@ -337,7 +330,7 @@
 		}
 
 		.list-wrap {
-			border-radius: 3px;
+			border-radius: 4px;
 		}
 
 		.item-block .item-meta-wrap.has-meta {
