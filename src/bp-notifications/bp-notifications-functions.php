@@ -959,7 +959,7 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
  * @return array
  */
 function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
-	if ( empty( $user_id ) ) {
+	if ( empty( $user_id ) || bb_enabled_legacy_email_preference() ) {
 		return array();
 	}
 
@@ -1013,19 +1013,26 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		}
 	}
 
-	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+	$admin_excluded_actions = array();
+	$all_notifications      = array_column( array_filter( $all_notifications ), 'default', 'key' );
 
 	if ( ! empty( $enabled_all_notification ) ) {
 		foreach ( $enabled_all_notification as $key => $types ) {
+			if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
+				$admin_excluded_actions[] = current( $all_actions[ $key . '_' . $type ] );
+			}
 			if ( isset( $types[ $type ] ) ) {
 				$default_by_admin[ $key . '_' . $type ] = $types[ $type ];
 			}
 		}
 	}
 
-	$notifications = wp_parse_args( $default_by_admin, $all_notifications );
-
-	$excluded_actions = array();
+	$notifications          = wp_parse_args( $default_by_admin, $all_notifications );
+	$excluded_actions       = array();
+	$notifications_type_key = 'enable_notification';
+	if ( in_array( $type, array( 'web', 'app' ), true ) ) {
+		$notifications_type_key = $notifications_type_key . '_' . $type;
+	}
 
 	foreach ( $notifications as $key => $val ) {
 		$user_val = get_user_meta( $user_id, $key, true );
@@ -1037,21 +1044,17 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
 
-		// Add in excluded action if the settings is disabled from backend.
-		if ( isset( $default_by_admin ) && isset( $default_by_admin[ $key ] ) && 'no' === $default_by_admin[ $key ][0] ) {
-			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
-		}
-		if ( isset( $default_by_admin ) && isset( $default_by_admin[ $key ] ) && 'no' === $default_by_admin[ $key ] ) {
+		// Add in excluded action if the settings is disabled from frontend top bar Enable Notification option.
+		if ( 'no' === bp_get_user_meta( $user_id, $notifications_type_key, true ) ) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
 
-		// Add in excluded action if the settings is disabled from frontend topbar Enable Notification option.
-		if ( 'no' === bp_get_user_meta( $user_id, 'enable_notification', true ) ) {
-			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
+		// add global excluded actions.
+		if ( ! empty( $admin_excluded_actions ) ) {
+			$excluded_actions = array_merge( $excluded_actions, $admin_excluded_actions );
 		}
 
 		$excluded_actions = array_unique( $excluded_actions );
-
 	}
 
 	return $excluded_actions;
