@@ -3008,18 +3008,11 @@ function bb_labs_notification_preferences_info_section_callback() {
 				wp_kses_post(
 				/* translators: Support portal. */
 					__(
-						'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s">support portal</a>.',
+						'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s" target="_blank" >support portal</a>.',
 						'buddyboss'
 					)
 				),
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-pages',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
+				"https://support.buddyboss.com"
 			)
 		);
 		?>
