@@ -1082,8 +1082,8 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 
 	$user_id = intval( $user_id );
 
-	// Do not process if no user_id
-	if ( $user_id === 0 ) {
+	// Do not process if no user_id.
+	if ( 0 === $user_id ) {
 		return array();
 	}
 
