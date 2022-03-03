@@ -188,7 +188,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
  *
  * @return bool Yes if the topic appears as a lead, otherwise false
  */
-function bbp_show_lead_topic( $show_lead = false ) {
+function bbp_show_lead_topic( $show_lead = true ) {
 
 	// Never separate the lead topic in feeds.
 	if ( is_feed() ) {
