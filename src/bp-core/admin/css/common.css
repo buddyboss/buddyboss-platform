@@ -2919,7 +2919,7 @@ table tbody td .bb-description {
   flex-direction: column;
   margin-right: 15px;
   text-align: center;
-  width: 115px;
+  width: 110px;
 }
 
 .bb-header-style-outer .bb-header-style input[type="radio"] {
@@ -2938,11 +2938,11 @@ table tbody td .bb-description {
 .bb-header-style-outer .bb-header-style .option:before {
   background: #f9f9f9;
   border: 2px solid #ccd0d4;
-  border-radius: 5px;
+  border-radius: 4px;
   box-sizing: border-box;
   content: "";
   display: flex;
-  height: 115px;
+  height: 110px;
   margin-bottom: 5px;
   transition: all 0.3s ease;
   width: 100%;
@@ -2992,7 +2992,7 @@ html[dir="rtl"] .bb-header-style-outer .bb-header-style .option.opt-left:after {
   flex-direction: column;
   margin-right: 15px;
   text-align: center;
-  width: 115px;
+  width: 110px;
 }
 
 .bb-grid-style-outer .bb-grid-style input[type="radio"] {
@@ -3011,11 +3011,11 @@ html[dir="rtl"] .bb-header-style-outer .bb-header-style .option.opt-left:after {
 .bb-grid-style-outer .bb-grid-style .option:before {
   background: #f9f9f9;
   border: 2px solid #ccd0d4;
-  border-radius: 5px;
+  border-radius: 4px;
   box-sizing: border-box;
   content: "";
   display: flex;
-  height: 115px;
+  height: 110px;
   margin-bottom: 5px;
   transition: all 0.3s ease;
   width: 100%;
@@ -3061,7 +3061,7 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
   flex-direction: column;
   margin-right: 15px;
   text-align: center;
-  width: 115px;
+  width: 110px;
 }
 
 .bb-grid-style-outer .bb-header-style input[type="radio"] {
@@ -3080,11 +3080,11 @@ html[dir="rtl"] .bb-grid-style-outer .bb-grid-style .option.opt-left:after {
 .bb-grid-style-outer .bb-header-style .option:before {
   background: #f9f9f9;
   border: 2px solid #ccd0d4;
-  border-radius: 5px;
+  border-radius: 4px;
   box-sizing: border-box;
   content: "";
   display: flex;
-  height: 115px;
+  height: 110px;
   margin-bottom: 5px;
   transition: all 0.3s ease;
   width: 100%;
