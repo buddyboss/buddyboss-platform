@@ -1562,89 +1562,51 @@ function bp_nouveau_add_notify_group_members_checkbox() {
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
 
-		$type = 'email';
+		// Groups preferences registered.
+		$options = bb_register_notification_preferences( 'groups' );
 
-		// All preferences registered.
-		$preferences = bb_register_notification_preferences();
+		if ( empty( $options ) ) {
+			return;
+		}
 
 		// Saved notification from backend default settings.
 		$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
-		// Enabled default notification from preferences.
-		$all_notifications = array();
-
-		$all_actions = array();
-
-		// Enabled default notification from backend.
-		$default_by_admin = array();
-
-		if ( ! empty( $preferences ) ) {
-			$preferences = array_column( $preferences, 'fields', null );
-			foreach ( $preferences as $key => $val ) {
-				$all_notifications = array_merge( $all_notifications, $val );
-			}
+		if ( empty( $options['fields'] ) ) {
+			return;
 		}
 
-		$all_notifications = array_map(
-			function ( $n ) use ( $type ) {
-				if (
-					! empty( $n['notifications'] ) &&
-					in_array( $type, array( 'web', 'app' ), true )
-				) {
-					$n['key'] = $n['key'] . '_' . $type;
+		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
+		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
-					return $n;
-				} elseif (
-					! empty( $n['email_types'] ) &&
-					'email' === $type
-				) {
-					$n['key'] = $n['key'] . '_' . $type;
-
-					return $n;
-				}
-
-			},
-			$all_notifications
+		$fields = array_filter(
+			$options['fields'],
+			function ( $var ) use ( $enabled_notification ) {
+				return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
+			}
 		);
 
-		$all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
-		if ( ! empty( $all_actions ) ) {
-			foreach ( $all_actions as $key => $val ) {
-				$all_actions[ $key ] = array_column( array_filter( $val ), 'component_action' );
-			}
+		if ( empty( $fields ) ) {
+			return;
 		}
 
-		if ( ! empty( $enabled_all_notification ) ) {
-			foreach ( $enabled_all_notification as $key => $types ) {
-				if ( isset( $types[ $type ] ) ) {
-					$default_by_admin[ $key . '_' . $type ] = $types[ $type ];
-				}
-			}
-		}
-
-		if ( isset( $default_by_admin ) && isset( $default_by_admin['notification_groups_group_updated_email'] ) && 'yes' === $default_by_admin['notification_groups_group_updated_email'] ) {
+		$keys = array_column( $fields, 'key' );
+		if ( ! empty( $keys ) && in_array( 'notification_groups_group_updated', $keys, true ) ) {
 			printf(
 				'<p class="bp-controls-wrap">
-		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
-		<label for="group-notify-members" class="bp-label-text">%s</label>
-	</p>',
-				esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
-			);
-		} elseif ( isset( $default_by_admin ) && ! array_key_exists( 'notification_groups_group_updated_email', $default_by_admin ) ) {
-			printf(
-				'<p class="bp-controls-wrap">
-		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
-		<label for="group-notify-members" class="bp-label-text">%s</label>
-	</p>',
+                    <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+                    <label for="group-notify-members" class="bp-label-text">%s</label>
+                </p>',
 				esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
 			);
 		}
 	} else {
 		printf(
 			'<p class="bp-controls-wrap">
-		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
-		<label for="group-notify-members" class="bp-label-text">%s</label>
-	</p>',
+                <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+                <label for="group-notify-members" class="bp-label-text">%s</label>
+            </p>',
 			esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
 		);
 	}
