@@ -917,16 +917,8 @@ a.layout-grid-view {
   }
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list {
-  display: -ms-grid;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-}
-
-.buddypress-wrap ul.bp-list.groups-dir-list:before {
-  display: none;
+.buddypress-wrap ul.bp-list.groups-dir-list > li {
+  min-width: 275px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover.cover-large a {
@@ -1038,8 +1030,6 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list li.item-entry {
-  flex: none !important;
-  max-width: initial !important;
   margin-bottom: 15px;
 }
 
