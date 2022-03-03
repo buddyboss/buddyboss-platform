@@ -63,20 +63,26 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id Member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_member_folder_ids( $member_id, $action = '' ) {
+	public static function get_member_folder_ids( $member_id, $action = '', $page = - 1 ) {
 		$folder_ids = array();
 
-		$folders = BP_Document_Folder::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'user_id'          => $member_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$folders = BP_Document_Folder::get( $args );
 
 		if ( ! empty( $folders['folders'] ) ) {
 			$folder_ids = $folders['folders'];
@@ -99,20 +105,26 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $group_id Group id.
+	 * @param int $page     Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_group_folder_ids( $group_id ) {
+	public static function get_group_folder_ids( $group_id, $page = - 1 ) {
 		$folder_ids = array();
 
-		$folders = BP_Document_Folder::get(
-			array(
-				'moderation_query' => false,
-				'per_page'         => 0,
-				'fields'           => 'ids',
-				'group_id'         => $group_id,
-			)
+		$args = array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'group_id'         => $group_id,
 		);
+
+		if ( $page > 0 ) {
+			$args['per_page'] = self::$item_per_page;
+			$args['page']     = $page;
+		}
+
+		$folders = BP_Document_Folder::get( $args );
 
 		if ( ! empty( $folders['folders'] ) ) {
 			$folder_ids = $folders['folders'];
@@ -215,13 +227,15 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->background_disabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $folder_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $folder_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $folder_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -269,13 +283,15 @@ class BP_Suspend_Folder extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->background_disabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $folder_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $folder_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $folder_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();

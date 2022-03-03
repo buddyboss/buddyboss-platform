@@ -65,17 +65,18 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url                 : BP_Nouveau.ajaxurl,
-				timeout             : 3 * 60 * 60 * 1000,
-				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles       : 'image/*',
-				autoProcessQueue    : true,
-				addRemoveLinks      : true,
-				uploadMultiple      : false,
-				maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+				url                 		 : BP_Nouveau.ajaxurl,
+				timeout             		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig      		 : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  		 : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       		 : 'image/*',
+				autoProcessQueue    		 : true,
+				addRemoveLinks      		 : true,
+				uploadMultiple      		 : false,
+				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles 		 : 10,
+				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 			// if defined, add custom dropzone options.
@@ -91,19 +92,20 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_document_options = {
-				url                  : BP_Nouveau.ajaxurl,
-				timeout              : 3 * 60 * 60 * 1000,
-				dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
-				acceptedFiles        : BP_Nouveau.media.document_type,
-				createImageThumbnails: false,
-				dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
-				autoProcessQueue     : true,
-				addRemoveLinks       : true,
-				uploadMultiple       : false,
-				maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
-				dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
+				url                  		 : BP_Nouveau.ajaxurl,
+				timeout              		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig       		 : BP_Nouveau.media.dictFileTooBig,
+				acceptedFiles        		 : BP_Nouveau.media.document_type,
+				createImageThumbnails		 : false,
+				dictDefaultMessage   		 : BP_Nouveau.media.dropzone_document_message,
+				autoProcessQueue     		 : true,
+				addRemoveLinks       		 : true,
+				uploadMultiple       		 : false,
+				maxFiles             		 : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+				maxFilesize          		 : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+				dictInvalidFileType  		 : BP_Nouveau.document.dictInvalidFileType,
+				dictMaxFilesExceeded 		 : BP_Nouveau.media.document_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 		},
@@ -115,19 +117,20 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_video_options = {
-				url                  : BP_Nouveau.ajaxurl,
-				timeout              : 3 * 60 * 60 * 1000,
-				dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
-				acceptedFiles        : BP_Nouveau.video.video_type,
-				createImageThumbnails: false,
-				dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
-				autoProcessQueue     : true,
-				addRemoveLinks       : true,
-				uploadMultiple       : false,
-				maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-				maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictInvalidFileType  : BP_Nouveau.video.dictInvalidFileType,
-				dictMaxFilesExceeded : BP_Nouveau.video.video_dict_file_exceeded,
+				url                  		 : BP_Nouveau.ajaxurl,
+				timeout              		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig       		 : BP_Nouveau.video.dictFileTooBig,
+				acceptedFiles        		 : BP_Nouveau.video.video_type,
+				createImageThumbnails		 : false,
+				dictDefaultMessage   		 : BP_Nouveau.video.dropzone_video_message,
+				autoProcessQueue     		 : true,
+				addRemoveLinks       		 : true,
+				uploadMultiple       		 : false,
+				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles 		 : 10,
+				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size 		 : 2,
+				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
+				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
 			};
 
 		},
@@ -1027,7 +1030,7 @@ window.bp = window.bp || {};
 							},
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [
 								[new RegExp( /<div/gi ), '<p'],
 								[new RegExp( /<\/div/gi ), '</p'],
@@ -1035,12 +1038,27 @@ window.bp = window.bp || {};
 								[new RegExp( /<\/h[1-6]/gi ), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: [ 'ul', 'ol', 'li' ]
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+								unwrapTags: []
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								linkValidation: true
+							}
 						}
 					);
+
+					$( document ).on ( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function( event ) {
+
+						var URL = event.target.value;
+						
+						if ( bp.Nouveau.isURL( URL ) ) {
+							$( event.target ).removeClass('isNotValid').addClass('isValid');
+						} else {
+							$( event.target ).removeClass('isValid').addClass('isNotValid');
+						}
+		
+					});
 
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 						! _.isUndefined( BP_Nouveau.media.emoji ) &&
@@ -1306,6 +1324,15 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-document-uploader', bp.Nouveau.Messages.dropzone_document_options );
 
 				bp.Nouveau.Messages.dropzone.on(
+					'addedfile',
+					function ( file ) {
+						var filename = file.upload.filename;
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
 					'sending',
 					function(file, xhr, formData) {
 						formData.append( 'action', 'document_document_upload' );
@@ -1527,21 +1554,19 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function( element, file ) {
-
-						$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-
+					function( element ) {
 						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 						var radius        = circle.r.baseVal.value;
 						var circumference = radius * 2 * Math.PI;
 
 						circle.style.strokeDasharray  = circumference + ' ' + circumference;
-						circle.style.strokeDashoffset = circumference;
 						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						circle.style.strokeDashoffset = offset;
-
-						if ( element.upload.progress === 100 ) {
-							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+						if ( element.upload.progress <= 99 ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+							circle.style.strokeDashoffset = offset;
+						} else if ( element.upload.progress === 100 ) {
+							circle.style.strokeDashoffset = circumference - 0.99 * circumference;
+							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 						}
 					}
 				);
@@ -1549,6 +1574,13 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'success',
 					function(file, response) {
+
+						if ( file.upload.progress === 100 ) {
+							$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
+							$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+						}
+
 						if ( response.data.id ) {
 							file.id 				 = response.data.id;
 							response.data.uuid 		 = file.upload.uuid;

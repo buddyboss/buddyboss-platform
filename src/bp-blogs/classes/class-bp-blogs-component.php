@@ -348,6 +348,7 @@ class BP_Blogs_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'blog_meta',
+				'bp_blogs',
 			)
 		);
 
