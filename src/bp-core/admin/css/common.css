@@ -2377,7 +2377,7 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 .bp-messages-feedback .bp-feedback.warning .bp-icon:before {
-  font-family: "bb-icons";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   content: "\e855";
 }

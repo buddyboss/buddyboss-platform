@@ -480,7 +480,7 @@ window.bp = window.bp || {};
 
 						self.postForm.$el.find( 'input#group' ).prop( 'checked', true );
 						self.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-edit-group' );
-						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-angle-down').remove();
+						self.postForm.$el.find( '#bp-activity-privacy-point' ).find('i.bb-icon-chevron-down').remove();
 						self.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
 						// display group avatar when edit any feed.
 						if ( activity_data.group_avatar && false === activity_data.group_avatar.includes('mystery-group') ) {
