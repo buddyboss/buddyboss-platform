@@ -84,7 +84,7 @@ $video_url = 'https://player.vimeo.com/video/683811854?h=ee740ce122';
 								sprintf(
 								/* translators: 1. BuddyBoss platform pro link. 2. BuddyBoss platform pro text. */
 									'<a href="%1$s" target="_blank">%2$s</a>',
-									esc_url( 'https://www.buddyboss.com/pro' ),
+									esc_url( 'https://www.buddyboss.com/platform' ),
 									esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' )
 								),
 								sprintf(
