@@ -144,7 +144,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 						</a>
 					</header>
 					<div class="bb-leave-group-content bb-action-popup-content">
-						<p><?php echo esc_html__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+						<p><?php echo esc_html__( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
 						<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
