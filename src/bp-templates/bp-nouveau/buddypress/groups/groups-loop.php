@@ -155,7 +155,7 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 							</a>
 						</header>
 						<div class="bb-leave-group-content bb-action-popup-content">
-							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span></p>
+							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
 							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
