@@ -1048,14 +1048,14 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		if ( 'no' === bp_get_user_meta( $user_id, $notifications_type_key, true ) ) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
-
-		// add global excluded actions.
-		if ( ! empty( $admin_excluded_actions ) ) {
-			$excluded_actions = array_merge( $excluded_actions, $admin_excluded_actions );
-		}
-
-		$excluded_actions = array_unique( $excluded_actions );
 	}
+
+	// add global excluded actions.
+	if ( ! empty( $admin_excluded_actions ) ) {
+		$excluded_actions = array_merge( $excluded_actions, $admin_excluded_actions );
+	}
+
+	$excluded_actions = array_unique( $excluded_actions );
 
 	return $excluded_actions;
 }
