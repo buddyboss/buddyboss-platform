@@ -7891,7 +7891,7 @@ function bb_platform_group_headers_element_enable( $element ) {
 function bb_platform_group_header_style( $default = 'left' ) {
 
 	if ( function_exists( 'bb_platform_pro_group_header_style' ) ) {
-		return bb_platform_pro_group_header_style( $default );
+		return bb_platform_pro_group_header_style();
 	}
 
 	return $default;
@@ -7927,7 +7927,7 @@ function bb_platform_group_element_enable( $element ) {
 function bb_platform_group_grid_style( $default = 'left' ) {
 
 	if ( function_exists( 'bb_platform_pro_group_grid_style' ) ) {
-		return bb_platform_pro_group_grid_style( $default );
+		return bb_platform_pro_group_grid_style();
 	}
 
 	return $default;
