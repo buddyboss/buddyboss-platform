@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Loop
+ * The template for document loop
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-loop.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 bp_nouveau_before_loop();

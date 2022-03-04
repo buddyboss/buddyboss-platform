@@ -2,54 +2,64 @@
 /**
  * BuddyBoss - Groups Cover Photo Header.
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/single/cover-image-header.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 $group_link               = bp_get_group_permalink();
 $admin_link               = trailingslashit( $group_link . 'admin' );
 $group_avatar             = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link         = trailingslashit( $admin_link . 'group-cover-image' );
-$group_cover_image        = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups', 'item_id'    => bp_get_group_id() ) );
+$group_cover_image        = bp_attachments_get_attachment(
+	'url',
+	array(
+		'object_dir' => 'groups',
+		'item_id'    => bp_get_group_id(),
+	)
+);
 $has_cover_image          = '';
 $has_cover_image_position = '';
+$has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
 
 ?>
 
 <div id="cover-image-container">
 
 	<?php
-		if ( ! empty( $group_cover_image ) ) {
-			$group_cover_position = groups_get_groupmeta( bp_get_current_group_id(), 'bp_cover_position', true );
-			$has_cover_image = ' has-cover-image';
-			if ( '' !== $group_cover_position ) {
-				$has_cover_image_position = 'has-position';
-			}
+	if ( ! empty( $group_cover_image ) ) {
+		$group_cover_position = groups_get_groupmeta( bp_get_current_group_id(), 'bp_cover_position', true );
+		$has_cover_image      = ' has-cover-image';
+		if ( '' !== $group_cover_position ) {
+			$has_cover_image_position = ' has-position';
 		}
+	}
 	?>
 
-	<div id="header-cover-image" class="<?php echo $has_cover_image_position; echo $has_cover_image; ?>">
-		<?php if ( bp_group_use_cover_image_header() ) {
+	<div id="header-cover-image" class="<?php echo esc_attr( $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
+		<?php
+		if ( bp_group_use_cover_image_header() ) {
 
 			if ( ! empty( $group_cover_image ) ) {
 				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '"' . ( '' !== $group_cover_position ? ' data-top="' . $group_cover_position . '"' : '' ) . ( '' !== $group_cover_position ? ' style="top: ' . $group_cover_position . 'px"' : '' ) . ' alt="" />';
 			}
 			?>
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e('Change Cover Photo', 'buddyboss'); ?>">
+				<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 			<?php } ?>
 
-			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() ) { ?>
-				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e('Reposition Cover Photo', 'buddyboss'); ?>">
+			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() && bp_attachments_get_group_has_cover_image( bp_get_group_id() ) ) { ?>
+				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icon-move"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
-					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss'); ?></a>
-					<a href="#" class="button small cover-image-save"><?php _e('Save Changes', 'buddyboss'); ?></a>
-					<span class="drag-element-helper"><i class="bb-icon-menu"></i><?php _e('Drag to move cover photo', 'buddyboss'); ?></span>
-					<img src="<?php echo esc_url( $group_cover_image );  ?>" alt="<?php _e('Cover photo', 'buddyboss'); ?>" />
+					<a href="#" class="button small cover-image-cancel"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
+					<a href="#" class="button small cover-image-save"><?php _e( 'Save Changes', 'buddyboss' ); ?></a>
+					<span class="drag-element-helper"><i class="bb-icon-menu"></i><?php _e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
+					<img src="<?php echo esc_url( $group_cover_image ); ?>" alt="<?php _e( 'Cover photo', 'buddyboss' ); ?>" />
 				</div>
 			<?php } ?>
 		<?php } ?>
@@ -59,7 +69,7 @@ $has_cover_image_position = '';
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
-					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e('Change Group Photo', 'buddyboss'); ?>">
+					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-edit-thin"></i>
 					</a>
 				<?php } ?>

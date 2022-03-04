@@ -966,49 +966,60 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	$group      = bp_messages_get_meta( $id, 'group_id', true );
 	$group_name = bp_get_group_name( groups_get_group( $group ) );
 
-	// Email each recipient.
-	$all_recipients = array();
-
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
-	// Send an email to each recipient.
-	foreach ( $recipients as $recipient ) {
-
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
-			continue;
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+		global $bb_email_background_updater;
+		$chunk_recipients = array_chunk( $recipients, 10 );
+		if ( ! empty( $chunk_recipients ) ) {
+			foreach ( $chunk_recipients as $key => $data_recipients ) {
+				$bb_email_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_render_messages_recipients',
+							'args'     => array(
+								$data_recipients,
+								'group-message-email',
+								bp_get_messages_slug(),
+								$thread_id,
+								$sender_id,
+								array(
+									'message_id'  => $id,
+									'usermessage' => stripslashes( $message ),
+									'message'     => stripslashes( $message ),
+									'sender.name' => $sender_name,
+									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+									'group.name'  => $group_name
+								),
+							),
+						),
+					)
+				);
+				$bb_email_background_updater->save();
+			}
+			$bb_email_background_updater->dispatch();
 		}
 
-		// User data and links.
-		$ud = get_userdata( $recipient->user_id );
-		if ( empty( $ud ) ) {
-			continue;
-		}
+	} else {
+		// Send an email to each recipient.
+		foreach ( $recipients as $recipient ) {
 
-		$unsubscribe_args = array(
-			'user_id'           => $recipient->user_id,
-			'notification_type' => 'group-message-email',
-		);
+			if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+				continue;
+			}
 
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-			$all_recipients[] = array(
-				'email_type' => 'group-message-email',
-				'recipient'  => $ud,
-				'arguments'  => array(
-					'tokens' => array(
-						'message_id'  => $id,
-						'usermessage' => stripslashes( $message ),
-						'message'     => stripslashes( $message ),
-						'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-						'sender.name' => $sender_name,
-						'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-						'group.name'  => $group_name,
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-					),
-				),
+			// User data and links.
+			$ud = get_userdata( $recipient->user_id );
+			if ( empty( $ud ) ) {
+				continue;
+			}
+
+			$unsubscribe_args = array(
+				'user_id'           => $recipient->user_id,
+				'notification_type' => 'group-message-email',
 			);
 
-		} else {
 			bp_send_email(
 				'group-message-email',
 				$ud,
@@ -1026,14 +1037,6 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 				)
 			);
 		}
-	}
-
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && ! empty( $all_recipients ) ) {
-		// Added bulk data into email queue.
-		bb_email_queue()->add_bulk_record( $all_recipients );
-
-		// call email background process.
-		bb_email_queue()->bb_email_background_process();
 	}
 
 	/**
@@ -1181,9 +1184,12 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 
 		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 			if ( bp_is_active( 'groups' ) ) {
-				$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
-				$group_avatar = array(
-					'url'  => bp_core_fetch_avatar(
+
+				$group_name       = bp_get_group_name( groups_get_group( $group_id ) );
+				$group_avatar_url = '';
+
+				if ( ! bp_disable_group_avatar_uploads() ) {
+					$group_avatar_url = bp_core_fetch_avatar(
 						array(
 							'item_id'    => $group_id,
 							'object'     => 'group',
@@ -1193,9 +1199,16 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'title'      => $group_name,
 							'html'       => false,
 						)
-					),
+					);
+				} else {
+					$group_avatar_url = bb_get_buddyboss_group_avatar();
+				}
+
+				$group_avatar = array(
+					'url'  => $group_avatar_url,
 					'name' => $group_name,
 				);
+
 			} else {
 
 				/**
@@ -1209,24 +1222,24 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
-				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$default_group_avatar_url = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 				$legacy_group_avatar_name = '-groupavatar-full';
 				$legacy_user_avatar_name  = '-avatar2';
+				$group_avatar_url         = '';
 
-				if ( ! empty( $group_name ) ) {
+				if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
 					$directory         = 'group-avatars';
 					$avatar_size       = '-bpfull';
 					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
 					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
 
-					$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
-					if ( '' !== $avatar ) {
-						$group_avatar = array(
-							'url'  => $avatar,
-							'name' => $group_name,
-						);
-					}
+					$group_avatar_url = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
 				}
+
+				$group_avatar = array(
+					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
+					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+				);
 			}
 
 			if ( ! empty( $group_avatar ) ) {
@@ -1420,4 +1433,53 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 	}
 
 	return $message;
+}
+
+/**
+ * Send Group email into background.
+ *
+ * @since BuddyBoss 1.9.0
+ *
+ * @param array  $recipients   Message Recipients.
+ * @param string $email_type   Email type.
+ * @param string $message_slug Message Slug.
+ * @param int    $thread_id    Message Thread ID.
+ * @param int    $sender_id    Sender ID.
+ * @param array  $tokens       Message Tokens.
+ */
+function bb_render_messages_recipients( $recipients, $email_type, $message_slug, $thread_id, $sender_id, $tokens = array() ) {
+
+	if ( empty( $recipients ) ) {
+		return;
+	}
+
+	// Send an email to all recipient.
+	foreach ( $recipients as $recipient ) {
+
+		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+			continue;
+		}
+
+		// User data and links.
+		$ud = get_userdata( $recipient->user_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
+		$unsubscribe_args = array(
+			'user_id'           => $recipient->user_id,
+			'notification_type' => 'group-message-email',
+		);
+
+		$tokens['message.url'] = esc_url( bp_core_get_user_domain( $recipient->user_id ) . $message_slug . '/view/' . $thread_id . '/' );
+		$tokens['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+		bp_send_email(
+			$email_type,
+			$ud,
+			array(
+				'tokens' => $tokens,
+			)
+		);
+	}
 }

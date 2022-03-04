@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8.3
 Requires PHP: 5.6.20
-Stable tag: 1.8.5
+Stable tag: 1.9.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,56 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.9.0.1 =
+* Media - Fixed critical API caching purge issue on symlink delete cron
+
+= 1.9.0 =
+* Performance - Optimized core functions, loops, and SQL queries
+* Performance - Extended object caching support
+* Performance - Removed duplicate SQL queries significantly
+* Performance - Optimized a bunch of specific page and functionality performance
+* Forums - Provided edit option for forums and discussion in the WordPress toolbar
+* Activity - Show preview when link added with text
+* Activity - Improved embedded video width and UI
+* Activity - Improved activity form upload media UI
+* Profiles - Handled profile completion widget string translation issue
+* REST API - Handled caching issues in the API to improve performance
+* REST API - Provided order by and include options in the API
+* REST API - Provided moderation can report parameters in the API
+* Compatibility - Show title properly when RankMath plugin is active
+
+= 1.8.7 =
+* Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled
+* Groups - Fixed group title and description critical security issue
+* Activity - Fixed critical issue to restrict photos and videos privacy update when uploaded to a specific album
+* Activity - Fixed small UI issue showing text close to ellipsis icon
+* Activity - Fixed @mention issue with space when user created from the dashboard
+* Activity - Fixed activity form upload UX issue with preview
+* Activity - Fixed activity form preview URL issue not rendered on paste
+* Media - Fixed documents directory screen small UI issues
+* Media - Fixed videos directory screen small UI issues
+* Media - Fixed edit action not working issue in media popup
+* Media - small improvement for video upload progress logic
+* Moderation - Fixed moderation markup issue in email customizer
+* REST API - Fixed group message thread permission issue in the API
+* REST API - Fixed media edit issue in the API
+* REST API - Fixed default avatar issue in the API when group avatar is disabled
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+
+= 1.8.6 =
+* Profiles - Provided WordPress, BuddyBoss, and Custom option to change default profile avatar image
+* Profiles - Provided BuddyBoss and Custom option to change default profile cover image
+* Groups - Provided BuddyBoss and Custom option to change default group avatar and cover image
+* Activity - significantly enhanced activity form interface with modal layout
+* Private Network - Provided option to restrict REST APIs and RSS feed public access
+* Media - Fixed generating thumbnail infinite loading issue for uploaded video
+* Media - Fixed portrait video thumbnail wrong size issues
+* Network Search - Fixed search issue with ampersand character in group and activities
+* REST API - Provided default cover and avatar image API support for profile and group
+* REST API - Provided caching support in the APIs for restrict Rest API and RSS feed option
+* REST API - Fixed activity like and comment parameter issue in the API
+* REST API - Fixed forum reply permission issue in the API
 
 = 1.8.5 =
 * Profiles - Fixed profile type search settings to show when the Network Search component is active

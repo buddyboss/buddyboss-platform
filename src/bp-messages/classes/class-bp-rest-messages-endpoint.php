@@ -1796,7 +1796,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
 
-		$response->add_links( $this->prepare_links( $thread ) );
+		$response->add_links( $this->prepare_links( $thread, $response ) );
 
 		/**
 		 * Filter a thread value returned from the API.
@@ -1813,12 +1813,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Messages_Thread $thread Thread object.
+	 * @param BP_Messages_Thread $thread   Thread object.
+	 * @param WP_REST_Response   $response Rest response.
 	 *
 	 * @return array Links for the given thread.
 	 * @since 0.1.0
 	 */
-	protected function prepare_links( $thread ) {
+	protected function prepare_links( $thread, $response ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
 
 		// Entity meta.
@@ -1840,6 +1841,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					'href' => rest_url( $starred_base . $message->id ),
 				);
 			}
+		}
+
+		$data = $response->get_data();
+		if ( ! empty( $data ) && ! empty( $data['is_group'] ) && bp_is_active( 'groups' ) ) {
+			$links['group'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $data['is_group'] ) ),
+				'embeddable' => true,
+			);
 		}
 
 		/**
@@ -2556,40 +2565,54 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private.
 
 			if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
+
+				$group_avatar = array(
+					'thumb' => '',
+					'full'  => '',
+				);
+
 				if ( bp_is_active( 'groups' ) ) {
-					$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
-					$group_avatar = array(
-						'thumb' => bp_core_fetch_avatar(
-							array(
-								'html'    => false,
-								'object'  => 'group',
-								'item_id' => $group_id,
-								'type'    => 'thumb',
-							)
-						),
-						'full'  => bp_core_fetch_avatar(
-							array(
-								'html'    => false,
-								'object'  => 'group',
-								'item_id' => $group_id,
-								'type'    => 'full',
-							)
-						),
-					);
+					$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+
+					if ( ! bp_disable_group_avatar_uploads() ) {
+						$group_avatar = array(
+							'thumb' => bp_core_fetch_avatar(
+								array(
+									'html'    => false,
+									'object'  => 'group',
+									'item_id' => $group_id,
+									'type'    => 'thumb',
+								)
+							),
+							'full'  => bp_core_fetch_avatar(
+								array(
+									'html'    => false,
+									'object'  => 'group',
+									'item_id' => $group_id,
+									'type'    => 'full',
+								)
+							),
+						);
+					} else {
+						$group_avatar = array(
+							'thumb' => function_exists( 'bb_get_buddyboss_group_avatar' ) ? bb_get_buddyboss_group_avatar( 'thumb' ) : buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss-50.png',
+							'full'  => function_exists( 'bb_get_buddyboss_group_avatar' ) ? bb_get_buddyboss_group_avatar() : buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png',
+						);
+					}
+
 				} else {
 					$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table = $prefix . 'bp_groups';
 					// phpcs:ignore
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
-					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
-					$legacy_group_avatar_name = '-groupavatar-full';
-					$legacy_user_avatar_name  = '-avatar2';
+					$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 
-					if ( ! empty( $group_name ) ) {
-						$directory         = 'group-avatars';
-						$avatar_size       = '-bpfull';
-						$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
-						$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+					if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
+						$directory                = 'group-avatars';
+						$avatar_size              = '-bpfull';
+						$legacy_group_avatar_name = '-groupavatar-full';
+						$legacy_user_avatar_name  = '-avatar2';
+						$avatar_folder_dir        = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+						$avatar_folder_url        = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
 
 						$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
 						if ( '' !== $avatar ) {
@@ -2598,6 +2621,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 								'full'  => $avatar,
 							);
 						}
+					} elseif ( function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) ) {
+						$group_avatar = array(
+							'thumb' => bb_attachments_get_default_profile_group_avatar_image(
+								array(
+									'object' => 'group',
+									'type'   => 'thumb',
+								)
+							),
+							'full'  => bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ),
+						);
 					}
 				}
 
