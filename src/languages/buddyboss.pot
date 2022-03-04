@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-02 14:53:51+00:00\n"
+"POT-Creation-Date: 2022-03-04 05:39:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -633,7 +633,7 @@ msgstr ""
 #: bp-activity/bp-activity-filters.php:2375
 #: bp-activity/bp-activity-filters.php:2787
 #: bp-activity/bp-activity-filters.php:2993
-#: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1722
+#: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1727
 #: cli/components/activity.php:763
 #. translators: 1. User Link. 2. Group link.
 msgid "%1$s posted an update in the group %2$s"
@@ -1112,8 +1112,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-activity.php:392
 #: bp-activity/classes/class-bp-activity-template.php:145
 #: bp-groups/bp-groups-functions.php:255 bp-groups/bp-groups-functions.php:787
-#: bp-groups/bp-groups-functions.php:2092
-#: bp-groups/bp-groups-functions.php:2443
+#: bp-groups/bp-groups-functions.php:2097
+#: bp-groups/bp-groups-functions.php:2448
 #: bp-groups/classes/class-bp-groups-group-members-template.php:101
 #: bp-groups/classes/class-bp-groups-group.php:1127
 #: bp-groups/classes/class-bp-groups-invite-template.php:86
@@ -3156,8 +3156,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:247
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
-#: bp-groups/bp-groups-admin.php:2581 bp-groups/bp-groups-functions.php:3580
-#: bp-groups/bp-groups-functions.php:3583
+#: bp-groups/bp-groups-admin.php:2581 bp-groups/bp-groups-functions.php:3585
+#: bp-groups/bp-groups-functions.php:3588
 msgid "Group Types"
 msgstr ""
 
@@ -4252,7 +4252,8 @@ msgstr ""
 msgid ""
 "BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You "
 "can help us prepare these features for official release by reporting issues "
-"and providing feedback through the <a href=\"%s\">support portal</a>."
+"and providing feedback through the <a href=\"%s\" target=\"_blank\" "
+">support portal</a>."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -4330,9 +4331,9 @@ msgstr ""
 #: bp-core/bp-core-functions.php:783 bp-core/bp-core-template.php:561
 #: bp-core/bp-core-update.php:895 bp-core/classes/class-bp-email-tokens.php:417
 #: bp-forums/admin/topics.php:679 bp-groups/bp-groups-admin.php:1426
-#: bp-groups/bp-groups-admin.php:2082 bp-groups/bp-groups-functions.php:4122
-#: bp-groups/bp-groups-functions.php:4141
-#: bp-groups/bp-groups-functions.php:4158 bp-groups/bp-groups-template.php:5506
+#: bp-groups/bp-groups-admin.php:2082 bp-groups/bp-groups-functions.php:4127
+#: bp-groups/bp-groups-functions.php:4146
+#: bp-groups/bp-groups-functions.php:4163 bp-groups/bp-groups-template.php:5506
 #: bp-groups/classes/class-bp-groups-component.php:645
 #: bp-groups/classes/class-bp-groups-component.php:974
 #: bp-groups/classes/class-bp-groups-list-table.php:439
@@ -4943,7 +4944,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:221
 #: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
 #: bp-groups/bp-groups-admin.php:1981 bp-groups/bp-groups-admin.php:2309
-#: bp-groups/bp-groups-functions.php:3588
+#: bp-groups/bp-groups-functions.php:3593
 #: bp-groups/classes/class-bp-groups-list-table.php:744
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:796
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:271
@@ -6297,7 +6298,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2540
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
-#: bp-groups/bp-groups-functions.php:3582
+#: bp-groups/bp-groups-functions.php:3587
 #: bp-groups/bp-groups-notifications.php:1251
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-notification.php:59
@@ -8504,28 +8505,28 @@ msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:232
 #: bp-core/deprecated/buddyboss/1.1.8.php:237
-#: bp-groups/bp-groups-functions.php:3579
 #: bp-groups/bp-groups-functions.php:3584
+#: bp-groups/bp-groups-functions.php:3589
 msgid "New Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:234
-#: bp-groups/bp-groups-functions.php:3581
+#: bp-groups/bp-groups-functions.php:3586
 msgid "Edit Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:238
-#: bp-groups/bp-groups-functions.php:3585
+#: bp-groups/bp-groups-functions.php:3590
 msgid "No Group Types found"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:239
-#: bp-groups/bp-groups-functions.php:3586
+#: bp-groups/bp-groups-functions.php:3591
 msgid "No Group Types found in trash"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:240
-#: bp-groups/bp-groups-functions.php:3587
+#: bp-groups/bp-groups-functions.php:3592
 msgid "Search Group Types"
 msgstr ""
 
@@ -8560,13 +8561,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -13958,10 +13959,10 @@ msgid ""
 msgstr ""
 
 #: bp-forums/common/locale.php:43 bp-groups/bp-groups-admin.php:1481
-#: bp-groups/bp-groups-functions.php:1343
-#: bp-groups/bp-groups-functions.php:4124
-#: bp-groups/bp-groups-functions.php:4143
-#: bp-groups/bp-groups-functions.php:4160
+#: bp-groups/bp-groups-functions.php:1348
+#: bp-groups/bp-groups-functions.php:4129
+#: bp-groups/bp-groups-functions.php:4148
+#: bp-groups/bp-groups-functions.php:4165
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:321
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:337
 #. translators: user role
@@ -13969,10 +13970,10 @@ msgid "Organizer"
 msgstr ""
 
 #: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2533
-#: bp-groups/bp-groups-admin.php:1482 bp-groups/bp-groups-functions.php:1351
-#: bp-groups/bp-groups-functions.php:4126
-#: bp-groups/bp-groups-functions.php:4145
-#: bp-groups/bp-groups-functions.php:4162
+#: bp-groups/bp-groups-admin.php:1482 bp-groups/bp-groups-functions.php:1356
+#: bp-groups/bp-groups-functions.php:4131
+#: bp-groups/bp-groups-functions.php:4150
+#: bp-groups/bp-groups-functions.php:4167
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:322
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:338
 #. translators: user role
@@ -14740,10 +14741,10 @@ msgid "Replies: %s"
 msgstr ""
 
 #: bp-forums/replies/functions.php:2499 bp-forums/users/template.php:517
-#: bp-groups/bp-groups-admin.php:1483 bp-groups/bp-groups-functions.php:1359
-#: bp-groups/bp-groups-functions.php:4128
-#: bp-groups/bp-groups-functions.php:4147
-#: bp-groups/bp-groups-functions.php:4164
+#: bp-groups/bp-groups-admin.php:1483 bp-groups/bp-groups-functions.php:1364
+#: bp-groups/bp-groups-functions.php:4133
+#: bp-groups/bp-groups-functions.php:4152
+#: bp-groups/bp-groups-functions.php:4169
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:323
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:339
 #: bp-members/bp-members-functions.php:3887
@@ -16798,9 +16799,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1257 bp-groups/bp-groups-admin.php:1269
 #: bp-groups/bp-groups-admin.php:1281 bp-groups/bp-groups-admin.php:1293
 #: bp-groups/bp-groups-admin.php:1420 bp-groups/bp-groups-admin.php:2026
-#: bp-groups/bp-groups-functions.php:4118
-#: bp-groups/bp-groups-functions.php:4137
-#: bp-groups/bp-groups-functions.php:4154
+#: bp-groups/bp-groups-functions.php:4123
+#: bp-groups/bp-groups-functions.php:4142
+#: bp-groups/bp-groups-functions.php:4159
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:441
 msgid "Organizers"
 msgstr ""
@@ -16900,9 +16901,9 @@ msgid "Enter a comma-separated list of user logins."
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1423 bp-groups/bp-groups-admin.php:2054
-#: bp-groups/bp-groups-functions.php:4120
-#: bp-groups/bp-groups-functions.php:4139
-#: bp-groups/bp-groups-functions.php:4156
+#: bp-groups/bp-groups-functions.php:4125
+#: bp-groups/bp-groups-functions.php:4144
+#: bp-groups/bp-groups-functions.php:4161
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:442
 msgid "Moderators"
 msgstr ""
@@ -16924,7 +16925,7 @@ msgstr ""
 msgid "Roles"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1485 bp-groups/bp-groups-functions.php:1367
+#: bp-groups/bp-groups-admin.php:1485 bp-groups/bp-groups-functions.php:1372
 msgid "Banned"
 msgstr ""
 
@@ -17120,19 +17121,19 @@ msgstr ""
 msgid "You successfully left the group."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:2538
-#: bp-groups/bp-groups-functions.php:2571
-#: bp-groups/bp-groups-functions.php:2608
+#: bp-groups/bp-groups-functions.php:2543
+#: bp-groups/bp-groups-functions.php:2576
+#: bp-groups/bp-groups-functions.php:2613
 msgid ""
 "Argument `membership_id` passed to %1$s  is deprecated. See the inline "
 "documentation at %2$s for more details."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:3001
+#: bp-groups/bp-groups-functions.php:3006
 msgid "Group type already exists."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:3032
+#: bp-groups/bp-groups-functions.php:3037
 msgid "You may not register a group type with this name."
 msgstr ""
 
@@ -28046,9 +28047,8 @@ msgstr ""
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1631
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1639
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1648
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1601
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1610
 msgid "Notify group members of these changes via email"
 msgstr ""
 
@@ -30404,7 +30404,7 @@ msgctxt "Unapprove the topic"
 msgid "Pending"
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:4592
+#: bp-groups/bp-groups-functions.php:4597
 #. translators: Group member count.
 msgctxt "group member count"
 msgid "%s member"
@@ -30468,14 +30468,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 

@@ -29,7 +29,7 @@ if ( false === $bb_changelog ) {
 }
 
 // If you have any video then add url here.
-$video_url = 'https://player.vimeo.com/video/338221385';
+$video_url = 'https://player.vimeo.com/video/683811854?h=ee740ce122';
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
@@ -49,12 +49,12 @@ $video_url = 'https://player.vimeo.com/video/338221385';
 			<?php
 			if ( true === $show_overview ) {
 				?>
-				<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
+				<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active" data-action="bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
 				<?php
 			}
 			if ( ! empty( $bb_changelog_data ) && isset( $bb_changelog_data['body'] ) ) {
 				?>
-				<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
+				<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor" data-action="bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
 				<?php
 			}
 			?>
@@ -84,7 +84,7 @@ $video_url = 'https://player.vimeo.com/video/338221385';
 								sprintf(
 								/* translators: 1. BuddyBoss platform pro link. 2. BuddyBoss platform pro text. */
 									'<a href="%1$s" target="_blank">%2$s</a>',
-									esc_url( 'https://www.buddyboss.com/pro' ),
+									esc_url( 'https://www.buddyboss.com/platform' ),
 									esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' )
 								),
 								sprintf(
@@ -104,7 +104,7 @@ $video_url = 'https://player.vimeo.com/video/338221385';
 						<p><?php esc_html_e( 'For more information, please watch the video below:', 'buddyboss' ); ?></p>
 						<div class="video-wrapper">
 							<div class="video-container">
-								<iframe src="<?php echo esc_url( $video_url ); ?>?byline=0&portrait=0&autoplay=0" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								<iframe src="<?php echo esc_url( $video_url ); ?>" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
 							</div>
 						</div>
 						<?php
