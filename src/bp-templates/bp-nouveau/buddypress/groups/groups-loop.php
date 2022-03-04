@@ -79,7 +79,7 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 						<div class="item-avatar"><a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a></div>
 					<?php endif; ?>
 
-					<div class="item">
+					<div class="item <?php echo esc_attr( $group_members . ' ' . $join_button ); ?>">
 
 						<div class="group-item-wrap">
 
