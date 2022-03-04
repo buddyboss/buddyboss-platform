@@ -196,7 +196,12 @@ class BP_Notifications_Notification {
 		$bp = buddypress();
 
 		// Look for a notification.
-		$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->notifications->table_name} WHERE id = %d", $this->id ) );
+		$notification = wp_cache_get( $this->id, 'bp_notifications' );
+
+		if ( false === $notification ) {
+			$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->notifications->table_name} WHERE id = %d", $this->id ) );
+			wp_cache_set( $this->id, $notification, 'bp_notifications' );
+		}
 
 		// Setup the notification data.
 		if ( ! empty( $notification ) && ! is_wp_error( $notification ) ) {
@@ -432,12 +437,20 @@ class BP_Notifications_Notification {
 				$order_by               = implode( ', ', $order_by_clean );
 				$conditions['order_by'] = "{$order_by}";
 			}
+
+			if ( ! empty( $args['id'] ) && 'in' === $args['order_by'] ) {
+				$in                     = implode( ',', wp_parse_id_list( $args['id'] ) );
+				$conditions['order_by'] = "FIELD(id, {$in})";
+			}
 		}
 
 		// Sort order direction.
 		if ( ! empty( $args['sort_order'] ) && in_array( $args['sort_order'], array( 'ASC', 'DESC' ) ) ) {
 			$sort_order               = $args['sort_order'];
 			$conditions['sort_order'] = "{$sort_order}";
+			if ( ! empty( $args['id'] ) && 'include' === $args['order_by'] ) {
+				$conditions['sort_order'] = '';
+			}
 		}
 
 		// Custom ORDER BY.
@@ -585,7 +598,14 @@ class BP_Notifications_Notification {
 
 		$bp = buddypress();
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
+		$cache_key = 'bp_notifications_check_access_' . $user_id . '_' . $notification_id;
+		$record    = wp_cache_get( $cache_key, 'bp_notifications' );
+
+		if ( false === $record ) {
+			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
+			wp_cache_set( $cache_key, $record, 'bp_notifications' );
+		}
+		return $record;
 	}
 
 	/**
@@ -705,6 +725,7 @@ class BP_Notifications_Notification {
 			array(
 				'order_by'   => $r['order_by'],
 				'sort_order' => $r['sort_order'],
+				'id'         => $r['id'],
 			)
 		);
 
