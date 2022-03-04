@@ -6580,14 +6580,23 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		$all_notifications
 	);
 
+	$main = array();
+
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
 	if ( ! empty( $enabled_notification ) ) {
 		foreach ( $enabled_notification as $key => $types ) {
+			if ( isset( $types['main'] ) ) {
+				$main[ $key ] = $types['main'];
+			}
 			if ( isset( $types[ $type ] ) ) {
 				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
 				$default_by_admin[ $key_type ] = $types[ $type ];
 			}
 		}
+	}
+
+	if ( ! bb_enabled_legacy_email_preference() && ! empty( $main ) && isset( $main[ $notification_type ] ) && 'no' === $main[ $notification_type ] ) {
+		return false;
 	}
 
 	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
@@ -6602,19 +6611,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	} elseif (
 		array_key_exists( $notification_type, $notifications ) &&
 		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
-		'no' !== bp_get_user_meta( $user_id, $notification_type, true ) &&
-		isset( $default_by_admin ) &&
-		isset( $default_by_admin[ $notification_type ] ) &&
-		'no' !== $default_by_admin[ $notification_type ]
-
-	) {
-		return true;
-	} elseif (
-		array_key_exists( $notification_type, $notifications ) &&
-		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
-		'no' !== bp_get_user_meta( $user_id, $notification_type, true ) &&
-		! isset( $default_by_admin[ $notification_type ] )
-
+		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
 	) {
 		return true;
 	}
