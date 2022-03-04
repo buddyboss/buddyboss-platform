@@ -1072,10 +1072,6 @@ a.layout-grid-view {
   border-radius: 4px;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list.grid .item-block .item-meta-wrap.has-meta {
-  min-height: 35px;
-}
-
 .buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) {
   display: -webkit-box;
   display: -ms-flexbox;
