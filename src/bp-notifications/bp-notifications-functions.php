@@ -972,16 +972,16 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	// Enabled default notification from preferences.
 	$all_notifications = array();
 
-	$all_actions = array();
-
 	// Enabled default notification from backend.
 	$default_by_admin = array();
 
-	if ( ! empty( $preferences ) ) {
-		$preferences = array_column( $preferences, 'fields', null );
-		foreach ( $preferences as $key => $val ) {
-			$all_notifications = array_merge( $all_notifications, $val );
-		}
+	if ( empty( $preferences ) ) {
+		return;
+	}
+
+	$preferences = array_column( $preferences, 'fields', null );
+	foreach ( $preferences as $key => $val ) {
+		$all_notifications = array_merge( $all_notifications, $val );
 	}
 
 	$all_notifications = array_map(
@@ -1007,10 +1007,13 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	);
 
 	$all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
-	if ( ! empty( $all_actions ) ) {
-		foreach ( $all_actions as $key => $val ) {
-			$all_actions[ $key ] = array_column( array_filter( $val ), 'component_action' );
-		}
+
+	if ( empty( $all_actions ) ) {
+		return;
+	}
+
+	foreach ( $all_actions as $key => $val ) {
+		$all_actions[ $key ] = array_column( array_filter( $val ), 'component_action' );
 	}
 
 	$admin_excluded_actions = array();
@@ -1019,7 +1022,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	if ( ! empty( $enabled_all_notification ) ) {
 		foreach ( $enabled_all_notification as $key => $types ) {
 			if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
-				$admin_excluded_actions[] = current( $all_actions[ $key . '_' . $type ] );
+				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
 			}
 			if ( isset( $types[ $type ] ) ) {
 				$default_by_admin[ $key . '_' . $type ] = $types[ $type ];
@@ -1050,7 +1053,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 		}
 	}
 
-	// add global excluded actions.
+	// Add global disabled notification from admin.
 	if ( ! empty( $admin_excluded_actions ) ) {
 		$excluded_actions = array_merge( $excluded_actions, $admin_excluded_actions );
 	}
