@@ -446,4 +446,4 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	add_action( 'admin_notices', 'bp_duplicate_notice' );
 	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
 }
-/* End of file */
+/* End of file - 2 */
