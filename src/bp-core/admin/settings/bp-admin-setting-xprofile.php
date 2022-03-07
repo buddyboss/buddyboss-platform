@@ -650,7 +650,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		printf( '</select>' );
 
 		?>
-		<p class="description"><?php esc_html_e( 'Display profile/member directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Display member directories in grid view, list view, or allow toggling between both views.', 'buddyboss' ); ?></p>
 		<?php
 	}
 
