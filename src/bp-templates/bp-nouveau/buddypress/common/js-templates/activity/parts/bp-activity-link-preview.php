@@ -27,13 +27,13 @@
 			<div class="activity-link-preview-image">
 				<img src="{{{data.link_images[data.link_image_index]}}}"/>
 				<a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
-					<i class="bb-icons bb-icon-close"></i>
+					<i class="bb-icons-l bb-icon-times"></i>
 				</a>
 			</div>
 			<# if ( data.link_images.length > 1 ) { #>
 			<div class="activity-url-thumb-nav">
-				<button type="button" id="activity-url-prevPicButton"><span class="bb-icons bb-icon-angle-left"></span></button>
-				<button type="button" id="activity-url-nextPicButton"><span class="bb-icons bb-icon-angle-right"></span></button>
+				<button type="button" id="activity-url-prevPicButton"><span class="bb-icons-l bb-icon-angle-left"></span></button>
+				<button type="button" id="activity-url-nextPicButton"><span class="bb-icons-l bb-icon-angle-right"></span></button>
 				<div id="activity-url-scrapper-img-count">
 					<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 				</div>

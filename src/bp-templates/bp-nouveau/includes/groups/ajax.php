@@ -649,7 +649,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="load-more">
 			<div class="center">
-				<i class="bb-icons bb-icon-loader animate-spin"></i>
+				<i class="bb-icons-l bb-icon-spinner animate-spin"></i>
 			</div>
 		</li>
 		<?php
