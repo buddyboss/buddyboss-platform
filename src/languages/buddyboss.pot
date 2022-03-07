@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-07 10:46:51+00:00\n"
+"POT-Creation-Date: 2022-03-07 11:17:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2512,7 +2512,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:378
 #: bp-core/admin/bp-core-admin-functions.php:675
-#: bp-core/admin/bp-core-admin-settings.php:1593
+#: bp-core/admin/bp-core-admin-settings.php:1592
 #: bp-core/classes/class-bp-admin.php:336
 #: bp-core/classes/class-bp-admin.php:484
 #: bp-core/classes/class-bp-admin.php:754
@@ -2598,7 +2598,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:680
-#: bp-core/admin/bp-core-admin-settings.php:1618
+#: bp-core/admin/bp-core-admin-settings.php:1617
 #: bp-core/classes/class-bp-admin.php:345
 #: bp-core/classes/class-bp-admin.php:493
 msgid "Integrations"
@@ -3183,16 +3183,16 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:825
 #: bp-core/admin/bp-core-admin-settings.php:854
 #: bp-core/admin/bp-core-admin-settings.php:1163
-#: bp-core/admin/bp-core-admin-settings.php:1418
-#: bp-core/admin/bp-core-admin-settings.php:1509
-#: bp-core/admin/bp-core-admin-settings.php:1575
-#: bp-core/admin/bp-core-admin-settings.php:1957
-#: bp-core/admin/bp-core-admin-settings.php:2077
-#: bp-core/admin/bp-core-admin-settings.php:2394
-#: bp-core/admin/bp-core-admin-settings.php:2472
-#: bp-core/admin/bp-core-admin-settings.php:2511
-#: bp-core/admin/bp-core-admin-settings.php:2538
-#: bp-core/admin/bp-core-admin-settings.php:2678
+#: bp-core/admin/bp-core-admin-settings.php:1417
+#: bp-core/admin/bp-core-admin-settings.php:1508
+#: bp-core/admin/bp-core-admin-settings.php:1574
+#: bp-core/admin/bp-core-admin-settings.php:1956
+#: bp-core/admin/bp-core-admin-settings.php:2076
+#: bp-core/admin/bp-core-admin-settings.php:2393
+#: bp-core/admin/bp-core-admin-settings.php:2471
+#: bp-core/admin/bp-core-admin-settings.php:2510
+#: bp-core/admin/bp-core-admin-settings.php:2537
+#: bp-core/admin/bp-core-admin-settings.php:2677
 #: bp-core/admin/settings/bp-admin-setting-friends.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:565
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:621
@@ -3214,7 +3214,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:275
-#: bp-core/admin/bp-core-admin-settings.php:1879
+#: bp-core/admin/bp-core-admin-settings.php:1878
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
@@ -3244,25 +3244,25 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:475
-#: bp-core/admin/bp-core-admin-settings.php:1971
-#: bp-core/admin/bp-core-admin-settings.php:1999
-#: bp-core/admin/bp-core-admin-settings.php:2027
+#: bp-core/admin/bp-core-admin-settings.php:1970
+#: bp-core/admin/bp-core-admin-settings.php:1998
+#: bp-core/admin/bp-core-admin-settings.php:2026
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:397
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:479
-#: bp-core/admin/bp-core-admin-settings.php:1976
-#: bp-core/admin/bp-core-admin-settings.php:2004
-#: bp-core/admin/bp-core-admin-settings.php:2041 bp-core/bp-core-options.php:40
+#: bp-core/admin/bp-core-admin-settings.php:1975
+#: bp-core/admin/bp-core-admin-settings.php:2003
+#: bp-core/admin/bp-core-admin-settings.php:2040 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:483
-#: bp-core/admin/bp-core-admin-settings.php:1981
-#: bp-core/admin/bp-core-admin-settings.php:2009
-#: bp-core/admin/bp-core-admin-settings.php:2046
+#: bp-core/admin/bp-core-admin-settings.php:1980
+#: bp-core/admin/bp-core-admin-settings.php:2008
+#: bp-core/admin/bp-core-admin-settings.php:2045
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:399
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
@@ -3484,7 +3484,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:969
-#: bp-core/admin/bp-core-admin-settings.php:1327
+#: bp-core/admin/bp-core-admin-settings.php:1326
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:192
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:207
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:221
@@ -3588,15 +3588,15 @@ msgid "Select the height of group cover images in group headers and directories.
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1181
-#: bp-core/admin/bp-core-admin-settings.php:2240
+#: bp-core/admin/bp-core-admin-settings.php:2239
 #: bp-core/admin/settings/bp-admin-setting-groups.php:153
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:260
 msgid "Header Style"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1191
-#: bp-core/admin/bp-core-admin-settings.php:2250
-#: bp-core/admin/bp-core-admin-settings.php:2323
+#: bp-core/admin/bp-core-admin-settings.php:2249
+#: bp-core/admin/bp-core-admin-settings.php:2322
 msgid "Centered"
 msgstr ""
 
@@ -3607,409 +3607,402 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1236
-msgid "Select which elements show in your profile headers."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:1237
+#: bp-core/admin/bp-core-admin-settings.php:1273
 msgid "Select which elements to show in your member directories."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1274
-msgid "Select which elements show in your member directories."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:1311
+#: bp-core/admin/bp-core-admin-settings.php:1310
 msgid "Select which profile actions to enable in your member directories."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1349
+#: bp-core/admin/bp-core-admin-settings.php:1348
 msgid ""
 "Select which profile action to show as a primary button. The remaining "
 "enabled profile actions will be shown as secondary buttons underneath."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1364
+#: bp-core/admin/bp-core-admin-settings.php:1363
 msgid "Enable social group creation by all members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1365
+#: bp-core/admin/bp-core-admin-settings.php:1364
 msgid "Administrators can always create groups, regardless of this setting."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1378
+#: bp-core/admin/bp-core-admin-settings.php:1377
 msgid "Enable avatars for groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1379
+#: bp-core/admin/bp-core-admin-settings.php:1378
 msgid ""
 "When enabled, group organizers will be able to upload avatars in the "
 "group's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1391
+#: bp-core/admin/bp-core-admin-settings.php:1390
 msgid "Enable cover images for groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1392
+#: bp-core/admin/bp-core-admin-settings.php:1391
 msgid ""
 "When enabled, group organizers will be able to upload cover images in the "
 "group's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1438
+#: bp-core/admin/bp-core-admin-settings.php:1437
 msgid "Enable <a href=\"%s\">group types</a> to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1449
+#: bp-core/admin/bp-core-admin-settings.php:1448
 msgid "Enable group types to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1468
+#: bp-core/admin/bp-core-admin-settings.php:1467
 msgid "Allow selected <a href=\"%s\">profile types</a> to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1479
+#: bp-core/admin/bp-core-admin-settings.php:1478
 msgid "Allow selected profile types to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1483
+#: bp-core/admin/bp-core-admin-settings.php:1482
 msgid ""
 "When a member requests to join a group their membership is automatically "
 "accepted"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1524
+#: bp-core/admin/bp-core-admin-settings.php:1523
 msgid "Allow groups to have subgroups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1536
+#: bp-core/admin/bp-core-admin-settings.php:1535
 msgid "Hide subgroups from Groups Directory & Group Type Shortcode"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1548
+#: bp-core/admin/bp-core-admin-settings.php:1547
 msgid "Restrict subgroup invites to members of the parent group"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1549
+#: bp-core/admin/bp-core-admin-settings.php:1548
 msgid ""
 "Members must first be a member of the parent group prior to being invited "
 "to a subgroup"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1640
+#: bp-core/admin/bp-core-admin-settings.php:1639
 #: bp-integrations/buddyboss-app/bp-buddyboss-app-integration.php:22
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:4
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:12
 msgid "BuddyBoss App"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1715
+#: bp-core/admin/bp-core-admin-settings.php:1714
 msgid "Allow members to customize the email subject"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1727
+#: bp-core/admin/bp-core-admin-settings.php:1726
 msgid "Allow members to customize the email body content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1739
+#: bp-core/admin/bp-core-admin-settings.php:1738
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1744
+#: bp-core/admin/bp-core-admin-settings.php:1743
 msgid ""
 "Customize this setting while editing any of your <a href=\"%s\">Profile "
 "Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1768
+#: bp-core/admin/bp-core-admin-settings.php:1767
 msgid ""
 "Select which custom post types show in the activity feed when members "
 "publish them. For each custom post type, you can select whether or not to "
 "show comments in these activity posts (if comments are supported)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1782
+#: bp-core/admin/bp-core-admin-settings.php:1781
 msgid "WordPress Posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1789
+#: bp-core/admin/bp-core-admin-settings.php:1788
 msgid "When members publish new blog posts, show them in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1814
+#: bp-core/admin/bp-core-admin-settings.php:1813
 #. translators: %s: comment post type
 msgid "Comments are not supported for %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1833
+#: bp-core/admin/bp-core-admin-settings.php:1832
 msgid "Enable WordPress Post comments in the activity feed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1833
+#: bp-core/admin/bp-core-admin-settings.php:1832
 msgid "Enable %s comments in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1840
+#: bp-core/admin/bp-core-admin-settings.php:1839
 msgid ""
 "Allow members to view and create comments to blog posts in the activity "
 "feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1873
+#: bp-core/admin/bp-core-admin-settings.php:1872
 msgid "Allow non-members to register new accounts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1912
+#: bp-core/admin/bp-core-admin-settings.php:1911
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1930
+#: bp-core/admin/bp-core-admin-settings.php:1929
 msgid "Allow members to use gravatars for profile avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1931
+#: bp-core/admin/bp-core-admin-settings.php:1930
 msgid ""
 "When enabled, members will be able to use avatars from their <a "
 "href=\"https://gravatar.com/\">Gravatar</a> account."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1976
-#: bp-core/admin/bp-core-admin-settings.php:2027
-#: bp-core/admin/bp-core-admin-settings.php:2041
+#: bp-core/admin/bp-core-admin-settings.php:1975
+#: bp-core/admin/bp-core-admin-settings.php:2026
+#: bp-core/admin/bp-core-admin-settings.php:2040
 msgid "(can be disabled)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1985
+#: bp-core/admin/bp-core-admin-settings.php:1984
 msgid ""
 "If you disable \"Last Name\" field, it will not appear anywhere in the "
 "network."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2013
+#: bp-core/admin/bp-core-admin-settings.php:2012
 msgid ""
 "All name fields are required with this format. Best used for professional "
 "networks."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2050
+#: bp-core/admin/bp-core-admin-settings.php:2049
 msgid ""
 "If you disable \"First Name\" and \"Last Name\" fields, they will not "
 "appear anywhere in the network. This allows your members to be fully "
 "anonymous (if they use a pseudonym for their nickname)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2135
+#: bp-core/admin/bp-core-admin-settings.php:2134
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2149
+#: bp-core/admin/bp-core-admin-settings.php:2148
 msgid "Add Legal Agreement checkbox to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2153
+#: bp-core/admin/bp-core-admin-settings.php:2152
 msgid ""
 "Require non-members to explicitly agree to your Terms of Service and "
 "Privacy Policy before registering."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2166
+#: bp-core/admin/bp-core-admin-settings.php:2165
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2178
+#: bp-core/admin/bp-core-admin-settings.php:2177
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:634
 msgid "Grid and List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2179
-#: bp-core/admin/bp-core-admin-settings.php:2210
+#: bp-core/admin/bp-core-admin-settings.php:2178
+#: bp-core/admin/bp-core-admin-settings.php:2209
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:635
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:666
 msgid "Grid"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2180
-#: bp-core/admin/bp-core-admin-settings.php:2211
+#: bp-core/admin/bp-core-admin-settings.php:2179
+#: bp-core/admin/bp-core-admin-settings.php:2210
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:636
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:667
 msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2197
+#: bp-core/admin/bp-core-admin-settings.php:2196
 msgid ""
 "Display group directories in Grid View, List View, or allow toggling "
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2246
-#: bp-core/admin/bp-core-admin-settings.php:2319
+#: bp-core/admin/bp-core-admin-settings.php:2245
+#: bp-core/admin/bp-core-admin-settings.php:2318
 msgid "Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2246
-#: bp-core/admin/bp-core-admin-settings.php:2319
+#: bp-core/admin/bp-core-admin-settings.php:2245
+#: bp-core/admin/bp-core-admin-settings.php:2318
 msgid "Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2258
+#: bp-core/admin/bp-core-admin-settings.php:2257
 msgid ""
 "Select the style of your group headers. Group avatars and cover images will "
 "only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2295
+#: bp-core/admin/bp-core-admin-settings.php:2294
 msgid "Select which elements to show in your group headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2313
+#: bp-core/admin/bp-core-admin-settings.php:2312
 #: bp-core/admin/settings/bp-admin-setting-groups.php:201
 msgid "Grid Style"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2331
+#: bp-core/admin/bp-core-admin-settings.php:2330
 msgid ""
 "Select the style of the of grid layouts. Group avatars and cover images "
 "will only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2368
+#: bp-core/admin/bp-core-admin-settings.php:2367
 msgid ""
 "Select which elements show in group directories. Cover images will only "
 "display in grid view and group descriptions will only display in list view."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2410
+#: bp-core/admin/bp-core-admin-settings.php:2409
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2411
+#: bp-core/admin/bp-core-admin-settings.php:2410
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2418
+#: bp-core/admin/bp-core-admin-settings.php:2417
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2446
+#: bp-core/admin/bp-core-admin-settings.php:2445
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2485
+#: bp-core/admin/bp-core-admin-settings.php:2484
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2553
+#: bp-core/admin/bp-core-admin-settings.php:2552
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2554
+#: bp-core/admin/bp-core-admin-settings.php:2553
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2572
+#: bp-core/admin/bp-core-admin-settings.php:2571
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2580
+#: bp-core/admin/bp-core-admin-settings.php:2579
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2598
+#: bp-core/admin/bp-core-admin-settings.php:2597
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2599
+#: bp-core/admin/bp-core-admin-settings.php:2598
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2613
+#: bp-core/admin/bp-core-admin-settings.php:2612
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2614
+#: bp-core/admin/bp-core-admin-settings.php:2613
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2629
+#: bp-core/admin/bp-core-admin-settings.php:2628
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2630
+#: bp-core/admin/bp-core-admin-settings.php:2629
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2631
+#: bp-core/admin/bp-core-admin-settings.php:2630
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2632
+#: bp-core/admin/bp-core-admin-settings.php:2631
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2633
+#: bp-core/admin/bp-core-admin-settings.php:2632
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2634
+#: bp-core/admin/bp-core-admin-settings.php:2633
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2635
+#: bp-core/admin/bp-core-admin-settings.php:2634
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2636
+#: bp-core/admin/bp-core-admin-settings.php:2635
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2637
+#: bp-core/admin/bp-core-admin-settings.php:2636
 msgid "5 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2738
+#: bp-core/admin/bp-core-admin-settings.php:2737
 msgid "Restrict REST API access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2744
+#: bp-core/admin/bp-core-admin-settings.php:2743
 #. translators: Registration link.
 msgid "Login and %s APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2747
+#: bp-core/admin/bp-core-admin-settings.php:2746
 #: bp-core/admin/settings/bp-admin-setting-general.php:48
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 msgid "Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2768
+#: bp-core/admin/bp-core-admin-settings.php:2767
 #. translators: Settings link.
 msgid ""
 "Your BuddyBoss App is currently public. To restrict access to REST APIs for "
 "logged-out members, please enable \"Private App\" in the %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2771
+#: bp-core/admin/bp-core-admin-settings.php:2770
 msgid "BuddyBoss App's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2799
+#: bp-core/admin/bp-core-admin-settings.php:2798
 msgid ""
 "Enter REST API endpoint URLs or URI fragments (e.g. "
 "wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
 "one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2813
+#: bp-core/admin/bp-core-admin-settings.php:2812
 msgid "Restrict RSS feed access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2825
+#: bp-core/admin/bp-core-admin-settings.php:2824
 msgid ""
 "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
 "publicly visible always. Enter one URL or URI per line."
