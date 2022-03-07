@@ -722,3 +722,39 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 	return $last_activity;
 }
 
+/**
+ * Allow HTML for member xprofile data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $allow_html The array allow custom tags and attributes. Default: null.
+ *
+ * @return array Associative array of allowed tags and attributes.
+ */
+function bb_members_allow_html_tags( $allow_html = array() ) {
+	$bbp_allow_tags = bbp_kses_allowed_tags();
+
+	if ( ! empty( $allow_html ) ) {
+		$bbp_allow_tags = array_merge( $bbp_allow_tags, $allow_html );
+	}
+
+	// Allow tag attributes for xprofile datas.
+	$allowed_post_tags = wp_kses_allowed_html( 'post' );
+	$bbp_allow_tags    = array_merge( $bbp_allow_tags, $allowed_post_tags );
+
+	// Allow "svg" for social networks.
+	$bbp_allow_tags['svg']  = array(
+		'xmlns'       => array(),
+		'fill'        => array(),
+		'viewbox'     => array(),
+		'role'        => array(),
+		'aria-hidden' => array(),
+		'focusable'   => array(),
+	);
+	$bbp_allow_tags['path'] = array(
+		'd'    => array(),
+		'fill' => array(),
+	);
+
+	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
+}
