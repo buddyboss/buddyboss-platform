@@ -1772,6 +1772,9 @@ window.bp = window.bp || {};
 
 					var member_profile_actions      = []; // Create an array for primary action field to hide/show.
 					var selected_member_actions_arr = []; // Create an array for primary action option.
+					var current_primary_action      = ''; // Get selected primary action button.
+
+					current_primary_action = BP_ADMIN.member_directories.profile_action_btn;
 					$( '.member-directory-profile-actions input[type="checkbox"]:checked' ).each(
 						function ( i, e ) {
 							member_profile_actions.push( e.value );
@@ -1787,11 +1790,18 @@ window.bp = window.bp || {};
 
 							// Add the options when checked/unchecked profile actions.
 							if ( typeof value[0] !== 'undefined' && typeof value[0].element_name !== 'undefined' && typeof value[0].element_label !== 'undefined' ) {
+
+								var primary_action_btn_select_attr = false;
+								if ( current_primary_action === value[0].element_name ) {
+									primary_action_btn_select_attr = true;
+								}
+
 								$( '.member-directory-profile-primary-action select' )
 									.append(
 										$( '<option></option>' )
 											.attr( 'value', value[0].element_name )
 											.text( value[0].element_label )
+											.attr( 'selected', primary_action_btn_select_attr )
 									);
 							}
 						}

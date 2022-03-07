@@ -302,7 +302,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'html' => $email_template,
 					),
 					'member_directories'  => array(
-						'profile_actions' => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
+						'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
+						'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
 					),
 				)
 			);
