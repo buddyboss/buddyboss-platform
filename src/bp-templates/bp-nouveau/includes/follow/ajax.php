@@ -132,6 +132,13 @@ function bp_nouveau_ajax_followunfollow_member() {
 			wp_send_json_error( $response );
 		} else {
 
+			$total_followers = 0;
+			$follower_ids    = bp_get_follower_ids( array( 'user_id' => $leader_id ) );
+
+			if ( ! empty( $follower_ids ) ) {
+				$total_followers = count( explode( ',', $follower_ids ) );
+			}
+
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
@@ -143,11 +150,17 @@ function bp_nouveau_ajax_followunfollow_member() {
 								bp_loggedin_user_id(),
 								$button_arguments
 							),
+							'count'    => $total_followers,
 						)
 					);
 				}
 			} else {
-				wp_send_json_success( array( 'contents' => '' ) );
+				wp_send_json_success(
+					array(
+						'contents' => '',
+						'count'    => $total_followers,
+					)
+				);
 			}
 		}
 
@@ -167,6 +180,14 @@ function bp_nouveau_ajax_followunfollow_member() {
 
 			wp_send_json_error( $response );
 		} else {
+
+			$total_followers = 0;
+			$follower_ids    = bp_get_follower_ids( array( 'user_id' => $leader_id ) );
+
+			if ( ! empty( $follower_ids ) ) {
+				$total_followers = count( explode( ',', $follower_ids ) );
+			}
+
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
@@ -178,11 +199,17 @@ function bp_nouveau_ajax_followunfollow_member() {
 								bp_loggedin_user_id(),
 								$button_arguments
 							),
+							'count'    => $total_followers,
 						)
 					);
 				}
 			} else {
-				wp_send_json_success( array( 'contents' => '' ) );
+				wp_send_json_success(
+					array(
+						'contents' => '',
+						'count'    => $total_followers,
+					)
+				);
 			}
 		}
 	} else {
