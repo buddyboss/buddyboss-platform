@@ -7473,6 +7473,7 @@ body.guillotine-dragging * {
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta {
   display: block;
+  margin-bottom: 0;
   margin-left: 5px;
   max-width: initial;
   position: static;
