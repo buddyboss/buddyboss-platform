@@ -4925,13 +4925,7 @@ function bb_enabled_member_directory_profile_action( $action = '' ) {
  * @return string Return the primary action for member directories.
  */
 function bb_get_member_directory_primary_action() {
-
-	// If enabled follow component then return follow as primary action.
-	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
-		return 'follow';
-	}
-
-	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : '';
+	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : bp_get_option( 'bb-member-profile-primary-action' );
 }
 
 /**

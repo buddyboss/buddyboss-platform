@@ -97,8 +97,10 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 									endif;
 									?>
 								</div>
-							<?php endif;
-							if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) { ?>
+								<?php
+							endif;
+							if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) {
+								?>
 								<div class="flex align-items-top member-social">
 									<div class="flex align-items-center">
 										<?php
@@ -111,11 +113,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 										}
 										?>
 									</div>
-									<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
+									<?php echo wp_kses( bp_get_user_social_networks_urls(), bb_members_allow_html_tags() ); ?>
 								</div>
 							<?php } else { ?>
 								<div class="flex align-items-center">
-									<?php echo wp_kses_post( bp_get_user_social_networks_urls() ); ?>
+									<?php echo wp_kses( bp_get_user_social_networks_urls(), bb_members_allow_html_tags() ); ?>
 								</div>
 							<?php } ?>
 

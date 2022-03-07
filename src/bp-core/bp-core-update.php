@@ -1705,6 +1705,13 @@ function bb_update_to_1_9_1() {
 	// Display plugin update notice.
 	update_option( '_bb_is_update', true );
 
+	// If enabled follow component then return follow as primary action.
+	$primary_action = '';
+	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+		$primary_action = 'follow';
+	}
+	bp_update_option( 'bb-member-profile-primary-action', $primary_action );
+
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
 		return;
 	}

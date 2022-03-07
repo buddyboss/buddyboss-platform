@@ -1233,7 +1233,6 @@ function bb_admin_setting_profile_header_elements( $args ) {
 		}
 		?>
 	</div>
-	<p class="description"><?php esc_html_e( 'Select which elements show in your profile headers.', 'buddyboss' ); ?></p>
 	<p class="description"><?php esc_html_e( 'Select which elements to show in your member directories.', 'buddyboss' ); ?></p>
 	<?php
 }
@@ -1271,7 +1270,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 		}
 		?>
 	</div>
-	<p class="description"><?php esc_html_e( 'Select which elements show in your member directories.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Select which elements to show in your member directories.', 'buddyboss' ); ?></p>
 	<?php
 }
 
