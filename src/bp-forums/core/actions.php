@@ -301,3 +301,6 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 
 // Maybe convert the users password
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
+
+// Memtions results for standalone forum
+add_action( 'bbp_forums_mentions_prime_results', 'bbp_forums_mentions_prime_results' );

@@ -986,3 +986,59 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
 	return $terms;
 }
 
+/**
+ * Mentions result for standalone forums
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bbp_forums_mentions_prime_results() {
+	
+	// Stop here if user is not logged in.
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Bail if single group page.
+	if ( bp_is_group() ) {
+		return;
+	}
+	
+	$members_query = array(
+		'count_total'     => '', // Prevents total count.
+		'populate_extras' => false,
+		'per_page'        => 10,
+		'page'            => 1,
+		'type'            => 'active',
+		'exclude'         => array( get_current_user_id() ),
+	);
+
+	$members_query = new BP_User_Query( $members_query );
+	$members       = array();
+
+	foreach ( $members_query->results as $user ) {
+		$result        = new stdClass();
+		$result->ID    = $user->user_nicename;
+		$result->image = bp_core_fetch_avatar(
+			array(
+				'html'    => false,
+				'item_id' => $user->ID,
+			)
+		);
+
+		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+			$result->name = $user->display_name;
+		} else {
+			$result->name = bp_core_get_user_displayname( $user->ID );
+		}
+
+		$members[] = $result;
+	}
+
+	wp_localize_script(
+		'bp-mentions',
+		'BP_Suggestions',
+		array(
+			'members' => $members
+		)
+	);
+}
