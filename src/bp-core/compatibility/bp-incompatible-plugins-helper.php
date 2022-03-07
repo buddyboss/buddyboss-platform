@@ -132,6 +132,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
 
+		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
 	/**
