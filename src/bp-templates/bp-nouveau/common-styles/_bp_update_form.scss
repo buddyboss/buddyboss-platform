@@ -36,7 +36,7 @@
 	max-width: 100%;
 
 	.privacy-point-icon:before {
-		font-family: bb-icons;
+		font-family: 'bb-icons-lined';/* stylelint-disable-line */
 		speak: none;
 		display: inline-block;
 		text-decoration: inherit;
@@ -59,7 +59,7 @@
 	&.public {
 
 		.privacy-point-icon:before {
-			content: "\e819";
+			content: "\eeaa";
 		}
 	}
 
@@ -73,21 +73,21 @@
 	&.friends {
 
 		.privacy-point-icon:before {
-			content: "\e95e";
+			content: "\ef5a";
 		}
 	}
 
 	&.onlyme {
 
 		.privacy-point-icon:before {
-			content: "\e90d";
+			content: "\eecc";
 		}
 	}
 
 	&.group {
 
 		.privacy-point-icon:before {
-			content: "\e93d";
+			content: "\e95d";
 		}
 	}
 
@@ -291,7 +291,7 @@
 		margin: 0 15px 0 0;
 
 		&:before {
-			font-family: bb-icons;
+			font-family: 'bb-icons-lined';/* stylelint-disable-line */
 			speak: none;
 			display: inline-block;
 			text-decoration: inherit;
@@ -309,15 +309,15 @@
 		}
 
 		&--friends:before {
-			content: "\e95e";
+			content: "\ef5a";
 		}
 
 		&--onlyme:before {
-			content: "\e90d";
+			content: "\eecc";
 		}
 
 		&--group:before {
-			content: "\e93d";
+			content: "\e95d";
 		}
 	}
 
@@ -456,8 +456,8 @@
 			border-top: 0;
 
 			.emojionearea-button:before {
-				content: "\E821";
-				font: normal 400 normal 24px/1 bb-icons;
+				content: "\ee5f";
+				font: normal 400 normal 24px/1 bb-icons-lined;/* stylelint-disable-line */
 				opacity: 1;
 				background: none;
 				position: static;
@@ -773,8 +773,8 @@
 				position: relative;
 
 				&:after {
-					content: "\e838";
-					font: normal normal 400 22px/1 "bb-icons";/* stylelint-disable-line */
+					content: "\ef30";
+					font: normal normal 400 22px/1 "bb-icons-lined";/* stylelint-disable-line */
 					margin: 10px auto;
 					display: inline-block;
 					text-align: center;
@@ -1207,8 +1207,8 @@
 	display: block;
 
 	&:before {
-		content: "\e81f";
-		font-family: bb-icons;
+		content: "\ef10";
+		font-family: 'bb-icons-lined';/* stylelint-disable-line */
 		speak: none;
 		display: inline-block;
 		width: 1em;
@@ -1415,8 +1415,8 @@
 		line-height: 1;
 
 		&:before {
-			content: "\e819";
-			font-family: 'bb-icons';/* stylelint-disable-line */
+			content: "\eeaa";
+			font-family: 'bb-icons-lined';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
 			display: inline-block;
@@ -1424,7 +1424,7 @@
 
 		&:after {
 			content: "\e826";
-			font-family: 'bb-icons';/* stylelint-disable-line */
+			font-family: 'bb-icons-lined';/* stylelint-disable-line */
 			font-size: 20px;
 			vertical-align: middle;
 			display: inline-block;
@@ -1436,19 +1436,19 @@
 		}
 
 		&.onlyme:before {
-			content: "\e90d";
+			content: "\eecc";
 		}
 
 		&.loggedin:before {
-			content: "\e95d";
+			content: "\e93d";
 		}
 
 		&.friends:before {
-			content: "\e95e";
+			content: "\ef5a";
 		}
 
 		&.loading:before {
-			content: "\e838";
+			content: "\ef30";
 			animation: spin 2s infinite linear;
 		}
 	}
@@ -1519,8 +1519,8 @@
 		}
 
 		&:before {
-			content: "\e90d";
-			font-family: 'bb-icons';/* stylelint-disable-line */
+			content: "\eecc";
+			font-family: 'bb-icons-lined';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
 			display: inline-block;
@@ -1530,11 +1530,11 @@
 		}
 
 		&.public:before {
-			content: "\e819";
+			content: "\eeaa";
 		}
 
 		&.onlyme:before {
-			content: "\e95f";
+			content: "\eecd";
 		}
 
 		&.loggedin:before {
@@ -1542,7 +1542,7 @@
 		}
 
 		&.friends:before {
-			content: "\e95e";
+			content: "\ef5a";
 		}
 
 		&.bb-edit-privacy {
@@ -1552,8 +1552,8 @@
 			}
 
 			a:before {
-				content: "\e90d";
-				font-family: 'bb-icons';/* stylelint-disable-line */
+				content: "\eecc";
+				font-family: 'bb-icons-lined';/* stylelint-disable-line */
 				font-size: 16px;
 				margin-right: 10px;
 				width: 20px;
@@ -1563,11 +1563,11 @@
 			}
 
 			&.public a:before {
-				content: "\e960";
+				content: "\eeaa";
 			}
 
 			&.onlyme a:before {
-				content: "\e95f";
+				content: "\eecd";
 			}
 
 			&.loggedin a:before {
@@ -1575,7 +1575,7 @@
 			}
 
 			&.friends a:before {
-				content: "\e95e";
+				content: "\ef5a";
 			}
 		}
 	}

@@ -1298,7 +1298,7 @@ function bp_media_settings_callback_extension_document_support() {
 					<?php
 					if ( $is_default ) {
 						?>
-						<i class="bb-icon <?php echo $document_icon; ?>"></i>
+						<i class="bb-icons-l <?php echo $document_icon; ?>"></i>
 						<?php
 					}
 					if ( ! $is_default ) {

@@ -30,7 +30,7 @@ if ( $group_id > 0 ) {
 }
 ?>
 <div class="document-action-wrap">
-	<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+	<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up bb-icons-lined document-icon-collapse"></i></a>
 	<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss' ); ?>">
 		<i class="bb-icon-download"></i>
 	</a>

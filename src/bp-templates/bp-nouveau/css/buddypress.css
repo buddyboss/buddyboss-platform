@@ -1087,7 +1087,8 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point .privacy-point-icon:before {
-  font-family: bb-icons;
+  font-family: 'bb-icons-lined';
+  /* stylelint-disable-line */
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -1104,7 +1105,7 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point.public .privacy-point-icon:before {
-  content: "\e819";
+  content: "\eeaa";
 }
 
 #bp-activity-privacy-point.loggedin .privacy-point-icon:before {
@@ -1112,15 +1113,15 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point.friends .privacy-point-icon:before {
-  content: "\e95e";
+  content: "\ef5a";
 }
 
 #bp-activity-privacy-point.onlyme .privacy-point-icon:before {
-  content: "\e90d";
+  content: "\eecc";
 }
 
 #bp-activity-privacy-point.group .privacy-point-icon:before {
-  content: "\e93d";
+  content: "\e95d";
 }
 
 #bp-activity-privacy-point.bp-activity-edit-group {
@@ -1297,7 +1298,8 @@ a.layout-grid-view {
 }
 
 .bp-activity-privacy__label .privacy-figure:before {
-  font-family: bb-icons;
+  font-family: 'bb-icons-lined';
+  /* stylelint-disable-line */
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -1315,15 +1317,15 @@ a.layout-grid-view {
 }
 
 .bp-activity-privacy__label .privacy-figure--friends:before {
-  content: "\e95e";
+  content: "\ef5a";
 }
 
 .bp-activity-privacy__label .privacy-figure--onlyme:before {
-  content: "\e90d";
+  content: "\eecc";
 }
 
 .bp-activity-privacy__label .privacy-figure--group:before {
-  content: "\e93d";
+  content: "\e95d";
 }
 
 .bp-activity-privacy__label .privacy-label {
@@ -1475,8 +1477,9 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
 .activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea-button:before {
-  content: "\E821";
-  font: normal 400 normal 24px/1 bb-icons;
+  content: "\ee5f";
+  font: normal 400 normal 24px/1 bb-icons-lined;
+  /* stylelint-disable-line */
   opacity: 1;
   background: none;
   position: static;
@@ -1843,8 +1846,8 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading #whats-new-content:after,
 .activity-update-form.modal-popup .bp-activity-edit.loading #whats-new-content:after {
-  content: "\e838";
-  font: normal normal 400 22px/1 "bb-icons";
+  content: "\ef30";
+  font: normal normal 400 22px/1 "bb-icons-lined";
   /* stylelint-disable-line */
   margin: 10px auto;
   display: inline-block;
@@ -2258,8 +2261,9 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-autocomplete-wrapper:before {
-  content: "\e81f";
-  font-family: bb-icons;
+  content: "\ef10";
+  font-family: 'bb-icons-lined';
+  /* stylelint-disable-line */
   speak: none;
   display: inline-block;
   width: 1em;
@@ -2474,8 +2478,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .bb-document-privacy-wrap .privacy:before,
 .bb-media-privacy-wrap .privacy:before {
-  content: "\e819";
-  font-family: 'bb-icons';
+  content: "\eeaa";
+  font-family: 'bb-icons-lined';
   /* stylelint-disable-line */
   font-size: 16px;
   vertical-align: middle;
@@ -2485,7 +2489,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bb-document-privacy-wrap .privacy:after,
 .bb-media-privacy-wrap .privacy:after {
   content: "\e826";
-  font-family: 'bb-icons';
+  font-family: 'bb-icons-lined';
   /* stylelint-disable-line */
   font-size: 20px;
   vertical-align: middle;
@@ -2500,22 +2504,22 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .bb-document-privacy-wrap .privacy.onlyme:before,
 .bb-media-privacy-wrap .privacy.onlyme:before {
-  content: "\e90d";
+  content: "\eecc";
 }
 
 .bb-document-privacy-wrap .privacy.loggedin:before,
 .bb-media-privacy-wrap .privacy.loggedin:before {
-  content: "\e95d";
+  content: "\e93d";
 }
 
 .bb-document-privacy-wrap .privacy.friends:before,
 .bb-media-privacy-wrap .privacy.friends:before {
-  content: "\e95e";
+  content: "\ef5a";
 }
 
 .bb-document-privacy-wrap .privacy.loading:before,
 .bb-media-privacy-wrap .privacy.loading:before {
-  content: "\e838";
+  content: "\ef30";
   animation: spin 2s infinite linear;
 }
 
@@ -2586,8 +2590,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li:before {
-  content: "\e90d";
-  font-family: 'bb-icons';
+  content: "\eecc";
+  font-family: 'bb-icons-lined';
   /* stylelint-disable-line */
   font-size: 16px;
   vertical-align: middle;
@@ -2598,11 +2602,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li.public:before {
-  content: "\e819";
+  content: "\eeaa";
 }
 
 .activity-privacy > li.onlyme:before {
-  content: "\e95f";
+  content: "\eecd";
 }
 
 .activity-privacy > li.loggedin:before {
@@ -2610,7 +2614,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li.friends:before {
-  content: "\e95e";
+  content: "\ef5a";
 }
 
 .activity-privacy > li.bb-edit-privacy:before {
@@ -2618,8 +2622,8 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li.bb-edit-privacy a:before {
-  content: "\e90d";
-  font-family: 'bb-icons';
+  content: "\eecc";
+  font-family: 'bb-icons-lined';
   /* stylelint-disable-line */
   font-size: 16px;
   margin-right: 10px;
@@ -2630,11 +2634,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li.bb-edit-privacy.public a:before {
-  content: "\e960";
+  content: "\eeaa";
 }
 
 .activity-privacy > li.bb-edit-privacy.onlyme a:before {
-  content: "\e95f";
+  content: "\eecd";
 }
 
 .activity-privacy > li.bb-edit-privacy.loggedin a:before {
@@ -2642,7 +2646,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li.bb-edit-privacy.friends a:before {
-  content: "\e95e";
+  content: "\ef5a";
 }
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy {

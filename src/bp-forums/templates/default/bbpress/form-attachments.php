@@ -43,7 +43,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 					<div class="dz-size" data-dz-size></div>
 				</div>
 				<div class="dz-progress-ring-wrap">
-					<i class="bb-icon bb-icon-camera-fill"></i>
+					<i class="bb-icons-f bb-icon-camera"></i>
 					<svg class="dz-progress-ring" width="54" height="54">
 						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 					</svg>
@@ -90,7 +90,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 					<div class="dz-size" data-dz-size></div>
 				</div>
 				<div class="dz-progress-ring-wrap">
-					<i class="bb-icon bb-icon-attach-fill"></i>
+					<i class="bb-icons-f bb-icon-file-attach"></i>
 					<svg class="dz-progress-ring" width="54" height="54">
                     <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
                 </svg>
@@ -118,7 +118,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
 			<div class="dz-progress-ring-wrap">
-				<i class="bb-icon bb-icon-video-fill"></i>
+				<i class="bb-icons-f bb-icon-video"></i>
 				<svg class="dz-progress-ring" width="54" height="54">
                     <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
                 </svg>
@@ -154,7 +154,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 	<?php if ( bp_is_active( 'media' ) ) : ?>
 		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
 			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
-				<span class="bb-icon bb-icon-text-format"></span>
+				<span class="bb-icons-l bb-icon-font"></span>
 			</a>
 		</div>
 		<?php
@@ -164,7 +164,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		?>
 		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
-				<i class="bb-icon bb-icon-camera-small"></i>
+				<i class="bb-icons-l bb-icon-camera"></i>
 			</a>
 		</div>
 
@@ -175,7 +175,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		?>
 		<div class="post-elements-buttons-item post-video video-support">
 			<a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
-				<i class="bb-icon bb-icon-video-alt"></i>
+				<i class="bb-icons-l bb-icon-video"></i>
 			</a>
 		</div>
 		<?php
@@ -186,7 +186,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 		<div class="post-elements-buttons-item post-media document-support">
 			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-				<i class="bb-icon bb-icon-attach"></i>
+				<i class="bb-icons-l bb-icon-file-attach"></i>
 			</a>
 		</div>
 
@@ -198,7 +198,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
 				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
-					<i class="bb-icon bb-icon-gif"></i>
+					<i class="bb-icons-l bb-icon-gif"></i>
 				</a>
 				<div class="gif-media-search-dropdown">
 					<div class="gif-search-content">

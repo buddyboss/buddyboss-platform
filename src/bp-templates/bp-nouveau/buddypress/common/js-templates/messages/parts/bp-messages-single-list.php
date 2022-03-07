@@ -148,7 +148,7 @@
 							</a>
 						</div>
 						<div class="document-action-wrap">
-							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up bb-icons-lined document-icon-collapse"></i></a>
 							<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
 								<i class="bb-icon-download"></i>
 							</a>
