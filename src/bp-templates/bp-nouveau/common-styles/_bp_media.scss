@@ -335,8 +335,8 @@
 
 		#bp-media-create-album-submit.saving:after,
 		#bp-video-create-album-submit.saving:after {
-			content: "\e838";
-			font-family: "bb-icons";/* stylelint-disable-line */
+			content: "\ef30";
+			font-family: "bb-icons-lined";/* stylelint-disable-line */
 			font-size: 18px;
 			line-height: 1;
 			margin-left: 10px;
@@ -563,8 +563,8 @@
 .buddypress-wrap .bp-subnavs .component-navigation.media-nav {
 
 	li.selected.loading a:after {
-		content: "\e838";
-		font-family: "bb-icons"; /* stylelint-disable-line */
+		content: "\ef30";
+		font-family: "bb-icons-lined"; /* stylelint-disable-line */
 		font-size: 16px;
 		line-height: 1;
 		margin-left: 5px;
@@ -2210,8 +2210,8 @@ img.emojioneemoji {
 	.dz-details {
 
 		&:before {
-			content: "\e9d3";
-			font-family: "bb-icons"; /* stylelint-disable-line */
+			content: "\efeb";
+			font-family: "bb-icons-filled"; /* stylelint-disable-line */
 			font-size: 18px;
 			height: 50px;
 			width: 50px;
@@ -2295,7 +2295,8 @@ img.emojioneemoji {
 		}
 
 		&:before {
-			content: "\e9d2";
+			content: "\f056";
+			font-family: "bb-icons-filled";/* stylelint-disable-line */
 			margin-top: 34px;
 		}
 
@@ -2329,7 +2330,8 @@ img.emojioneemoji {
 		}
 
 		&:before {
-			content: "\e9d4";
+			content: "\f14a";
+			font-family: "bb-icons-filled";/* stylelint-disable-line */
 			font-size: 16px;
 			position: absolute;
 			top: 50%;
@@ -2728,8 +2730,8 @@ div.dropzone .dz-preview {
 		width: 230px;
 
 		a.button.loading:after {
-			content: "\e838";
-			font-family: "bb-icons"; /* stylelint-disable-line */
+			content: "\ef30";
+			font-family: "bb-icons-lined"; /* stylelint-disable-line */
 			font-size: 18px;
 			line-height: 1;
 			margin-left: 10px;
@@ -3255,7 +3257,7 @@ div.dropzone .dz-preview {
 						}
 
 						&:before {
-							font-family: 'bb-icons'; /* stylelint-disable-line */
+							font-family: "bb-icons-lined"; /* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -3265,7 +3267,7 @@ div.dropzone .dz-preview {
 					}
 
 					&.rename_file a:before {
-						content: "\e80c";
+						content: "\ee5a";
 					}
 
 					&.move_file {
@@ -3276,14 +3278,16 @@ div.dropzone .dz-preview {
 						}
 
 						a:before {
-							content: "\e959";
+							content: "\ee9f";
+							font-family: "bb-icons-lined";/* stylelint-disable-line */
 							font-size: 13px;
 						}
 
 					}
 
 					&.delete_file a:before {
-						content: "\e937";
+						content: "\ef48";
+						font-family: "bb-icons-lined";/* stylelint-disable-line */
 						font-size: 15px;
 					}
 
@@ -3296,7 +3300,8 @@ div.dropzone .dz-preview {
 						font-weight: 400;
 
 						&:before {
-							content: "\e8ea";
+							content: "\ee9c";
+							font-family: "bb-icons-lined";/* stylelint-disable-line */
 							font-size: 15px;
 							vertical-align: middle;
 						}
@@ -3319,15 +3324,18 @@ div.dropzone .dz-preview {
 					}
 
 					&.download_file a:before {
-						content: "\e890";
+						font-family: "bb-icons-lined";/* stylelint-disable-line */
+						content: "\ee57";
 					}
 
 					&.copy_download_file_url a:before {
-						content: "\e8ac";
+						font-family: "bb-icons-lined";/* stylelint-disable-line */
+						content: "\ee3b";
 					}
 
 					&.privacy_file a:before {
-						content: "\e90d";
+						font-family: "bb-icons-lined";/* stylelint-disable-line */
+						content: "\eecc";
 						font-size: 15px;
 					}
 
@@ -3737,8 +3745,8 @@ div.dropzone .dz-preview {
 		}
 
 		&:after {
-			content: "\e81f";
-			font-family: bb-icons; /* stylelint-disable-line */
+			content: "\ef10";
+			font-family: "bb-icons-lined"; /* stylelint-disable-line */
 			display: inline-block;
 			color: #4d5c6d;
 			opacity: 0.4;
@@ -4126,7 +4134,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 							}
 
 							i:before {
-								font-family: 'bb-icons'; /* stylelint-disable-line */
+								font-family: "bb-icons-lined"; /* stylelint-disable-line */
 								font-size: 16px;
 								display: inline-block;
 								margin-right: 10px;
@@ -4268,8 +4276,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			pointer-events: none;
 
 			&:after {
-				content: "\e838";
-				font-family: "bb-icons"; /* stylelint-disable-line */
+				content: "\ef30";
+				font-family: "bb-icons-lined"; /* stylelint-disable-line */
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -4404,8 +4412,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			pointer-events: none;
 
 			&:after {
-				content: "\e838";
-				font-family: "bb-icons"; /* stylelint-disable-line */
+				content: "\ef30";
+				font-family: "bb-icons-lined"; /* stylelint-disable-line */
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -4423,8 +4431,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	position: relative;
 
 	&:after {
-		content: "\e81f";
-		font-family: bb-icons; /* stylelint-disable-line */
+		content: "\ef10";
+		font-family: "bb-icons-lined"; /* stylelint-disable-line */
 		display: inline-block;
 		color: #4d5c6d;
 		opacity: 0.4;
@@ -4479,7 +4487,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 			span:before {
 				content: "\e827";
-				font-family: "bb-icons"; /* stylelint-disable-line */
+				font-family: "bb-icons-lined"; /* stylelint-disable-line */
 				font-size: 20px;
 				vertical-align: middle;
 				display: inline-block;
@@ -4589,8 +4597,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 					text-overflow: ellipsis;
 
 					&:before {
-						content: "\e959";
-						font-family: bb-icons; /* stylelint-disable-line */
+						content: "\ee9f";
+						font-family: "bb-icons-lined"; /* stylelint-disable-line */
 						color: #939597;
 						margin-right: 12px;
 						font-size: 16px;
@@ -4676,7 +4684,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 .location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
-	content: "\e963";
+	content: "\eeb8";
+	font-family: "bb-icons-lined";/* stylelint-disable-line */
 	font-size: 15px;
 }
 
@@ -4902,7 +4911,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				opacity: 0.9;
 
 				&:after {
-					font: normal normal 400 14px/1 bb-icons;
+					font: normal normal 400 14px/1 bb-icons-lined;
 					speak: none;
 					display: inline-block;
 					margin: 0 0 0 6px;
@@ -4910,7 +4919,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 					text-transform: none;
 					-webkit-font-smoothing: antialiased;
 					-moz-osx-font-smoothing: grayscale;
-					content: "\E838";
+					content: "\ef30";
 					animation: spin 2s infinite linear;
 				}
 
@@ -5053,7 +5062,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				color: #939597;
 				letter-spacing: -0.24px;
 				line-height: 24px;
-				font-family: 'bb-icons'; /* stylelint-disable-line */
+				font-family: "bb-icons-lined"; /* stylelint-disable-line */
 				font-size: 22px;
 			}
 
