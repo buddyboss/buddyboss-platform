@@ -37,6 +37,7 @@ $is_enabled_joined_date      = bb_enabled_profile_header_layout_element( 'joined
 $is_enabled_last_active      = bb_enabled_profile_header_layout_element( 'last-active' );
 $is_enabled_followers        = bb_enabled_profile_header_layout_element( 'followers' );
 $is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
+$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' );
 ?>
 
 <?php if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) : ?>
@@ -147,6 +148,7 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 							</div>
 							<?php
 						endif;
+
 						if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_active( 'activity' ) && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) {
 							?>
 							<div class="flex align-items-top member-social">
@@ -160,9 +162,12 @@ $is_enabled_following        = bb_enabled_profile_header_layout_element( 'follow
 									}
 									?>
 								</div>
-								<?php echo wp_kses( bp_get_user_social_networks_urls(), bb_members_allow_html_tags() ); ?>
 							</div>
-						<?php } else { ?>
+							<?php
+						}
+
+						if ( $is_enabled_social_networks && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
+							?>
 							<div class="flex align-items-center member-social">
 								<?php echo wp_kses( bp_get_user_social_networks_urls(), bb_members_allow_html_tags() ); ?>
 							</div>
