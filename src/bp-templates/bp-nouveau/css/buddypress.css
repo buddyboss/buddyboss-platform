@@ -7237,15 +7237,15 @@ body.guillotine-dragging * {
   float: left;
   image-rendering: -webkit-optimize-contrast;
   margin: 0;
-  width: 26px;
+  width: 30px;
 }
 
 .groups-header .moderators-lists #group-admins > li .bb-icon {
-  height: 26px;
-  width: 26px;
+  height: 30px;
+  width: 30px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 26px;
+  line-height: 30px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -7468,7 +7468,6 @@ body.guillotine-dragging * {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  margin-top: 5px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta {
@@ -7485,7 +7484,7 @@ body.guillotine-dragging * {
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button > * {
   min-width: auto;
-  padding: 5px 15px;
+  padding: 7px 15px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
@@ -7558,6 +7557,7 @@ body.guillotine-dragging * {
   .groups-header #cover-image-container #item-header-content .group-actions-absolute {
     position: static;
     justify-content: center;
+    margin-top: 0;
   }
   .groups-header #cover-image-container.centered #item-header-content > .bp-group-type {
     margin-bottom: 15px;
