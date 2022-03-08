@@ -20,10 +20,23 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	$is_enabled_last_active      = bb_enabled_profile_header_layout_element( 'last-active' );
 	$is_enabled_followers        = bb_enabled_profile_header_layout_element( 'followers' );
 	$is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
-	$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' );
+	$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+
+	$user_social_networks_urls      = '';
+	$social_networks_urls_div_class = 'social-networks-hide';
+	if ( $is_enabled_social_networks ) {
+
+		add_filter( 'bp_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+		$user_social_networks_urls = bp_get_user_social_networks_urls();
+		remove_filter( 'bp_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+
+		if ( ! empty( $user_social_networks_urls ) ) {
+			$social_networks_urls_div_class = 'social-networks-show';
+		}
+	}
 	?>
 
-	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style ); ?>">
+	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class ); ?>">
 
 		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
@@ -119,12 +132,14 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 								<?php
 							}
 
-							if ( $is_enabled_social_networks && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
+							if ( ! empty( $user_social_networks_urls ) ) {
 								?>
 								<div class="flex align-items-center member-social">
-									<?php echo wp_kses( bp_get_user_social_networks_urls(), bb_members_allow_html_tags() ); ?>
+									<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
 								</div>
-							<?php } ?>
+								<?php
+							}
+							?>
 
 						</div><!-- .header-meta-wrap -->
 
