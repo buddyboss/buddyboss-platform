@@ -28,11 +28,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 			<div id="item-header-avatar">
 				<?php
-				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
+				if ( $is_enabled_online_status ) {
+					bb_current_user_status( bp_displayed_user_id() );
+				}
 
-					if ( $is_enabled_online_status ) {
-						bb_current_user_status( bp_displayed_user_id() );
-					}
+				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
 					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-camera"></i>
