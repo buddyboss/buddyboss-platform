@@ -1680,8 +1680,7 @@ function bp_xprofile_social_network_provider() {
  */
 function bp_get_user_social_networks_urls( $user_id = null ) {
 
-	global $wpdb;
-	global $bp;
+	global $wpdb, $bp;
 
 	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
 
