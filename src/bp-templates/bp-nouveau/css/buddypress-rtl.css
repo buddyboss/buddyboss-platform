@@ -1238,7 +1238,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {
-  max-width: 26px;
+  max-width: 28px;
   float: right;
   margin-left: -9px;
   position: relative;
@@ -1258,11 +1258,11 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {
-  height: 26px;
-  width: 26px;
+  height: 28px;
+  width: 28px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 26px;
+  line-height: 28px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
