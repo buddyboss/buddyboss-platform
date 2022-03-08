@@ -7237,15 +7237,15 @@ body.guillotine-dragging * {
   float: left;
   image-rendering: -webkit-optimize-contrast;
   margin: 0;
-  width: 30px;
+  width: 34px;
 }
 
 .groups-header .moderators-lists #group-admins > li .bb-icon {
-  height: 30px;
-  width: 30px;
+  height: 34px;
+  width: 34px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 30px;
+  line-height: 34px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -7484,7 +7484,7 @@ body.guillotine-dragging * {
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button > * {
   min-width: auto;
-  padding: 7px 15px;
+  padding: 8px 15px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
