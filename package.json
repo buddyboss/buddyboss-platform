@@ -32,9 +32,6 @@
 		"postcss-scss": "^4.0.2",
 		"stylelint": "~13.13.1"
 	},
-	"scripts": {
-		"prepare": "husky install"
-	},
 	"engines": {
 		"node": ">=14.15.0"
 	},
