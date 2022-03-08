@@ -15,7 +15,7 @@
 				<header class="bb-model-header">
 					<h4><?php esc_html_e( 'Report', 'buddyboss' ); ?> <span class="bp-reported-type"></span></h4>
 					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
-						<span class="bb-icon bb-icon-close"></span>
+						<span class="bb-icons-l bb-icon-times"></span>
 					</button>
 				</header>
 				<?php

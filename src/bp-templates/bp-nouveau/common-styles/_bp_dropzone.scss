@@ -102,7 +102,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		font-family: "bb-icons";/* stylelint-disable-line */
+		font-family: "bb-icons-lined";/* stylelint-disable-line */
 		font-size: 20px;
 		line-height: 1;
 		speak: none;
@@ -729,10 +729,10 @@
 				position: relative;
 
 				&:before {
-					content: "\e98e";
+					content: "\ee6e";
 					font-size: 28px;
 					color: #92949d;
-					font-family: "bb-icons";/* stylelint-disable-line */
+					font-family: "bb-icons-lined";/* stylelint-disable-line */
 					display: inline-block;
 					line-height: 1;
 					position: absolute;
@@ -741,7 +741,7 @@
 					transform: translateX(-50%);
 				}
 
-				[class*="bb-icon"] {
+				[class*="bb-icons-lined"] {
 					font-size: 28px;
 					color: rgba(18, 43, 70, 0.5);
 					left: 50%;

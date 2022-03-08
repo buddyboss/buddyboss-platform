@@ -59,7 +59,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 												<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 											</a>
 											<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
-												<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+												<i class="bb-icons-l bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 											</a>
 											<?php
 										}
@@ -69,7 +69,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
 										<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
-											<i class="bb-icon-folder-stacked"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+											<i class="bb-icons-l bb-icon-folder-alt"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
 									}
@@ -79,7 +79,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
 											<a href="#" class="media-folder_action__anchor">
-												<i class="bb-icon-menu-dots-v"></i>
+												<i class="bb-icons-f bb-icon-ellipsis-v"></i>
 											</a>
 											<div class="media-folder_action__list">
 												<ul>
@@ -88,7 +88,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 														?>
 														<li>
 															<a id="bp-edit-folder-open" href="#">
-																<i class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
+																<i class="bb-icons-l bb-icon-edit"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
 															</a>
 														</li>
 														<?php
@@ -97,7 +97,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 														?>
 														<li>
 															<a href="#" id="bb-delete-folder">
-																<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
+																<i class="bb-icons-l bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
 															</a>
 														</li>
 														<?php

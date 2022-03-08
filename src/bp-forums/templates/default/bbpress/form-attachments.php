@@ -85,7 +85,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 			<div class="dz-preview dz-file-preview">
 				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 				<div class="dz-details">
-					<div class="dz-icon"><span class="bb-icon-file"></span></div>
+					<div class="dz-icon"><span class="bb-icons-l bb-icon-file"></span></div>
 					<div class="dz-filename"><span data-dz-name></span></div>
 					<div class="dz-size" data-dz-size></div>
 				</div>

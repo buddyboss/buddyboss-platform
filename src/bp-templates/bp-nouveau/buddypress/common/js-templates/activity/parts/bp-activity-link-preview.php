@@ -12,7 +12,7 @@
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>
-	<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-icon-loader animate-spin"></i><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
+	<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-icons-l bb-icon-spinner animate-spin"></i><?php esc_html_e( 'Loading preview...', 'buddyboss' ) ?></span>
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
 	<a title="<?php esc_html_e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><?php esc_html_e( 'Remove Preview', 'buddyboss' ); ?></i></a>

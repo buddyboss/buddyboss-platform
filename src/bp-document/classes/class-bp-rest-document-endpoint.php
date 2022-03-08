@@ -1412,7 +1412,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'<textarea class="document-text-file-data-hidden" style="display: none;">' . wp_kses_post( $file_data ) . '</textarea>' .
 						'</div>' .
 						'<div class="document-expand">' .
-							'<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
+							'<a href="#" class="document-expand-anchor"><i class="bb-icons-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
 						'</div>' .
 					'</div>';
 

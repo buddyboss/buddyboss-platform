@@ -16,7 +16,7 @@
 	<?php if ( bbp_get_forum_report_link( array( 'id' => bbp_get_forum_id() ) ) ) { ?>
 		<div class="bb_more_options action">
 			<a href="#" class="bb_more_options_action">
-				<i class="bb-icon-menu-dots-h"></i>
+				<i class="bb-icons-f bb-icon-ellipsis-v"></i>
 			</a>
 			<div class="bb_more_options_list">
 				<?php bbp_forum_report_link( array( 'id' => bbp_get_forum_id() ) ); ?>

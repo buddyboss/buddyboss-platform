@@ -125,7 +125,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 			}
 
 			&:before {
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons-lined";/* stylelint-disable-line */
 				font-size: 15px;
 				display: inline-block;
 				margin-right: 10px;
@@ -136,11 +136,11 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&.reported-content:before,
 			&.report-content:before {
-				content: "\e8ea";
+				content: "\ee9c";
 			}
 
 			&:before {
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons-lined";/* stylelint-disable-line */
 				font-size: 15px;
 				display: inline-block;
 				margin-right: 10px;
@@ -150,8 +150,8 @@ body.buddypress.bp-user #page #primary .entry-header {
 			}
 
 			&.view-as:before {
-				content: "\e88a";
-				font-family: bb-icons;
+				content: "\ef52";
+				font-family: "bb-icons-lined";/* stylelint-disable-line */
 				font-size: 16px;
 				display: inline-block;
 				margin-right: 10px;
@@ -161,22 +161,22 @@ body.buddypress.bp-user #page #primary .entry-header {
 			}
 
 			&.send-message:before {
-				content: "\e839";
+				content: "\ee62";
 				font-size: 16px;
 				color: inherit !important;
 			}
 
 			&.block-member:before {
-				content: "\e8c9";
+				content: "\ee08";
 			}
 
 			&.friendship-button:before,
 			&.follow-button:before {
-				content: "\e94d";
+				content: "\ef60";
 			}
 
 			&.view-as:before {
-				content: "\e88a";
+				content: "\ef52";
 			}
 
 		}

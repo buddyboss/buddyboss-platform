@@ -6460,8 +6460,8 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
-  content: "\e838";
-  font-family: "bb-icons";
+  content: "\ef30";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -6882,7 +6882,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button:before,
 .bb_more_options .bb_more_options_list button:before,
 .bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 15px;
   display: inline-block;
@@ -6903,7 +6903,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.report-content:before,
 .bb_more_options .bb_more_options_list a.reported-content:before,
 .bb_more_options .bb_more_options_list a.report-content:before {
-  content: "\e8ea";
+  content: "\ee9c";
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button:before,
@@ -6912,7 +6912,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button:before,
 .bb_more_options .bb_more_options_list button:before,
 .bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 15px;
   display: inline-block;
@@ -6928,8 +6928,9 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
 .bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\e88a";
-  font-family: bb-icons;
+  content: "\ef52";
+  font-family: "bb-icons-lined";
+  /* stylelint-disable-line */
   font-size: 16px;
   display: inline-block;
   margin-right: 10px;
@@ -6944,7 +6945,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
-  content: "\e839";
+  content: "\ee62";
   font-size: 16px;
   color: inherit !important;
 }
@@ -6955,7 +6956,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.block-member:before,
 .bb_more_options .bb_more_options_list button.block-member:before,
 .bb_more_options .bb_more_options_list a.block-member:before {
-  content: "\e8c9";
+  content: "\ee08";
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.friendship-button:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
@@ -6969,7 +6970,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.follow-button:before,
 .bb_more_options .bb_more_options_list a.friendship-button:before,
 .bb_more_options .bb_more_options_list a.follow-button:before {
-  content: "\e94d";
+  content: "\ef60";
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
@@ -6978,7 +6979,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
 .bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\e88a";
+  content: "\ef52";
 }
 
 @media screen and (max-width: 799px) {
@@ -7575,8 +7576,9 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #bp-pending-invites-loader .dashicons-update:before {
-  content: "\e838";
-  font-family: bb-icons;
+  content: "\ef30";
+  font-family: "bb-icons-lined";
+  /* stylelint-disable-line */
   font-size: 20px;
   display: block;
   -webkit-transform: scale(0.8);
@@ -7596,8 +7598,9 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #bp-invites-submit-loader .dashicons-update:before {
-  content: "\e838";
-  font-family: bb-icons;
+  content: "\ef30";
+  font-family: "bb-icons-lined";
+  /* stylelint-disable-line */
   font-size: 20px;
   display: block;
   -webkit-transform: scale(0.8);
@@ -13553,8 +13556,8 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 }
 
 .bb-select-container span.select2-selection__choice__remove:before {
-  content: "\E828";
-  font-family: bb-icons;
+  content: "\e828";
+  font-family: bb-icons-lined;
   font-size: 13px;
   line-height: 1;
   background: #fff;
@@ -20769,8 +20772,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before {
-  content: "\e88b";
-  font-family: "bb-icons";
+  content: "\ee67";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 16px;
 }
@@ -20812,8 +20815,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-theatre .bb-activity-video-elem .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-video-thumb .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-media-section .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
-  content: "\e88b";
-  font-family: "bb-icons";
+  content: "\ee67";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 16px;
   display: -webkit-box;
@@ -20830,8 +20833,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before {
-  content: "\e9ce" !important;
-  font-family: "bb-icons";
+  content: "\ef07" !important;
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
 }
 
@@ -20897,7 +20900,9 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-media-section .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
-  content: "\e8af";
+  font-family: "bb-icons-lined";
+  /* stylelint-disable-line */
+  content: "\eed5";
 }
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap {
@@ -20984,8 +20989,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a:before {
-  content: "\e9cb";
-  font-family: 'bb-icons';
+  content: "\eeb4";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 20px;
   display: inline-block;
@@ -20998,7 +21003,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a.video-file-delete:before {
-  content: "\e937";
+  content: "\ef48";
   font-size: 15px;
 }
 
@@ -21088,8 +21093,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader:after,
 .bb-activity-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader:after {
-  content: "\e838";
-  font-family: "bb-icons";
+  content: "\ef30";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 35px;
   animation: spin 2s infinite linear;
@@ -21505,6 +21510,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-custom-check:checked + label .bb-icon:before {
   content: "\e876";
   display: inline;
+  font-family: "bb-icons-lined";
+  /* stylelint-disable-line */
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .bb-field-wrap .dropzone .dz-preview .dz-image {
@@ -21579,8 +21586,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-button:before {
-  content: "\e9d3";
-  font-family: "bb-icons";
+  content: "\efeb";
+  font-family: "bb-icons-filled";
   /* stylelint-disable-line */
   position: absolute;
   top: -10px;
@@ -21662,6 +21669,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap .bb-custom-check:checked + label .bb-icon:before {
+  font-family: "bb-icons-filled";
+  /* stylelint-disable-line */
   content: "\e876";
   display: inline;
 }
@@ -21720,8 +21729,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bp-video-thumbnail-uploader .button.bp-video-thumbnail-submit.saving:after {
-  content: "\e838";
-  font-family: "bb-icons";
+  content: "\ef30";
+  font-family: "bb-icons-filled";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -22302,7 +22311,7 @@ body > .open-popup.video-error-popup {
   position: absolute;
   top: 0;
   left: 0;
-  font-family: "bb-icons";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 20px;
   line-height: 1;
@@ -22888,10 +22897,10 @@ body > .open-popup.video-error-popup {
 }
 
 .dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon:before {
-  content: "\e98e";
+  content: "\ee6e";
   font-size: 28px;
   color: #92949d;
-  font-family: "bb-icons";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   display: inline-block;
   line-height: 1;
@@ -22901,7 +22910,7 @@ body > .open-popup.video-error-popup {
   transform: translateX(-50%);
 }
 
-.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"] {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icons-lined"] {
   font-size: 28px;
   color: rgba(18, 43, 70, 0.5);
   left: 50%;
@@ -23495,8 +23504,8 @@ span.icons:before {
 }
 
 #group-messages-container div#group-messages-new-submit #send_group_message_button.loading:after {
-  content: "\e838";
-  font-family: "bb-icons";
+  content: "\ef30";
+  font-family: "bb-icons-lined";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;

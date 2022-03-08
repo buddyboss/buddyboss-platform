@@ -24,7 +24,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 		<div id="item-header-avatar">
 			<?php if ( bp_is_item_admin() ) { ?>
 				<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-edit-thin"></i>
+					<i class="bb-icons-l bb-icon-edit"></i>
 				</a>
 			<?php } ?>
 			<?php bp_group_avatar(); ?>

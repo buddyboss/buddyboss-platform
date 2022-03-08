@@ -974,7 +974,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 					} else {
 						?>
 						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss' ); ?>">
-							<i class="bb-icon-slash" aria-hidden="true"></i>
+							<i class="bb-icons-l bb-icon-cancel" aria-hidden="true"></i>
 						</span>
 						<?php
 					}
@@ -988,7 +988,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="bb-icon-loader animate-spin"></i>
+					<i class="bb-icons-l bb-icon-spinner animate-spin"></i>
 				</div>
 			</li>
 			<?php
