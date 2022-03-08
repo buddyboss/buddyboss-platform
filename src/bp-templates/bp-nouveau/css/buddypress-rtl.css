@@ -7083,12 +7083,15 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .users-header #item-header-cover-image #item-header-content {
   flex: 1;
-  margin-top: -50px;
   min-width: 0;
 }
 
 .users-header #item-header-cover-image #item-header-avatar .bp-member-type {
   display: none;
+}
+
+.users-header #cover-image-container:not(.network_profiles) .member-social-links {
+  display: none !important;
 }
 
 /*
