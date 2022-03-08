@@ -301,7 +301,7 @@
 		}
 
 		&--public:before {
-			content: "\e819";
+			content: "\eeaa";
 		}
 
 		&--loggedin:before {
@@ -988,7 +988,8 @@
 			position: relative;
 
 			.medium-editor-action-more-button b:before {
-				content: "\e81a";
+				content: "\ee5c";
+				font-family: 'bb-icons-lined'; /* stylelint-disable-line */
 			}
 
 			> ul {

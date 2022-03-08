@@ -1113,7 +1113,8 @@ blockquote.wp-embedded-content {
 
 
 span.dashicons.dashicons-admin-file:before {
-	content: "\e96a";
+	content: "\ee7a";
+	font-family: 'bb-icons-lined'; /* stylelint-disable-line */
 }
 
 .activity-list .activity-item .activity-content.video-activity-wrap,
@@ -1343,7 +1344,8 @@ span.dashicons.dashicons-admin-file:before {
 					border-radius: 50%;
 
 					&:before {
-						content: "\e81a";
+						content: "\ee5c";
+						font-family: 'bb-icons-lined'; /* stylelint-disable-line */
 					}
 
 				}
@@ -1614,7 +1616,8 @@ span.dashicons.dashicons-admin-file:before {
 					filter: drop-shadow(2px 2px 5px #000);
 
 					&:before {
-						content: "\e81a";
+						content: "\ee5c";
+						font-family: 'bb-icons-lined'; /* stylelint-disable-line */
 					}
 
 				}
@@ -1805,7 +1808,8 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before,
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
-	content: "\e963";
+	content: "\eeb8";
+	font-family: 'bb-icons-lined'; /* stylelint-disable-line */
 	font-size: 14px;
 }
 
