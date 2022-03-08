@@ -1250,11 +1250,13 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member img {
-  border: 2px solid #fff;
+  border: 2px solid transparent;
+  background-color: #fff;
   border-radius: 50%;
   float: left;
   max-width: 100%;
   image-rendering: -webkit-optimize-contrast;
+  display: block;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {
@@ -1281,6 +1283,10 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon:hover {
   background-color: #e3e3e3;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list .group-footer-wrap:not(.group-join-button-hidden) .bs-group-members {
+  margin-left: -4px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap {
@@ -7232,7 +7238,8 @@ body.guillotine-dragging * {
 }
 
 .groups-header .moderators-lists #group-admins > li img {
-  border: 2px solid #fff;
+  border: 2px solid transparent;
+  background-color: #fff;
   border-radius: 50%;
   float: left;
   image-rendering: -webkit-optimize-contrast;

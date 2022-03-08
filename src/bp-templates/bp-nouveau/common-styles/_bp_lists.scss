@@ -509,11 +509,13 @@
 			}
 
 			img {
-				border: 2px solid #fff;
+				border: 2px solid transparent;
+				background-color: #fff;
 				border-radius: 50%;
 				float: left;
 				max-width: 100%;
 				image-rendering: -webkit-optimize-contrast;
+				display: block;
 			}
 
 			.bb-icon {
@@ -540,6 +542,10 @@
 
 		}
 
+	}
+
+	.group-footer-wrap:not(.group-join-button-hidden) .bs-group-members {
+		margin-left: -4px;
 	}
 
 	.footer-button-wrap {
