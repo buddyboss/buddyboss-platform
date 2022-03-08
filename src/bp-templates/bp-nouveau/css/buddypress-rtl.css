@@ -918,7 +918,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list > li {
-  min-width: 275px;
+  min-width: 300px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover.cover-large a {
@@ -1238,7 +1238,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {
-  max-width: 26px;
+  max-width: 28px;
   float: right;
   margin-left: -9px;
   position: relative;
@@ -1258,11 +1258,11 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {
-  height: 26px;
-  width: 26px;
+  height: 28px;
+  width: 28px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 26px;
+  line-height: 28px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -7247,15 +7247,15 @@ body.guillotine-dragging * {
   float: right;
   image-rendering: -webkit-optimize-contrast;
   margin: 0;
-  width: 26px;
+  width: 30px;
 }
 
 .groups-header .moderators-lists #group-admins > li .bb-icon {
-  height: 26px;
-  width: 26px;
+  height: 30px;
+  width: 30px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 26px;
+  line-height: 30px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -7478,7 +7478,6 @@ body.guillotine-dragging * {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  margin-top: 5px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta {
@@ -7495,7 +7494,7 @@ body.guillotine-dragging * {
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button > * {
   min-width: auto;
-  padding: 5px 15px;
+  padding: 7px 15px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
@@ -7568,6 +7567,7 @@ body.guillotine-dragging * {
   .groups-header #cover-image-container #item-header-content .group-actions-absolute {
     position: static;
     justify-content: center;
+    margin-top: 0;
   }
   .groups-header #cover-image-container.centered #item-header-content > .bp-group-type {
     margin-bottom: 15px;
