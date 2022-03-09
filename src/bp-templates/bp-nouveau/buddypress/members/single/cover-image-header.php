@@ -183,9 +183,17 @@ if ( bp_is_my_profile() ) {
 							<?php
 						}
 
+						$additional_class = '';
+						if ( function_exists( 'bp_get_user_social_networks_field_value' ) ) {
+							$networks_field_value = bp_get_user_social_networks_field_value();
+							if ( is_array( $networks_field_value ) && count( array_filter( $networks_field_value ) ) > 6 ) {
+								$additional_class = "left-align";
+							}
+						}
+
 						if ( ! empty( $user_social_networks_urls ) ) {
 							?>
-							<div class="flex align-items-center member-social-links">
+							<div class="flex align-items-center member-social-links <?php echo $additional_class ?>">
 								<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
 							</div>
 							<?php
