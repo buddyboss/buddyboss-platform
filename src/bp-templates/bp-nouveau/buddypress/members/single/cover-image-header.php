@@ -186,7 +186,7 @@ if ( bp_is_my_profile() ) {
 						$additional_class = '';
 						if ( function_exists( 'bp_get_user_social_networks_field_value' ) ) {
 							$networks_field_value = bp_get_user_social_networks_field_value();
-							if ( is_array( $networks_field_value ) && count( $networks_field_value ) > 6 ) {
+							if ( is_array( $networks_field_value ) && count( array_filter( $networks_field_value ) ) > 6 ) {
 								$additional_class = "left-align";
 							}
 						}
