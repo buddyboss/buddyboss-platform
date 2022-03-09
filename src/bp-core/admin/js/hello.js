@@ -8,7 +8,6 @@
 	/**
 	 * Open the Hello BuddyBoss modal.
 	 */
-	var iframeAutoPlay = '?byline=0&portrait=0&autoplay=1';
 	var bp_hello_open_modal = function( event ) {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
 		  modal    = document.querySelector( '#bp-hello-container.bb-onload-modal' );
@@ -37,14 +36,6 @@
 			var focus_target = modal.querySelectorAll( 'a[href], button' );
 			focus_target     = Array.prototype.slice.call( focus_target );
 			focus_target[0].focus();
-			
-			// Open popup - click on changelog and close popup - Again open popup then changelog tab will active, at that time stop video.
-			var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
-			var getHref = document.querySelector( '.bb-hello-tabs .bb-hello-tabs_anchor.is_active' );
-			if ( getHref ) {
-				var getHrefWithoutHash = getHref.getAttribute( 'data-action' );
-				bbIframeActions( iframeSelector, getHrefWithoutHash );
-			}
 		}
 
 		// Events.
@@ -85,18 +76,6 @@
 		document.getElementById( 'bp-hello-container' ).setAttribute( 'style', 'display:none' );
 		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
-		// Close model then video should also stop.
-		var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
-		if ( iframeSelector && iframeSelector.src ) {
-			var result = iframeSelector.src.includes( '?' );
-			if ( result ) {
-				var iframeSrcSplit = iframeSelector.src.split( '?' );
-				if ( iframeSrcSplit.hasOwnProperty( 0 ) ) {
-					var iframeSrcData = iframeSrcSplit[0];
-					iframeSelector.src = iframeSrcData;
-				}
-			}
-		}
 	};
 
 	/**
@@ -184,28 +163,6 @@
 		// activate new tabs and tabContent
 		event.target.classList.add( 'is_active' );
 		var getHrefWithoutHash = event.target.getAttribute( 'data-action' );
-		// If tab change from overview to changelog then also stop video in overview tab content.
-		var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
-		bbIframeActions ( iframeSelector, getHrefWithoutHash );
 		document.getElementById( getHrefWithoutHash ).classList.add( 'is_active' );
-	}
-	
-	function bbIframeActions ( iframeSelector, getHrefWithoutHash ) {
-		if ( 'bb-release-overview' !== getHrefWithoutHash ) { // If not overview tab then stop video.
-			if ( iframeSelector && iframeSelector.src ) {
-				var result = iframeSelector.src.includes( '?' );
-				if ( result ) {
-					var iframeSrcSplit = iframeSelector.src.split( '?' );
-					if ( iframeSrcSplit.hasOwnProperty( 0 ) ) {
-						var iframeSrcData = iframeSrcSplit[0];
-						iframeSelector.src = iframeSrcData;
-					}
-				}
-			}
-		} else {
-			if ( iframeSelector ) { // If overview tab then autoplay video.
-				iframeSelector.src = iframeSelector.src + iframeAutoPlay;
-			}
-		}
 	}
 }());
