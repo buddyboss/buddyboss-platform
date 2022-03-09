@@ -478,6 +478,7 @@ TABLE OF CONTENTS:
  */
 .bp-hello-title h1 {
   display: inline-block;
+  font-weight: 600;
   margin-right: 10px;
   vertical-align: middle;
   width: initial;
@@ -487,6 +488,8 @@ TABLE OF CONTENTS:
   background-color: #f1f6fb;
   border-radius: 3px;
   color: #0073aa;
+  font-size: 13px;
+  font-weight: 600;
   display: inline-block;
   padding: 5px 10px;
   vertical-align: middle;
