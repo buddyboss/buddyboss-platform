@@ -701,10 +701,16 @@ function bb_members_allow_html_tags( $allow_html = array() ) {
 		'role'        => array(),
 		'aria-hidden' => array(),
 		'focusable'   => array(),
+		'fill-rule'   => array(),
+		'clip-rule'   => array(),
 	);
 	$bbp_allow_tags['path'] = array(
 		'd'    => array(),
 		'fill' => array(),
+	);
+	$bbp_allow_tags['g']    = array(
+		'transform' => array(),
+		'fill'      => array(),
 	);
 
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
