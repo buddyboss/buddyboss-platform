@@ -39,7 +39,7 @@ $is_enabled_followers        = bb_enabled_profile_header_layout_element( 'follow
 $is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
 $is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
-$my_profile 					=  '';
+$my_profile                     = '';
 $user_social_networks_urls      = '';
 $social_networks_urls_div_class = 'social-networks-hide';
 if ( $is_enabled_social_networks ) {
