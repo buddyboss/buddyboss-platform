@@ -66,20 +66,21 @@
 				}
 
 				img {
-					border: 2px solid #fff;
+					border: 2px solid transparent;
+					background-color: #fff;
 					border-radius: 50%;
 					float: left;
 					image-rendering: -webkit-optimize-contrast;
 					margin: 0;
-					width: 26px;
+					width: 34px;
 				}
 
 				.bb-icon {
-					height: 26px;
-					width: 26px;
+					height: 34px;
+					width: 34px;
 					font-size: 16px;
 					color: #c3c4c8;
-					line-height: 26px;
+					line-height: 34px;
 					border-radius: 50%;
 					background-color: #f9f9f9;
 					border: 2px solid #fff;
@@ -308,7 +309,6 @@
 
 				@include dis-flex();
 				@include flex-align(center);
-				margin-top: $marg-xsml;
 
 				.groups-meta {
 					display: block;
@@ -322,7 +322,7 @@
 
 						> * {
 							min-width: auto;
-							padding: 5px 15px;
+							padding: 8px 16px;
 						}
 
 					}
@@ -420,6 +420,7 @@
 				.group-actions-absolute {
 					position: static;
 					justify-content: center;
+					margin-top: 0;
 				}
 
 			}

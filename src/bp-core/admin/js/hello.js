@@ -8,7 +8,6 @@
 	/**
 	 * Open the Hello BuddyBoss modal.
 	 */
-	var iframeAutoPlay = '?byline=0&portrait=0&autoplay=1';
 	var bp_hello_open_modal = function( event ) {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
 		  modal    = document.querySelector( '#bp-hello-container.bb-onload-modal' );
@@ -38,12 +37,14 @@
 			focus_target     = Array.prototype.slice.call( focus_target );
 			focus_target[0].focus();
 			
-			// Open popup - click on changelog and close popup - Again open popup then changelog tab will active, at that time stop video.
-			var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
-			var getHref = document.querySelector( '.bb-hello-tabs .bb-hello-tabs_anchor.is_active' );
-			if ( getHref ) {
-				var getHrefWithoutHash = getHref.getAttribute( 'data-action' );
-				bbIframeActions( iframeSelector, getHrefWithoutHash );
+			if ( modal.classList.contains( 'bb-update-modal' ) ) {
+				// Open popup - click on changelog and close popup - Again open popup then changelog tab will active, at that time stop video.
+				var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
+				var getHref = document.querySelector( '.bb-hello-tabs .bb-hello-tabs_anchor.is_active' );
+				if ( getHref ) {
+					var getHrefWithoutHash = getHref.getAttribute( 'data-action' );
+					bbIframeActions( iframeSelector, getHrefWithoutHash );
+				}
 			}
 		}
 
@@ -87,15 +88,10 @@
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
 		// Close model then video should also stop.
 		var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
-		if ( iframeSelector && iframeSelector.src ) {
-			var result = iframeSelector.src.includes( '?' );
-			if ( result ) {
-				var iframeSrcSplit = iframeSelector.src.split( '?' );
-				if ( iframeSrcSplit.hasOwnProperty( 0 ) ) {
-					var iframeSrcData = iframeSrcSplit[0];
-					iframeSelector.src = iframeSrcData;
-				}
-			}
+		var getHref = document.querySelector( '.bb-hello-tabs .bb-hello-tabs_anchor.is_active' );
+		if ( getHref ) {
+			var getHrefWithoutHash = getHref.getAttribute( 'data-action' );
+			bbIframeActions( iframeSelector, getHrefWithoutHash );
 		}
 	};
 
@@ -204,7 +200,7 @@
 			}
 		} else {
 			if ( iframeSelector ) { // If overview tab then autoplay video.
-				iframeSelector.src = iframeSelector.src + iframeAutoPlay;
+				iframeSelector.src = iframeSelector.src;
 			}
 		}
 	}

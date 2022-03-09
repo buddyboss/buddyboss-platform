@@ -438,6 +438,23 @@ TABLE OF CONTENTS:
 /**
  * 8.0 - Update Modal
  */
+.bb-update-modal#bp-hello-container {
+  bottom: initial;
+  margin-top: 15px;
+  max-height: calc(100% - 70px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bb-update-modal .bp-hello-content {
+  border-radius: 0 0 3px 3px;
+  height: auto;
+  min-height: 200px;
+  max-height: calc(100% - 90px);
+}
+
 .bb-update-modal .bb-release-changelog ul,
 .bb-update-modal ul.bp-hello-list {
   font-size: 14px;
@@ -461,15 +478,18 @@ TABLE OF CONTENTS:
  */
 .bp-hello-title h1 {
   display: inline-block;
+  font-weight: 600;
   margin-left: 10px;
   vertical-align: middle;
   width: initial;
 }
 
 .bp-hello-title .bb-version {
-  background-color: var(--bp-hello-color-secondary);
+  background-color: #f1f6fb;
   border-radius: 3px;
-  color: var(--bp-hello-color-primary);
+  color: #0073aa;
+  font-size: 13px;
+  font-weight: 600;
   display: inline-block;
   padding: 5px 10px;
   vertical-align: middle;
@@ -491,6 +511,7 @@ TABLE OF CONTENTS:
   padding: 10px 0;
   position: relative;
   text-decoration: none;
+  font-weight: 600;
 }
 
 #bp-hello-container .bb-hello-tabs .bb-hello-tabs_anchor {
@@ -502,6 +523,15 @@ TABLE OF CONTENTS:
 #bp-hello-container .bb-hello-tabs .bb-hello-tabs_anchor.is_active {
   border-color: var(--bp-hello-color-primary);
   color: var(--bp-hello-color-primary);
+}
+
+.bb-hello-tabs_content {
+  padding-top: 10px;
+}
+
+.bb-hello-tabs_content ul,
+.bb-hello-tabs_content p {
+  margin-bottom: 20px;
 }
 
 .bb-hello-tabs_content:not(.is_active) {

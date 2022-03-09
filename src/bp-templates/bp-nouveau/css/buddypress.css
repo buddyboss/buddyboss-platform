@@ -918,7 +918,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list > li {
-  min-width: 275px;
+  min-width: 300px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-cover.cover-large a {
@@ -1238,7 +1238,7 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member {
-  max-width: 26px;
+  max-width: 28px;
   float: left;
   margin-right: -9px;
   position: relative;
@@ -1250,19 +1250,21 @@ a.layout-grid-view {
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member img {
-  border: 2px solid #fff;
+  border: 2px solid transparent;
+  background-color: #fff;
   border-radius: 50%;
   float: left;
   max-width: 100%;
   image-rendering: -webkit-optimize-contrast;
+  display: block;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {
-  height: 26px;
-  width: 26px;
+  height: 28px;
+  width: 28px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 26px;
+  line-height: 28px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -1281,6 +1283,10 @@ a.layout-grid-view {
 
 .buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon:hover {
   background-color: #e3e3e3;
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list .group-footer-wrap:not(.group-join-button-hidden) .bs-group-members {
+  margin-left: -4px;
 }
 
 .buddypress-wrap ul.bp-list.groups-dir-list .footer-button-wrap {
@@ -7085,12 +7091,15 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .users-header #item-header-cover-image #item-header-content {
   flex: 1;
-  margin-top: -50px;
   min-width: 0;
 }
 
 .users-header #item-header-cover-image #item-header-avatar .bp-member-type {
   display: none;
+}
+
+.users-header #cover-image-container:not(.network_profiles) .member-social-links {
+  display: none !important;
 }
 
 /*
@@ -7240,20 +7249,21 @@ body.guillotine-dragging * {
 }
 
 .groups-header .moderators-lists #group-admins > li img {
-  border: 2px solid #fff;
+  border: 2px solid transparent;
+  background-color: #fff;
   border-radius: 50%;
   float: left;
   image-rendering: -webkit-optimize-contrast;
   margin: 0;
-  width: 26px;
+  width: 34px;
 }
 
 .groups-header .moderators-lists #group-admins > li .bb-icon {
-  height: 26px;
-  width: 26px;
+  height: 34px;
+  width: 34px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 26px;
+  line-height: 34px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -7476,7 +7486,6 @@ body.guillotine-dragging * {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  margin-top: 5px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta {
@@ -7493,7 +7502,7 @@ body.guillotine-dragging * {
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .groups-meta .generic-button > * {
   min-width: auto;
-  padding: 5px 15px;
+  padding: 8px 16px;
 }
 
 .groups-header #cover-image-container #item-header-content .group-actions-absolute .bb_more_options {
@@ -7566,6 +7575,7 @@ body.guillotine-dragging * {
   .groups-header #cover-image-container #item-header-content .group-actions-absolute {
     position: static;
     justify-content: center;
+    margin-top: 0;
   }
   .groups-header #cover-image-container.centered #item-header-content > .bp-group-type {
     margin-bottom: 15px;

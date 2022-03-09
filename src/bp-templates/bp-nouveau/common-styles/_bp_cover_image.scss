@@ -200,7 +200,6 @@
 
 	#item-header-content {
 		flex: 1;
-		margin-top: -50px;
 		min-width: 0;
 	}
 
@@ -208,6 +207,10 @@
 		display: none;
 	}
 
+}
+
+.users-header #cover-image-container:not(.network_profiles) .member-social-links {
+	display: none !important;
 }
 
 /*

@@ -1906,7 +1906,7 @@ window.bp = window.bp || {};
 			var current_page = '';
 			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) ) {
 				current_page = 'directory';
-			} else if ( $( document.body ).hasClass( 'single' ) && $( document.body ).hasClass( 'xprofile' ) ) {
+			} else if ( $( document.body ).hasClass( 'bp-user' ) ) {
 				current_page = 'single';
 			}
 
@@ -2021,8 +2021,8 @@ window.bp = window.bp || {};
 							$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
 						}
 
-						if ( 'follow' === object && item.find( '.followers-wrap strong' ).length > 0 && typeof response.data.count !== 'undefined' ) {
-							item.find( '.followers-wrap strong' ).html( response.data.count );
+						if ( 'follow' === object && item.find( '.followers-wrap' ).length > 0 && typeof response.data.count !== 'undefined' && response.data.count !== '' ) {
+							item.find( '.followers-wrap' ).replaceWith( response.data.count );
 						}
 
 						target.parent().replaceWith( response.data.contents );

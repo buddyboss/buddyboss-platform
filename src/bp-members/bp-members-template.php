@@ -2821,7 +2821,7 @@ function bb_get_followers_count( $user_id = false ) {
 			$followers = sprintf(
 				/* translators: Follower string. */
 				'<strong>0</strong> %1$s',
-				esc_html__( 'follower', 'buddyboss' ),
+				esc_html__( 'followers', 'buddyboss' ),
 			);
 		} elseif ( 1 === $total_followers ) {
 			$followers = sprintf(
