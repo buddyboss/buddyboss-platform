@@ -43,7 +43,7 @@ $video_url = 'https://player.vimeo.com/video/683811854?h=ee740ce122';
 
 		<div class="bp-hello-title">
 			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Release Notes', 'buddyboss' ); ?></h1>
-			<span class="bb-version"><?php echo esc_html__( 'Version', 'buddyboss' ) . ' ' . esc_html( BP_PLATFORM_VERSION ); ?></span>
+			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Platform v', 'buddyboss' ) . esc_html( BP_PLATFORM_VERSION ); ?></span>
 		</div>
 		<ul class="bb-hello-tabs">
 			<?php
