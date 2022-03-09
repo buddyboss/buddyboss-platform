@@ -2002,8 +2002,8 @@ window.bp = window.bp || {};
 							$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
 						}
 
-						if ( 'follow' === object && item.find( '.followers-wrap strong' ).length > 0 && typeof response.data.count !== 'undefined' ) {
-							item.find( '.followers-wrap strong' ).html( response.data.count );
+						if ( 'follow' === object && item.find( '.followers-wrap' ).length > 0 && typeof response.data.count !== 'undefined' && response.data.count !== '' ) {
+							item.find( '.followers-wrap' ).replaceWith( response.data.count );
 						}
 
 						target.parent().replaceWith( response.data.contents );
