@@ -1673,6 +1673,30 @@ function bp_xprofile_social_network_provider() {
 }
 
 /**
+ * Get social networks field values.
+ *
+ * @return array
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_get_user_social_networks_field_value( $user_id = null ) {
+
+	global $wpdb;
+	global $bp;
+
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+
+	$original_option_values = array();
+
+	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) {
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+	}
+
+	return $original_option_values;
+}
+
+/**
  * Add social networks button to the member header area.
  *
  * @return string
