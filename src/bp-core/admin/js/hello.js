@@ -38,12 +38,14 @@
 			focus_target     = Array.prototype.slice.call( focus_target );
 			focus_target[0].focus();
 			
-			// Open popup - click on changelog and close popup - Again open popup then changelog tab will active, at that time stop video.
-			var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
-			var getHref = document.querySelector( '.bb-hello-tabs .bb-hello-tabs_anchor.is_active' );
-			if ( getHref ) {
-				var getHrefWithoutHash = getHref.getAttribute( 'data-action' );
-				bbIframeActions( iframeSelector, getHrefWithoutHash );
+			if ( modal.classList.contains( 'bb-update-modal' ) ) {
+				// Open popup - click on changelog and close popup - Again open popup then changelog tab will active, at that time stop video.
+				var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
+				var getHref = document.querySelector( '.bb-hello-tabs .bb-hello-tabs_anchor.is_active' );
+				if ( getHref ) {
+					var getHrefWithoutHash = getHref.getAttribute( 'data-action' );
+					bbIframeActions( iframeSelector, getHrefWithoutHash );
+				}
 			}
 		}
 
