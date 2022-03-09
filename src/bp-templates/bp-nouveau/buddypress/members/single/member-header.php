@@ -22,7 +22,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	$is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
 	$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
-	$my_profile 					=  '';
+	$my_profile                     = '';
 	$user_social_networks_urls      = '';
 	$social_networks_urls_div_class = 'social-networks-hide';
 	if ( $is_enabled_social_networks ) {
@@ -36,17 +36,17 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 		}
 	}
 	if ( bp_is_my_profile() ) {
-		$my_profile =  'my_profile';
+		$my_profile = 'my_profile';
 	}
 	?>
 
-	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class. ' ' . $my_profile ) ); ?>">
+	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?>">
 
 		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
 			<div id="item-header-avatar">
 				<?php
-				if ( $is_enabled_online_status ) {
+				if ( $is_enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
 					bb_current_user_status( bp_displayed_user_id() );
 				}
 

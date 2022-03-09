@@ -4818,6 +4818,47 @@ function bp_get_hidden_member_types() {
 }
 
 /**
+ * Current user online status.
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_current_user_status( $user_id ) {
+	if ( bb_is_online_user( $user_id ) ) {
+		echo '<span class="member-status online"></span>';
+	}
+}
+
+/**
+ * Current user online activity time.
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @param int $user_id User id.
+ *
+ * @return string
+ */
+function bb_is_online_user( $user_id ) {
+
+	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
+		return;
+	}
+
+	$last_activity = strtotime( bp_get_user_last_activity( $user_id ) );
+
+	if ( empty( $last_activity ) ) {
+		return false;
+	}
+
+	// the activity timeframe is 5 minutes.
+	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
+	return ( time() - $last_activity <= $activity_timeframe );
+}
+
+/**
  * Get profile cover image width.
  *
  * @since BuddyBoss [BBVERSION]
