@@ -1887,7 +1887,7 @@ window.bp = window.bp || {};
 			var current_page = '';
 			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) ) {
 				current_page = 'directory';
-			} else if ( $( document.body ).hasClass( 'single' ) && $( document.body ).hasClass( 'xprofile' ) ) {
+			} else if ( $( document.body ).hasClass( 'bp-user' ) ) {
 				current_page = 'single';
 			}
 

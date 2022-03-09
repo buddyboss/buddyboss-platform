@@ -83,7 +83,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						<div class="item-avatar">
 							<a href="<?php bp_member_permalink(); ?>">
 								<?php
-								if ( $enabled_online_status ) {
+								if ( $enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
 									bb_current_user_status( bp_get_member_user_id() );
 								}
 								bp_member_avatar( bp_nouveau_avatar_args() );

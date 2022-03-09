@@ -95,7 +95,7 @@ if ( bp_is_my_profile() ) {
 
 			<div id="item-header-avatar">
 				<?php
-				if ( $is_enabled_online_status ) {
+				if ( $is_enabled_online_status && function_exists( 'bb_current_user_status' ) ) {
 					bb_current_user_status( bp_displayed_user_id() );
 				}
 
