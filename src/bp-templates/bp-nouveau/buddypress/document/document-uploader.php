@@ -20,7 +20,7 @@
 						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
-							<span class="bb-icon-l bb-icon-times"></span>
+							<span class="bb-icons-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-field-steps bb-field-steps-1">

@@ -1040,7 +1040,7 @@ window.bp = window.bp || {};
 									default_images_html += '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">';
 									default_images_html += '<div class="">';
 									default_images_html += '<input ' + checked_str + ' id="bb-video-' + value.id + '" class="bb-custom-check" type="radio" value="' + value.id + '" name="bb-video-thumbnail-select" />';
-									default_images_html += '<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-' + value.id + '"><span class="bb-icon-l bb-icon-check"></span></label>';
+									default_images_html += '<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="Select" for="bb-video-' + value.id + '"><span class="bb-icons-l bb-icon-check"></span></label>';
 									default_images_html += '<a class="" href="#">';
 									default_images_html += '<img src="' + value.url + '" class=""/>';
 									default_images_html += '</a>';

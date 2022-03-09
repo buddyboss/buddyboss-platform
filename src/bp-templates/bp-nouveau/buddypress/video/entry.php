@@ -105,7 +105,7 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 			?>
 			<div class="bb-video-check-wrap bb-action-check-wrap">
 				<input id="bb-video-<?php bp_video_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_video_id(); ?>" name="bb-video-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php bp_video_id(); ?>"><span class="bb-icon-l bb-icon-check"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php bp_video_id(); ?>"><span class="bb-icons-l bb-icon-check"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>

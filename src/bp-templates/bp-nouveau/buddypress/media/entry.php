@@ -116,7 +116,7 @@ if ( 'video' === $media_template->media->type ) {
 				?>
 				<div class="bb-media-check-wrap bb-action-check-wrap">
 					<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
-					<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon-l bb-icon-check"></span></label>
+					<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icons-l bb-icon-check"></span></label>
 				</div>
 			<?php endif; ?>
 		</div>
@@ -199,7 +199,7 @@ if ( 'video' === $media_template->media->type ) {
 			?>
 			<div class="bb-media-check-wrap bb-action-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon-l bb-icon-check"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icons-l bb-icon-check"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>
