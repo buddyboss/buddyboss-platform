@@ -189,14 +189,9 @@
 	function bbIframeActions ( iframeSelector, getHrefWithoutHash ) {
 		if ( 'bb-release-overview' !== getHrefWithoutHash ) { // If not overview tab then stop video.
 			if ( iframeSelector && iframeSelector.src ) {
-				var result = iframeSelector.src.includes( '?' );
-				if ( result ) {
-					var iframeSrcSplit = iframeSelector.src.split( '?' );
-					if ( iframeSrcSplit.hasOwnProperty( 0 ) ) {
-						var iframeSrcData = iframeSrcSplit[0];
-						iframeSelector.src = iframeSrcData;
-					}
-				}
+				var iframeSelectorData = iframeSelector.src;
+				iframeSelector.src = '';
+				iframeSelector.src = iframeSelectorData;
 			}
 		} else {
 			if ( iframeSelector ) { // If overview tab then autoplay video.
