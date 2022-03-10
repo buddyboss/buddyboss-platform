@@ -2364,7 +2364,7 @@ function bb_admin_setting_group_elements( $args ) {
 	}
 	echo '</div>' .
 	'<p class="description">' .
-		esc_html__( 'Select which elements show in group your directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ) .
+		esc_html__( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ) .
 	'</p>';
 }
 

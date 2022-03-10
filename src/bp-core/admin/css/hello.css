@@ -460,6 +460,12 @@ TABLE OF CONTENTS:
   font-size: 14px;
 }
 
+.bb-update-modal .bb-release-changelog h2 {
+  font-weight: 400;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
 .bb-update-modal .video-wrapper {
   height: auto;
 }
