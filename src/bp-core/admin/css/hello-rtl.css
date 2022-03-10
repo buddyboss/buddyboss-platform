@@ -475,6 +475,10 @@ TABLE OF CONTENTS:
   max-height: initial;
 }
 
+.bb-update-modal #bb-release-content a {
+  text-decoration: none;
+}
+
 .bb-release-content {
   margin-bottom: 20px;
 }
