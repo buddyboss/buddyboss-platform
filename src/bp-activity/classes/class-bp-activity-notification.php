@@ -56,7 +56,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'activity',
-			esc_html__( 'Activity Feeds', 'buddyboss' ),
+			esc_html__( 'Activity Feed', 'buddyboss' ),
 			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
 			2
 		);
