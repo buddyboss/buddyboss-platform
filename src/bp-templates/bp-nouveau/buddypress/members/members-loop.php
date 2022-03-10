@@ -169,7 +169,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 					<?php if ( ! empty( $member_switch_button ) ) { ?>
 					<div class="bb_more_options member-dropdown">
-						<a href="#" class="bb_more_options_action">
+						<a href="#" class="bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icon-menu-dots-h"></i>
 						</a>
 						<div class="bb_more_options_list">
