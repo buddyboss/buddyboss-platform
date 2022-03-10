@@ -1216,17 +1216,38 @@ body.post-type-bp-group-type .postbox .inside {
   padding: 0 22px 22px;
 }
 
-body.post-type-bp-member-type .postbox .inside .bp-member-type-hide-colorpicker,
-body.post-type-bp-member-type .postbox .inside .bp-group-type-hide-colorpicker,
-body.post-type-bp-group-type .postbox .inside .bp-member-type-hide-colorpicker,
-body.post-type-bp-group-type .postbox .inside .bp-group-type-hide-colorpicker {
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-meta-box-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-meta-box-colorpicker {
+  display: flex;
+  flex-direction: row;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one {
+  display: flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: -webkit-match-parent;
+  justify-content: space-between;
+  flex-basis: 10%;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label {
+  margin-bottom: 10px;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-hide-colorpicker,
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-hide-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-hide-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-hide-colorpicker {
   display: none;
 }
 
-body.post-type-bp-member-type .postbox .inside .bp-member-type-show-colorpicker,
-body.post-type-bp-member-type .postbox .inside .bp-group-type-show-colorpicker,
-body.post-type-bp-group-type .postbox .inside .bp-member-type-show-colorpicker,
-body.post-type-bp-group-type .postbox .inside .bp-group-type-show-colorpicker {
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-show-colorpicker,
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-show-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-show-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bp-group-type-show-colorpicker {
   display: block;
 }
 

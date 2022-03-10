@@ -1278,14 +1278,35 @@ body.post-type-bp-member-type .postbox .inside,
 body.post-type-bp-group-type .postbox .inside {
 	padding: 0 22px 22px;
 
-	.bp-member-type-hide-colorpicker,
-	.bp-group-type-hide-colorpicker {
-		display: none;
-	}
+	.bb-meta-box-label-color-main {
 
-	.bp-member-type-show-colorpicker,
-	.bp-group-type-show-colorpicker {
-		display: block;
+		.bb-meta-box-colorpicker {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.bb-colorpicker-row-one {
+			display: flex;
+			flex-direction: column;
+			vertical-align: middle;
+			text-align: -webkit-match-parent;
+			justify-content: space-between;
+			flex-basis: 10%;
+
+			.bb-colorpicker-label {
+				margin-bottom: 10px;
+			}
+		}
+
+		.bp-member-type-hide-colorpicker,
+		.bp-group-type-hide-colorpicker {
+			display: none;
+		}
+
+		.bp-member-type-show-colorpicker,
+		.bp-group-type-show-colorpicker {
+			display: block;
+		}
 	}
 }
 
