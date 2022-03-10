@@ -815,7 +815,7 @@ function bb_group_headers_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62811, // TODO : need to be update Tutorial.
+						'article' => '125305',
 					),
 					'admin.php'
 				)
@@ -1153,7 +1153,7 @@ function bb_profile_headers_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 62802,
+							'article' => 125303,
 						),
 						'admin.php'
 					)
@@ -2383,7 +2383,7 @@ function bp_group_directories_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => '83107',
+							'article' => '125311',
 						),
 						'admin.php'
 					)
