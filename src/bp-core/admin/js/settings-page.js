@@ -1870,6 +1870,31 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+			
+			// Run only post_type is member type and group type.
+			if ( 'undefined' !== typeof BP_ADMIN.post_type ) {
+				var type = BP_ADMIN.post_type;
+				if ( $( '#' + type + '-label-background-color' ).length ) {
+					$( '#' + type + '-label-background-color' ).wpColorPicker();
+				}
+				if ( $( '#' + type + '-label-text-color' ).length ) {
+					$( '#' + type + '-label-text-color' ).wpColorPicker();
+				}
+				if ( $( '#' + type + '-label-color-type' ).length ) {
+					$( document ).on(
+						'change',
+						'#' + type + '-label-color-type',
+						function ( e ) {
+							e.preventDefault();
+							if ( 'default' === $( this ).val() ) {
+								$( '#' + type + '-color-settings' ).hide();
+							} else {
+								$( '#' + type + '-color-settings' ).show();
+							}
+						}
+					);
+				}
+			}
 		}
 	);
 

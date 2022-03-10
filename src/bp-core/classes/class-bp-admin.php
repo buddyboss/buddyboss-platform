@@ -832,6 +832,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
 				)
 			);
+
+			// Enqueue only post_type is member type and group type.
+			if (
+				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
+				0 === strpos( get_current_screen()->id, 'bp-member-type' )
+			) {
+				wp_enqueue_style( 'wp-color-picker' );
+				wp_enqueue_script( 'wp-color-picker' );
+			}
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/

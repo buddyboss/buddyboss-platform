@@ -109,62 +109,80 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
+			$localize_arg = array(
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'select_document'      => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+				'tools'                => array(
+					'default_data'  => array(
+						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
+						'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
+					),
+					'repair_forums' => array(
+						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+					),
+				),
+				'moderation'           => array(
+					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+				),
+				'avatar_cover_preview' => array(
+					'nonce'  => wp_create_nonce( 'bb-avatar-cover-live-preview' ),
+					'action' => 'bb_profile_group_get_live_preview_urls',
+				),
+				'avatar_settings'      => array(
+					'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
+					'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
+					'wordpress_avatar_types'   => array(
+						'mystery',
+						'blank',
+						'gravatar_default',
+						'identicon',
+						'wavatar',
+						'monsterid',
+						'retro',
+					),
+				),
+				'profile_group_cover'  => array(
+					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
+					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
+					'feedback_messages' => array(
+						0 => sprintf(
+							esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+							(int) $cover_dimensions['width'],
+							(int) $cover_dimensions['height']
+						),
+						1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss' ),
+						2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
+						3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss' ),
+					),
+					'upload'            => array(
+						'nonce'           => wp_create_nonce( 'bp-uploader' ),
+						'action'          => 'bp_cover_image_upload',
+						'object'          => ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
+						'item_id'         => 0,
+						'item_type'       => 'default',
+						'has_cover_image' => false,
+					),
+					'remove'            => array(
+						'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
+						'action' => 'bp_cover_image_delete',
+						'json'   => true,
+					),
+				),
+			);
+
+			// Localize only post_type is member type and group type.
+			if (
+				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
+				0 === strpos( get_current_screen()->id, 'bp-member-type' )
+			) {
+				$localize_arg['post_type'] = get_current_screen()->id;
+			}
+
 			wp_localize_script(
 				'bp-admin',
 				'BP_ADMIN',
-				array(
-					'ajax_url'             => admin_url( 'admin-ajax.php' ),
-					'select_document'      => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
-					'tools'                => array(
-						'default_data'  => array(
-							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
-							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
-						),
-						'repair_forums' => array(
-							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
-						),
-					),
-					'moderation'           => array(
-						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-					),
-					'avatar_cover_preview' => array(
-						'nonce'  => wp_create_nonce( 'bb-avatar-cover-live-preview' ),
-						'action' => 'bb_profile_group_get_live_preview_urls',
-					),
-					'avatar_settings'      => array(
-						'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
-						'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
-						'wordpress_avatar_types'   => array( 'mystery', 'blank', 'gravatar_default', 'identicon', 'wavatar', 'monsterid', 'retro' ),
-					),
-					'profile_group_cover'  => array(
-						'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
-						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
-						'feedback_messages' => array(
-							0 => sprintf(
-								esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
-								(int) $cover_dimensions['width'],
-								(int) $cover_dimensions['height']
-							),
-							1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss' ),
-							2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
-							3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss' ),
-						),
-						'upload'            => array(
-							'nonce'           => wp_create_nonce( 'bp-uploader' ),
-							'action'          => 'bp_cover_image_upload',
-							'object'          => ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
-							'item_id'         => 0,
-							'item_type'       => 'default',
-							'has_cover_image' => false,
-						),
-						'remove'            => array(
-							'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
-							'action' => 'bp_cover_image_delete',
-							'json'   => true,
-						),
-					),
-				)
+				$localize_arg
 			);
 
 			$active_tab = bp_core_get_admin_active_tab();

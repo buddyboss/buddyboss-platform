@@ -1216,6 +1216,20 @@ body.post-type-bp-group-type .postbox .inside {
   padding: 0 22px 22px;
 }
 
+body.post-type-bp-member-type .postbox .inside .bp-member-type-hide-colorpicker,
+body.post-type-bp-member-type .postbox .inside .bp-group-type-hide-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bp-member-type-hide-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bp-group-type-hide-colorpicker {
+  display: none;
+}
+
+body.post-type-bp-member-type .postbox .inside .bp-member-type-show-colorpicker,
+body.post-type-bp-member-type .postbox .inside .bp-group-type-show-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bp-member-type-show-colorpicker,
+body.post-type-bp-group-type .postbox .inside .bp-group-type-show-colorpicker {
+  display: block;
+}
+
 body.post-type-bp-member-type #member-type-shortcode,
 body.post-type-bp-group-type #group-type-shortcode {
   line-height: 1;

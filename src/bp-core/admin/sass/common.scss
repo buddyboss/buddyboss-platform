@@ -1277,6 +1277,16 @@ body.post-type-reply #edit-slug-box {
 body.post-type-bp-member-type .postbox .inside,
 body.post-type-bp-group-type .postbox .inside {
 	padding: 0 22px 22px;
+
+	.bp-member-type-hide-colorpicker,
+	.bp-group-type-hide-colorpicker {
+		display: none;
+	}
+
+	.bp-member-type-show-colorpicker,
+	.bp-group-type-show-colorpicker {
+		display: block;
+	}
 }
 
 body.post-type-bp-member-type #member-type-shortcode,
