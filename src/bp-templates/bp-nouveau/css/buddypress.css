@@ -5942,9 +5942,6 @@ form.ac-form .ac-reply-content input {
 }
 
 .bp-profile-search-widget .bps-form-title {
-  font-size: 13px;
-  font-weight: 400;
-  color: #767676;
   line-height: 1;
   margin-top: 0;
   margin-bottom: 20px;
@@ -7924,45 +7921,67 @@ body.register .buddypress-wrap .page ul {
 
 /* Profile Completion Widget  */
 div.profile_completion_wrap .progress_text_wrap {
-  text-align: right;
-  margin-bottom: 5px;
+  text-align: center;
 }
 
-div.profile_completion_wrap .progress_container {
-  border: 1px solid #000;
-  border-radius: 12px;
-}
-
-div.profile_completion_wrap .progress_container .pc_progress {
-  height: 8px;
-  background-color: #0b80a4;
-  border-radius: 12px 0 0 12px;
-}
-
-div.profile_completion_wrap ul.pc_detailed_progress li {
+.pc_detailed_progress li {
   margin: 15px 0;
 }
 
-div.profile_completion_wrap ul.pc_detailed_progress li span.completed_staus {
+.pc_detailed_progress li span.completed_staus {
   color: #fff;
-  border-radius: 8px;
-  padding: 2px;
   float: right;
   width: 50px;
   text-align: center;
 }
 
-div.profile_completion_wrap ul.pc_detailed_progress li.completed span.completed_staus {
-  background-color: #8a2;
+.pc_detailed_progress li.completed span.completed_staus {
+  color: #8a2;
 }
 
-div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.section_name a {
-  color: #5087e5;
-  text-decoration: underline;
+.pc_detailed_progress li.incomplete span.completed_staus {
+  color: #b71717;
 }
 
-div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed_staus {
-  background-color: #b71717;
+.pc_progress_graph path {
+  stroke: #e7e7e8;
+  stroke-linecap: round;
+  stroke-width: 6;
+}
+
+.pc_progress_graph.pc_progress_graph--blank path {
+  stroke-linecap: initial;
+}
+
+.pc_progress_wrap {
+  text-align: center;
+  margin: 0 0 25px;
+}
+
+.pc_progress_wrap svg {
+  width: 70%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.pc_progress_wrap .pc_progress_rate {
+  stroke: #0b80a4;
+}
+
+.progress_text_wrap {
+  margin-top: -50px;
+}
+
+.progress_text_wrap h3 {
+  margin: 0;
+}
+
+.progress_text_wrap .progress_text_value {
+  font-weight: 600;
+}
+
+.progress_text_label {
+  display: block;
 }
 
 /* Send Invites Table */
