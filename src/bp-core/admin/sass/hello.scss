@@ -526,6 +526,11 @@ TABLE OF CONTENTS:
 		overflow-y: auto;
 		top: 50%;
 		transform: translateY(-50%);
+
+		h1#bp-hello-title {
+			font-weight: 600;
+		}
+
 	}
 
 	.bp-hello-content {
@@ -540,6 +545,12 @@ TABLE OF CONTENTS:
 		font-size: 14px;
 	}
 
+	.bb-release-changelog h2 {
+		font-weight: 400;
+		font-size: 14px;
+		margin-bottom: 25px;
+	}
+
 	.video-wrapper {
 		height: auto;
 	}
@@ -547,6 +558,10 @@ TABLE OF CONTENTS:
 	.bp-hello-header {
 		height: auto;
 		max-height: initial;
+	}
+
+	#bb-release-content a {
+		text-decoration: none;
 	}
 
 
