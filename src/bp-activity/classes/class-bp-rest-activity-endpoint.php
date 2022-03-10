@@ -162,7 +162,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'page'              => $request['page'],
 			'per_page'          => $request['per_page'],
 			'search_terms'      => $request['search'],
-			'sort'              => $request['order'],
+			'sort'              => strtoupper( $request['order'] ),
+			'order_by'          => $request['orderby'],
 			'spam'              => $request['status'],
 			'display_comments'  => $request['display_comments'],
 			'site_id'           => $request['site_id'],
@@ -239,6 +240,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['secondary_id'] ) ) {
 			$args['filter']['secondary_id'] = $request['secondary_id'];
+		}
+
+		if ( ! empty( $args['order_by'] ) && 'include' === $args['order_by'] ) {
+			$args['order_by'] = 'in';
 		}
 
 		if ( $args['in'] ) {
@@ -1243,6 +1248,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&& bp_is_activity_edit_enabled()
 					&& function_exists( 'bp_activity_user_can_edit' )
 					&& bp_activity_user_can_edit( $activity )
+				) && (
+					isset( $activity->privacy ) &&
+					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
 				)
 				? true
 				: false
@@ -1260,7 +1268,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// remove comment options from media/document/video activity.
-		if ( ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) ) {
+		if ( ! empty( $activity->secondary_item_id ) && ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) && 'activity_comment' !== $activity->type ) {
+			$secondary_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+			if ( ! empty( $secondary_activity->type ) && in_array( $secondary_activity->type, array( 'activity_comment' ), true ) ) {
+				$data['can_comment']  = false;
+				$data['can_edit']     = false;
+				$data['can_favorite'] = false;
+			}
+		} elseif ( ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) ) {
 			$data['can_comment']  = false;
 			$data['can_edit']     = false;
 			$data['can_favorite'] = false;
@@ -1906,6 +1921,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'enum'              => array( 'asc', 'desc' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['orderby'] = array(
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'default'           => '',
+			'type'              => 'string',
+			'enum'              => array( 'id', 'include' ),
+			'sanitize_callback' => 'sanitize_key',
 		);
 
 		$params['after'] = array(

@@ -80,6 +80,7 @@ add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 add_action( 'bp_init', 'bp_add_permastructs', 40 );
 add_action( 'bp_init', 'bp_init_background_updater', 50 );
 add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -138,27 +139,32 @@ if ( is_admin() ) {
 // Email unsubscribe.
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
-add_action( 'bp_init', function() {
-	$component = bp_get_option( 'bp-active-components' );
+add_action(
+	'bp_init',
+	function() {
+		$component = bp_get_option( 'bp-active-components' );
 
-	// Set the "Document" component active/inactive based on the media components.
-	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-		$component['document'] = '1';
-		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-		unset( $component['document'] );
-		bp_update_option( 'bp-active-components', $component );
-	}
+		// Set the "Document" component active/inactive based on the media components.
+		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
+			$component['document'] = '1';
+			bp_update_option( 'bp-active-components', $component );
+		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
+			unset( $component['document'] );
+			bp_update_option( 'bp-active-components', $component );
+		}
 
-	// Set the "Video" component active/inactive based on the media components.
-	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
-		$component['video'] = '1';
-		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
-		unset( $component['video'] );
-		bp_update_option( 'bp-active-components', $component );
-	}
-}, 10, 2 );
+		// Set the "Video" component active/inactive based on the media components.
+		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
+			$component['video'] = '1';
+			bp_update_option( 'bp-active-components', $component );
+		} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
+			unset( $component['video'] );
+			bp_update_option( 'bp-active-components', $component );
+		}
+	},
+	10,
+	2
+);
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -187,149 +193,198 @@ function bp_restrict_single_attachment() {
  * Validate and update symlink option value.
  *
  * @since BuddyBoss 1.7.0
+ *
+ * @param int $updated_value Current value of options.
  */
-function bb_media_symlink_validate() {
+function bb_media_symlink_validate( $updated_value ) {
+	$keys = array(
+		'bb_media_symlink_type',
+		'bb_document_symlink_type',
+		'bb_document_video_symlink_type',
+		'bb_video_symlink_type',
+		'bb_video_thumb_symlink_type',
+	);
 
 	if ( true === bb_check_server_disabled_symlink() ) {
+		bp_update_option( 'bp_media_symlink_support', 0 );
+		foreach ( $keys as $k ) {
+			bp_delete_option( $k );
+		}
 		return;
 	}
 
-	$type            = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-	$page            = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 	$output_file_src = '';
 
-	if ( isset( $_GET ) && isset( $type ) && 'bp-media' === $type && 'bp-settings' === $page ) {
+	$upload_dir = wp_upload_dir();
+	$upload_dir = $upload_dir['basedir'];
 
-		$keys = array(
-			'bb_media_symlink_type',
-			'bb_document_symlink_type',
-			'bb_document_video_symlink_type',
-			'bb_video_symlink_type',
-			'bb_video_thumb_symlink_type',
-		);
+	$platform_previews_path = $upload_dir . '/bb-platform-previews';
+	if ( ! is_dir( $platform_previews_path ) ) {
+		wp_mkdir_p( $platform_previews_path );
+		chmod( $platform_previews_path, 0755 );
+	}
 
-		$upload_dir = wp_upload_dir();
-		$upload_dir = $upload_dir['basedir'];
+	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
+	if ( ! is_dir( $media_symlinks_path ) ) {
+		wp_mkdir_p( $media_symlinks_path );
+		chmod( $media_symlinks_path, 0755 );
+	}
 
-		$platform_previews_path = $upload_dir . '/bb-platform-previews';
-		if ( ! is_dir( $platform_previews_path ) ) {
-			wp_mkdir_p( $platform_previews_path );
-			chmod( $platform_previews_path, 0755 );
+	foreach ( $keys as $k ) {
+		bp_delete_option( $k );
+	}
+
+	if ( empty( $updated_value ) || 0 === $updated_value ) {
+		return;
+	}
+
+	$attachment_id = bb_core_upload_dummy_attachment();
+
+	if ( ! empty( $attachment_id ) ) {
+
+		$attachment_url  = wp_get_attachment_image_src( $attachment_id );
+		$attachment_file = get_attached_file( $attachment_id );
+		$symlinks_path   = $media_symlinks_path;
+		$size            = 'thumbnail';
+		$symlink_name    = md5( 'testsymlink' . $attachment_id . $size );
+		$attachment_path = $symlinks_path . '/' . $symlink_name;
+		$file            = image_get_intermediate_size( $attachment_id, $size );
+		if ( $file && ! empty( $file['path'] ) ) {
+			$output_file_src = $upload_dir . '/' . $file['path'];
+		} elseif ( $attachment_url ) {
+			$output_file_src = $attachment_file;
 		}
 
-		$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
-		if ( ! is_dir( $media_symlinks_path ) ) {
-			wp_mkdir_p( $media_symlinks_path );
-			chmod( $media_symlinks_path, 0755 );
-		}
+		$upload_directory        = wp_get_upload_dir();
+		$key                     = 'bb_media_symlink_type';
+		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
+		$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
-		$media_symlink = get_option( 'bb_media_symlink_type', '' );
-		if ( empty( $media_symlink ) ) {
+		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
+			if ( ! is_link( $attachment_path ) ) {
 
-			$attachment_id = bb_core_upload_dummy_attachment();
+				$sym_status = bp_get_option( $key, '' );
+				$status     = false;
 
-			if ( ! empty( $attachment_id ) ) {
+				if ( empty( $sym_status ) || 'default' === $sym_status ) {
 
-				$attachment_url  = wp_get_attachment_image_src( $attachment_id );
-				$attachment_file = get_attached_file( $attachment_id );
-				$symlinks_path   = $media_symlinks_path;
-				$size            = 'thumbnail';
-				$symlink_name    = md5( 'testsymlink' . $attachment_id . $size );
-				$attachment_path = $symlinks_path . '/' . $symlink_name;
-				$file            = image_get_intermediate_size( $attachment_id, $size );
-				if ( $file && ! empty( $file['path'] ) ) {
-					$output_file_src = $upload_dir . '/' . $file['path'];
-				} elseif ( $attachment_url ) {
-					$output_file_src = $attachment_file;
+					symlink( $output_file_src, $attachment_path );
 				}
 
-				$upload_directory        = wp_get_upload_dir();
-				$key                     = 'bb_media_symlink_type';
-				$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
-				$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
+				if ( empty( $sym_status ) ) {
+					if ( ! empty( $symlink_url ) ) {
 
-				if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-					if ( ! is_link( $attachment_path ) ) {
-
-						$sym_status = bp_get_option( $key, '' );
-						$status     = false;
-
-						if ( empty( $sym_status ) || 'default' === $sym_status ) {
-							symlink( $output_file_src, $attachment_path );
+						$fetch = wp_remote_get( $symlink_url );
+						if ( is_wp_error( $fetch ) ) {
+							$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => false ) );
 						}
 
-						if ( empty( $sym_status ) ) {
-							if ( ! empty( $symlink_url ) ) {
-								$fetch = wp_remote_get( $symlink_url );
-
-								if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-									$status     = true;
-									$sym_status = 'default';
-									foreach ( $keys as $k ) {
-										bp_update_option( $k, $sym_status );
-									}
-								}
+						if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+							$status     = true;
+							$sym_status = 'default';
+							foreach ( $keys as $k ) {
+								bp_update_option( $k, $sym_status );
 							}
+							bp_delete_option( 'bb_display_support_error' );
+						} else {
+							bp_update_option( 'bb_display_support_error', 1 );
+						}
+					}
 
-							if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-								unlink( $attachment_path );
+					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
+						unlink( $attachment_path );
+						bp_update_option( 'bp_media_symlink_support', 0 );
+
+						foreach ( $keys as $k ) {
+							bp_delete_option( $k );
+						}
+						bp_update_option( 'bb_display_support_error', 1 );
+					} else {
+						bp_delete_option( 'bb_display_support_error' );
+					}
+				}
+
+				if ( false === $status && ( empty( $sym_status ) || 'relative' === $sym_status ) ) {
+					$tmp = getcwd();
+					chdir( wp_normalize_path( ABSPATH ) );
+					$sym_path   = explode( '/', $symlinks_path );
+					$search_key = array_search( 'wp-content', $sym_path, true );
+					if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
+						$sym_path = array_slice( array_filter( $sym_path ), $search_key );
+						$sym_path = implode( '/', $sym_path );
+					}
+					if ( is_dir( 'wp-content/' . $sym_path ) ) {
+						chdir( 'wp-content/' . $sym_path );
+						if ( empty( $file['path'] ) ) {
+							$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
+						}
+						$output_file_src = '../../' . $file['path'];
+						if ( file_exists( $output_file_src ) ) {
+							symlink( $output_file_src, $symlink_name );
+						}
+					}
+					chdir( $tmp );
+
+					if ( empty( $sym_status ) ) {
+
+						if ( ! empty( $symlink_url ) ) {
+							$fetch = wp_remote_get( $symlink_url );
+							if ( is_wp_error( $fetch ) ) {
+								$fetch = wp_remote_get( $symlink_url, array( 'sslverify' => false ) );
+							}
+							if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+								$status     = true;
+								$sym_status = 'relative';
+								foreach ( $keys as $k ) {
+									bp_update_option( $k, $sym_status );
+								}
+								bp_delete_option( 'bb_display_support_error' );
+							} else {
+								bp_update_option( 'bb_display_support_error', 1 );
 							}
 						}
 
-						if ( false === $status && ( empty( $sym_status ) || 'relative' === $sym_status ) ) {
-							$tmp = getcwd();
-							chdir( wp_normalize_path( ABSPATH ) );
-							$sym_path   = explode( '/', $symlinks_path );
-							$search_key = array_search( 'wp-content', $sym_path, true );
-							if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
-								$sym_path = array_slice( array_filter( $sym_path ), $search_key );
-								$sym_path = implode( '/', $sym_path );
+						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
+							unlink( $attachment_path );
+							bp_update_option( 'bp_media_symlink_support', 0 );
+							bp_update_option( 'bb_display_support_error', 1 );
+							foreach ( $keys as $k ) {
+								bp_delete_option( $k );
 							}
-							if ( is_dir( 'wp-content/' . $sym_path ) ) {
-								chdir( 'wp-content/' . $sym_path );
-								if ( empty( $file['path'] ) ) {
-									$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
-								}
-								$output_file_src = '../../' . $file['path'];
-								if ( file_exists( $output_file_src ) ) {
-									symlink( $output_file_src, $symlink_name );
-								}
-							}
-							chdir( $tmp );
-
-							if ( empty( $sym_status ) ) {
-
-								if ( ! empty( $symlink_url ) ) {
-									$fetch = wp_remote_get( $symlink_url );
-									if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-										$status     = true;
-										$sym_status = 'relative';
-										foreach ( $keys as $k ) {
-											bp_update_option( $k, $sym_status );
-										}
-									}
-								}
-
-								if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-									unlink( $attachment_path );
-								}
-							}
+						} else {
+							bp_delete_option( 'bb_display_support_error' );
 						}
 					}
 				}
-				wp_delete_attachment( $attachment_id, true );
-			} else {
-
-				foreach ( $keys as $k ) {
-					bp_delete_option( $k );
-				}
-
-				bp_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
 			}
 		}
+		wp_delete_attachment( $attachment_id, true );
+	} else {
+
+		foreach ( $keys as $k ) {
+			bp_delete_option( $k );
+		}
+
+		bp_update_option( 'bp_media_symlink_support', 0 );
+		bp_core_remove_temp_directory( $upload_dir . '/bb-platform-previews' );
 	}
 }
-add_action( 'bp_admin_init', 'bb_media_symlink_validate', 10, 2 );
+
+/**
+ * Check the symlink type default/relative on symlink option update.
+ *
+ * @since BuddyBoss 1.8.2
+ *
+ * @param mixed $old_value The old option value.
+ * @param mixed $value     The new option value.
+ */
+function bb_update_media_symlink_support( $old_value, $value ) {
+	if ( $old_value !== $value ) {
+		bb_media_symlink_validate( $value );
+	}
+}
+
+add_action( 'update_option_bp_media_symlink_support', 'bb_update_media_symlink_support', 10, 2 );
 
 /**
  * Check and re-start the background process if queue is not empty.
@@ -344,3 +399,72 @@ function bb_email_handle_cron_healthcheck() {
 }
 
 add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
+
+/**
+ * Check and reschedule the background process if queue is not empty.
+ *
+ * @since BuddyBoss 1.8.3
+ */
+function bb_handle_cron_healthcheck() {
+	global $bp_background_updater;
+	if ( $bp_background_updater->is_updating() ) {
+		$bp_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
+
+/**
+ * Function will remove RSS Feeds.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_restricate_rss_feed_callback() {
+	if ( is_user_logged_in() ) {
+		return;
+	}
+	if ( true === bp_enable_private_rss_feeds() ) {
+		bb_restricate_rss_feed();
+	}
+}
+add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
+
+/**
+ * Function will remove REST APIs endpoint.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ */
+function bb_restricate_rest_api_callback( $response, $handler, $request ) {
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	if (
+		! is_user_logged_in() &&
+		! empty( $handler['permission_callback'] ) &&
+		(
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is active.
+				true === bbapp_is_private_app_enabled() && // private app is enabled.
+				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+			) ||
+			(
+				! function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is not active.
+				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+			)
+		)
+	) {
+		return bb_restricate_rest_api( $response, $handler, $request );
+	}
+
+	return $response;
+}
+
+add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );

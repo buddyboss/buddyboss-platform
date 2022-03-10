@@ -2,8 +2,10 @@
 /**
  * BuddyBoss - Groups Loop
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/groups-loop.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_before_loop(); ?>
@@ -24,16 +26,32 @@ bp_nouveau_before_loop(); ?>
 	<?php
 	while ( bp_groups() ) :
 		bp_the_group();
-	?>
+		?>
 
 		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
-			<div class="list-wrap">
+			<div class="list-wrap group-list">
 
-				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-					<div class="item-avatar">
-						<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
-					</div>
-				<?php endif; ?>
+				<div class="group-list-header">
+					<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
+						<?php
+						$group_cover_image_url = bp_attachments_get_attachment(
+							'url',
+							array(
+								'object_dir' => 'groups',
+								'item_id'    => bp_get_group_id(),
+							)
+						);
+						$has_default_cover     = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
+						?>
+						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
+					<?php } ?>
+
+					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
+						<div class="item-avatar">
+							<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
+						</div>
+					<?php endif; ?>
+				</div>
 
 				<div class="item">
 
