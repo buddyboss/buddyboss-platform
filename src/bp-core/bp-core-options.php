@@ -42,7 +42,7 @@ function bp_get_default_options() {
 		// Default fullname field name.
 		'bp-xprofile-nickname-field-name'            => __( 'Nickname', 'buddyboss' ),
 
-		// Default fullname field name. (for backward compat)
+		// Default fullname field name. (for backward compat).
 		'bp-xprofile-fullname-field-name'            => __( 'Name', 'buddyboss' ),
 
 		'bp-display-name-format'                     => 'first_name',
@@ -117,7 +117,7 @@ function bp_get_default_options() {
 		// Email unsubscribe salt.
 		'bp-emails-unsubscribe-salt'                 => '',
 
-		// Profile Enable Gravatar
+		// Profile Enable Gravatar.
 		'bp-enable-profile-gravatar'                 => false,
 
 		/* Groups ************************************************************/
@@ -1022,7 +1022,6 @@ function bp_is_activity_edit_enabled( $default = false ) {
  *                      Default: false.
  * @return bool True if Edit is enabled, otherwise false.
  */
-
 function bp_is_relevant_feed_enabled( $default = false ) {
 
 	/**
@@ -1037,7 +1036,7 @@ function bp_is_relevant_feed_enabled( $default = false ) {
 }
 
 /**
- * single time slot by time key.
+ * Single time slot by time key.
  *
  * @param null $time Return single time slot by time key.
  *
@@ -1082,7 +1081,7 @@ function bp_activity_edit_times( $time = null ) {
 /**
  * Get BuddyBoss Activity Time option.
  *
- * @param bool $default when option not found, function will return $default value
+ * @param bool $default when option not found, function will return $default value.
  *
  * @return mixed|void
  *
@@ -1355,7 +1354,7 @@ function bp_disable_invite_member_type( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $post_type Post Type
+ * @param string $post_type Post Type.
  * @param bool   $default Optional. Fallback value if not found in the database.
  *                        Default: false.
  *
@@ -1400,7 +1399,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $activity_type Activity Type
+ * @param string $activity_type Activity Type.
  * @param bool   $default Optional. Fallback value if not found in the database.
  *                        Default: false.
  *
@@ -1467,7 +1466,7 @@ function bp_member_type_default_on_registration( $default = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $member_type Member type
+ * @param string $member_type Member type.
  * @param bool   $default Optional. Fallback value if not found in the database.
  *                        Default: true.
  *

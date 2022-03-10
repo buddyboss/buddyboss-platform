@@ -224,7 +224,7 @@ function bp_core_get_core_userdata( $user_id = 0 ) {
 		return false;
 	}
 
-	// Get core user data
+	// Get core user data.
 	$userdata = BP_Core_User::get_core_userdata( $user_id );
 
 	/**
@@ -1122,7 +1122,7 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		return false;
 	}
 
-	// Bail if this is switched user
+	// Bail if this is switched user.
 	$old_user = bp_current_member_switched();
 	if ( $old_user instanceof WP_User ) {
 		return false;
@@ -2966,7 +2966,7 @@ function bp_register_member_type_section() {
 		return;
 	}
 
-	// profile types
+	// profile types.
 	register_post_type(
 		bp_get_member_type_post_type(),
 		apply_filters(
@@ -2988,25 +2988,25 @@ function bp_register_member_type_section() {
 		)
 	);
 
-	// set profile type while update user profile
+	// set profile type while update user profile.
 	// add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
 
 	// action for remove profile type metabox.
 	add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox' );
 
-	// add column
+	// add column.
 	add_filter( 'manage_' . bp_get_member_type_post_type() . '_posts_columns', 'bp_member_type_add_column' );
 
 	// action for adding a sortable column name.
 	add_action( 'manage_' . bp_get_member_type_post_type() . '_posts_custom_column', 'bp_member_type_show_data', 10, 2 );
 
-	// sortable columns
+	// sortable columns.
 	add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns', 'bp_member_type_add_sortable_columns' );
 
 	// request filter.
 	add_action( 'load-edit.php', 'bp_member_type_add_request_filter' );
 
-	// hide quick edit link on the custom post type list screen
+	// hide quick edit link on the custom post type list screen.
 	add_filter( 'post_row_actions', 'bp_member_type_hide_quickedit', 10, 2 );
 
 	// filter for adding body class where the shortcode added.
@@ -3131,7 +3131,7 @@ function bp_get_member_type_key( $post_id ) {
 	$key = get_post_meta( $post_id, '_bp_member_type_key', true );
 
 	// Fallback to legacy way of generating profile type key from singular label
-	// if Key is not set by admin user
+	// if Key is not set by admin user.
 	if ( empty( $key ) ) {
 		$key  = get_post_field( 'post_name', $post_id );
 		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
@@ -3331,7 +3331,7 @@ function bp_member_type_post_by_type( $member_type ) {
 	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
 	$post_id = $wpdb->get_var( $query );
 
-	// Fallback to legacy way to retrieve profile type from name by using singular label
+	// Fallback to legacy way to retrieve profile type from name by using singular label.
 	if ( ! $post_id ) {
 		$name    = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
 		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
@@ -3476,9 +3476,9 @@ function bp_get_removed_member_types() {
  */
 function bp_get_users_of_removed_member_types() {
 	$user_ids = array();
-	// get removed profile type post ids
+	// get removed profile type post ids.
 	$bp_member_type_ids = bp_get_removed_member_types();
-	// get removed profile type names/slugs
+	// get removed profile type names/slugs.
 	$bp_member_type_names = array();
 	if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
 		foreach ( $bp_member_type_ids as $single ) {
@@ -3486,7 +3486,7 @@ function bp_get_users_of_removed_member_types() {
 		}
 	}
 
-	// get member user ids
+	// get member user ids.
 	if ( isset( $bp_member_type_names ) && ! empty( $bp_member_type_names ) ) {
 		foreach ( $bp_member_type_names as $type_name ) {
 			$type_id           = bp_member_type_term_taxonomy_id( $type_name );
@@ -3571,8 +3571,8 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		}
 		?>
-	<li id="members-<?php echo $type_id; ?>">
-		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); // @todo no variables in the text domain please ?></a>
+		<li id="members-<?php echo $type_id; ?>">
+			<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); // @todo no variables in the text domain please ?></a>
 		</li>
 		<?php
 	}
@@ -3850,7 +3850,7 @@ function bp_member_type_changing_listing_label() {
 		'edit-bp-group-type',
 	);
 
-	// Check to make sure we're on a profile type's admin page
+	// Check to make sure we're on a profile type's admin page.
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
 		wp_enqueue_script( 'bp-clipboard', $url_clip_board . 'clipboard.js', array(), bp_get_version() );
@@ -3892,7 +3892,7 @@ function bp_get_user_member_type( $user_id ) {
 			// Get the profile type.
 			$type = bp_get_member_type( $user_id );
 
-			// Output the
+			// Output the.
 			if ( $type_obj = bp_get_member_type_object( $type ) ) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
@@ -4040,7 +4040,7 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
  */
 function bp_member_switching_get_olduser_cookie() {
 	if ( isset( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
-		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ); // WPCS: sanitization ok
+		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] );
 	} else {
 		return false;
 	}
@@ -4061,7 +4061,7 @@ function bp_member_switching_get_auth_cookie() {
 	}
 
 	if ( isset( $_COOKIE[ $auth_cookie_name ] ) && is_string( $_COOKIE[ $auth_cookie_name ] ) ) {
-		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) ); // WPCS: sanitization ok
+		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) );
 	}
 	if ( ! isset( $cookie ) || ! is_array( $cookie ) ) {
 		$cookie = array();
@@ -4095,14 +4095,14 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 	$cookie_parts = wp_parse_auth_cookie( end( $auth_cookie ) );
 
 	if ( $set_old_user && $old_user_id ) {
-		// Switching to another user
+		// Switching to another user.
 		$new_token = '';
-		// We'll not override the old user
+		// We'll not override the old user.
 		if ( empty( $auth_cookie ) ) {
 			bp_member_switching_set_olduser_cookie( $old_user_id, false, $old_token );
 		}
 	} else {
-		// Switching back, either after being switched off or after being switched to another user
+		// Switching back, either after being switched off or after being switched to another user.
 		$new_token = isset( $cookie_parts['token'] ) ? $cookie_parts['token'] : '';
 		bp_member_switching_clear_olduser_cookie( false );
 	}
@@ -4129,7 +4129,7 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 	wp_set_current_user( $user_id );
 
 	if ( $old_token && $old_user_id && ! $set_old_user ) {
-		// When switching back, destroy the session for the old user
+		// When switching back, destroy the session for the old user.
 		$manager = WP_Session_Tokens::get_instance( $old_user_id );
 		$manager->destroy( $old_token );
 	}
@@ -4186,10 +4186,10 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 
 					$group_id = bp_get_group_id();
 
-					// check if already member
+					// check if already member.
 					$membership = new BP_Groups_Member( $user_id, $group_id );
 					if ( ! isset( $membership->id ) ) {
-						// add as member
+						// add as member.
 						groups_join_group( $group_id, $user_id );
 					}
 
@@ -4572,7 +4572,7 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 		'link',
 	);
 
-	// Provide extensibility
+	// Provide extensibility.
 	return apply_filters( 'bp_nouveau_btn_invites_mce_buttons', $buttons );
 }
 
@@ -4640,12 +4640,12 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 
 		if ( '' === trim( $xprofile_nick_name ) ) {
 			$user = get_userdata( $user_id );
-			// make sure nickname is valid
+			// make sure nickname is valid.
 			$nickname = get_user_meta( $user_id, 'nickname', true );
 			$nickname = sanitize_title( $nickname );
 			$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
 
-			// or use the user_nicename
+			// or use the user_nicename.
 			if ( ! $nickname || $invalid ) {
 				$nickname = $user->user_nicename;
 			}
@@ -4815,4 +4815,265 @@ function bp_get_hidden_member_types() {
 	 * @param array $post_name Hidden profile type names.
 	 */
 	return apply_filters( 'bp_get_hidden_member_types', isset( $hidden_profile_types->posts ) ? wp_list_pluck( $hidden_profile_types->posts, 'post_name' ) : false );
+}
+
+/**
+ * Current user online status.
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_current_user_status( $user_id ) {
+	if ( bb_is_online_user( $user_id ) ) {
+		echo '<span class="member-status online"></span>';
+	}
+}
+
+/**
+ * Current user online activity time.
+ *
+ * @since BuddyPress 1.7.0
+ *
+ * @param int $user_id User id.
+ *
+ * @return string
+ */
+function bb_is_online_user( $user_id ) {
+
+	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
+		return;
+	}
+
+	$last_activity = strtotime( bp_get_user_last_activity( $user_id ) );
+
+	if ( empty( $last_activity ) ) {
+		return false;
+	}
+
+	// the activity timeframe is 5 minutes.
+	$activity_timeframe = 5 * MINUTE_IN_SECONDS;
+	return ( time() - $last_activity <= $activity_timeframe );
+}
+
+/**
+ * Get profile cover image width.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'default'.
+ *
+ * @return string Return profile cover image width.
+ */
+function bb_get_profile_cover_image_width( $default = 'default' ) {
+	return bp_get_option( 'bb-pro-cover-profile-width', $default );
+}
+
+/**
+ * Get profile cover image height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'small'.
+ *
+ * @return string Return profile cover image height.
+ */
+function bb_get_profile_cover_image_height( $default = 'small' ) {
+	return bp_get_option( 'bb-pro-cover-profile-height', $default );
+}
+
+/**
+ * Get profile header layout style.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'left'.
+ *
+ * @return string Return profile header layout style.
+ */
+function bb_get_profile_header_layout_style( $default = 'left' ) {
+	return function_exists( 'bb_platform_pro_profile_headers_style' ) ? bb_platform_pro_profile_headers_style( $default ) : $default;
+}
+
+/**
+ * Get profile header layout style.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $element Profile header element.
+ *                        Default: online-status.
+ *
+ * @return bool True if profile element is enabled otherwise false.
+ */
+function bb_enabled_profile_header_layout_element( $element = 'online-status' ) {
+	return (bool) function_exists( 'bb_platform_pro_profile_header_element_enable' ) ? bb_platform_pro_profile_header_element_enable( $element ) : true;
+}
+
+/**
+ * Check the member directory element is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $element Member directory element.
+ *                        Default: online-status.
+ *
+ * @return bool True if member directory element is enabled otherwise false.
+ */
+function bb_enabled_member_directory_element( $element = 'online-status' ) {
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_element' ) ? bb_platform_pro_enable_member_directory_element( $element ) : true;
+}
+
+/**
+ * Get enabled the profile actions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Return selected profile actions.
+ */
+function bb_get_enabled_member_directory_profile_actions() {
+	return function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : ( function_exists( 'bb_get_member_directory_profile_actions' ) ? array_column( bb_get_member_directory_profile_actions(), 'element_name' ) : array() );
+}
+
+/**
+ * Check the member profile action is enabled or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $action Member directory profile action.
+ *                            Default: null.
+ *
+ * @return bool True if member profile action is enabled otherwise false.
+ */
+function bb_enabled_member_directory_profile_action( $action = '' ) {
+
+	if ( empty( $action ) ) {
+		return false;
+	}
+
+	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_profile_action' ) ? bb_platform_pro_enable_member_directory_profile_action( $action ) : true;
+}
+
+/**
+ * Get the primary action for member directories.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return the primary action for member directories.
+ */
+function bb_get_member_directory_primary_action() {
+	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : bp_get_option( 'bb-member-profile-primary-action' );
+}
+
+/**
+ * Function which will return the member id if $id > 0 then it will return the original displayed id
+ * else it will return the member loop member id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $id Member ID.
+ *
+ * @return int Member ID.
+ */
+function bb_member_loop_set_member_id( $id ) {
+
+	if ( $id > 0 ) {
+
+		// This will fix the issues in theme members directory page & members connections tab send message issue.
+		if ( is_user_logged_in() && bp_loggedin_user_id() === $id ) {
+			if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} elseif ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+				// This will fix the issues in theme members directory page & members connections tab send message issue.
+				return bp_get_member_user_id();
+			} else {
+				return $id;
+			}
+		} else {
+			return $id;
+		}
+	}
+
+	// This will fix the issues in theme members directory page & members connections tab send message issue.
+	return bp_get_member_user_id();
+}
+
+/**
+ * Function which will return the false in even if user is in h/her own profile page in connections members listing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $my_profile The current page is profile page or not.
+ *
+ * @return bool
+ */
+function bb_member_loop_set_my_profile( $my_profile ) {
+
+	if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
+			return false;
+		}
+	}
+	if ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
+			return false;
+		}
+	}
+	return $my_profile;
+}
+
+/**
+ * Get member directories and header page button arguments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $page    The current page is member directories or header page. Default: 'directory'.
+ * @param string $clicked The button clicked from primary or secondary button. Default: 'primary'.
+ *
+ * @return array Return button arguments.
+ */
+function bb_member_get_profile_action_arguments( $page = 'directory', $clicked = 'primary' ) {
+	$button_args = array();
+	if ( 'directory' === $page ) {
+		$button_args = array(
+			'prefix_link_text' => '<i></i>',
+			'button_attr'      => array(
+				'hover_type' => 'hover',
+			),
+		);
+
+		if ( 'secondary' === $clicked ) {
+			$button_args = array_merge(
+				array(
+					'is_tooltips'      => true,
+					'data-balloon-pos' => 'up',
+				),
+				$button_args
+			);
+		}
+	} elseif ( 'single' === $page ) {
+		if ( 'primary' === $clicked ) {
+			$button_args = array(
+				'prefix_link_text' => '<i></i>',
+				'is_tooltips'      => false,
+				'button_attr'      => array(
+					'hover_type' => 'hover',
+				),
+			);
+		} elseif ( 'secondary' === $clicked ) {
+			$button_args = array(
+				'is_tooltips' => false,
+				'button_attr' => array(
+					'hover_type' => 'static',
+				),
+			);
+		}
+	}
+
+	return $button_args;
 }
