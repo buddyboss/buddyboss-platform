@@ -336,6 +336,7 @@ class BP_Video_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp_video',
+				'bp_video_album',
 			)
 		);
 
