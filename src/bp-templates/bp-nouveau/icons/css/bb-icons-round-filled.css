@@ -54,6 +54,7 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+.bb-icons-rf.bb-icon-upload:before { content: '\e9e9'; } /* '' */
 .bb-icons-rf.bb-icon-activity:before { content: '\f523'; } /* '' */
 .bb-icons-rf.bb-icon-activity-slash:before { content: '\f524'; } /* '' */
 .bb-icons-rf.bb-icon-address-book:before { content: '\f525'; } /* '' */
@@ -173,7 +174,7 @@
 .bb-icons-rf.bb-icon-bullhorn:before { content: '\f597'; } /* '' */
 .bb-icons-rf.bb-icon-bullseye:before { content: '\f598'; } /* '' */
 .bb-icons-rf.bb-icon-calendar:before { content: '\f599'; } /* '' */
-.bb-icons-rf.bb-icon-camara:before { content: '\f59a'; } /* '' */
+.bb-icons-rf.bb-icon-camera:before { content: '\f59a'; } /* '' */
 .bb-icons-rf.bb-icon-camera-slash:before { content: '\f59b'; } /* '' */
 .bb-icons-rf.bb-icon-cancel:before { content: '\f59c'; } /* '' */
 .bb-icons-rf.bb-icon-caret-down:before { content: '\f59d'; } /* '' */
@@ -260,7 +261,7 @@
 .bb-icons-rf.bb-icon-edit:before { content: '\f5ee'; } /* '' */
 .bb-icons-rf.bb-icon-eject:before { content: '\f5ef'; } /* '' */
 .bb-icons-rf.bb-icon-ellipsis-h:before { content: '\f5f0'; } /* '' */
-.bb-icons-rf.bb-icon-ellispis-v:before { content: '\f5f1'; } /* '' */
+.bb-icons-rf.bb-icon-ellipsis-v:before { content: '\f5f1'; } /* '' */
 .bb-icons-rf.bb-icon-emoticon-frown:before { content: '\f5f2'; } /* '' */
 .bb-icons-rf.bb-icon-emoticon-smile:before { content: '\f5f3'; } /* '' */
 .bb-icons-rf.bb-icon-emoticon-wink:before { content: '\f5f4'; } /* '' */

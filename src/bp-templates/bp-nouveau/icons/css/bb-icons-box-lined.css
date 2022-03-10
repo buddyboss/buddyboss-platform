@@ -54,6 +54,7 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+.bb-icons-bl.bb-icon-upload:before { content: '\e9e6'; } /* '' */
 .bb-icons-bl.bb-icon-activity:before { content: '\f33e'; } /* '' */
 .bb-icons-bl.bb-icon-activity-slash:before { content: '\f33f'; } /* '' */
 .bb-icons-bl.bb-icon-address-book:before { content: '\f340'; } /* '' */
@@ -173,7 +174,7 @@
 .bb-icons-bl.bb-icon-bullhorn:before { content: '\f3b2'; } /* '' */
 .bb-icons-bl.bb-icon-bullseye:before { content: '\f3b3'; } /* '' */
 .bb-icons-bl.bb-icon-calendar:before { content: '\f3b4'; } /* '' */
-.bb-icons-bl.bb-icon-camara:before { content: '\f3b5'; } /* '' */
+.bb-icons-bl.bb-icon-camera:before { content: '\f3b5'; } /* '' */
 .bb-icons-bl.bb-icon-camera-slash:before { content: '\f3b6'; } /* '' */
 .bb-icons-bl.bb-icon-cancel:before { content: '\f3b7'; } /* '' */
 .bb-icons-bl.bb-icon-caret-down:before { content: '\f3b8'; } /* '' */
@@ -260,7 +261,7 @@
 .bb-icons-bl.bb-icon-edit:before { content: '\f409'; } /* '' */
 .bb-icons-bl.bb-icon-eject:before { content: '\f40a'; } /* '' */
 .bb-icons-bl.bb-icon-ellipsis-h:before { content: '\f40b'; } /* '' */
-.bb-icons-bl.bb-icon-ellispis-v:before { content: '\f40c'; } /* '' */
+.bb-icons-bl.bb-icon-ellipsis-v:before { content: '\f40c'; } /* '' */
 .bb-icons-bl.bb-icon-emoticon-frown:before { content: '\f40d'; } /* '' */
 .bb-icons-bl.bb-icon-emoticon-smile:before { content: '\f40e'; } /* '' */
 .bb-icons-bl.bb-icon-emoticon-wink:before { content: '\f40f'; } /* '' */
