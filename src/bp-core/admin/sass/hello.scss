@@ -526,6 +526,11 @@ TABLE OF CONTENTS:
 		overflow-y: auto;
 		top: 50%;
 		transform: translateY(-50%);
+
+		h1#bp-hello-title {
+			font-weight: 600;
+		}
+
 	}
 
 	.bp-hello-content {
