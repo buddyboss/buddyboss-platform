@@ -2827,7 +2827,7 @@ table tbody td .bb-description {
 }
 
 .bb-lab-notice.notification-information:before {
-  content: "\e853";
+  content: "\e8c2";
   display: inline-block;
   font-family: "bb-icons";
   /* stylelint-disable-line */

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-28 07:02:50+00:00\n"
+"POT-Creation-Date: 2022-03-10 01:29:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -431,7 +431,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:860
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1321
-#: bp-xprofile/classes/class-bp-xprofile-group.php:859
+#: bp-xprofile/classes/class-bp-xprofile-group.php:861
 msgid "Update"
 msgstr ""
 
@@ -569,7 +569,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1188
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1231
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1518
-#: bp-xprofile/classes/class-bp-xprofile-group.php:966
+#: bp-xprofile/classes/class-bp-xprofile-group.php:968
 msgid "Cancel"
 msgstr ""
 
@@ -1249,7 +1249,7 @@ msgid "Filter activities list"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:347
-#: bp-core/bp-core-functions.php:7105
+#: bp-core/bp-core-functions.php:7102
 #: bp-groups/classes/class-bp-groups-list-table.php:354
 #: bp-messages/bp-messages-template.php:1023
 #: bp-moderation/classes/class-bp-moderation-list-table.php:276
@@ -3597,7 +3597,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:889
-#: bp-core/bp-core-functions.php:7105
+#: bp-core/bp-core-functions.php:7102
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:192
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:207
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:221
@@ -3628,7 +3628,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:698
 #: bp-core/admin/bp-core-admin-settings.php:982
-#: bp-core/bp-core-functions.php:7084 bp-core/bp-core-functions.php:7164
+#: bp-core/bp-core-functions.php:7081 bp-core/bp-core-functions.php:7161
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:65
 msgid "App"
 msgstr ""
@@ -4003,7 +4003,7 @@ msgid "BuddyBoss Labs"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2398
-#: bp-core/bp-core-functions.php:7047 bp-core/bp-core-functions.php:7048
+#: bp-core/bp-core-functions.php:7044 bp-core/bp-core-functions.php:7045
 #: bp-notifications/bp-notifications-settings.php:345
 msgid "Notification Preferences"
 msgstr ""
@@ -4073,7 +4073,8 @@ msgstr ""
 msgid ""
 "BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You "
 "can help us prepare these features for official release by reporting issues "
-"and providing feedback through the <a href=\"%s\">support portal</a>."
+"and providing feedback through the <a href=\"%s\" target=\"_blank\" "
+">support portal</a>."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -5920,7 +5921,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:1086
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1338
-#: bp-xprofile/classes/class-bp-xprofile-group.php:875
+#: bp-xprofile/classes/class-bp-xprofile-group.php:877
 msgid "Profile Fields"
 msgstr ""
 
@@ -6212,7 +6213,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3284 bp-core/bp-core-functions.php:3380
-#: bp-core/bp-core-functions.php:7075 bp-forums/admin/metaboxes.php:573
+#: bp-core/bp-core-functions.php:7072 bp-forums/admin/metaboxes.php:573
 #: bp-members/classes/class-bp-members-admin.php:2466
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -6556,39 +6557,39 @@ msgid ""
 "href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6990 bp-core/bp-core-functions.php:7193
-#: bp-core/bp-core-functions.php:7222
+#: bp-core/bp-core-functions.php:6987 bp-core/bp-core-functions.php:7190
+#: bp-core/bp-core-functions.php:7219
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:187
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7040 bp-core/bp-core-functions.php:7041
+#: bp-core/bp-core-functions.php:7037 bp-core/bp-core-functions.php:7038
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:873
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7042
+#: bp-core/bp-core-functions.php:7039
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7049
+#: bp-core/bp-core-functions.php:7046
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7053
+#: bp-core/bp-core-functions.php:7050
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7073
+#: bp-core/bp-core-functions.php:7070
 msgid "Enable notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7080 bp-core/bp-core-functions.php:7158
+#: bp-core/bp-core-functions.php:7077 bp-core/bp-core-functions.php:7155
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:52
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7153
+#: bp-core/bp-core-functions.php:7150
 msgid "A manual notification from a site admin"
 msgstr ""
 
@@ -8193,13 +8194,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -13640,7 +13641,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:79
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:121
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:32
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2826
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2835
 #. translators: user role
 msgid "Blocked"
 msgstr ""
@@ -14762,7 +14763,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1487
-#: bp-xprofile/classes/class-bp-xprofile-group.php:941
+#: bp-xprofile/classes/class-bp-xprofile-group.php:943
 msgid "Submit"
 msgstr ""
 
@@ -16272,7 +16273,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1468
 #: bp-templates/bp-nouveau/includes/functions.php:1520
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1296
-#: bp-xprofile/classes/class-bp-xprofile-group.php:847
+#: bp-xprofile/classes/class-bp-xprofile-group.php:849
 msgid "Save"
 msgstr ""
 
@@ -23170,7 +23171,7 @@ msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:515
 #: bp-moderation/bp-moderation-functions.php:239
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2837
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2846
 msgid "Block"
 msgstr ""
 
@@ -24688,7 +24689,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1270
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1428
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2862
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2871
 #: bp-templates/bp-nouveau/includes/video/ajax.php:187
 msgid "Load More"
 msgstr ""
@@ -27623,9 +27624,8 @@ msgstr ""
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1631
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1639
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1648
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1601
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1610
 msgid "Notify group members of these changes via email"
 msgstr ""
 
@@ -27936,13 +27936,13 @@ msgstr ""
 msgid "<p class=\"joined\">Joined \"%s\"</p>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2699
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2773
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2708
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2782
 msgid "Missing thread id."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2704
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2777
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2713
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2786
 msgid "Invalid page number."
 msgstr ""
 
@@ -28586,7 +28586,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:170 bp-xprofile/bp-xprofile-admin.php:178
 #: bp-xprofile/bp-xprofile-admin.php:376
-#: bp-xprofile/classes/class-bp-xprofile-group.php:846
+#: bp-xprofile/classes/class-bp-xprofile-group.php:848
 msgid "New Field Set"
 msgstr ""
 
@@ -28602,7 +28602,7 @@ msgid "Add New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:280
-#: bp-xprofile/classes/class-bp-xprofile-group.php:858
+#: bp-xprofile/classes/class-bp-xprofile-group.php:860
 msgid "Edit Field Set"
 msgstr ""
 
@@ -29662,38 +29662,38 @@ msgstr ""
 msgid "Optional"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:678
+#: bp-xprofile/classes/class-bp-xprofile-group.php:680
 msgid "Please make sure you give the group a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:895
+#: bp-xprofile/classes/class-bp-xprofile-group.php:897
 msgid "Field Set Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:900
+#: bp-xprofile/classes/class-bp-xprofile-group.php:902
 msgid "Field Set Description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:905
+#: bp-xprofile/classes/class-bp-xprofile-group.php:907
 #. translators: accessibility text
 msgid "Add description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:997
+#: bp-xprofile/classes/class-bp-xprofile-group.php:999
 msgid "Repeater Set"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:999
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1001
 msgid ""
 "Allow the profile fields within this set to be repeated again and again, so "
 "the user can add multiple instances of their data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1001
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1003
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1002
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1004
 msgid "Enabled"
 msgstr ""
 
@@ -29847,17 +29847,17 @@ msgctxt "Separator in time since"
 msgid ","
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6800
+#: bp-core/bp-core-functions.php:6797
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6813
+#: bp-core/bp-core-functions.php:6810
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6826
+#: bp-core/bp-core-functions.php:6823
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""
@@ -30029,15 +30029,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
