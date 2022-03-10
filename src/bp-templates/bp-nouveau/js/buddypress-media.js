@@ -6149,7 +6149,7 @@ window.bp = window.bp || {};
 			$(document).on('click', '.bb-prev-document', this.previousDocument.bind(this));
 			$(document).on('click', '.bb-next-document', this.nextDocument.bind(this));
 			$(document).on('bp_activity_ajax_delete_request', this.activityDeleted.bind(this));
-			$(document).on('click', '#bb-media-model-container .media-privacy > li, #bb-media-model-container .activity-privacy > li:not(".bb-edit-privacy")', this.mediaPrivacyChange.bind(this));
+			$(document).on('click', '#bb-media-model-container .media-privacy>li', this.mediaPrivacyChange.bind(this));
 			$(document).on('click', '#bb-media-model-container .document-privacy>li', this.documentPrivacyChange.bind(this));
 			$(document).on('click', '#bb-media-model-container .bb-media-section span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind(this));
 			$(document).on('click', '#bb-media-model-container .bb-document-section span.privacy', bp.Nouveau, this.toggleDocumentPrivacyDropdown.bind(this));
@@ -7084,7 +7084,7 @@ window.bp = window.bp || {};
 		},
 
 		mediaPrivacyChange: function ( event ) {
-			var target = $( event.target ), self = this, privacy = target.data( 'value' ), older_privacy = 'public', ul_class = 'media-privacy';
+			var target = $( event.target ), self = this, privacy = target.data( 'value' ), older_privacy = 'public';
 
 			event.preventDefault();
 
@@ -7092,13 +7092,9 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( target.closest( '.bb-media-privacy-wrap' ).find( 'ul' ).hasClass( 'activity-privacy' ) ) {
-				ul_class = 'activity-privacy';
-			}
-
 			target.closest( '.bb-media-privacy-wrap' ).find( '.privacy' ).addClass( 'loading' );
-			older_privacy = target.closest( '.bb-media-privacy-wrap' ).find( 'ul.' + ul_class + ' li.selected' ).data( 'value' );
-			target.closest( '.bb-media-privacy-wrap' ).find( 'ul.' + ul_class + ' li' ).removeClass( 'selected' );
+			older_privacy = target.closest( '.bb-media-privacy-wrap' ).find( 'ul.media-privacy li.selected' ).data( 'value' );
+			target.closest( '.bb-media-privacy-wrap' ).find( 'ul.media-privacy li' ).removeClass( 'selected' );
 			target.addClass( 'selected' );
 
 			$.ajax(
