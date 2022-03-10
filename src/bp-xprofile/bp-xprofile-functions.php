@@ -1673,30 +1673,6 @@ function bp_xprofile_social_network_provider() {
 }
 
 /**
- * Get social networks field values.
- *
- * @return array
- * @since BuddyBoss [BBVERSION]
- */
-function bp_get_user_social_networks_field_value( $user_id = null ) {
-
-	global $wpdb;
-	global $bp;
-
-	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
-
-	$original_option_values = array();
-
-	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
-
-	if ( $social_networks_id > 0 ) {
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
-	}
-
-	return $original_option_values;
-}
-
-/**
  * Add social networks button to the member header area.
  *
  * @return string
@@ -2404,5 +2380,30 @@ function bb_enabled_member_social_networks() {
 	}
 
 	return apply_filters( 'bb_enabled_member_social_networks', (bool) $social_networks_id );
+}
+
+/**
+ * Get social networks field values.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|null $user_id ID of the user or null. Default current displayed user profile ID.
+ *
+ * @return array
+ */
+function bb_get_user_social_networks_field_value( $user_id = null ) {
+	global $wpdb, $bp;
+
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	$original_option_values = array();
+
+	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) {
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+	}
+
+	return $original_option_values;
 }
 
