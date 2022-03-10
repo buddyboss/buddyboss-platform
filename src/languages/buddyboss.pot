@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-09 09:34:05+00:00\n"
+"POT-Creation-Date: 2022-03-10 08:38:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -564,8 +564,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:37
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:223
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:83
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:264
-#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:212
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:272
+#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:220
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:36
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:27
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:27
@@ -3867,8 +3867,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2367
 msgid ""
-"Select which elements show in group directories. Cover images will only "
-"display in grid view and group descriptions will only display in list view."
+"Select which elements show in group your directories. Cover images will "
+"only display in grid view and group descriptions will only display in list "
+"view."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2409
@@ -5302,7 +5303,7 @@ msgid "Release Notes"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:46
-msgid "Version"
+msgid "BuddyBoss Platform v"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:57
@@ -8794,13 +8795,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -16349,8 +16350,8 @@ msgstr ""
 #: bp-friends/bp-friends-template.php:458
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:201
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:206
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:247
-#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:195
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:255
+#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:203
 msgid "Remove Connection"
 msgstr ""
 
@@ -21682,8 +21683,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:151
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:219
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:224
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:265
-#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:213
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:273
+#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:221
 msgid "Confirm"
 msgstr ""
 
@@ -25657,8 +25658,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:211
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:216
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:257
-#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:205
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:265
+#: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:213
 #. translators: %s: The member name with HTML tags
 #. translators: %s: The member name with HTML tags
 #. translators: %s: The member name with HTML tags.
@@ -27044,11 +27045,11 @@ msgstr ""
 msgid "There was a problem when trying to unfollow this user."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/follow/ajax.php:178
+#: bp-templates/bp-nouveau/includes/follow/ajax.php:175
 msgid "There was a problem when trying to follow this user."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/follow/ajax.php:213
+#: bp-templates/bp-nouveau/includes/follow/ajax.php:212
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:263
 msgid "Request Pending"
 msgstr ""
@@ -30114,15 +30115,14 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\r\n"
+"uploading videos (optional). Ask your web host.\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary "
-"file.\r\n"
-"\t\t\t\t\t<br /><br />%3$s\r\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
+"\t\t\t\t\t<br /><br />%3$s\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
