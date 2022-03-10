@@ -577,7 +577,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				'field'       => '',
 				'value'       => '',
 				'options'     => array(),
-				'group_label' => __( 'Activity Feed', 'buddyboss' ),
+				'group_label' => __( 'Activity Feeds', 'buddyboss' ),
 			);
 
 			if ( bp_activity_do_mentions() ) {
