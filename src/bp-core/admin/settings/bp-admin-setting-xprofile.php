@@ -694,7 +694,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => '83106',
+						'article' => '125308',
 					),
 					'admin.php'
 				)
