@@ -314,7 +314,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 	}
 
 	?>
-	<table class="form-table">
+	<table class="form-table dynamic-notification-after">
 		<tbody>
 		<tr>
 			<th scope="row"><?php esc_html_e( 'Hide Messaging Notifications', 'buddyboss' ); ?></th>

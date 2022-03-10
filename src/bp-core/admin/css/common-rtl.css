@@ -2810,11 +2810,11 @@ table tbody td .bb-description {
   display: none;
 }
 
-#bp_notification_settings_automatic table.render-dynamic-notification + table.form-table tbody tr th {
+table.form-table.dynamic-notification-after tbody tr th {
   padding: 15px 10px 0;
 }
 
-#bp_notification_settings_automatic table.render-dynamic-notification + table.form-table tbody tr td {
+table.form-table.dynamic-notification-after tbody tr td {
   padding: 15px 10px;
 }
 
