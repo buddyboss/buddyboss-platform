@@ -448,6 +448,10 @@ TABLE OF CONTENTS:
   transform: translateY(-50%);
 }
 
+.bb-update-modal#bp-hello-container h1#bp-hello-title {
+  font-weight: 600;
+}
+
 .bb-update-modal .bp-hello-content {
   border-radius: 0 0 3px 3px;
   height: auto;
