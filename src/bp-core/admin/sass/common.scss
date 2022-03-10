@@ -3000,6 +3000,18 @@ table tbody td .bb-description {
 	}
 }
 
+#bp_notification_settings_automatic table.render-dynamic-notification + table.form-table tbody tr {
+
+	th {
+		padding: 15px 10px 0;
+	}
+
+	td {
+		padding: 15px 10px;
+	}
+
+}
+
 .bb-bottom-notice {
 	margin: 2.2em -2.8em -2.2em;
 	background: #f6f6f8;
@@ -3014,6 +3026,25 @@ table tbody td .bb-description {
 	margin-top: 1.2em;
 	border-radius: 3px;
 	border: 1px solid #ccd0d4;
+}
+
+.bp-admin-card .form-table .bp-new-notice-panel-notice {
+	color: #8b6300;
+	background-color: #fff3c8;
+	padding: 1.2em;
+	font-size: 14px;
+	line-height: 1.5;
+	border-radius: 3px;
+	margin: 20px 0;
+
+	a {
+		color: inherit;
+	}
+
+	+ p.description {
+		margin-bottom: 15px;
+	}
+
 }
 
 .bb-lab-notice.notification-information {
