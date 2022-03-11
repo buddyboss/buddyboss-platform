@@ -964,3 +964,32 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
 add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+
+/**
+ * Custom css for all group type's label. ( i.e - Background color, Text color)
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_group_type_label_custom_css() {
+	if ( true === bp_disable_group_type_creation() ) {
+		$registered_group_types = bp_groups_get_group_types();
+		$group_type_custom_css  = '';
+		if ( ! empty( $registered_group_types ) ) {
+			foreach ( $registered_group_types as $type ) {
+				$post_id          = bp_group_get_group_type_id( $type );
+				$meta_data        = get_post_meta( $post_id, '_bp_group_type_label_color', true );
+				$label_color_data = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : '';
+				$color_type       = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+				if ( 'custom' === $color_type ) {
+					$background_color      = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+					$text_color            = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+					$class_name            = 'body .item-header-wrap .bp-group-meta .group-type.bb-current-group-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-group-' . $type : '';
+					$group_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
+					$group_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+				}
+			}
+		}
+		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );

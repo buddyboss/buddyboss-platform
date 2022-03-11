@@ -633,3 +633,33 @@ function bb_core_prime_mentions_results() {
 
 add_action( 'bp_activity_mentions_prime_results', 'bb_core_prime_mentions_results' );
 add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results' );
+
+/**
+ * Custom css for all member type's label. ( i.e - Background color, Text color)
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ */
+function bb_load_member_type_label_custom_css() {
+	if ( true === bp_member_type_enable_disable() ) {
+		$registered_member_types = bp_get_member_types();
+		$member_type_custom_css  = '';
+		if ( ! empty( $registered_member_types ) ) {
+			foreach ( $registered_member_types as $type ) {
+				$post_id          = bp_member_type_post_by_type( $type );
+				$meta_data        = get_post_meta( $post_id, '_bp_member_type_label_color', true );
+				$label_color_data = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : '';
+				$color_type       = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+				if ( 'custom' === $color_type ) {
+					$background_color       = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+					$text_color             = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-member-' . $type : '.bp-member-type.bb-current-member-' . $type;
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+				}
+			}
+		}
+		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );

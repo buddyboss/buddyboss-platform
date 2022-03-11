@@ -3897,7 +3897,7 @@ function bp_get_user_member_type( $user_id ) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
 
-			$string = '<span class="bp-member-type">' . $member_type . '</span>';
+			$string = '<span class="bp-member-type bb-current-member-' . esc_attr( $type ) . '">' . $member_type . '</span>';
 		} else {
 			$string = '<span class="bp-member-type">' . $member_type . '</span>';
 		}
