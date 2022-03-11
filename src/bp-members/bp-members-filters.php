@@ -638,7 +638,6 @@ add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results
  * Custom css for all member type's label. ( i.e - Background color, Text color)
  *
  * @since BuddyBoss [BBVERSION]
- *
  */
 function bb_load_member_type_label_custom_css() {
 	if ( true === bp_member_type_enable_disable() ) {
