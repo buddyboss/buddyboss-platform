@@ -3057,6 +3057,18 @@ table tbody td .bb-description {
 	}
 }
 
+table.form-table.dynamic-notification-after tbody tr {
+
+	th {
+		padding: 15px 10px 0;
+	}
+
+	td {
+		padding: 15px 10px;
+	}
+
+}
+
 .bb-bottom-notice {
 	margin: 2.2em -2.8em -2.2em;
 	background: #f6f6f8;
@@ -3073,10 +3085,29 @@ table tbody td .bb-description {
 	border: 1px solid #ccd0d4;
 }
 
+.bp-admin-card .form-table .bp-new-notice-panel-notice {
+	color: #8b6300;
+	background-color: #fff3c8;
+	padding: 1.2em;
+	font-size: 14px;
+	line-height: 1.5;
+	border-radius: 3px;
+	margin: 20px 0;
+
+	a {
+		color: inherit;
+	}
+
+	+ p.description {
+		margin-bottom: 15px;
+	}
+
+}
+
 .bb-lab-notice.notification-information {
 
 	&:before {
-		content: "\e853";
+		content: "\e8c2";
 		display: inline-block;
 		font-family: "bb-icons"; /* stylelint-disable-line */
 		font-size: 16px;

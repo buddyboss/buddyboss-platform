@@ -2914,7 +2914,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 			'<p class="bp-new-notice-panel-notice">%s</p>',
 			sprintf(
 				/* translators: Components page link. */
-				wp_kses_post( __( 'This feature requires the %s component to be enabled.', 'buddyboss' ) ),
+				wp_kses_post( __( 'To make full use of this feature, enable the %s component.', 'buddyboss' ) ),
 				'<strong><a href="' . esc_url(
 					add_query_arg(
 						array( 'page' => 'bp-components' ),

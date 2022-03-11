@@ -740,7 +740,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			$fields_forums[] = array(
 				'name'        => 'notification_forums_following_reply',
-				'label'       => __( 'A member replies to a discussion you are subscribed', 'buddyboss' ),
+				'label'       => __( 'A member replies to a discussion you are subscribed to', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
 				'options'     => array(
@@ -752,7 +752,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			$fields_forums[] = array(
 				'name'        => 'notification_forums_following_topic',
-				'label'       => __( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ),
+				'label'       => __( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' ),
 				'field'       => 'radio',
 				'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
 				'options'     => array(

@@ -355,7 +355,7 @@ function forums_notification_settings() {
 		<tbody>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
@@ -371,7 +371,7 @@ function forums_notification_settings() {
 		</tr>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />

@@ -171,6 +171,7 @@ class BP_Settings_Component extends BP_Component {
 			'screen_function' => 'bp_settings_screen_notification',
 			'position'        => 20,
 			'user_has_access' => $access,
+			'item_css_class'  => $data['item_css_class'],
 		);
 
 		$sub_nav[] = array(
