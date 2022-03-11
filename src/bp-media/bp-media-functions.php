@@ -2768,7 +2768,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity media own.
-					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && 'hidden' === bp_get_group_status( groups_get_group( $activity->item_id ) ) ) ? 1 : 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2841,7 +2842,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity media own.
-							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && 'hidden' === bp_get_group_status( groups_get_group( $activity->item_id ) ) ) ? 1 : 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
