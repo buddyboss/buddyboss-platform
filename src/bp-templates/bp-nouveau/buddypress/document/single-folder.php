@@ -56,7 +56,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										if ( $manage ) {
 											?>
 											<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-												<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+												<i class="bb-icons-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 											</a>
 											<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
 												<i class="bb-icons-l bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
@@ -66,7 +66,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 									} elseif ( ! bp_is_group() && $can_edit_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+											<i class="bb-icons-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
 										<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
 											<i class="bb-icons-l bb-icon-folder-alt"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
