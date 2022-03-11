@@ -1387,7 +1387,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
-		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( $displayed_user_id, $current_user_id ) ) {
+		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( (int) $displayed_user_id, (int) $current_user_id ) ) {
 			$hidden_levels = array( 'adminsonly' );
 
 			// Current user is logged in but not friends, so exclude friends-only.
