@@ -427,14 +427,14 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'wrapper_class'       => 'friendship-button awaiting_response_friend',
 					'wrapper_id'          => 'friendship-button-' . $potential_friend_id,
 					'link_href'           => bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/',
-					'link_text'           => esc_html__( 'Connect Requested', 'buddyboss' ),
+					'link_text'           => esc_html__( 'Pending Request', 'buddyboss' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
 					'link_class'          => 'friendship-button awaiting_response_friend requested',
 					'button_attr'         => array(
 						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
-						'data-title'           => '',
-						'data-title-displayed' => '',
+						'data-title'           => esc_html__( 'Review Request', 'buddyboss' ),
+						'data-title-displayed' => esc_html__( 'Pending Request', 'buddyboss' ),
 					),
 				),
 				$button_args
@@ -455,7 +455,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'link_text'           => esc_html__( 'Connected', 'buddyboss' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
-					'link_class'          => 'friendship-button is_friend remove bp-toggle-action-button',
+					'link_class'          => 'friendship-button is_friend remove',
 					'button_attr'         => array(
 						'data-bb-user-name'    => bp_core_get_user_displayname( $potential_friend_id ),
 						'data-bb-user-link'    => bp_core_get_user_domain( $potential_friend_id ),
