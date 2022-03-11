@@ -9089,14 +9089,14 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-notification.php:79
 #: bp-forums/core/actions.php:358
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:743
-msgid "A member replies to a discussion you are subscribed"
+msgid "A member replies to a discussion you are subscribed to"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:177
 #: bp-forums/classes/class-bp-forums-notification.php:113
 #: bp-forums/core/actions.php:374
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:755
-msgid "A member creates discussion in a forum you are subscribed"
+msgid "A member creates a discussion in a forum you are subscribed to"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:29
@@ -12615,7 +12615,7 @@ msgid ""
 msgstr ""
 
 #: bp-forums/classes/class-bp-forums-notification.php:93
-msgid "A member replies to a discussion you are subscribed to."
+msgid "A member replies to a discussion you are subscribed to to."
 msgstr ""
 
 #: bp-forums/classes/class-bp-forums-notification.php:94
