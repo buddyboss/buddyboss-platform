@@ -7835,6 +7835,15 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\e94d";
 }
 
+#buddypress .bb_more_options .bb_more_options_list .generic-button > button.awaiting_response_friend:before,
+#buddypress .bb_more_options .bb_more_options_list button.awaiting_response_friend:before,
+#buddypress .bb_more_options .bb_more_options_list a.awaiting_response_friend:before,
+.bb_more_options .bb_more_options_list .generic-button > button.awaiting_response_friend:before,
+.bb_more_options .bb_more_options_list button.awaiting_response_friend:before,
+.bb_more_options .bb_more_options_list a.awaiting_response_friend:before {
+  content: "\e94e";
+}
+
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
 #buddypress .bb_more_options .bb_more_options_list button.follow-button:before,
 #buddypress .bb_more_options .bb_more_options_list a.follow-button:before,
