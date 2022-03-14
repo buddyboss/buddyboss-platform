@@ -57,6 +57,21 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.9.1 =
+* Profiles - Provided support to customize Profile header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Profiles - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to customize Group header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Handled Group type direct URL issue when Group type and its label name is same
+* Forums - Handled forum discussion js error for non-English language
+* Activity - Handled activity formatting issue for auto-generated discussion replies
+* Activity - Improved responsiveness of activity form
+* Coding Standards - Refactored since time output across all components
+* Updater - Provided 'Release Notes' modal to show information about the release
+* REST API - Handled API performance table column size issue for specific server
+* REST API - Handled Forum APIs wrong permissions issue
+* REST API - Update to send activity with embed in the API as a separate object
+
 = 1.9.0.1 =
 * Media - Fixed critical API caching purge issue on symlink delete cron
 

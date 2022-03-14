@@ -1662,3 +1662,23 @@ function bp_get_field_data_attribute( $attribute = false ) {
 	 */
 	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
 }
+
+/**
+ * Validate social networks field values.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $html The member social networks.
+ * @param string $original_option_values The field value.
+ * @param string $social_networks_id The social network id.
+ *
+ * @return string|null
+ */
+function bb_get_user_social_networks_urls_with_visibility( $html, $original_option_values, $social_networks_id ) {
+
+	if ( strpos( $html, 'social-networks-wrap' ) === false ) {
+		return '';
+	}
+
+	return $html;
+}
