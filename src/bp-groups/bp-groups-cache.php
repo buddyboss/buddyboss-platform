@@ -462,6 +462,10 @@ function bb_groups_clear_group_type_cache_on_update( $post_id ) {
 
 	// clear cache when updated.
 	wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
+	$bp_group_type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
+	if ( ! empty( $bp_group_type_key ) ) {
+		wp_cache_delete( 'bb-group-type-label-color-' . $bp_group_type_key, 'bp_groups_group_type' );
+	}
 }
 add_action( 'save_post', 'bb_groups_clear_group_type_cache_on_update' );
 
@@ -484,6 +488,10 @@ function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
 
 	// clear cache when updated.
 	wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
+	$bp_group_type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
+	if ( ! empty( $bp_group_type_key ) ) {
+		wp_cache_delete( 'bb-group-type-label-color-' . $bp_group_type_key, 'bp_groups_group_type' );
+	}
 }
 
 add_action( 'before_delete_post', 'bb_groups_clear_group_type_cache_before_delete' );

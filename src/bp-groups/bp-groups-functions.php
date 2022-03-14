@@ -4520,3 +4520,37 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+/**
+ * Function will return label background and text color's for group type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $type Member type
+ *
+ * @return array Return array of label color data
+ */
+function bb_get_group_type_label_colors( $type ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
+	$post_id                   = bp_group_get_group_type_id( $type );
+	$cache_key                 = 'bb-group-type-label-color-' . $type;
+	$bp_group_type_label_color = wp_cache_get( $cache_key, 'bp_groups_group_type' );
+	if ( false === $bp_group_type_label_color && ! empty( $post_id ) ) {
+		$label_colors_meta = get_post_meta( $post_id, '_bp_group_type_label_color', true );
+		$label_colors      = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : '';
+		$color_type        = isset( $label_colors['type'] ) ? $label_colors['type'] : 'default';
+		$background_color  = 'custom' === $color_type ? isset( $label_colors['background_color'] ) ? $label_colors['background_color'] : '' : '';
+		$text_color        = 'custom' === $color_type ? isset( $label_colors['text_color'] ) ? $label_colors['text_color'] : '' : '';
+		// Array of label's text and background color data.
+		$bp_group_type_label_color = array(
+			'color_type'       => $color_type,
+			'background-color' => $background_color,
+			'color'            => $text_color,
+		);
+		wp_cache_set( $cache_key, $bp_group_type_label_color, 'bp_groups_group_type' );
+	}
+
+	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
+}

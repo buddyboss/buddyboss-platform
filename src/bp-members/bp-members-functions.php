@@ -4834,6 +4834,9 @@ function bp_get_hidden_member_types() {
  * @return array Return array of label color data
  */
 function bb_get_member_type_label_colors( $type ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
 	$post_id                    = bp_member_type_post_by_type( $type );
 	$cache_key                  = 'bb-member-type-label-color-' . $type;
 	$bp_member_type_label_color = wp_cache_get( $cache_key, 'bp_member_member_type' );

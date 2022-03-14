@@ -977,14 +977,15 @@ function bb_load_group_type_label_custom_css() {
 		$group_type_custom_css  = wp_cache_get( $cache_key, 'bp_groups_group_type' );
 		if ( false === $group_type_custom_css && ! empty( $registered_group_types ) ) {
 			foreach ( $registered_group_types as $type ) {
-				$post_id          = bp_group_get_group_type_id( $type );
-				$meta_data        = get_post_meta( $post_id, '_bp_group_type_label_color', true );
-				$label_color_data = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : '';
-				$color_type       = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
-				if ( 'custom' === $color_type ) {
+				$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $type ) : '';
+				if (
+					isset( $label_color_data ) &&
+					isset( $label_color_data['color_type'] ) &&
+					'custom' === $label_color_data['color_type']
+				) {
 					$background_color      = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
 					$text_color            = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
-					$class_name            = 'body .item-header-wrap .bp-group-meta .group-type.bb-current-group-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-group-' . $type : '';
+					$class_name            = 'body .item-header-wrap .bp-group-meta .group-type.bb-current-group-' . $type;
 					$group_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$group_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}
