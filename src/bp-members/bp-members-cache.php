@@ -120,6 +120,7 @@ function bb_members_clear_member_type_cache_on_update( $post_id ) {
 	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
 	wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 	wp_cache_delete( 'bp_get_hidden_member_types_cache', 'bp_member_member_type' ); // Use with this function bp_get_hidden_member_types
+	wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' ); // Use for label type background and text color.
 }
 
 add_action( 'save_post', 'bb_members_clear_member_type_cache_on_update' );

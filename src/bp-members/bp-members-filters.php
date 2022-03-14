@@ -642,8 +642,9 @@ add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results
 function bb_load_member_type_label_custom_css() {
 	if ( true === bp_member_type_enable_disable() ) {
 		$registered_member_types = bp_get_member_types();
-		$member_type_custom_css  = '';
-		if ( ! empty( $registered_member_types ) ) {
+		$cache_key               = 'bb-member-type-label-css';
+		$member_type_custom_css  = wp_cache_get( $cache_key, 'bp_member_member_type' );
+		if ( false === $member_type_custom_css && ! empty( $registered_member_types ) ) {
 			foreach ( $registered_member_types as $type ) {
 				$post_id          = bp_member_type_post_by_type( $type );
 				$meta_data        = get_post_meta( $post_id, '_bp_member_type_label_color', true );
@@ -657,6 +658,7 @@ function bb_load_member_type_label_custom_css() {
 					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}
 			}
+			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
 		}
 		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
 	}
