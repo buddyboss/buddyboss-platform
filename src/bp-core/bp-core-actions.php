@@ -475,7 +475,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
  * @param $upgrader_object WP_Upgrader instance.
  * @param $options         Array of bulk item update data
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 	$show_display_popup = false;

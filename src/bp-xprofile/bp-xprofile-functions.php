@@ -2366,7 +2366,7 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 /**
  * Enabled the social networks for members or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return bool True if enabled the social networks otherwise false.
  */
@@ -2385,7 +2385,7 @@ function bb_enabled_member_social_networks() {
 /**
  * Get social networks field values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int|null $user_id ID of the user or null. Default current displayed user profile ID.
  *

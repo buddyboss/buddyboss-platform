@@ -3,7 +3,7 @@
  * BuddyBoss Admin Setting Fields Class.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 	/**
 	 * Load BuddyBoss plugin admin area.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.1
 	 */
 	class BB_Admin_Setting_Fields {
 
@@ -43,7 +43,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Initialize the field variable in this method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 *
 		 * @param array $args Pass the field attributes to render field.
 		 */
@@ -81,7 +81,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render the field according the passing argument in the __construct method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		public function render_field() {
 
@@ -128,7 +128,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Check the field type is supported or not?
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 *
 		 * @return bool True if field is supported otherwise false.
 		 */
@@ -143,7 +143,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render text if field is not supported.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function field_not_supported() {
 			?>
@@ -154,7 +154,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render the field description.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function field_description() {
 
@@ -168,7 +168,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render text field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_text_field() {
 
@@ -197,7 +197,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render password field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_password_field() {
 
@@ -225,7 +225,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render textarea field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_textarea_field() {
 
@@ -253,7 +253,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render radio field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_radio_field() {
 
@@ -285,7 +285,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render checkbox field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_checkbox_field() {
 			?>
@@ -304,7 +304,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render multi checkbox field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_multi_checkbox_field() {
 
@@ -336,7 +336,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 		/**
 		 * Render select field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		private function render_select_field() {
 

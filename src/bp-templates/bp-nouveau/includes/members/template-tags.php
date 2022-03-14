@@ -1181,7 +1181,7 @@ function bp_nouveau_get_wp_profile_field_data() {
 /**
  * Get the user registered date meta.
  *
- * @since BuddyPress [BBVERSION]
+ * @since BuddyPress 1.9.1
  *
  * @param int $user_id User ID.
  *
@@ -1203,7 +1203,7 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	/**
 	 * Filters the user registered date meta.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 1.9.1
 	 *
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.2.6
  * @since BuddyPress 2.7.0 Introduced $parent_element, $parent_attr, $button_element, $button_attr
- * @since BuddyPress [BBVERSION] Introduced $prefix_link_text, $postfix_link_text, $is_tooltips, $hover_type, $add_pre_post_text as
+ * @since BuddyPress 1.9.1 Introduced $prefix_link_text, $postfix_link_text, $is_tooltips, $hover_type, $add_pre_post_text as
  *              $args parameters.
  *              Deprecated $wrapper, $wrapper_id, $wrapper_class, $link_href, $link_class,
  *              $link_id, $link_rel, $link_title as $args params.
@@ -147,7 +147,7 @@ class BP_Button {
 	/**
 	 * The prefix of the button link text.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 1.9.1
 	 *
 	 * @var string
 	 */
@@ -156,7 +156,7 @@ class BP_Button {
 	/**
 	 * The postfix of the button link text.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 1.9.1
 	 *
 	 * @var string
 	 */
@@ -165,7 +165,7 @@ class BP_Button {
 	/**
 	 * Is enabled tooltips?
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 1.9.1
 	 *
 	 * @var bool
 	 */

@@ -1106,7 +1106,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Display plugin information after plugin successfully updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		public function bb_display_update_plugin_information() {
 			// Check the transient to see if we've just updated the plugin.

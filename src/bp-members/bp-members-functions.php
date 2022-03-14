@@ -4861,7 +4861,7 @@ function bb_is_online_user( $user_id ) {
 /**
  * Get profile cover image width.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'default'.
@@ -4875,7 +4875,7 @@ function bb_get_profile_cover_image_width( $default = 'default' ) {
 /**
  * Get profile cover image height.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'small'.
@@ -4889,7 +4889,7 @@ function bb_get_profile_cover_image_height( $default = 'small' ) {
 /**
  * Get profile header layout style.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'left'.
@@ -4903,7 +4903,7 @@ function bb_get_profile_header_layout_style( $default = 'left' ) {
 /**
  * Get profile header layout style.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $element Profile header element.
  *                        Default: online-status.
@@ -4917,7 +4917,7 @@ function bb_enabled_profile_header_layout_element( $element = 'online-status' ) 
 /**
  * Check the member directory element is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $element Member directory element.
  *                        Default: online-status.
@@ -4931,7 +4931,7 @@ function bb_enabled_member_directory_element( $element = 'online-status' ) {
 /**
  * Get enabled the profile actions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return array Return selected profile actions.
  */
@@ -4942,7 +4942,7 @@ function bb_get_enabled_member_directory_profile_actions() {
 /**
  * Check the member profile action is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $action Member directory profile action.
  *                            Default: null.
@@ -4961,7 +4961,7 @@ function bb_enabled_member_directory_profile_action( $action = '' ) {
 /**
  * Get the primary action for member directories.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string Return the primary action for member directories.
  */
@@ -4973,7 +4973,7 @@ function bb_get_member_directory_primary_action() {
  * Function which will return the member id if $id > 0 then it will return the original displayed id
  * else it will return the member loop member id.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int $id Member ID.
  *
@@ -5006,7 +5006,7 @@ function bb_member_loop_set_member_id( $id ) {
 /**
  * Function which will return the false in even if user is in h/her own profile page in connections members listing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param bool $my_profile The current page is profile page or not.
  *
@@ -5030,7 +5030,7 @@ function bb_member_loop_set_my_profile( $my_profile ) {
 /**
  * Get member directories and header page button arguments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $page    The current page is member directories or header page. Default: 'directory'.
  * @param string $clicked The button clicked from primary or secondary button. Default: 'primary'.

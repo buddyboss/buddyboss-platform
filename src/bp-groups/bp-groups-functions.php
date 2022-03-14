@@ -1090,6 +1090,11 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 
 	$user_id = intval( $user_id );
 
+	// Do not process if no user_id.
+	if ( 0 === $user_id ) {
+		return array();
+	}
+
 	$membership_ids = wp_cache_get( $user_id, 'bp_groups_memberships_for_user' );
 	if ( false === $membership_ids ) {
 		$membership_ids = BP_Groups_Member::get_membership_ids_for_user( $user_id );
@@ -4528,7 +4533,7 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 /**
  * Get members list for group directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int   $group_id ID of the group.
  * @param array $role roles of the group.
@@ -4608,7 +4613,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 /**
  * Get group cover image width.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'default'.
@@ -4622,7 +4627,7 @@ function bb_get_group_cover_image_width( $default = 'default' ) {
 /**
  * Get group cover image height.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'small'.
