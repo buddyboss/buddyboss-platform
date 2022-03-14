@@ -646,13 +646,14 @@ function bb_load_member_type_label_custom_css() {
 		$member_type_custom_css  = wp_cache_get( $cache_key, 'bp_member_member_type' );
 		if ( false === $member_type_custom_css && ! empty( $registered_member_types ) ) {
 			foreach ( $registered_member_types as $type ) {
-				$post_id          = bp_member_type_post_by_type( $type );
-				$meta_data        = get_post_meta( $post_id, '_bp_member_type_label_color', true );
-				$label_color_data = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : '';
-				$color_type       = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
-				if ( 'custom' === $color_type ) {
-					$background_color       = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
-					$text_color             = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $type ) : '';
+				if (
+					isset( $label_color_data ) &&
+					isset( $label_color_data['color_type'] ) &&
+					'custom' === $label_color_data['color_type']
+				) {
+					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
 					$class_name             = 'body .bp-member-type.bb-current-member-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-member-' . $type : '.bp-member-type.bb-current-member-' . $type;
 					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';

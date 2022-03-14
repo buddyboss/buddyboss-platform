@@ -4823,3 +4823,34 @@ function bp_get_hidden_member_types() {
 	 */
 	return apply_filters( 'bp_get_hidden_member_types', isset( $hidden_profile_types->posts ) ? wp_list_pluck( $hidden_profile_types->posts, 'post_name' ) : false );
 }
+
+/**
+ * Get label background and text color for member type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $type Member type
+ *
+ * @return array Return array of label color data
+ */
+function bb_get_member_type_label_colors( $type ) {
+	$post_id                    = bp_member_type_post_by_type( $type );
+	$cache_key                  = 'bb-member-type-label-color-' . $type;
+	$bp_member_type_label_color = wp_cache_get( $cache_key, 'bp_member_member_type' );
+	if ( false === $bp_member_type_label_color && ! empty( $post_id ) ) {
+		$label_colors_meta = get_post_meta( $post_id, '_bp_member_type_label_color', true );
+		$label_colors      = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : '';
+		$color_type        = isset( $label_colors['type'] ) ? $label_colors['type'] : 'default';
+		$background_color  = 'custom' === $color_type ? isset( $label_colors['background_color'] ) ? $label_colors['background_color'] : '' : '';
+		$text_color        = 'custom' === $color_type ? isset( $label_colors['text_color'] ) ? $label_colors['text_color'] : '' : '';
+		// Array of label's text and background color data.
+		$bp_member_type_label_color = array(
+			'color_type'       => $color_type,
+			'background-color' => $background_color,
+			'color'            => $text_color,
+		);
+		wp_cache_set( $cache_key, $bp_member_type_label_color, 'bp_member_member_type' );
+	}
+
+	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
+}
