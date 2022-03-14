@@ -4825,7 +4825,7 @@ function bp_get_hidden_member_types() {
 }
 
 /**
- * Get label background and text color for member type.
+ * Function will return label background and text color's for member type.
  *
  * @since BuddyBoss [BBVERSION]
  *

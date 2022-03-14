@@ -635,7 +635,7 @@ add_action( 'bp_activity_mentions_prime_results', 'bb_core_prime_mentions_result
 add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results' );
 
 /**
- * Custom css for all member type's label. ( i.e - Background color, Text color)
+ * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
  *
  * @since BuddyBoss [BBVERSION]
  */

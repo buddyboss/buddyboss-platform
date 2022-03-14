@@ -120,7 +120,8 @@ function bb_members_clear_member_type_cache_on_update( $post_id ) {
 	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
 	wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 	wp_cache_delete( 'bp_get_hidden_member_types_cache', 'bp_member_member_type' ); // Use with this function bp_get_hidden_member_types
-	wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' ); // Use for label type background and text color.
+	// Use for label type background and text color.
+	wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' );
 	$bp_member_type_key = get_post_meta( $post_id, '_bp_member_type_key', true );
 	if ( ! empty( $bp_member_type_key ) ) {
 		wp_cache_delete( 'bb-member-type-label-color-' . $bp_member_type_key, 'bp_member_member_type' );
@@ -149,7 +150,8 @@ function bb_members_clear_member_type_cache_before_delete( $post_id ) {
 	// clear cache when deleted.
 	wp_cache_delete( 'bp_get_removed_member_types', 'bp_member_member_type' );
 	wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
-	wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' ); // Use for label type background and text color.
+	// Use for label type background and text color.
+	wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' );
 	$bp_member_type_key = get_post_meta( $post_id, '_bp_member_type_key', true );
 	if ( ! empty( $bp_member_type_key ) ) {
 		wp_cache_delete( 'bb-member-type-label-color-' . $bp_member_type_key, 'bp_member_member_type' );
