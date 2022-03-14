@@ -236,11 +236,20 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
 		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
-		if ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && ! in_array( $activity->type, array(
-				'bbp_forum_create',
-				'bbp_topic_create',
-				'bbp_reply_create'
-			) ) ) {
+		if (
+			(
+				! empty( $document_id ) ||
+				! empty( $document_ids )
+			) &&
+			! in_array(
+				$activity->type,
+				array(
+					'bbp_forum_create',
+					'bbp_topic_create',
+					'bbp_reply_create',
+				)
+			)
+		) {
 			$explode_documents = explode( ',', $document_ids );
 			if ( ! empty( $document_id ) ) {
 				$args['button_attr']['data-bp-content-id']   = $document_id;

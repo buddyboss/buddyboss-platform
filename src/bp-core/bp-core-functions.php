@@ -1142,13 +1142,9 @@ function bp_core_current_time( $gmt = true, $type = 'mysql' ) {
  *
  * This function will return an English representation of the time elapsed
  * since a given date.
- * eg: 2 hours and 50 minutes
+ * eg: 2 hours
  * eg: 4 days
- * eg: 4 weeks and 6 days
- *
- * Note that fractions of minutes are not represented in the return string. So
- * an interval of 3 minutes will be represented by "3 minutes ago", as will an
- * interval of 3 minutes 59 seconds.
+ * eg: 4 weeks
  *
  * @since BuddyPress 1.0.0
  *
@@ -1158,7 +1154,7 @@ function bp_core_current_time( $gmt = true, $type = 'mysql' ) {
  * @param int|bool   $newer_date Optional. Unix timestamp of date to compare older
  *                               date to. Default: false (current time).
  * @return string String representing the time since the older date, eg
- *         "2 hours and 50 minutes".
+ *         "2 hours".
  */
 function bp_core_time_since( $older_date, $newer_date = false ) {
 
@@ -1183,7 +1179,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', __( 'sometime', 'buddyboss' ) );
+	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is right now.
@@ -1192,7 +1188,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', __( 'right now', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1201,11 +1197,13 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$ago_text = apply_filters( 'bp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) );
+	/* translators: The time since the older date. */
+	$ago_text = apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
 		YEAR_IN_SECONDS,
+		YEAR_IN_SECONDS / 6,
 		30 * DAY_IN_SECONDS,
 		WEEK_IN_SECONDS,
 		DAY_IN_SECONDS,
@@ -1235,20 +1233,18 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		$output = $unknown_text;
 
 		/**
-		 * We only want to output two chunks of time here, eg:
-		 * x years, xx months
-		 * x days, xx hours
-		 * so there's only two bits of calculation below:
+		 * We only want to output only one chunk of time here, eg:
+		 * x years
+		 * x days
+		 * so there's only one bit of calculation below:
 		 */
 	} else {
 
 		/**
 		 * Initializing the count variable to avoid undefined notice
 		 */
-		$count  = 0;
-		$count2 = 0;
+		$count = 0;
 
-		// Step one: the first chunk.
 		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
 			$seconds = $chunks[ $i ];
 
@@ -1268,74 +1264,77 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a year', 'buddyboss' ) : sprintf(
+						/* translators: The display years count from the older date. */
+						_n( '%s year', '%s years', $count, 'buddyboss' ),
+						$count
+					);
+					break;
+				case YEAR_IN_SECONDS / 6:
+					$month_seconds = floor( $since / ( 30 * DAY_IN_SECONDS ) );
+					$output        = sprintf(
+						/* translators: The display months count from the older date. */
+						_n( '%s month', '%s months', $month_seconds, 'buddyboss' ),
+						$month_seconds
+					);
 					break;
 				case 30 * DAY_IN_SECONDS:
-					$output = sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
+					$week_seconds = floor( $since / WEEK_IN_SECONDS );
+					$output       = $count < 2 ? sprintf(
+						/* translators: The display weeks count from the older date. */
+						_n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ),
+						$week_seconds
+					) : sprintf(
+						/* translators: The display months count from the older date. */
+						_n( '%s month', '%s months', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case WEEK_IN_SECONDS:
-					$output = sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a week', 'buddyboss' ) : sprintf(
+						/* translators: The display weeks count from the older date. */
+						_n( '%s week', '%s weeks', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case DAY_IN_SECONDS:
-					$output = sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a day', 'buddyboss' ) : sprintf(
+						/* translators: The display days count from the older date. */
+						_n( '%s day', '%s days', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case HOUR_IN_SECONDS:
-					$output = sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'an hour', 'buddyboss' ) : sprintf(
+						/* translators: The display hours count from the older date.. */
+						_n( '%s hour', '%s hours', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				case MINUTE_IN_SECONDS:
-					$output = sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
+					$output = $count < 2 ? esc_html__( 'a minute', 'buddyboss' ) : sprintf(
+						/* translators: The display minutes count from the older date. */
+						_n( '%s minute', '%s minutes', $count, 'buddyboss' ),
+						$count
+					);
 					break;
 				default:
-					$output = sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
-			}
-
-			// Step two: the second chunk
-			// A quirk in the implementation means that this
-			// condition fails in the case of minutes and seconds.
-			// We've left the quirk in place, since fractions of a
-			// minute are not a useful piece of information for our
-			// purposes.
-			if ( $i + 2 < $j ) {
-				$seconds2 = $chunks[ $i + 1 ];
-				$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
-
-				// Add to output var.
-				if ( 0 != $count2 ) {
-					$output .= _x( ',', 'Separator in time since', 'buddyboss' ) . ' ';
-
-					switch ( $seconds2 ) {
-						case 30 * DAY_IN_SECONDS:
-							$output .= sprintf( _n( '%s month', '%s months', $count2, 'buddyboss' ), $count2 );
-							break;
-						case WEEK_IN_SECONDS:
-							$output .= sprintf( _n( '%s week', '%s weeks', $count2, 'buddyboss' ), $count2 );
-							break;
-						case DAY_IN_SECONDS:
-							$output .= sprintf( _n( '%s day', '%s days', $count2, 'buddyboss' ), $count2 );
-							break;
-						case HOUR_IN_SECONDS:
-							$output .= sprintf( _n( '%s hour', '%s hours', $count2, 'buddyboss' ), $count2 );
-							break;
-						case MINUTE_IN_SECONDS:
-							$output .= sprintf( _n( '%s minute', '%s minutes', $count2, 'buddyboss' ), $count2 );
-							break;
-						default:
-							$output .= sprintf( _n( '%s second', '%s seconds', $count2, 'buddyboss' ), $count2 );
-					}
-				}
+					$output = $count < 2 ? $right_now_text : sprintf(
+						/* translators: The display seconds count from the older date.. */
+						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+						$count
+					);
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) $count && ! (int) $count2 ) {
+			if ( ! (int) $count ) {
 				$output = $right_now_text;
 			}
 		}
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	if ( $output != $right_now_text ) {
-		$output = sprintf( $ago_text, $output );
-	}
+	$output = sprintf( $ago_text, $output );
 
 	/**
 	 * Filters the English-language representation of the time elapsed since a given date.
@@ -1378,10 +1377,10 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 
 		// Not a valid date, so return blank string.
 	} catch ( Exception $e ) {
-			 return '';
+		return '';
 	}
 
-		 return $date->format( DateTime::ISO8601 );
+	return $date->format( DateTime::ISO8601 );
 }
 
 /**
@@ -4911,7 +4910,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  * @since BuddyBoss 1.3.2
  */
 function bp_core_parse_url( $url ) {
-	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );
@@ -4925,8 +4924,19 @@ function bp_core_parse_url( $url ) {
 		return array();
 	}
 
+	if ( ! function_exists( '_wp_oembed_get_object' ) ) {
+		require ABSPATH . WPINC . '/class-oembed.php';
+	}
+
+	$embed_code = '';
+	$oembed_obj = _wp_oembed_get_object();
+	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => false ) );
+
+	if ( $is_oembed ) {
+		$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
+	}
+
 	// Fetch the oembed code for URL.
-	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
 	if ( ! empty( $embed_code ) ) {
 		$parsed_url_data['title']       = ' ';
 		$parsed_url_data['description'] = $embed_code;
@@ -5486,6 +5496,14 @@ function bp_core_is_empty_directory( $dir ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
+
+	/**
+	 * Action to perform before regenerating attachment thumbnails.
+	 *
+	 * @since BuddyBoss 1.8.7
+	 */
+	do_action( 'bp_core_before_regenerate_attachment_thumbnails' );
+
 	if ( function_exists( 'wp_get_original_image_path' ) ) {
 		$fullsizepath = wp_get_original_image_path( $attachment_id );
 	} else {
@@ -5497,6 +5515,13 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 	}
 	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 	wp_update_attachment_metadata( $attachment_id, $new_metadata );
+
+	/**
+	 * Action to perform after regenerating attachment thumbnails.
+	 *
+	 * @since BuddyBoss 1.8.7
+	 */
+	do_action( 'bp_core_after_regenerate_attachment_thumbnails' );
 }
 
 /**
@@ -5536,13 +5561,18 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $attachment_path Symbolising path to generate.
  */
 function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+
+	if ( true === bb_check_server_disabled_symlink() ) {
+		return;
+	}
+
 	if ( empty( $type ) || empty( $item ) ) {
 		return;
 	}
 
-	if ( ! bp_is_active( 'media') ) {
-	    return;
-    }
+	if ( ! bp_is_active( 'media' ) ) {
+		return;
+	}
 
 	$key           = '';
 	$sym_path      = '';
@@ -5630,8 +5660,8 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 							$upl_dir          = wp_get_upload_dir();
 
 							if ( ! $is_image ) {
-								if ( ! empty( $meta['sizes'][$size] ) ) {
-									$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
+								if ( ! empty( $meta['sizes'][ $size ] ) ) {
+									$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
 								} else {
 									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
 								}
@@ -5691,8 +5721,10 @@ function bb_check_ios_device() {
 	$ipod   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPod' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$iphone = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$ipad   = ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? stripos( $_SERVER['HTTP_USER_AGENT'], 'iPad' ) : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$safari = bb_core_get_browser();
+	$safari = ( isset( $safari['name'] ) ? 'Safari' === $safari['b_name'] : false ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
-	if ( $ipod || $iphone || $ipad ) {
+	if ( $ipod || $iphone || $ipad || $safari ) {
 		$is_ios = true;
 	}
 
@@ -5702,112 +5734,6 @@ function bb_check_ios_device() {
 	 * @since BuddyBoss 1.7.0.1
 	 */
 	return apply_filters( 'bb_check_ios_device', $is_ios );
-}
-
-/**
- * Enable symlink automatically.
- *
- * @since BuddyBoss 1.7.0
- */
-function bb_core_enable_default_symlink_support() {
-
-	if ( ! bp_is_active( 'media' ) ) {
-		return;
-	}
-
-	if ( (bool) get_option( 'bp_media_symlink_support', false ) ) {
-		return;
-	}
-
-	$upload_dir = wp_upload_dir();
-	$upload_dir = $upload_dir['basedir'];
-
-	$platform_previews_path = $upload_dir . '/bb-platform-previews';
-	if ( ! is_dir( $platform_previews_path ) ) {
-		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
-	}
-
-	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
-	if ( ! is_dir( $media_symlinks_path ) ) {
-		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
-	}
-
-	$upload_dir      = wp_upload_dir();
-	$upload_dir      = $upload_dir['basedir'];
-	$output_file_src = '';
-	$attachment_id   = bb_core_upload_dummy_attachment();
-
-	if ( ! empty( $attachment_id ) ) {
-
-		$attachment_url          = wp_get_attachment_image_src( $attachment_id );
-		$attachment_file         = get_attached_file( $attachment_id );
-		$symlinks_path           = $media_symlinks_path;
-		$size                    = 'thumbnail';
-		$symlink_name            = md5( 'testsymlink' . $attachment_id . $size );
-		$attachment_path         = $symlinks_path . '/' . $symlink_name;
-		$file                    = image_get_intermediate_size( $attachment_id, $size );
-		$upload_directory        = wp_get_upload_dir();
-		$preview_attachment_path = $symlinks_path . '/' . $symlink_name;
-		$symlink_url             = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
-
-		if ( $file && ! empty( $file['path'] ) ) {
-			$output_file_src = $upload_dir . '/' . $file['path'];
-		} elseif ( $attachment_url ) {
-			$output_file_src = $attachment_file;
-		}
-
-		if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-
-			if ( ! is_link( $attachment_path ) ) {
-
-				symlink( $output_file_src, $attachment_path );
-
-				if ( ! empty( $symlink_url ) ) {
-					$fetch = wp_remote_get( $symlink_url );
-
-					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-						bp_update_option( 'bp_media_symlink_support', 1 );
-					}
-				}
-				unlink( $attachment_path );
-
-				if ( bb_enable_symlinks() ) {
-					wp_delete_attachment( $attachment_id, true );
-					return;
-				}
-
-				$tmp = getcwd();
-				chdir( wp_normalize_path( ABSPATH ) );
-				$sym_path   = explode( '/', $symlinks_path );
-				$search_key = array_search( 'wp-content', $sym_path, true );
-				if ( is_array( $sym_path ) && ! empty( $sym_path ) && false !== $search_key ) {
-					$sym_path = array_slice( array_filter( $sym_path ), $search_key );
-					$sym_path = implode( '/', $sym_path );
-				}
-				if ( is_dir( 'wp-content/' . $sym_path ) ) {
-					chdir( 'wp-content/' . $sym_path );
-					if ( empty( $file['path'] ) ) {
-						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
-					}
-					$output_file_src = '../../' . $file['path'];
-					if ( file_exists( $output_file_src ) ) {
-						symlink( $output_file_src, $symlink_name );
-					}
-				}
-				chdir( $tmp );
-
-				if ( ! empty( $symlink_url ) ) {
-					$fetch = wp_remote_get( $symlink_url );
-					if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
-						bp_update_option( 'bp_media_symlink_support', 1 );
-					}
-				}
-			}
-		}
-		wp_delete_attachment( $attachment_id, true );
-	}
 }
 
 /**
@@ -5853,12 +5779,13 @@ function bb_core_upload_dummy_attachment() {
  */
 function bb_core_get_browser() {
 
-	$u_agent  = $_SERVER['HTTP_USER_AGENT'];
+	$u_agent  = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	$bname    = 'Unknown';
 	$platform = 'Unknown';
-	$version  = "";
+	$version  = '';
+	$ub       = '';
 
-	//First get the platform?
+	// First get the platform?
 	if ( preg_match( '/linux/i', $u_agent ) ) {
 		$platform = 'linux';
 	} elseif ( preg_match( '/macintosh|mac os x/i', $u_agent ) ) {
@@ -5867,52 +5794,52 @@ function bb_core_get_browser() {
 		$platform = 'windows';
 	}
 
-	// Next get the name of the useragent yes seperately and for good reason
+	// Next get the name of the useragent yes seperately and for good reason.
+	$ub = '';
 	if ( preg_match( '/MSIE/i', $u_agent ) && ! preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Internet Explorer';
-		$ub    = "MSIE";
+		$ub    = 'MSIE';
 	} elseif ( preg_match( '/Firefox/i', $u_agent ) ) {
 		$bname = 'Mozilla Firefox';
-		$ub    = "Firefox";
+		$ub    = 'Firefox';
 	} elseif ( preg_match( '/Chrome/i', $u_agent ) ) {
 		$bname = 'Google Chrome';
-		$ub    = "Chrome";
+		$ub    = 'Chrome';
 	} elseif ( preg_match( '/Safari/i', $u_agent ) ) {
 		$bname = 'Apple Safari';
-		$ub    = "Safari";
+		$ub    = 'Safari';
 	} elseif ( preg_match( '/Opera/i', $u_agent ) ) {
 		$bname = 'Opera';
-		$ub    = "Opera";
+		$ub    = 'Opera';
 	} elseif ( preg_match( '/Netscape/i', $u_agent ) ) {
 		$bname = 'Netscape';
-		$ub    = "Netscape";
+		$ub    = 'Netscape';
 	}
 
-	// finally get the correct version number
+	// finally get the correct version number.
 	$known   = array( 'Version', $ub, 'other' );
-	$pattern = '#(?<browser>' . join( '|', $known ) .
-	           ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+	$pattern = '#(?<browser>' . join( '|', $known ) . ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
 	if ( ! preg_match_all( $pattern, $u_agent, $matches ) ) {
-		// we have no matching number just continue
+		// we have no matching number just continue.
 	}
 
-	// see how many we have
+	// see how many we have.
 	$i = count( $matches['browser'] );
-	if ( $i != 1 ) {
-		//we will have two since we are not using 'other' argument yet
-		//see if version is before or after the name
-		if ( strripos( $u_agent, "Version" ) < strripos( $u_agent, $ub ) ) {
-			$version = $matches['version'][0];
+	if ( 1 !== $i ) {
+		// we will have two since we are not using 'other' argument yet.
+		// see if version is before or after the name.
+		if ( strripos( $u_agent, 'Version' ) < strripos( $u_agent, $ub ) ) {
+			$version = isset( $matches['version'][0] ) ? $matches['version'][0] : '';
 		} else {
-			$version = $matches['version'][1];
+			$version = isset( $matches['version'][1] ) ? $matches['version'][1] : '';
 		}
 	} else {
-		$version = $matches['version'][0];
+		$version = isset( $matches['version'][0] ) ? $matches['version'][0] : '';
 	}
 
-	// check if we have a number
-	if ( $version == null || $version == "" ) {
-		$version = "?";
+	// check if we have a number.
+	if ( null === $version || '' === $version ) {
+		$version = '?';
 	}
 
 	return array(
@@ -5920,15 +5847,16 @@ function bb_core_get_browser() {
 		'name'      => $bname,
 		'version'   => $version,
 		'platform'  => $platform,
-		'pattern'   => $pattern
+		'pattern'   => $pattern,
+		'b_name'    => $ub,
 	);
 }
 
 /**
  * Function to check if media record is exist.
  *
- * @param int    $id   media id
- * @param string $type media type
+ * @param int    $id   media id.
+ * @param string $type media type.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -5942,13 +5870,30 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 	$document_table = "{$wpdb->prefix}bp_document";
 
 	if ( in_array( $type, array( 'media', 'video' ) ) ) {
-		$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
-		$record    = $wpdb->get_row( $media_sql );
+		$cache_key   = 'bb_' . $type . '_activity_' . $id;
+		$cache_group = 'bp_' . $type;
+		$record      = wp_cache_get( $cache_key, $cache_group );
+
+		if ( false === $record ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$media_sql = $wpdb->prepare( "SELECT activity_id FROM {$media_table} WHERE id=%d", $id );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, Generic.Formatting.MultipleStatementAlignment.IncorrectWarning
+			$record = $wpdb->get_row( $media_sql );
+			wp_cache_set( $cache_key, $record, $cache_group );
+		}
 	}
 
 	if ( 'document' === $type ) {
-		$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
-		$record       = $wpdb->get_row( $document_sql );
+		$cache_key = 'bb_document_activity_' . $id;
+		$record    = wp_cache_get( $cache_key, 'bp_document' );
+
+		if ( false === $record ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$document_sql = $wpdb->prepare( "SELECT activity_id FROM {$document_table} WHERE id=%d", $id );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, Generic.Formatting.MultipleStatementAlignment.IncorrectWarning
+			$record       = $wpdb->get_row( $document_sql );
+			wp_cache_set( $cache_key, $record, 'bp_document' );
+		}
 	}
 
 	return $record;
@@ -5957,7 +5902,7 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 /**
  * Function to check if suspend record is exist.
  *
- * @param int $id id
+ * @param int $id id.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -5974,8 +5919,16 @@ function bb_moderation_suspend_record_exist( $id ) {
 
 	$suspend_table = "{$wpdb->prefix}bp_suspend";
 
-	$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
-	$record             = $wpdb->get_row( $suspend_record_sql );
+	$cache_key = 'bb_suspend_' . $id;
+	$record    = wp_cache_get( $cache_key, 'bp_moderation' );
+
+	if ( false === $record ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$suspend_record_sql = $wpdb->prepare( "SELECT id,item_id,item_type,reported FROM {$suspend_table} WHERE item_id=%d", $id );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$record = $wpdb->get_row( $suspend_record_sql );
+		wp_cache_set( $cache_key, $record, 'bp_moderation' );
+	}
 
 	return $record;
 }
@@ -5983,8 +5936,8 @@ function bb_moderation_suspend_record_exist( $id ) {
 /**
  * Function to update suspend data.
  *
- * @param object $moderated_activities suspend records
- * @param int    $offset               pagination object
+ * @param object $moderated_activities Suspend records.
+ * @param int    $offset               Pagination object.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -6002,15 +5955,23 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 				if ( ! empty( $media_results ) ) {
 					$suspend_record = bb_moderation_suspend_record_exist( $media_results->activity_id );
 					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $suspend_record->item_id,
-							'item_type' => $suspend_record->item_type,
-						), array( 'id' => $moderated_activity->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $suspend_record->item_id,
+								'item_type' => $suspend_record->item_type,
+							),
+							array( 'id' => $moderated_activity->id )
+						);
 
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $moderated_activity->item_id,
-							'item_type' => $moderated_activity->item_type,
-						), array( 'id' => $suspend_record->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $moderated_activity->item_id,
+								'item_type' => $moderated_activity->item_type,
+							),
+							array( 'id' => $suspend_record->id )
+						);
 					}
 				}
 			}
@@ -6020,15 +5981,23 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 				if ( ! empty( $document_results ) ) {
 					$suspend_record = bb_moderation_suspend_record_exist( $document_results->activity_id );
 					if ( ! empty( $suspend_record ) && 1 === (int) $suspend_record->reported ) {
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $suspend_record->item_id,
-							'item_type' => $suspend_record->item_type,
-						), array( 'id' => $moderated_activity->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $suspend_record->item_id,
+								'item_type' => $suspend_record->item_type,
+							),
+							array( 'id' => $moderated_activity->id )
+						);
 
-						$wpdb->update( $suspend_table, array(
-							'item_id'   => $moderated_activity->item_id,
-							'item_type' => $moderated_activity->item_type,
-						), array( 'id' => $suspend_record->id ) );
+						$wpdb->update(
+							$suspend_table,
+							array(
+								'item_id'   => $moderated_activity->item_id,
+								'item_type' => $moderated_activity->item_type,
+							),
+							array( 'id' => $suspend_record->id )
+						);
 					}
 				}
 			}
@@ -6070,7 +6039,7 @@ function bb_moderation_bg_update_moderation_data() {
  * @return array
  */
 function bb_get_all_admin_users() {
-	$args = array(
+	$args  = array(
 		'role'    => 'administrator',
 		'orderby' => 'user_nicename',
 		'order'   => 'ASC',
@@ -6103,4 +6072,731 @@ function bb_check_server_disabled_symlink() {
 	}
 
 	return false;
+}
+
+/**
+ * Function will restrict RSS feed.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_restricate_rss_feed() {
+	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	if (
+		strpos( $actual_link, '/feed/' ) === false &&
+		strpos( $actual_link, 'feed=' ) === false
+	) { // if permalink has ? then need to check with feed=.
+		return;
+	}
+
+	if (
+		strpos( $actual_link, 'wp-cron.php' ) === false &&
+		strpos( $actual_link, 'wp-login.php' ) === false &&
+		strpos( $actual_link, 'admin-ajax.php' ) === false &&
+		strpos( $actual_link, 'wp-json' ) === false
+	) {
+		$request_url      = untrailingslashit( $actual_link );
+		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
+		if ( '' !== $exclude_rss_feed ) {
+			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
+			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
+			if ( ! empty( $exclude_arr_rss_feeds ) && is_array( $exclude_arr_rss_feeds ) ) {
+				// Check if current url has slash in the last if not then add because we allow to add
+				// feed url like this one - /feed/.
+				foreach ( $exclude_arr_rss_feeds as $url ) {
+					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+					$un_trailing_slash_it_url = untrailingslashit( $url );
+					// Check if strict match.
+					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						return;
+					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url );
+						// Allow to view if fragment matched.
+						foreach ( $fragments as $fragment ) {
+							if ( $fragment === trim( $url, '/' ) ) {
+								return;
+							}
+						}
+						// Allow to view if fragment matched with the trailing slash.
+						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						if ( $is_matched_fragment === $url ) {
+							return;
+						}
+						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
+						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+							return;
+						}
+						// Check URL is fully matched without remove trailing slash.
+					} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
+						return;
+					}
+				}
+			}
+		}
+
+		$defaults = array(
+			'mode'     => 2,
+			'redirect' => $actual_link,
+			'root'     => bp_get_root_domain(),
+			'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+		);
+		bp_core_no_access( $defaults );
+		exit();
+	}
+}
+
+/**
+ * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response $response
+ */
+function bb_restricate_rest_api( $response, $handler, $request ) {
+	// Get current route.
+	$current_endpoint = $request->get_route();
+	// Add mandatory endpoint here for app which you want to exclude from restriction.
+	// ex: /buddyboss-app/auth/v1/jwt/token.
+	$default_exclude_endpoint   = array(
+		'/buddyboss/v1/signup/form',
+		'/buddyboss/v1/signup/(?P<id>[\w-]+)',
+		'/buddyboss/v1/signup/activate/(?P<id>[\w-]+)',
+		'/buddyboss/v1/settings',
+		'/buddyboss/v1/signup',
+	);
+	$exclude_required_endpoints = apply_filters( 'bb_exclude_endpoints_from_restriction', $default_exclude_endpoint, $current_endpoint );
+	// Allow some endpoints which is mandatory for app.
+	if ( ! empty( $exclude_required_endpoints ) && in_array( $current_endpoint, $exclude_required_endpoints, true ) ) {
+		return $response;
+	}
+
+	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
+		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
+		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
+		$response      = rest_ensure_response( $error );
+	}
+
+	return $response;
+}
+
+/**
+ * Function will check current REST APIs endpoint is allow or not.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $current_endpoint Current endpoint.
+ *
+ * @return bool true Return true if allow endpoint otherwise return false.
+ */
+function bb_is_allowed_endpoint( $current_endpoint ) {
+	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
+	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
+	if ( '' !== $exclude_endpoints ) {
+		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
+		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
+			foreach ( $exclude_arr_endpoints as $endpoints ) {
+				if ( ! empty( $endpoints ) ) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
+					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
+						return true;
+					} else {
+						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
+							$endpoints = str_replace( trailingslashit( bp_get_root_domain() ), '', $endpoints );
+						}
+						if ( strpos( $endpoints, 'wp-json' ) !== false ) {
+							$endpoints = str_replace( 'wp-json', '', $endpoints );
+						}
+						$endpoints                = str_replace( '//', '/', $endpoints );
+						$endpoints                = str_replace( '///', '/', $endpoints );
+						$endpoints                = '/' . ltrim( $endpoints, '/' );
+						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						if ( $current_endpoint_allowed ) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Get default BuddyBoss profile avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default BuddyBoss profile avatar URL.
+ */
+function bb_get_buddyboss_profile_avatar( $size = 'full' ) {
+
+	$bb_avatar_filename = 'profile-avatar-buddyboss.png';
+	if ( 'full' !== $size ) {
+		$bb_avatar_filename = 'profile-avatar-buddyboss-50.png';
+	}
+	/**
+	 * Filters default BuddyBoss avatar image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_buddyboss_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_avatar_filename ), $size );
+}
+
+/**
+ * Get default legacy profile avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default legacy profile avatar URL.
+ */
+function bb_get_legacy_profile_avatar( $size = 'full' ) {
+
+	$legacy_avatar_filename = 'profile-avatar-legacy.png';
+	if ( 'full' !== $size ) {
+		$legacy_avatar_filename = 'profile-avatar-legacy-50.png';
+	}
+	/**
+	 * Filters default legacy avatar image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_legacy_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $legacy_avatar_filename ), $size );
+}
+
+/**
+ * Get default blank profile avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default blank profile avatar URL.
+ */
+function bb_get_blank_profile_avatar( $size = 'full' ) {
+
+	$blank_avatar_filename = 'profile-avatar-blank.png';
+	if ( 'full' !== $size ) {
+		$blank_avatar_filename = 'profile-avatar-blank-50.png';
+	}
+	/**
+	 * Filters default blank avatar image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_blank_profile_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $blank_avatar_filename ), $size );
+}
+
+/**
+ * Has default custom upload avatar?.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return bool True if found the custom profile avatar otherwise false.
+ */
+function bb_has_default_custom_upload_profile_avatar() {
+	$item_id = 0;
+	$retval  = false;
+	$avatar  = bp_core_fetch_avatar(
+		array(
+			'item_id'   => $item_id,
+			'item_type' => null,
+			'no_grav'   => true,
+			'html'      => false,
+			'type'      => 'full',
+		)
+	);
+
+	if ( false !== strpos( $avatar, '/' . $item_id . '/' ) ) {
+		$retval = true;
+	}
+
+	// Support WP User Avatar Plugin default avatar image.
+	$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
+	if ( 'wp_user_avatar' === $avatar_option ) {
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-user-avatar/wp-user-avatar.php' ) ) {
+			$default_image_id = bp_get_option( 'avatar_default_wp_user_avatar', '' );
+			if ( '' !== $default_image_id ) {
+				$image_attributes = wp_get_attachment_image_src( (int) $default_image_id );
+				if ( isset( $image_attributes[0] ) && '' !== $image_attributes[0] ) {
+
+					$wp_user_avatar = apply_filters( 'bp_core_avatar_default_local_size', $image_attributes[0] );
+
+					if ( $avatar != $avatar_option ) {
+						$retval = true;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Filters has custom upload avatar image?
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param bool $retval  Whether or not a user has an uploaded avatar.
+	 * @param int  $item_id ID of the user being checked.
+	 */
+	return apply_filters( 'bb_has_default_custom_upload_profile_avatar', $retval, $item_id );
+}
+
+/**
+ * Get default custom cover photo Width and Height.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
+ * @return array|bool An associative array containing the advised width and height for the cover photo. False if settings are empty.
+ */
+function bb_attachments_get_default_custom_cover_image_dimensions( $component = 'xprofile' ) {
+	$cover_dimensions = bp_attachments_get_cover_image_dimensions( $component );
+
+	if ( ! $cover_dimensions ) {
+		$cover_dimensions = array(
+			'width'  => 1950,
+			'height' => 450,
+		);
+	}
+
+	return $cover_dimensions;
+}
+
+/**
+ * Get default BuddyBoss profile cover URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return string Return default BuddyBoss profile cover URL.
+ */
+function bb_get_buddyboss_profile_cover() {
+	/**
+	 * Filters default cover image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default BuddyBoss profile cover URL.
+	 */
+	return apply_filters( 'bb_get_buddyboss_profile_cover', esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ) );
+}
+
+/**
+ * Get default BuddyBoss group avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default BuddyBoss group avatar URL.
+ */
+function bb_get_buddyboss_group_avatar( $size = 'full' ) {
+
+	$bb_group_avatar_filename = 'group-avatar-buddyboss.png';
+	if ( 'full' !== $size ) {
+		$bb_group_avatar_filename = 'group-avatar-buddyboss-50.png';
+	}
+	/**
+	 * Filters to change default BuddyBoss avatar image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default BuddyBoss profile avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_buddyboss_group_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_group_avatar_filename ), $size );
+}
+
+/**
+ * Get default legacy group avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $size This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default legacy group avatar URL.
+ */
+function bb_get_legacy_group_avatar( $size = 'full' ) {
+
+	$legacy_group_avatar_filename = 'group-avatar-legacy.png';
+	if ( 'full' !== $size ) {
+		$legacy_group_avatar_filename = 'group-avatar-legacy-50.png';
+	}
+	/**
+	 * Filters to change default legacy avatar image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default legacy group avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_legacy_group_avatar', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $legacy_group_avatar_filename ), $size );
+}
+
+/**
+ * Get default custom avatars for Profile and Group.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $object The object to get the settings for ("user" for user or "group").
+ * @param string $size   This parameter specifies whether you'd like the 'full' or smaller 'thumb' avatar. Default: 'thumb'.
+ * @return string Return avatar URL if found the custom default avatar otherwise false.
+ */
+function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
+	$avatar_dir = 'avatars';
+	if ( 'group' === $object ) {
+		$avatar_dir = 'group-avatars';
+	}
+
+	$item_id          = 0;
+	$scheme           = null;
+	$avatar_loc       = new stdClass();
+	$avatar_loc->path = trailingslashit( bp_core_avatar_upload_path() );
+	$avatar_loc->url  = trailingslashit( bp_core_avatar_url() );
+	$avatar_loc->dir  = trailingslashit( $avatar_dir );
+
+	$avatar_folder_url = $avatar_loc->url . $avatar_loc->dir . $item_id;
+	$avatar_folder_dir = $avatar_loc->path . $avatar_loc->dir . $item_id;
+	$avatar_size       = ( 'thumb' == $size ) ? '-bpthumb' : '-bpfull';
+
+	$avatar_url = '';
+
+	if ( file_exists( $avatar_folder_dir ) ) {
+
+		// Open directory.
+		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+			// Stash files in an array once to check for one that matches.
+			$avatar_files = array();
+			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+				// Only add files to the array (skip directories).
+				if ( 2 < strlen( $avatar_file ) ) {
+					$avatar_files[] = $avatar_file;
+				}
+			}
+
+			// Check for array.
+			if ( 0 < count( $avatar_files ) ) {
+
+				// Check for current avatar.
+				foreach ( $avatar_files as $key => $value ) {
+					if ( strpos( $value, $avatar_size ) !== false ) {
+						$avatar_url = $avatar_folder_url . '/' . $avatar_files[ $key ];
+					}
+				}
+			}
+		}
+
+		// Close the avatar directory.
+		closedir( $av_dir );
+
+		// If we found a locally uploaded avatar.
+		if ( isset( $avatar_url ) && ! empty( $avatar_url ) ) {
+			// Support custom scheme.
+			$avatar_url = set_url_scheme( $avatar_url, $scheme );
+		}
+	}
+
+	/**
+	 * Filters get default custom avatars for Profile and Group.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $avatar_url The avatar URL if found the custom default avatar otherwise false.
+	 * @param string $object     The object to get the settings for ("user" for user or "group").
+	 * @param string $size       This parameter specifies whether you'd like the 'full' or smaller 'thumb' avatar. Default: 'thumb'.
+	 */
+	return apply_filters( 'bb_get_default_custom_avatar', $avatar_url, $object, $size );
+}
+
+/**
+ * Has default custom upload group avatar?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return bool True if found the custom group avatar otherwise false.
+ */
+function bb_has_default_custom_upload_group_avatar() {
+	/**
+	 * Filters has custom upload group avatar image?
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param bool $value True if found the custom group avatar otherwise false.
+	 */
+	return apply_filters( 'bb_has_default_custom_upload_group_avatar', (bool) bb_get_default_custom_upload_group_avatar() );
+}
+
+/**
+ * Get default BuddyBoss group cover URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return string Return default BuddyBoss group cover URL.
+ */
+function bb_get_custom_buddyboss_group_cover() {
+	/**
+	 * Filters default BuddyBoss group cover image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default BuddyBoss group cover URL.
+	 */
+	return apply_filters( 'bb_get_custom_buddyboss_group_cover', esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ) );
+}
+
+/**
+ * Get default avatar image URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param array $params Parameters passed to bp_core_fetch_avatar().
+ * @return false|string The avatar photo URL, false on failure.
+ */
+function bb_attachments_get_default_profile_group_avatar_image( $params ) {
+
+	$object = isset( $params['object'] ) ? $params['object'] : 'user';
+	$size   = isset( $params['type'] ) ? $params['type'] : 'full';
+
+	$avatar_image_url       = false;
+	$disable_avatar_uploads = ( 'user' === $object ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
+
+	if ( 'user' === $object ) {
+
+		$show_avatar                 = bp_get_option( 'show_avatars' );
+		$profile_avatar_type         = bb_get_profile_avatar_type();
+		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
+
+		/**
+		 * Profile Avatars = BuddyBoss.
+		 * Upload Avatars = checked.
+		 */
+		if ( 'BuddyBoss' === $profile_avatar_type ) {
+
+			// Default Profile Avatar = BuddyBoss.
+			if ( 'buddyboss' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_buddyboss_profile_avatar( $size );
+
+				// Default Profile Avatar = Legacy.
+			} elseif ( 'legacy' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_legacy_profile_avatar( $size );
+
+				// Default Profile Avatar = Custom.
+			} elseif ( 'custom' === $default_profile_avatar_type ) {
+				$avatar_image_url = bb_get_default_custom_upload_profile_avatar( bb_get_buddyboss_profile_avatar( $size ), $size );
+			}
+
+			/**
+			 * Avatar Display = checked.
+			 * Profile Avatars = WordPress.
+			 * Default Avatar = Blank.
+			 */
+		} elseif ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' === bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar_image_url = bb_get_blank_profile_avatar( $size );
+
+			/**
+			 * Avatar Display = unchecked.
+			 * Profile Avatars = WordPress.
+			 */
+		} elseif ( ! $show_avatar && 'WordPress' === $profile_avatar_type ) {
+			$avatar_image_url = bb_get_blank_profile_avatar( $size );
+		}
+	} elseif ( ! $disable_avatar_uploads && 'group' === $object ) {
+
+		$group_avatar_type = bb_get_default_group_avatar_type();
+
+		if ( 'buddyboss' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
+		} elseif ( 'legacy' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_legacy_group_avatar( $size );
+		} elseif ( 'custom' === $group_avatar_type ) {
+			$avatar_image_url = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
+		}
+	}
+
+	/**
+	 * Filters default avatar image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
+	 * @param array       $params           Parameters passed to bp_core_fetch_avatar().
+	 */
+	return apply_filters( 'bb_attachments_get_default_profile_group_avatar_image', $avatar_image_url, $params );
+}
+
+/**
+ * Get default cover image URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $component The component to get the settings for ("members" or "xprofile" for user or "groups").
+ * @return false|array The cover photo settings in array, false on failure.
+ */
+function bb_attachments_get_default_profile_group_cover_image( $component ) {
+
+	if ( 'xprofile' === $component ) {
+		$component = 'members';
+	}
+
+	$cover_image_url        = false;
+	$disable_avatar_uploads = ( 'members' === $component ) ? bp_disable_cover_image_uploads() : bp_disable_group_cover_image_uploads();
+
+	if ( 'members' === $component ) {
+		$profile_cover_type = bb_get_default_profile_cover_type();
+
+		if ( ! $disable_avatar_uploads && 'buddyboss' === $profile_cover_type ) {
+			$cover_image_url = bb_get_buddyboss_profile_cover();
+		} elseif ( ! $disable_avatar_uploads && 'custom' === $profile_cover_type ) {
+			$cover_image_url = bb_get_default_custom_upload_profile_cover();
+
+			if ( empty( $cover_image_url ) ) {
+				$cover_image_url = bb_get_buddyboss_profile_cover();
+			}
+		}
+	} elseif ( 'groups' === $component ) {
+		$group_cover_type = bb_get_default_group_cover_type();
+
+		if ( ! $disable_avatar_uploads && 'buddyboss' === $group_cover_type ) {
+			$cover_image_url = bb_get_custom_buddyboss_group_cover();
+		} elseif ( ! $disable_avatar_uploads && 'custom' === $group_cover_type ) {
+			$cover_image_url = bb_get_default_custom_upload_group_cover();
+
+			if ( empty( $cover_image_url ) ) {
+				$cover_image_url = bb_get_custom_buddyboss_group_cover();
+			}
+		}
+	}
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+	 * @param string $component The component to get the settings for ("members" for user or "groups").
+	 */
+	return apply_filters( 'bb_attachments_get_default_profile_group_cover_image', $cover_image_url, $component );
+}
+
+/**
+ * Get default cover image URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $data whether to get the url or the path.
+ * @param array  $args {
+ *     @type string $object_dir  The object dir (eg: members/groups). Defaults to members.
+ *     @type int    $item_id     The object id (eg: a user or a group id). Defaults to current user.
+ *     @type string $type        The type of the attachment which is also the subdir where files are saved.
+ *                               Defaults to 'cover-image'
+ *     @type string $file        The name of the file.
+ * }
+ * @return string|bool The url or the path to the attachment, false otherwise.
+ */
+function bb_get_default_profile_group_cover( $data, $args ) {
+
+	if ( isset( $_POST['action'] ) && 'bp_cover_image_delete' === sanitize_text_field( $_POST['action'] ) ) {
+		return false;
+	}
+
+	$cover_image_url = bb_attachments_get_default_profile_group_cover_image( $args['object_dir'] );
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+	 * @param string $data whether to get the url or the path.
+	 * @param array $r {
+	 *     @type string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 *     @type int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 *     @type string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                              Defaults to 'cover-image'
+	 *     @type string $file       The name of the file.
+	 * }
+	 */
+	return apply_filters( 'bb_get_default_profile_group_cover', $cover_image_url, $data, $args );
+}
+
+/**
+ * Get settings for live preview default profile and group images.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return array Array contains information text and background colors.
+ */
+function bb_get_settings_live_preview_default_profile_group_images() {
+
+	$is_buddyboss_app_plugin_active = class_exists( 'bbapp' ) ? true : false;
+	$is_buddyboss_theme_active      = function_exists( 'buddyboss_theme' ) ? true : false;
+
+	$info_text                  = __( 'The <strong>Cover Image Background</strong> color can be changed with custom CSS.', 'buddyboss' );
+	$web_cover_background_color = '#e2e9ef';
+	$app_cover_background_color = '#EDEEF2';
+
+	if ( $is_buddyboss_theme_active ) {
+		$web_cover_background_color = ( function_exists( 'buddyboss_theme_get_option' ) ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : $web_cover_background_color;
+	}
+
+	if ( $is_buddyboss_app_plugin_active ) {
+		$bbapp_styling = (array) get_option( 'bbapp_styling', array() );
+
+		if ( isset( $bbapp_styling['styles']['styles.colors.coverImageBg'] ) && ! empty( $bbapp_styling['styles']['styles.colors.coverImageBg'] ) ) {
+			$app_cover_background_color = $bbapp_styling['styles']['styles.colors.coverImageBg'];
+		}
+	}
+
+	if ( $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
+		$info_text = sprintf(
+			/* translators: 1: theme setting url 2: app plugin url */
+			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss' ),
+			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' ),
+			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
+		);
+	} elseif ( $is_buddyboss_theme_active && ! $is_buddyboss_app_plugin_active ) {
+		$info_text = sprintf(
+			/* translators: 1: theme setting url */
+			__( 'The <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
+			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' )
+		);
+	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
+		$info_text = sprintf(
+			/* translators: 1: app plugin url */
+			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss' ),
+			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
+		);
+	}
+
+	return array(
+		'info'                           => $info_text,
+		'app_background_color'           => $app_cover_background_color,
+		'web_background_color'           => $web_cover_background_color,
+		'is_buddyboss_theme_active'      => $is_buddyboss_theme_active,
+		'is_buddyboss_app_plugin_active' => $is_buddyboss_app_plugin_active,
+	);
+}
+
+/**
+ * Remove all the unfiltered html from the string.
+ *
+ * @since BuddyBoss 1.8.7
+ *
+ * @param string $content Given string.
+ *
+ * @return string
+ */
+function bb_core_remove_unfiltered_html( $content ) {
+	return esc_html( wp_strip_all_tags( wp_specialchars_decode( $content ) ) );
 }

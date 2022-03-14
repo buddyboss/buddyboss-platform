@@ -398,3 +398,14 @@ function bp_rest_register_field( $component_id, $attribute, $args = array(), $ob
 	// Check it has been registered.
 	return isset( $registered_fields[ $attribute ] );
 }
+
+/**
+ * Function to check its BuddyBoss rest route or not.
+ *
+ * @since BuddyBoss [VERSION]
+ *
+ * @return bool
+ */
+function bb_is_rest() {
+	return ! empty( $GLOBALS['wp']->query_vars['rest_route'] );
+}

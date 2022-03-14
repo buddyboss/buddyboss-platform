@@ -20,6 +20,9 @@ add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 // Filter the user registration URL to point to BuddyPress's registration page.
 add_filter( 'register_url', 'bp_get_signup_page' );
 
+// Change the last active display format if users active within 5 minutes then shows 'Active now'.
+add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -214,7 +217,7 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 		array(
 			'column'  => 'privacy',
 			'value'   => $privacy,
-			'compare' => 'IN'
+			'compare' => 'IN',
 		),
 	);
 
@@ -405,14 +408,14 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy
+			'value'   => $privacy,
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders
+		$folders,
 	);
 
 	return $args;
@@ -521,3 +524,194 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 	return $args;
 }
 add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_folder_personal_scope', 10, 2 );
+
+/**
+ * Used by the Activity component's @mentions to print a JSON list of the latest 10 users.
+ *
+ * This is intended to speed up @mentions lookups for a majority of use cases.
+ *
+ * @since buddyboss 1.8.6
+ *
+ * @see   bp_activity_mentions_script()
+ */
+function bb_core_prime_mentions_results() {
+
+	// Stop here if user is not logged in.
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
+		return;
+	}
+
+	// Bail out if the site has a ton of users.
+	if ( bp_is_large_install() ) {
+		return;
+	}
+
+	// Bail if single group page.
+	if ( bp_is_group() ) {
+		return;
+	}
+
+	$members_query = array(
+		'count_total'     => '', // Prevents total count.
+		'populate_extras' => false,
+		'per_page'        => 10,
+		'page'            => 1,
+		'type'            => 'active',
+		'exclude'         => array( get_current_user_id() ),
+	);
+
+	$members_query = new BP_User_Query( $members_query );
+	$members       = array();
+
+	foreach ( $members_query->results as $user ) {
+		$result        = new stdClass();
+		$result->ID    = $user->user_nicename;
+		$result->image = bp_core_fetch_avatar(
+			array(
+				'html'    => false,
+				'item_id' => $user->ID,
+			)
+		);
+
+		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+			$result->name = $user->display_name;
+		} else {
+			$result->name = bp_core_get_user_displayname( $user->ID );
+		}
+
+		$members[] = $result;
+	}
+
+	$friends = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+
+		if ( friends_get_total_friend_count( get_current_user_id() ) > 30 ) {
+			return;
+		}
+
+		$friends_query = array(
+			'count_total'     => '',                    // Prevents total count.
+			'populate_extras' => false,
+			'type'            => 'alphabetical',
+			'user_id'         => get_current_user_id(),
+		);
+
+		$friends_query = new BP_User_Query( $friends_query );
+
+		foreach ( $friends_query->results as $user ) {
+			$result        = new stdClass();
+			$result->ID    = bp_activity_get_user_mentionname( $user->ID );
+			$result->image = bp_core_fetch_avatar(
+				array(
+					'html'    => false,
+					'item_id' => $user->ID,
+				)
+			);
+
+			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			} else {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			}
+			$result->user_id = $user->ID;
+
+			$friends[] = $result;
+		}
+	}
+
+	wp_localize_script(
+		'bp-mentions',
+		'BP_Suggestions',
+		array(
+			'members' => $members,
+			'friends' => $friends,
+		)
+	);
+}
+
+add_action( 'bp_activity_mentions_prime_results', 'bb_core_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results' );
+
+/**
+ * Get member last active difference in minutes.
+ *
+ * @param string $last_activity Formatted 'active [x days ago]' string.
+ * @param int    $user_id ID of the user. Default: displayed user ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Return string if time difference within minutes otherwise $last_activity.
+ */
+function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
+
+	$last_active_date = bp_get_user_last_activity( $user_id );
+	if ( empty( $last_active_date ) ) {
+		return $last_activity;
+	}
+
+	// Get Unix timestamp from datetime.
+	$time_chunks           = explode( ':', str_replace( ' ', ':', $last_active_date ) );
+	$date_chunks           = explode( '-', str_replace( ' ', '-', $last_active_date ) );
+	$last_active_timestamp = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
+
+	// Difference in seconds.
+	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
+	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
+		$minutes_diff = round( $since_diff / MINUTE_IN_SECONDS );
+
+		// Difference within 5 minutes.
+		if ( 5 >= $minutes_diff ) {
+			return esc_html__( 'Active now', 'buddyboss' );
+		}
+	}
+
+	return $last_activity;
+}
+
+/**
+ * Allow HTML for member xprofile data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $allow_html The array allow custom tags and attributes. Default: null.
+ *
+ * @return array Associative array of allowed tags and attributes.
+ */
+function bb_members_allow_html_tags( $allow_html = array() ) {
+	$bbp_allow_tags = bbp_kses_allowed_tags();
+
+	if ( ! empty( $allow_html ) ) {
+		$bbp_allow_tags = array_merge( $bbp_allow_tags, $allow_html );
+	}
+
+	// Allow tag attributes for xprofile datas.
+	$allowed_post_tags = wp_kses_allowed_html( 'post' );
+	$bbp_allow_tags    = array_merge( $bbp_allow_tags, $allowed_post_tags );
+
+	// Allow "svg" for social networks.
+	$bbp_allow_tags['svg']  = array(
+		'xmlns'       => array(),
+		'fill'        => array(),
+		'viewbox'     => array(),
+		'role'        => array(),
+		'aria-hidden' => array(),
+		'focusable'   => array(),
+		'fill-rule'   => array(),
+		'clip-rule'   => array(),
+	);
+	$bbp_allow_tags['path'] = array(
+		'd'    => array(),
+		'fill' => array(),
+	);
+	$bbp_allow_tags['g']    = array(
+		'transform' => array(),
+		'fill'      => array(),
+	);
+
+	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
+}

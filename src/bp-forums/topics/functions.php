@@ -378,7 +378,6 @@ function bbp_new_topic_handler( $action = '' ) {
 			'post_status'    => $topic_status,
 			'post_parent'    => $forum_id,
 			'post_type'      => bbp_get_topic_post_type(),
-			'tax_input'      => $terms,
 			'comment_status' => 'closed',
 		)
 	);
@@ -389,6 +388,9 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags.
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id() );
 
 		/** Trash Check */
 
@@ -744,7 +746,6 @@ function bbp_edit_topic_handler( $action = '' ) {
 			'post_parent'  => $forum_id,
 			'post_author'  => $topic_author,
 			'post_type'    => bbp_get_topic_post_type(),
-			'tax_input'    => $terms,
 		)
 	);
 
@@ -766,6 +767,9 @@ function bbp_edit_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags.
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 		// Update counts, etc..
 		do_action( 'bbp_edit_topic', $topic_id, $forum_id, $anonymous_data, $topic_author, true /* Is edit */ );
@@ -2301,6 +2305,9 @@ function bbp_toggle_topic_handler( $action = '' ) {
 					check_ajax_referer( 'untrash-' . bbp_get_topic_post_type() . '_' . $topic_id );
 
 					$success = wp_untrash_post( $topic_id );
+					if ( $success ) {
+						$success = wp_publish_post( $topic_id );
+					}
 					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the discussion.', 'buddyboss' );
 
 					break;

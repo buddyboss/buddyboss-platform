@@ -94,7 +94,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public static function get_content_owner_id( $group_id ) {
-		$g_admins     = groups_get_group_admins( $group_id );
+		$g_admins = groups_get_group_admins( $group_id );
 
 		return ( ! empty( $g_admins ) ) ? wp_list_pluck( $g_admins, 'user_id' ) : 0;
 	}

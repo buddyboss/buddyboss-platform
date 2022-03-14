@@ -1107,6 +1107,8 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			}
 
 			// Clear cached data, so that the changed settings take effect on the current page load.
+			clean_user_cache( bp_displayed_user_id() );
+			
 			if (
 				( false === $email_error )
 				&& ( false === $pass_error )

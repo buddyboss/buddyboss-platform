@@ -1305,7 +1305,7 @@ function bp_nouveau_nav_has_count() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
-	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+	echo esc_html( bp_core_number_format( bp_nouveau_get_nav_count() ) );
 }
 
 	/**

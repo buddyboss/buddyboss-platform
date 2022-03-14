@@ -87,6 +87,7 @@ add_action( 'groups_banned_member', 'bp_group_messages_banned_member', 10, 2 );
 add_action( 'groups_ban_member', 'bp_group_messages_admin_banned_member', 10, 2 );
 add_action( 'groups_unban_member', 'bp_group_messages_unbanned_member', 10, 2 );
 add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_accepted', 10, 3 );
+add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
 
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
@@ -94,7 +95,7 @@ add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_
 add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
-
+add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -213,6 +214,87 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 					bp_messages_update_meta( $last_message_id, 'group_id', $group_id );
 				}
 			}
+		}
+	}
+}
+
+/**
+ * Save group message meta.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param object $message Message object.
+ */
+function bp_media_messages_save_group_data( &$message ) {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
+	static $cache = array();
+	static $cache_first_message = array();
+
+	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
+	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual.
+	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
+	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list.
+	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply.
+
+	if ( '' === $message_meta_users_list && isset( $group ) && '' !== $group ) {
+		if ( isset( $cache[ $group ] ) ) {
+			$message_meta_users_list = $cache[ $group ];
+		} else {
+			// Fetch all the group members.
+			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
+
+			// Exclude logged-in user ids from the members list.
+			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
+				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+			}
+			$message_meta_users_list = implode( ',', $members );
+			$cache[ $group ]         = $message_meta_users_list;
+		}
+	}
+
+	if ( isset( $group ) && '' !== $group ) {
+		$thread_key = 'group_message_thread_id_' . $message->thread_id;
+		bp_messages_update_meta( $message->id, 'group_id', $group );
+		bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+		bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
+		bp_messages_update_meta( $message->id, $thread_key, $group );
+		bp_messages_update_meta( $message->id, 'message_from', 'group' );
+		bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
+		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
+		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+	} else {
+
+		if ( isset( $cache_first_message[ $message->thread_id ] ) ) {
+			$message_id = $cache_first_message[ $message->thread_id ];
+		} else {
+			$first_message                              = BP_Messages_Thread::get_first_message( (int) $message->thread_id );
+			$message_id                                 = (int) $first_message->id;
+			$cache_first_message[ $message->thread_id ] = $message_id;
+		}
+
+		if ( $message_id > 0 ) {
+			$group         = bp_messages_get_meta( $message_id, 'group_id', true );
+			$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
+			$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
+			$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
+		}
+
+		if ( $group ) {
+			$thread_key = 'group_message_thread_id_' . $message->thread_id;
+			bp_messages_update_meta( $message->id, 'group_id', $group );
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+			bp_messages_update_meta( $message->id, $thread_key, $group );
+			bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
+			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
+			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 		}
 	}
 }
@@ -698,7 +780,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -715,9 +797,9 @@ function bp_messages_admin_repair_unread_messages_count() {
 
 /**
  * Exclude current user and admin user when we open blocked member list.
- * 
+ *
  * @since BuddyBoss 1.7.6
- * 
+ *
  * @return string Exclude admin users from message block list.
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
@@ -729,12 +811,11 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 
 /**
  * Add nonce for the moderation when click on block member button.
- * 
- * @param $params Get params.
- * 
- * @return $params Return params.
+ *
+ * @param  array $params Get params.
+ *
+ * @return array $params Return params.
  */
-add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
 function bp_core_get_js_strings_callback(  $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	return $params;
