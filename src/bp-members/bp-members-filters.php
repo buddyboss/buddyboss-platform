@@ -692,7 +692,7 @@ add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results
  * @param string $last_activity Formatted 'active [x days ago]' string.
  * @param int    $user_id ID of the user. Default: displayed user ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string Return string if time difference within minutes otherwise $last_activity.
  */
@@ -725,7 +725,7 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 /**
  * Allow HTML for member xprofile data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $allow_html The array allow custom tags and attributes. Default: null.
  *

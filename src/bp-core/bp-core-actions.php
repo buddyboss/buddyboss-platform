@@ -504,7 +504,7 @@ function bb_render_notification_settings() {
  * @param $upgrader_object WP_Upgrader instance.
  * @param $options         Array of bulk item update data
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 	$show_display_popup = false;

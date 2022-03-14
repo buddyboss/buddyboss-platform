@@ -1448,7 +1448,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 /**
  * Get an excerpt of a group description with view more link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string      $excerpt  The group being referenced.
  * @param object|bool $group    The group being referenced.
@@ -7864,7 +7864,7 @@ function bp_group_get_video_album_status( $group_id = false ) {
 /**
  * Checks if default platform group element is enabled.
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param string $element Group element.
  * @return bool Is group element enabled or not
@@ -7881,7 +7881,7 @@ function bb_platform_group_headers_element_enable( $element ) {
 /**
  * Get group grid style setting
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: left.
@@ -7900,7 +7900,7 @@ function bb_platform_group_header_style( $default = 'left' ) {
 /**
  * Checks if default platform group element is enabled.
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param string $element Group element.
  * @return bool Is group element enabled or not
@@ -7917,7 +7917,7 @@ function bb_platform_group_element_enable( $element ) {
 /**
  * Get group grid style setting
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: left.

@@ -15,7 +15,7 @@ add_action( 'bp_init', array( 'BP_Members_Admin', 'register_members_admin' ) );
 /**
  * Get element list for profile headers.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return array List of profile header elements.
  */
@@ -71,7 +71,7 @@ function bb_get_profile_header_elements() {
 	/**
 	 * Profile headers elements.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.1
 	 *
 	 * @param $elements array List of profile header elements.
 	 */
@@ -81,7 +81,7 @@ function bb_get_profile_header_elements() {
 /**
  * Get element list for member directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return array List of elements for member directory.
  */
@@ -120,7 +120,7 @@ function bb_get_member_directory_elements() {
 	/**
 	 * Member directory elements.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.1
 	 *
 	 * @param $elements array List of member directory elements.
 	 */
@@ -130,7 +130,7 @@ function bb_get_member_directory_elements() {
 /**
  * Get profile actions for member directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return array List of profile actions for member directory.
  */
@@ -164,7 +164,7 @@ function bb_get_member_directory_profile_actions() {
 	/**
 	 * Profile actions for member directory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.1
 	 *
 	 * @param $profile_actions array List of profile actions for member directory.
 	 */

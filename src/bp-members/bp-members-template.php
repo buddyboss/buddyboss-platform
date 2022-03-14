@@ -2793,7 +2793,7 @@ function bp_get_signup_confirm_email_value() {
  * @param int|null $user_id user id to get followers count. If user id is null then get current logged-in user id.
  *                 Default false.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string
  */
@@ -2850,7 +2850,7 @@ function bb_get_followers_count( $user_id = false ) {
  * @param int|null $user_id user id to get following count. If user id is null then get current logged-in user id.
  *                 Default false.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string
  */
@@ -2905,7 +2905,7 @@ function bb_get_following_count( $user_id = false ) {
 /**
  * Get member actions for member directories.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int    $user_id Member ID.
  * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
@@ -2998,7 +2998,7 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 	/**
 	 * Filters the member actions for member directories.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.1
 	 *
 	 * @param array  $buttons     Member profile actions.
 	 * @param int    $user_id     Member ID.
