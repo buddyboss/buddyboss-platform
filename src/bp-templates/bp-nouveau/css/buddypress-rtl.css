@@ -9265,7 +9265,7 @@ body .bp-messages-user-threads {
 }
 
 .main-notification-settings .email:last-child {
-  min-width: 18px;
+  min-width: 48px;
 }
 
 .main-notification-settings .email:last-child label {
