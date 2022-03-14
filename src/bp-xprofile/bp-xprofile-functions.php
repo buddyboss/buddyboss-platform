@@ -1387,7 +1387,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
-		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( $displayed_user_id, $current_user_id ) ) {
+		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( (int) $displayed_user_id, (int) $current_user_id ) ) {
 			$hidden_levels = array( 'adminsonly' );
 
 			// Current user is logged in but not friends, so exclude friends-only.
@@ -2362,3 +2362,48 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 		return false;
 	}
 }
+
+/**
+ * Enabled the social networks for members or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if enabled the social networks otherwise false.
+ */
+function bb_enabled_member_social_networks() {
+	static $social_networks_id = '';
+
+	if ( '' === $social_networks_id ) {
+		global $wpdb, $bp;
+
+		$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+
+	return apply_filters( 'bb_enabled_member_social_networks', (bool) $social_networks_id );
+}
+
+/**
+ * Get social networks field values.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|null $user_id ID of the user or null. Default current displayed user profile ID.
+ *
+ * @return array
+ */
+function bb_get_user_social_networks_field_value( $user_id = null ) {
+	global $wpdb, $bp;
+
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	$original_option_values = array();
+
+	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) {
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+	}
+
+	return $original_option_values;
+}
+

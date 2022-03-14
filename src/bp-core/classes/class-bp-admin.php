@@ -207,6 +207,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
+
+			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
 		}
 
 		/**
@@ -693,6 +695,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$bp = buddypress();
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
+			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
@@ -710,7 +713,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
 			// @todo: used for bp-performance will enable in feature.
-            // require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
+			// require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
 
 		/**
@@ -748,8 +751,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings' => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
-					'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
+					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss' ) . '</a>',
 				)
 			);
 		}
@@ -780,34 +784,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
-			// Hello BuddyBoss.
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// Hello BuddyBoss App.
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
-				wp_enqueue_style( 'bp-hello-css' );
-			}
-
 			wp_enqueue_script( 'bp-fitvids-js' );
 
 			wp_enqueue_script( 'bp-wp-api-js' );
@@ -826,12 +802,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp-help-js',
 				'BP_HELP',
 				array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'bb_help_url'        => $bp_help_base_url,
-					'bb_help_title'      => __( 'Docs', 'buddyboss' ),
-					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					'ajax_url'              => admin_url( 'admin-ajax.php' ),
+					'bb_help_url'           => $bp_help_base_url,
+					'bb_help_title'         => esc_html__( 'Docs', 'buddyboss' ),
+					'bb_help_no_network'    => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
 				)
 			);
+
+			// Hello BuddyBoss.
+			wp_enqueue_style( 'bp-hello-css' );
+			wp_enqueue_script( 'bp-hello-js' );
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -1120,6 +1101,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			foreach ( $scripts as $id => $script ) {
 				wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
 			}
+		}
+
+		/**
+		 * Display plugin information after plugin successfully updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_display_update_plugin_information() {
+			// Check the transient to see if we've just updated the plugin.
+			global $bp;
+			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			delete_option( '_bb_is_update' );
 		}
 	}
 endif; // End class_exists check.

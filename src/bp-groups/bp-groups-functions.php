@@ -1109,24 +1109,28 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 	// Prime the invitations- and requests-as-memberships cache.
 	$invitation_ids = array();
 	if ( true !== $r['is_confirmed'] || false !== $r['invite_sent'] ) {
-		$invitation_ids = groups_get_invites( array(
-			'user_id'     => $user_id,
-			'invite_sent' => 'all',
-			'type'        => 'all',
-			'fields'      => 'ids'
-		) );
+		$invitation_ids = groups_get_invites(
+			array(
+				'user_id'     => $user_id,
+				'invite_sent' => 'all',
+				'type'        => 'all',
+				'fields'      => 'ids',
+			)
+		);
 
 		// Prime the invitations cache.
 		$uncached_invitation_ids = bp_get_non_cached_ids( $invitation_ids, 'bp_groups_invitations_as_memberships' );
 		if ( $uncached_invitation_ids ) {
-			$uncached_invitations = groups_get_invites( array(
-				'id'          => $uncached_invitation_ids,
-				'invite_sent' => 'all',
-				'type'        => 'all'
-			) );
+			$uncached_invitations = groups_get_invites(
+				array(
+					'id'          => $uncached_invitation_ids,
+					'invite_sent' => 'all',
+					'type'        => 'all',
+				)
+			);
 			foreach ( $uncached_invitations as $uncached_invitation ) {
 				// Reshape the result as a membership db entry.
-				$invitation = new StdClass;
+				$invitation                = new StdClass();
 				$invitation->id            = $uncached_invitation->id;
 				$invitation->group_id      = $uncached_invitation->item_id;
 				$invitation->user_id       = $uncached_invitation->user_id;
@@ -3729,7 +3733,7 @@ function bp_register_active_group_types() {
 						'name'          => $name,
 						'singular_name' => $singular_name,
 					),
-					'has_directory'         => strtolower( $name ),
+					'has_directory'         => $key,
 					'show_in_create_screen' => true,
 					'show_in_list'          => true,
 					'description'           => '',
@@ -4520,3 +4524,112 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+/**
+ * Get members list for group directory.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $group_id ID of the group.
+ * @param array $role roles of the group.
+ * @return string members list html.
+ */
+function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 'admin' ) ) {
+
+	if ( ! $group_id ) {
+		$group_id = bp_get_group_id();
+	}
+
+	if ( ! $group_id ) {
+		return '';
+	}
+
+	$members = new \BP_Group_Member_Query(
+		array(
+			'group_id'     => $group_id,
+			'per_page'     => 3,
+			'page'         => 1,
+			'group_role'   => $role,
+			'exclude'      => false,
+			'search_terms' => false,
+			'type'         => 'active',
+		)
+	);
+
+	$total   = $members->total_users;
+	$members = array_values( $members->results );
+
+	if ( ! empty( $members ) ) {
+		?>
+		<span class="bs-group-members">
+		<?php
+		foreach ( $members as $member ) {
+			$avatar = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $member->ID,
+					'avatar_dir' => 'avatars',
+					'object'     => 'user',
+					'type'       => 'thumb',
+					'html'       => false,
+				)
+			);
+			?>
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+					<img src="<?php echo esc_url( $avatar ); ?>"
+						alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
+				</a>
+			</span>
+			<?php
+		}
+
+		if ( $total - count( $members ) !== 0 ) {
+			$member_count = $total - count( $members );
+			?>
+			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
+			<?php
+			/* translators: Group member count. */
+			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
+			?>
+			">
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
+					<span class="bb-icon bb-icon-menu-dots-h"></span>
+				</a>
+			</span>
+			<?php
+		}
+		?>
+		</span>
+		<?php
+	}
+
+}
+
+/**
+ * Get group cover image width.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'default'.
+ *
+ * @return string Return group cover image width.
+ */
+function bb_get_group_cover_image_width( $default = 'default' ) {
+	return bp_get_option( 'bb-pro-cover-group-width', $default );
+}
+
+/**
+ * Get group cover image height.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: 'small'.
+ *
+ * @return string Return group cover image height.
+ */
+function bb_get_group_cover_image_height( $default = 'small' ) {
+	return bp_get_option( 'bb-pro-cover-group-height', $default );
+}
+
