@@ -53,7 +53,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$hide_message_notification = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 1;
-			bp_update_option( 'hide_message_notification', (bool) $hide_message_notification );
+			bp_update_option( 'hide_message_notification', (int) $hide_message_notification );
 		}
 
 		bp_update_option( '_bp_on_screen_notifications_enable', $enabel );
