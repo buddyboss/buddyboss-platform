@@ -821,6 +821,10 @@ function bp_get_activity_member_display_name() {
 	 */
 	return apply_filters( 'bp_get_activity_member_display_name', $retval );
 }
+add_filter( 'bp_get_activity_member_display_name', 'wp_filter_kses' );
+add_filter( 'bp_get_activity_member_display_name', 'stripslashes'   );
+add_filter( 'bp_get_activity_member_display_name', 'strip_tags'     );
+add_filter( 'bp_get_activity_member_display_name', 'esc_html'       );
 
 /**
  * Output the activity object name.

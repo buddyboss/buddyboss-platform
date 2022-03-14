@@ -2508,25 +2508,30 @@ function bp_get_signup_avatar( $args = '' ) {
 		// No avatar DIR was found.
 	} else {
 
-		// Set default gravatar type.
-		if ( empty( $bp->grav_default->user ) ) {
-			$default_grav = 'wavatar';
-		} elseif ( 'mystery' == $bp->grav_default->user ) {
-			$default_grav = apply_filters( 'bp_get_signup_avatar_mystery', $bp->plugin_url . 'bp-core/images/mystery-man.jpg' );
-		} else {
+		$gravatar_url = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) );
+
+		if ( empty( $gravatar_url ) ) {
+
+			// Set default gravatar type.
+			if ( empty( $bp->grav_default->user ) ) {
+				$default_grav = 'wavatar';
+			}
+
 			$default_grav = $bp->grav_default->user;
+
+			/**
+			 * Filters the base Gravatar url used for signup avatars when no avatar dir found.
+			 *
+			 * @since BuddyPress 1.0.2
+			 *
+			 * @param string $value Gravatar url to use.
+			 */
+			$gravatar_url    = apply_filters( 'bp_gravatar_url', 'https://www.gravatar.com/avatar/' );
+			$md5_lcase_email = md5( strtolower( bp_get_signup_email_value() ) );
+			$gravatar_url    = $gravatar_url . $md5_lcase_email . '?d=' . $default_grav . '&amp;s=' . $size;
 		}
 
-		/**
-		 * Filters the base Gravatar url used for signup avatars when no avatar dir found.
-		 *
-		 * @since BuddyPress 1.0.2
-		 *
-		 * @param string $value Gravatar url to use.
-		 */
-		$gravatar_url    = apply_filters( 'bp_gravatar_url', 'https://www.gravatar.com/avatar/' );
-		$md5_lcase_email = md5( strtolower( bp_get_signup_email_value() ) );
-		$gravatar_img    = '<img src="' . $gravatar_url . $md5_lcase_email . '?d=' . $default_grav . '&amp;s=' . $size . '" width="' . $size . '" height="' . $size . '" alt="' . $alt . '" class="' . $class . '" />';
+		$gravatar_img = '<img src="' . esc_url( $gravatar_url ) . '" width="' . esc_attr( $size ) . '" height="' . esc_attr( $size ) . '" alt="' . esc_attr( $alt ) . '" class="' . esc_attr( $class ) . '" />';
 	}
 
 	/**

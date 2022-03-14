@@ -1,12 +1,13 @@
 <?php
 /**
- * BuddyBoss - Users Moderation
+ * The template for user moderation
  *
- * @since BuddyBoss 1.5.6
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/moderation.php.
+ *
+ * @since   BuddyBoss 1.5.6
  * @package BuddyBoss
- * @version 2.0.0
+ * @version 1.5.6
  */
-
 
 switch ( bp_current_action() ) :
 	case 'blocked-members':

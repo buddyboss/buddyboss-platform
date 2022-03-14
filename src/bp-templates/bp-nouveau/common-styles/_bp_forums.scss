@@ -392,6 +392,10 @@ div.bbp-reply-header {
 	max-width: 100%;
 }
 
+#bbpress-forums div.bbp-reply-content div.bbcode_code {
+	overflow-x: auto;
+}
+
 /* =Reply to
 -------------------------------------------------------------- */
 
@@ -1629,41 +1633,6 @@ h2.bbp-form-title.entry-title {
 			-ms-flex: 0 0 50%;
 			flex: 0 0 50%;
 			max-width: 50%;
-		}
-
-	}
-
-}
-
-//Edit Topic, Reply Video Uploader
-.reply-edit #bbpress-forums .bbp-reply-form .bbp-form #whats-new-attachments,
-.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-attachments {
-
-	.dropzone .dz-complete.dz-file-preview {
-
-		.dz-remove:after {
-			left: 0;
-		}
-
-		.dz-progress {
-			display: none;
-		}
-
-		.dz-filename {
-			color: #4d5c6d;
-		}
-
-		&.dz-file-preview {
-			background-color: #f0f3f7;
-		}
-
-		.dz-details {
-			min-height: 120px;
-
-			.dz-size {
-				display: block !important;
-			}
-
 		}
 
 	}
