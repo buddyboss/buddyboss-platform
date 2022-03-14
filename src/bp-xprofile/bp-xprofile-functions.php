@@ -830,25 +830,23 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 	
 		// Combine the core search (against wp_users) into a single OR clause
 		// with the xprofile_data search.
-		$matched_user_ids = $wpdb->get_col(
+		$matched_user_ids = array();
+	
+		// Checked profile fields based on privacy settings of particular user while searching
+		$matched_user_data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+				"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
 				$search_terms_nospace,
 				$search_terms_space
 			)
 		);
-	
-		// Checked profile fields based on privacy settings of particular user while searching
-		if ( ! empty( $matched_user_ids ) ) {
-			$matched_user_data = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-					$search_terms_nospace,
-					$search_terms_space
-				)
-			);
-	
+
+		if ( ! empty( $matched_user_data ) ) {
+
 			foreach ( $matched_user_data as $key => $user ) {
+
+				$matched_user_ids[ $key ] = $user->user_id;
+
 				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
 				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
 					if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
@@ -861,6 +859,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 					}
 				}
 			}
+
 		}
 	
 		if ( ! empty( $matched_user_ids ) ) {
