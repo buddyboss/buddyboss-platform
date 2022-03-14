@@ -3311,7 +3311,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 /**
  * Get label with platform pro notice if the platform is not active or not validate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string
  */
@@ -3344,7 +3344,7 @@ function bb_get_pro_label_notice() {
 /**
  * Get class for buddyboss pro settings fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string
  */

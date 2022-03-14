@@ -1694,7 +1694,7 @@ function bb_update_to_1_9_0_1() {
  * Update routine.
  * Migrate the cover sizes from the theme option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_update_to_1_9_1() {
 	// Display plugin update notice.
