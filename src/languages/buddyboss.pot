@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
+"Project-Id-Version: BuddyBoss Platform 1.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-02-28 11:08:10+00:00\n"
+"POT-Creation-Date: 2022-03-14 08:25:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1599,7 +1599,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:449
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:71
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:109
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1670
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1688
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1125
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1515
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1342
@@ -1719,118 +1719,122 @@ msgstr ""
 msgid "Sorry, you are not allowed to update favorites."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1676
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1694
 msgid "The ID of some other object primarily associated with this one."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1681
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1699
 msgid "The ID of some other object also associated with this one."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1686
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1704
 msgid "The ID for the author of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1691
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1709
 msgid "User's display name for the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1696
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1714
 msgid "The permalink to this activity on the site."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1702
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1720
 msgid "The active BuddyPress component the activity relates to."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1711
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1729
 msgid "The activity type of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1720
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1738
 msgid "The description of the activity's type (eg: Username posted an update)"
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1729
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1747
 msgid "Allowed HTML content for the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1739
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1757
 msgid "Content for the activity, as it exists in the database."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1744
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1762
 msgid "HTML content for the activity, transformed for display."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1753
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1771
 msgid "The date the activity was published, in the site's timezone."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1759
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1777
 msgid "Whether the activity has been marked as spam or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1769
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1787
 msgid "A list of objects children of the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1775
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1793
 msgid "Total number of comments of the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1781
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1799
 msgid "Whether the activity object should be sitewide hidden or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1786
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1804
 msgid "Whether the activity object has been favorited by the current user."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1792
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1810
 msgid "Whether or not user have the favorite access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1798
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1816
 msgid "Favorite count for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1804
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1822
 msgid "Whether or not user have the comment access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1810
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1828
 msgid "Comment count for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1816
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1834
 msgid "Whether or not user have the edit access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1822
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1840
 msgid "Whether or not user have the delete access for the activity object."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1828
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1846
 msgid "Content for the activity without HTML tags."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1834
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2023
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1852
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2047
 msgid "Privacy of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1840
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1858
 msgid "Activity data for allow edit or not."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1845
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1863
 msgid ""
 "Feature media image which added last in the content for blog post as well "
 "as custom post type."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1859
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1869
+msgid "WordPress Embed data with activity."
+msgstr ""
+
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1883
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:479
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1455
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:298
@@ -1845,7 +1849,7 @@ msgstr ""
 msgid "Avatar URL with full image size (%1$d x %2$d pixels)."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1867
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1891
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:487
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1463
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:306
@@ -1863,12 +1867,12 @@ msgstr ""
 msgid "Avatar URL with thumb image size (%1$d x %2$d pixels)."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1874
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1898
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2161
 msgid "Avatar URLs for the author of the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1900
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1924
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:599
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1211
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1298
@@ -1876,7 +1880,7 @@ msgstr ""
 msgid "Ensure result set excludes specific IDs."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1909
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1933
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:531
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1202
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1795
@@ -1887,7 +1891,7 @@ msgstr ""
 msgid "Ensure result set includes specific IDs."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1918
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1942
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1689
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1131
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1222
@@ -1903,56 +1907,56 @@ msgstr ""
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1927
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1951
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1430
 msgid "Order by a specific parameter."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1935
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1959
 msgid "Limit result set to items published after a given ISO8601 compliant date."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1942
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1966
 msgid "Limit result set to items created by a specific user (ID)."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1950
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1974
 #: bp-core/classes/class-bp-rest-components-endpoint.php:513
 msgid "Limit result set to items with a specific status."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1959
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1983
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1122
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1629
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1330
 msgid "Limit result set to items with a specific scope."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1967
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1991
 msgid "Limit result set to items created by a specific group."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1975
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1999
 msgid "Limit result set to items created by a specific site."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1983
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2007
 msgid "Limit result set to items with a specific prime association ID."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1991
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2015
 msgid "Limit result set to items with a specific secondary association ID."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:1999
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2023
 msgid "Limit result set to items with a specific active BuddyPress component."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2007
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2031
 msgid "Limit result set to items with a specific activity type."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2015
+#: bp-activity/classes/class-bp-rest-activity-endpoint.php:2039
 msgid ""
 "No comments by default, stream for within stream display, threaded for "
 "below each activity item."
@@ -8795,13 +8799,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -16339,7 +16343,12 @@ msgid "Cancel Request"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:425
-msgid "Connect Requested"
+#: bp-friends/bp-friends-template.php:432
+msgid "Pending Request"
+msgstr ""
+
+#: bp-friends/bp-friends-template.php:431
+msgid "Review Request"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:450
@@ -23532,6 +23541,7 @@ msgid "Blocked Member"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-comment.php:316
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:172
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1568
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1858
 msgid "More Options"
@@ -24373,40 +24383,40 @@ msgstr ""
 msgid "API Caching"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:392
+#: bp-performance/classes/class-performance.php:440
 msgid ""
 "API Caching cannot be automatically installed on your server. To enable "
 "caching, you need to manually install the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:394
-#: bp-performance/classes/class-performance.php:421
+#: bp-performance/classes/class-performance.php:442
+#: bp-performance/classes/class-performance.php:469
 msgid "must-use plugins"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:396
+#: bp-performance/classes/class-performance.php:444
 msgid "Download the plugin"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:397
+#: bp-performance/classes/class-performance.php:445
 msgid ""
 "and then upload it into the \"/wp-content/mu-plugins/\" directory on your "
 "server."
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:419
+#: bp-performance/classes/class-performance.php:467
 msgid ""
 "API Caching could not be automatically updated on your server. To enable "
 "caching, you need to manually update the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:423
+#: bp-performance/classes/class-performance.php:471
 msgid "Download v1.0.1"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:424
+#: bp-performance/classes/class-performance.php:472
 msgid ""
 "and then upload the plugin manually into the \"/wp-content/mu-plugins/\" "
 "directory on your server."
@@ -30115,14 +30125,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
