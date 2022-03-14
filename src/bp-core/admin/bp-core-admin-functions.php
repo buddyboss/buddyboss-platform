@@ -3339,7 +3339,7 @@ function bb_disable_multiple_select_situation() {
 /**
  * Get label with platform pro notice if the platform is not active or not validate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string
  */
@@ -3372,7 +3372,7 @@ function bb_get_pro_label_notice() {
 /**
  * Get class for buddyboss pro settings fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string
  */

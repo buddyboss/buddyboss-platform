@@ -726,7 +726,7 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 /**
  * Default profile cover sizes settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_admin_setting_callback_default_profile_cover_size() {
 
@@ -803,7 +803,7 @@ function bp_profile_photos_tutorial() {
 /**
  * Link to Group Headers Settings tutorial
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_group_headers_tutorial() {
 	?>
@@ -1093,7 +1093,7 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 /**
  * Default group cover sizes settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_admin_setting_callback_default_group_cover_size() {
 
@@ -1141,7 +1141,7 @@ function bb_admin_setting_callback_default_group_cover_size() {
 /**
  * Link to Profile Headers tutorial
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_profile_headers_tutorial() {
 	?>
@@ -1168,7 +1168,7 @@ function bb_profile_headers_tutorial() {
 /**
  * Profile headers style options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_admin_setting_profile_headers_style() {
 	?>
@@ -1203,7 +1203,7 @@ function bb_admin_setting_profile_headers_style() {
 /**
  * Allow Platform default profile header element setting field
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $args Field options.
  */
@@ -1240,7 +1240,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 /**
  * Member directory elements options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $args The array contains extra information of field.
  */
@@ -1277,7 +1277,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 /**
  * Member directory profile actions options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $args The array contains extra information of field.
  */
@@ -1314,7 +1314,7 @@ function bb_admin_setting_member_profile_actions( $args ) {
 /**
  * Member directory profile primary action options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $args The array contains extra information of field.
  */
@@ -2226,7 +2226,7 @@ function bp_admin_setting_group_layout_default_option() {
 /**
  * Admin Settings for Settings > Groups > Group Headers > Header style
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_admin_setting_group_header_style() {
 	?>
@@ -2261,7 +2261,7 @@ function bb_admin_setting_group_header_style() {
 /**
  * Allow Platform default group header elements setting field
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $args Field options.
  */
@@ -2299,7 +2299,7 @@ function bb_admin_setting_group_headers_elements( $args ) {
 /**
  * Admin Settings for Settings > Groups > Group Directories > Grid style
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_admin_setting_group_grid_style() {
 	?>
@@ -2334,7 +2334,7 @@ function bb_admin_setting_group_grid_style() {
 /**
  * Allow Platform default group element setting field
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param array $args Field options.
  */

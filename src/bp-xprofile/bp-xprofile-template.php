@@ -1666,7 +1666,7 @@ function bp_get_field_data_attribute( $attribute = false ) {
 /**
  * Validate social networks field values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $html The member social networks.
  * @param string $original_option_values The field value.
