@@ -234,6 +234,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									<?php
 									$registered_emails = bb_register_notification_email_templates( $field['key'] );
 									$total_email_count = 0;
+
 									if ( ! empty( $registered_emails ) ) {
 										foreach ( $registered_emails as $email_type ) {
 											$total_email_count += get_terms(
@@ -251,16 +252,24 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></a>
 										<?php
 									} elseif ( ! empty( $registered_emails ) ) {
-										$url = ( count( $registered_emails ) === 1 ) ?
-											bp_get_admin_url(
-												add_query_arg(
+										$posts = get_posts(
+											array(
+												'showposts' => 1,
+												'post_type' => bp_get_email_post_type(),
+												'tax_query' => array(
 													array(
-														'post_type' => bp_get_email_post_type(),
 														'taxonomy' => bp_get_email_tax_type(),
-														'term' => current( $registered_emails ),
+														'field' => 'slug',
+														'terms' => $registered_emails,
 													),
-													'edit.php'
-												)
+												),
+												'fields' => 'ids',
+											)
+										);
+
+										$url = ( count( $registered_emails ) === 1 && ! empty( $posts ) ) ?
+											get_edit_post_link(
+												current( $posts )
 											) : add_query_arg(
 												array(
 													'post_type' => bp_get_email_post_type(),
@@ -319,7 +328,8 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 		<tr>
 			<th scope="row"><?php esc_html_e( 'Hide Messaging Notifications', 'buddyboss' ); ?></th>
 			<td>
-				<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 0 ) ); ?> />
+				<input name="hide_message_notification" type="hidden" value="0" />
+				<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bp_get_option( 'hide_message_notification', 1 ) ); ?> />
 				<label for="hide_message_notification"><?php esc_html_e( 'Hide group and private messages from notifications', 'buddyboss' ); ?></label>
 				<p class="description"><?php esc_html_e( 'When enabled, notifications for group messages and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
 			</td>
