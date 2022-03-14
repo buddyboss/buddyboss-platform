@@ -1228,8 +1228,12 @@ body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-
   flex-direction: column;
   vertical-align: middle;
   text-align: -webkit-match-parent;
-  justify-content: space-between;
-  flex-basis: 10%;
+  flex-basis: auto;
+}
+
+body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one:not(:first-child),
+body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one:not(:first-child) {
+  margin-left: 15px;
 }
 
 body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label,

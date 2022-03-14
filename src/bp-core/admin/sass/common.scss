@@ -1290,8 +1290,11 @@ body.post-type-bp-group-type .postbox .inside {
 			flex-direction: column;
 			vertical-align: middle;
 			text-align: -webkit-match-parent;
-			justify-content: space-between;
-			flex-basis: 10%;
+			flex-basis: auto;
+
+			&:not(:first-child) {
+				margin-left: 15px;
+			}
 
 			.bb-colorpicker-label {
 				margin-bottom: 10px;
