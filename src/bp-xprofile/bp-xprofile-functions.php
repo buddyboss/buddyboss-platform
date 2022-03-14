@@ -812,57 +812,73 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 
-	if ( $query->query_vars['search_wildcard'] === 'left' ) {
-		$search_terms_nospace = '%' . $search_terms_clean;
-		$search_terms_space   = '%' . $search_terms_clean . ' %';
-	} elseif ( $query->query_vars['search_wildcard'] === 'right' ) {
-		$search_terms_nospace = $search_terms_clean . '%';
-		$search_terms_space   = '% ' . $search_terms_clean . '%';
-	} else {
-		$search_terms_nospace = '%' . $search_terms_clean . '%';
-		$search_terms_space   = '%' . $search_terms_clean . '%';
-	}
+	static $cache = array();
+	$cache_key = 'bb_xprofile_user_query_search_sql' . str_replace( ' ', '', $search_terms_clean );
 
-	// Combine the core search (against wp_users) into a single OR clause
-	// with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-			$search_terms_nospace,
-			$search_terms_space
-		)
-	);
+	if ( ! isset( $cache[ $cache_key ] ) ) {
 
-	// Checked profile fields based on privacy settings of particular user while searching
-	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results(
+		if ( $query->query_vars['search_wildcard'] === 'left' ) {
+			$search_terms_nospace = '%' . $search_terms_clean;
+			$search_terms_space   = '%' . $search_terms_clean . ' %';
+		} elseif ( $query->query_vars['search_wildcard'] === 'right' ) {
+			$search_terms_nospace = $search_terms_clean . '%';
+			$search_terms_space   = '% ' . $search_terms_clean . '%';
+		} else {
+			$search_terms_nospace = '%' . $search_terms_clean . '%';
+			$search_terms_space   = '%' . $search_terms_clean . '%';
+		}
+	
+		// Combine the core search (against wp_users) into a single OR clause
+		// with the xprofile_data search.
+		$matched_user_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+				"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
 				$search_terms_nospace,
 				$search_terms_space
 			)
 		);
-
-		foreach ( $matched_user_data as $key => $user ) {
-			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-			if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
+	
+		// Checked profile fields based on privacy settings of particular user while searching
+		if ( ! empty( $matched_user_ids ) ) {
+			$matched_user_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+					$search_terms_nospace,
+					$search_terms_space
+				)
+			);
+	
+			foreach ( $matched_user_data as $key => $user ) {
+				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
+				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+					if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
+						unset( $matched_user_ids[ $key ] );
+					}
 				}
-			}
-			if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
+				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
+					if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
+						unset( $matched_user_ids[ $key ] );
+					}
 				}
 			}
 		}
-	}
+	
+		if ( ! empty( $matched_user_ids ) ) {
+			$search_core            = $sql['where']['search'];
+			$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
+			$sql['where']['search'] = $search_combined;
+		}
 
-	if ( ! empty( $matched_user_ids ) ) {
-		$search_core            = $sql['where']['search'];
-		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
-		$sql['where']['search'] = $search_combined;
+		// Add to cache
+		$cache[ $cache_key ] = $sql;
+
+	} else {
+
+		// Get from cache
+		$sql = $cache[ $cache_key ];
+
 	}
+	
 
 	return $sql;
 }
