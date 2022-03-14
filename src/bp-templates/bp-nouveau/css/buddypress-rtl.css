@@ -9264,6 +9264,15 @@ body .bp-messages-user-threads {
   min-width: 95px;
 }
 
+.main-notification-settings .email:last-child {
+  min-width: 18px;
+}
+
+.main-notification-settings .email:last-child label {
+  font-size: 0 !important;
+  line-height: 20px !important;
+}
+
 @media screen and (min-width: 901px) {
   .main-notification-settings .bb-mobile-setting {
     display: none;

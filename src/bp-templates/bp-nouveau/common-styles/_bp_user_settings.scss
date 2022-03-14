@@ -208,6 +208,15 @@
 		min-width: 95px;
 	}
 
+	.email:last-child {
+		min-width: 18px;
+
+		label {
+			font-size: 0 !important;
+			line-height: 20px !important;
+		}
+	}
+
 	@media screen and (min-width: 901px) {
 
 		.bb-mobile-setting {

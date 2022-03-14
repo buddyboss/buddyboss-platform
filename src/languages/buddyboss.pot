@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-10 01:29:17+00:00\n"
+"POT-Creation-Date: 2022-03-14 12:19:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1249,7 +1249,7 @@ msgid "Filter activities list"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:347
-#: bp-core/bp-core-functions.php:7102
+#: bp-core/bp-core-functions.php:7104
 #: bp-groups/classes/class-bp-groups-list-table.php:354
 #: bp-messages/bp-messages-template.php:1023
 #: bp-moderation/classes/class-bp-moderation-list-table.php:276
@@ -3174,8 +3174,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3268
 #: bp-moderation/bp-moderation-admin.php:384
 #: bp-moderation/bp-moderation-admin.php:460
-#: bp-settings/classes/class-bp-settings-component.php:188
-#: bp-settings/classes/class-bp-settings-component.php:295
+#: bp-settings/classes/class-bp-settings-component.php:189
+#: bp-settings/classes/class-bp-settings-component.php:296
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:21
 msgid "Blocked Members"
 msgstr ""
@@ -3597,7 +3597,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:889
-#: bp-core/bp-core-functions.php:7102
+#: bp-core/bp-core-functions.php:7104
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:192
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:207
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:221
@@ -3628,7 +3628,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:698
 #: bp-core/admin/bp-core-admin-settings.php:982
-#: bp-core/bp-core-functions.php:7081 bp-core/bp-core-functions.php:7161
+#: bp-core/bp-core-functions.php:7083 bp-core/bp-core-functions.php:7163
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:65
 msgid "App"
 msgstr ""
@@ -3998,13 +3998,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2353
-#: bp-notifications/bp-notifications-settings.php:356
+#: bp-notifications/bp-notifications-settings.php:365
 msgid "BuddyBoss Labs"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2398
-#: bp-core/bp-core-functions.php:7044 bp-core/bp-core-functions.php:7045
-#: bp-notifications/bp-notifications-settings.php:345
+#: bp-core/bp-core-functions.php:7045 bp-core/bp-core-functions.php:7046
+#: bp-notifications/bp-notifications-settings.php:354
 msgid "Notification Preferences"
 msgstr ""
 
@@ -4014,7 +4014,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2429
 #. translators: Components page link.
-msgid "This feature requires the %s component to be enabled."
+msgid "To make full use of this feature, enable the %s component."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2435
@@ -5512,8 +5512,8 @@ msgstr ""
 msgid "Upload Failed! Error was: %s"
 msgstr ""
 
-#: bp-core/bp-core-buddybar.php:690 bp-core/bp-core-buddybar.php:706
-#: bp-core/bp-core-buddybar.php:726
+#: bp-core/bp-core-buddybar.php:697 bp-core/bp-core-buddybar.php:713
+#: bp-core/bp-core-buddybar.php:733
 msgid "You do not have access to this page."
 msgstr ""
 
@@ -6153,8 +6153,8 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2979 bp-members/bp-members-adminbar.php:185
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:905
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:927
-#: bp-settings/classes/class-bp-settings-component.php:214
-#: bp-settings/classes/class-bp-settings-component.php:284
+#: bp-settings/classes/class-bp-settings-component.php:215
+#: bp-settings/classes/class-bp-settings-component.php:285
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/delete-account.php:14
 #: bp-templates/bp-nouveau/includes/functions.php:1479
 msgid "Delete Account"
@@ -6213,7 +6213,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3284 bp-core/bp-core-functions.php:3380
-#: bp-core/bp-core-functions.php:7072 bp-forums/admin/metaboxes.php:573
+#: bp-core/bp-core-functions.php:7074 bp-forums/admin/metaboxes.php:573
 #: bp-members/classes/class-bp-members-admin.php:2466
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -6557,8 +6557,8 @@ msgid ""
 "href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6987 bp-core/bp-core-functions.php:7190
-#: bp-core/bp-core-functions.php:7219
+#: bp-core/bp-core-functions.php:6987 bp-core/bp-core-functions.php:7192
+#: bp-core/bp-core-functions.php:7221
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:187
 msgid "-"
 msgstr ""
@@ -6572,24 +6572,24 @@ msgstr ""
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7046
+#: bp-core/bp-core-functions.php:7047
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7050
+#: bp-core/bp-core-functions.php:7052
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7070
+#: bp-core/bp-core-functions.php:7072
 msgid "Enable notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7077 bp-core/bp-core-functions.php:7155
+#: bp-core/bp-core-functions.php:7079 bp-core/bp-core-functions.php:7157
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:52
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7150
+#: bp-core/bp-core-functions.php:7152
 msgid "A manual notification from a site admin"
 msgstr ""
 
@@ -8194,13 +8194,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8739,7 +8739,7 @@ msgid "A member replies to a discussion you are subscribed to"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:177
-#: bp-forums/classes/class-bp-forums-notification.php:113
+#: bp-forums/classes/class-bp-forums-notification.php:107
 #: bp-forums/core/actions.php:374
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:755
 msgid "A member creates a discussion in a forum you are subscribed to"
@@ -12276,12 +12276,12 @@ msgid ""
 "forum discussions."
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-notification.php:122
+#: bp-forums/classes/class-bp-forums-notification.php:116
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] New discussion: {{discussion.title}}"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-notification.php:124
+#: bp-forums/classes/class-bp-forums-notification.php:118
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} started a new discussion <a "
@@ -12291,7 +12291,7 @@ msgid ""
 "{{{discussion.content}}}"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-notification.php:126
+#: bp-forums/classes/class-bp-forums-notification.php:120
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} started a new discussion {{discussion.title}} in the forum "
@@ -12302,11 +12302,11 @@ msgid ""
 "Discussion Link: {{discussion.url}}"
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-notification.php:127
+#: bp-forums/classes/class-bp-forums-notification.php:121
 msgid "A member has created a new forum discussion."
 msgstr ""
 
-#: bp-forums/classes/class-bp-forums-notification.php:128
+#: bp-forums/classes/class-bp-forums-notification.php:122
 msgid ""
 "You will no longer receive emails when a member will create a new forum "
 "discussion."
@@ -21656,13 +21656,13 @@ msgstr ""
 #: bp-search/classes/class-bp-search-members.php:368
 #: bp-settings/classes/class-bp-settings-component.php:27
 #: bp-settings/classes/class-bp-settings-component.php:144
-#: bp-settings/classes/class-bp-settings-component.php:246
+#: bp-settings/classes/class-bp-settings-component.php:247
 msgid "Account"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:865
 #: bp-settings/classes/class-bp-settings-component.php:154
-#: bp-settings/classes/class-bp-settings-component.php:254
+#: bp-settings/classes/class-bp-settings-component.php:255
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:15
 msgid "Login Information"
 msgstr ""
@@ -21676,8 +21676,8 @@ msgid "Group Invites"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:897
-#: bp-settings/classes/class-bp-settings-component.php:177
-#: bp-settings/classes/class-bp-settings-component.php:274
+#: bp-settings/classes/class-bp-settings-component.php:178
+#: bp-settings/classes/class-bp-settings-component.php:275
 msgid "Export Data"
 msgstr ""
 
@@ -24041,36 +24041,36 @@ msgid ""
 "receive via email, web or app in their Notification Preferences."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:251
+#: bp-notifications/bp-notifications-settings.php:252
 msgid "Missing Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:273
+#: bp-notifications/bp-notifications-settings.php:282
 msgid "Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:278
+#: bp-notifications/bp-notifications-settings.php:287
 msgid "Manage Defaults"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:320
+#: bp-notifications/bp-notifications-settings.php:329
 msgid "Hide Messaging Notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:323
+#: bp-notifications/bp-notifications-settings.php:332
 msgid "Hide group and private messages from notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:324
+#: bp-notifications/bp-notifications-settings.php:333
 msgid ""
-"When enabled, notifications for group and private messages will not show in "
-"a member's list of notifications or be included in the count of unread "
-"notifications. However, notifications will still be sent externally (via "
-"email, web and/or app) and shown in a member's list of messages, as well as "
-"the count of unread messages."
+"When enabled, notifications for group messages and private messages will "
+"not show in a member's list of notifications or be included in the count of "
+"unread notifications. However, notifications will still be sent externally "
+"(via email, web and/or app) and shown in a member's list of messages, as "
+"well as the count of unread messages."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:343
+#: bp-notifications/bp-notifications-settings.php:352
 #. translators: 1. Notification Preferences label. 2. BuddyBoss labs.
 msgid ""
 "Enable the %1$s feature in %2$s to manage the notification types used on "
@@ -24671,7 +24671,7 @@ msgid ""
 "(%2$s) for the verification link."
 msgstr ""
 
-#: bp-settings/classes/class-bp-settings-component.php:201
+#: bp-settings/classes/class-bp-settings-component.php:202
 msgid "Capabilities"
 msgstr ""
 
@@ -30029,14 +30029,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
