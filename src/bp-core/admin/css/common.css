@@ -1213,7 +1213,7 @@ body.post-type-reply #edit-slug-box {
  */
 body.post-type-bp-member-type .postbox .inside,
 body.post-type-bp-group-type .postbox .inside {
-  padding: 0 22px 22px;
+  padding: 0 12px 12px;
 }
 
 body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-meta-box-colorpicker,
@@ -1239,6 +1239,7 @@ body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-
 body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label,
 body.post-type-bp-group-type .postbox .inside .bb-meta-box-label-color-main .bb-colorpicker-row-one .bb-colorpicker-label {
   margin-bottom: 10px;
+  color: #686868;
 }
 
 body.post-type-bp-member-type .postbox .inside .bb-meta-box-label-color-main .bp-member-type-hide-colorpicker,
