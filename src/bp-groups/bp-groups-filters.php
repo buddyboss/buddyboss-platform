@@ -981,9 +981,9 @@ function bb_load_group_type_label_custom_css() {
 					isset( $label_color_data['color_type'] ) &&
 					'custom' === $label_color_data['color_type']
 				) {
-					$background_color      = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
-					$text_color            = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
-					$class_name            = 'body .item-header-wrap .bp-group-meta .group-type.bb-current-group-' . $type;
+					$background_color      = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color            = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name            = 'body .bp-group-meta .group-type.bb-current-group-' . $type;
 					$group_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$group_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}

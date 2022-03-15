@@ -2623,6 +2623,7 @@ function bb_group_type_labelcolor_metabox( $post ) {
 	$colorpicker_class = 'default' === $color_type ? $post_type . '-hide-colorpicker' : $post_type . '-show-colorpicker';
 	if (
 		function_exists( 'buddyboss_theme_get_option' ) &&
+		'custom' !== $color_type &&
 		(
 			! isset( $label_color_data['background_color'] ) ||
 			! isset( $label_color_data['background_color'] )

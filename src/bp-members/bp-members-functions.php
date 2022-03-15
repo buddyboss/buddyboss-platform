@@ -5103,10 +5103,22 @@ function bb_get_member_type_label_colors( $type ) {
 	$bp_member_type_label_color = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $bp_member_type_label_color && ! empty( $post_id ) ) {
 		$label_colors_meta = get_post_meta( $post_id, '_bp_member_type_label_color', true );
-		$label_colors      = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : '';
-		$color_type        = isset( $label_colors['type'] ) ? $label_colors['type'] : 'default';
-		$background_color  = 'custom' === $color_type ? isset( $label_colors['background_color'] ) ? $label_colors['background_color'] : '' : '';
-		$text_color        = 'custom' === $color_type ? isset( $label_colors['text_color'] ) ? $label_colors['text_color'] : '' : '';
+		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : '';
+		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+		if (
+			function_exists( 'buddyboss_theme_get_option' ) &&
+			'custom' !== $color_type &&
+			(
+				! isset( $label_color_data['background_color'] ) ||
+				! isset( $label_color_data['background_color'] )
+			)
+		) {
+			$background_color = buddyboss_theme_get_option( 'label_background_color' );
+			$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+		} else {
+			$background_color = $label_color_data['background_color'];
+			$text_color       = $label_color_data['text_color'];
+		}
 		// Array of label's text and background color data.
 		$bp_member_type_label_color = array(
 			'color_type'       => $color_type,
