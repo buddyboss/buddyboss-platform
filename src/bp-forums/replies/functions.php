@@ -312,6 +312,13 @@ function bbp_new_reply_handler( $action = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['bbp_video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_video ) {
+			bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
+		}
+	}
+
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_gif ) {
@@ -426,7 +433,12 @@ function bbp_new_reply_handler( $action = '' ) {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+		if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+			$terms = explode( ',', $terms );
+		} else {
+			$terms = (array) $terms;
+		}
+		$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id() );
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
@@ -774,8 +786,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Just in time manipulation of reply terms before being edited
 	$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
-	// Insert terms
-	$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+	// update terms
+	if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+		$terms = explode( ',', $terms );
+	} else {
+		$terms = (array) $terms;
+	}
+	$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 	// Term error
 	if ( is_wp_error( $terms ) ) {

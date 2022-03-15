@@ -222,15 +222,17 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$args['type'] = self::$type;
 			$this->hide_related_content( $group_id, $hide_sitewide, $args );
 		} else {
 			$args['type'] = self::$type;
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $group_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $group_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -279,15 +281,17 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$args['type'] = self::$type;
 			$this->unhide_related_content( $group_id, $hide_sitewide, $force_all, $args );
 		} else {
 			$args['type'] = self::$type;
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $group_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $group_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -306,31 +310,32 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 */
 	protected function get_related_contents( $group_id, $args = array() ) {
 		$related_contents = array();
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bp_is_active( 'forums' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Forum::$type ] = (array) bbp_get_group_forum_ids( $group_id );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id );
+			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id, $page );
 		}
 
-		if ( bp_is_active( 'messages' ) ) {
+		if ( bp_is_active( 'messages' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Message::$type ] = BP_Suspend_Message::get_group_message_thread_ids( $group_id );
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id );
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id );
+			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id, $page );
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id, $page );
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id );
+			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id, $page );
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id, $page );
 		}
 
 		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_group_video_ids( $group_id );
+			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_group_video_ids( $group_id, $page );
 		}
 
 		return $related_contents;

@@ -90,9 +90,26 @@
 
 						<?php do_action( 'bbp_theme_before_topic_form_tags' ); ?>
 
+						<?php
+						$get_topic_id = bbp_get_topic_id();
+						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bbp_get_topic_tag_names( $get_topic_id ) : array();
+						?>
+
 						<p>
-							<input type="hidden" value="" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>"></select>
+							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
+								<?php
+								if ( ! empty( $get_the_tags ) ) {
+									$get_the_tags = explode( ',', $get_the_tags );
+									foreach ( $get_the_tags as $single_tag ) {
+										$single_tag = trim( $single_tag );
+										?>
+										<option selected="selected" value="<?php echo esc_attr( $single_tag ); ?>"><?php echo esc_html( $single_tag ); ?></option>
+										<?php
+									}
+								}
+								?>
+							</select>
 						</p>
 
 						<?php do_action( 'bbp_theme_after_topic_form_tags' ); ?>
