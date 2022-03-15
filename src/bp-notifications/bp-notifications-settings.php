@@ -248,10 +248,21 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									}
 
 									if ( ! empty( $registered_emails ) && count( $registered_emails ) > $total_email_count ) {
+										$label_text = esc_html__( 'Missing Email Template', 'buddyboss' );
+
+										if ( ( count( $registered_emails ) - $total_email_count ) > 1 ) {
+											$label_text = esc_html__( 'Missing Email Templates', 'buddyboss' );
+										}
 										?>
-											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php esc_html_e( 'Missing Email Template', 'buddyboss' ); ?></a>
+											<a class="no-email-info" href="<?php echo esc_url( $email_url ); ?>"><?php echo wp_kses_post( $label_text ); ?></a>
 										<?php
 									} elseif ( ! empty( $registered_emails ) ) {
+
+										$label_text = esc_html__( 'Email Template', 'buddyboss' );
+										if ( count( $registered_emails ) > 1 ) {
+											$label_text = esc_html__( 'Email Templates', 'buddyboss' );
+										}
+
 										$posts = get_posts(
 											array(
 												'showposts' => 1,
@@ -279,7 +290,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 												'edit.php'
 											);
 										?>
-										<a class="email-info" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Email Template', 'buddyboss' ); ?></a>
+										<a class="email-info" href="<?php echo esc_url( $url ); ?>"><?php echo wp_kses_post( $label_text ); ?></a>
 										<?php
 									}
 									?>
