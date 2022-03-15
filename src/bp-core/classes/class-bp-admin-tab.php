@@ -177,6 +177,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				0 === strpos( get_current_screen()->id, 'bp-member-type' )
 			) {
 				$localize_arg['post_type'] = get_current_screen()->id;
+				if ( function_exists( 'buddyboss_theme_get_option' ) ) {
+					$localize_arg['background_color'] = buddyboss_theme_get_option( 'label_background_color' );
+					$localize_arg['color']            = buddyboss_theme_get_option( 'label_text_color' );
+				}
 			}
 
 			wp_localize_script(

@@ -2130,25 +2130,46 @@ window.bp = window.bp || {};
 			// Run only post_type is member type and group type.
 			if ( 'undefined' !== typeof BP_ADMIN.post_type ) {
 				var type = BP_ADMIN.post_type;
-				if ( $( '#' + type + '-label-background-color' ).length ) {
-					$( '#' + type + '-label-background-color' ).wpColorPicker();
-				}
-				if ( $( '#' + type + '-label-text-color' ).length ) {
-					$( '#' + type + '-label-text-color' ).wpColorPicker();
-				}
-				if ( $( '#' + type + '-label-color-type' ).length ) {
-					$( document ).on(
-						'change',
-						'#' + type + '-label-color-type',
-						function ( e ) {
-							e.preventDefault();
-							if ( 'default' === $( this ).val() ) {
-								$( '#' + type + '-color-settings' ).hide();
-							} else {
-								$( '#' + type + '-color-settings' ).show();
+				if ( type ) {
+					if ( $( '#' + type + '-label-background-color' ).length ) {
+						$( '#' + type + '-label-background-color' ).wpColorPicker();
+					}
+					if ( $( '#' + type + '-label-text-color' ).length ) {
+						$( '#' + type + '-label-text-color' ).wpColorPicker();
+					}
+					if ( $( '#' + type + '-label-color-type' ).length ) {
+						$( document ).on(
+							'change',
+							'#' + type + '-label-color-type',
+							function ( e ) {
+								e.preventDefault();
+								if ( 'default' === $( this ).val() ) {
+									$( '#' + type + '-color-settings' ).hide();
+								} else {
+									$( '#' + type + '-color-settings' ).show();
+								}
+							}
+						);
+					}
+					
+					$( '.wp-picker-input-wrap .wp-picker-clear' ).click( function ( e ) {
+						e.preventDefault();
+						var colorPickerId = $( this ).closest( 'span' ).find( '.wp-color-picker' ).attr( 'id' );
+						if ( type + '-label-background-color' === colorPickerId ) {
+							var defaultBgColor = ( 'undefined' !== typeof BP_ADMIN.background_color ) ? BP_ADMIN.background_color : '';
+							if ( defaultBgColor ) {
+								$( '#' + type + '-label-background-color' ).val( defaultBgColor );
+								$( '#' + type + '-background-color-colorpicker .wp-color-result' ).css( 'background-color', defaultBgColor );
 							}
 						}
-					);
+						if ( type + '-label-text-color' === colorPickerId ) {
+							var defaultTextColor = 'undefined' !== typeof BP_ADMIN.color ? BP_ADMIN.color : '';
+							if ( defaultTextColor ) {
+								$( '#' + type + '-label-text-color' ).val( defaultTextColor );
+								$( '#' + type + '-text-color-colorpicker .wp-color-result' ).css( 'background-color', defaultTextColor );
+							}
+						}
+					} );
 				}
 			}
 		}

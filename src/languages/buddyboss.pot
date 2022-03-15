@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-15 06:57:05+00:00\n"
+"POT-Creation-Date: 2022-03-15 12:45:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3091,40 +3091,40 @@ msgstr ""
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3389
+#: bp-core/admin/bp-core-admin-functions.php:3401
 msgid ""
 "Select which label colors to use for profiles using this profile type. "
-"Profile Type labels are used places such as member directories and profile "
-"headers."
+"Profile Type labels are used in places such as member directories and "
+"profile headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3392
+#: bp-core/admin/bp-core-admin-functions.php:3404
 #: bp-core/admin/bp-core-admin-settings.php:745
 #: bp-core/admin/bp-core-admin-settings.php:1112
 #: bp-document/bp-document-functions.php:1943
-#: bp-groups/bp-groups-admin.php:2630 bp-video/bp-video-functions.php:2484
+#: bp-groups/bp-groups-admin.php:2642 bp-video/bp-video-functions.php:2484
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3393
+#: bp-core/admin/bp-core-admin-functions.php:3405
 #: bp-core/admin/bp-core-admin-settings.php:501
 #: bp-core/admin/bp-core-admin-settings.php:594
 #: bp-core/admin/bp-core-admin-settings.php:892
 #: bp-core/admin/bp-core-admin-settings.php:979
-#: bp-groups/bp-groups-admin.php:2631
+#: bp-groups/bp-groups-admin.php:2643
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:241
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:194
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:339
 msgid "Custom"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3399
-#: bp-groups/bp-groups-admin.php:2637
+#: bp-core/admin/bp-core-admin-functions.php:3411
+#: bp-groups/bp-groups-admin.php:2649
 msgid "Background Color"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3403
-#: bp-groups/bp-groups-admin.php:2641
+#: bp-core/admin/bp-core-admin-functions.php:3415
+#: bp-groups/bp-groups-admin.php:2653
 msgid "Text Color"
 msgstr ""
 
@@ -3146,8 +3146,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:39
 #: bp-core/admin/bp-core-admin-pages.php:42
 #: bp-core/admin/bp-core-admin-pages.php:46
-#: bp-core/classes/class-bp-admin-tab.php:316
-#: bp-core/classes/class-bp-admin-tab.php:339 bp-forums/groups.php:347
+#: bp-core/classes/class-bp-admin-tab.php:320
+#: bp-core/classes/class-bp-admin-tab.php:343 bp-forums/groups.php:347
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:35
 msgid "Save Settings"
 msgstr ""
@@ -3243,7 +3243,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:565
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:621
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:703
-#: bp-core/classes/class-bp-admin-tab.php:331
+#: bp-core/classes/class-bp-admin-tab.php:335
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
 #: bp-integrations/learndash/bp-learndash-functions.php:477
@@ -17200,7 +17200,7 @@ msgstr ""
 msgid "<a href=\"%1$s\">%2$s</a>"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2627
+#: bp-groups/bp-groups-admin.php:2639
 msgid ""
 "Select which label colors to use for groups using this group type. Group "
 "Type labels are used in places such as group headers and forum discussions."

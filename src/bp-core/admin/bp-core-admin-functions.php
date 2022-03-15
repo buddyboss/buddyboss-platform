@@ -3378,30 +3378,42 @@ function bb_get_pro_fields_class() {
  * @param $post Post data object.
  */
 function bb_member_type_labelcolor_metabox( $post ) {
+	$post_type         = isset( $post->post_type ) ? $post->post_type : 'bp-member-type';
 	$meta_data         = get_post_meta( $post->ID, '_bp_member_type_label_color', true );
 	$label_color_data  = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : '';
 	$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
-	$background_color  = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
-	$text_color        = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
-	$colorpicker_class = 'default' === $color_type ? 'bp-member-type-hide-colorpicker' : 'bp-member-type-show-colorpicker';
+	$colorpicker_class = 'default' === $color_type ? $post_type . '-hide-colorpicker' : $post_type . '-show-colorpicker';
+	if (
+		function_exists( 'buddyboss_theme_get_option' ) &&
+		(
+			! isset( $label_color_data['background_color'] ) ||
+			! isset( $label_color_data['background_color'] )
+		)
+	) {
+		$background_color = buddyboss_theme_get_option( 'label_background_color' );
+		$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+	} else {
+		$background_color = $label_color_data['background_color'];
+		$text_color       = $label_color_data['text_color'];
+	}
 	?>
 	<div class="bb-meta-box-label-color-main">
 		<p><?php esc_html_e( 'Select which label colors to use for profiles using this profile type. Profile Type labels are used in places such as member directories and profile headers.', 'buddyboss' ); ?></p>
 		<p>
-			<select name="bp-member-type[label_color][type]" id="bp-member-type-label-color-type">
+			<select name="<?php echo esc_attr( $post_type ); ?>[label_color][type]" id="<?php echo esc_attr( $post_type ); ?>-label-color-type">
 				<option value="default" <?php selected( $color_type, 'default' ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
 				<option value="custom" <?php selected( $color_type, 'custom' ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
 			</select>
 		</p>
-		<div id="bp-member-type-color-settings" class="bp-member-type-colorpicker <?php echo esc_attr( $colorpicker_class ); ?>">
+		<div id="<?php echo esc_attr( $post_type ); ?>-color-settings" class="<?php echo esc_attr( $post_type ); ?>-colorpicker <?php echo esc_attr( $colorpicker_class ); ?>">
 			<div class="bb-meta-box-colorpicker">
-				<div class="bb-colorpicker-row-one">
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-background-color-colorpicker">
 					<label class="bb-colorpicker-label"><?php esc_html_e( 'Background Color', 'buddyboss' ); ?></label>
-					<input id="bp-member-type-label-background-color" name="bp-member-type[label_color][background_color]" type="text" value="<?php echo esc_attr( $background_color ); ?>"/>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-background-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][background_color]" type="text" value="<?php echo esc_attr( $background_color ); ?>"/>
 				</div>
-				<div class="bb-colorpicker-row-one">
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-text-color-colorpicker">
 					<label class="bb-colorpicker-label"><?php esc_html_e( 'Text Color', 'buddyboss' ); ?></label>
-					<input id="bp-member-type-label-text-color" name="bp-member-type[label_color][text_color]" type="text" value="<?php echo esc_attr( $text_color ); ?>"/>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-text-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][text_color]" type="text" value="<?php echo esc_attr( $text_color ); ?>"/>
 				</div>
 			</div>
 		</div>
