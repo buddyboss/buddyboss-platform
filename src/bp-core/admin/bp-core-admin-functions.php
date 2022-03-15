@@ -3386,7 +3386,7 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	$colorpicker_class = 'default' === $color_type ? 'bp-member-type-hide-colorpicker' : 'bp-member-type-show-colorpicker';
 	?>
 	<div class="bb-meta-box-label-color-main">
-		<p><?php esc_html_e( 'Select which label colors to use for profiles using this profile type. Profile Type labels are used places such as member directories and profile headers.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Select which label colors to use for profiles using this profile type. Profile Type labels are used in places such as member directories and profile headers.', 'buddyboss' ); ?></p>
 		<p>
 			<select name="bp-member-type[label_color][type]" id="bp-member-type-label-color-type">
 				<option value="default" <?php selected( $color_type, 'default' ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
