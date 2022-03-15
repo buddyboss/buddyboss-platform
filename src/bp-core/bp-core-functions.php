@@ -7068,7 +7068,7 @@ function bb_enable_notifications_options() {
 	}
 
 	$data = array(
-		'label'  => esc_html__( 'Enable notifications', 'buddyboss' ),
+		'label'  => esc_html__( 'Enable Notifications', 'buddyboss' ),
 		'fields' => array(
 			'enable_notification' => esc_html__( 'Email', 'buddyboss' ),
 		),

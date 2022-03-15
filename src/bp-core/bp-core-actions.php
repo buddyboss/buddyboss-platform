@@ -480,24 +480,6 @@ function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
 
 /**
- * Render registered notifications into frontend.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_render_notification_settings() {
-	$registered_notification = bb_register_notification_preferences();
-
-	bb_render_enable_notification_options();
-
-	bb_render_manual_notification();
-
-	if ( ! empty( $registered_notification ) ) {
-		foreach ( $registered_notification as $group => $data ) {
-			bb_render_notification( $group );
-		}
-	}
-}
-/*
  * Function will run after plugin successfully update.
  *
  * @param $upgrader_object WP_Upgrader instance.
@@ -519,3 +501,21 @@ function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 }
 add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2);
 
+/**
+ * Render registered notifications into frontend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_render_notification_settings() {
+	$registered_notification = bb_register_notification_preferences();
+
+	bb_render_enable_notification_options();
+
+	bb_render_manual_notification();
+
+	if ( ! empty( $registered_notification ) ) {
+		foreach ( $registered_notification as $group => $data ) {
+			bb_render_notification( $group );
+		}
+	}
+}

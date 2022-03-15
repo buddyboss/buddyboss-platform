@@ -3020,4 +3020,3 @@ function bb_labs_notification_preferences_info_section_callback() {
 
 	<?php
 }
-

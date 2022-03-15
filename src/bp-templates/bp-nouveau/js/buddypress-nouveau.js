@@ -3081,6 +3081,28 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 *  Close Action Popup
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		closeActionPopup: function( event ) {
+			event.preventDefault();
+			$( this ).closest( '.bb-action-popup' ).hide();
+		},
+
+		/**
+		 *  Show Action Popup
+		 *
+		 *  @param  {object} event The event object.
+		 *  @return {function}
+		 */
+		showActionPopup: function( event ) {
+			event.preventDefault();
+			$( $( event.currentTarget ).attr( 'href' ) ).show();
+		},
+
+		/**
 		 *  handle profile notification setting events
 		 */
 		profileNotificationSetting: function () {
@@ -3190,27 +3212,6 @@ window.bp = window.bp || {};
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).html( '' );
 				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).append( available_option );
 			});
-		},
-		/*
-		 *  Close Action Popup
-		 *
-		 *  @param  {object} event The event object.
-		 *  @return {function}
-		 */
-		closeActionPopup: function( event ) {
-			event.preventDefault();
-			$( this ).closest( '.bb-action-popup' ).hide();
-		},
-
-		/**
-		 *  Show Action Popup
-		 *
-		 *  @param  {object} event The event object.
-		 *  @return {function}
-		 */
-		showActionPopup: function( event ) {
-			event.preventDefault();
-			$( $( event.currentTarget ).attr( 'href' ) ).show();
 		}
 
 	};
