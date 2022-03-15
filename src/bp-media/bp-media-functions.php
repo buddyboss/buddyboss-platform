@@ -50,16 +50,10 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
-	$thumb_nfo = wp_get_attachment_image_src( $attachment->ID );
-	$url_nfo   = wp_get_attachment_image_src( $attachment->ID, 'full' );
-
-	$url       = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
-	$thumb_nfo = is_array( $thumb_nfo ) && ! empty( $thumb_nfo ) ? $thumb_nfo[0] : null;
-
 	$result = array(
 		'id'    => (int) $attachment->ID,
-		'thumb' => esc_url( $thumb_nfo ),
-		'url'   => esc_url( $url ),
+		'thumb' => bb_core_get_encoded_image( $attachment->ID, 'thumbnail' ),
+		'url'   => bb_core_get_encoded_image( $attachment->ID ),
 		'name'  => esc_attr( $name ),
 	);
 
@@ -102,6 +96,7 @@ function bp_media_remove_default_image_sizes( $sizes ) {
 			'bb-media-photos-album-directory-image'        => $sizes['bb-media-photos-album-directory-image'],
 			'bb-media-photos-album-directory-image-medium' => $sizes['bb-media-photos-album-directory-image-medium'],
 			'bb-media-photos-popup-image'                  => $sizes['bb-media-photos-popup-image'],
+			'thumbnail'                                    => $sizes['thumbnail'],
 		);
 	}
 
@@ -3530,7 +3525,7 @@ function bp_media_register_image_sizes() {
 	if ( ! empty( $image_sizes ) ) {
 		foreach ( $image_sizes as $name => $image_size ) {
 			if ( ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) && 0 < (int) $image_size['width'] && 0 < $image_size['height'] ) {
-				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'] );
+				add_image_size( sanitize_key( $name ), $image_size['width'], $image_size['height'], ( isset( $image_size['crop'] ) ? $image_size['crop'] : false ) );
 			}
 		}
 	}
