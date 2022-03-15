@@ -4653,19 +4653,12 @@ function bb_get_group_type_label_colors( $type ) {
 		$label_colors_meta = get_post_meta( $post_id, '_bp_group_type_label_color', true );
 		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : '';
 		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
-		if (
-			function_exists( 'buddyboss_theme_get_option' ) &&
-			'custom' !== $color_type &&
-			(
-				! isset( $label_color_data['background_color'] ) ||
-				! isset( $label_color_data['background_color'] )
-			)
-		) {
+		if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
 			$background_color = buddyboss_theme_get_option( 'label_background_color' );
 			$text_color       = buddyboss_theme_get_option( 'label_text_color' );
 		} else {
-			$background_color = $label_color_data['background_color'];
-			$text_color       = $label_color_data['text_color'];
+			$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+			$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
 		}
 		// Array of label's text and background color data.
 		$bp_group_type_label_color = array(
