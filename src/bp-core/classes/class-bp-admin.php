@@ -785,40 +785,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
-			// Hello BuddyBoss.
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// Hello BuddyBoss App.
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET ) && isset( $_GET['post_type'] ) && bp_get_email_post_type() === $_GET['post_type'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
-				wp_enqueue_style( 'bp-hello-css' );
-			}
-
 			wp_enqueue_script( 'bp-fitvids-js' );
 
 			wp_enqueue_script( 'bp-wp-api-js' );
@@ -1151,4 +1117,3 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 	}
 endif; // End class_exists check.
-

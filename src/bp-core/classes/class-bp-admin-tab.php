@@ -298,12 +298,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'json'   => true,
 						),
 					),
-					'email_template'       => array(
-						'html' => $email_template,
-					),
 					'member_directories'  => array(
 						'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
 						'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
+					),
+					'email_template'       => array(
+						'html' => $email_template,
 					),
 				)
 			);
@@ -679,7 +679,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ). '>' .
 						wp_kses(
 							$section['title'],
 							array(
@@ -689,11 +689,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 								),
 							)
 						);
-					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+                    if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {?>
+
+						 <div class="bbapp-tutorial-btn">
+
+							<?phpcall_user_func( $section['tutorial_callback'], $section );
 						?>
-						<div class="bbapp-tutorial-btn">
-							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
-						</div>
+						 </div>
 						<?php
 					}
 					echo "</h2>\n";
@@ -708,7 +710,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				}
 
 				echo '<table class="form-table">';
-				$this->bp_custom_do_settings_fields( $page, $section['id'] );
+					$this->bp_custom_do_settings_fields( $page, $section['id'] );
 				echo '</table>';
 
 				if ( isset( $section['notice'] ) && ! empty( $section['notice'] ) ) {
@@ -718,7 +720,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					</div>
 					<?php
 				}
-
 				echo '</table></div>';
 			}
 		}
@@ -768,4 +769,3 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 	}
 
 endif;
-

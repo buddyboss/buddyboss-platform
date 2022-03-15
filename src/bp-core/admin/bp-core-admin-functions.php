@@ -3308,34 +3308,6 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	return apply_filters( 'bp_core_get_moderation_admin_tabs', $tabs );
 }
 
-add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
-
-/**
- * Disable the multi select in situation.
- *
- * @return void
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_disable_multiple_select_situation() {
-
-	global $typenow;
-
-	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
-		?>
-
-		<script type="text/javascript">
-			jQuery( document ).ready( function ( $ ) {
-				jQuery( document ).on( 'change', '#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input[type="checkbox"]', function () {
-					var group = 'input[type="checkbox"][name="' + jQuery( this ).attr( 'name' ) + '"]';
-					jQuery( group ).not( this ).prop( 'checked', false );
-				} );
-			} );
-		</script>
-
-		<?php
-	}
-}
 /**
  * Get label with platform pro notice if the platform is not active or not validate.
  *
@@ -3396,3 +3368,31 @@ function bb_get_pro_fields_class() {
 }
 
 
+add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
+
+/**
+ * Disable the multi select in situation.
+ *
+ * @return void
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_disable_multiple_select_situation() {
+
+	global $typenow;
+
+	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
+		?>
+
+		<script type="text/javascript">
+			jQuery( document ).ready( function ( $ ) {
+				jQuery( document ).on( 'change', '#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input[type="checkbox"]', function () {
+					var group = 'input[type="checkbox"][name="' + jQuery( this ).attr( 'name' ) + '"]';
+					jQuery( group ).not( this ).prop( 'checked', false );
+				} );
+			} );
+		</script>
+
+		<?php
+	}
+}

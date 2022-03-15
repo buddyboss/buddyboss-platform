@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-14 16:26:34+00:00\n"
+"POT-Creation-Date: 2022-03-15 13:28:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3219,24 +3219,24 @@ msgstr ""
 msgid "Reporting Categories"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3356
+#: bp-core/admin/bp-core-admin-functions.php:3328
 msgid "Update to"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3357
+#: bp-core/admin/bp-core-admin-functions.php:3329
 msgid "BuddyBoss Platform Pro 1.2.0"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3358
-#: bp-core/admin/bp-core-admin-functions.php:3365
+#: bp-core/admin/bp-core-admin-functions.php:3330
+#: bp-core/admin/bp-core-admin-functions.php:3337
 msgid "to unlock"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3363
+#: bp-core/admin/bp-core-admin-functions.php:3335
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3364
+#: bp-core/admin/bp-core-admin-functions.php:3336
 #: bp-core/admin/templates/update-buddyboss.php:88
 #. translators: 1. BuddyBoss platform pro link. 2. BuddyBoss platform pro text.
 msgid "BuddyBoss Platform Pro"
@@ -4175,13 +4175,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2841
-#: bp-notifications/bp-notifications-settings.php:366
+#: bp-notifications/bp-notifications-settings.php:377
 msgid "BuddyBoss Labs"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2886
 #: bp-core/bp-core-functions.php:7045 bp-core/bp-core-functions.php:7046
-#: bp-notifications/bp-notifications-settings.php:355
+#: bp-notifications/bp-notifications-settings.php:366
 msgid "Notification Preferences"
 msgstr ""
 
@@ -6544,6 +6544,7 @@ msgid "Email list navigation"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3278
+#: bp-notifications/bp-notifications-settings.php:263
 msgid "Email Templates"
 msgstr ""
 
@@ -6598,7 +6599,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3372 bp-core/classes/class-bp-admin.php:919
+#: bp-core/bp-core-functions.php:3372 bp-core/classes/class-bp-admin.php:885
 msgid "Situations"
 msgstr ""
 
@@ -6928,7 +6929,7 @@ msgid "Choose which notifications to receive by email."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:7072
-msgid "Enable notifications"
+msgid "Enable Notifications"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:7079 bp-core/bp-core-functions.php:7157
@@ -7704,11 +7705,11 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:842
+#: bp-core/classes/class-bp-admin.php:808
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:843
+#: bp-core/classes/class-bp-admin.php:809
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -24435,27 +24436,31 @@ msgid ""
 "receive via email, web or app in their Notification Preferences."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:252
+#: bp-notifications/bp-notifications-settings.php:251
 msgid "Missing Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:282
+#: bp-notifications/bp-notifications-settings.php:254
+msgid "Missing Email Templates"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:261
 msgid "Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:287
+#: bp-notifications/bp-notifications-settings.php:298
 msgid "Manage Defaults"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:329
+#: bp-notifications/bp-notifications-settings.php:340
 msgid "Hide Messaging Notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:333
+#: bp-notifications/bp-notifications-settings.php:344
 msgid "Hide group and private messages from notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:334
+#: bp-notifications/bp-notifications-settings.php:345
 msgid ""
 "When enabled, notifications for group messages and private messages will "
 "not show in a member's list of notifications or be included in the count of "
@@ -24464,7 +24469,7 @@ msgid ""
 "well as the count of unread messages."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:353
+#: bp-notifications/bp-notifications-settings.php:364
 #. translators: 1. Notification Preferences label. 2. BuddyBoss labs.
 msgid ""
 "Enable the %1$s feature in %2$s to manage the notification types used on "
