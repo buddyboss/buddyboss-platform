@@ -684,8 +684,7 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
  */
 function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 	// Allow tag attributes for xprofile datas.
-	$allowed_post_tags = wp_kses_allowed_html( 'post' );
-	$bbp_allow_tags    = array_merge( $bbp_allow_tags, $allowed_post_tags );
+	$bbp_allow_tags = array_merge( $bbp_allow_tags, wp_kses_allowed_html( 'post' ) );
 
 	// Allow "svg" for social networks.
 	$bbp_allow_tags['svg']  = array(
