@@ -20,7 +20,7 @@ $product = wc_get_product( get_the_ID() ); ?>
 				<?php
 			} else {
 				?>
-				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+				<i class="bb-icons-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 				<?php
 			}
 			?>
