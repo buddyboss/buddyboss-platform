@@ -22,9 +22,15 @@
 		</div>
 		<div class="item">
 			<div class="item-title">
-				<?php echo stripslashes( wp_strip_all_tags( bbp_forum_title( get_the_ID() ) ) ); ?>
+
+				<div class="entry-title item-title">
+					<a href="<?php bbp_reply_url( get_the_ID() ); ?>"><?php bbp_reply_author_display_name( get_the_ID() ); ?></a>
+					<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
+				</div>
+				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( get_the_ID() ), 30, '...' ) ); ?>
+                <br>
+				<?php bbp_reply_post_date( get_the_ID(), true ); ?>
 			</div>
-			<div class="item-desc"><?php echo bp_search_reply_intro( 30 ); ?></div>
 		</div>
 	</a>
 </div>
