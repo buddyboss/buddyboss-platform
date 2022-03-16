@@ -34,20 +34,15 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 				<a href="<?php the_permalink(); ?>" title="
 												<?php
 												echo esc_attr(
-													sprintf(
-														__(
-															'Permalink to %s',
-															'buddyboss'
-														),
-														the_title_attribute( 'echo=0' )
-													)
+												/* translators: %s title attribute. */
+													sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) )
 												);
 												?>
 					" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 
 			<div class="entry-content entry-summary">
-				<?php echo $result['post_content']; ?>
+				<?php echo wp_kses_post( $result['post_content'] ); ?>
 			</div>
 
 			<?php
@@ -55,8 +50,13 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 				?>
 				<div class="entry-meta">
 					<span class="author">
-						<?php printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() ); ?>
-					</span> <span class="middot">&middot;</span> <span class="published">
+						<?php
+						/* translators: %s author name */
+						printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() );
+						?>
+					</span>
+					<span class="middot">&middot;</span>
+					<span class="published">
 						<?php the_date(); ?>
 					</span>
 				</div>
