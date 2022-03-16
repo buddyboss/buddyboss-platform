@@ -589,7 +589,8 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 
 /* Integrations - BuddyBoss App */
 .bp-admin-card.section-bp_buddyboss_app-integration h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-buddyboss-app.svg);
+  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddyboss-app.svg);
+  background-size: 100%;
 }
 
 /* Integrations - LearnDash */
@@ -598,22 +599,14 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_ld_sync-learndash h2:before,
 .bp-admin-card.section-bp_ld_sync-reports h2:before,
 .bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-learndash.svg);
-}
-
-/* Integrations - MemberPress */
-.bp-admin-card.section-bp-memberpress-integration h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-memberpress.svg);
-}
-
-/* Integrations - WooCommerce */
-.bp-admin-card.section-bp-woocommerce-integration h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-woocommerce.svg);
+  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-learndash.svg);
+  background-size: 100%;
 }
 
 /* Integrations - BuddyPress Plugins */
 .bp-admin-card.section-bp_compatibility-integration h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-buddypress.svg);
+  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddypress.svg);
+  background-size: 100%;
 }
 
 /*
