@@ -377,10 +377,10 @@ tr.bp-search-parent-field label {
 	&:before {
 		display: inline-block;
 		content: " ";
-		background-size: 26px 26px;
+		background-size: 100%;
 		background-repeat: no-repeat;
 		background-position: center;
-		background-color: #f6f6f6;
+		background-color: #fff;
 		height: 38px;
 		width: 38px;
 		border-radius: 50px;
@@ -415,66 +415,65 @@ tr.bp-search-parent-field label {
 
 /* General Settings */
 .bp-admin-card.section-bp_main h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/cog.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/cog.svg);
 }
 
 .bp-admin-card.section-bp_registration h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/clipboard.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/clipboard.svg);
 }
 
 .bp-admin-card.section-bp_privacy h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/lock-alt.svg);
-	background-size: 24px 24px;
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/lock-alt.svg);
 }
 
 /* Profiles */
 .bp-admin-card.section-bp_xprofile h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/user-card.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/user-card.svg);
 }
 
 .bp-admin-card.section-bp_member_avatar_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/image.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/image.svg);
 }
 
 .bp-admin-card.section-bp_member_type_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/tag.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tag.svg);
 }
 
 .bp-admin-card.section-bp_profile_search_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/search.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/search.svg);
 }
 
 .bp-admin-card.section-bp_profile_list_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/grid-large.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/grid-large.svg);
 }
 
 .section-bp_profile_headers_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/maximize.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/maximize.svg);
 }
 
 /* Groups */
 .bp-admin-card.section-bp_groups_avatar_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/image.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/image.svg);
 }
 
 .bp-admin-card.section-bp_groups h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/users.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/users.svg);
 }
 
 .bp-admin-card.section-bp_groups_headers_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/maximize.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/maximize.svg);
 }
 
 .bp-admin-card.section-bp_groups_types h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/tag.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tag.svg);
 }
 
 .bp-admin-card.section-bp_groups_hierarchies h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/layers.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/layers.svg);
 }
 
 .bp-admin-card.section-bp_group_list_settings h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/grid-large.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/grid-large.svg);
 }
 
 /* Forums */
@@ -487,16 +486,16 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bbp_settings_user_slugs h2:before,
 .bp-admin-card.section-bbp_settings_buddypress h2:before,
 .bp-admin-card.section-bbp_settings_akismet h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/comments-square.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/comments-square.svg);
 }
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/activity.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/activity.svg);
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/pin.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/pin.svg);
 	-webkit-transform: rotate(45deg);
 	transform: rotate(45deg);
 }
@@ -513,11 +512,11 @@ tr.bp-search-parent-field label {
 
 /* Media */
 .bp-admin-card.section-bp_media_settings_photos h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/camera.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/camera.svg);
 }
 
 .bp-admin-card.section-bp_media_settings_documents h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/folder-open.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/folder-open.svg);
 }
 
 .section-bp_video_settings_extensions table.form-table tbody tr.video-extensions-listing > th,
@@ -531,11 +530,11 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card.section-bp_media_settings_emoji h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/emoticon-smile.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/emoticon-smile.svg);
 }
 
 .bp-admin-card.section-bp_media_settings_gifs h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/gif.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/gif.svg);
 }
 
 .bp-admin-card.section-bp_media_settings_symlinks {
@@ -543,36 +542,36 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card.section-bp_media_settings_symlinks h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/server.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/server.svg);
 }
 
 /* Connections */
 .bp-admin-card.section-bp_friends h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/user-friends.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/user-friends.svg);
 }
 
 /* Invites */
 .bp-admin-card.section-bp_invites h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/envelope.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/envelope.svg);
 }
 
 /* Moderation */
 .bp-admin-card.section-bp_moderation_settings_blocking h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/user-slash.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/user-slash.svg);
 }
 
 .bp-admin-card.section-bp_moderation_settings_reporting h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/flag.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/flag.svg);
 }
 
 /* Search */
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/search.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/search.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/caret-down.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/caret-down.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
@@ -588,16 +587,16 @@ tr.bp-search-parent-field label {
 /* Video */
 .bp-admin-card.section-bp_media_settings_videos h2:before,
 .bp-admin-card.section-bp_video_settings_extensions h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/video.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/video.svg);
 }
 
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/paste.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/paste.svg);
 }
 
 .bp-admin-card.section-bp_registration_pages h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/clipboard.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/clipboard.svg);
 }
 
 /* Tools */
@@ -606,14 +605,12 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-repair_forums h2:before,
 body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp-member-type-import h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/tools.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tools.svg);
 }
 
 /* Integrations - BuddyBoss App */
 .bp-admin-card.section-bp_buddyboss_app-integration h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddyboss-app.svg);
-	background-size: 100%;
-	background-color: #fff;
 }
 
 /* Integrations - LearnDash */
@@ -623,15 +620,11 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_ld_sync-reports h2:before,
 .bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-learndash.svg);
-	background-size: 100%;
-	background-color: #fff;
 }
 
 /* Integrations - BuddyPress Plugins */
 .bp-admin-card.section-bp_compatibility-integration h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddypress.svg);
-	background-size: 100%;
-	background-color: #fff;
 }
 
 /*
@@ -2366,7 +2359,7 @@ h2.has_tutorial_btn {
  *----------------------------------------------------------------------------*/
 
 .bp-admin-card.section-bp_notifications h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/bell.svg);
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/bell.svg);
 }
 
 .bb-screen-position-outer {
