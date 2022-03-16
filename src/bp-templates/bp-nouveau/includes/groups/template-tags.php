@@ -552,7 +552,7 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb_more_options' ) );
 	}
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icons-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }

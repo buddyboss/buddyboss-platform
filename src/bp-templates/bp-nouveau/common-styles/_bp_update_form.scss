@@ -36,7 +36,7 @@
 	max-width: 100%;
 
 	.privacy-point-icon:before {
-		font-family: 'bb-icons-lined';/* stylelint-disable-line */
+		font-family: 'bb-icons';/* stylelint-disable-line */
 		speak: none;
 		display: inline-block;
 		text-decoration: inherit;
@@ -291,7 +291,7 @@
 		margin: 0 15px 0 0;
 
 		&:before {
-			font-family: 'bb-icons-lined';/* stylelint-disable-line */
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			speak: none;
 			display: inline-block;
 			text-decoration: inherit;
@@ -774,7 +774,7 @@
 
 				&:after {
 					content: "\ef30";
-					font: normal normal 400 22px/1 "bb-icons-lined";/* stylelint-disable-line */
+					font: normal normal 400 22px/1 "bb-icons";/* stylelint-disable-line */
 					margin: 10px auto;
 					display: inline-block;
 					text-align: center;
@@ -989,7 +989,7 @@
 
 			.medium-editor-action-more-button b:before {
 				content: "\ee5c";
-				font-family: 'bb-icons-lined'; /* stylelint-disable-line */
+				font-family: 'bb-icons'; /* stylelint-disable-line */
 			}
 
 			> ul {
@@ -1209,7 +1209,7 @@
 
 	&:before {
 		content: "\ef10";
-		font-family: 'bb-icons-lined';/* stylelint-disable-line */
+		font-family: 'bb-icons';/* stylelint-disable-line */
 		speak: none;
 		display: inline-block;
 		width: 1em;
@@ -1417,7 +1417,7 @@
 
 		&:before {
 			content: "\eeaa";
-			font-family: 'bb-icons-lined';/* stylelint-disable-line */
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
 			display: inline-block;
@@ -1425,7 +1425,7 @@
 
 		&:after {
 			content: "\e826";
-			font-family: 'bb-icons-lined';/* stylelint-disable-line */
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 20px;
 			vertical-align: middle;
 			display: inline-block;
@@ -1521,7 +1521,7 @@
 
 		&:before {
 			content: "\eecc";
-			font-family: 'bb-icons-lined';/* stylelint-disable-line */
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
 			display: inline-block;
@@ -1554,7 +1554,7 @@
 
 			a:before {
 				content: "\eecc";
-				font-family: 'bb-icons-lined';/* stylelint-disable-line */
+				font-family: 'bb-icons';/* stylelint-disable-line */
 				font-size: 16px;
 				margin-right: 10px;
 				width: 20px;

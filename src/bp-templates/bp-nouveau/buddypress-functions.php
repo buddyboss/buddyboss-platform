@@ -375,7 +375,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
 			),
 
-			'bp-nouveau-icons-box-filled' => array(
+			/*'bp-nouveau-icons-box-filled' => array(
 				'file' => 'icons/css/bb-icons-box-filled.css', 'dependencies' => array(), 'version' => $this->version,
 			),
 			'bp-nouveau-icons-box-lined' => array(
@@ -392,6 +392,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 			'bp-nouveau-icons-round-lined' => array(
 				'file' => 'icons/css/bb-icons-round-lined.css', 'dependencies' => array(), 'version' => $this->version,
+            ),*/
+            'bp-nouveau-bb-icons' => array(
+				'file' => 'icons/css/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
 			)
 		) );
 

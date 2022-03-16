@@ -25,6 +25,6 @@
 				<?php esc_html_e( 'Group', 'buddyboss' ); ?>
 			<# } #>
 		</span>
-		<i class="bb-icons-l bb-icon-angle-down"></i>
+		<i class="bb-icon-l bb-icon-angle-down"></i>
 	</div>
 </script>

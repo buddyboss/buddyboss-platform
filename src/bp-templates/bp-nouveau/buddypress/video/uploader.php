@@ -23,7 +23,7 @@
 						<span id="bp-video-uploader-modal-status-text" style="display: none;"></span>
 
 						<a class="bb-model-close-button" id="bp-video-uploader-close" href="#">
-							<span class="bb-icons-l bb-icon-times"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 
@@ -44,7 +44,7 @@
 												<div class="dz-filename"><span data-dz-name></span></div>
 											</div>
 											<div class="dz-progress-ring-wrap">
-												<i class="bb-icons-f bb-icon-video"></i>
+												<i class="bb-icon-f bb-icon-video"></i>
 												<svg class="dz-progress-ring" width="54" height="54">
 													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 												</svg>
@@ -76,14 +76,14 @@
 								if ( bp_is_active( 'groups' ) && bp_is_group_single() && bp_is_group_albums_support_enabled() ) {
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icons-l bb-icon-folder"></i>
+										<i class="bb-icon-l bb-icon-folder"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
 								} elseif ( bp_is_profile_albums_support_enabled() ) {
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
-										<i class="bb-icons-l bb-icon-folder"></i>
+										<i class="bb-icon-l bb-icon-folder"></i>
 										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
 									</a>
 									<?php
@@ -103,7 +103,7 @@
 
 					<footer class="bb-model-footer video-uploader-footer">
 						<a href="#" class="bp-video-open-create-popup-album" style="display: none;">
-							<i class="bb-icons-l bb-icon-plus"></i>
+							<i class="bb-icon-l bb-icon-plus"></i>
 							Create new album
 						</a>
 

@@ -15,7 +15,7 @@
 		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
 	<div class="gif-image-remove gif-image-overlay">
-		<i class="bb-icons-l bb-icon-times"></i>
+		<i class="bb-icon-l bb-icon-times"></i>
 	</div>
 	<# } #>
 </script>

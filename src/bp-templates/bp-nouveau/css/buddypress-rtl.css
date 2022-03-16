@@ -1438,7 +1438,7 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point .privacy-point-icon:before {
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   speak: none;
   display: inline-block;
@@ -1649,7 +1649,7 @@ a.layout-grid-view {
 }
 
 .bp-activity-privacy__label .privacy-figure:before {
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   speak: none;
   display: inline-block;
@@ -2198,7 +2198,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading #whats-new-content:after,
 .activity-update-form.modal-popup .bp-activity-edit.loading #whats-new-content:after {
   content: "\ef30";
-  font: normal normal 400 22px/1 "bb-icons-lined";
+  font: normal normal 400 22px/1 "bb-icons";
   /* stylelint-disable-line */
   margin: 10px auto;
   display: inline-block;
@@ -2397,7 +2397,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form .medium-editor-toolbar .medium-editor-action-more .medium-editor-action-more-button b:before {
   content: "\ee5c";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
 }
 
@@ -2615,7 +2615,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-autocomplete-wrapper:before {
   content: "\ef10";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   speak: none;
   display: inline-block;
@@ -2832,7 +2832,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bb-document-privacy-wrap .privacy:before,
 .bb-media-privacy-wrap .privacy:before {
   content: "\eeaa";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
   vertical-align: middle;
@@ -2842,7 +2842,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bb-document-privacy-wrap .privacy:after,
 .bb-media-privacy-wrap .privacy:after {
   content: "\e826";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 20px;
   vertical-align: middle;
@@ -2944,7 +2944,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-privacy > li:before {
   content: "\eecc";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
   vertical-align: middle;
@@ -2976,7 +2976,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-privacy > li.bb-edit-privacy a:before {
   content: "\eecc";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
   margin-left: 10px;
@@ -3460,7 +3460,7 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .button:before,
 .activity-list .activity-item .bp-generic-meta.action .icons:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   vertical-align: middle;
@@ -3673,7 +3673,7 @@ input.search-query-input {
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   display: inline-block;
@@ -3791,14 +3791,14 @@ input.search-query-input {
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action b {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   text-align: center;
   width: 24px;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action b:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   line-height: 1;
   display: block;
@@ -3824,7 +3824,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
 
 ul.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\ef02";
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
 }
 
@@ -3838,7 +3838,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
 
 ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   content: "\e828";
-  font-family: "bb-icons-round-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
 }
 
@@ -3864,7 +3864,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #whats-new-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-messages-toolbar .emojionearea .emojionearea-button:before {
   content: "\ee5f";
-  font: normal 400 normal 24px/1 "bb-icons-lined";
+  font: normal 400 normal 24px/1 "bb-icons";
   /* stylelint-disable-line */
   speak: none;
   display: inline-block;
@@ -4203,7 +4203,7 @@ blockquote.wp-embedded-content > p:first-child > a:hover {
 
 span.dashicons.dashicons-admin-file:before {
   content: "\ee7a";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
 }
 
@@ -4518,7 +4518,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a.media-action_more i:before,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a.video-action_more i:before {
   content: "\ee5c";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
 }
 
@@ -4642,7 +4642,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap .video-action_list ul li a:before,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li a:before,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   display: inline-block;
@@ -5019,7 +5019,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap > a.item-action_more i:before,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a.item-action_more i:before {
   content: "\ee5c";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
 }
 
@@ -5074,7 +5074,7 @@ span.dashicons.dashicons-admin-file:before {
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li a:before,
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li a:before,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   display: inline-block;
@@ -5235,7 +5235,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before,
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
   content: "\eeb8";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 14px;
 }
@@ -5279,7 +5279,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text:not(.loaded):after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   display: inline-block;
   text-align: center;
@@ -5459,7 +5459,7 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   display: inline-block;
@@ -6717,7 +6717,7 @@ body.register .registration-popup .mfp-close:hover {
 
 .bb-password-wrap .bb-show-pass .bb-icon-eye:before {
   content: "\ee6a";
-  font-family: 'bb-icons-lined';
+  font-family: 'bb-icons';
   /* stylelint-disable-line */
 }
 
@@ -7013,7 +7013,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 #buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -7761,7 +7761,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button:before,
 .bb_more_options .bb_more_options_list button:before,
 .bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 15px;
   display: inline-block;
@@ -7791,7 +7791,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button:before,
 .bb_more_options .bb_more_options_list button:before,
 .bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 15px;
   display: inline-block;
@@ -7818,7 +7818,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
   content: "\ef52";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
 }
@@ -8485,7 +8485,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 
 #bp-pending-invites-loader .dashicons-update:before {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 20px;
   display: block;
@@ -8507,7 +8507,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 
 #bp-invites-submit-loader .dashicons-update:before {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 20px;
   display: block;
@@ -9059,7 +9059,7 @@ div.profile_completion_wrap .progress_text_wrap {
   font-size: 14px;
   color: #122b46;
   line-height: 1;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   display: inline-block;
   vertical-align: middle;
@@ -9339,7 +9339,7 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 15px;
   display: inline-block;
@@ -9354,7 +9354,7 @@ div.profile_completion_wrap .progress_text_wrap {
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.hide_thread a:before {
   content: "\f8bb";
-  font-family: "bb-icons-round-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
 }
 
@@ -9759,7 +9759,7 @@ input#send-to-input {
   content: "\ee5a";
   font-size: 20px;
   line-height: 1;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   vertical-align: top;
   text-align: center;
@@ -10020,7 +10020,7 @@ body .bp-messages-user-threads {
 
 .mass-user-block-list #moderated_user_list:not(.is_not_empty):before {
   content: "\ef30";
-  font: normal normal normal 20px/1 "bb-icons-lined";
+  font: normal normal normal 20px/1 "bb-icons";
   /* stylelint-disable-line */
   speak: none;
   display: inline-block !important;
@@ -10044,7 +10044,7 @@ body .bp-messages-user-threads {
 
 .bb-report-type-pagination .page-data #load_more_rl.loading:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -11074,7 +11074,7 @@ ul.bbp-stats .bbp-count {
 .buddypress-wrap ul.item-list li.selected .invite-button span.icons:before,
 .buddypress-wrap ul.item-list li .group-remove-invite-button span.icons:before {
   content: "\e828";
-  font-family: "bb-icons-round-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   speak: none;
   font-style: normal;
@@ -16123,7 +16123,7 @@ body.login .login-popup .mfp-close:hover {
 .modal-container#boss-media-create-album-popup #bp-video-create-album-submit.saving:after, .modal-container#boss-video-create-album-popup #bp-media-create-album-submit.saving:after,
 .modal-container#boss-video-create-album-popup #bp-video-create-album-submit.saving:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -16335,7 +16335,7 @@ body.login .login-popup .mfp-close:hover {
 .buddypress-wrap .bp-subnavs .component-navigation.document-nav li.selected.loading a:after,
 .buddypress-wrap .bp-subnavs .component-navigation.media-nav li.selected.loading a:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   line-height: 1;
@@ -17826,7 +17826,7 @@ img.emojioneemoji {
 
 .dropzone .dz-preview.dz-error .dz-details:before {
   content: "\efeb";
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   height: 50px;
@@ -17899,7 +17899,7 @@ img.emojioneemoji {
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
   content: "\f056";
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-top: 34px;
 }
@@ -17929,7 +17929,7 @@ img.emojioneemoji {
 
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
   content: "\f14a";
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   position: absolute;
@@ -18270,7 +18270,7 @@ div.dropzone .dz-preview .dz-filename {
 
 #media-folder-document-data-table .pager a.button.loading:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -18806,7 +18806,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   display: inline-block;
@@ -18829,7 +18829,7 @@ div.dropzone .dz-preview .dz-filename {
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before {
   content: "\ee9f";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 13px;
 }
@@ -18837,7 +18837,7 @@ div.dropzone .dz-preview .dz-filename {
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.delete_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.delete_file a:before {
   content: "\ef48";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 15px;
 }
@@ -18855,7 +18855,7 @@ div.dropzone .dz-preview .dz-filename {
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before {
   content: "\ee9c";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 15px;
   vertical-align: middle;
@@ -18880,21 +18880,21 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\ee57";
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.copy_download_file_url a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.copy_download_file_url a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\ee3b";
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.privacy_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.privacy_file a:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\eecc";
   font-size: 15px;
@@ -19285,7 +19285,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .bp-media-header-wrap .media-search-form:after {
   content: "\ef10";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   display: inline-block;
   color: #4d5c6d;
@@ -19641,7 +19641,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list ul li a i:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   display: inline-block;
@@ -19747,7 +19747,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .modal-container.has-folderlocationUI .bb-model-footer a.saving:after,
 .modal-container.has-folderlocationUI .bb-model-footer a.loading:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -19899,7 +19899,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .db-modal-buttons .button.loading:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -19916,7 +19916,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .has-folderlocationUI .bb-field-wrap-search:after {
   content: "\ef10";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   display: inline-block;
   color: #4d5c6d;
@@ -19988,7 +19988,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before,
 .location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:before {
   content: "\e827";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 20px;
   vertical-align: middle;
@@ -20241,7 +20241,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span:before,
 .location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span:before {
   content: "\ee9f";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   color: #939597;
   margin-left: 12px;
@@ -20437,7 +20437,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
   content: "\eeb8";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 15px;
 }
@@ -20805,7 +20805,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   color: #939597;
   letter-spacing: -0.24px;
   line-height: 24px;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 22px;
 }
@@ -21727,7 +21727,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .enlarge_button .vjs-icon-placeholder:before {
   content: "\ee67";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
 }
@@ -21770,7 +21770,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-media-section .video-js .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
   content: "\ee67";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
   display: -webkit-box;
@@ -21788,7 +21788,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button span.vjs-icon-placeholder:before {
   content: "\ef07" !important;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
 }
 
@@ -21854,7 +21854,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-theatre .bb-activity-video-elem .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-video-thumb .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before, .video-theatre
 .bb-media-section .video-js:fullscreen .vjs-control-bar .vjs-fullscreen-control .vjs-icon-placeholder:before {
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\eed5";
 }
@@ -21944,7 +21944,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-media-model-container .activity-list .activity-media-description .video-action-wrap.item-action-wrap .video-action_list ul li a:before {
   content: "\eeb4";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 20px;
   display: inline-block;
@@ -22048,7 +22048,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .forums-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader:after,
 .bb-activity-video-wrap .bb-activity-video-elem video.video-js + .bb-video-loader:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 35px;
   animation: spin 2s infinite linear;
@@ -22464,7 +22464,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-custom-check:checked + label .bb-icon:before {
   content: "\e876";
   display: inline;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
 }
 
@@ -22541,7 +22541,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-button:before {
   content: "\efeb";
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   position: absolute;
   top: -10px;
@@ -22623,7 +22623,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap .bb-custom-check:checked + label .bb-icon:before {
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\e876";
   display: inline;
@@ -22684,7 +22684,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bp-video-thumbnail-uploader .button.bp-video-thumbnail-submit.saving:after {
   content: "\ef30";
-  font-family: "bb-icons-filled";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
@@ -23265,7 +23265,7 @@ body > .open-popup.video-error-popup {
   position: absolute;
   top: 0;
   right: 0;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 20px;
   line-height: 1;
@@ -23854,7 +23854,7 @@ body > .open-popup.video-error-popup {
   content: "\ee6e";
   font-size: 28px;
   color: #92949d;
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   display: inline-block;
   line-height: 1;
@@ -23864,7 +23864,7 @@ body > .open-popup.video-error-popup {
   transform: translateX(50%);
 }
 
-.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icons-lined"] {
+.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icons"] {
   font-size: 28px;
   color: rgba(18, 43, 70, 0.5);
   right: 50%;
@@ -24459,7 +24459,7 @@ span.icons:before {
 
 #group-messages-container div#group-messages-new-submit #send_group_message_button.loading:after {
   content: "\ef30";
-  font-family: "bb-icons-lined";
+  font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;

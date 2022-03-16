@@ -25,7 +25,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
 					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-						<i class="bb-icons-l bb-icon-edit"></i>
+						<i class="bb-icon-l bb-icon-edit"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 				<?php } ?>
@@ -46,7 +46,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 							<?php bp_group_list_parents(); ?>
 							<div class="bp-parent-group-title-wrap">
 								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( $parent_group ) ); ?>"><?php echo wp_kses_post( bp_get_group_name( $parent_group ) ); ?></a>
-								<i class="bb-icons-l bb-icon-angle-right"></i>
+								<i class="bb-icon-l bb-icon-angle-right"></i>
 								<span class="bp-current-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></span>
 							</div>
 						</div>
@@ -119,7 +119,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<header class="bb-model-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Group Description', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-action-popup bb-model-close-button" href="#">
-							<span class="bb-icons-l bb-icon-times"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-action-popup-content">
@@ -140,7 +140,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 					<header class="bb-model-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Leave Group', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-leave-group bb-model-close-button" href="#">
-							<span class="bb-icons-l bb-icon-times"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-leave-group-content bb-action-popup-content">

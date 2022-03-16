@@ -243,7 +243,7 @@
 
 				.vjs-icon-placeholder:before {
 					content: "\ee67";
-					font-family: "bb-icons-lined";/* stylelint-disable-line */
+					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
 				}
 
@@ -284,7 +284,7 @@
 
 				.vjs-icon-placeholder:before {
 					content: "\ee67";
-					font-family: "bb-icons-lined";/* stylelint-disable-line */
+					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
 					display: -webkit-box;
 					display: -ms-flexbox;
@@ -301,7 +301,7 @@
 
 			.vjs-seek-button span.vjs-icon-placeholder:before {
 				content: "\ef07" !important;
-				font-family: "bb-icons-lined";/* stylelint-disable-line */
+				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
 			.vjs-seek-button.skip-back .vjs-icon-placeholder:before {
@@ -349,7 +349,7 @@
 			}
 
 			.vjs-icon-placeholder:before {
-				font-family: "bb-icons-lined";/* stylelint-disable-line */
+				font-family: "bb-icons";/* stylelint-disable-line */
 				content: "\eed5";
 			}
 
@@ -444,7 +444,7 @@
 
 					&:before {
 						content: "\eeb4";
-						font-family: "bb-icons-lined";/* stylelint-disable-line */						
+						font-family: "bb-icons";/* stylelint-disable-line */						
 						font-size: 20px;
 						display: inline-block;
 						text-align: center;
@@ -562,7 +562,7 @@
 
 			&:after {
 				content: "\ef30";
-				font-family: "bb-icons-lined";/* stylelint-disable-line */
+				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 35px;
 				animation: spin 2s infinite linear;
 			}
@@ -1020,7 +1020,7 @@
 			.bb-custom-check:checked + label .bb-icon:before {
 				content: "\e876";
 				display: inline;
-				font-family: "bb-icons-lined";/* stylelint-disable-line */
+				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
 		}
@@ -1099,7 +1099,7 @@
 
 				&:before {
 					content: "\efeb";
-					font-family: "bb-icons-filled";/* stylelint-disable-line */
+					font-family: "bb-icons";/* stylelint-disable-line */
 					position: absolute;
 					top: -10px;
 					left: 50%;
@@ -1186,7 +1186,7 @@
 					}
 
 					.bb-custom-check:checked + label .bb-icon:before {
-						font-family: "bb-icons-filled";/* stylelint-disable-line */
+						font-family: "bb-icons";/* stylelint-disable-line */
 						content: "\e876";
 						display: inline;
 					}
@@ -1255,7 +1255,7 @@
 
 		&.saving:after {
 			content: "\ef30";
-			font-family: "bb-icons-filled";/* stylelint-disable-line */
+			font-family: "bb-icons";/* stylelint-disable-line */
 			font-size: 18px;
 			line-height: 1;
 			margin-left: 10px;

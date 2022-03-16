@@ -303,7 +303,7 @@
 			// Uncomment .acomment-reply class for icon us
 			.button:before,
 			.icons:before {
-				font-family: "bb-icons-lined";/* stylelint-disable-line */
+				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 18px;
 				vertical-align: middle;
 			}
@@ -530,7 +530,7 @@
 						}
 
 						&:before {
-							font-family: "bb-icons-lined";/* stylelint-disable-line */
+							font-family: "bb-icons";/* stylelint-disable-line */
 							font-size: 18px;
 							display: inline-block;
 							margin-right: 10px;
@@ -689,12 +689,12 @@
 ul.medium-editor-toolbar-actions {
 
 	.medium-editor-action b {
-		font-family: "bb-icons-lined";/* stylelint-disable-line */
+		font-family: "bb-icons";/* stylelint-disable-line */
 		text-align: center;
 		width: 24px;
 
 		&:before {
-			font-family: "bb-icons-lined";/* stylelint-disable-line */
+			font-family: "bb-icons";/* stylelint-disable-line */
 			line-height: 1;
 			display: block;
 			transform: none;
@@ -720,7 +720,7 @@ ul.medium-editor-toolbar-actions {
 
 	.medium-editor-action-quote b:before {
 		content: "\ef02";
-		font-family: "bb-icons-filled";/* stylelint-disable-line */
+		font-family: "bb-icons";/* stylelint-disable-line */
 	}
 
 	.medium-editor-action-anchor b:before {
@@ -733,7 +733,7 @@ ul.medium-editor-toolbar-actions {
 
 	.medium-editor-action-close b:before {
 		content: "\e828";
-		font-family: "bb-icons-round-lined";/* stylelint-disable-line */
+		font-family: "bb-icons";/* stylelint-disable-line */
 	}
 
 }
@@ -758,7 +758,7 @@ ul.medium-editor-toolbar-actions {
 
 	.emojionearea .emojionearea-button:before {
 		content: "\ee5f";
-		font: normal 400 normal 24px/1 "bb-icons-lined";/* stylelint-disable-line */
+		font: normal 400 normal 24px/1 "bb-icons";/* stylelint-disable-line */
 		speak: none;
 		display: inline-block;
 		text-decoration: inherit;
@@ -1114,7 +1114,7 @@ blockquote.wp-embedded-content {
 
 span.dashicons.dashicons-admin-file:before {
 	content: "\ee7a";
-	font-family: 'bb-icons-lined'; /* stylelint-disable-line */
+	font-family: 'bb-icons'; /* stylelint-disable-line */
 }
 
 .activity-list .activity-item .activity-content.video-activity-wrap,
@@ -1345,7 +1345,7 @@ span.dashicons.dashicons-admin-file:before {
 
 					&:before {
 						content: "\ee5c";
-						font-family: 'bb-icons-lined'; /* stylelint-disable-line */
+						font-family: 'bb-icons'; /* stylelint-disable-line */
 					}
 
 				}
@@ -1399,7 +1399,7 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						&:before {
-							font-family: "bb-icons-lined";/* stylelint-disable-line */
+							font-family: "bb-icons";/* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -1617,7 +1617,7 @@ span.dashicons.dashicons-admin-file:before {
 
 					&:before {
 						content: "\ee5c";
-						font-family: 'bb-icons-lined'; /* stylelint-disable-line */
+						font-family: 'bb-icons'; /* stylelint-disable-line */
 					}
 
 				}
@@ -1661,7 +1661,7 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						&:before {
-							font-family: "bb-icons-lined";/* stylelint-disable-line */
+							font-family: "bb-icons";/* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -1809,7 +1809,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before,
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
 	content: "\eeb8";
-	font-family: 'bb-icons-lined'; /* stylelint-disable-line */
+	font-family: 'bb-icons'; /* stylelint-disable-line */
 	font-size: 14px;
 }
 
@@ -1855,7 +1855,7 @@ span.dashicons.dashicons-admin-file:before {
 
 		.document-text:not(.loaded):after {
 			content: "\ef30";
-			font-family: "bb-icons-lined";/* stylelint-disable-line */
+			font-family: "bb-icons";/* stylelint-disable-line */
 			display: inline-block;
 			text-align: center;
 			margin: 10px 0;
@@ -2039,7 +2039,7 @@ span.dashicons.dashicons-admin-file:before {
 							}
 
 							&:before {
-								font-family: "bb-icons-lined";/* stylelint-disable-line */
+								font-family: "bb-icons";/* stylelint-disable-line */
 								font-size: 16px;
 								display: inline-block;
 								margin-right: 10px;

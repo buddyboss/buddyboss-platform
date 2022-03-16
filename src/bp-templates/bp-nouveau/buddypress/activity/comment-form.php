@@ -41,7 +41,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 									<div class="dz-size" data-dz-size></div>
 								</div>
 								<div class="dz-progress-ring-wrap">
-									<i class="bb-icons-f bb-icon-camera"></i>
+									<i class="bb-icon-f bb-icon-camera"></i>
 									<svg class="dz-progress-ring" width="54" height="54">
 										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
@@ -64,12 +64,12 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 							<div class="dz-preview dz-file-preview">
 								<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 								<div class="dz-details">
-									<div class="dz-icon"><span class="bb-icons-l bb-icon-file"></span></div>
+									<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 									<div class="dz-filename"><span data-dz-name></span></div>
 									<div class="dz-size" data-dz-size></div>
 								</div>
 								<div class="dz-progress-ring-wrap">
-									<i class="bb-icons-f bb-icon-file-attach"></i>
+									<i class="bb-icon-f bb-icon-file-attach"></i>
 									<svg class="dz-progress-ring" width="54" height="54">
 										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
@@ -94,7 +94,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 									<div class="dz-filename"><span data-dz-name></span></div>
 								</div>
 								<div class="dz-progress-ring-wrap">
-									<i class="bb-icons-f bb-icon-video"></i>
+									<i class="bb-icon-f bb-icon-video"></i>
 									<svg class="dz-progress-ring" width="54" height="54">
 										<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 									</svg>
@@ -135,25 +135,25 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 						<div class="post-elements-buttons-item post-media media-support">
 							<a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icons-l bb-icon-camera"></i>
+								<i class="bb-icon-l bb-icon-camera"></i>
 							</a>
 						</div>
 
 						<div class="post-elements-buttons-item post-video video-support">
 							<a href="#" id="ac-reply-video-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icons-l bb-icon-video"></i>
+								<i class="bb-icon-l bb-icon-video"></i>
 							</a>
 						</div>
 						<div class="post-elements-buttons-item post-media document-support">
 							<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icons-l bb-icon-file-attach"></i>
+								<i class="bb-icon-l bb-icon-file-attach"></i>
 							</a>
 						</div>
 
 						<div class="post-elements-buttons-item post-gif">
 							<div class="gif-media-search">
 								<a href="#" id="ac-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
-									<i class="bb-icons-l bb-icon-gif"></i>
+									<i class="bb-icon-l bb-icon-gif"></i>
 								</a>
 								<div class="gif-media-search-dropdown"></div>
 							</div>

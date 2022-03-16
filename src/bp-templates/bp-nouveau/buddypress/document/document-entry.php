@@ -242,7 +242,7 @@ id="div-listing-<?php bp_document_id(); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icons-f bb-icon-ellipsis-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
 					<?php

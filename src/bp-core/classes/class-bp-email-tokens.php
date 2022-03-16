@@ -855,7 +855,7 @@ class BP_Email_Tokens {
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
-																	<span class="bb-icons-l bb-icon-play"></span>
+																	<span class="bb-icon-l bb-icon-play"></span>
 																	<?php if( is_int( $gif_data['still'] ) ) { ?>
 																		<img alt="" src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																	<?php } else { ?>

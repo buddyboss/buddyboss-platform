@@ -112,7 +112,7 @@ window.bp = window.bp || {};
 					return false;
 				}
 
-				$(event.currentTarget).append(' <i class="bb-icons-l bb-icon-spinner animate-spin"></i>');
+				$(event.currentTarget).append(' <i class="bb-icon-l bb-icon-spinner animate-spin"></i>');
 
 				var curObj = $( this );
 				var id = curObj.attr( 'data-id' );
