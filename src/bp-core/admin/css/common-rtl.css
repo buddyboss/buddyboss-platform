@@ -579,12 +579,18 @@ tr.bp-search-parent-field label {
 }
 
 /* Tools */
-.bp-admin-card.section-default_data h2:before,
+.bp-admin-card.section-default_data h2:before {
+  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/duplicate.svg);
+}
+
 .bp-admin-card.section-repair_community h2:before,
-.bp-admin-card.section-repair_forums h2:before,
-body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
-.bp-admin-card.section-bp-member-type-import h2:before {
+.bp-admin-card.section-repair_forums h2:before {
   background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tools.svg);
+}
+
+.bp-admin-card.section-bp-member-type-import h2:before,
+body.buddyboss_page_bbp-converter .bp-admin-card h2:before {
+  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/cloud-upload.svg);
 }
 
 /* Integrations - BuddyBoss App */
