@@ -33,12 +33,15 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 				<?php echo wp_kses_post( wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?>
 			</div>
 			<div class="entry-meta">
+				<span><?php esc_html_e( 'By ', 'buddyboss' ); ?><?php echo esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
+				<span class="middot">&middot;</span>
 				<span class="reply-count">
 					<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
 				</span>
 				<span class="middot">&middot;</span>
-				<span class="freshness">
-					<?php bbp_topic_freshness_link( $topic_id ); ?>
+				<span>
+					<?php esc_html_e( 'Started ', 'buddyboss' ); ?>
+					<?php echo wp_kses_post( bbp_get_topic_created_time( $topic_id ) ); ?>
 				</span>
 			</div>
 		</div>
