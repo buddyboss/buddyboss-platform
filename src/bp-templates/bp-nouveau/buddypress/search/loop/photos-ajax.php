@@ -9,16 +9,16 @@
  * @version 1.0.0
  */
 
-$listing_class  = '';
-$attachment_id  = bp_get_media_attachment_id();
-$media_id       = bp_get_media_id();
-$filename       = basename( get_attached_file( $attachment_id ) );
-$photo_title    = '';
-$media_type     = '';
+$listing_class = '';
+$attachment_id = bp_get_media_attachment_id();
+$media_id      = bp_get_media_id();
+$filename      = basename( get_attached_file( $attachment_id ) );
+$photo_title   = '';
+$media_type    = '';
 if ( $attachment_id ) {
-	$listing_class  = 'ac-media-list';
-	$media_type     = 'photos';
-	$photo_title    = bp_get_media_title();
+	$listing_class = 'ac-media-list';
+	$media_type    = 'photos';
+	$photo_title   = bp_get_media_title();
 }
 
 $class = ''; // used.
@@ -35,7 +35,7 @@ $media_created = bp_get_media_date_created();
 			<div class="media-album_items ac-album-list">
 				<div class="media-album_thumb">
 					<a href="<?php echo esc_url( $media_link ); ?>">
-						<img src="<?php bp_media_attachment_image_thumbnail() ?>" alt="<?php echo esc_html( $photo_title ); ?>" />
+						<img src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php echo esc_html( $photo_title ); ?>" />
 					</a>
 				</div>
 

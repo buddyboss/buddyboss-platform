@@ -10,7 +10,7 @@
  */
 
 $topic_id = get_the_ID();
-$total = bbp_get_topic_reply_count( $topic_id ) ?>
+$total    = bbp_get_topic_reply_count( $topic_id ) ?>
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
@@ -30,7 +30,7 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 				<a href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 			</h3>
 			<div class="entry-content entry-summary">
-				<?php echo wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ?>
+				<?php echo wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ); ?>
 			</div>
 			<div class="entry-meta">
 				<span class="reply-count">
@@ -38,7 +38,7 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 				</span>
 				<span class="middot">&middot;</span>
 				<span class="freshness">
-					<?php bbp_topic_freshness_link( $topic_id ) ?>
+					<?php bbp_topic_freshness_link( $topic_id ); ?>
 				</span>
 			</div>
 			<?php
@@ -60,8 +60,8 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 						<span class="discussion-tag">
 							<?php
 							echo esc_html( $discussion_tag->name );
-							if( $tags_count != $loop_count ){
-								echo ", ";
+							if ( $tags_count != $loop_count ) {
+								echo ', ';
 							}
 							?>
 						</span>

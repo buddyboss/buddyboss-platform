@@ -15,9 +15,9 @@ $total = bp_search_get_total_topics_count( get_the_ID() ) ?>
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
 				<img
-					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default(get_post_type()) ?>"
+					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
 					class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-					alt="<?php the_title() ?>"
+					alt="<?php the_title(); ?>"
 				/>
 			</a>
 		</div>
