@@ -14,20 +14,14 @@
 		<div class="item-avatar">
 			<?php bp_group_avatar( 'type=thumb&width=50&height=50' ); ?>
 		</div>
-
-		<div class="item">
-			<div class="item-title"><?php bp_group_name(); ?></div>
-			<?php if ( bp_nouveau_group_has_meta() ) : ?>
-				<p class="item-meta group-details">
-				<?php
-					$meta = array(
-						'status' => bp_get_group_type(),
-						'count'  => bp_get_group_member_count(),
-					);
-					echo join( ' / ', array_map( 'wp_kses', (array) $meta, array( 'span' => array( 'class' => array() ) ) ) );
-					?>
-				</p>
-			<?php endif; ?>
+		<p class="item">
+			<div class="item-title"><?php bp_group_link(); ?></div>
+			<p class="item-meta group-details">
+				<?php bp_group_description(); ?>
+			</p><!-- //.group_description -->
+			<?php bp_group_type(); ?>
+			<span class="middot">&middot;</span>
+			<p class="item-meta group-details"><?php esc_html_e( 'Last active ', 'buddyboss' ); ?><?php bp_group_last_active(); ?></p>
 		</div>
 	</a>
 </div>
