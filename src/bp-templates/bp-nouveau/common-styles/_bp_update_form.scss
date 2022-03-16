@@ -1794,3 +1794,11 @@ input.search-query-input {
 		}
 	}
 }
+
+.media-support-hide,
+.document-support-hide,
+.video-support-hide,
+.post-emoji-hide,
+.post-gif-hide {
+	display: none;
+}
