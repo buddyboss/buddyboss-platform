@@ -463,12 +463,12 @@
 				position: static;
 			}
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				font-size: 24px;
 				margin-right: 10px;
 			}
 
-			.post-mention .bb-icon {
+			.post-mention [class*=" bb-icon-"] {
 				font-size: 20px;
 			}
 

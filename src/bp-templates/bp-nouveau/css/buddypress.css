@@ -1259,7 +1259,7 @@ a.layout-grid-view {
   display: block;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon {
+.buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member [class*=" bb-icon-"] {
   height: 28px;
   width: 28px;
   font-size: 16px;
@@ -1281,7 +1281,7 @@ a.layout-grid-view {
   justify-content: center;
 }
 
-.buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member .bb-icon:hover {
+.buddypress-wrap ul.bp-list.groups-dir-list .bs-group-members .bs-group-member [class*=" bb-icon-"]:hover {
   background-color: #e3e3e3;
 }
 
@@ -1380,7 +1380,7 @@ a.layout-grid-view {
   padding-top: 1em;
 }
 
-#notifications-user-list .bb-sort-by-date .notifications-order-actions a .bb-icon {
+#notifications-user-list .bb-sort-by-date .notifications-order-actions a [class*=" bb-icon-"] {
   width: 20px;
   text-align: center;
 }
@@ -1836,14 +1836,14 @@ a.layout-grid-view {
   position: static;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .bb-icon,
-.activity-update-form .activity-form.focus-in #editor-toolbar .bb-icon {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar [class*=" bb-icon-"],
+.activity-update-form .activity-form.focus-in #editor-toolbar [class*=" bb-icon-"] {
   font-size: 24px;
   margin-right: 10px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-mention .bb-icon,
-.activity-update-form .activity-form.focus-in #editor-toolbar .post-mention .bb-icon {
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-mention [class*=" bb-icon-"],
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-mention [class*=" bb-icon-"] {
   font-size: 20px;
 }
 
@@ -3843,21 +3843,16 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 }
 
 .ac-reply-toolbar .bb-icon,
+.ac-reply-toolbar [class*=" bb-icon-"],
 #whats-new-toolbar .bb-icon,
-#whats-new-messages-toolbar .bb-icon {
+#whats-new-toolbar [class*=" bb-icon-"],
+#whats-new-messages-toolbar .bb-icon,
+#whats-new-messages-toolbar [class*=" bb-icon-"] {
   color: rgba(18, 43, 70, 0.5);
   transition: all linear 0.2s;
   font-size: 24px;
   width: auto;
   height: auto;
-}
-
-.ac-reply-toolbar .bb-icon.bb-icon-video-alt,
-#whats-new-toolbar .bb-icon.bb-icon-video-alt,
-#whats-new-messages-toolbar .bb-icon.bb-icon-video-alt {
-  font-size: 22px;
-  min-width: 24px;
-  text-align: center;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -7278,7 +7273,7 @@ body.guillotine-dragging * {
   width: 34px;
 }
 
-.groups-header .moderators-lists #group-admins > li .bb-icon {
+.groups-header .moderators-lists #group-admins > li [class*=" bb-icon-"] {
   height: 34px;
   width: 34px;
   font-size: 16px;
@@ -7300,7 +7295,7 @@ body.guillotine-dragging * {
   justify-content: center;
 }
 
-.groups-header .moderators-lists #group-admins > li .bb-icon:hover {
+.groups-header .moderators-lists #group-admins > li [class*=" bb-icon-"]:hover {
   background-color: #e3e3e3;
 }
 
@@ -17115,12 +17110,12 @@ ul.bb-albums-list .load-more {
   align-items: center;
 }
 
-.bb-album-content-wrap .bb-album_stats i.bb-icon {
+.bb-album-content-wrap .bb-album_stats [class*=" bb-icon-"] {
   font-size: 20px;
   margin-right: 7px;
 }
 
-.bb-album-content-wrap .bb-album_stats i.bb-icon.bb-icon-video-alt {
+.bb-album-content-wrap .bb-album_stats [class*=" bb-icon-"].bb-icon-video-alt {
   font-size: 18px;
 }
 
@@ -17325,10 +17320,10 @@ ul.bb-albums-list .load-more {
   .bb-album-content-wrap .bb-album_stats {
     font-size: 12px;
   }
-  .bb-album-content-wrap .bb-album_stats i.bb-icon {
+  .bb-album-content-wrap .bb-album_stats [class*=" bb-icon-"] {
     font-size: 20px;
   }
-  .bb-album-content-wrap .bb-album_stats i.bb-icon.bb-icon-video-alt {
+  .bb-album-content-wrap .bb-album_stats [class*=" bb-icon-"].bb-icon-video-alt {
     font-size: 17px;
   }
   .bb-album-content-wrap .bb-album_stats .bb-album_stats_spacer {
@@ -17787,7 +17782,7 @@ img.emojioneemoji {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap .bb-icon {
+.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap [class*=" bb-icon-"] {
   color: rgba(18, 43, 70, 0.5);
 }
 
@@ -22451,13 +22446,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-icon {
+.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap [class*=" bb-icon-"] {
   border: 2px solid #fff;
   background-color: rgba(255, 255, 255, 0.4);
   /* stylelint-disable-line */
 }
 
-.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap .bb-icon:before {
+.video-thumbnail-content .bb-dropzone-wrap .bb-action-check-wrap [class*=" bb-icon-"]:before {
   display: none;
 }
 
@@ -22599,7 +22594,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   bottom: 0;
 }
 
-.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li > div > label .bb-icon {
+.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li > div > label [class*=" bb-icon-"] {
   display: none;
 }
 
@@ -22612,13 +22607,13 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   left: inherit;
 }
 
-.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap .bb-icon {
+.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap [class*=" bb-icon-"] {
   border: 2px solid #fff;
   background-color: rgba(255, 255, 255, 0.4);
   /* stylelint-disable-line */
 }
 
-.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap .bb-icon:before {
+.video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li .bb-action-check-wrap [class*=" bb-icon-"]:before {
   display: none;
 }
 
@@ -22826,7 +22821,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
     min-height: 100px;
     max-height: 106px;
   }
-  .video-thumbnail-content .bb-action-check-wrap .bb-icon {
+  .video-thumbnail-content .bb-action-check-wrap [class*=" bb-icon-"] {
     font-size: 11px;
     width: 18px;
     height: 18px;
@@ -22916,7 +22911,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   line-height: 1;
 }
 
-.dropzone.video-dropzone .dz-preview .dz-progress-ring-wrap .bb-icon {
+.dropzone.video-dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
   font-size: 16px;
 }
 
@@ -22976,7 +22971,7 @@ div.dropzone.dz-started .dz-default.dz-message {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap .bb-icon {
+.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap [class*=" bb-icon-"] {
   color: rgba(18, 43, 70, 0.5);
 }
 
@@ -23791,7 +23786,7 @@ body > .open-popup.video-error-popup {
   transition: all ease 0.3s;
 }
 
-.dropzone .dz-preview .dz-progress-ring-wrap .bb-icon {
+.dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -23805,7 +23800,7 @@ body > .open-popup.video-error-popup {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap .bb-icon {
+.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap [class*=" bb-icon-"] {
   color: rgba(18, 43, 70, 0.5);
 }
 
@@ -23818,7 +23813,7 @@ body > .open-popup.video-error-popup {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap .bb-icon {
+.dropzone.document-dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
   color: rgba(18, 43, 70, 0.5);
 }
 
@@ -25407,9 +25402,9 @@ span.icons:before {
   box-shadow: none;
 }
 
-#reported-content .bb-model-header .mfp-close .bb-icon,
-#block-member .bb-model-header .mfp-close .bb-icon,
-#content-report .bb-model-header .mfp-close .bb-icon {
+#reported-content .bb-model-header .mfp-close [class*=" bb-icon-"],
+#block-member .bb-model-header .mfp-close [class*=" bb-icon-"],
+#content-report .bb-model-header .mfp-close [class*=" bb-icon-"] {
   font-size: 24px;
   pointer-events: none;
 }

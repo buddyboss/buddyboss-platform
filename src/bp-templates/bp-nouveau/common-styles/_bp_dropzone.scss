@@ -657,7 +657,7 @@
 
 		}
 
-		.bb-icon {
+		[class*=" bb-icon-"] {
 			position: absolute;
 			top: 50%;
 			left: 50%;
@@ -680,7 +680,7 @@
 			.dz-progress-ring-wrap {
 				background-color: rgba(0, 0, 0, 0.05);
 
-				.bb-icon {
+				[class*=" bb-icon-"] {
 					color: rgba(18, 43, 70, 0.5);
 				}
 			}
@@ -694,7 +694,7 @@
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				color: rgba(18, 43, 70, 0.5);
 			}
 		}

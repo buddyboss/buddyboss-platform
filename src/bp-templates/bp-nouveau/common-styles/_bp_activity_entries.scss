@@ -742,18 +742,13 @@ ul.medium-editor-toolbar-actions {
 #whats-new-toolbar,
 #whats-new-messages-toolbar {
 
-	.bb-icon {
+	.bb-icon,
+	[class*=" bb-icon-"] {
 		color: rgba(18, 43, 70, 0.5);
 		transition: all linear 0.2s;
 		font-size: 24px;
 		width: auto;
 		height: auto;
-
-		&.bb-icon-video-alt {
-			font-size: 22px;
-			min-width: 24px;
-			text-align: center;
-		}
 	}
 
 	.emojionearea .emojionearea-button:before {

@@ -1006,7 +1006,7 @@
 			z-index: 1111;
 			display: none;
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 
 				border: 2px solid #fff;
 				background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
@@ -1160,7 +1160,7 @@
 					top: 0;
 					bottom: 0;
 
-					.bb-icon {
+					[class*=" bb-icon-"] {
 						display: none;
 					}
 
@@ -1174,7 +1174,7 @@
 					right: 7px;
 					left: inherit;
 
-					.bb-icon {
+					[class*=" bb-icon-"] {
 
 						border: 2px solid #fff;
 						background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
@@ -1433,7 +1433,7 @@
 			max-height: 106px;
 		}
 
-		.bb-action-check-wrap .bb-icon {
+		.bb-action-check-wrap [class*=" bb-icon-"] {
 			font-size: 11px;
 			width: 18px;
 			height: 18px;
@@ -1535,7 +1535,7 @@ div.dropzone.dz-started {
 		}
 	}
 
-	.dz-preview .dz-progress-ring-wrap .bb-icon {
+	.dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
 		font-size: 16px;
 	}
 
@@ -1597,7 +1597,7 @@ div.dropzone.dz-started {
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				color: rgba(18, 43, 70, 0.5);
 			}
 		}
