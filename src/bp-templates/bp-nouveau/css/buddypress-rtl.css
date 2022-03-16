@@ -9353,7 +9353,7 @@ div.profile_completion_wrap .progress_text_wrap {
 }
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.hide_thread a:before {
-  content: "\f8bb";
+  content: "\e828";
   font-family: "bb-icons";
   /* stylelint-disable-line */
 }
@@ -17825,7 +17825,7 @@ img.emojioneemoji {
 }
 
 .dropzone .dz-preview.dz-error .dz-details:before {
-  content: "\efeb";
+  content: "\ee06";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
@@ -17898,7 +17898,7 @@ img.emojioneemoji {
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
-  content: "\f056";
+  content: "\e980";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-top: 34px;
@@ -17928,7 +17928,7 @@ img.emojioneemoji {
 }
 
 .dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details:before {
-  content: "\f14a";
+  content: "\ef65";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
@@ -22540,7 +22540,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-button:before {
-  content: "\efeb";
+  content: "\ee06";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   position: absolute;
