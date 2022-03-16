@@ -404,6 +404,7 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_privacy h2:before {
   background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/lock-alt.svg);
+  background-size: 24px 24px;
 }
 
 /* Profiles */
@@ -591,6 +592,7 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_buddyboss_app-integration h2:before {
   background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddyboss-app.svg);
   background-size: 100%;
+  background-color: #fff;
 }
 
 /* Integrations - LearnDash */
@@ -601,12 +603,14 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
   background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-learndash.svg);
   background-size: 100%;
+  background-color: #fff;
 }
 
 /* Integrations - BuddyPress Plugins */
 .bp-admin-card.section-bp_compatibility-integration h2:before {
   background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddypress.svg);
   background-size: 100%;
+  background-color: #fff;
 }
 
 /*
