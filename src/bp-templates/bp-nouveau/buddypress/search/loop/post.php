@@ -45,24 +45,18 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 				<?php echo wp_kses_post( $result['post_content'] ); ?>
 			</div>
 
-			<?php
-			if ( 'post' === get_post_type() ) {
-				?>
-				<div class="entry-meta">
-					<span class="author">
-						<?php
-						/* translators: %s author name */
-						printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() );
-						?>
-					</span>
-					<span class="middot">&middot;</span>
-					<span class="published">
-						<?php the_date(); ?>
-					</span>
-				</div>
-				<?php
-			}
-			?>
+			<div class="entry-meta">
+				<span class="author">
+					<?php
+					/* translators: %s author name */
+					printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() );
+					?>
+				</span>
+				<span class="middot">&middot;</span>
+				<span class="published">
+					<?php the_date(); ?>
+				</span>
+			</div>
 		</div>
 	</div>
 </li>
