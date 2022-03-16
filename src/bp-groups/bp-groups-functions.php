@@ -4634,11 +4634,11 @@ function bb_get_group_cover_image_height( $default = 'small' ) {
 }
 
 /**
- * Function will return label background and text color's for group type.
+ * Function will return label background and text color's for specific group type.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $type Member type
+ * @param $type Type of the group
  *
  * @return array Return array of label color data
  */

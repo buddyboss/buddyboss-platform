@@ -5086,11 +5086,11 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
 }
 
 /**
- * Function will return label background and text color's for member type.
+ * Function will return label background and text color's for specific member type.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param $type Member type
+ * @param $type Type of the member
  *
  * @return array Return array of label color data
  */

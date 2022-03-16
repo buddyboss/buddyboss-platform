@@ -3371,7 +3371,7 @@ function bb_get_pro_fields_class() {
 }
 
 /**
- * Added new meta box label color for member profile.
+ * Added new meta box as text and background color for member types label.
  *
  * @since BuddyBoss [BBVERSION]
  *

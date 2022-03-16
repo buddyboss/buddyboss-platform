@@ -2609,7 +2609,7 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
 }
 
 /**
- * Added new meta box for profile's label color.
+ * Added new meta box as text and background color for group types label.
  *
  * @since BuddyBoss [BBVERSION]
  *
