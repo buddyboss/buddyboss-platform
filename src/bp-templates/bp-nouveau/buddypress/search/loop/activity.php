@@ -18,11 +18,6 @@
 			</a>
 		</div>
 
-		<div class="activity-header">
-			<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
-			<?php esc_html_e( 'posted an update', 'buddyboss' ); ?>
-		</div>
-
 		<div class="item activity-content">
 			<div class="activity-header">
 				<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
