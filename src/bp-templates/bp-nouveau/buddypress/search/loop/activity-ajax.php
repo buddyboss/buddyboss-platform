@@ -24,18 +24,19 @@
 		</div>
 
 		<div class="item">
+			<h3 class="entry-title item-title">
+				<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
+			</h3>
+			<?php esc_html_e( 'posted an update', 'buddyboss' ); ?>
+			<?php esc_html_e( 'replied to a post', 'buddyboss' ); ?>
 			<?php if ( bp_activity_has_content() ) : ?>
 				<div class="item-title">
-					<?php echo bp_search_activity_intro( 30 ); ?>
+					<?php echo wp_kses_post( bp_search_activity_intro( 30 ) ); ?>
 				</div>
 			<?php endif; ?>
 			<div class="item-meta activity-header">
-				<strong class="activity-user">
-					<?php echo bp_core_get_user_displayname( bp_get_activity_user_id() ); ?>
-				</strong>
-				<span class="middot">&middot;</span>
 				<time>
-					<?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . ' ago'; ?>
+					<?php echo wp_kses_post( human_time_diff( bp_nouveau_get_activity_timestamp() ) ) . esc_html__( ' ago', 'buddyboss' ); ?>
 				</time>
 			</div>
 		</div>
