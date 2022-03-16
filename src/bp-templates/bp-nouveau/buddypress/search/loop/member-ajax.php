@@ -17,10 +17,12 @@
 
 		<div class="item">
 			<div class="item-title"><?php bp_member_name(); ?></div>
-
+			<?php echo bp_get_user_member_type( bp_get_member_user_id() ); ?>
 			<?php if ( bp_nouveau_member_has_meta() ) : ?>
 				<p class="item-meta last-activity">
-					<?php bp_nouveau_member_meta(); ?>
+					<span class="middot">&middot;</span>
+					<?php esc_html_e( 'Last active', 'buddyboss' ); ?>
+					<?php echo wp_kses_post( bp_get_member_last_activity_time() ); ?>
 				</p><!-- #item-meta -->
 			<?php endif; ?>
 		</div>
