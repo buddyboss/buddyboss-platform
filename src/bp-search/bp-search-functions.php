@@ -519,37 +519,36 @@ function bp_get_search_user_fields() {
 function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) {
 
 	$default = array(
-		'product'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/product.svg' : 'icon-product',
-		'sfwd-courses'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'icon-product',
-		'sfwd-lessons'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'sfwd-topic'          => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'sfwd-quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'icon-product',
-		'post'                => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'icon-product',
-		'forum'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'icon-product',
-		'topic'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'icon-product',
-		'reply'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'icon-product',
-		'bp-member-type'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'icon-product',
-		'memberpressproduct'  => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'icon-product',
-		'wp-parser-function'  => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'icon-product',
-		'wp-parser-class'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'icon-product',
-		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'icon-product',
-		'wp-parser-method'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'icon-product',
-		'command'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'icon-product',
-		'course'              => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'icon-product',
-		'llms_membership'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'icon-product',
-		'lesson'              => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'llms_assignment'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'llms_assignment'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'llms_certificate'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'llms_my_certificate' => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'icon-product',
-		'llms_quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'icon-quiz',
+		'product'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/product.svg' : 'bb-icon-shopping-cart',
+		'sfwd-courses'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'bb-icon-course',
+		'sfwd-lessons'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-book',
+		'sfwd-topic'          => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
+		'sfwd-quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
+		'post'                => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
+		'forum'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
+		'topic'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
+		'reply'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-reply',
+		'bp-member-type'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'memberpressproduct'  => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'wp-parser-function'  => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-class'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'wp-parser-method'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'command'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
+		'course'              => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'bb-icon-course',
+		'llms_membership'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
+		'lesson'              => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-book',
+		'llms_assignment'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
+		'llms_certificate'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_my_certificate' => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
+		'llms_quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
 	);
 
 	if ( isset( $default[ $post_type ] ) ) {
 		return $default[ $post_type ];
 	}
 
-	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'icon-product';
+	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-file';
 
 }
 
