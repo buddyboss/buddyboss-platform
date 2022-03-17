@@ -83,6 +83,7 @@ class Core {
         <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->course_slug ); ?>" class="menupop">
             <a class="ab-item" aria-haspopup="true"
                href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>">
+			   	<i class="bb-icons-l bb-icon-course"></i>
                 <span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo esc_attr( $this->course_name ); ?>
             </a>
 
