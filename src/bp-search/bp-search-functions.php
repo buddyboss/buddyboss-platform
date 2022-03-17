@@ -548,7 +548,7 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 		return $default[ $post_type ];
 	}
 
-	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-file';
+	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-file-doc';
 
 }
 

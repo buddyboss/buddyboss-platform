@@ -15,7 +15,7 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 <li class="bp-search-item bp-search-item_reply">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php bbp_reply_url( $reply_id ); ?>">
+			<a href="<?php bbp_reply_url( $reply_id ); ?>" class="bp-search-item_reply_link">
 				<?php
 				$args   = array(
 					'type'    => 'avatar',

@@ -25,10 +25,10 @@
 		<div class="item">
 			<h3 class="entry-title item-title">
 				<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
+				<?php esc_html_e( 'replied to a post', 'buddyboss' ); ?>
 			</h3>
-			<?php esc_html_e( 'replied to a post', 'buddyboss' ); ?>
 			<?php if ( bp_activity_has_content() ) : ?>
-				<div class="item-title">
+				<div class="item-desc">
 					<?php echo wp_kses_post( bp_search_activity_intro( 30 ) ); ?>
 				</div>
 			<?php endif; ?>

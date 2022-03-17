@@ -34,38 +34,43 @@ $course_price      = @$meta['sfwd-courses_course_price'];
 				<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 
-			<?php
-			if ( get_the_excerpt( $course_id ) ) {
-				echo mb_strimwidth( get_the_excerpt( $course_id ), 0, 100 ) . '...';
-			}
-			?>
+			<div class="entry-summary">
+				<?php
+				if ( get_the_excerpt( $course_id ) ) {
+					echo mb_strimwidth( get_the_excerpt( $course_id ), 0, 100 ) . '...';
+				}
+				?>
+			</div>
+			
 
 			<div class="entry-meta">
-				<span><?php printf( _n( '%d lesson', '%s lessons', $total, 'buddyboss' ), $total ); ?></span>
-			</div>
-
-			<?php if ( ! empty( learndash_course_status( $course_id ) ) ) : ?>
-				<div class="entry-meta">
+			
+				<?php if ( ! empty( learndash_course_status( $course_id ) ) ) : ?>
 					<span class="course-status">
 						<?php echo learndash_course_status( $course_id, null, false ); ?>
 					</span>
-				</div>
-			<?php endif; ?>
+				<?php endif; ?>
+				
+				<span class="middot">&middot;</span>
+				
+				<span><?php printf( _n( '%d lesson', '%s lessons', $total, 'buddyboss' ), $total ); ?></span>
+				
+			</div>
+
+			<?php
+			// format the Course price to be proper XXX.YY no leading dollar signs or other values.
+			if ( ( $course_price_type == 'paynow' ) || ( $course_price_type == 'subscribe' ) ) {
+				if ( $course_price != '' ) {
+					$course_price = preg_replace( '/[^0-9.]/', '', $course_price );
+					?>
+					<div class="item-extra entry-meta"><?php echo number_format( floatval( $course_price ), 2, '.', '' ); ?></div>
+					<?php
+				}
+			}
+			?>
+
 
 
 		</div>
-
-		<?php
-		// format the Course price to be proper XXX.YY no leading dollar signs or other values.
-		if ( ( $course_price_type == 'paynow' ) || ( $course_price_type == 'subscribe' ) ) {
-			if ( $course_price != '' ) {
-				$course_price = preg_replace( '/[^0-9.]/', '', $course_price );
-				?>
-				<div class="item-extra"><?php echo number_format( floatval( $course_price ), 2, '.', '' ); ?></div>
-				<?php
-			}
-		}
-		?>
-
 	</div>
 </li>

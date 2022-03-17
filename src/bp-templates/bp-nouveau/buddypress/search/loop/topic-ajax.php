@@ -35,6 +35,8 @@ $total = bbp_get_topic_reply_count( get_the_ID() ) ?>
 			</div>
 			<div class="item-desc">
 				<span><?php echo wp_kses_post( wp_trim_words( bbp_get_topic_content( get_the_ID() ), 30, '...' ) ); ?></span><br>
+			</div>
+			<div class="entry-meta">
 				<span><?php esc_html_e( 'By ', 'buddyboss' ); ?><?php echo esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( get_the_ID() ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<?php

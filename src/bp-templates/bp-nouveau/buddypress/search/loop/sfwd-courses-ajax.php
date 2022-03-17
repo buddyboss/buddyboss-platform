@@ -31,18 +31,21 @@ $course_id = get_the_ID();  ?>
 				?>
 
 			</div>
-			<?php
-			// @todo remove %d?
-			printf( _n( '%d lesson', '%d lessons', $total, 'buddyboss' ), $total );
-			?>
+			<div class="entry-meta">
 
-			<?php if ( ! empty( learndash_course_status( $course_id ) ) ) : ?>
-				<div class="entry-meta">
+				<?php if ( ! empty( learndash_course_status( $course_id ) ) ) : ?>
 					<span class="course-status">
 						<?php echo learndash_course_status( $course_id, null, false ); ?>
 					</span>
-				</div>
-			<?php endif; ?>
+				<?php endif; ?>
+				
+				<span class="middot">&middot;</span>
+
+				<?php
+				// @todo remove %d?
+				printf( _n( '%d lesson', '%d lessons', $total, 'buddyboss' ), $total );
+				?>
+			</div>
 
 		</div>
 	</a>

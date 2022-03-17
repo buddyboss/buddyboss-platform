@@ -22,14 +22,18 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 
 		<div class="item">
 			<div class="item-title"><?php the_title(); ?></div>
-			<?php
-			if ( get_the_excerpt( get_the_ID() ) ) {
-				echo mb_strimwidth( get_the_excerpt( get_the_ID() ), 0, 100 ) . '...';
-			} elseif ( get_the_content( get_the_ID() ) ) {
-				echo mb_strimwidth( get_the_content( get_the_ID() ), 0, 100 ) . '...';
-			}
-			?>
+
 			<div class="item-desc">
+				<?php
+				if ( get_the_excerpt( get_the_ID() ) ) {
+					echo mb_strimwidth( get_the_excerpt( get_the_ID() ), 0, 100 ) . '...';
+				} elseif ( get_the_content( get_the_ID() ) ) {
+					echo mb_strimwidth( get_the_content( get_the_ID() ), 0, 100 ) . '...';
+				}
+				?>
+			</div>
+
+			<div class="item-meta">
 			<?php
 			// @todo remove %d?
 			printf( _n( '%d quiz', '%d quizzes', $total, 'buddyboss' ), $total );

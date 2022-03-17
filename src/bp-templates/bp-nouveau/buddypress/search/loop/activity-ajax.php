@@ -24,9 +24,11 @@
 		</div>
 
 		<div class="item">
-			<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
+			<div class="item-title">
+				<?php echo wp_kses_post( bp_get_activity_action( array( 'no_timestamp' => true ) ) ); ?>
+			</div>
 			<?php if ( bp_activity_has_content() ) : ?>
-				<div class="item-title">
+				<div class="item-desc">
 					<?php echo wp_kses_post( bp_search_activity_intro( 30 ) ); ?>
 				</div>
 			<?php endif; ?>

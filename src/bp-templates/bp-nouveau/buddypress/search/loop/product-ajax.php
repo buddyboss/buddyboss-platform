@@ -29,16 +29,16 @@ $product = wc_get_product( get_the_ID() ); ?>
 		<div class="item">
 			<div class="item-title"><?php the_title(); ?></div>
             <?php wc_get_template( 'single-product/short-description.php' ); ?>
-            <span class="entry-meta">
+            <div class="entry-meta">
 				<?php
 				$category = wc_get_product_category_list( get_the_ID() );
 				if ( $category ) {
 					echo wc_get_product_category_list( get_the_ID(), '<span class="middot">&middot;</span>' );
 				}
 				?>
-			</span>
-            <span class="middot">&middot;</span>
-			<div class="item-desc"><?php echo wp_kses_post( $product->get_price_html() ); ?></div>
+				<span class="middot">&middot;</span>
+				<?php echo wp_kses_post( $product->get_price_html() ); ?>
+			</div>
 		</div>
 	</a>
 </div>

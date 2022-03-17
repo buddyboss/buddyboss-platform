@@ -14,14 +14,16 @@
 		<div class="item-avatar">
 			<?php bp_group_avatar( 'type=thumb&width=50&height=50' ); ?>
 		</div>
-		<p class="item">
+		<div class="item">
 			<div class="item-title"><?php bp_group_link(); ?></div>
-			<p class="item-meta group-details">
+			<div class="item-meta group-details">
 				<?php bp_group_description(); ?>
-			</p><!-- //.group_description -->
-			<?php bp_group_type(); ?>
+			</div><!-- //.group_description -->
+			<span class="item-meta">
+				<?php bp_group_type(); ?>
+			</span>
 			<span class="middot">&middot;</span>
-			<p class="item-meta group-details"><?php esc_html_e( 'Last active ', 'buddyboss' ); ?><?php bp_group_last_active(); ?></p>
+			<p class="item-meta last-active"><?php esc_html_e( 'Last active ', 'buddyboss' ); ?><?php bp_group_last_active(); ?></p>
 		</div>
 	</a>
 </div>
