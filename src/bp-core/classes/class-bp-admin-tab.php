@@ -249,7 +249,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
 					
-					if ( 'bp-enable-private-network-public-content' === $setting_name ) {
+					if ( 'bp-enable-private-network-public-content' === $setting_name || 'bb-enable-private-rss-feeds-public-content' === $setting_name ) {
 						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( $_POST[ $setting_name ] ) : '';
 					} else {
 						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : '';
