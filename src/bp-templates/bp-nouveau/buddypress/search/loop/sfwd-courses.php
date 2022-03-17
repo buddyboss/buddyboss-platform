@@ -28,16 +28,23 @@ $course_price      = @$meta['sfwd-courses_course_price'];
 		</div>
 
 		<div class="item">
-			<div class="entry-meta">
-				<span><?php printf( _n( '%d lesson', '%s lessons', $total, 'buddyboss' ), $total ); ?></span>
-			</div>
+
 
 			<h3 class="entry-title item-title">
 				<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 
+			<?php
+			if ( get_the_excerpt( $course_id ) ) {
+				echo mb_strimwidth( get_the_excerpt( $course_id ), 0, 100 ) . '...';
+			}
+			?>
+
+			<div class="entry-meta">
+				<span><?php printf( _n( '%d lesson', '%s lessons', $total, 'buddyboss' ), $total ); ?></span>
+			</div>
+
 			<?php if ( ! empty( learndash_course_status( $course_id ) ) ) : ?>
-				<?php echo do_shortcode( "[learndash_course_progress course_id=$course_id]" ); ?>
 				<div class="entry-meta">
 					<span class="course-status">
 						<?php echo learndash_course_status( $course_id, null, false ); ?>
