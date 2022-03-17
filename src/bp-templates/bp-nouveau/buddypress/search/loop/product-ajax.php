@@ -34,8 +34,6 @@ $product = wc_get_product( get_the_ID() ); ?>
 				$category = wc_get_product_category_list( get_the_ID() );
 				if ( $category ) {
 					echo wc_get_product_category_list( get_the_ID(), '<span class="middot">&middot;</span>' );
-				} elseif ( wc_get_product_tag_list( get_the_ID() ) ) {
-					echo wc_get_product_tag_list( get_the_ID(), '<span class="middot">&middot;</span>' );
 				}
 				?>
 			</span>
