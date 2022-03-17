@@ -15,13 +15,21 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php bbp_topic_permalink( $topic_id ); ?>">
-				<img
-					src="<?php echo esc_url( bbp_get_forum_thumbnail_src( bbp_get_forum_id( $topic_id ) ) ?: bp_search_get_post_thumbnail_default( get_post_type() ) ); ?>"
-					class="avatar forum-avatar"
-					height="150"
-					width="150"
-					alt=""
-				/>
+				<?php
+				$args   = array(
+					'type'    => 'avatar',
+					'post_id' => $topic_id,
+				);
+				$avatar = bbp_get_topic_author_link( $args );
+
+				if ( $avatar ) {
+					echo wp_kses_post( $avatar );
+				} else {
+					?>
+				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+					<?php
+				}
+				?>
 			</a>
 		</div>
 
