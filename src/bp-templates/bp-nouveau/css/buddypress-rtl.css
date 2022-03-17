@@ -1829,7 +1829,7 @@ a.layout-grid-view {
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .emojionearea-button:before,
 .activity-update-form .activity-form.focus-in #editor-toolbar .emojionearea-button:before {
   content: "\ee5f";
-  font: normal 400 normal 24px/1 bb-icons-lined;
+  font: normal 400 normal 24px/1 bb-icons;
   /* stylelint-disable-line */
   opacity: 1;
   background: none;
@@ -14499,7 +14499,7 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 
 .bb-select-container span.select2-selection__choice__remove:before {
   content: "\e828";
-  font-family: bb-icons-lined;
+  font-family: bb-icons;
   font-size: 13px;
   line-height: 1;
   background: #fff;
@@ -20662,7 +20662,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .modal-container .bb-model-footer .button.report-submit.loading:after {
-  font: normal normal 400 14px/1 bb-icons-lined;
+  font: normal normal 400 14px/1 bb-icons;
   speak: none;
   display: inline-block;
   margin: 0 6px 0 0;
