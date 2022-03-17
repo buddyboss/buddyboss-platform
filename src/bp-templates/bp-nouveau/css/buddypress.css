@@ -3826,6 +3826,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\ef02";
   font-family: "bb-icons";
   /* stylelint-disable-line */
+  font-weight: 300;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
@@ -3840,6 +3841,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   content: "\e828";
   font-family: "bb-icons";
   /* stylelint-disable-line */
+  font-weight: 100;
 }
 
 .ac-reply-toolbar .bb-icon,
@@ -11073,7 +11075,7 @@ ul.bbp-stats .bbp-count {
   /* stylelint-disable-line */
   speak: none;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
@@ -17824,6 +17826,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
+  font-weight: 300;
   height: 50px;
   width: 50px;
   display: inline-block;
@@ -17897,6 +17900,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   margin-top: 34px;
+  font-weight: 300;
 }
 
 .dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details .dz-filename {
@@ -17927,6 +17931,7 @@ img.emojioneemoji {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
+  font-weight: 300;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -22543,6 +22548,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   left: 50%;
   transform: translateX(-50%);
   font-size: 16px;
+  font-weight: 300;
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated {
@@ -22622,6 +22628,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   /* stylelint-disable-line */
   content: "\e876";
   display: inline;
+  font-weight: 300;
 }
 
 .video-thumbnail-content .bp-video-thumbnail-auto-generated .video-thumb-list li > div,
@@ -22682,6 +22689,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
+  font-weight: 300;
   line-height: 1;
   margin-left: 10px;
   text-align: center;

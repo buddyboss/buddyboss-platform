@@ -721,6 +721,7 @@ ul.medium-editor-toolbar-actions {
 	.medium-editor-action-quote b:before {
 		content: "\ef02";
 		font-family: "bb-icons";/* stylelint-disable-line */
+		font-weight: 300;
 	}
 
 	.medium-editor-action-anchor b:before {
@@ -734,6 +735,7 @@ ul.medium-editor-toolbar-actions {
 	.medium-editor-action-close b:before {
 		content: "\e828";
 		font-family: "bb-icons";/* stylelint-disable-line */
+		font-weight: 100;
 	}
 
 }
