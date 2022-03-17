@@ -2630,7 +2630,7 @@ function bb_group_type_labelcolor_metabox( $post ) {
 	}
 	?>
 	<div class="bb-meta-box-label-color-main">
-		<p><?php esc_html_e( 'Select which label colors to use for groups using this group type. Group Type labels are used in places such as group headers and forum discussions.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Select which label colors to use for groups using this group type. Group Type labels are used in places such as group headers.', 'buddyboss' ); ?></p>
 		<p>
 			<select name="<?php echo esc_attr( $post_type ); ?>[label_color][type]" id="<?php echo esc_attr( $post_type ); ?>-label-color-type">
 				<option value="default" <?php selected( $color_type, 'default' ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
