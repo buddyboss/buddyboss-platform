@@ -23,27 +23,32 @@ $product = wc_get_product( get_the_ID() ); ?>
 		</div>
 
 		<div class="item">
-			<span class="entry-meta">
-				<?php echo wc_get_product_category_list( get_the_ID() ); ?>
-			</span>
+
 
 			<h3 class="entry-title item-title">
 				<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
-			<div class="rating-custom clearfix">
-				<?php wc_get_template( 'single-product/rating.php' ); ?>
-			</div>
 
-			<?php if ( $product->is_on_sale() ) : ?>
-				<div class="product-sale">
-					<span class="onsale"><?php esc_html_e( 'Sale!', 'buddyboss' ); ?></span>
-				</div>
-			<?php endif; ?>
+			<?php wc_get_template( 'single-product/short-description.php' ); ?>
+
+            <span class="entry-meta">
+				<?php
+				$category = wc_get_product_category_list( get_the_ID() );
+				if ( $category ) {
+					echo wc_get_product_category_list( get_the_ID(), '<span class="middot">&middot;</span>' );
+				} elseif ( wc_get_product_tag_list( get_the_ID() ) ) {
+					echo wc_get_product_tag_list( get_the_ID(), '<span class="middot">&middot;</span>' );
+				}
+				?>
+
+			</span>
+            <span class="middot">&middot;</span>
+            <div class="item-extra">
+				<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
+            </div>
 
 		</div>
 
-		<div class="item-extra">
-			<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
-		</div>
+
 	</div>
 </li>
