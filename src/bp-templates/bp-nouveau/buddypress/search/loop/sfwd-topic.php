@@ -27,6 +27,14 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 				<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 
+			<?php
+			if ( get_the_excerpt( get_the_ID() ) ) {
+				echo mb_strimwidth( get_the_excerpt( get_the_ID() ), 0, 100 ) . '...';
+			} elseif ( get_the_content( get_the_ID() ) ) {
+				echo mb_strimwidth( get_the_content( get_the_ID() ), 0, 100 ) . '...';
+			}
+			?>
+
 			<div class="entry-content entry-summary">
 				<?php printf( _n( '%d quiz', '%d quizzes', $total, 'buddyboss' ), $total ); ?>
 			</div>
