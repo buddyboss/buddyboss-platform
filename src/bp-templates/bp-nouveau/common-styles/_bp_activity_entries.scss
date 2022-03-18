@@ -1245,6 +1245,8 @@ span.dashicons.dashicons-admin-file:before {
 			flex: 0 0 100% !important;
 			max-width: 100% !important;
 			min-width: auto !important;
+			position: relative;
+			inset: 0;
 
 			.entry-img {
 				padding-top: 55.56% !important;
