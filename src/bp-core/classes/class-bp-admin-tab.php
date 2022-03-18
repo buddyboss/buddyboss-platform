@@ -289,10 +289,19 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'item_type'       => 'default',
 						'has_cover_image' => false,
 					),
-					'email_template'       => array(
-						'html' => $email_template,
+					'remove'            => array(
+						'nonce'  => wp_create_nonce( 'bp_delete_cover_image' ),
+						'action' => 'bp_cover_image_delete',
+						'json'   => true,
 					),
-				)
+				),
+				'member_directories'  => array(
+					'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
+					'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
+				),
+				'email_template'      => array(
+					'html' => $email_template,
+				),
 			);
 
 			// Localize only post_type is member type and group type.
