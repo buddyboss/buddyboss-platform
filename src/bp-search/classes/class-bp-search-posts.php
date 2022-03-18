@@ -34,7 +34,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			/*
-			 an example UNION query :-
+			An example UNION query :-
 			-----------------------------------------------------
 			(
 				SELECT
@@ -77,9 +77,10 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$sql .= " FROM {$wpdb->posts} p ";
 
 			/*
-			 ++++++++++++++++++++++++++++++++
+			++++++++++++++++++++++++++++++++
 			 * wp_posts table fields
-			 +++++++++++++++++++++++++++++++ */
+			+++++++++++++++++++++++++++++++
+			*/
 			$taxonomies = get_object_taxonomies( $this->pt_name );
 			foreach ( $taxonomies as $taxonomy ) {
 				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->pt_name ) ) {
@@ -87,17 +88,19 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				}
 			}
 
-			// Tax query left join
+			// Tax query left join.
 			if ( ! empty( $tax ) ) {
 				$sql .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
 			}
 
-			// WHERE
-			$sql                .= " WHERE 1=1 AND ( p.post_title LIKE %s OR ExtractValue(p.post_content, '//text()') LIKE %s ";
+			// WHERE.
+			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR ExtractValue(p.post_content, '//text()') LIKE %s OR ExtractValue(REPLACE(p.post_content, '&nbsp;', ' '), '//text()') LIKE %s ";
+
+			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
-			// Tax query
+			// Tax query.
 			if ( ! empty( $tax ) ) {
 
 				$tax_in_arr = array_map(
@@ -109,19 +112,18 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$sql                    .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON 
-					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
+				$sql                    .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 					$query_placeholder[] = '%' . $search_term . '%';
 					$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			// Meta query
+			// Meta query.
 			if ( bp_is_search_post_type_meta_enable( $this->pt_name ) ) {
 				$sql                .= " OR p.ID IN (SELECT post_id FROM {$wpdb->postmeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s )";
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			// Post should be publish
+			// Post should be publish.
 			$sql .= ") AND p.post_type = '{$this->pt_name}' AND p.post_status = 'publish' ";
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
