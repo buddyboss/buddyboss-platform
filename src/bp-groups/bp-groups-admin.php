@@ -2618,7 +2618,7 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
 function bb_group_type_labelcolor_metabox( $post ) {
 	$post_type         = isset( $post->post_type ) ? $post->post_type : 'bp-group-type';
 	$meta_data         = get_post_meta( $post->ID, '_bp_group_type_label_color', true );
-	$label_color_data  = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : '';
+	$label_color_data  = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : array();
 	$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
 	$colorpicker_class = 'default' === $color_type ? $post_type . '-hide-colorpicker' : $post_type . '-show-colorpicker';
 	if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {

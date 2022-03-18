@@ -4651,7 +4651,7 @@ function bb_get_group_type_label_colors( $type ) {
 	$bp_group_type_label_color = wp_cache_get( $cache_key, 'bp_groups_group_type' );
 	if ( false === $bp_group_type_label_color && ! empty( $post_id ) ) {
 		$label_colors_meta = get_post_meta( $post_id, '_bp_group_type_label_color', true );
-		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : '';
+		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : array();
 		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
 		if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
 			$background_color = buddyboss_theme_get_option( 'label_background_color' );
