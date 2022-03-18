@@ -155,7 +155,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 			}
 
 			&.view-as:before {
-				content: "\ef52";
+				content: "\ee69";
 				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 16px;
 			}
@@ -180,13 +180,13 @@ body.buddypress.bp-user #page #primary .entry-header {
 			}
 
 			&.follow-button:before {
-				content: "\ebba";
+				content: "\ee03";
 				font-size: 14px;
 			}
 
 			&.is_friend:before,
 			&.pending_friend:before {
-				content: "\e930";
+				content: "\ef64";
 			}
 
 		}

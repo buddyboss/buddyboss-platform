@@ -7814,7 +7814,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
 .bb_more_options .bb_more_options_list button.view-as:before,
 .bb_more_options .bb_more_options_list a.view-as:before {
-  content: "\ef52";
+  content: "\ee69";
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
@@ -7869,7 +7869,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.follow-button:before,
 .bb_more_options .bb_more_options_list button.follow-button:before,
 .bb_more_options .bb_more_options_list a.follow-button:before {
-  content: "\ebba";
+  content: "\ee03";
   font-size: 14px;
 }
 
@@ -7884,7 +7884,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.pending_friend:before,
 .bb_more_options .bb_more_options_list a.is_friend:before,
 .bb_more_options .bb_more_options_list a.pending_friend:before {
-  content: "\e930";
+  content: "\ef64";
 }
 
 @media screen and (max-width: 799px) {
