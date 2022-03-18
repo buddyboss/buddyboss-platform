@@ -242,7 +242,7 @@
 				}
 
 				.vjs-icon-placeholder:before {
-					content: "\e88b";
+					content: "\ee67";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
 				}
@@ -283,7 +283,7 @@
 				}
 
 				.vjs-icon-placeholder:before {
-					content: "\e88b";
+					content: "\ee67";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
 					display: -webkit-box;
@@ -300,7 +300,7 @@
 			}
 
 			.vjs-seek-button span.vjs-icon-placeholder:before {
-				content: "\e9ce" !important;
+				content: "\ef07" !important;
 				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
@@ -349,7 +349,8 @@
 			}
 
 			.vjs-icon-placeholder:before {
-				content: "\e8af";
+				font-family: "bb-icons";/* stylelint-disable-line */
+				content: "\eed5";
 			}
 
 		}
@@ -442,8 +443,8 @@
 					}
 
 					&:before {
-						content: "\e9cb";
-						font-family: 'bb-icons';/* stylelint-disable-line */
+						content: "\eeb4";
+						font-family: "bb-icons";/* stylelint-disable-line */						
 						font-size: 20px;
 						display: inline-block;
 						text-align: center;
@@ -455,7 +456,7 @@
 					}
 
 					&.video-file-delete:before {
-						content: "\e937";
+						content: "\ef48";
 						font-size: 15px;
 					}
 
@@ -560,7 +561,7 @@
 			border-radius: 4px;
 
 			&:after {
-				content: "\e838";
+				content: "\ef30";
 				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 35px;
 				animation: spin 2s infinite linear;
@@ -1005,7 +1006,7 @@
 			z-index: 1111;
 			display: none;
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 
 				border: 2px solid #fff;
 				background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
@@ -1019,6 +1020,7 @@
 			.bb-custom-check:checked + label .bb-icon:before {
 				content: "\e876";
 				display: inline;
+				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
 		}
@@ -1096,13 +1098,14 @@
 				position: relative;
 
 				&:before {
-					content: "\e9d3";
+					content: "\ee06";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					position: absolute;
 					top: -10px;
 					left: 50%;
 					transform: translateX(-50%);
 					font-size: 16px;
+					font-weight: 300;
 				}
 
 			}
@@ -1158,7 +1161,7 @@
 					top: 0;
 					bottom: 0;
 
-					.bb-icon {
+					[class*=" bb-icon-"] {
 						display: none;
 					}
 
@@ -1172,7 +1175,7 @@
 					right: 7px;
 					left: inherit;
 
-					.bb-icon {
+					[class*=" bb-icon-"] {
 
 						border: 2px solid #fff;
 						background-color: rgba(255, 255, 255, 0.40);/* stylelint-disable-line */
@@ -1184,8 +1187,10 @@
 					}
 
 					.bb-custom-check:checked + label .bb-icon:before {
+						font-family: "bb-icons";/* stylelint-disable-line */
 						content: "\e876";
 						display: inline;
+						font-weight: 300;
 					}
 
 				}
@@ -1251,9 +1256,10 @@
 		margin-top: 25px;
 
 		&.saving:after {
-			content: "\e838";
+			content: "\ef30";
 			font-family: "bb-icons";/* stylelint-disable-line */
 			font-size: 18px;
+			font-weight: 300;
 			line-height: 1;
 			margin-left: 10px;
 			text-align: center;
@@ -1430,7 +1436,7 @@
 			max-height: 106px;
 		}
 
-		.bb-action-check-wrap .bb-icon {
+		.bb-action-check-wrap [class*=" bb-icon-"] {
 			font-size: 11px;
 			width: 18px;
 			height: 18px;
@@ -1532,7 +1538,7 @@ div.dropzone.dz-started {
 		}
 	}
 
-	.dz-preview .dz-progress-ring-wrap .bb-icon {
+	.dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
 		font-size: 16px;
 	}
 
@@ -1594,7 +1600,7 @@ div.dropzone.dz-started {
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				color: rgba(18, 43, 70, 0.5);
 			}
 		}

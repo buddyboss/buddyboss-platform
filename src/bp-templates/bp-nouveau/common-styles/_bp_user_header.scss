@@ -136,7 +136,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&.reported-content:before,
 			&.report-content:before {
-				content: "\e8ea";
+				content: "\ee9c";
 			}
 
 			&:before {
@@ -155,23 +155,24 @@ body.buddypress.bp-user #page #primary .entry-header {
 			}
 
 			&.view-as:before {
-				content: "\e8be";
+				content: "\ef52";
+				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 16px;
 			}
 
 			&.send-message:before {
-				content: "\e910";
+				content: "\ee62";
 				font-size: 16px;
 				color: inherit !important;
 			}
 
 			&.block-member:before {
-				content: "\e8c9";
+				content: "\ee08";
 			}
 
 			&.not_friends:before,
 			&.friendship-button:before {
-				content: "\e94d";
+				content: "\ef60";
 			}
 
 			&.awaiting_response_friend:before {

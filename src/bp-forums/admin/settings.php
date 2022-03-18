@@ -1322,7 +1322,7 @@ function bbp_converter_setting_callback_dbpass() {
 
 	<div class="_bbp_converter_db_pass_wrap">
 		<input name="_bbp_converter_db_pass" id="_bbp_converter_db_pass" type="password" value="<?php bbp_form_option( '_bbp_converter_db_pass' ); ?>" class="medium-text" />
-		<i class="bb-icon bb-icon-eye bbp-db-pass-toggle"></i>
+		<i class="bb-icon-l bb-icon-eye bbp-db-pass-toggle"></i>
 	</div>
 	<label for="_bbp_converter_db_pass"><?php esc_html_e( 'Password to access the database', 'buddyboss' ); ?></label>
 

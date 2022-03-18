@@ -704,7 +704,7 @@ table.extension-listing {
 	tbody td {
 		padding: 10px;
 
-		i.bb-icon {
+		[class*=" bb-icon-"] {
 			font-size: 33px;
 			color: #999;
 			margin-left: 8px;
