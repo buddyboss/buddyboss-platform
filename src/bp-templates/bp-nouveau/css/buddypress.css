@@ -2955,6 +2955,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   margin-right: 10px;
   width: 20px;
   text-align: center;
+  font-weight: 400;
 }
 
 .activity-privacy > li.public:before {
