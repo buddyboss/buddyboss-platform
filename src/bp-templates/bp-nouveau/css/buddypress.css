@@ -1657,6 +1657,7 @@ a.layout-grid-view {
   text-transform: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
 }
 
 .bp-activity-privacy__label .privacy-figure--public:before {
@@ -1842,9 +1843,10 @@ a.layout-grid-view {
   margin-right: 10px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-mention [class*=" bb-icon-"],
-.activity-update-form .activity-form.focus-in #editor-toolbar .post-mention [class*=" bb-icon-"] {
-  font-size: 20px;
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .show-toolbar [class*=" bb-icon-"],
+.activity-update-form .activity-form.focus-in #editor-toolbar .show-toolbar [class*=" bb-icon-"] {
+  font-size: 28px;
+  margin-right: 5px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-attachments .dropzone.open,
@@ -2269,6 +2271,11 @@ a.layout-grid-view {
   position: relative;
 }
 
+#whats-new-toolbar .post-elements-buttons-item.show-toolbar,
+#whats-new-messages-toolbar .post-elements-buttons-item.show-toolbar {
+  margin-right: 5px;
+}
+
 #whats-new-messages-toolbar .post-elements-buttons-item,
 .activity-form #whats-new-toolbar .post-elements-buttons-item {
   line-height: 1;
@@ -2278,7 +2285,7 @@ a.layout-grid-view {
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
   top: inherit;
   bottom: 6px;
-  left: 39px;
+  left: 40px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -2479,10 +2486,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   min-width: 30px;
   border: 0;
   background-color: transparent !important;
-}
-
-.activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button b:before {
-  font-size: 26px;
 }
 
 .activity-update-form .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
@@ -3803,7 +3806,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action b:before {
   line-height: 1;
   display: block;
   transform: none;
-  font-size: 24px;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-bold b:before {
@@ -3819,14 +3821,13 @@ ul.medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
-  content: "\ee87";
+  content: "\eeca";
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\ef02";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-weight: 300;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
@@ -3855,6 +3856,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   font-size: 24px;
   width: auto;
   height: auto;
+}
+
+.ac-reply-toolbar #activity-document-button [class*=" bb-icon-"],
+#whats-new-toolbar #activity-document-button [class*=" bb-icon-"],
+#whats-new-messages-toolbar #activity-document-button [class*=" bb-icon-"] {
+  font-size: 20px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -22919,10 +22926,6 @@ div.dropzone.dz-started .dz-default.dz-message {
   line-height: 1;
 }
 
-.dropzone.video-dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icon-"] {
-  font-size: 16px;
-}
-
 .dropzone.video-dropzone .dz-preview .dz-filename {
   opacity: 0;
   visibility: hidden;
@@ -23801,7 +23804,7 @@ body > .open-popup.video-error-popup {
   transform: translate(-50%, -50%);
   color: #fff;
   z-index: 11;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap {

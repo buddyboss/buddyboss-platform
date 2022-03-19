@@ -298,6 +298,7 @@
 			text-transform: none;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
+			font-size: 20px;
 		}
 
 		&--public:before {
@@ -468,8 +469,9 @@
 				margin-right: 10px;
 			}
 
-			.post-mention [class*=" bb-icon-"] {
-				font-size: 20px;
+			.show-toolbar [class*=" bb-icon-"] {
+				font-size: 28px;
+				margin-right: 5px;
 			}
 
 		}
@@ -850,6 +852,10 @@
 	.post-elements-buttons-item {
 		margin-right: 10px;
 		position: relative;
+
+		&.show-toolbar {
+			margin-right: 5px;
+		}
 	}
 }
 
@@ -868,7 +874,7 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 6px;
-		left: 39px;
+		left: 40px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
@@ -1071,10 +1077,6 @@
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-
-				b:before {
-					font-size: 26px;
-				}
 
 				&.medium-editor-button-active {
 					background: none transparent !important;
