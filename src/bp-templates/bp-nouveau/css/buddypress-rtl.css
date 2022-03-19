@@ -3858,10 +3858,15 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   height: auto;
 }
 
-.ac-reply-toolbar #activity-document-button [class*=" bb-icon-"],
-#whats-new-toolbar #activity-document-button [class*=" bb-icon-"],
-#whats-new-messages-toolbar #activity-document-button [class*=" bb-icon-"] {
-  font-size: 20px;
+.ac-reply-toolbar .document-support [class*=" bb-icon-"],
+.ac-reply-toolbar .post-media-document-support [class*=" bb-icon-"],
+#whats-new-toolbar .document-support [class*=" bb-icon-"],
+#whats-new-toolbar .post-media-document-support [class*=" bb-icon-"],
+#whats-new-messages-toolbar .document-support [class*=" bb-icon-"],
+#whats-new-messages-toolbar .post-media-document-support [class*=" bb-icon-"] {
+  font-size: 19px;
+  position: relative;
+  bottom: 1px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -16339,6 +16344,7 @@ body.login .login-popup .mfp-close:hover {
 .buddypress-wrap .bp-subnavs .component-navigation.document-nav li.selected.loading a:after,
 .buddypress-wrap .bp-subnavs .component-navigation.media-nav li.selected.loading a:after {
   content: "\ef30";
+  font-weight: 400;
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;

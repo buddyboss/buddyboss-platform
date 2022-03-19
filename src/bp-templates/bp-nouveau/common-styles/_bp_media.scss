@@ -564,6 +564,7 @@
 
 	li.selected.loading a:after {
 		content: "\ef30";
+		font-weight: 400;
 		font-family: "bb-icons"; /* stylelint-disable-line */
 		font-size: 16px;
 		line-height: 1;

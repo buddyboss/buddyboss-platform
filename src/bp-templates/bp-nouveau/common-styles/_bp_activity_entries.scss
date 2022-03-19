@@ -751,8 +751,11 @@ ul.medium-editor-toolbar-actions {
 		height: auto;
 	}
 
-	#activity-document-button [class*=" bb-icon-"] {
-		font-size: 20px;
+	.document-support [class*=" bb-icon-"],
+	.post-media-document-support  [class*=" bb-icon-"] {
+		font-size: 19px;
+		position: relative;
+		bottom: 1px;
 	}
 
 	.emojionearea .emojionearea-button:before {
