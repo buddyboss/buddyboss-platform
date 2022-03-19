@@ -3554,7 +3554,7 @@ input.search-query-input {
 .activity-list .bb-activity-more-options-wrap {
   position: absolute;
   left: 15px;
-  top: 20px;
+  top: 8px;
 }
 
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action {
@@ -3604,8 +3604,8 @@ input.search-query-input {
 
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options {
   position: absolute;
-  top: 20px;
-  left: 4px;
+  top: 30px;
+  left: 10px;
   background: #fff;
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   border-radius: 4px;
