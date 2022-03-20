@@ -5316,7 +5316,7 @@ span.dashicons.dashicons-admin-file:before {
   flex-basis: 30px;
   width: 30px;
   text-align: center;
-  padding: 15px 0 !important;
+  padding: 10px 0 !important;
   display: inline-block;
   vertical-align: middle;
   position: relative;
@@ -5471,7 +5471,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 16px;
+  font-size: 18px;
   display: inline-block;
   margin-left: 10px;
   width: 20px;
@@ -5492,17 +5492,14 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file a:before {
   content: "\ee9f";
-  font-size: 13px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.delete_file a:before {
   content: "\ef48";
-  font-size: 15px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.privacy_file a:before {
   content: "\eecc";
-  font-size: 15px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.copy_download_file_url a:before {
@@ -21752,6 +21749,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 16px;
+  font-weight: 400;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-play-control:after,
@@ -21812,6 +21810,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\ef07" !important;
   font-family: "bb-icons";
   /* stylelint-disable-line */
+  font-weight: 400;
 }
 
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,

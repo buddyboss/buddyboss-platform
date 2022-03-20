@@ -245,6 +245,7 @@
 					content: "\ee67";
 					font-family: "bb-icons";/* stylelint-disable-line */
 					font-size: 16px;
+					font-weight: 400;
 				}
 
 			}
@@ -302,6 +303,7 @@
 			.vjs-seek-button span.vjs-icon-placeholder:before {
 				content: "\ef07" !important;
 				font-family: "bb-icons";/* stylelint-disable-line */
+				font-weight: 400;
 			}
 
 			.vjs-seek-button.skip-back .vjs-icon-placeholder:before {

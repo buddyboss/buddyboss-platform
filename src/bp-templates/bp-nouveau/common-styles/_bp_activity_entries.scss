@@ -1882,7 +1882,7 @@ span.dashicons.dashicons-admin-file:before {
 				flex-basis: 30px;
 				width: 30px;
 				text-align: center;
-				padding: 15px 0 !important;
+				padding: 10px 0 !important;
 				display: inline-block;
 				vertical-align: middle;
 				position: relative;
@@ -2042,7 +2042,7 @@ span.dashicons.dashicons-admin-file:before {
 
 							&:before {
 								font-family: "bb-icons";/* stylelint-disable-line */
-								font-size: 16px;
+								font-size: 18px;
 								display: inline-block;
 								margin-right: 10px;
 								width: 20px;
@@ -2066,18 +2066,15 @@ span.dashicons.dashicons-admin-file:before {
 
 							a:before {
 								content: "\ee9f";
-								font-size: 13px;
 							}
 						}
 
 						&.delete_file a:before {
 							content: "\ef48";
-							font-size: 15px;
 						}
 
 						&.privacy_file a:before {
 							content: "\eecc";
-							font-size: 15px;
 						}
 
 						&.copy_download_file_url a:before {
