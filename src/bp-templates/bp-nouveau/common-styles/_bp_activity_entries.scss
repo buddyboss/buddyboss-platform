@@ -1595,10 +1595,15 @@ span.dashicons.dashicons-admin-file:before {
 
 			i {
 				font-size: 14px;
-				padding: 4px;
+				padding: 0;
 				border: 1px solid #fff;
 				background-color: transparent;
 				color: #fff;
+				display: inline-block;
+				width: 25px;
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
 			}
 
 			&:hover {
@@ -1743,7 +1748,7 @@ span.dashicons.dashicons-admin-file:before {
 
 					&.delete_file a:before {
 						content: "\ef48";
-						font-size: 15px;
+						font-size: 20px;
 					}
 
 					&.edit_video a:before {

@@ -4997,10 +4997,15 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i {
   font-size: 14px;
-  padding: 4px;
+  padding: 0;
   border: 1px solid #fff;
   background-color: transparent;
   color: #fff;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap > a:hover,
@@ -5180,7 +5185,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li.delete_file a:before,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li.delete_file a:before {
   content: "\ef48";
-  font-size: 15px;
+  font-size: 20px;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li.edit_video a:before,
