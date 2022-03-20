@@ -7817,7 +7817,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before,
 .bb_more_options .bb_more_options_list button.back-to-admin:before,
 .bb_more_options .bb_more_options_list a.back-to-admin:before {
-  content: "\e84c";
+  content: "\ef0a";
   font-size: 18px;
 }
 
@@ -7830,7 +7830,7 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\ee69";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 16px;
+  font-size: 18px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
