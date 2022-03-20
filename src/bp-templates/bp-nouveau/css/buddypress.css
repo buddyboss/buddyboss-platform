@@ -4467,10 +4467,15 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
   font-size: 14px;
-  padding: 4px;
+  padding: 0;
   border: 1px solid #fff;
   background-color: transparent;
   color: #fff;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a:hover,
@@ -4724,7 +4729,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li.delete_file a:before,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li.delete_file a:before {
   content: "\ef48";
-  font-size: 15px;
+  font-size: 20px;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.edit_thumbnail_video a:before,
@@ -5247,7 +5252,7 @@ span.dashicons.dashicons-admin-file:before {
   content: "\eeb8";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
-  font-size: 14px;
+  font-size: 20px;
 }
 
 @media screen and (max-width: 799px) {
@@ -20458,7 +20463,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   content: "\eeb8";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .modal-container .bb-field-steps {
@@ -20557,7 +20562,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options a.button > i,
 .directory.document .document-options a.button > i,
 .directory.video .video-options a.button > i {
-  margin-right: 6px;
+  margin-right: 0;
+  font-size: 18px;
 }
 
 .directory.media .media-options > *,

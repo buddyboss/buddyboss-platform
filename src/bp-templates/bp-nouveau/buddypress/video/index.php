@@ -44,7 +44,7 @@
 
 				if ( ( bp_is_profile_video_support_enabled() && bb_user_can_create_video() ) ) {
 					?>
-					<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-export"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+					<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 					<?php
 				}
 

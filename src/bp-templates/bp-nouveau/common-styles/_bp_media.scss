@@ -4690,7 +4690,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
 	content: "\eeb8";
 	font-family: "bb-icons";/* stylelint-disable-line */
-	font-size: 15px;
+	font-size: 18px;
 }
 
 .modal-container .bb-field-steps {
@@ -4807,7 +4807,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .directory.video .video-options {
 
 	a.button > i {
-		margin-right: 6px;
+		margin-right: 0;
+		font-size: 18px;
 	}
 
 	> * {
