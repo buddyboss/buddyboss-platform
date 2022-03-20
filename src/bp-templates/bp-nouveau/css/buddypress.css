@@ -18860,7 +18860,6 @@ div.dropzone .dz-preview .dz-filename {
   content: "\ee9f";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 13px;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.delete_file a:before,
@@ -18868,7 +18867,6 @@ div.dropzone .dz-preview .dz-filename {
   content: "\ef48";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 15px;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a,
@@ -22579,7 +22577,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 300;
 }
 
@@ -22810,6 +22808,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bp-video-thumbnail-uploader .bb-model-footer .bp-video-thumbnail-submit.is-disabled {
   pointer-events: none;
   background-color: #9ea8b3 !important;
+  border-color: #9ea8b3 !important;
   box-shadow: none !important;
 }
 

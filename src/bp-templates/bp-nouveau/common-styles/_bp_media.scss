@@ -3284,7 +3284,6 @@ div.dropzone .dz-preview {
 						a:before {
 							content: "\ee9f";
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 13px;
 						}
 
 					}
@@ -3292,7 +3291,6 @@ div.dropzone .dz-preview {
 					&.delete_file a:before {
 						content: "\ef48";
 						font-family: "bb-icons";/* stylelint-disable-line */
-						font-size: 15px;
 					}
 
 					&.report_file a {
