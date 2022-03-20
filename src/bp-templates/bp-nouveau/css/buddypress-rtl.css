@@ -6089,6 +6089,14 @@ form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
 }
 
 form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
   margin-left: 10px;
   position: relative;
 }
