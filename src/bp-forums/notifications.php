@@ -98,6 +98,66 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		return $return;
 	}
 
+	// New topic notifications.
+	if ( 'bbp_new_topic' === $action ) {
+		$topic_id    = bbp_get_topic_id( $item_id );
+		$topic_title = bbp_get_topic_title( $topic_id );
+		$topic_link  = wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'   => 'bbp_mark_read',
+					'topic_id' => $topic_id
+				),
+				bbp_get_topic_permalink( $topic_id )
+			),
+			'bbp_mark_topic_' . $topic_id
+		);
+
+		$title_attr = esc_html__( 'Discussion started', 'buddyboss' );
+
+		if ( (int) $total_items > 1 ) {
+			$text   = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $total_items );
+			$filter = 'bbp_multiple_new_discussion_subscription_notification';
+		} else {
+
+			if ( ! empty( $secondary_item_id ) ) {
+				$text = sprintf( __( '%1$s started a discussion: "%2$s"', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $topic_title );
+			} else {
+				$text = sprintf( __( 'You have a new discussion: "%s"', 'buddyboss' ), $topic_title );
+			}
+
+			$filter = 'bbp_single_new_discussion_subscription_notification';
+		}
+
+		// WordPress Toolbar.
+		if ( 'string' === $format ) {
+			$return = apply_filters( $filter, '<a href="' . esc_url( $topic_link ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $text, $topic_link );
+
+			// Deprecated BuddyBar.
+		} else {
+			$return = apply_filters(
+				$filter,
+				array(
+					'text' => $text,
+					'link' => $topic_link,
+				),
+				$topic_link,
+				(int) $total_items,
+				$text,
+				$topic_title
+			);
+		}
+
+		/**
+		 * Format notification.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
+
+		return $return;
+	}
+
 	if ( 'bbp_new_at_mention' === $action ) {
 		$topic_id = bbp_get_reply_topic_id( $item_id );
 
@@ -382,6 +442,10 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 
 	// Bail if we have errors
 	if ( ! bbp_has_errors() ) {
+
+		if ( ! empty( $_GET['topic_id'] ) ) {
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['topic_id'] ), bbp_get_component_name(), 'bbp_new_topic' );
+		}
 
 		if ( ! empty( $_GET['reply_id'] ) ) {
 			// Attempt to clear notifications for the current user from this reply
