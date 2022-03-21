@@ -114,6 +114,12 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'new_at_mention',
 			'notification_activity_new_mention'
 		);
+
+		$this->register_notification(
+			'activity',
+			'bbp_new_at_mention',
+			'notification_activity_new_mention'
+		);
 	}
 
 	/**
