@@ -1385,23 +1385,23 @@ span.dashicons.dashicons-admin-file:before {
 
 			ul {
 				list-style: none;
-				margin: 5px 0 !important;
-				padding: 0 !important;
+				margin: 5px 0;
+				padding: 0;
 
 				li {
 					margin: 0;
 					padding: 0;
-					list-style-type: none !important;
+					list-style-type: none;
 
 					a {
-						padding: 10px 14px !important;
-						display: block !important;
+						padding: 10px 14px;
+						display: block;
 						font-size: 14px;
 						line-height: 1;
 						color: #7f868f;
 
 						&:hover {
-							background-color: #f5f5f5 !important;
+							background-color: #f5f5f5;
 							color: $blue;
 						}
 
