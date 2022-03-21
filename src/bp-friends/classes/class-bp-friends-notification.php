@@ -58,7 +58,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends',
 			esc_html__( 'Connections', 'buddyboss' ),
 			esc_html__( 'Connections Notifications', 'buddyboss' ),
-			10
+			22
 		);
 
 		$this->register_notification_for_friendship_request();

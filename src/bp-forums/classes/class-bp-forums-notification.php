@@ -58,7 +58,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'forums',
 			esc_html__( 'Forums', 'buddyboss' ),
 			esc_html__( 'Forums Notifications', 'buddyboss' ),
-			8
+			15
 		);
 
 		// Replies to a discussion you are subscribed.

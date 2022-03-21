@@ -58,7 +58,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'activity',
 			esc_html__( 'Activity Feed', 'buddyboss' ),
 			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
-			3
+			6
 		);
 
 		$this->register_notification_for_reply();

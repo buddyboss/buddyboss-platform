@@ -58,7 +58,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			esc_html__( 'Account Settings', 'buddyboss' ),
 			esc_html__( 'Account Settings Notifications', 'buddyboss' ),
-			2
+			6
 		);
 
 		$this->register_notification_for_password_change();

@@ -58,7 +58,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups',
 			esc_html__( 'Social Groups', 'buddyboss' ),
 			esc_html__( 'Social Groups Notifications', 'buddyboss' ),
-			6
+			9
 		);
 
 		// Group user invites.
