@@ -3916,7 +3916,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$settings_verify_email_change = array(
-		'description' => __( 'Recipient has changed their email address.', 'buddyboss' ),
+		'description' => __( 'A member\'s email is changed.', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 

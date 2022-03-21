@@ -715,3 +715,17 @@ function bb_members_allow_html_tags( $allow_html = array() ) {
 
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
 }
+
+// Load Account Settings Notifications.
+add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+
+/**
+ * Register the Account Settings notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_members_account_settings_notifications() {
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
+	}
+}
