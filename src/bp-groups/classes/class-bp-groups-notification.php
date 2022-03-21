@@ -61,14 +61,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			9
 		);
 
-		// Group user invites.
-		$this->register_notification_for_group_invite();
-
 		// Group information update.
 		$this->register_notification_for_group_updated();
 
 		// Group user has been promoted as admin/mod.
 		$this->register_notification_for_group_user_promotion();
+
+		// Group user invites.
+		$this->register_notification_for_group_invite();
 
 		// User request for the group membership.
 		$this->register_notification_for_group_membership_request();
@@ -82,46 +82,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Register notification for user invites.
-	 */
-	public function register_notification_for_group_invite() {
-		$this->register_notification_type(
-			'notification_groups_invite',
-			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
-			'',
-			'groups'
-		);
-
-		$this->register_email_type(
-			'groups-invitation',
-			array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
-				'unsubscribe_text'    =>  __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
-			),
-			'notification_groups_invite'
-		);
-
-		$this->register_notification(
-			'groups',
-			'group_invite',
-			'notification_groups_invite'
-		);
-	}
-
-	/**
 	 * Register notification for group update.
 	 */
 	public function register_notification_for_group_updated() {
 		$this->register_notification_type(
 			'notification_groups_group_updated',
 			esc_html__( 'Group information is updated', 'buddyboss' ),
-			'',
+			esc_html__( 'A group\'s details are updated', 'buddyboss' ),
 			'groups'
 		);
 
@@ -137,6 +104,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     =>  __( "A group's details were updated.", 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
 			),
+			'notification_groups_group_updated'
+		);
+
+		$this->register_notification(
+			'groups',
+			'group_details_updated',
 			'notification_groups_group_updated'
 		);
 	}
@@ -177,6 +150,39 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups',
 			'member_promoted_to_mod',
 			'notification_groups_admin_promotion'
+		);
+	}
+
+	/**
+	 * Register notification for user invites.
+	 */
+	public function register_notification_for_group_invite() {
+		$this->register_notification_type(
+			'notification_groups_invite',
+			esc_html__( 'You receive a new invite to join a group', 'buddyboss' ),
+			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+			'groups'
+		);
+
+		$this->register_email_type(
+			'groups-invitation',
+			array(
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_title'         => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_content'       => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
+				/* translators: do not remove {} brackets or translate its contents. */
+				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
+				'situation_label'     => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
+				'unsubscribe_text'    =>  __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
+			),
+			'notification_groups_invite'
+		);
+
+		$this->register_notification(
+			'groups',
+			'group_invite',
+			'notification_groups_invite'
 		);
 	}
 
