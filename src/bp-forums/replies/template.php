@@ -1808,7 +1808,7 @@ function bbp_get_reply_to_link( $args = array() ) {
 
 	// Add $uri to the array, to be passed through the filter
 	$r['uri'] = $uri;
-	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
+	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-l bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
 
 	return apply_filters( 'bbp_get_reply_to_link', $retval, $r, $args );
 }

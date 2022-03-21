@@ -518,7 +518,7 @@
 				display: block;
 			}
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				height: 28px;
 				width: 28px;
 				font-size: 16px;
@@ -636,7 +636,7 @@
 	clear: both;
 	padding-top: $pad-med;
 
-	.bb-sort-by-date .notifications-order-actions a .bb-icon {
+	.bb-sort-by-date .notifications-order-actions a [class*=" bb-icon-"] {
 		width: 20px;
 		text-align: center;
 	}
