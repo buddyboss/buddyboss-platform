@@ -660,7 +660,7 @@ table.extension-listing tbody td {
   padding: 10px;
 }
 
-table.extension-listing tbody td i.bb-icon {
+table.extension-listing tbody td [class*=" bb-icon-"] {
   font-size: 33px;
   color: #999;
   margin-right: 8px;

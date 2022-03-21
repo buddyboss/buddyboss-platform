@@ -608,9 +608,10 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-repair_forums h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tools.svg);
 }
+
 .bp-admin-card.section-bp-member-type-import h2:before,
 body.buddyboss_page_bbp-converter .bp-admin-card h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/cloud-upload.svg);	
+	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/cloud-upload.svg);
 }
 
 /* Integrations - BuddyBoss App */
@@ -682,7 +683,7 @@ table.extension-listing {
 	tbody td {
 		padding: 10px;
 
-		i.bb-icon {
+		[class*=" bb-icon-"] {
 			font-size: 33px;
 			color: #999;
 			margin-left: 8px;

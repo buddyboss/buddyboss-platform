@@ -51,7 +51,7 @@ $more_media     = $media_template->media_count > 5 ? true : false;
 			if ( bp_loggedin_user_id() === bp_get_media_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 					<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-						<i class="bb-icon-menu-dots-v"></i>
+						<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 					</a>
 					<div class="media-action_list">
 						<ul class="conflict-activity-ul-li-comment">
