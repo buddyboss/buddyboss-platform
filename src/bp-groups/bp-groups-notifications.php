@@ -1498,6 +1498,12 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 
 	$sender_id = bp_loggedin_user_id();
 
+	// Remove sender from the group member list.
+	$unset_sender_key = array_search( $sender_id, $user_ids, true );
+	if ( false !== $unset_sender_key ) {
+		unset( $user_ids[ $unset_sender_key ] );
+	}
+
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
