@@ -406,7 +406,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  */
 function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
 
-	switch ( $action ) {
+    switch ( $action ) {
 		case 'new_membership_request':
 			$group_id           = $item_id;
 			$requesting_user_id = $secondary_item_id;
@@ -1018,6 +1018,102 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 
 			break;
 
+		case 'group_details_updated':
+			$group_id   = $item_id;
+			$group      = groups_get_group( $group_id );
+			$group_link = bp_get_group_permalink( $group );
+			$amount     = 'single';
+
+			$notification_link = $group_link . '?n=1';
+
+			if ( (int) $total_items > 1 ) {
+				$text   = sprintf( __( 'The group details for "%s" were updated %d times.', 'buddyboss' ), $group->name, (int) $total_items );
+				$amount = 'multiple';
+
+				if ( 'string' == $format ) {
+					/**
+					 * Filters multiple group invitation notification for string format.
+					 * Complete filter - bp_groups_multiple_group_invite_notification.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param int $total_items Total number of rejected requests.
+					 * @param string $text Notification content.
+					 * @param string $notification_link The permalink for notification.
+					 *
+					 * @param string $string HTML anchor tag for notification.
+					 */
+					return apply_filters( 'bp_groups_' . $amount . '_' . $action . '_notification', '<a href="' . $notification_link . '">' . $text . '</a>', $total_items, $text, $notification_link );
+				} else {
+					/**
+					 * Filters multiple group invitation notification for non-string format.
+					 * Complete filter - bp_groups_multiple_group_invite_notification.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param int $total_items Total number of rejected requests.
+					 * @param string $text Notification content.
+					 * @param string $notification_link The permalink for notification.
+					 *
+					 * @param array $array Array holding permalink and content for notification.
+					 */
+					return apply_filters(
+						'bp_groups_' . $amount . '_' . $action . '_notification',
+						array(
+							'link' => $notification_link,
+							'text' => $text,
+						),
+						$total_items,
+						$text,
+						$notification_link
+					);
+				}
+			} else {
+				$text   = sprintf( __( 'The group details for "%s" were updated', 'buddyboss' ), $group->name );
+
+				if ( 'string' == $format ) {
+					/**
+					 * Filters single group details update notification for string format.
+					 * Complete filter - bp_groups_single_group_detail_updated_notification.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param string $string            HTML anchor tag for notification.
+					 * @param int    $group_link        The permalink for the group.
+					 * @param string $group->name       Name of the group.
+					 * @param string $text              Notification content.
+					 * @param string $notification_link The permalink for notification.
+					 */
+					return apply_filters( 'bp_groups_' . $amount . '_' . $action . '_notification', '<a href="' . $notification_link . '">' . $text . '</a>', $group_link, $group->name, $text, $notification_link );
+				} else {
+					/**
+					 * Filters single group invitation notification for non-string format.
+					 * Complete filter - bp_groups_single_group_detail_updated_notification.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param array  $array             Array holding permalink and content for notification.
+					 * @param int    $group_link        The permalink for the group.
+					 * @param string $group->name       Name of the group.
+					 * @param string $text              Notification content.
+					 * @param string $notification_link The permalink for notification.
+					 */
+					return apply_filters(
+						'bp_groups_' . $amount . '_' . $action . '_notification',
+						array(
+							'link' => $notification_link,
+							'text' => $text,
+						),
+						$group_link,
+						$group->name,
+						$text,
+						$notification_link
+					);
+				}
+			}
+
+			break;
+
 		default:
 			/**
 			 * Filters plugin-added group-related custom component_actions.
@@ -1377,3 +1473,67 @@ function groups_screen_notification_settings() {
 }
 
 add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
+
+/**
+ * Fire user notification when group information has been updated.
+ *
+ * @param int $group_id Group id.
+ *
+ * @return void
+ */
+function bb_groups_notification_groups_updated( $group_id = 0 ) {
+	if ( empty( $group_id ) ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	if ( ! bp_is_active( 'notifications' ) ) {
+		return;
+	}
+
+	$user_ids = (array) BP_Groups_Member::get_group_member_ids( $group_id );
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$sender_id = bp_loggedin_user_id();
+
+	if (
+		function_exists( 'bb_notifications_background_enabled' ) &&
+		true === bb_notifications_background_enabled() &&
+		count( $user_ids ) > 20
+	) {
+		global $bb_notifications_background_updater;
+		$bb_notifications_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_add_background_notifications',
+					'args'     => array(
+						$user_ids,
+						$group_id,
+						$sender_id,
+						buddypress()->groups->id,
+						'group_details_updated',
+						bp_core_current_time(),
+						true,
+					),
+				),
+			)
+		);
+		$bb_notifications_background_updater->save()->dispatch();
+	} else {
+		foreach ( $user_ids  as $user_id ) {
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $group_id,
+					'secondary_item_id' => $sender_id,
+					'component_name'    => buddypress()->groups->id,
+					'component_action'  => 'group_details_updated',
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+		}
+	}
+}

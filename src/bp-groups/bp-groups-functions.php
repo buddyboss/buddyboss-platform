@@ -319,6 +319,10 @@ function groups_edit_base_group_details( $args = array() ) {
 		groups_notification_group_updated( $group->id, $old_group );
 	}
 
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		bb_groups_notification_groups_updated( $group->id );
+	}
+
 	/**
 	 * Fired after a group's details are updated.
 	 *
