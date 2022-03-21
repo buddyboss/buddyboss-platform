@@ -365,6 +365,8 @@ tr.bp-search-parent-field label {
 	font-weight: 700;
 	color: #333;
 	border-bottom: 1px solid #eaeaea;
+	align-items: center;
+	display: flex;
 
 	span {
 		font-weight: 400;
@@ -374,18 +376,10 @@ tr.bp-search-parent-field label {
 		text-decoration: none;
 	}
 
-	&:before {
-		display: inline-block;
-		content: " ";
-		background-size: 100%;
-		background-repeat: no-repeat;
-		background-position: center;
-		background-color: #fff;
-		height: 38px;
-		width: 38px;
-		border-radius: 50px;
+	[class*=" bb-icon-"] {
+		font-size: 28px;
+		margin-right: 6px;
 		vertical-align: middle;
-		margin-right: 15px;
 	}
 
 }

@@ -347,6 +347,8 @@ tr.bp-search-parent-field label {
   font-weight: 700;
   color: #333;
   border-bottom: 1px solid #eaeaea;
+  align-items: center;
+  display: flex;
 }
 
 .bp-admin-card h2 span {
@@ -357,18 +359,10 @@ tr.bp-search-parent-field label {
   text-decoration: none;
 }
 
-.bp-admin-card h2:before {
-  display: inline-block;
-  content: " ";
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #fff;
-  height: 38px;
-  width: 38px;
-  border-radius: 50px;
+.bp-admin-card h2 [class*=" bb-icon-"] {
+  font-size: 28px;
+  margin-right: 6px;
   vertical-align: middle;
-  margin-right: 15px;
 }
 
 .bp-admin-card h3 {
