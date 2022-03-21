@@ -1537,3 +1537,22 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		}
 	}
 }
+
+/**
+ * Mark group detail update notifications as read when a member views their group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_groups_group_details_update_mark_notifications() {
+	if ( isset( $_GET['n'] ) && bp_is_active( 'notifications' ) && bp_is_group_single() ) {
+
+		// Get the necessary ID's.
+		$group_id = buddypress()->groups->id;
+		$user_id  = bp_loggedin_user_id();
+
+		// Mark notifications read.
+		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'group_details_updated' );
+	}
+
+}
+add_action( 'bp_template_redirect', 'bb_groups_group_details_update_mark_notifications' );
