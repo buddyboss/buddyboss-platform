@@ -1715,14 +1715,26 @@ function bbp_has_forum_thumbnail( $forum_id = null ) {
  * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = null ) {
-	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+	$thumbnail_id = get_post_thumbnail_id( $forum_id );
+	if ( $thumbnail_id ) {
 		return wp_get_attachment_image_url( $thumbnail_id, $size );
 	}
 
-	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	if ( $group_ids ) {
 		$group_id = $group_ids[0];
 
-		if ( bp_is_active( 'groups' ) && bp_get_group_has_avatar( $group_id ) ) {
+		if ( bp_is_active( 'groups' ) && ! bp_disable_group_cover_image_uploads() && bp_attachments_get_group_has_cover_image( $group_id ) ) {
+			return bp_attachments_get_attachment(
+				'url',
+				array(
+					'object_dir' => 'groups',
+					'item_id'    => $group_id,
+				)
+			);
+		}
+
+		if ( bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() && bp_get_group_has_avatar( $group_id ) ) {
 			return bp_core_fetch_avatar(
 				array(
 					'item_id'       => $group_id,
