@@ -96,6 +96,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'notification_forums_following_reply'
 		);
 
+		$this->register_notification(
+			'forums',
+			'bbp_new_reply',
+			'notification_forums_following_reply'
+		);
+
 	}
 
 	/**
