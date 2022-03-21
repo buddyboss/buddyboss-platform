@@ -142,6 +142,11 @@ add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 add_action(
 	'bp_init',
 	function() {
+
+		if ( class_exists( 'BP_Mentions_Notification' ) ) {
+			BP_Mentions_Notification::instance();
+		}
+
 		if ( false === bb_enabled_legacy_email_preference() ) {
 			// Render notifications on frontend.
 			add_action( 'bp_notification_settings', 'bb_render_notification_settings', 1 );
