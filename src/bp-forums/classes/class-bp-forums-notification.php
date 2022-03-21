@@ -124,6 +124,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			'notification_forums_following_topic'
 		);
 
+		$this->register_notification(
+			'forums',
+			'bbp_new_topic',
+			'notification_forums_following_topic'
+		);
 	}
 
 	/**
