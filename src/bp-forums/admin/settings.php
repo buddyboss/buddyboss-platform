@@ -1227,11 +1227,23 @@ function bbp_admin_settings() {
 /**
  * Main settings section description for the settings page
  *
+ * @param $args array Array of section data.
+ *
  * @since bbPress (r3813)
  */
-function bbp_converter_setting_callback_main_section() {
+function bbp_converter_setting_callback_main_section( $args ) {
 	?>
-	<h3><?php _e( 'Database Settings', 'buddyboss' ); ?></h3>
+	<h2>
+		<?php
+		if ( isset( $args['icon'] ) && ! empty( $args['icon'] ) ) {
+			?>
+			<i class="<?php echo esc_attr( $args['icon'] ); ?>"></i>
+			<?php
+		}
+		esc_html_e( 'Import Forums', 'buddyboss' );
+		?>
+	</h2>
+	<h3><?php esc_html_e( 'Database Settings', 'buddyboss' ); ?></h3>
 	<p><?php _e( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss' ); ?></p>
 
 	<?php

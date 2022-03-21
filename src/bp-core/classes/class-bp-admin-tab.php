@@ -340,7 +340,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			if ( ! empty( $tutorial_callback ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
-
+			if ( function_exists( 'bb_section_icons' ) ) {
+				$meta_icon = bb_section_icons( $id );
+				if ( ! empty( $meta_icon ) ) {
+					$wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
+				}
+			}
 			return $this;
 		}
 
@@ -538,8 +543,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="'.$section['icon'].'"></i>' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
 						wp_kses(
 							$section['title'],
 							array(

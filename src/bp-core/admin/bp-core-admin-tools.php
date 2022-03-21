@@ -41,7 +41,16 @@ function bp_core_admin_tools() {
 	<div class="wrap">
 		<div class="bp-admin-card section-default_data">
 
-			<h2><?php esc_html_e( 'Default Data', 'buddyboss' ); ?></h2>
+			<h2>
+				<?php
+				$meta_icon = bb_section_icons( 'default_data' );
+				if ( ! empty( $meta_icon ) ) {
+					?>
+					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+					<?php
+				}
+				esc_html_e( 'Default Data', 'buddyboss' ); ?>
+			</h2>
 
 			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
 				<fieldset>
@@ -229,7 +238,17 @@ function bp_repair_community_submenu_page() {
 	<div class="wrap">
 		<div class="bp-admin-card section-repair_community">
 
-			<h2><?php esc_html_e( 'Repair Community', 'buddyboss' ); ?></h2>
+			<h2>
+				<?php
+				$meta_icon = bb_section_icons( 'repair_community' );
+				if ( ! empty( $meta_icon ) ) {
+					?>
+					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+					<?php
+				}
+				esc_html_e( 'Repair Community', 'buddyboss' );
+				?>
+			</h2>
 
 			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 

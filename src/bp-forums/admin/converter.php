@@ -141,10 +141,15 @@ class BBP_Converter {
 	 * @uses register_setting() To register various settings
 	 */
 	public function register_admin_settings() {
-
+		global $wp_settings_sections;
 		// Add the main section.
-		add_settings_section( 'bbpress_converter_main', __( 'Import Forums', 'buddyboss' ), 'bbp_converter_setting_callback_main_section', 'bbpress_converter' );
-
+		add_settings_section( 'bbpress_converter_main', '', 'bbp_converter_setting_callback_main_section', 'bbpress_converter' );
+		if ( function_exists( 'bb_section_icons' ) ) {
+			$meta_icon = bb_section_icons( 'bbpress_converter_main' );
+			if ( ! empty( $meta_icon ) ) {
+				$wp_settings_sections['bbpress_converter']['bbpress_converter_main']['icon'] = $meta_icon;
+			}
+		}
 		// System Select.
 		add_settings_field( '_bbp_converter_platform', __( 'Select Platform', 'buddyboss' ), 'bbp_converter_setting_callback_platform', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_platform', 'sanitize_text_field' );

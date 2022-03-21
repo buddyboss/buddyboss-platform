@@ -1,7 +1,17 @@
 <div class="wrap">
 	
 	<div class="bp-admin-card section-bp_buddyboss_app-integration">
-		<h2><?php _e( 'BuddyBoss App', 'buddyboss' ); ?></h2>
+		<h2>
+			<?php
+			$meta_icon = bb_section_icons( 'bp_buddyboss_app-integration' );
+			if ( ! empty( $meta_icon ) ) {
+				?>
+				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+				<?php
+			}
+			esc_html_e( 'BuddyBoss App', 'buddyboss' );
+			?>
+		</h2>
 		<p>
 		<?php
 			printf(

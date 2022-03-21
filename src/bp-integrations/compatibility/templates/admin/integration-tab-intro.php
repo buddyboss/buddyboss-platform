@@ -1,7 +1,16 @@
 <div class="wrap">
 
 	<div class="bp-admin-card section-bp_compatibility-integration">
-		<h2><?php _e( 'BuddyPress <span>&mdash; Third party plugin settings</span>', 'buddyboss' ); ?></h2>
+		<h2>
+			<?php
+			$meta_icon = bb_section_icons( 'bp_compatibility-integration' );
+			if ( ! empty( $meta_icon ) ) {
+				?>
+				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+				<?php
+			}
+			_e( 'BuddyPress <span>&mdash; Third party plugin settings</span>', 'buddyboss' ); ?>
+		</h2>
 
 		<?php
 		// We're saving our own options, until the WP Settings API is updated to work with Multisite.
