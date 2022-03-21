@@ -414,3 +414,70 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	exit();
 }
 add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
+
+/**
+ * Add notifications for the forum subscribers for creating a new discussion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $topic_id Topic id.
+ * @param int   $forum_id Forum id.
+ * @param array $user_ids Array of users list.
+ *
+ * @return void
+ */
+function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
+	if ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) || empty( $user_ids ) ) {
+		return;
+	}
+
+	$topic_author_id = bbp_get_topic_author_id( $topic_id );
+
+	// Remove Topic author from the users.
+	$unset_topic_key = array_search( $topic_author_id, $user_ids, true );
+	if ( false !== $unset_topic_key ) {
+		unset( $user_ids[ $unset_topic_key ] );
+	}
+
+	if (
+		function_exists( 'bb_notifications_background_enabled' ) &&
+		true === bb_notifications_background_enabled() &&
+		count( $user_ids ) > 20
+	) {
+		global $bb_notifications_background_updater;
+		$bb_notifications_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_add_background_notifications',
+					'args'     => array(
+						$user_ids,
+						$topic_id,
+						$topic_author_id,
+						bbp_get_component_name(),
+						'bbp_new_topic',
+						bp_core_current_time(),
+						true,
+					),
+				),
+			)
+		);
+		$bb_notifications_background_updater->save()->dispatch();
+	} else {
+		foreach ( $user_ids as $user_id ) {
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $topic_id,
+					'secondary_item_id' => $topic_author_id,
+					'component_name'    => bbp_get_component_name(),
+					'component_action'  => 'bbp_new_topic',
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+		}
+	}
+
+}
+
+add_action( 'bbp_pre_notify_forum_subscribers', 'bb_pre_notify_forum_subscribers', 10, 3 );
