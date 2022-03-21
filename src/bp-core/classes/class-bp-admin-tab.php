@@ -340,8 +340,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			if ( ! empty( $tutorial_callback ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
-			if ( function_exists( 'bb_section_icons' ) ) {
-				$meta_icon = bb_section_icons( $id );
+			if ( function_exists( 'bb_admin_icons' ) ) {
+				$meta_icon = bb_admin_icons( $id );
 				if ( ! empty( $meta_icon ) ) {
 					$wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
 				}

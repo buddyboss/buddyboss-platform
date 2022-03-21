@@ -3,7 +3,7 @@
 	<div class="bp-admin-card section-bp_compatibility-integration">
 		<h2>
 			<?php
-			$meta_icon = bb_section_icons( 'bp_compatibility-integration' );
+			$meta_icon = bb_admin_icons( 'bp_compatibility-integration' );
 			if ( ! empty( $meta_icon ) ) {
 				?>
 				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>

@@ -3,7 +3,7 @@
 	<div class="bp-admin-card section-bp_buddyboss_app-integration">
 		<h2>
 			<?php
-			$meta_icon = bb_section_icons( 'bp_buddyboss_app-integration' );
+			$meta_icon = bb_admin_icons( 'bp_buddyboss_app-integration' );
 			if ( ! empty( $meta_icon ) ) {
 				?>
 				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>

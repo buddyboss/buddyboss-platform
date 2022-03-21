@@ -1372,7 +1372,7 @@ function bp_media_import_submenu_page() {
 					<div class="import-panel-content">
 						<h2>
 							<?php
-							$meta_icon = bb_section_icons( 'bp-member-type-import' );
+							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
 							if ( ! empty( $meta_icon ) ) {
 								?>
 								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>

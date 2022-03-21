@@ -6804,11 +6804,13 @@ function bb_core_remove_unfiltered_html( $content ) {
 /**
  * Function will return icon of platform section.
  *
- * @param $id
+ * @since BuddyBoss [BBVERSION]
  *
- * @return string
+ * @param $id Id of the section.
+ *
+ * @return string Return icon name.
  */
-function bb_section_icons( $id ) {
+function bb_admin_icons( $id ) {
 	$meta_common_icon = 'bb-icon-rf';
 	switch ( $id ) {
 		case 'bp_main':
@@ -6932,5 +6934,5 @@ function bb_section_icons( $id ) {
 			$meta_icon = '';
 	}
 
-	return $meta_icon;
+	return apply_filters( 'bb_admin_icons', $meta_icon );
 }

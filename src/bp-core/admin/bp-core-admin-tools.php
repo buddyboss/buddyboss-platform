@@ -43,7 +43,7 @@ function bp_core_admin_tools() {
 
 			<h2>
 				<?php
-				$meta_icon = bb_section_icons( 'default_data' );
+				$meta_icon = bb_admin_icons( 'default_data' );
 				if ( ! empty( $meta_icon ) ) {
 					?>
 					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
@@ -240,7 +240,7 @@ function bp_repair_community_submenu_page() {
 
 			<h2>
 				<?php
-				$meta_icon = bb_section_icons( 'repair_community' );
+				$meta_icon = bb_admin_icons( 'repair_community' );
 				if ( ! empty( $meta_icon ) ) {
 					?>
 					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>

@@ -145,8 +145,8 @@ function bp_core_admin_register_page_fields() {
 	$directory_pages = bp_core_admin_get_directory_pages();
 	$description     = '';
 	add_settings_section( 'bp_pages', __( 'Component Pages', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
-	if ( function_exists( 'bb_section_icons' ) ) {
-		$wp_settings_sections[ 'bp-pages' ][ 'bp_pages' ]['icon'] = bb_section_icons( 'bp_pages' );
+	if ( function_exists( 'bb_admin_icons' ) ) {
+		$wp_settings_sections[ 'bp-pages' ][ 'bp_pages' ]['icon'] = bb_admin_icons( 'bp_pages' );
 	}
 	foreach ( $directory_pages as $name => $label ) {
 
@@ -193,8 +193,8 @@ function bp_core_admin_register_registration_page_fields() {
 
 	add_settings_section( 'bp_registration_pages', $section_title, 'bp_core_admin_registration_pages_description', 'bp-pages' );
 	$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ][ 'tutorial_callback' ] = 'bb_registration_page_tutorial';
-	if ( function_exists( 'bb_section_icons' ) ) {
-		$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ]['icon'] = bb_section_icons( 'bp_registration_pages' );
+	if ( function_exists( 'bb_admin_icons' ) ) {
+		$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ]['icon'] = bb_admin_icons( 'bp_registration_pages' );
 	}
 
 	$existing_pages = bp_core_get_directory_page_ids();

@@ -39,7 +39,7 @@ function bbp_admin_repair() {
 
 			<h2>
 				<?php
-				$meta_icon = bb_section_icons( 'repair_forums' );
+				$meta_icon = bb_admin_icons( 'repair_forums' );
 				if ( ! empty( $meta_icon ) ) {
 					?>
 					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
