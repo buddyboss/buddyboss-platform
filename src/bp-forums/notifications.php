@@ -495,6 +495,7 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 		return;
 	}
 
+	$user_ids        = wp_parse_id_list( $user_ids );
 	$topic_author_id = bbp_get_topic_author_id( $topic_id );
 
 	// Remove Topic author from the users.
@@ -541,7 +542,83 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 			);
 		}
 	}
+}
+add_action( 'bbp_pre_notify_forum_subscribers', 'bb_pre_notify_forum_subscribers', 10, 3 );
+
+/**
+ * Add notifications for the forum subscribers for creating a new discussion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $reply_id Topic id.
+ * @param int   $topic_id Forum id.
+ * @param array $user_ids Array of users list.
+ *
+ * @return void
+ */
+function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
+	if ( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) || empty( $user_ids ) ) {
+		return;
+	}
+
+	$user_ids        = wp_parse_id_list( $user_ids );
+	$reply_author_id = bbp_get_reply_author_id( $reply_id );
+	$reply_to_id     = bbp_get_reply_to( $reply_id );
+
+	// Remove Topic author from the users.
+	$unset_reply_key = array_search( $reply_author_id, $user_ids, true );
+	if ( false !== $unset_reply_key ) {
+		unset( $user_ids[ $unset_reply_key ] );
+	}
+
+	if ( ! empty( $reply_to_id ) ) {
+		$reply_to_author_id = bbp_get_reply_author_id( $reply_to_id );
+
+		$unset_reply_to_key = array_search( $reply_to_author_id, $user_ids, true );
+		if ( false !== $unset_reply_to_key ) {
+			unset( $user_ids[ $unset_reply_to_key ] );
+		}
+	}
+
+	if (
+		function_exists( 'bb_notifications_background_enabled' ) &&
+		true === bb_notifications_background_enabled() &&
+		count( $user_ids ) > 20
+	) {
+		global $bb_notifications_background_updater;
+		$bb_notifications_background_updater->data(
+			array(
+				array(
+					'callback' => 'bb_add_background_notifications',
+					'args'     => array(
+						$user_ids,
+						$reply_id,
+						$reply_author_id,
+						bbp_get_component_name(),
+						'bbp_new_reply',
+						bp_core_current_time(),
+						true,
+					),
+				),
+			)
+		);
+		$bb_notifications_background_updater->save()->dispatch();
+	} else {
+		foreach ( $user_ids as $user_id ) {
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $reply_id,
+					'secondary_item_id' => $reply_author_id,
+					'component_name'    => bbp_get_component_name(),
+					'component_action'  => 'bbp_new_reply',
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+		}
+	}
 
 }
+add_action( 'bbp_pre_notify_subscribers', 'bb_pre_notify_reply_subscribers', 10, 3 );
 
-add_action( 'bbp_pre_notify_forum_subscribers', 'bb_pre_notify_forum_subscribers', 10, 3 );
