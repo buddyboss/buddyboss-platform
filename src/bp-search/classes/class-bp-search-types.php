@@ -86,12 +86,12 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 			return isset( $this->search_results['items'][ $item_id ]['title'] ) ? $this->search_results['items'][ $item_id ]['title'] : $this->search_term;
 		}
 
-		public function get_total_match_count( $search_term ) {
+		public function get_total_match_count( $search_term, $search_type = 'posts' ) {
 			$this->search_term = $search_term;// save it for future reference may be.
 
 			global $wpdb;
 			static $bbp_search_term = array();
-			$cache_key = 'bb_search_term_total_match_count_' . sanitize_title( $search_term );
+			$cache_key = 'bb_search_term_total_match_count_' . $search_type . '_' . sanitize_title( $search_term );
 			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
 				$sql    = $this->sql( $search_term, true );
 				$result = $wpdb->get_var( $sql );
