@@ -215,6 +215,7 @@ TABLE OF CONTENTS:
 	content: "\edc8";
 	font-family: "bb-icons";/* stylelint-disable-line */
 	font-style: normal;
+	font-weight: 300;
 	speak: none;
 	display: inline-block;
 	text-decoration: inherit;
@@ -228,7 +229,7 @@ TABLE OF CONTENTS:
 	margin-left: 0.2em;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	color: #fff;
+	color: #9ca2a7;
 }
 
 /*
@@ -396,7 +397,7 @@ tr.bp-search-parent-field label {
 	}
 
 	[class*=" bb-icon-"] {
-		font-size: 28px;
+		font-size: 36px;
 		margin-right: 6px;
 		vertical-align: middle;
 	}
@@ -628,22 +629,28 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before {
 }
 
 /* Integrations - BuddyBoss App */
-.bp-admin-card.section-bp_buddyboss_app-integration h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddyboss-app.svg);
+.bp-admin-card.section-bp_buddyboss_app-integration h2 > i {
+	color: #e2623d;
 }
 
 /* Integrations - LearnDash */
-.bp-admin-card.section-bp_ld-integration h2:before,
-.bp-admin-card.section-bp_ld_sync-buddypress h2:before,
-.bp-admin-card.section-bp_ld_sync-learndash h2:before,
-.bp-admin-card.section-bp_ld_sync-reports h2:before,
-.bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-learndash.svg);
+.bp-admin-card.section-bp_ld-integration h2 > i,
+.bp-admin-card.section-bp_ld_sync-buddypress h2 > i,
+.bp-admin-card.section-bp_ld_sync-learndash h2 > i,
+.bp-admin-card.section-bp_ld_sync-reports h2 > i,
+.bp-admin-card.section-bp_ld_course_tab-buddypress h2 > i {
+	color: #235af4;
 }
 
 /* Integrations - BuddyPress Plugins */
-.bp-admin-card.section-bp_compatibility-integration h2:before {
-	background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/brand-buddypress.svg);
+.bp-admin-card.section-bp_compatibility-integration h2 > i {
+	color: #e2623d;
+}
+
+/* Integrations - Zoom */
+.bp-admin-card.section-bp_zoom_gutenberg_section h2 > i,
+.bp-admin-card.section-bp_zoom_settings_section h2 > i {
+	color: #478df7;
 }
 
 /*
