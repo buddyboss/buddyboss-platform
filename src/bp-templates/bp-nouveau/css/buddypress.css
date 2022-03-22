@@ -3865,9 +3865,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 #whats-new-toolbar .post-media-document-support [class*=" bb-icon-"],
 #whats-new-messages-toolbar .document-support [class*=" bb-icon-"],
 #whats-new-messages-toolbar .post-media-document-support [class*=" bb-icon-"] {
-  font-size: 19px;
-  position: relative;
-  bottom: 1px;
+  font-size: 22px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,

@@ -46,7 +46,7 @@
 			?>
 			<div class="post-elements-buttons-item post-media post-media-document-support">
 				<a href="#" id="messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-					<i class="bb-icon-l bb-icon-file-attach"></i>
+					<i class="bb-icon-l bb-icon-paperclip"></i>
 				</a>
 			</div>
 		<?php endif; ?>
