@@ -28,19 +28,22 @@ add_filter( 'bp_notifications_get_registered_components', 'bbp_filter_notificati
 /**
  * Format the BuddyBar/Toolbar notifications
  *
- * @since bbPress (r5155)
+ * @since   bbPress (r5155)
+ *
+ * @param string $action            The kind of notification being rendered.
+ * @param int    $item_id           The primary item id.
+ * @param int    $secondary_item_id The secondary item id.
+ * @param int    $total_items       The total number of messaging-related notifications waiting for the user.
+ * @param string $format            'string' for BuddyBar-compatible notifications; 'array' for WP Toolbar.
+ * @param string $action_name       Canonical notification action.
+ * @param string $name              Notification component ID.
+ * @param int    $id                Notification ID.
  *
  * @package BuddyBoss
- *
- * @param string $action The kind of notification being rendered
- * @param int    $item_id The primary item id
- * @param int    $secondary_item_id The secondary item id
- * @param int    $total_items The total number of messaging-related notifications waiting for the user
- * @param string $format 'string' for BuddyBar-compatible notifications; 'array' for WP Toolbar
  */
-function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id ) {
 
-	// New reply notifications
+	// New reply notifications.
 	if ( 'bbp_new_reply' === $action ) {
 		$topic_id    = bbp_get_reply_topic_id( $item_id );
 		$topic_title = bbp_get_topic_title( $topic_id );
@@ -183,11 +186,21 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$text   = sprintf( __( 'You have %d new mentions', 'buddyboss' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
-			if ( ! empty( $secondary_item_id ) ) {
+
+			$type = bp_notifications_get_meta( $id, 'type', true );
+			if ( $type ) {
+				if ( 'forum_reply' === $type ) {
+					$type_html = esc_html__( 'forum reply', 'buddyboss' );
+				} elseif ( 'forum_topic' === $type ) {
+					$type_html = esc_html__( 'forum discussion', 'buddyboss' );
+				}
+				$text = sprintf( __( '%1$s mentioned you in %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $type_html );
+			} elseif ( ! empty( $secondary_item_id ) ) {
 				$text = sprintf( __( '%3$s mentioned you in %2$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
 				$text = sprintf( __( 'You have %1$d new mention to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
 			}
+
 			$filter = 'bbp_single_new_subscription_notification';
 		}
 
@@ -222,7 +235,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 
 	return $action;
 }
-add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 5 );
+add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 8 );
 
 /**
  * Hooked into the new reply function, this notification action is responsible
@@ -332,7 +345,10 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				continue;
 			}
 
-			bp_notifications_add_notification( $args );
+			$n_id = bp_notifications_add_notification( $args );
+			if ( $n_id ) {
+				bp_notifications_update_meta( $n_id, 'type', 'forum_reply' );
+			}
 		}
 	}
 }
@@ -402,7 +418,10 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				continue;
 			}
 
-			bp_notifications_add_notification( $args );
+			$n_id = bp_notifications_add_notification( $args );
+			if ( $n_id ) {
+				bp_notifications_update_meta( $n_id, 'type', 'forum_topic' );
+			}
 		}
 	}
 }
