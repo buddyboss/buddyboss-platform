@@ -7230,3 +7230,57 @@ function bb_render_manual_notification() {
 	}
 }
 
+/**
+ * Fetch the settings based on the notification component and notification key.
+ *
+ * @param string $notification_key Notification key.
+ * @param string $component        Component name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool|void
+ */
+function bb_get_modern_notification_admin_settings_is_enabled( $notification_key, $component ) {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+
+		if ( '' === $notification_key ) {
+			return false;
+		}
+
+		// Groups preferences registered.
+		$options = bb_register_notification_preferences( $component );
+
+		if ( empty( $options ) ) {
+			return;
+		}
+
+		// Saved notification from backend default settings.
+		$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+		if ( empty( $options['fields'] ) ) {
+			return;
+		}
+
+		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
+		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
+
+		$fields = array_filter(
+			$options['fields'],
+			function ( $var ) use ( $enabled_notification ) {
+				return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
+			}
+		);
+
+		if ( empty( $fields ) ) {
+			return;
+		}
+
+		$keys = array_column( $fields, 'key' );
+		if ( ! empty( $keys ) && in_array( $notification_key, $keys, true ) ) {
+			return true;
+		}
+	}
+
+}

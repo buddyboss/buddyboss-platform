@@ -478,3 +478,28 @@ function bp_nouveau_member_customizer_nav() {
 
 	return $nav->get_primary();
 }
+
+/**
+ * Register notifications filters for the members component.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_nouveau_members_notification_filters() {
+
+	$notifications = array();
+	if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_notification_account_password', 'members' ) && bp_is_active( 'notifications' ) ) {
+		$notifications = array(
+			array(
+				'id'       => 'bb_notification_account_password',
+				'label'    => __( 'Password changed', 'buddyboss' ),
+				'position' => 155,
+			),
+		);
+	}
+
+	if ( $notifications ) {
+		foreach ( $notifications as $notification ) {
+			bp_nouveau_notifications_register_filter( $notification );
+		}
+	}
+}

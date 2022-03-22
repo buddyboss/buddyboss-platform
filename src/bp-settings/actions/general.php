@@ -227,7 +227,7 @@ function bp_settings_action_general() {
 		$feedback_type = 'success';
 
 		// If the user is changing their password, send them a confirmation email.
-		if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( bp_displayed_user_id(), 'bb_notification_account_password' ) ) {
+		if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_notification_account_password', 'members' ) && true === bb_is_notification_enabled( bp_displayed_user_id(), 'bb_notification_account_password' ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => (int) bp_displayed_user_id(),
@@ -245,7 +245,7 @@ function bp_settings_action_general() {
 			bp_send_email( 'settings-password-changed', (int) bp_displayed_user_id(), $args );
 		}
 
-		if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+		if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_notification_account_password', 'members' ) && bp_is_active( 'notifications' ) ) {
 
 			// Send a notification to the user.
 			bp_notifications_add_notification(
