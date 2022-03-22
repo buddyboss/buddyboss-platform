@@ -128,6 +128,14 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'bbp_new_at_mention',
 			'notification_activity_new_mention'
 		);
+
+		$this->register_notification_filter(
+			'bbp_new_at_mention',
+			__( 'Forum New mentions', 'buddyboss' ),
+			5,
+			'notification_activity_new_mention',
+			'mentions'
+		);
 	}
 
 	/**
