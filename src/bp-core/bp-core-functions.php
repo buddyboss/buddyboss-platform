@@ -7240,7 +7240,7 @@ function bb_render_manual_notification() {
  *
  * @return bool|void
  */
-function bb_get_modern_notification_admin_settings_is_enabled( $notification_key, $component ) {
+function bb_get_modern_notification_admin_settings_is_enabled( $notification_key, $component = '' ) {
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
 
@@ -7251,15 +7251,27 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		// Groups preferences registered.
 		$options = bb_register_notification_preferences( $component );
 
+		if ( empty( $component ) ) {
+			$fields = array();
+			$data   = array_column( $options, 'fields' );
+
+			foreach ( $data as $k => $field ) {
+				$fields = array_merge( $fields, $field );
+				unset( $data[ $k ] );
+			}
+
+			$options = array( 'fields' => $fields );
+		}
+
 		if ( empty( $options ) ) {
-			return;
+			return false;
 		}
 
 		// Saved notification from backend default settings.
 		$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 		if ( empty( $options['fields'] ) ) {
-			return;
+			return false;
 		}
 
 		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
@@ -7274,7 +7286,7 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		);
 
 		if ( empty( $fields ) ) {
-			return;
+			return false;
 		}
 
 		$keys = array_column( $fields, 'key' );
@@ -7283,4 +7295,5 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		}
 	}
 
+    return false;
 }
