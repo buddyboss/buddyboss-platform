@@ -7295,5 +7295,5 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		}
 	}
 
-    return false;
+	return false;
 }
