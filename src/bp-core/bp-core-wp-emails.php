@@ -912,24 +912,42 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+		if ( bb_enabled_legacy_email_preference() ) {
 
-		$pass_change_email = array(
-			'to'      => $user['user_email'],
-			/* translators: User password change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
-			'message' => $pass_change_text,
-			'headers' => '',
-		);
+			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
+			$pass_change_email = array(
+				'to'      => $user['user_email'],
+				/* translators: User password change notification email subject. 1: Site name */
+				'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
+				'message' => $pass_change_text,
+				'headers' => '',
+			);
 
-		$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+
+		} else {
+			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+			$pass_change_text = '';
+
+			$pass_change_email = array(
+				'to'      => '',
+				'subject' => '',
+				'message' => '',
+				'headers' => '',
+			);
+
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+		}
 
 		return $pass_change_email;
 	}

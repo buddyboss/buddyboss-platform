@@ -115,6 +115,23 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
+
+		if ( 'members' === $component_name && 'update_member_password' === $component_action_name ) {
+
+			$text          = esc_html__( 'Your password was changed', 'buddyboss' );
+			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+
+			return apply_filters(
+				'bb_members_' . $component_action_name . '_notification',
+				array(
+					'link' => $settings_link,
+					'text' => $text,
+				),
+				$action_item_count,
+				$item_id
+			);
+		}
+
 		return array();
 	}
 }
