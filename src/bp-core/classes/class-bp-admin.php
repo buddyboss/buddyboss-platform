@@ -389,7 +389,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					$this->capability,
 					$this->settings_page,
 					'bp_core_admin_backpat_menu',
-					buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
+					'none',
 					3
 				);
 			}
@@ -427,7 +427,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$this->capability,
 				$this->settings_page,
 				'bp_core_admin_backpat_menu',
-				buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
+				'none',
 				3
 			);
 

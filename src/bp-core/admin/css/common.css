@@ -209,6 +209,27 @@ TABLE OF CONTENTS:
   border-bottom: 1px solid #555;
 }
 
+#adminmenu li.toplevel_page_buddyboss-platform .wp-menu-image:before {
+  content: "\edc8";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-style: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: 0.2em;
+  text-align: center;
+  opacity: 0.8;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 16px;
+  margin-left: 0.2em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #fff;
+}
+
 /*
  * 2.2 Settings - Components
  */
