@@ -64,11 +64,13 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$text   = sprintf( __( 'You have %d new replies', 'buddyboss' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
-			if ( ! empty( $secondary_item_id ) ) {
-				$text = sprintf( __( 'You have %d new reply to %2$s from %3$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
+			$except = bbp_get_reply_excerpt( $item_id, 50 );
+			if ( ! empty( $except ) ) {
+				$text = sprintf( __( '%1$s replied to a discussion: "%2$s"', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $except );
 			} else {
-				$text = sprintf( __( 'You have %1$d new reply to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
+				$text = sprintf( __( '%s replied to a discussion', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 			}
+
 			$filter = 'bbp_single_new_subscription_notification';
 		}
 
