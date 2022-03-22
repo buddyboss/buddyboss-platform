@@ -55,7 +55,19 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
+				$type = bp_notifications_get_meta( $id, 'type', true );
+				if ( $type ) {
+					if ( 'post_comment' === $type ) {
+						$type_html = esc_html__( 'post comment', 'buddyboss' );
+					} elseif ( 'activity_comment' === $type ) {
+						$type_html = esc_html__( 'activity comment', 'buddyboss' );
+					} else {
+						$type_html = esc_html__( 'activity post', 'buddyboss' );
+					}
+					$text = sprintf( __( '%1$s mentioned you in %2$s', 'buddyboss' ), $user_fullname, $type_html );
+				} else {
+					$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
+				}
 			}
 			break;
 
@@ -172,7 +184,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
  * @param int    $receiver_user_id   ID of user receiving notification.
  */
 function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
-	bp_notifications_add_notification(
+	$n_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $receiver_user_id,
 			'item_id'           => $activity->id,
@@ -183,6 +195,25 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 			'is_new'            => 1,
 		)
 	);
+
+	if ( $n_id ) {
+		if ( 'activity_comment' === $activity->type ) {
+			if ( ! empty( $activity->item_id ) ) {
+				$parent_activity = new BP_Activity_Activity( $activity->item_id );
+				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
+					bp_notifications_update_meta( $n_id, 'type', 'post_comment' );
+				} else {
+					bp_notifications_update_meta( $n_id, 'type', 'activity_comment' );
+				}
+			} else {
+				bp_notifications_update_meta( $n_id, 'type', 'activity_comment' );
+			}
+		} elseif ( 'blogs' === $activity->component ) {
+			bp_notifications_update_meta( $n_id, 'type', 'post_comment' );
+		} else {
+			bp_notifications_update_meta( $n_id, 'type', 'activity_post' );
+		}
+	}
 }
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
