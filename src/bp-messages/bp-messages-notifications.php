@@ -43,34 +43,322 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 				? bp_get_message_thread_view_link( $thread_id )
 				: false;
 
+			$media_ids    = bp_messages_get_meta( $item_id, 'bp_media_ids', true );
+			$document_ids = bp_messages_get_meta( $item_id, 'bp_document_ids', true );
+			$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
+			$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
+
+			$excerpt = bp_create_excerpt( wp_strip_all_tags( $message->message ), 50, array(
+				'ending' => __( '&hellip;', 'buddyboss' )
+			) );
+
+			if ( '&nbsp;' === $excerpt ) {
+				$excerpt = '';
+			}
+
 			if ( ! empty( $secondary_item_id ) ) {
 
 				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
 
 					$group         = bp_messages_get_meta( $item_id, 'group_id', true ); // group id
-					$message_users = bp_messages_get_meta( $item_id, 'group_message_users', true ); // all - individual
-					$message_type  = bp_messages_get_meta( $item_id, 'group_message_type', true ); // open - private
+//					$message_users = bp_messages_get_meta( $item_id, 'group_message_users', true ); // all - individual
+//					$message_type  = bp_messages_get_meta( $item_id, 'group_message_type', true ); // open - private
 					$message_from  = bp_messages_get_meta( $item_id, 'message_from', true ); // group
 					$group_name    = bp_get_group_name( groups_get_group( $group ) );
 
 					if ( empty( $message_from ) ) {
-						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
-					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
-						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
-					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
-					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
-					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
-						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						$text = sprintf(
+							__( '%1$s sent you a message', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id )
+						);
+					} elseif ( 'group' === $message_from ) {
+						if ( ! empty( $excerpt ) ) {
+							$text = sprintf(
+								__( '%1$s sent a message to %2$s: "%3$s"', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								$group_name,
+								$excerpt
+							);
+						} elseif ( $media_ids ) {
+							$media_ids = array_filter( explode( ',', $media_ids ) );
+							if ( count( $media_ids ) > 1 ) {
+								$text = sprintf(
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'some photos', 'buddyboss' ),
+									$group_name
+								);
+							} else {
+								$text = sprintf(
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'a photo', 'buddyboss' ),
+									$group_name
+								);
+							}
+						} elseif ( $document_ids ) {
+							$document_ids = array_filter( explode( ',', $document_ids ) );
+							if ( count( $document_ids ) > 1 ) {
+								$text = sprintf(
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'some documents', 'buddyboss' ),
+									$group_name
+								);
+							} else {
+								$text = sprintf(
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'a document', 'buddyboss' ),
+									$group_name
+								);
+							}
+						} elseif ( $video_ids ) {
+							$video_ids = array_filter( explode( ',', $video_ids ) );
+							if ( count( $video_ids ) > 1 ) {
+								$text = sprintf(
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'some videos', 'buddyboss' ),
+									$group_name
+								);
+							} else {
+								$text = sprintf(
+									__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'a video', 'buddyboss' ),
+									$group_name
+								);
+							}
+						} elseif ( empty( $gif_data ) ) {
+							$text = sprintf(
+								__( '%1$s sent %2$s to %3$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'a gif', 'buddyboss' ),
+								$group_name
+							);
+						} else {
+							$text = sprintf(
+								__( '%1$s sent a message to %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								$group_name
+							);
+						}
+
 					} else {
-						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						if ( ! empty( $excerpt ) ) {
+							$text = sprintf(
+								__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								$excerpt
+							);
+						} elseif ( $media_ids ) {
+							$media_ids = array_filter( explode( ',', $media_ids ) );
+							if ( count( $media_ids ) > 1 ) {
+								$text = sprintf(
+									__( '%1$s sent you %2$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'some photos', 'buddyboss' )
+								);
+							} else {
+								$text = sprintf(
+									__( '%1$s sent you %2$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'a photo', 'buddyboss' )
+								);
+							}
+						} elseif ( $document_ids ) {
+							$document_ids = array_filter( explode( ',', $document_ids ) );
+							if ( count( $document_ids ) > 1 ) {
+								$text = sprintf(
+									__( '%1$s sent you %2$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'some documents', 'buddyboss' )
+								);
+							} else {
+								$text = sprintf(
+									__( '%1$s sent you %2$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'a document', 'buddyboss' )
+								);
+							}
+						} elseif ( $video_ids ) {
+							$video_ids = array_filter( explode( ',', $video_ids ) );
+							if ( count( $video_ids ) > 1 ) {
+								$text = sprintf(
+									__( '%1$s sent you %2$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'some videos', 'buddyboss' )
+								);
+							} else {
+								$text = sprintf(
+									__( '%1$s sent you %2$s', 'buddyboss' ),
+									bp_core_get_user_displayname( $secondary_item_id ),
+									esc_html__( 'a video', 'buddyboss' )
+								);
+							}
+						} elseif ( empty( $gif_data ) ) {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'a gif', 'buddyboss' )
+							);
+						} else {
+							$text = sprintf(
+								__( '%1$s sent you a message', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id )
+							);
+						}
 					}
+
+//					if ( empty( $message_from ) ) {
+//						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+//					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
+//						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+//					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
+//						$text = sprintf( __( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+//					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
+//						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+//					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
+//						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+//					} else {
+//						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+//					}
+
 				} else {
-					$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+
+					if ( ! empty( $excerpt ) ) {
+						$text = sprintf(
+							__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$excerpt
+						);
+					} elseif ( $media_ids ) {
+						$media_ids = array_filter( explode( ',', $media_ids ) );
+						if ( count( $media_ids ) > 1 ) {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'some photos', 'buddyboss' )
+							);
+						} else {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'a photo', 'buddyboss' )
+							);
+						}
+					} elseif ( $document_ids ) {
+						$document_ids = array_filter( explode( ',', $document_ids ) );
+						if ( count( $document_ids ) > 1 ) {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'some documents', 'buddyboss' )
+							);
+						} else {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'a document', 'buddyboss' )
+							);
+						}
+					} elseif ( $video_ids ) {
+						$video_ids = array_filter( explode( ',', $video_ids ) );
+						if ( count( $video_ids ) > 1 ) {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'some videos', 'buddyboss' )
+							);
+						} else {
+							$text = sprintf(
+								__( '%1$s sent you %2$s', 'buddyboss' ),
+								bp_core_get_user_displayname( $secondary_item_id ),
+								esc_html__( 'a video', 'buddyboss' )
+							);
+						}
+					} elseif ( empty( $gif_data ) ) {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'a gif', 'buddyboss' )
+						);
+					} else {
+						$text = sprintf(
+							__( '%1$s sent you a message', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id )
+						);
+					}
+//					$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 				}
 			} else {
-				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ), bp_core_number_format( $total_items ) );
+
+				if ( ! empty( $excerpt ) ) {
+					$text = sprintf(
+						__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id ),
+						$excerpt
+					);
+				} elseif ( $media_ids ) {
+					$media_ids = array_filter( explode( ',', $media_ids ) );
+					if ( count( $media_ids ) > 1 ) {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'some photos', 'buddyboss' )
+						);
+					} else {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'a photo', 'buddyboss' )
+						);
+					}
+				} elseif ( $document_ids ) {
+					$document_ids = array_filter( explode( ',', $document_ids ) );
+					if ( count( $document_ids ) > 1 ) {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'some documents', 'buddyboss' )
+						);
+					} else {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'a document', 'buddyboss' )
+						);
+					}
+				} elseif ( $video_ids ) {
+					$video_ids = array_filter( explode( ',', $video_ids ) );
+					if ( count( $video_ids ) > 1 ) {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'some videos', 'buddyboss' )
+						);
+					} else {
+						$text = sprintf(
+							__( '%1$s sent you %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							esc_html__( 'a video', 'buddyboss' )
+						);
+					}
+				} elseif ( empty( $gif_data ) ) {
+					$text = sprintf(
+						__( '%1$s sent you %2$s', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id ),
+						esc_html__( 'a gif', 'buddyboss' )
+					);
+				} else {
+					$text = sprintf(
+						__( '%1$s sent you a message', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id )
+					);
+				}
+
+//				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ), bp_core_number_format( $total_items ) );
 			}
 		}
 
