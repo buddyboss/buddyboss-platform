@@ -2642,7 +2642,7 @@ div.dropzone .dz-preview {
 		}
 
 		i {
-			font-size: 8px;
+			font-size: 13px;
 			-webkit-transform: rotate(180deg) translateY(1px);
 			-ms-transform: rotate(180deg) translateY(1px);
 			transform: rotate(180deg) translateY(1px);
@@ -3202,7 +3202,7 @@ div.dropzone .dz-preview {
 		.media-folder_action__anchor {
 
 			i {
-				font-size: 21px;
+				font-size: 19px;
 				color: #939597;
 			}
 
@@ -3250,7 +3250,8 @@ div.dropzone .dz-preview {
 
 					a {
 						padding: 10px 14px;
-						display: block;
+						display: flex;
+						align-items: center;
 						font-size: 14px;
 						line-height: 1;
 						color: #7f868f;
@@ -3262,7 +3263,7 @@ div.dropzone .dz-preview {
 
 						&:before {
 							font-family: "bb-icons"; /* stylelint-disable-line */
-							font-size: 16px;
+							font-size: 20px;
 							display: inline-block;
 							margin-right: 10px;
 							width: 20px;
@@ -3338,7 +3339,6 @@ div.dropzone .dz-preview {
 					&.privacy_file a:before {
 						font-family: "bb-icons";/* stylelint-disable-line */
 						content: "\eecc";
-						font-size: 15px;
 					}
 
 				}
@@ -4049,7 +4049,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				vertical-align: middle;
 
 				i {
-					font-size: 21px;
+					font-size: 19px;
 					margin-top: 5px;
 				}
 
@@ -4125,7 +4125,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 						a {
 							padding: 10px 14px;
-							display: block;
+							display: flex;
+							align-items: center;
 							font-size: 14px;
 							line-height: 1;
 							color: #7f868f;
@@ -4137,7 +4138,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 							i:before {
 								font-family: "bb-icons"; /* stylelint-disable-line */
-								font-size: 16px;
+								font-size: 20px;
 								display: inline-block;
 								margin-right: 10px;
 								width: 20px;

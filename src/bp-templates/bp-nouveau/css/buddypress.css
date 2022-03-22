@@ -4589,8 +4589,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul {
   list-style: none;
-  margin: 5px 0 !important;
-  padding: 0 !important;
+  margin: 5px 0;
+  padding: 0;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li,
@@ -4607,7 +4607,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li {
   margin: 0;
   padding: 0;
-  list-style-type: none !important;
+  list-style-type: none;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li a,
@@ -4622,8 +4622,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap .video-action_list ul li a,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li a,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li a {
-  padding: 10px 14px !important;
-  display: block !important;
+  padding: 10px 14px;
+  display: block;
   font-size: 14px;
   line-height: 1;
   color: #7f868f;
@@ -4641,7 +4641,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap .video-action_list ul li a:hover,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .media-action_list ul li a:hover,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap .video-action_list ul li a:hover {
-  background-color: #f5f5f5 !important;
+  background-color: #f5f5f5;
   color: #5087e5;
 }
 
@@ -18215,7 +18215,7 @@ div.dropzone .dz-preview .dz-filename {
 }
 
 #media-stream .document-data-table-head .data-head i {
-  font-size: 8px;
+  font-size: 13px;
   -webkit-transform: rotate(180deg) translateY(1px);
   -ms-transform: rotate(180deg) translateY(1px);
   transform: rotate(180deg) translateY(1px);
@@ -18771,7 +18771,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__anchor i,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__anchor i {
-  font-size: 21px;
+  font-size: 19px;
   color: #939597;
 }
 
@@ -18821,7 +18821,8 @@ div.dropzone .dz-preview .dz-filename {
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li a,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li a {
   padding: 10px 14px;
-  display: block;
+  display: flex;
+  align-items: center;
   font-size: 14px;
   line-height: 1;
   color: #7f868f;
@@ -18837,7 +18838,7 @@ div.dropzone .dz-preview .dz-filename {
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 16px;
+  font-size: 20px;
   display: inline-block;
   margin-right: 10px;
   width: 20px;
@@ -18924,7 +18925,6 @@ div.dropzone .dz-preview .dz-filename {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   content: "\eecc";
-  font-size: 15px;
 }
 
 @media screen and (max-width: 540px) {
@@ -19582,7 +19582,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__anchor i {
-  font-size: 21px;
+  font-size: 19px;
   margin-top: 5px;
 }
 
@@ -19656,7 +19656,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list ul li a {
   padding: 10px 14px;
-  display: block;
+  display: flex;
+  align-items: center;
   font-size: 14px;
   line-height: 1;
   color: #7f868f;
@@ -19670,7 +19671,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list ul li a i:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 16px;
+  font-size: 20px;
   display: inline-block;
   margin-right: 10px;
   width: 20px;
