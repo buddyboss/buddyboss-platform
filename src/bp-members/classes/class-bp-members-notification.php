@@ -116,7 +116,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
 
-		if ( 'members' === $component_name && 'update_member_password' === $component_action_name ) {
+		if ( 'members' === $component_name && 'bb_notification_account_password' === $component_action_name ) {
 
 			$text          = esc_html__( 'Your password was changed', 'buddyboss' );
 			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );

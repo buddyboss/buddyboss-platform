@@ -254,7 +254,7 @@ function bp_settings_action_general() {
 					'item_id'           => bp_displayed_user_id(),
 					'secondary_item_id' => bp_displayed_user_id(),
 					'component_name'    => buddypress()->members->id,
-					'component_action'  => 'update_member_password',
+					'component_action'  => 'bb_notification_account_password',
 					'date_notified'     => bp_core_current_time(),
 					'is_new'            => 1,
 				)
