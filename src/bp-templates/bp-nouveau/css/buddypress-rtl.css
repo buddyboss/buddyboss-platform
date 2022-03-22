@@ -13685,7 +13685,6 @@ td.bbp-topic-counts {
 .bbp-pagination-links span.current {
   background: #eee;
   opacity: 0.8;
-  border: 1px solid #ddd;
 }
 
 .bbp-pagination-links span.dots {
