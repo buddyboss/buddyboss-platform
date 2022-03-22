@@ -6937,6 +6937,10 @@ function bb_admin_icons( $id ) {
 		case 'connection_access_control_block':
 			$meta_icon = $meta_common_icon . ' bb-icon-lock';
 			break;
+		case 'bp_zoom_settings_section':
+		case 'bp_zoom_gutenberg_section';
+			$meta_icon = $meta_common_icon . ' bb-icon-brand-zoom';
+			break;
 		default:
 			$meta_icon = '';
 	}
