@@ -6930,6 +6930,13 @@ function bb_admin_icons( $id ) {
 		case 'bbpress_converter_main':
 			$meta_icon = $meta_common_icon . ' bb-icon-cloud-upload';
 			break;
+		case 'group_access_control_block':
+		case 'activity_access_control_block':
+		case 'messages_access_control_block':
+		case 'media_access_control_block';
+		case 'connection_access_control_block':
+			$meta_icon = $meta_common_icon . ' bb-icon-lock';
+			break;
 		default:
 			$meta_icon = '';
 	}
