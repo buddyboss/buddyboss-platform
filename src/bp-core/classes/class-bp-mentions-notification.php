@@ -115,6 +115,14 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'notification_activity_new_mention'
 		);
 
+		$this->register_notification_filter(
+			'new_at_mention',
+			__( 'New mentions', 'buddyboss' ),
+			5,
+			'notification_activity_new_mention',
+			'mentions'
+		);
+
 		$this->register_notification(
 			'activity',
 			'bbp_new_at_mention',
