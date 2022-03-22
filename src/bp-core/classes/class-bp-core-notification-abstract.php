@@ -59,6 +59,15 @@ abstract class BP_Core_Notification_Abstract {
 	private $priority = 20;
 
 	/**
+	 * Notification Filters.
+	 *
+	 * @var array
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private $notifcation_filters = array();
+
+	/**
 	 * Initialize.
 	 *
 	 * @return void
@@ -74,6 +83,9 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 99, 8 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
+
+		// Register the Notifications filters.
+		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
 	}
 
 	/**
@@ -428,5 +440,50 @@ abstract class BP_Core_Notification_Abstract {
 	 * }
 	 */
 	abstract public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id );
+
+	/**
+	 * Register the notification filters.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_filters() {
+
+		if ( ! empty( $this->notifcation_filters ) ) {
+			foreach ( $this->notifcation_filters as $filter ) {
+				// Check admin settings enabled or not.
+				if ( bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['notification_component'] ) && bp_is_active( 'notifications' ) ) {
+					unset( $filter['notification_type'] );
+					unset( $filter['notification_component'] );
+					bp_nouveau_notifications_register_filter( $filter );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Register Notification Filter.
+	 *
+	 * @param string $notification_id        Notification Type key.
+	 * @param string $notification_label     Notification label.
+	 * @param int    $notification_position  Notification position.
+	 * @param string $notification_type      Notification type.
+	 * @param string $notification_component Notification component.
+	 *
+	 * @return void
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_filter( string $notification_id, string $notification_label, int $notification_position = 0, string $notification_type, string $notification_component ) {
+
+		$this->notifcation_filters[] = array(
+			'id'                     => $notification_id,
+			'label'                  => $notification_label,
+			'position'               => $notification_position,
+			'notification_type'      => $notification_type,
+			'notification_component' => $notification_component,
+		);
+
+	}
+
 }
 
