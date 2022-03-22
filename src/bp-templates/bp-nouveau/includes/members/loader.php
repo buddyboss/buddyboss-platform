@@ -80,8 +80,6 @@ class BP_Nouveau_Members {
 		// Add 'Dashboard' link to admin bar.
 		add_action( 'bp_setup_admin_bar', 'bp_nouveau_admin_bar_member_dashboard', 11 );
 
-		// Register the Account Password change Notifications filters.
-		add_action( 'bp_nouveau_notifications_init_filters', 'bp_nouveau_members_notification_filters' );
 	}
 
 	/**
