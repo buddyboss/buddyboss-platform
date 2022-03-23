@@ -6836,7 +6836,7 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_profile_list_settings':
 		case 'bp_group_list_settings':
-			$meta_icon = $meta_common_icon . ' bb-icon-grid-large';
+			$meta_icon = $meta_common_icon . ' bb-icon-grid-small';
 			break;
 		case 'bp_member_type_settings':
 		case 'bp_groups_types':
