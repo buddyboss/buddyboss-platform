@@ -103,7 +103,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
+				'situation_label'     => __( 'A member is mentioned in a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),
 			'bb_new_mention'
