@@ -90,7 +90,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member replies to a discussion you are subscribed to to.', 'buddyboss' ),
+				'situation_label'     => __( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
 			),
 			'bb_forums_subscribed_reply'
@@ -124,7 +124,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has created a new forum discussion.', 'buddyboss' ),
+				'situation_label'     => __( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
 			),
 			'bb_forums_subscribed_discussion'
