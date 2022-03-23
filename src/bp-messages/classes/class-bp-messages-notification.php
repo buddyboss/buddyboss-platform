@@ -84,7 +84,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'Recipient has received a private message.', 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a new private message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
 			),
 			'bb_messages_new'
