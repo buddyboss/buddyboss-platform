@@ -108,20 +108,11 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'activity',
-			'update_reply',
+			'bb_activity_comment',
 			'bb_activity_comment',
 			true,
 			__( 'New update replies', 'buddyboss' ),
 			15
-		);
-
-		$this->register_notification(
-			'activity',
-			'comment_reply',
-			'bb_activity_comment',
-			true,
-			__( 'New update comment replies', 'buddyboss' ),
-			25
 		);
 	}
 

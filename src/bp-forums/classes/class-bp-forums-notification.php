@@ -98,7 +98,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'forums',
-			'bbp_new_reply',
+			'bb_forums_subscribed_reply',
 			'bb_forums_subscribed_reply'
 		);
 
@@ -132,7 +132,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'forums',
-			'bbp_new_topic',
+			'bb_forums_subscribed_discussion',
 			'bb_forums_subscribed_discussion'
 		);
 	}

@@ -111,19 +111,10 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'mentions',
-			'new_at_mention',
+			'bb_new_mention',
 			'bb_new_mention',
 			true,
 			__( 'New mentions', 'buddyboss' ),
-			5
-		);
-
-		$this->register_notification(
-			'mentions',
-			'bbp_new_at_mention',
-			'bb_new_mention',
-			true,
-			__( 'Forum New mentions', 'buddyboss' ),
 			5
 		);
 

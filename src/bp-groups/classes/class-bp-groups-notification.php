@@ -145,20 +145,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'member_promoted_to_admin',
+			'bb_groups_promoted',
 			'bb_groups_promoted',
 			true,
-			__( 'Group Organizer promotions', 'buddyboss' ),
+			__( 'Group promotions', 'buddyboss' ),
 			85
-		);
-
-		$this->register_notification(
-			'groups',
-			'member_promoted_to_mod',
-			'bb_groups_promoted',
-			true,
-			__( 'Group Moderator promotions', 'buddyboss' ),
-			95
 		);
 	}
 
@@ -190,7 +181,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'group_invite',
+			'bb_groups_new_invite',
 			'bb_groups_new_invite',
 			true,
 			__( 'Group invitations', 'buddyboss' ),
@@ -226,7 +217,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'new_membership_request',
+			'bb_groups_new_request',
 			'bb_groups_new_request',
 			true,
 			__( 'Pending Group membership requests', 'buddyboss' ),
@@ -262,7 +253,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'membership_request_accepted',
+			'bb_groups_request_accepted',
 			'bb_groups_request_accepted',
 			true,
 			__( 'Accepted Group membership requests', 'buddyboss' ),
@@ -299,7 +290,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'membership_request_rejected',
+			'bb_groups_request_rejected',
 			'bb_groups_request_rejected',
 			true,
 			__( 'Rejected Group membership requests', 'buddyboss' ),
@@ -335,7 +326,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'new_message',
+			'bb_groups_new_message',
 			'bb_groups_new_message'
 		);
 	}

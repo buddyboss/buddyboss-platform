@@ -93,7 +93,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'friends',
-			'friendship_request',
+			'bb_connections_new_request',
 			'bb_connections_new_request',
 			true,
 			__( 'Pending connection requests', 'buddyboss' ),
@@ -129,7 +129,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'friends',
-			'friendship_accepted',
+			'bb_connections_request_accepted',
 			'bb_connections_request_accepted',
 			true,
 			__( 'Accepted connection requests', 'buddyboss' ),

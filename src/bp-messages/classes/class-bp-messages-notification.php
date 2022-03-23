@@ -92,7 +92,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'messages',
-			'new_message',
+			'bb_messages_new',
 			'bb_messages_new',
 			true,
 			__( 'New private messages', 'buddyboss' ),
