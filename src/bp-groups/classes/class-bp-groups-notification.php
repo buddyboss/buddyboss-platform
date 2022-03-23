@@ -140,7 +140,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( "Recipient's status within a group has changed.", 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
 			),
-			'notification_groups_admin_promotion'
+			'bb_groups_promoted'
 		);
 
 		$this->register_notification(
