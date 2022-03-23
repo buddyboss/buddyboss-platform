@@ -94,15 +94,10 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'members',
 			'update_member_password',
-			'bb_notification_account_password'
-		);
-
-		$this->register_notification_filter(
-			'update_member_password',
-			__( 'Password changed', 'buddyboss' ),
-			155,
 			'bb_notification_account_password',
-			'members'
+			true,
+			__( 'Password changed', 'buddyboss' ),
+			155
 		);
 
 	}
