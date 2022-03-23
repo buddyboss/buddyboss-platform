@@ -88,7 +88,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'Recipient was mentioned in an activity update.', 'buddyboss' ),
+				'situation_label'     => __( 'A member is mentioned by another member', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 			),
 			'bb_new_mention'
