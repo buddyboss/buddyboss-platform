@@ -3926,12 +3926,12 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$content_moderation_email = array(
-		'description' => __( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => __( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
 	$user_moderation_email = array(
-		'description' => __( 'When a member has been automatically suspended due to reaching the reporting threshold.', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => __( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
