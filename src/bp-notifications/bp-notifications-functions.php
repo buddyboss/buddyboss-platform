@@ -269,6 +269,7 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 				$notification_item->component_action, // Duplicated so plugins can check the canonical action name.
 				$component_name,
 				$notification_item->id,
+				'web',
 			);
 
 			// Function should return an object.

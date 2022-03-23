@@ -112,10 +112,11 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
 	 *
 	 * @return array
 	 */
-	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
+	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
 		return array();
 	}
 }
