@@ -89,7 +89,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is mentioned by another member', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),
 			'bb_new_mention'
 		);
@@ -104,7 +104,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),
 			'bb_new_mention'
 		);
