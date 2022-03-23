@@ -55,19 +55,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$type = bp_notifications_get_meta( $id, 'type', true );
-				if ( $type ) {
-					if ( 'post_comment' === $type ) {
-						$type_html = esc_html__( 'post comment', 'buddyboss' );
-					} elseif ( 'activity_comment' === $type ) {
-						$type_html = esc_html__( 'activity comment', 'buddyboss' );
-					} else {
-						$type_html = esc_html__( 'activity post', 'buddyboss' );
-					}
-					$text = sprintf( __( '%1$s mentioned you in %2$s', 'buddyboss' ), $user_fullname, $type_html );
-				} else {
-					$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
-				}
+				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
 			}
 			break;
 
@@ -529,6 +517,11 @@ add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single
  * @param string $activity        Activity object.
  */
 function bb_activity_add_notification_metas( $notification_id, $activity ) {
+
+	if ( bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	if ( $notification_id ) {
 		if ( 'activity_comment' === $activity->type ) {
 			if ( ! empty( $activity->item_id ) ) {
