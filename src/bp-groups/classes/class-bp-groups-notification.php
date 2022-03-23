@@ -143,29 +143,19 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'member_promoted_to_admin',
-			'notification_groups_admin_promotion'
-		);
-
-		$this->register_notification_filter(
-			'member_promoted_to_admin',
-			__( 'Group Organizer promotions', 'buddyboss' ),
-			85,
 			'notification_groups_admin_promotion',
-			'groups'
+			true,
+			__( 'Group Organizer promotions', 'buddyboss' ),
+			85
 		);
 
 		$this->register_notification(
 			'groups',
 			'member_promoted_to_mod',
-			'notification_groups_admin_promotion'
-		);
-
-		$this->register_notification_filter(
-			'member_promoted_to_mod',
-			__( 'Group Moderator promotions', 'buddyboss' ),
-			95,
 			'notification_groups_admin_promotion',
-			'groups'
+			true,
+			__( 'Group Moderator promotions', 'buddyboss' ),
+			95
 		);
 	}
 
@@ -198,15 +188,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'group_invite',
-			'notification_groups_invite'
-		);
-
-		$this->register_notification_filter(
-			'group_invite',
-			__( 'Group invitations', 'buddyboss' ),
-			105,
 			'notification_groups_invite',
-			'groups'
+			true,
+			__( 'Group invitations', 'buddyboss' ),
+			105
 		);
 	}
 
@@ -239,15 +224,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'new_membership_request',
-			'notification_groups_membership_request'
-		);
-
-		$this->register_notification_filter(
-			'new_membership_request',
-			__( 'Pending Group membership requests', 'buddyboss' ),
-			55,
 			'notification_groups_membership_request',
-			'groups'
+			true,
+			__( 'Pending Group membership requests', 'buddyboss' ),
+			55
 		);
 	}
 
@@ -295,29 +275,19 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'membership_request_accepted',
-			'notification_membership_request_completed'
-		);
-
-		$this->register_notification_filter(
-			'membership_request_accepted',
-			__( 'Accepted Group membership requests', 'buddyboss' ),
-			65,
 			'notification_membership_request_completed',
-			'groups'
+			true,
+			__( 'Accepted Group membership requests', 'buddyboss' ),
+			65
 		);
 
 		$this->register_notification(
 			'groups',
 			'membership_request_rejected',
-			'notification_membership_request_completed'
-		);
-
-		$this->register_notification_filter(
-			'membership_request_rejected',
-			__( 'Rejected Group membership requests', 'buddyboss' ),
-			75,
 			'notification_membership_request_completed',
-			'groups'
+			true,
+			__( 'Rejected Group membership requests', 'buddyboss' ),
+			75
 		);
 	}
 
