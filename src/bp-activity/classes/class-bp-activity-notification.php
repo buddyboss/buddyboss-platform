@@ -70,8 +70,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_reply() {
 		$this->register_notification_type(
 			'bb_activity_comment',
-			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
-			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+			esc_html__( 'A member replies to your post or comment', 'buddyboss' ),
+			esc_html__( 'A member receives a reply to their post or comment', 'buddyboss' ),
 			'activity'
 		);
 

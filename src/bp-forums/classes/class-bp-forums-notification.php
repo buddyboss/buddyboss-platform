@@ -76,8 +76,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_forums_following_reply() {
 		$this->register_notification_type(
 			'bb_forums_subscribed_reply',
-			esc_html__( 'A member replies to a discussion you are subscribed to', 'buddyboss' ),
-			'',
+			esc_html__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
+			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 			'forums'
 		);
 
@@ -110,8 +110,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_forums_following_topic() {
 		$this->register_notification_type(
 			'bb_forums_subscribed_discussion',
-			esc_html__( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' ),
-			'',
+			esc_html__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
+			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 			'forums'
 		);
 

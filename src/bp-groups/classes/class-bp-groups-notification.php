@@ -90,7 +90,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_updated() {
 		$this->register_notification_type(
 			'bb_groups_details_updated',
-			esc_html__( 'Group information is updated', 'buddyboss' ),
+			esc_html__( 'The details of a group you manage are updated', 'buddyboss' ),
 			esc_html__( 'A group\'s details are updated', 'buddyboss' ),
 			'groups'
 		);
@@ -123,8 +123,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_user_promotion() {
 		$this->register_notification_type(
 			'bb_groups_promoted',
-			esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
-			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddyboss' ),
+			esc_html__( 'You\'re promoted in a group', 'buddyboss' ),
+			esc_html__( 'A member is promoted in a group', 'buddyboss' ),
 			'groups'
 		);
 
@@ -160,7 +160,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_type(
 			'bb_groups_new_invite',
 			esc_html__( 'You receive a new invite to join a group', 'buddyboss' ),
-			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
+			esc_html__( 'A member receives an invite to join a group', 'buddyboss' ),
 			'groups'
 		);
 
@@ -195,8 +195,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_membership_request() {
 		$this->register_notification_type(
 			'bb_groups_new_request',
-			esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
-			'',
+			esc_html__( 'A member requests to join a group you manage', 'buddyboss' ),
+			esc_html__( 'A group organizer receives a request to join their group', 'buddyboss' ),
 			'groups'
 		);
 
@@ -231,8 +231,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_membership_request_accepted() {
 		$this->register_notification_type(
 			'bb_groups_request_accepted',
-			esc_html__( 'Your request to join a group has been approved', 'buddyboss' ),
-			esc_html__( 'A member\'s request to join a group has been approved', 'buddyboss' ),
+			esc_html__( 'Your request to join a group is accepted', 'buddyboss' ),
+			esc_html__( 'A member is accepted into a group', 'buddyboss' ),
 			'groups'
 		);
 
@@ -268,8 +268,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_membership_request_rejected() {
 		$this->register_notification_type(
 			'bb_groups_request_rejected',
-			esc_html__( 'Your request to join a group has been rejected', 'buddyboss' ),
-			esc_html__( 'A member\'s request to join a group has been rejected', 'buddyboss' ),
+			esc_html__( 'Your request to join a group is rejected', 'buddyboss' ),
+			esc_html__( 'A member is rejected from joining a group', 'buddyboss' ),
 			'groups'
 		);
 
@@ -304,7 +304,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_user_messages() {
 		$this->register_notification_type(
 			'bb_groups_new_message',
-			esc_html__( 'A group sends you a new message', 'buddyboss' ),
+			esc_html__( 'You receive a new group message', 'buddyboss' ),
 			esc_html__( 'A member receives a new group message', 'buddyboss' ),
 			'groups'
 		);

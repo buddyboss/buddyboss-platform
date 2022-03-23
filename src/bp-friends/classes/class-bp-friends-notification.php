@@ -71,7 +71,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_friendship_request() {
 		$this->register_notification_type(
 			'bb_connections_new_request',
-			esc_html__( 'A member invites you to connect', 'buddyboss' ),
+			esc_html__( 'You receive a new connection request', 'buddyboss' ),
 			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
 			'friends'
 		);
@@ -107,7 +107,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_friendship_accept() {
 		$this->register_notification_type(
 			'bb_connections_request_accepted',
-			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
+			esc_html__( 'Your connection request is accepted', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
 			'friends'
 		);

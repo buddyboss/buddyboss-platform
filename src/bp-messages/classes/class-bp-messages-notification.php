@@ -70,8 +70,8 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_new_message() {
 		$this->register_notification_type(
 			'bb_messages_new',
-			esc_html__( 'A member sends you a new message', 'buddyboss' ),
-			esc_html__( 'A member receives a new message', 'buddyboss' ),
+			esc_html__( 'You receive a new private message', 'buddyboss' ),
+			esc_html__( 'A member receives a new private message', 'buddyboss' ),
 			'messages'
 		);
 
