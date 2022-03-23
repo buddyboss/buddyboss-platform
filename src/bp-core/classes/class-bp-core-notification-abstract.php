@@ -375,13 +375,13 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_notification( string $component, string $component_action, string $notification_type, bool $notification_filter = true, string $notification_id = '', string $notification_filter_label = '', int $notification_position = 0 ) {
+	final public function register_notification( string $component, string $component_action, string $notification_type, bool $notification_filter = true, string $notification_filter_label = '', int $notification_position = 0 ) {
 		$this->notifications[] = array(
 			'component'           => $component,
 			'component_action'    => $component_action,
 			'notification_type'   => $notification_type,
 			'notification_filter' => $notification_filter,
-			'id'                  => $notification_id,
+			'id'                  => $component_action,
 			'label'               => $notification_filter_label,
 			'position'            => $notification_position,
 		);
