@@ -84,7 +84,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a reply to their activity post', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 			),
 			'bb_activity_comment'
@@ -99,7 +99,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a reply to their activity comment', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 
 			),
