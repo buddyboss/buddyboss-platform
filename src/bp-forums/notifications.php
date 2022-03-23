@@ -64,13 +64,11 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$text   = sprintf( __( 'You have %d new replies', 'buddyboss' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
-			$except = bbp_get_reply_excerpt( $item_id, 50 );
-			if ( ! empty( $except ) ) {
-				$text = sprintf( __( '%1$s replied to a discussion: "%2$s"', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $except );
+			if ( ! empty( $secondary_item_id ) ) {
+				$text = sprintf( __( 'You have %d new reply to %2$s from %3$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
-				$text = sprintf( __( '%s replied to a discussion', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+				$text = sprintf( __( 'You have %1$d new reply to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
 			}
-
 			$filter = 'bbp_single_new_subscription_notification';
 		}
 
@@ -188,21 +186,11 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$text   = sprintf( __( 'You have %d new mentions', 'buddyboss' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
-
-			$type = bp_notifications_get_meta( $id, 'type', true );
-			if ( $type ) {
-				if ( 'forum_reply' === $type ) {
-					$type_html = esc_html__( 'forum reply', 'buddyboss' );
-				} elseif ( 'forum_topic' === $type ) {
-					$type_html = esc_html__( 'forum discussion', 'buddyboss' );
-				}
-				$text = sprintf( __( '%1$s mentioned you in %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $type_html );
-			} elseif ( ! empty( $secondary_item_id ) ) {
+			if ( ! empty( $secondary_item_id ) ) {
 				$text = sprintf( __( '%3$s mentioned you in %2$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
 				$text = sprintf( __( 'You have %1$d new mention to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
 			}
-
 			$filter = 'bbp_single_new_subscription_notification';
 		}
 
