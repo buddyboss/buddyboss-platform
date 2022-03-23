@@ -166,11 +166,7 @@ class BP_Notifications_Notification {
 				$this->id = $wpdb->insert_id;
 
 				// Set the notification type.
-				if ( bb_enabled_legacy_email_preference() ) {
-					bp_notifications_update_meta( $this->id, 'is_modern', 0 );
-				} else {
-					bp_notifications_update_meta( $this->id, 'is_modern', 1 );
-				}
+				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
 			}
 			$retval = $this->id;
 		}
