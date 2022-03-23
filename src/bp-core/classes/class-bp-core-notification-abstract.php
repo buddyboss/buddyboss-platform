@@ -354,17 +354,13 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true, bool $notification_filter = true, string $notification_id = '', string $notification_filter_label = '', int $notification_position = 0 ) {
+	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
 		$this->preferences[] = array(
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
 			'notification_admin_label' => $notification_admin_label,
 			'notification_group'       => $notification_group,
 			'notification_default'     => $default,
-			'notification_filter'      => $notification_filter,
-			'id'                       => $notification_id,
-			'label'                    => $notification_filter_label,
-			'position'                 => $notification_position,
 		);
 	}
 
@@ -379,11 +375,15 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_notification( string $component, string $component_action, string $notification_type ) {
+	final public function register_notification( string $component, string $component_action, string $notification_type, bool $notification_filter = true, string $notification_id = '', string $notification_filter_label = '', int $notification_position = 0 ) {
 		$this->notifications[] = array(
-			'component'         => $component,
-			'component_action'  => $component_action,
-			'notification_type' => $notification_type,
+			'component'           => $component,
+			'component_action'    => $component_action,
+			'notification_type'   => $notification_type,
+			'notification_filter' => $notification_filter,
+			'id'                  => $notification_id,
+			'label'               => $notification_filter_label,
+			'position'            => $notification_position,
 		);
 	}
 
@@ -443,11 +443,11 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 
-		if ( ! empty( $this->preferences ) ) {
-			foreach ( $this->preferences as $filter ) {
+		if ( ! empty( $this->notifications ) ) {
+			foreach ( $this->notifications as $filter ) {
 
 				// Check admin settings enabled or not.
-				if ( isset( $filter ) && isset( $filter['notification_filter'] ) && $filter['notification_filter'] && isset( $filter['notification_id'] ) && isset( $filter['notification_filter_label'] ) && bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['notification_component'] ) && bp_is_active( 'notifications' ) ) {
+				if ( isset( $filter ) && isset( $filter['notification_filter'] ) && $filter['notification_filter'] && isset( $filter['notification_id'] ) && isset( $filter['notification_filter_label'] ) && bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['component'] ) && bp_is_active( 'notifications' ) ) {
 					unset( $filter['notification_type'] );
 					unset( $filter['notification_label'] );
 					unset( $filter['notification_admin_label'] );
