@@ -112,30 +112,21 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'activity',
 			'new_at_mention',
-			'notification_activity_new_mention'
-		);
-
-		$this->register_notification_filter(
-			'new_at_mention',
-			__( 'New mentions', 'buddyboss' ),
-			5,
 			'notification_activity_new_mention',
-			'mentions'
+			true,
+			__( 'New mentions', 'buddyboss' ),
+			5
 		);
 
 		$this->register_notification(
 			'activity',
 			'bbp_new_at_mention',
-			'notification_activity_new_mention'
+			'notification_activity_new_mention',
+			true,
+			__( 'Forum New mentions', 'buddyboss' ),
+			5
 		);
 
-		$this->register_notification_filter(
-			'bbp_new_at_mention',
-			__( 'Forum New mentions', 'buddyboss' ),
-			5,
-			'notification_activity_new_mention',
-			'mentions'
-		);
 	}
 
 	/**
