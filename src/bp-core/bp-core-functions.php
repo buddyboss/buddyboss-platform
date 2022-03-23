@@ -3911,7 +3911,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$core_user_registration_with_blog = array(
-		'description' => __( 'Recipient has registered for an account and site.', 'buddyboss' ),
+		'description' => __( 'Activate a new account and site', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
