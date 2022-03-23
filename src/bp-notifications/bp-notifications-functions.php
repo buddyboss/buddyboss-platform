@@ -1091,3 +1091,24 @@ function bb_notification_exclude_group_message_notification( $component_names ) 
 // Hide messages notifications from the notifications list.
 add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 
+/**
+ * Check the notification is legacy or modern.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $notification_id Notification ID.
+ *
+ * @return bool True if the notification is legacy otherwise false.
+ */
+function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
+
+	/**
+	 * Filters the notification is legacy or modern.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $is_legacy_notification The notification is legacy or modern.
+	 * @param int  $notification_id        Notification ID.
+	 */
+	return (bool) apply_filters( 'bb_notifications_is_legacy_notification', (bool) ! bp_notifications_get_meta( $notification_id, 'is_modern', true ), $notification_id );
+}
