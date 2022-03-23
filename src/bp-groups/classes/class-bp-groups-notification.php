@@ -112,7 +112,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification(
 			'groups',
-			'group_details_updated',
+			'bb_groups_details_updated',
 			'bb_groups_details_updated'
 		);
 	}
