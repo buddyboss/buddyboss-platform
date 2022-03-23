@@ -75,7 +75,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$this->register_notification_type(
-			'notification_forums_following_reply',
+			'bb_forums_subscribed_reply',
 			esc_html__( 'A member replies to a discussion you are subscribed to', 'buddyboss' ),
 			'',
 			'forums'
@@ -93,13 +93,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member replies to a discussion you are subscribed to to.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
 			),
-			'notification_forums_following_reply'
+			'bb_forums_subscribed_reply'
 		);
 
 		$this->register_notification(
 			'forums',
 			'bbp_new_reply',
-			'notification_forums_following_reply'
+			'bb_forums_subscribed_reply'
 		);
 
 	}
@@ -109,7 +109,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$this->register_notification_type(
-			'notification_forums_following_topic',
+			'bb_forums_subscribed_discussion',
 			esc_html__( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' ),
 			'',
 			'forums'
@@ -127,13 +127,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member has created a new forum discussion.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
 			),
-			'notification_forums_following_topic'
+			'bb_forums_subscribed_discussion'
 		);
 
 		$this->register_notification(
 			'forums',
 			'bbp_new_topic',
-			'notification_forums_following_topic'
+			'bb_forums_subscribed_discussion'
 		);
 	}
 

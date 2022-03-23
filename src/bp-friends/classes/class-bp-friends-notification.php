@@ -70,7 +70,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_request() {
 		$this->register_notification_type(
-			'notification_friends_friendship_request',
+			'bb_connections_new_request',
 			esc_html__( 'A member invites you to connect', 'buddyboss' ),
 			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
 			'friends'
@@ -88,13 +88,13 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
 			),
-			'notification_friends_friendship_request'
+			'bb_connections_new_request'
 		);
 
 		$this->register_notification(
 			'friends',
 			'friendship_request',
-			'notification_friends_friendship_request',
+			'bb_connections_new_request',
 			true,
 			__( 'Pending connection requests', 'buddyboss' ),
 			45
@@ -106,7 +106,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_accept() {
 		$this->register_notification_type(
-			'notification_friends_friendship_accepted',
+			'bb_connections_request_accepted',
 			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
 			'friends'
@@ -124,13 +124,13 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
 			),
-			'notification_friends_friendship_accepted'
+			'bb_connections_request_accepted'
 		);
 
 		$this->register_notification(
 			'friends',
 			'friendship_accepted',
-			'notification_friends_friendship_accepted',
+			'bb_connections_request_accepted',
 			true,
 			__( 'Accepted connection requests', 'buddyboss' ),
 			35

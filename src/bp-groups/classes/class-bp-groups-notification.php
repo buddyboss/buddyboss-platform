@@ -73,8 +73,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		// User request for the group membership.
 		$this->register_notification_for_group_membership_request();
 
-		// Group membership request has been accepted/rejected.
-		$this->register_notification_for_group_membership_request_completed();
+		// Group membership request has been accepted.
+		$this->register_notification_for_group_membership_request_accepted();
+
+		// Group membership request has been rejected.
+		$this->register_notification_for_group_membership_request_rejected();
 
 		if ( true === bp_disable_group_messages() ) {
 			$this->register_notification_for_group_user_messages();
@@ -86,7 +89,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_updated() {
 		$this->register_notification_type(
-			'notification_groups_group_updated',
+			'bb_groups_details_updated',
 			esc_html__( 'Group information is updated', 'buddyboss' ),
 			esc_html__( 'A group\'s details are updated', 'buddyboss' ),
 			'groups'
@@ -101,16 +104,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-				'situation_label'     =>  __( "A group's details were updated.", 'buddyboss' ),
+				'situation_label'     => __( "A group's details were updated.", 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
 			),
-			'notification_groups_group_updated'
+			'bb_groups_details_updated'
 		);
 
 		$this->register_notification(
 			'groups',
 			'group_details_updated',
-			'notification_groups_group_updated'
+			'bb_groups_details_updated'
 		);
 	}
 
@@ -119,7 +122,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_user_promotion() {
 		$this->register_notification_type(
-			'notification_groups_admin_promotion',
+			'bb_groups_promoted',
 			esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
 			esc_html__( 'A member is promoted to a group organizer or moderator', 'buddyboss' ),
 			'groups'
@@ -135,7 +138,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( "Recipient's status within a group has changed.", 'buddyboss' ),
-				'unsubscribe_text'    =>  __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
 			),
 			'notification_groups_admin_promotion'
 		);
@@ -143,7 +146,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'member_promoted_to_admin',
-			'notification_groups_admin_promotion',
+			'bb_groups_promoted',
 			true,
 			__( 'Group Organizer promotions', 'buddyboss' ),
 			85
@@ -152,7 +155,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'member_promoted_to_mod',
-			'notification_groups_admin_promotion',
+			'bb_groups_promoted',
 			true,
 			__( 'Group Moderator promotions', 'buddyboss' ),
 			95
@@ -164,7 +167,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_invite() {
 		$this->register_notification_type(
-			'notification_groups_invite',
+			'bb_groups_new_invite',
 			esc_html__( 'You receive a new invite to join a group', 'buddyboss' ),
 			esc_html__( 'A member invites you to join a group', 'buddyboss' ),
 			'groups'
@@ -180,15 +183,15 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
-				'unsubscribe_text'    =>  __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
 			),
-			'notification_groups_invite'
+			'bb_groups_new_invite'
 		);
 
 		$this->register_notification(
 			'groups',
 			'group_invite',
-			'notification_groups_invite',
+			'bb_groups_new_invite',
 			true,
 			__( 'Group invitations', 'buddyboss' ),
 			105
@@ -200,7 +203,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_membership_request() {
 		$this->register_notification_type(
-			'notification_groups_membership_request',
+			'bb_groups_new_request',
 			esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
 			'',
 			'groups'
@@ -218,13 +221,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member has requested permission to join a group.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
 			),
-			'notification_groups_membership_request'
+			'bb_groups_new_request'
 		);
 
 		$this->register_notification(
 			'groups',
 			'new_membership_request',
-			'notification_groups_membership_request',
+			'bb_groups_new_request',
 			true,
 			__( 'Pending Group membership requests', 'buddyboss' ),
 			55
@@ -232,13 +235,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Register notification for membership request has been accepted/rejected.
+	 * Register notification for membership request has been accepted.
 	 */
-	public function register_notification_for_group_membership_request_completed() {
+	public function register_notification_for_group_membership_request_accepted() {
 		$this->register_notification_type(
-			'notification_membership_request_completed',
-			esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
-			esc_html__( 'A member\'s request to join a group has been approved or denied', 'buddyboss' ),
+			'bb_groups_request_accepted',
+			esc_html__( 'Your request to join a group has been approved', 'buddyboss' ),
+			esc_html__( 'A member\'s request to join a group has been approved', 'buddyboss' ),
 			'groups'
 		);
 
@@ -254,7 +257,29 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 			),
-			'notification_membership_request_completed'
+			'bb_groups_request_accepted'
+		);
+
+		$this->register_notification(
+			'groups',
+			'membership_request_accepted',
+			'bb_groups_request_accepted',
+			true,
+			__( 'Accepted Group membership requests', 'buddyboss' ),
+			65
+		);
+
+	}
+
+	/**
+	 * Register notification for membership request has been rejected.
+	 */
+	public function register_notification_for_group_membership_request_rejected() {
+		$this->register_notification_type(
+			'bb_groups_request_rejected',
+			esc_html__( 'Your request to join a group has been rejected', 'buddyboss' ),
+			esc_html__( 'A member\'s request to join a group has been rejected', 'buddyboss' ),
+			'groups'
 		);
 
 		$this->register_email_type(
@@ -269,22 +294,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 			),
-			'notification_membership_request_completed'
-		);
-
-		$this->register_notification(
-			'groups',
-			'membership_request_accepted',
-			'notification_membership_request_completed',
-			true,
-			__( 'Accepted Group membership requests', 'buddyboss' ),
-			65
+			'bb_groups_request_rejected'
 		);
 
 		$this->register_notification(
 			'groups',
 			'membership_request_rejected',
-			'notification_membership_request_completed',
+			'bb_groups_request_rejected',
 			true,
 			__( 'Rejected Group membership requests', 'buddyboss' ),
 			75
@@ -296,7 +312,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_group_user_messages() {
 		$this->register_notification_type(
-			'notification_group_messages_new_message',
+			'bb_groups_new_message',
 			esc_html__( 'A group sends you a new message', 'buddyboss' ),
 			esc_html__( 'A member receives a new group message', 'buddyboss' ),
 			'groups'
@@ -314,13 +330,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'Recipient has received a group message.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
 			),
-			'notification_group_messages_new_message'
+			'bb_groups_new_message'
 		);
 
 		$this->register_notification(
 			'groups',
 			'new_message',
-			'notification_group_messages_new_message'
+			'bb_groups_new_message'
 		);
 	}
 

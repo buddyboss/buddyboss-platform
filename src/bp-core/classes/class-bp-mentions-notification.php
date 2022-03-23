@@ -69,7 +69,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_mentions() {
 		$this->register_notification_type(
-			'notification_activity_new_mention',
+			'bb_new_mention',
 			sprintf(
 				/* translators: %s: users mention name. */
 				__( 'A member mentions you using "@%s"', 'buddyboss' ),
@@ -91,7 +91,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member is mentioned by another member.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),
-			'notification_activity_new_mention'
+			'bb_new_mention'
 		);
 
 		$this->register_email_type(
@@ -106,13 +106,13 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member is mentioned in a group.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),
-			'notification_activity_new_mention'
+			'bb_new_mention'
 		);
 
 		$this->register_notification(
 			'mentions',
 			'new_at_mention',
-			'notification_activity_new_mention',
+			'bb_new_mention',
 			true,
 			__( 'New mentions', 'buddyboss' ),
 			5
@@ -121,7 +121,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'mentions',
 			'bbp_new_at_mention',
-			'notification_activity_new_mention',
+			'bb_new_mention',
 			true,
 			__( 'Forum New mentions', 'buddyboss' ),
 			5

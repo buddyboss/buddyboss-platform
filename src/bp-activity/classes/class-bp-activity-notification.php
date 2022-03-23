@@ -69,7 +69,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_reply() {
 		$this->register_notification_type(
-			'notification_activity_new_reply',
+			'bb_activity_comment',
 			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
 			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
 			'activity'
@@ -87,7 +87,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 			),
-			'notification_activity_new_reply'
+			'bb_activity_comment'
 		);
 
 		$this->register_email_type(
@@ -103,13 +103,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 
 			),
-			'notification_activity_new_reply'
+			'bb_activity_comment'
 		);
 
 		$this->register_notification(
 			'activity',
 			'update_reply',
-			'notification_activity_new_reply',
+			'bb_activity_comment',
 			true,
 			__( 'New update replies', 'buddyboss' ),
 			15
@@ -118,7 +118,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'activity',
 			'comment_reply',
-			'notification_activity_new_reply',
+			'bb_activity_comment',
 			true,
 			__( 'New update comment replies', 'buddyboss' ),
 			25

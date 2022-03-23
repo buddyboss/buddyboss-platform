@@ -69,7 +69,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_new_message() {
 		$this->register_notification_type(
-			'notification_messages_new_message',
+			'bb_messages_new',
 			esc_html__( 'A member sends you a new message', 'buddyboss' ),
 			esc_html__( 'A member receives a new message', 'buddyboss' ),
 			'messages'
@@ -87,13 +87,13 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				'situation_label'     => __( 'Recipient has received a private message.', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
 			),
-			'notification_messages_new_message'
+			'bb_messages_new'
 		);
 
 		$this->register_notification(
 			'messages',
 			'new_message',
-			'notification_messages_new_message',
+			'bb_messages_new',
 			true,
 			__( 'New private messages', 'buddyboss' ),
 			155
