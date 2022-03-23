@@ -386,6 +386,10 @@ tr.bp-search-parent-field label {
   vertical-align: middle;
 }
 
+.bp-admin-card h2 [class*=" bb-icon-"]:before {
+  margin-right: 0;
+}
+
 .bp-admin-card h3 {
   font-size: 19px;
   font-weight: 600;
