@@ -224,11 +224,12 @@ TABLE OF CONTENTS:
   opacity: 0.8;
   font-variant: normal;
   text-transform: none;
-  line-height: 16px;
+  line-height: 20px;
   margin-left: 0.2em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #9ca2a7;
+  color: #fff;
+  font-size: 23px;
 }
 
 /*
