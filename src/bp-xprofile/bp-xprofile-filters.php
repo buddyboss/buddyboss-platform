@@ -126,7 +126,7 @@ add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
 add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
 
 // Validate user_nickname when user created from the backend
-add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 4 );
+add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 3 );
 add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_update', 10, 3 );
 
 /**
@@ -1275,11 +1275,10 @@ function bb_xprofile_repair_user_nicknames_callback() {
  * @param array   $meta Default meta values and keys for the user.
  * @param WP_User $user User object.
  * @param bool    $update Whether the user is being updated rather than created.
- * @param array   $userdata The raw array of data passed to wp_insert_user().
  *
  * @return array
  */
-function bb_validate_user_nickname_on_user_register( array $meta, WP_User $user, bool $update, array $userdata ) {
+function bb_validate_user_nickname_on_user_register( array $meta, WP_User $user, bool $update ) {
 
 	if ( ! $update ) {
 		if ( isset( $meta['nickname'] ) && ! empty( $meta['nickname'] ) ) {
