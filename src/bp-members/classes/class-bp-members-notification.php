@@ -128,6 +128,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 
 			$text          = esc_html__( 'Your password was changed', 'buddyboss' );
 			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+			$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
 
 			return apply_filters(
 				'bb_members_' . $component_action_name . '_notification',

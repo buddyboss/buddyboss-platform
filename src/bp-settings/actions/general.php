@@ -256,6 +256,7 @@ function bp_settings_action_general() {
 					'component_name'    => buddypress()->members->id,
 					'component_action'  => 'bb_notification_account_password',
 					'date_notified'     => bp_core_current_time(),
+					'allow_duplicate'   => true,
 					'is_new'            => 1,
 				)
 			);

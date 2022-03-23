@@ -5084,3 +5084,38 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
 
 	return $button_args;
 }
+
+/**
+ * Mark Member notification read.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_members_notifications_mark_read() {
+	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() || ! bp_current_action() ) {
+		return;
+	}
+
+	if ( 'general' === bp_current_action() ) {
+		$n_id = 0;
+		// For replies to a parent update.
+		if ( ! empty( $_GET['rid'] ) ) {
+			$n_id = (int) $_GET['rid'];
+		}
+
+		// Mark individual notification as read.
+		if ( ! empty( $n_id ) ) {
+			BP_Notifications_Notification::update(
+				array(
+					'is_new' => false,
+				),
+				array(
+					'user_id' => bp_loggedin_user_id(),
+					'id'      => $n_id,
+				)
+			);
+		}
+	}
+}
+add_action( 'template_redirect', 'bb_members_notifications_mark_read' );
