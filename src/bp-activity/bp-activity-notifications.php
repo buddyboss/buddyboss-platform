@@ -72,32 +72,53 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			break;
 
 		case 'update_reply':
-			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity reply', 'buddyboss' );
-			$amount = 'single';
-
-			if ( (int) $total_items > 1 ) {
-				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items );
-				$amount = 'multiple';
-			} else {
-				$link = add_query_arg( 'rid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss' ), $user_fullname );
-			}
-			break;
-
 		case 'comment_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity comment reply', 'buddyboss' );
+			$title  = ( 'update_reply' === $action ) ? __( 'New Activity reply', 'buddyboss' ) : __( 'New Activity comment reply', 'buddyboss' );
 			$amount = 'single';
+
+			$activity = new BP_Activity_Activity( $activity_id );
+			$excerpt  = bp_create_excerpt(
+				wp_strip_all_tags( $activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			);
+
+			if ( '&nbsp;' === $excerpt ) {
+				$excerpt = '';
+			}
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
+				$text   = ( 'update_reply' === $action ) ? sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items ) : sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
+				$link = ( 'update_reply' === $action ) ? add_query_arg( 'rid', (int) $id, bp_activity_get_permalink( $activity_id ) ) : add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
+				$type = bp_notifications_get_meta( $id, 'type', true );
+
+				if ( $type ) {
+					if ( 'activity_comment' === $type ) {
+						$type_html = esc_html__( 'comment', 'buddyboss' );
+					} else {
+						$type_html = esc_html__( 'post', 'buddyboss' );
+					}
+
+					if ( ! empty( $excerpt ) ) {
+						$text = sprintf( __( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ), $user_fullname, $type_html, $excerpt );
+					} else {
+						$text = sprintf( __( '%1$s replied to your %2$s', 'buddyboss' ), $user_fullname, $type_html );
+					}
+
+				} else {
+
+					if ( ! empty( $excerpt ) ) {
+						$text = sprintf( __( '%1$s replied: "%2$s"', 'buddyboss' ), $user_fullname, $excerpt );
+					} else {
+						$text = sprintf( __( '%1$s replied', 'buddyboss' ), $user_fullname );
+					}
+				}
 			}
 			break;
 	}
@@ -184,7 +205,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
  * @param int    $receiver_user_id   ID of user receiving notification.
  */
 function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
-	$n_id = bp_notifications_add_notification(
+	$notification_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $receiver_user_id,
 			'item_id'           => $activity->id,
@@ -196,24 +217,15 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 		)
 	);
 
-	if ( $n_id ) {
-		if ( 'activity_comment' === $activity->type ) {
-			if ( ! empty( $activity->item_id ) ) {
-				$parent_activity = new BP_Activity_Activity( $activity->item_id );
-				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
-					bp_notifications_update_meta( $n_id, 'type', 'post_comment' );
-				} else {
-					bp_notifications_update_meta( $n_id, 'type', 'activity_comment' );
-				}
-			} else {
-				bp_notifications_update_meta( $n_id, 'type', 'activity_comment' );
-			}
-		} elseif ( 'blogs' === $activity->component ) {
-			bp_notifications_update_meta( $n_id, 'type', 'post_comment' );
-		} else {
-			bp_notifications_update_meta( $n_id, 'type', 'activity_post' );
-		}
-	}
+	/**
+	 * Fires right after creating notifications for the activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $notification_id Notification ID.
+	 * @param string $activity        Activity object.
+	 */
+	do_action( 'bb_activity_add_notification', $notification_id, $activity );
 }
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
@@ -227,7 +239,7 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * @param int                  $commenter_id ID of the user who made the comment.
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
-	bp_notifications_add_notification(
+	$notification_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $activity->user_id,
 			'item_id'           => $comment_id,
@@ -238,6 +250,16 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 			'is_new'            => 1,
 		)
 	);
+
+	/**
+	 * Fires right after creating notifications for the activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $notification_id Notification ID.
+	 * @param string $activity        Activity object.
+	 */
+	do_action( 'bb_activity_add_notification', $notification_id, $activity );
 }
 add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 3 );
 
@@ -251,7 +273,7 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @param int                  $commenter_id     ID of the user who made the comment.
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
-	bp_notifications_add_notification(
+	$notification_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $activity_comment->user_id,
 			'item_id'           => $comment_id,
@@ -262,6 +284,16 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 			'is_new'            => 1,
 		)
 	);
+
+	/**
+	 * Fires right after creating notifications for the activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $notification_id Notification ID.
+	 * @param string $activity        Activity object.
+	 */
+	do_action( 'bb_activity_add_notification', $notification_id, $activity_comment );
 }
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
 
@@ -487,3 +519,33 @@ function bp_activity_remove_screen_notifications_single_post() {
 	}
 }
 add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single_post' );
+
+/**
+ * Create notification meta based on activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification_id Notification ID.
+ * @param string $activity        Activity object.
+ */
+function bb_activity_add_notification_metas( $notification_id, $activity ) {
+	if ( $notification_id ) {
+		if ( 'activity_comment' === $activity->type ) {
+			if ( ! empty( $activity->item_id ) ) {
+				$parent_activity = new BP_Activity_Activity( $activity->item_id );
+				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
+					bp_notifications_update_meta( $notification_id, 'type', 'post_comment' );
+				} else {
+					bp_notifications_update_meta( $notification_id, 'type', 'activity_comment' );
+				}
+			} else {
+				bp_notifications_update_meta( $notification_id, 'type', 'activity_comment' );
+			}
+		} elseif ( 'blogs' === $activity->component ) {
+			bp_notifications_update_meta( $notification_id, 'type', 'post_comment' );
+		} else {
+			bp_notifications_update_meta( $notification_id, 'type', 'activity_post' );
+		}
+	}
+}
+add_action( 'bb_activity_add_notification', 'bb_activity_add_notification_metas', 10, 2 );
