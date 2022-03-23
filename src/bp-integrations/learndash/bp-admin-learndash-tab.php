@@ -109,7 +109,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__( 'Social Group Sync', 'buddyboss' ),
 			array(
 				'input_text'   => sprintf(
-					__( 'Enable group sync functionality <b>FROM</b> <a href="%1$s">BuddyBoss Social Groups</a> <b>TO</b> <a href="%2$s">LearnDash Groups</a>', 'buddyboss' ),
+					__( 'Enable group sync functionality <strong><em>from</em></strong> <a href="%1$s">BuddyBoss Social Groups</a> <strong><em>to</em></strong> <a href="%2$s">LearnDash Groups</a>', 'buddyboss' ),
 					add_query_arg(
 						array(
 							'page' => 'bp-groups',
@@ -247,7 +247,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__( 'LearnDash Group Sync', 'buddyboss' ),
 			array(
 				'input_text'   => sprintf(
-					__( 'Enable group sync functionality <b>FROM</b> <a href="%1$s">LearnDash Groups</a> <b>TO</b> <a href="%2$s">BuddyBoss Social Groups</a>', 'buddyboss' ),
+					__( 'Enable group sync functionality <strong><em>from</em></strong> <a href="%1$s">LearnDash Groups</a> <strong><em>to</em></strong> <a href="%2$s">BuddyBoss Social Groups</a>', 'buddyboss' ),
 					add_query_arg(
 						array(
 							'post_type' => 'groups',
