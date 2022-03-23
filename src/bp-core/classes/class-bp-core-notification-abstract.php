@@ -59,15 +59,6 @@ abstract class BP_Core_Notification_Abstract {
 	private $priority = 20;
 
 	/**
-	 * Notification Filters.
-	 *
-	 * @var array
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private $notifcation_filters = array();
-
-	/**
 	 * Initialize.
 	 *
 	 * @return void
@@ -363,13 +354,17 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
+	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true, bool $notification_filter = true, string $notification_id = '', string $notification_filter_label = '', int $notification_position = 0 ) {
 		$this->preferences[] = array(
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
 			'notification_admin_label' => $notification_admin_label,
 			'notification_group'       => $notification_group,
 			'notification_default'     => $default,
+			'notification_filter'      => $notification_filter,
+			'id'                       => $notification_id,
+			'label'                    => $notification_filter_label,
+			'position'                 => $notification_position,
 		);
 	}
 
@@ -448,40 +443,21 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 
-		if ( ! empty( $this->notifcation_filters ) ) {
-			foreach ( $this->notifcation_filters as $filter ) {
+		if ( ! empty( $this->preferences ) ) {
+			foreach ( $this->preferences as $filter ) {
+
 				// Check admin settings enabled or not.
-				if ( bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['notification_component'] ) && bp_is_active( 'notifications' ) ) {
+				if ( isset( $filter ) && isset( $filter['notification_filter'] ) && $filter['notification_filter'] && isset( $filter['notification_id'] ) && isset( $filter['notification_filter_label'] ) && bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['notification_component'] ) && bp_is_active( 'notifications' ) ) {
 					unset( $filter['notification_type'] );
-					unset( $filter['notification_component'] );
+					unset( $filter['notification_label'] );
+					unset( $filter['notification_admin_label'] );
+					unset( $filter['notification_group'] );
+					unset( $filter['notification_default'] );
+					unset( $filter['notification_filter'] );
 					bp_nouveau_notifications_register_filter( $filter );
 				}
 			}
 		}
-	}
-
-	/**
-	 * Register Notification Filter.
-	 *
-	 * @param string $notification_id        Notification Type key.
-	 * @param string $notification_label     Notification label.
-	 * @param int    $notification_position  Notification position.
-	 * @param string $notification_type      Notification type.
-	 * @param string $notification_component Notification component.
-	 *
-	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function register_notification_filter( string $notification_id, string $notification_label, int $notification_position = 0, string $notification_type, string $notification_component ) {
-
-		$this->notifcation_filters[] = array(
-			'id'                     => $notification_id,
-			'label'                  => $notification_label,
-			'position'               => $notification_position,
-			'notification_type'      => $notification_type,
-			'notification_component' => $notification_component,
-		);
 
 	}
 
