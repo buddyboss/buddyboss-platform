@@ -9,7 +9,7 @@
 				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
 				<?php
 			}
-			_e( 'BuddyPress <span>&mdash; Third party plugin settings</span>', 'buddyboss' ); ?>
+			_e( 'BuddyPress&nbsp;<span>&mdash; Third party plugin settings</span>', 'buddyboss' ); ?>
 		</h2>
 
 		<?php

@@ -18,7 +18,7 @@
 			</p>
 		<?php else: ?>
 			<h2 class="has_tutorial_btn">
-				<?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?>
+				<?php _e( 'LearnDash&nbsp;<span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?>
 				<div class="bbapp-tutorial-btn">
 					<a class="button" href="<?php echo bp_get_admin_url(
 						add_query_arg(
