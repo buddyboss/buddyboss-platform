@@ -110,7 +110,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			'activity',
+			'mentions',
 			'new_at_mention',
 			'notification_activity_new_mention',
 			true,
@@ -119,7 +119,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification(
-			'activity',
+			'mentions',
 			'bbp_new_at_mention',
 			'notification_activity_new_mention',
 			true,

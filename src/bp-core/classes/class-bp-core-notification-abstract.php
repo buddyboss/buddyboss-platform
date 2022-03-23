@@ -447,7 +447,7 @@ abstract class BP_Core_Notification_Abstract {
 			foreach ( $this->notifications as $filter ) {
 
 				// Check admin settings enabled or not.
-				if ( isset( $filter ) && isset( $filter['notification_filter'] ) && $filter['notification_filter'] && isset( $filter['notification_id'] ) && isset( $filter['notification_filter_label'] ) && bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['component'] ) && bp_is_active( 'notifications' ) ) {
+				if ( isset( $filter ) && isset( $filter['notification_filter'] ) && $filter['notification_filter'] && isset( $filter['id'] ) && isset( $filter['label'] ) && bb_get_modern_notification_admin_settings_is_enabled( $filter['notification_type'], $filter['component'] ) && bp_is_active( 'notifications' ) ) {
 					unset( $filter['notification_type'] );
 					unset( $filter['notification_label'] );
 					unset( $filter['notification_admin_label'] );

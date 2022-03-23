@@ -94,6 +94,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'messages',
 			'new_message',
 			'notification_messages_new_message',
+			true,
 			__( 'New private messages', 'buddyboss' ),
 			155
 		);
