@@ -382,12 +382,13 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card h2 [class*=" bb-icon-"] {
   font-size: 36px;
-  margin-left: 6px;
+  width: 36px;
+  margin-left: 16px;
   vertical-align: middle;
 }
 
 .bp-admin-card h2 [class*=" bb-icon-"]:before {
-  margin-right: 0;
+  margin: 0;
 }
 
 .bp-admin-card h3 {
