@@ -104,7 +104,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-				'situation_label'     => __( "A group's details are updated.", 'buddyboss' ),
+				'situation_label'     => __( "A group's details are updated", 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
 			),
 			'bb_groups_details_updated'
