@@ -371,7 +371,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 		return;
 	}
 
-	// Get some topic information
+	// Get some topic information.
 	$args = array(
 		'item_id'           => $topic_id,
 		'secondary_item_id' => get_current_user_id(),
