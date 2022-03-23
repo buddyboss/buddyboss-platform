@@ -32,7 +32,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	private $prefernces = array();
+	private $preferences = array();
 
 	/**
 	 * Notifications.
@@ -141,8 +141,8 @@ abstract class BP_Core_Notification_Abstract {
 			}
 		}
 
-		if ( ! empty( $this->prefernces ) ) {
-			foreach ( $this->prefernces as $preference ) {
+		if ( ! empty( $this->preferences ) ) {
+			foreach ( $this->preferences as $preference ) {
 				$notifications[ $preference['notification_group'] ]['fields'][] = array(
 					'key'           => $preference['notification_type'],
 					'label'         => $preference['notification_label'],
@@ -364,7 +364,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
-		$this->prefernces[] = array(
+		$this->preferences[] = array(
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
 			'notification_admin_label' => $notification_admin_label,
