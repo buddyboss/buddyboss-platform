@@ -3906,7 +3906,7 @@ function bp_email_get_schema() {
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
-		'description' => __( 'Recipient has registered for an account.', 'buddyboss' ),
+		'description' => __( 'Activate a new account', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
