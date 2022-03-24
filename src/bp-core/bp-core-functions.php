@@ -6873,7 +6873,7 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_rf . ' bb-icon-pin';
 			break;
 		case 'bp_notifications':
-			$meta_icon = $bb_icon_rf . ' bb-icon-bell';
+			$meta_icon = $bb_icon_rf . ' bb-icon-desktop';
 			break;
 		case 'bp_media_settings_photos':
 			$meta_icon = $bb_icon_rf . ' bb-icon-camera';
