@@ -209,6 +209,10 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 		// What type of acknowledgement.
 		$type = ! empty( $accepted ) ? 'membership_request_accepted' : 'membership_request_rejected';
 
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type = ! empty( $accepted ) ? 'bb_groups_request_accepted' : 'bb_groups_request_rejected';
+		}
+
 		bp_notifications_add_notification(
 			array(
 				'user_id'          => $requesting_user_id,
@@ -1194,6 +1198,8 @@ function bp_groups_screen_my_groups_mark_notifications() {
 		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'membership_request_rejected' );
 		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'member_promoted_to_mod' );
 		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'member_promoted_to_admin' );
+		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_accepted' );
+		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_rejected' );
 	}
 }
 add_action( 'groups_screen_my_groups', 'bp_groups_screen_my_groups_mark_notifications', 10 );
