@@ -15,7 +15,7 @@
 		<p>
 		<?php
 			printf(
-				__( 'Access your community from a native mobile app using the %s. BuddyBoss App is a paid product built by BuddyBoss, providing native iOS and Android apps for WordPress, published under your own Apple and Google Play accounts. The apps are branded to match your site, and sync community data (members, groups, forums, etc.) back and forth with WordPress. If using LearnDash your members can also take their courses in the app.', 'buddyboss' ),
+				__( 'Access your community from a native mobile app using the %s. BuddyBoss App is a paid product built by BuddyBoss, providing native iOS and Android apps for WordPress, published under your own Apple and Google Play accounts. The apps are branded to match your site, and sync community data (members, groups, forums, etc.) back and forth with WordPress. If using LearnDash your members can take their courses in the app and can even take them offline!', 'buddyboss' ),
 				sprintf(
 					'<a href="%s" target="_blank">%s</a>',
 					'https://buddyboss.com/app',
