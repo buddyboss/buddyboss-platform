@@ -110,34 +110,13 @@ TABLE OF CONTENTS:
 
 	li a {
 
-		&:before {
-			color: #23282d; /* wp toolbar */
-			display: inline-block;
-			content: " ";
-			background-size: 20px 20px;
-			background-repeat: no-repeat;
-			background-position: center;
-			background-color: #f6f6f6;
-			height: 38px;
-			width: 38px;
-			border-radius: 50px;
-			vertical-align: middle;
-		}
+		i {
 
-		&:hover:before {
-			background-color: #eee;
-		}
-
-		&.youtube:before {
-			background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-youtube.svg);
-		}
-
-		&.twitter:before {
-			background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-twitter.svg);
-		}
-
-		&.facebook:before {
-			background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-facebook.svg);
+			&:before {
+				font-size: 35px;
+				vertical-align: middle;
+				margin: 0;
+			}
 		}
 	}
 }

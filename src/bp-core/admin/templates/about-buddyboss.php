@@ -117,7 +117,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="youtube" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="youtube" title="%1$s" href="%2$s"><i class="bb-icon-rl bb-icon-brand-youtube"></i><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on YouTube', 'buddyboss' ),
 						esc_url( 'https://www.youtube.com/c/BuddybossWP' ),
 						esc_html( 'Follow BuddyBoss on YouTube', 'buddyboss' )
@@ -128,7 +128,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="twitter" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="twitter" title="%1$s" href="%2$s"><i class="bb-icon-rl bb-icon-brand-twitter"></i><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
 						esc_url( 'https://twitter.com/BuddyBossWP' ),
 						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
@@ -139,7 +139,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="facebook" title="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="facebook" title="%1$s" href="%2$s"><i class="bb-icon-rl bb-icon-brand-facebook"></i><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Facebook', 'buddyboss' ),
 						esc_url( 'https://facebook.com/BuddyBossWP/' ),
 						esc_html( 'Follow BuddyBoss on Facebook', 'buddyboss' )

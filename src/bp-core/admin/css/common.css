@@ -413,93 +413,6 @@ tr.bp-search-parent-field label {
   color: #0073aa;
 }
 
-/* General Settings */
-.bp-admin-card.section-bp_main h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/cog.svg);
-}
-
-.bp-admin-card.section-bp_registration h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/clipboard.svg);
-}
-
-.bp-admin-card.section-bp_privacy h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/lock-alt.svg);
-}
-
-/* Profiles */
-.bp-admin-card.section-bp_xprofile h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/user-card.svg);
-}
-
-.bp-admin-card.section-bp_member_avatar_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/image.svg);
-}
-
-.bp-admin-card.section-bp_member_type_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tag.svg);
-}
-
-.bp-admin-card.section-bp_profile_search_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/search.svg);
-}
-
-.bp-admin-card.section-bp_profile_list_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/grid-large.svg);
-}
-
-.section-bp_profile_headers_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/maximize.svg);
-}
-
-/* Groups */
-.bp-admin-card.section-bp_groups_avatar_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/image.svg);
-}
-
-.bp-admin-card.section-bp_groups h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/users.svg);
-}
-
-.bp-admin-card.section-bp_groups_headers_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/maximize.svg);
-}
-
-.bp-admin-card.section-bp_groups_types h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tag.svg);
-}
-
-.bp-admin-card.section-bp_groups_hierarchies h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/layers.svg);
-}
-
-.bp-admin-card.section-bp_group_list_settings h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/grid-large.svg);
-}
-
-/* Forums */
-.bp-admin-card.section-bbp_settings_users h2:before,
-.bp-admin-card.section-bbp_settings_features h2:before,
-.bp-admin-card.section-bbp_settings_per_page h2:before,
-.bp-admin-card.section-bbp_settings_per_rss_page h2:before,
-.bp-admin-card.section-bbp_settings_root_slugs h2:before,
-.bp-admin-card.section-bbp_settings_single_slugs h2:before,
-.bp-admin-card.section-bbp_settings_user_slugs h2:before,
-.bp-admin-card.section-bbp_settings_buddypress h2:before,
-.bp-admin-card.section-bbp_settings_akismet h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/comments-square.svg);
-}
-
-/* Activity */
-.bp-admin-card.section-bp_activity h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/activity.svg);
-}
-
-.buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/pin.svg);
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
 .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none td {
   background: #f0f0f1;
   margin: 10px 0 0 10px;
@@ -510,14 +423,6 @@ tr.bp-search-parent-field label {
 }
 
 /* Media */
-.bp-admin-card.section-bp_media_settings_photos h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/camera.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_documents h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/folder-open.svg);
-}
-
 .section-bp_video_settings_extensions table.form-table tbody tr.video-extensions-listing > th,
 .bp-admin-card.section-bp_video_settings_extensions h2:before,
 .bp-admin-card.section-bp_document_settings_extensions h2:before {
@@ -528,49 +433,8 @@ tr.bp-search-parent-field label {
   padding: 0;
 }
 
-.bp-admin-card.section-bp_media_settings_emoji h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/emoticon-smile.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_gifs h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/gif.svg);
-}
-
 .bp-admin-card.section-bp_media_settings_symlinks {
   display: block !important;
-}
-
-.bp-admin-card.section-bp_media_settings_symlinks h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/server.svg);
-}
-
-/* Connections */
-.bp-admin-card.section-bp_friends h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/user-friends.svg);
-}
-
-/* Invites */
-.bp-admin-card.section-bp_invites h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/envelope.svg);
-}
-
-/* Moderation */
-.bp-admin-card.section-bp_moderation_settings_blocking h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/user-slash.svg);
-}
-
-.bp-admin-card.section-bp_moderation_settings_reporting h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/flag.svg);
-}
-
-/* Search */
-.bp-admin-card.section-bp_search_settings_community h2:before,
-.bp-admin-card.section-bp_search_settings_post_types h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/search.svg);
-}
-
-.bp-admin-card.section-bp_search_settings_general h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/caret-down.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
@@ -581,36 +445,6 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bp_search_settings_community th[scope="row"],
 .bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
   width: 1px;
-}
-
-/* Video */
-.bp-admin-card.section-bp_media_settings_videos h2:before,
-.bp-admin-card.section-bp_video_settings_extensions h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/video.svg);
-}
-
-/* Pages */
-.bp-admin-card.section-bp_pages h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/paste.svg);
-}
-
-.bp-admin-card.section-bp_registration_pages h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/clipboard.svg);
-}
-
-/* Tools */
-.bp-admin-card.section-default_data h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/duplicate.svg);
-}
-
-.bp-admin-card.section-repair_community h2:before,
-.bp-admin-card.section-repair_forums h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/tools.svg);
-}
-
-.bp-admin-card.section-bp-member-type-import h2:before,
-body.buddyboss_page_bbp-converter .bp-admin-card h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/cloud-upload.svg);
 }
 
 /* Integrations - BuddyBoss App */
@@ -629,7 +463,7 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before {
 
 /* Integrations - BuddyPress Plugins */
 .bp-admin-card.section-bp_compatibility-integration h2 > i {
-  color: #C95836;
+  color: #c95836;
 }
 
 /* Integrations - Zoom */
@@ -2262,10 +2096,6 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 /*------------------------------------------------------------------------------
  * 10.0 On-screen Notifications
  *----------------------------------------------------------------------------*/
-.bp-admin-card.section-bp_notifications h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-round-filled/bell.svg);
-}
-
 .bb-screen-position-outer {
   display: flex;
   width: 180px;

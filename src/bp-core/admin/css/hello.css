@@ -95,35 +95,10 @@ TABLE OF CONTENTS:
 /*
  * 2.1 - Social Icons
  */
-.bp-hello-social li a:before {
-  color: #23282d;
-  /* wp toolbar */
-  display: inline-block;
-  content: " ";
-  background-size: 20px 20px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #f6f6f6;
-  height: 38px;
-  width: 38px;
-  border-radius: 50px;
+.bp-hello-social li a i:before {
+  font-size: 35px;
   vertical-align: middle;
-}
-
-.bp-hello-social li a:hover:before {
-  background-color: #eee;
-}
-
-.bp-hello-social li a.youtube:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-youtube.svg);
-}
-
-.bp-hello-social li a.twitter:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-twitter.svg);
-}
-
-.bp-hello-social li a.facebook:before {
-  background-image: url(../../images/admin/icons/buddyboss/bb-icons-filled/brand-facebook.svg);
+  margin: 0;
 }
 
 /*------------------------------------------------------------------------------
