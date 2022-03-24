@@ -207,6 +207,47 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			);
 		}
 
+		if ( 'forums' === $component_name && 'bb_forums_subscribed_discussion' === $component_action_name ) {
+			$topic_id    = bbp_get_topic_id( $item_id );
+			$topic_title = bbp_get_topic_title( $topic_id );
+			$topic_link  = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'   => 'bbp_mark_read',
+						'topic_id' => $topic_id,
+					),
+					bbp_get_topic_permalink( $topic_id )
+				),
+				'bbp_mark_topic_' . $topic_id
+			);
+
+			if ( (int) $action_item_count > 1 ) {
+				/* translators: discussions count. */
+				$text = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $action_item_count );
+			} else {
+
+				if ( ! empty( $secondary_item_id ) ) {
+					$text = sprintf(
+						/* translators: 1.Member display name 2. discussions title. */
+						esc_html__( '%1$s started a discussion: "%2$s"', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id ),
+						$topic_title
+					);
+				} else {
+					$text = sprintf(
+						/* translators: discussions title. */
+						esc_html__( 'You have a new discussion: "%s"', 'buddyboss' ),
+						$topic_title
+					);
+				}
+			}
+
+			$content = array(
+				'text' => $text,
+				'link' => $topic_link,
+			);
+		}
+
 		return $content;
 	}
 }

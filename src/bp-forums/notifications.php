@@ -73,11 +73,11 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$filter = 'bbp_single_new_subscription_notification';
 		}
 
-		// WordPress Toolbar
+		// WordPress Toolbar.
 		if ( 'string' === $format ) {
 			$return = apply_filters( $filter, '<a href="' . esc_url( $topic_link ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $text, $topic_link );
 
-			// Deprecated BuddyBar
+			// Deprecated BuddyBar.
 		} else {
 			$return = apply_filters(
 				$filter,
@@ -554,7 +554,7 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 						$topic_id,
 						$topic_author_id,
 						bbp_get_component_name(),
-						'bbp_new_topic',
+						'bb_forums_subscribed_discussion',
 						bp_core_current_time(),
 						true,
 					),
@@ -570,7 +570,7 @@ function bb_pre_notify_forum_subscribers( $topic_id, $forum_id, $user_ids ) {
 					'item_id'           => $topic_id,
 					'secondary_item_id' => $topic_author_id,
 					'component_name'    => bbp_get_component_name(),
-					'component_action'  => 'bbp_new_topic',
+					'component_action'  => 'bb_forums_subscribed_discussion',
 					'date_notified'     => bp_core_current_time(),
 					'is_new'            => 1,
 				)
@@ -615,11 +615,7 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 		}
 	}
 
-	$action = 'bbp_new_reply';
-
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$action = 'bb_forums_subscribed_reply';
-	}
+	$action = 'bb_forums_subscribed_reply';
 
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
