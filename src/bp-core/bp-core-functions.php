@@ -6812,7 +6812,7 @@ function bb_core_remove_unfiltered_html( $content ) {
  */
 function bb_admin_icons( $id ) {
 	$bb_icon_rf = 'bb-icon-rf';
-	$bb_icon_rl = 'bb-icon-rl';
+	$bb_icon_bl = 'bb-icon-bl';
 	switch ( $id ) {
 		case 'bp_main':
 			$meta_icon = $bb_icon_rf . ' bb-icon-cog';
@@ -6910,16 +6910,16 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_rf . ' bb-icon-paste';
 			break;
 		case 'bp_buddyboss_app-integration':
-			$meta_icon = $bb_icon_rl . ' bb-icon-brand-buddyboss-app';
+			$meta_icon = $bb_icon_bl . ' bb-icon-brand-buddyboss-app';
 			break;
 		case 'bp_compatibility-integration':
-			$meta_icon = $bb_icon_rl . ' bb-icon-brand-buddypress';
+			$meta_icon = $bb_icon_bl . ' bb-icon-brand-buddypress';
 			break;
 		case 'bp_ld_sync-buddypress':
 		case 'bp_ld_sync-learndash':
 		case 'bp_ld_course_tab-buddypress':
 		case 'bp_ld-integration':
-			$meta_icon = $bb_icon_rl . ' bb-icon-brand-learndash';
+			$meta_icon = $bb_icon_bl . ' bb-icon-brand-learndash';
 			break;
 		case 'default_data':
 			$meta_icon = $bb_icon_rf . ' bb-icon-duplicate';
@@ -6941,7 +6941,7 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_zoom_settings_section':
 		case 'bp_zoom_gutenberg_section';
-			$meta_icon = $bb_icon_rl . ' bb-icon-brand-zoom';
+			$meta_icon = $bb_icon_bl . ' bb-icon-brand-zoom';
 			break;
 		default:
 			$meta_icon = '';
