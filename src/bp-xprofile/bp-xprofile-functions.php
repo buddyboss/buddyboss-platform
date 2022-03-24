@@ -1701,7 +1701,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
 
-					$html .= '<span class="social ' . $providers[ $key ]->value . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . $providers[ $key ]->name . '" href="' . esc_url( $original_option_value ) . '">' . $providers[ $key ]->svg . '</a></span>';
+					$html .= '<span class="social ' . $providers[ $key ]->value . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . $providers[ $key ]->name . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . strtolower($providers[ $key ]->value) . '"></i>' . $providers[ $key ]->svg . '</a></span>';
 				}
 			}
 		}

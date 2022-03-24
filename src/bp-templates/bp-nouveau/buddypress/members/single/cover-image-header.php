@@ -70,14 +70,14 @@ if ( bp_is_my_profile() ) {
 			if ( bp_is_my_profile() ) {
 				?>
 				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-l bb-icon-edit"></i>
+					<i class="bb-icon-bf bb-icon-edit"></i>
 				</a>
 
 				<?php
 				if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
 					?>
 					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-l bb-icon-arrows"></i>
+						<i class="bb-icon-bf bb-icon-arrows"></i>
 					</a>
 					<div class="header-cover-reposition-wrap">
 						<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
@@ -102,7 +102,7 @@ if ( bp_is_my_profile() ) {
 				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
 					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-l bb-icon-edit"></i>
+						<i class="bb-icon-rf bb-icon-edit"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 					<?php
