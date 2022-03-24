@@ -91,6 +91,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			break;
 
 		default:
+
 			/**
 			 * Filters plugin-added group-related custom component_actions.
 			 *
@@ -103,7 +104,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			 *                                  waiting for the user.
 			 * @param string $format            'string' for BuddyBar-compatible notifications;
 			 *                                  'array' for WP Toolbar.
-			 * @param int    $id   Notification ID.
+			 * @param int    $id                Notification ID.
 			 * @param string $screen            Notification Screen type.
 			 */
 			$custom_action_notification = apply_filters( 'bp_activity_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
