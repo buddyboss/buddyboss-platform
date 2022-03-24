@@ -3862,15 +3862,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   height: auto;
 }
 
-.ac-reply-toolbar .document-support [class*=" bb-icon-"],
-.ac-reply-toolbar .post-media-document-support [class*=" bb-icon-"],
-#whats-new-toolbar .document-support [class*=" bb-icon-"],
-#whats-new-toolbar .post-media-document-support [class*=" bb-icon-"],
-#whats-new-messages-toolbar .document-support [class*=" bb-icon-"],
-#whats-new-messages-toolbar .post-media-document-support [class*=" bb-icon-"] {
-  font-size: 22px;
-}
-
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-toolbar .emojionearea .emojionearea-button:before,
 #whats-new-messages-toolbar .emojionearea .emojionearea-button:before {

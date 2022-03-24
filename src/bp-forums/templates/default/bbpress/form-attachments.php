@@ -186,7 +186,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 		<div class="post-elements-buttons-item post-media document-support">
 			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-				<i class="bb-icon-l bb-icon-paperclip"></i>
+				<i class="bb-icon-l bb-icon-attach"></i>
 			</a>
 		</div>
 

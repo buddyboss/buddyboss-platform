@@ -146,7 +146,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 						</div>
 						<div class="post-elements-buttons-item post-media document-support">
 							<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icon-l bb-icon-paperclip"></i>
+								<i class="bb-icon-l bb-icon-attach"></i>
 							</a>
 						</div>
 
