@@ -90,8 +90,8 @@ defined( 'ABSPATH' ) || exit;
 			<li>
 				<?php
 				printf(
-					__( '<a href="%s" target="_blank">Github</a>', 'buddyboss' ),
-					esc_url( 'https://github.com/buddyboss/buddyboss-platform/wiki' )
+					__( '<a href="%s" target="_blank">GitHub</a>', 'buddyboss' ),
+					esc_url( 'https://github.com/buddyboss/buddyboss-platform' )
 				);
 				?>
 			</li>
