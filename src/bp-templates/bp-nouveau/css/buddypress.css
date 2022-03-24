@@ -17848,10 +17848,10 @@ img.emojioneemoji {
 }
 
 .dropzone .dz-preview.dz-error .dz-details:before {
-  content: "\ee06";
+  content: "\eeb4";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 300;
   height: 50px;
   width: 50px;
