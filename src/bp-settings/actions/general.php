@@ -245,7 +245,7 @@ function bp_settings_action_general() {
 			bp_send_email( 'settings-password-changed', (int) bp_displayed_user_id(), $args );
 		}
 
-		if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_notification_account_password', 'members' ) && bp_is_active( 'notifications' ) ) {
+		if ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) && bp_is_active( 'notifications' ) ) {
 
 			// Send a notification to the user.
 			bp_notifications_add_notification(
@@ -254,7 +254,7 @@ function bp_settings_action_general() {
 					'item_id'           => bp_displayed_user_id(),
 					'secondary_item_id' => bp_displayed_user_id(),
 					'component_name'    => buddypress()->members->id,
-					'component_action'  => 'update_member_password',
+					'component_action'  => 'bb_account_password',
 					'date_notified'     => bp_core_current_time(),
 					'allow_duplicate'   => true,
 					'is_new'            => 1,

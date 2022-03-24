@@ -121,20 +121,32 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
 
+		$notification = bp_notifications_get_notification( $notification_id );
+
 		if ( 'members' === $component_name && 'bb_account_password' === $component_action_name ) {
 
-			$text          = esc_html__( 'Your password was changed', 'buddyboss' );
+			// Set up the string and the filter.
+			if ( (int) $action_item_count > 1 ) {
+				$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $action_item_count );
+				$amount = 'multiple';
+			} else {
+				$text   = __( 'Your password was changed', 'buddyboss' );
+				$amount = 'single';
+			}
+
 			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
 			$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
 
+
 			return apply_filters(
-				'bb_members_' . $component_action_name . '_notification',
+				'bb_members_' . $amount . '_' . $component_action_name . '_notification',
 				array(
 					'link' => $settings_link,
 					'text' => $text,
 				),
-				$action_item_count,
-				$item_id
+				$notification,
+				$text,
+				$settings_link
 			);
 		}
 

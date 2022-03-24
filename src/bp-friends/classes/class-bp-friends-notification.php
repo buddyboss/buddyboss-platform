@@ -99,6 +99,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			__( 'Pending connection requests', 'buddyboss' ),
 			45
 		);
+
+		add_filter( 'bb_friends_bb_connections_new_request_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
 	}
 
 	/**
@@ -135,6 +137,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			__( 'Accepted connection requests', 'buddyboss' ),
 			35
 		);
+
+		add_filter( 'bb_friends_bb_connections_request_accepted_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
 	}
 
 	/**
@@ -155,6 +159,109 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+		return $content;
+	}
+
+	/**
+	 * Format Group notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $total_items           Number of notifications with the same action.
+	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
+	 *
+	 * @return array
+	 */
+	public function bb_format_friends_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+
+		$notification = bp_notifications_get_notification( $notification_id );
+
+		// Friends request accepted.
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_request_accepted' === $notification->component_action ) {
+
+			$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+
+			// Set up the string and the filter.
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+				/* translators: total members count */
+					esc_html__( '%d members accepted your connection requests', 'buddyboss' ),
+					(int) $total_items
+				);
+				$amount = 'multiple';
+			} else {
+				$text = sprintf(
+				/* translators: member name */
+					esc_html__( '%s has accepted your connection request', 'buddyboss' ),
+					bp_core_get_user_displayname( $item_id )
+				);
+				$amount = 'single';
+			}
+
+			$content = apply_filters(
+				'bb_friends_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$notification,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Friends request sent.
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_new_request' === $notification->component_action ) {
+
+			$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
+
+			// Set up the string and the filter.
+			if ( (int) $total_items > 1 ) {
+				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
+				$amount = 'multiple';
+			} else {
+				$text   = sprintf( __( '%s has sent you a connection request', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				$amount = 'single';
+			}
+
+			$content = apply_filters(
+				'bb_friends_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$notification,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
 		return $content;
 	}
 }
