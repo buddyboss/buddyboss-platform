@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-24 08:28:11+00:00\n"
+"POT-Creation-Date: 2022-03-24 18:05:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1371,7 +1371,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
 #: bp-core/bp-core-cssjs.php:401
-#: bp-templates/bp-nouveau/buddypress-functions.php:597
+#: bp-templates/bp-nouveau/buddypress-functions.php:600
 msgid "Are you sure?"
 msgstr ""
 
@@ -8175,7 +8175,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:147
 #: bp-members/classes/class-bp-core-whos-online-widget.php:355
 #: bp-members/classes/class-bp-core-whos-online-widget.php:399
-msgid "More"
+msgid "See all"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:163
@@ -15029,29 +15029,9 @@ msgstr ""
 msgid "Split the topic from this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2602 bp-forums/replies/template.php:2613
-msgid "Viewing %1$s reply"
-msgid_plural "Viewing %1$s replies"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/replies/template.php:2606 bp-forums/replies/template.php:2617
-msgid "Viewing %2$s of %4$s replies"
-msgid_plural "Viewing %2$s - %3$s of %4$s replies"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/replies/template.php:2625
-msgid "Viewing %1$s post"
-msgid_plural "Viewing %1$s posts"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-forums/replies/template.php:2629
-msgid "Viewing %2$s of %4$s posts"
-msgid_plural "Viewing %2$s - %3$s of %4$s posts"
-msgstr[0] ""
-msgstr[1] ""
+#: bp-forums/replies/template.php:2590
+msgid "Page %1$s of %2$s"
+msgstr ""
 
 #: bp-forums/search/template.php:237
 msgid "Search Results for '%s'"
@@ -19216,6 +19196,7 @@ msgid "Export is ready."
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:188
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
 msgid "Completed"
 msgstr ""
 
@@ -19767,6 +19748,7 @@ msgid "Group courses menu"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-progress.php:10
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
 msgid "Complete"
 msgstr ""
 
@@ -26106,8 +26088,8 @@ msgstr ""
 msgid "%s's Profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:19
-msgid "%s Complete"
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:31
+msgid "%"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/capabilities.php:14
@@ -26286,32 +26268,32 @@ msgstr ""
 msgid "Move Video to..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:595
+#: bp-templates/bp-nouveau/buddypress-functions.php:598
 msgid ""
 "As you are the only organizer of this group, you cannot leave it. You can "
 "either delete the group or promote another member to be an organizer first "
 "and then leave the group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:596
+#: bp-templates/bp-nouveau/buddypress-functions.php:599
 msgid "Are you sure you want to remove your connection with this member?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:598
+#: bp-templates/bp-nouveau/buddypress-functions.php:601
 msgid "Are you sure you want to delete this set? This cannot be undone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:599
+#: bp-templates/bp-nouveau/buddypress-functions.php:602
 msgid "View previous comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:600
+#: bp-templates/bp-nouveau/buddypress-functions.php:603
 msgid ""
 "Your profile has unsaved changes. If you leave the page, the changes will "
 "be lost."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:602
+#: bp-templates/bp-nouveau/buddypress-functions.php:605
 msgid "New Field"
 msgstr ""
 
