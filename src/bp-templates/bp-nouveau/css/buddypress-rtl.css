@@ -706,7 +706,7 @@ body.buddypress article.page > .entry-header .entry-title {
 }
 
 .buddypress-wrap .grid-filters a i {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .buddypress-wrap .grid-filters a,
@@ -7787,7 +7787,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 15px;
+  font-size: 22px;
   display: inline-block;
   margin-left: 10px;
   vertical-align: middle;
@@ -7809,22 +7809,6 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\ee9c";
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button:before,
-#buddypress .bb_more_options .bb_more_options_list button:before,
-#buddypress .bb_more_options .bb_more_options_list a:before,
-.bb_more_options .bb_more_options_list .generic-button > button:before,
-.bb_more_options .bb_more_options_list button:before,
-.bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 15px;
-  display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle;
-  width: 20px;
-  text-align: center;
-}
-
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list button.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list a.back-to-admin:before,
@@ -7832,7 +7816,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.back-to-admin:before,
 .bb_more_options .bb_more_options_list a.back-to-admin:before {
   content: "\ef0a";
-  font-size: 18px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
@@ -7844,7 +7827,6 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\ee69";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
@@ -7854,7 +7836,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
   content: "\ee62";
-  font-size: 16px;
   color: inherit !important;
 }
 
@@ -7897,7 +7878,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.follow-button:before,
 .bb_more_options .bb_more_options_list a.follow-button:before {
   content: "\ee03";
-  font-size: 14px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:before,
