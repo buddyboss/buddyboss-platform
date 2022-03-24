@@ -93,7 +93,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		default:
 
 			/**
-			 * Filters plugin-added group-related custom component_actions.
+			 * Filters plugin-added activity-related custom component_actions.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *

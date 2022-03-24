@@ -120,6 +120,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 		add_filter( 'bp_activity_bb_new_mention_notification', array( $this, 'bb_activity_format_notification' ), 10, 7 );
 		add_filter( 'bp_activity_bb_activity_comment_notification', array( $this, 'bb_activity_format_notification' ), 10, 7 );
+		add_filter( 'bp_forum_bb_new_mention_notification', array( $this, 'bb_activity_format_notification' ), 10, 7 );
 
 	}
 
@@ -163,18 +164,24 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
-		if ( ! empty( $notification ) && 'activity' === $notification->component_name ) {
+		$action                 = $notification->component_action;
+		$activity_id            = $item_id;
+		$user_id                = $secondary_item_id;
+		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$notification_type_html = '';
+		$activity_excerpt       = '';
 
-			$action                 = $notification->component_action;
-			$activity_id            = $item_id;
-			$user_id                = $secondary_item_id;
-			$user_fullname          = bp_core_get_user_displayname( $user_id );
-			$notification_type_html = '';
+		$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
+		if ( $notification_type ) {
+			if ( 'post_comment' === $notification_type ) {
+				$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+			} elseif ( 'activity_comment' === $notification_type ) {
+				$notification_type_html = esc_html__( 'post', 'buddyboss' );
+			}
+		}
 
-			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
-
-
-			// Get activity by activity ID.
+		// Get activity by activity ID.
+		if ( 'bb_activity_comment' === $action ) {
 			$activity         = new BP_Activity_Activity( $activity_id );
 			$activity_excerpt = bp_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
@@ -187,25 +194,13 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
 			}
+		}
 
-			switch ( $action ) {
-				case 'bb_new_mention':
-					$link  = bp_activity_get_permalink( $item_id );
-					$title = sprintf(
-					/* translators: %s: The user full name. */
-						__( '@%s Mentions', 'buddyboss' ),
-						bp_get_loggedin_user_username()
-					);
-					$amount = 'single';
+		if ( ! empty( $notification ) && 'bb_new_mention' === $action && ( 'activity' === $notification->component_name || 'forums' === $notification->component_name ) ) {
 
-					if ( $notification_type ) {
-						$notification_type_html = esc_html__( 'activity post', 'buddyboss' );
-						if ( 'post_comment' === $notification_type ) {
-							$notification_type_html = esc_html__( 'post comment', 'buddyboss' );
-						} elseif ( 'activity_comment' === $notification_type ) {
-							$notification_type_html = esc_html__( 'activity comment', 'buddyboss' );
-						}
-					}
+			switch ( $notification->component_name ) {
+				case 'activity':
+					$link = bp_activity_get_permalink( $item_id );
 
 					/**
 					 * Filters the mention notification permalink.
@@ -215,99 +210,130 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 					 *
 					 * @since BuddyBoss 1.2.5
 					 *
-					 * @param string $link          HTML anchor tag for the interaction.
-					 * @param int    $item_id            The permalink for the interaction.
-					 * @param int    $secondary_item_id     How many items being notified about.
-					 * @param int    $total_items     ID of the activity item being formatted.
+					 * @param string $link              HTML anchor tag for the interaction.
+					 * @param int    $item_id           The permalink for the interaction.
+					 * @param int    $secondary_item_id How many items being notified about.
+					 * @param int    $total_items       ID of the activity item being formatted.
 					 */
 					$link = apply_filters( 'bp_activity_new_at_mention_permalink', $link, $item_id, $secondary_item_id, $total_items );
 
-					if ( (int) $total_items > 1 ) {
-						$text = sprintf(
-							/* translators: %s: Total mentioned count. */
-							__( 'You have %1$d new mentions', 'buddyboss' ),
-							(int) $total_items
-						);
-						$amount = 'multiple';
-					} else {
+					break;
 
-						if ( ! empty( $notification_type_html ) ) {
-							$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s mentioned you in %2$s', 'buddyboss' ),
-								$user_fullname,
-								$notification_type_html
-							);
-						} else {
-							$text = sprintf(
-								/* translators: %s: User full name. */
-								__( '%1$s mentioned you', 'buddyboss' ),
-								$user_fullname
-							);
-						}
+				case 'forums':
+					$topic_id = bbp_get_reply_topic_id( $item_id );
+					$topic_id = empty( $topic_id ) ? $item_id : $topic_id;
+					$link     = wp_nonce_url(
+						add_query_arg(
+							array(
+								'action'   => 'bbp_mark_read',
+								'topic_id' => $topic_id,
+								'reply_id' => $item_id,
+							),
+							bbp_get_reply_url( $item_id )
+						),
+						'bbp_mark_topic_' . $topic_id
+					);
+
+					if ( $notification_type && ( 'forum_topic' === $notification_type || 'forum_reply' === $notification_type ) ) {
+						$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
 					}
 
 					break;
+			}
 
-				case 'bb_activity_comment':
-					$link   = bp_get_notifications_permalink();
-					$title  = __( 'New Activity reply', 'buddyboss' );
-					$amount = 'single';
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+				/* translators: %s: Total mentioned count. */
+					__( 'You have %1$d new mentions', 'buddyboss' ),
+					(int) $total_items
+				);
+				$amount = 'multiple';
+			} else {
+				$amount = 'single';
+				if ( ! empty( $notification_type_html ) ) {
+					$text = sprintf(
+					/* translators: 1: User full name, 2: Activity type. */
+						__( '%1$s mentioned you in %2$s', 'buddyboss' ),
+						$user_fullname,
+						$notification_type_html
+					);
+				} else {
+					$text = sprintf(
+					/* translators: %s: User full name. */
+						__( '%1$s mentioned you', 'buddyboss' ),
+						$user_fullname
+					);
+				}
+			}
 
-					if ( $notification_type ) {
-						$notification_type_html = esc_html__( 'post', 'buddyboss' );
-						if ( 'activity_comment' === $notification_type ) {
-							$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-						}
-					}
+			$title = sprintf(
+			/* translators: %s: The user full name. */
+				__( '@%s Mentions', 'buddyboss' ),
+				bp_get_loggedin_user_username()
+			);
 
-					if ( (int) $total_items > 1 ) {
-						$link = add_query_arg( 'type', $action, $link );
+			$content = apply_filters(
+				'bb_activity_' . $amount . '_' . $action . '_notification',
+				array(
+					'link' => $link,
+					'text' => $text,
+				),
+				$link,
+				$title,
+				$text,
+				$link
+			);
+
+		} elseif ( ! empty( $notification ) && 'bb_activity_comment' === $action && 'activity' === $notification->component_name ) {
+
+			$link   = bp_get_notifications_permalink();
+			$title  = __( 'New Activity reply', 'buddyboss' );
+			$amount = 'single';
+
+			if ( (int) $total_items > 1 ) {
+				$link = add_query_arg( 'type', $action, $link );
+				$text = sprintf(
+				/* translators: %s: Total reply count. */
+					__( 'You have %1$d new replies', 'buddyboss' ),
+					(int) $total_items
+				);
+				$amount = 'multiple';
+			} else {
+				$link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $activity_id ) );
+
+				if ( ! empty( $notification_type_html ) ) {
+					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
-						/* translators: %s: Total reply count. */
-							__( 'You have %1$d new replies', 'buddyboss' ),
-							(int) $total_items
+						/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
+							__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html,
+							$activity_excerpt
 						);
-						$amount = 'multiple';
 					} else {
-						$link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $activity_id ) );
-
-						if ( ! empty( $notification_type_html ) ) {
-							if ( ! empty( $activity_excerpt ) ) {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
-									__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html,
-									$activity_excerpt
-								);
-							} else {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							}
-						} else {
-							if ( ! empty( $activity_excerpt ) ) {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity content. */
-									__( '%1$s replied: "%2$s"', 'buddyboss' ),
-									$user_fullname,
-									$activity_excerpt
-								);
-							} else {
-								$text = sprintf(
-								/* translators: %s: User full name. */
-									__( '%1$s replied', 'buddyboss' ),
-									$user_fullname
-								);
-							}
-						}
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							__( '%1$s replied to your %2$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
 					}
-					break;
-
+				} else {
+					if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity content. */
+							__( '%1$s replied: "%2$s"', 'buddyboss' ),
+							$user_fullname,
+							$activity_excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							__( '%1$s replied', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				}
 			}
 
 			$content = apply_filters(

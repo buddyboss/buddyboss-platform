@@ -224,6 +224,29 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		return $return;
 	}
 
+	if ( in_array( $action, array( 'bb_new_mention', 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ), true ) ) {
+		/**
+		 * Filters plugin-added forum-related custom component_actions.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $notification      Null value.
+		 * @param int    $item_id           The primary item ID.
+		 * @param int    $secondary_item_id The secondary item ID.
+		 * @param int    $total_items       The total number of messaging-related notifications
+		 *                                  waiting for the user.
+		 * @param string $format            'string' for BuddyBar-compatible notifications;
+		 *                                  'array' for WP Toolbar.
+		 * @param int    $id                Notification ID.
+		 * @param string $screen            Notification Screen type.
+		 */
+		$custom_action_notification = apply_filters( 'bp_forum_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
+
+		if ( ! is_null( $custom_action_notification ) ) {
+			return $custom_action_notification;
+		}
+	}
+
 	return $action;
 }
 add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 9 );
@@ -310,7 +333,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 			}
 
 			$args['user_id']           = $user_id;
-			$args['component_action']  = 'bbp_new_at_mention';
+			$args['component_action']  = bb_enabled_legacy_email_preference() ? 'bbp_new_at_mention' : 'bb_new_mention';
 			$args['secondary_item_id'] = get_current_user_id();
 
 			// If forum is not accesible to user, do not send notification.
@@ -365,7 +388,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 		'item_id'           => $topic_id,
 		'secondary_item_id' => get_current_user_id(),
 		'component_name'    => bbp_get_component_name(),
-		'component_action'  => 'bbp_new_at_mention',
+		'component_action'  => bb_enabled_legacy_email_preference() ? 'bbp_new_at_mention' : 'bb_new_mention',
 	);
 
 	// Grab our temporary variable from bbp_convert_mentions().
@@ -462,11 +485,13 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_reply' );
 			// Clear mentions notifications by default.
 			bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_at_mention' );
+			bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bb_new_mention' );
 		} else {
 			// Attempt to clear notifications for the current user from this topic.
 			$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
 			// Clear mentions notifications by default.
 			bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_at_mention' );
+			bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bb_new_mention' );
 		}
 
 		// Do additional subscriptions actions.
