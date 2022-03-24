@@ -175,7 +175,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		if ( $notification_type ) {
 			if ( 'post_comment' === $notification_type ) {
 				$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-			} elseif ( 'activity_comment' === $notification_type ) {
+			} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
 				$notification_type_html = esc_html__( 'post', 'buddyboss' );
 			}
 		}
@@ -193,6 +193,21 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
+			}
+
+			if ( empty( $activity_excerpt ) && ! empty( $activity->item_id ) ) {
+				$parent_activity  = new BP_Activity_Activity( $activity->item_id );
+				$activity_excerpt = bp_create_excerpt(
+					wp_strip_all_tags( $parent_activity->content ),
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				);
+
+				if ( '&nbsp;' === $activity_excerpt ) {
+					$activity_excerpt = '';
+				}
 			}
 		}
 
