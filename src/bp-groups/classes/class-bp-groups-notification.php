@@ -229,6 +229,9 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			__( 'Pending Group membership requests', 'buddyboss' ),
 			55
 		);
+
+		add_filter( 'bp_groups_bb_groups_new_request_notification', array( $this, 'bb_format_groups_notification' ), 10, 7 );
+
 	}
 
 	/**
@@ -484,6 +487,46 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				$text = sprintf(
 					/* translators: group name */
 					esc_html__( 'You\'ve been invited to join "%s"', 'buddyboss' ),
+					$group->name
+				);
+			}
+
+			$content = apply_filters(
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$group_link,
+				$group->name,
+				$text,
+				$notification_link
+			);
+		}
+
+		// All group organizers in the group.
+		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_new_request' === $notification->component_action ) {
+
+			$group_id          = $item_id;
+			$group             = groups_get_group( $group_id );
+			$group_link        = bp_get_group_permalink( $group );
+			$amount            = 'single';
+			$notification_link = $group_link . 'admin/membership-requests/?n=1';
+
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+					/* translators: 1. total times. 2. group name */
+					esc_html__( '%1$d new membership requests for the group "%2$s"', 'buddyboss' ),
+					(int) $total_items,
+					$group->name
+				);
+				$amount = 'multiple';
+			} else {
+				$user_fullname = bp_core_get_user_displayname( $secondary_item_id );
+				$text          = sprintf(
+					/* translators: 1. user name. 2.group name. */
+					esc_html__( '%1$s has requested to join "%2$s"', 'buddyboss' ),
+					$user_fullname,
 					$group->name
 				);
 			}

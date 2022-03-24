@@ -133,13 +133,20 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 
 	// Trigger a BuddyPress Notification.
 	if ( bp_is_active( 'notifications' ) ) {
+
+		$action = 'new_membership_request';
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$action = 'bb_groups_new_request';
+		}
+
 		bp_notifications_add_notification(
 			array(
 				'user_id'           => $admin_id,
 				'item_id'           => $group_id,
 				'secondary_item_id' => $requesting_user_id,
 				'component_name'    => buddypress()->groups->id,
-				'component_action'  => 'new_membership_request',
+				'component_action'  => $action,
 			)
 		);
 	}
@@ -1162,6 +1169,7 @@ function bp_groups_accept_request_mark_notifications( $user_id, $group_id ) {
 	if ( bp_is_active( 'notifications' ) ) {
 		// First null parameter marks read for all admins.
 		bp_notifications_mark_notifications_by_item_id( null, $group_id, buddypress()->groups->id, 'new_membership_request', $user_id );
+		bp_notifications_mark_notifications_by_item_id( null, $group_id, buddypress()->groups->id, 'bb_groups_new_request', $user_id );
 	}
 }
 add_action( 'groups_membership_accepted', 'bp_groups_accept_request_mark_notifications', 10, 2 );
@@ -1218,6 +1226,7 @@ function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
 	if ( bp_is_active( 'notifications' ) && ! empty( $group_id ) ) {
 		// Mark as read group join requests notification.
 		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'new_membership_request' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'bb_groups_new_request' );
 	}
 }
 add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_requests_mark_notifications', 10 );
@@ -1232,6 +1241,7 @@ add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_
 function bp_groups_remove_data_for_user_notifications( $user_id ) {
 	if ( bp_is_active( 'notifications' ) ) {
 		bp_notifications_delete_notifications_from_user( $user_id, buddypress()->groups->id, 'new_membership_request' );
+		bp_notifications_delete_notifications_from_user( $user_id, buddypress()->groups->id, 'bb_groups_new_request' );
 	}
 }
 add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notifications', 10 );
