@@ -6812,7 +6812,7 @@ function bb_core_remove_unfiltered_html( $content ) {
  */
 function bb_admin_icons( $id ) {
 	$bb_icon_rf = 'bb-icon-bf';
-	$bb_icon_bl = 'bb-icon-bl';
+	//$bb_icon_bl = 'bb-icon-bl';
 	switch ( $id ) {
 		case 'bp_main':
 			$meta_icon = $bb_icon_rf . ' bb-icon-cog';
@@ -6939,15 +6939,15 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_rf . ' bb-icon-brand-learndash';
 			break;
 		case 'default_data':
-			$meta_icon = $bb_icon_bl . ' bb-icon-user-friends-alt';
+			$meta_icon = $bb_icon_rl . ' bb-icon-user-friends-alt';
 			break;
 		case 'repair_community':
 		case 'repair_forums':
-			$meta_icon = $bb_icon_bl . ' bb-icon-tools';
+			$meta_icon = $bb_icon_rl . ' bb-icon-tools';
 			break;
 		case 'bp-member-type-import':
 		case 'bbpress_converter_main':
-			$meta_icon = $bb_icon_bl . ' bb-icon-sort-amount-up';
+			$meta_icon = $bb_icon_rl . ' bb-icon-sort-amount-up';
 			break;
 		case 'group_access_control_block':
 		case 'activity_access_control_block':
