@@ -6841,9 +6841,11 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_member_type_settings':
 		case 'bp_groups_types':
-			$meta_icon = $bb_icon_rf . ' bb-icon-tag';
+			$meta_icon = $bb_icon_rf . ' bb-icon-tags';
 			break;
 		case 'bp_profile_search_settings':
+			$meta_icon = $bb_icon_rf . ' bb-icon-search-plus';
+			break;
 		case 'bp_search_settings_community':
 		case 'bp_search_settings_post_types':
 			$meta_icon = $bb_icon_rf . ' bb-icon-search';
@@ -6922,22 +6924,22 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_rf . ' bb-icon-brand-learndash';
 			break;
 		case 'default_data':
-			$meta_icon = $bb_icon_bl . ' bb-icon-user-friends';
+			$meta_icon = $bb_icon_bl . ' bb-icon-user-friends-alt';
 			break;
 		case 'repair_community':
 		case 'repair_forums':
-			$meta_icon = $bb_icon_bl . ' bb-icon-wrench';
+			$meta_icon = $bb_icon_bl . ' bb-icon-tools';
 			break;
 		case 'bp-member-type-import':
 		case 'bbpress_converter_main':
-			$meta_icon = $bb_icon_bl . ' bb-icon-upload';
+			$meta_icon = $bb_icon_bl . ' bb-icon-sort-amount-up';
 			break;
 		case 'group_access_control_block':
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
 		case 'media_access_control_block';
 		case 'connection_access_control_block':
-			$meta_icon = $bb_icon_rf . ' bb-icon-lock';
+			$meta_icon = $bb_icon_rf . ' bb-icon-lock-alt-open';
 			break;
 		case 'bp_zoom_settings_section':
 		case 'bp_zoom_gutenberg_section';
