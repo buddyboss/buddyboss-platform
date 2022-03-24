@@ -3487,6 +3487,7 @@ input.search-query-input {
 .activity-list .activity-item .bp-generic-meta.action .unfav:before {
   content: "\ef41";
   color: #0061ac;
+  font-weight: 300;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .edit-activity:before {
@@ -16597,6 +16598,10 @@ a.bb-close-model {
   font-weight: 400;
 }
 
+.bb-media-info-section .activity-media-description .bp-add-media-activity-description > span.bb-icon-edit {
+  font-size: 18px;
+}
+
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description {
   width: 100%;
   margin-bottom: 10px;
@@ -18439,7 +18444,7 @@ div.dropzone .dz-preview .dz-filename {
 }
 
 .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > i {
-  font-size: 35px;
+  font-size: 60px;
   margin-bottom: 10px;
   color: #9ca8b4;
 }
@@ -20563,7 +20568,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options a.button > i,
 .directory.document .document-options a.button > i,
 .directory.video .video-options a.button > i {
-  margin-right: 5px;
+  margin-right: 7px;
   font-size: 18px;
 }
 
