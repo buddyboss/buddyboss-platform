@@ -458,7 +458,7 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bp_ld_sync-learndash h2 > i,
 .bp-admin-card.section-bp_ld_sync-reports h2 > i,
 .bp-admin-card.section-bp_ld_course_tab-buddypress h2 > i {
-  color: #235af4;
+  color: #479BF8;
 }
 
 /* Integrations - BuddyPress Plugins */
@@ -469,7 +469,7 @@ tr.bp-search-parent-field label {
 /* Integrations - Zoom */
 .bp-admin-card.section-bp_zoom_gutenberg_section h2 > i,
 .bp-admin-card.section-bp_zoom_settings_section h2 > i {
-  color: #478df7;
+  color: #0E71EB;
 }
 
 /*

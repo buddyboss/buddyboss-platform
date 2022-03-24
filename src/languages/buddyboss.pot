@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-22 19:02:28+00:00\n"
+"POT-Creation-Date: 2022-03-24 10:43:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5174,7 +5174,7 @@ msgid "<a href=\"%s\" target=\"_blank\">REST API</a>"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:93
-msgid "<a href=\"%s\" target=\"_blank\">Github</a>"
+msgid "<a href=\"%s\" target=\"_blank\">GitHub</a>"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:108
@@ -6077,6 +6077,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-theme-compat.php:184
 #: bp-integrations/learndash/core/Requirements.php:36
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:22
 #: bp-performance/classes/class-settings.php:112
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:650
 msgid "Social Groups"
@@ -9608,6 +9609,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:367
 #: bp-integrations/learndash/bp-learndash-integration.php:22
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:51
 msgid "LearnDash"
 msgstr ""
 
@@ -18895,8 +18897,9 @@ msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:112
 msgid ""
-"Enable group sync functionality <b>FROM</b> <a href=\"%1$s\">BuddyBoss "
-"Social Groups</a> <b>TO</b> <a href=\"%2$s\">LearnDash Groups</a>"
+"Enable group sync functionality <strong><em>from</em></strong> <a "
+"href=\"%1$s\">BuddyBoss Social Groups</a> <strong><em>to</em></strong> <a "
+"href=\"%2$s\">LearnDash Groups</a>"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:132
@@ -19018,8 +19021,9 @@ msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:250
 msgid ""
-"Enable group sync functionality <b>FROM</b> <a href=\"%1$s\">LearnDash "
-"Groups</a> <b>TO</b> <a href=\"%2$s\">BuddyBoss Social Groups</a>"
+"Enable group sync functionality <strong><em>from</em></strong> <a "
+"href=\"%1$s\">LearnDash Groups</a> <strong><em>to</em></strong> <a "
+"href=\"%2$s\">BuddyBoss Social Groups</a>"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:270
@@ -19649,25 +19653,21 @@ msgstr ""
 msgid "Associated Group:"
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:5
-msgid "Social Groups</span>"
-msgstr ""
-
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:9
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:28
 msgid ""
 "You need to activate the <a href=\"%s\">Social Groups component</a> in "
 "order to sync LearnDash groups with Social groups."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:21
-msgid "LearnDash&nbsp;<span>&mdash; requires plugin to activate</span>"
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:52
+msgid "requires plugin to activate"
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:31
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:64
 msgid "View Tutorials"
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:37
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:70
 msgid ""
 "BuddyBoss Platform has integration settings for %s. If using LearnDash we "
 "add the ability to sync LearnDash groups with social groups, to connect "
@@ -19675,7 +19675,7 @@ msgid ""
 "we also include styling for LearnDash."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:41
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:74
 msgid "LearnDash LMS"
 msgstr ""
 

@@ -6811,7 +6811,7 @@ function bb_core_remove_unfiltered_html( $content ) {
  * @return string Return icon name.
  */
 function bb_admin_icons( $id ) {
-	$bb_icon_rf = 'bb-icon-rf';
+	$bb_icon_rf = 'bb-icon-bf';
 	$bb_icon_bl = 'bb-icon-bl';
 	switch ( $id ) {
 		case 'bp_main':
@@ -6910,27 +6910,27 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_rf . ' bb-icon-paste';
 			break;
 		case 'bp_buddyboss_app-integration':
-			$meta_icon = $bb_icon_bl . ' bb-icon-brand-buddyboss-app';
+			$meta_icon = $bb_icon_rf . ' bb-icon-mobile';
 			break;
 		case 'bp_compatibility-integration':
-			$meta_icon = $bb_icon_bl . ' bb-icon-brand-buddypress';
+			$meta_icon = $bb_icon_rf . ' bb-icon-brand-buddypress';
 			break;
 		case 'bp_ld_sync-buddypress':
 		case 'bp_ld_sync-learndash':
 		case 'bp_ld_course_tab-buddypress':
 		case 'bp_ld-integration':
-			$meta_icon = $bb_icon_bl . ' bb-icon-brand-learndash';
+			$meta_icon = $bb_icon_rf . ' bb-icon-brand-learndash';
 			break;
 		case 'default_data':
-			$meta_icon = $bb_icon_rf . ' bb-icon-duplicate';
+			$meta_icon = $bb_icon_bl . ' bb-icon-user-friends';
 			break;
 		case 'repair_community':
 		case 'repair_forums':
-			$meta_icon = $bb_icon_rf . ' bb-icon-tools';
+			$meta_icon = $bb_icon_bl . ' bb-icon-wrench';
 			break;
 		case 'bp-member-type-import':
 		case 'bbpress_converter_main':
-			$meta_icon = $bb_icon_rf . ' bb-icon-cloud-upload';
+			$meta_icon = $bb_icon_bl . ' bb-icon-upload';
 			break;
 		case 'group_access_control_block':
 		case 'activity_access_control_block':
@@ -6941,7 +6941,7 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_zoom_settings_section':
 		case 'bp_zoom_gutenberg_section';
-			$meta_icon = $bb_icon_bl . ' bb-icon-brand-zoom';
+			$meta_icon = $bb_icon_rf . ' bb-icon-brand-zoom';
 			break;
 		default:
 			$meta_icon = '';
