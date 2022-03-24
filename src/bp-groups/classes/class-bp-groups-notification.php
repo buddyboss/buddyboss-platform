@@ -153,6 +153,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			__( 'Group promotions', 'buddyboss' ),
 			85
 		);
+
+		add_filter( 'bp_groups_bb_groups_promoted_notification', array( $this, 'bb_format_groups_notification' ), 10, 7 );
 	}
 
 	/**
@@ -400,7 +402,55 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$content = apply_filters(
-				'bp_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$group_link,
+				$group->name,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Group members promoted.
+		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_promoted' === $notification->component_action ) {
+
+			$group_id          = $item_id;
+			$group             = groups_get_group( $group_id );
+			$group_link        = bp_get_group_permalink( $group );
+			$amount            = 'single';
+			$notification_link = $group_link . '?n=1';
+			$promote_text      = bp_notifications_get_meta( $notification_id, 'promoted_to', true );
+
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+				/* translators: 1. User Role name. 2. total times. */
+					__( 'You were promoted to a %1$s in %2$d groups', 'buddyboss' ),
+					$promote_text,
+					(int) $total_items
+				);
+				$amount = 'multiple';
+			} else {
+				if ( $promote_text ) {
+					$text = sprintf(
+					/* translators: group name */
+						esc_html__( 'Your role in "%1$s" was changed to "%2$s"', 'buddyboss' ),
+						$group->name,
+						$promote_text
+					);
+				} else {
+					$text = sprintf(
+					/* translators: group name */
+						esc_html__( 'Your role in "%1$s" was changed', 'buddyboss' ),
+						$group->name
+					);
+				}
+			}
+
+			$content = apply_filters(
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
 					'link' => $notification_link,
 					'text' => $text,

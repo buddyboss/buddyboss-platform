@@ -273,9 +273,13 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 		$type        = 'member_promoted_to_mod';
 	}
 
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type = 'bb_groups_promoted';
+	}
+
 	// Trigger a BuddyPress Notification.
 	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_add_notification(
+		$n_id = bp_notifications_add_notification(
 			array(
 				'user_id'          => $user_id,
 				'item_id'          => $group_id,
@@ -283,6 +287,10 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 				'component_action' => $type,
 			)
 		);
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			bp_notifications_update_meta( $n_id, 'promoted_to', $promoted_to );
+		}
 	}
 
 	// Bail if admin opted out of receiving this email.
@@ -1173,6 +1181,7 @@ function bp_groups_screen_my_groups_mark_notifications() {
 }
 add_action( 'groups_screen_my_groups', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 add_action( 'groups_screen_group_home', 'bp_groups_screen_my_groups_mark_notifications', 10 );
+
 /*
  * Request membership screen in clear read notification and count.
  */
@@ -1474,6 +1483,7 @@ function bb_groups_group_details_update_mark_notifications() {
 
 		// Mark notifications read.
 		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_details_updated' );
+		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_promoted' );
 	}
 }
 
