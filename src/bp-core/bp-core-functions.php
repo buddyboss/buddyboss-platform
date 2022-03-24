@@ -6858,13 +6858,28 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bbp_settings_users':
 		case 'bbp_settings_features':
-		case 'bbp_settings_per_page':
-		case 'bbp_settings_per_rss_page':
-		case 'bbp_settings_root_slugs':
-		case 'bbp_settings_single_slugs':
-		case 'bbp_settings_user_slugs':
-		case 'bbp_settings_buddypress':
 			$meta_icon = $bb_icon_rf . ' bb-icon-comments-square';
+			break;
+		case 'bbp_settings_root_slugs':
+			$meta_icon = $bb_icon_rf . ' bb-icon-grid-small';
+			break;
+		case 'bbp_settings_buddypress':
+			$meta_icon = $bb_icon_rf . ' bb-icon-users';
+			break;
+		case 'bbp_settings_per_page':
+			$meta_icon = $bb_icon_rf . ' bb-icon-sort-amount-down';
+			break;
+		case 'bbp_settings_per_rss_page':
+			$meta_icon = $bb_icon_rf . ' bb-icon-rss';
+			break;
+		case 'bbp_settings_single_slugs':
+			$meta_icon = $bb_icon_rf . ' bb-icon-pencil';
+			break;
+		case 'bbp_settings_user_slugs':
+			$meta_icon = $bb_icon_rf . ' bb-icon-user-edit';
+			break;
+		case 'bbp_settings_akismet':
+			$meta_icon = $bb_icon_rf . ' bb-icon-brand-wordpress';
 			break;
 		case 'bp_activity':
 			$meta_icon = $bb_icon_rf . ' bb-icon-activity';
