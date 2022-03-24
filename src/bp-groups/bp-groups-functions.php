@@ -4593,7 +4593,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			?>
 			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
-					<span class="bb-icon bb-icon-menu-dots-h"></span>
+					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
 			<?php

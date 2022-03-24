@@ -1900,7 +1900,7 @@ function bp_group_list_admins( $group = false ) {
 						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
 						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
 						?>">
-						<span class="bb-icon bb-icon-menu-dots-h"></span>
+						<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 					</a>
 				</li>
 			<?php } ?>
