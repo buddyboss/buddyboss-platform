@@ -118,8 +118,8 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			5
 		);
 
-		add_filter( 'bp_activity_bb_new_mention_notification', array( $this, 'bb_format_activity_mention_notification' ), 10, 7 );
-		add_filter( 'bp_activity_bb_activity_comment_notification', array( $this, 'bb_format_activity_mention_notification' ), 10, 7 );
+		add_filter( 'bp_activity_bb_new_mention_notification', array( $this, 'bb_activity_format_notification' ), 10, 7 );
+		add_filter( 'bp_activity_bb_activity_comment_notification', array( $this, 'bb_activity_format_notification' ), 10, 7 );
 
 	}
 
@@ -159,7 +159,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function bb_format_activity_mention_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+	public function bb_activity_format_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
@@ -311,7 +311,7 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$content = apply_filters(
-				'bb_activity_' . $amount . '_' . $notification->component_action . '_notification',
+				'bb_activity_' . $amount . '_' . $action . '_notification',
 				array(
 					'link' => $link,
 					'text' => $text,

@@ -326,6 +326,7 @@ function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 	}
 
 	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'new_at_mention' );
+	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'bb_new_mention' );
 }
 add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
 
@@ -344,6 +345,7 @@ function bp_activity_remove_screen_notifications_single_activity_permalink( $act
 
 	// Mark as read any notifications for the current user related to this activity item.
 	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'new_at_mention' );
+	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'bb_new_mention' );
 
 	$comment_id = 0;
 	// For replies to a parent update.

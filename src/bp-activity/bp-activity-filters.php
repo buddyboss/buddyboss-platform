@@ -1996,13 +1996,19 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 	$activity_obj = new BP_Activity_Activity( $item_id );
 
 	if ( 'activity_comment' == $activity_obj->type ) {
+
+		$component_action = 'new_at_mention';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$component_action = 'bb_new_mention';
+		}
+
 		$notification = BP_Notifications_Notification::get(
 			array(
 				'user_id'           => bp_loggedin_user_id(),
 				'item_id'           => $item_id,
 				'secondary_item_id' => $secondary_item_id,
 				'component_name'    => 'activity',
-				'component_action'  => 'new_at_mention',
+				'component_action'  => $component_action,
 			)
 		);
 
