@@ -269,6 +269,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			65
 		);
 
+		add_filter( 'bp_groups_bb_groups_request_accepted_notification', array( $this, 'bb_format_groups_notification' ), 10, 7 );
+
 	}
 
 	/**
@@ -305,6 +307,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			__( 'Rejected Group membership requests', 'buddyboss' ),
 			75
 		);
+
+		add_filter( 'bp_groups_bb_groups_request_rejected_notification', array( $this, 'bb_format_groups_notification' ), 10, 7 );
 	}
 
 	/**
@@ -527,6 +531,86 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					/* translators: 1. user name. 2.group name. */
 					esc_html__( '%1$s has requested to join "%2$s"', 'buddyboss' ),
 					$user_fullname,
+					$group->name
+				);
+			}
+
+			$content = apply_filters(
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$group_link,
+				$group->name,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Member whose group request was accepted.
+		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_request_accepted' === $notification->component_action ) {
+
+			$group_id          = $item_id;
+			$group             = groups_get_group( $group_id );
+			$group_link        = bp_get_group_permalink( $group );
+			$amount            = 'single';
+			$notification_link = $group_link . '?n=1';
+
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+					/* translators: total groups count. */
+					esc_html__( '%d accepted group membership requests', 'buddyboss' ),
+					(int) $total_items,
+					$group->name
+				);
+
+				$amount            = 'multiple';
+				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+			} else {
+				$text = sprintf(
+					/* translators: group name. */
+					esc_html__( '%s has approved your request to join', 'buddyboss' ),
+					$group->name
+				);
+			}
+
+			$content = apply_filters(
+				'bb_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$group_link,
+				$group->name,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Member whose group request was rejected.
+		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_request_rejected' === $notification->component_action ) {
+
+			$group_id          = $item_id;
+			$group             = groups_get_group( $group_id );
+			$group_link        = bp_get_group_permalink( $group );
+			$amount            = 'single';
+			$notification_link = $group_link . '?n=1';
+
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+					/* translators: total times */
+					esc_html__( '%d rejected group membership requests', 'buddyboss' ),
+					(int) $total_items,
+					$group->name
+				);
+
+				$amount            = 'multiple';
+				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+			} else {
+				$text = sprintf(
+					/* translators: group name. */
+					esc_html__( '%s has denied your request to join', 'buddyboss' ),
 					$group->name
 				);
 			}
