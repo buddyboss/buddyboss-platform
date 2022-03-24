@@ -684,10 +684,10 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
-	     && empty( $_POST['bbp_media'] )
-	     && empty( $_POST['bbp_video'] )
-	     && empty( $_POST['bbp_media_gif'] )
-	     && empty( $_POST['bbp_document'] )
+		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_video'] )
+		 && empty( $_POST['bbp_media_gif'] )
+		 && empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -1952,9 +1952,9 @@ function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
 
 	$update_reply = array(
 		'ID'          => $reply_id,
-		'post_status' => $previous_status
+		'post_status' => $previous_status,
 	);
-	wp_update_post($update_reply);
+	wp_update_post( $update_reply );
 
 	do_action( 'bbp_untrashed_reply', $reply_id );
 }
@@ -2058,7 +2058,7 @@ function bb_validate_reply_embed( $content ) {
  * @return string
  */
 function bbp_reply_content_autoembed_paragraph( $content ) {
-    global $wp_embed;
+	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
 		remove_filter( 'bbp_get_reply_content', array( $wp_embed, 'autoembed' ), 2 );
@@ -2453,12 +2453,35 @@ function bbp_list_replies( $args = array() ) {
 		'list_replies'
 	);
 
-	// Get replies to loop through in $_replies
+	// Get replies to loop through in $_replies.
 	$walker = new BBP_Walker_Reply();
 	$walker->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $r['page'], $r['per_page'], $r );
 
-	bbpress()->max_num_pages            = $walker->max_pages;
-	bbpress()->reply_query->in_the_loop = false;
+	if ( $r['page'] > 1 ) {
+
+		$loop_run     = $r['page'] - 1;
+		$offset_total = 0;
+		for ( $i = 1; $i <= $loop_run; $i++ ) {
+
+			$walker_offset = new stdClass();
+			ob_start();
+			$walker_offset = new BBP_Walker_Reply();
+
+			$walker_offset->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $i, $r['per_page'], $r );
+			ob_get_clean();
+
+			$offset_total = $offset_total + $walker_offset->total_items_per_page;
+		}
+		bbpress()->reply_query->offset = $offset_total;
+
+	} else {
+		bbpress()->reply_query->offset = 0;
+	}
+
+	bbpress()->max_num_pages                     = $walker->max_pages;
+	bbpress()->reply_query->in_the_loop          = false;
+	bbpress()->reply_query->total_items_per_page = $walker->total_items_per_page;
+
 }
 
 /**
