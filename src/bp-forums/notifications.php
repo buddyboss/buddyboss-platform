@@ -38,10 +38,11 @@ add_filter( 'bp_notifications_get_registered_components', 'bbp_filter_notificati
  * @param string $action_name       Canonical notification action.
  * @param string $name              Notification component ID.
  * @param int    $id                Notification ID.
+ * @param string $screen            Notification Screen type.
  *
  * @package BuddyBoss
  */
-function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id ) {
+function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id, $screen ) {
 
 	// New reply notifications.
 	if ( 'bbp_new_reply' === $action ) {
@@ -225,7 +226,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 
 	return $action;
 }
-add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 8 );
+add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 9 );
 
 /**
  * Hooked into the new reply function, this notification action is responsible
@@ -243,7 +244,7 @@ add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypres
  */
 function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
 
-	// Bail if somehow this is hooked to an edit action
+	// Bail if somehow this is hooked to an edit action.
 	if ( ! empty( $is_edit ) ) {
 		return;
 	}
@@ -255,12 +256,12 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	$topic_author_id   = bbp_get_topic_author_id( $topic_id );
 	$secondary_item_id = $author_id;
 
-	// Hierarchical replies
+	// Hierarchical replies.
 	if ( ! empty( $reply_to ) ) {
 		$reply_to_item_id = bbp_get_topic_author_id( $reply_to );
 	}
 
-	// Get some reply information
+	// Get some reply information.
 	$args = array(
 		'user_id'          => $topic_author_id,
 		'item_id'          => $reply_id,
@@ -269,14 +270,14 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		'date_notified'    => get_post( $reply_id )->post_date_gmt,
 	);
 
-	// Notify the topic author if not the current reply author
+	// Notify the topic author if not the current reply author.
 	if ( $author_id !== $topic_author_id && $topic_author_id !== $reply_to_item_id ) {
 		$args['secondary_item_id'] = $secondary_item_id;
 
 		bp_notifications_add_notification( $args );
 	}
 
-	// Notify the immediate reply author if not the current reply author
+	// Notify the immediate reply author if not the current reply author.
 	if ( ! empty( $reply_to ) && ( $author_id !== $reply_to_item_id ) ) {
 		$args['user_id']           = $reply_to_item_id;
 		$args['secondary_item_id'] = $secondary_item_id;
@@ -298,7 +299,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
 
-		unset( $args['date_notified'] ); // use BP default timestamp
+		unset( $args['date_notified'] ); // use BP default timestamp.
 
 		// Send @mentions and setup BP notifications.
 		foreach ( (array) $usernames as $user_id => $username ) {
@@ -426,30 +427,30 @@ add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 10, 2 );
  */
 function bbp_buddypress_mark_notifications( $action = '' ) {
 
-	// Bail if no topic ID is passed
+	// Bail if no topic ID is passed.
 	if ( empty( $_GET['topic_id'] ) ) {
 		return;
 	}
 
-	// Bail if action is not for this function
+	// Bail if action is not for this function.
 	if ( 'bbp_mark_read' !== $action ) {
 		return;
 	}
 
-	// Get required data
+	// Get required data.
 	$user_id  = bp_loggedin_user_id();
 	$topic_id = intval( $_GET['topic_id'] );
 
-	// Check nonce
+	// Check nonce.
 	if ( ! bbp_verify_nonce_request( 'bbp_mark_topic_' . $topic_id ) ) {
 		bbp_add_error( 'bbp_notification_topic_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 
-		// Check current user's ability to edit the user
+		// Check current user's ability to edit the user.
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
 		bbp_add_error( 'bbp_notification_permissions', __( '<strong>ERROR</strong>: You do not have permission to mark notifications for that user.', 'buddyboss' ) );
 	}
 
-	// Bail if we have errors
+	// Bail if we have errors.
 	if ( ! bbp_has_errors() ) {
 
 		if ( ! empty( $_GET['topic_id'] ) ) {
@@ -457,18 +458,18 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 		}
 
 		if ( ! empty( $_GET['reply_id'] ) ) {
-			// Attempt to clear notifications for the current user from this reply
+			// Attempt to clear notifications for the current user from this reply.
 			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_reply' );
-			// Clear mentions notifications by default
+			// Clear mentions notifications by default.
 			bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_at_mention' );
 		} else {
-			// Attempt to clear notifications for the current user from this topic
+			// Attempt to clear notifications for the current user from this topic.
 			$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
-			// Clear mentions notifications by default
+			// Clear mentions notifications by default.
 			bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_at_mention' );
 		}
 
-		// Do additional subscriptions actions
+		// Do additional subscriptions actions.
 		do_action( 'bbp_notifications_handler', $success, $user_id, $topic_id, $action );
 	}
 
@@ -589,6 +590,12 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 		}
 	}
 
+	$action = 'bbp_new_reply';
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$action = 'bb_forums_subscribed_reply';
+	}
+
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
@@ -604,7 +611,7 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 						$reply_id,
 						$reply_author_id,
 						bbp_get_component_name(),
-						'bbp_new_reply',
+						$action,
 						bp_core_current_time(),
 						true,
 					),
@@ -620,7 +627,7 @@ function bb_pre_notify_reply_subscribers( $reply_id, $topic_id, $user_ids ) {
 					'item_id'           => $reply_id,
 					'secondary_item_id' => $reply_author_id,
 					'component_name'    => bbp_get_component_name(),
-					'component_action'  => 'bbp_new_reply',
+					'component_action'  => $action,
 					'date_notified'     => bp_core_current_time(),
 					'is_new'            => 1,
 				)

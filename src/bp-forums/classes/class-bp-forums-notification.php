@@ -155,6 +155,58 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+
+		if ( 'forums' === $component_name && 'bb_forums_subscribed_reply' === $component_action_name ) {
+			$topic_id    = bbp_get_reply_topic_id( $item_id );
+			$topic_title = bbp_get_topic_title( $topic_id );
+			$topic_link  = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'   => 'bbp_mark_read',
+						'topic_id' => $topic_id,
+						'reply_id' => $item_id,
+					),
+					bbp_get_reply_url( $item_id )
+				),
+				'bbp_mark_topic_' . $topic_id
+			);
+
+			if ( (int) $action_item_count > 1 ) {
+				$text = sprintf(
+					/* translators: replies count. */
+					esc_html__( 'You have %d new replies', 'buddyboss' ),
+					(int) $action_item_count
+				);
+			} else {
+				$except = bbp_get_reply_excerpt( $item_id, 50 );
+				if ( ! empty( $except ) && ! empty( $secondary_item_id ) ) {
+					$text = sprintf(
+						/* translators: 1. Member display name. 2. excerpt. */
+						esc_html__( '%1$s replied to a discussion: "%2$s"', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id ),
+						$except
+					);
+				} elseif ( ! empty( $secondary_item_id ) && empty( $except ) ) {
+					$text = sprintf(
+						/* translators: Member display name. */
+						esc_html__( '%s replied to a discussion', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id )
+					);
+				} else {
+					$text = sprintf(
+						/* translators: topic title. */
+						esc_html__( 'You have a new reply to %s', 'buddyboss' ),
+						$topic_title
+					);
+				}
+			}
+
+			$content = array(
+				'text' => $text,
+				'link' => $topic_link,
+			);
+		}
+
 		return $content;
 	}
 }
