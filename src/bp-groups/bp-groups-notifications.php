@@ -346,12 +346,19 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 
 	// Trigger a BuddyPress Notification.
 	if ( bp_is_active( 'notifications' ) ) {
+
+		$action = 'group_invite';
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$action = 'bb_groups_new_invite';
+		}
+
 		bp_notifications_add_notification(
 			array(
 				'user_id'          => $invited_user_id,
 				'item_id'          => $group->id,
 				'component_name'   => buddypress()->groups->id,
-				'component_action' => 'group_invite',
+				'component_action' => $action,
 			)
 		);
 	}
@@ -1105,6 +1112,7 @@ function bp_groups_uninvite_user_delete_group_invite_notification( $group_id = 0
 	}
 
 	bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'group_invite' );
+	bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_invite' );
 }
 add_action( 'groups_uninvite_user', 'bp_groups_uninvite_user_delete_group_invite_notification', 10, 2 );
 
@@ -1135,6 +1143,7 @@ add_action( 'groups_demoted_member', 'bp_groups_delete_promotion_notifications',
 function bp_groups_accept_invite_mark_notifications( $user_id, $group_id ) {
 	if ( bp_is_active( 'notifications' ) ) {
 		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'group_invite' );
+		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_invite' );
 	}
 }
 add_action( 'groups_accept_invite', 'bp_groups_accept_invite_mark_notifications', 10, 2 );
@@ -1195,6 +1204,7 @@ add_action( 'groups_screen_group_request_membership', 'bp_groups_screen_my_group
 function bp_groups_screen_invites_mark_notifications() {
 	if ( bp_is_active( 'notifications' ) ) {
 		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->groups->id, 'group_invite' );
+		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->groups->id, 'bb_groups_new_invite' );
 	}
 }
 add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifications', 10 );
