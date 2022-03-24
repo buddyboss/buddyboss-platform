@@ -20563,7 +20563,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options a.button > i,
 .directory.document .document-options a.button > i,
 .directory.video .video-options a.button > i {
-  margin-left: 0;
+  margin-left: 5px;
   font-size: 18px;
 }
 
