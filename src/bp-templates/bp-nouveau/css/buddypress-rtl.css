@@ -3039,11 +3039,13 @@ div[class*="attached-gif-container"] .gif-image-overlay {
   color: #9ea8b3;
   margin-top: 0;
   position: absolute;
+  text-align: center;
 }
 
-div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-close {
+div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-times {
   font-size: 20px;
   vertical-align: top;
+  line-height: 20px;
 }
 
 div[class*="attached-gif-container"] .gif-player {
@@ -4464,9 +4466,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
-  font-size: 14px;
+  font-size: 25px;
   padding: 0;
-  border: 1px solid #fff;
   background-color: transparent;
   color: #fff;
   display: inline-block;
@@ -4994,9 +4995,8 @@ span.dashicons.dashicons-admin-file:before {
 #video-stream.video .bb-item-thumb .item-action-wrap > a i,
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i {
-  font-size: 14px;
+  font-size: 25px;
   padding: 0;
-  border: 1px solid #fff;
   background-color: transparent;
   color: #fff;
   display: inline-block;

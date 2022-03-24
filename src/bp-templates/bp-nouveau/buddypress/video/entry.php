@@ -43,7 +43,7 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
 				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-f bb-icon-ellipsis-v"></i>
+					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="video-action_list item-action_list">
 					<ul>
