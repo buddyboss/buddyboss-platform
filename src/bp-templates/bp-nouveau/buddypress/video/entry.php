@@ -43,7 +43,7 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
 				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-menu-dots-v"></i>
+					<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="video-action_list item-action_list">
 					<ul>
@@ -105,7 +105,7 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 			?>
 			<div class="bb-video-check-wrap bb-action-check-wrap">
 				<input id="bb-video-<?php bp_video_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_video_id(); ?>" name="bb-video-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php bp_video_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php bp_video_id(); ?>"><span class="bb-icon-l bb-icon-check"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>

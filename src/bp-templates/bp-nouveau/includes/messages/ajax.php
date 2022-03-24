@@ -688,7 +688,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 							</div>
 							<div class="document-expand">
 								<a href="#" class="document-expand-anchor"><i
-											class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+											class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 								</a>
 							</div>
 						</div> <!-- .document-text-wrap -->
@@ -2529,7 +2529,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 								</div>
 								<div class="document-expand">
 									<a href="#" class="document-expand-anchor"><i
-												class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+												class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
 									</a>
 								</div>
 							</div> <!-- .document-text-wrap -->
@@ -2859,7 +2859,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 						data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
 						data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
 						data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
-						data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
+						data-action="bp_load_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 					</a>
 				</p>
 			</div>
