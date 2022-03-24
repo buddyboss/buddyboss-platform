@@ -108,16 +108,14 @@ TABLE OF CONTENTS:
  */
 .bp-hello-social {
 
-	li a {
-
-		i {
-
-			&:before {
-				font-size: 35px;
-				vertical-align: middle;
-				margin: 0;
-			}
-		}
+	li a i:before {
+		font-size: 23px;
+		vertical-align: middle;
+		margin: 0;
+		background-color: #f6f6f6;
+		color: #333;
+		border-radius: 50px;
+		padding: 7px;
 	}
 }
 
