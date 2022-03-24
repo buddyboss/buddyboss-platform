@@ -1843,12 +1843,6 @@ a.layout-grid-view {
   margin-left: 10px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .show-toolbar [class*=" bb-icon-"],
-.activity-update-form .activity-form.focus-in #editor-toolbar .show-toolbar [class*=" bb-icon-"] {
-  font-size: 28px;
-  margin-left: 5px;
-}
-
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-attachments .dropzone.open,
 .activity-update-form .activity-form.focus-in #whats-new-attachments .dropzone.open {
   margin: 0 0 10px 0;
@@ -2269,11 +2263,6 @@ a.layout-grid-view {
 #whats-new-messages-toolbar .post-elements-buttons-item {
   margin-left: 10px;
   position: relative;
-}
-
-#whats-new-toolbar .post-elements-buttons-item.show-toolbar,
-#whats-new-messages-toolbar .post-elements-buttons-item.show-toolbar {
-  margin-left: 5px;
 }
 
 #whats-new-messages-toolbar .post-elements-buttons-item,
