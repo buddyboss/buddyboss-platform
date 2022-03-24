@@ -115,6 +115,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'bb_groups_details_updated',
 			'bb_groups_details_updated'
 		);
+
+		add_filter( 'bp_groups_bb_groups_details_updated_notification', array( $this, 'bb_format_groups_notification' ), 10, 7 );
 	}
 
 	/**
@@ -336,6 +338,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
 	 * @param int    $action_item_count     Number of notifications with the same action.
@@ -347,7 +350,89 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
-		return array();
+	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+		return $content;
+	}
+
+	/**
+	 * Format Group notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $total_items           Number of notifications with the same action.
+	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
+	 *
+	 * @return array
+	 */
+	public function bb_format_groups_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+
+		$notification = bp_notifications_get_notification( $notification_id );
+
+		// Group Details update.
+		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_details_updated' === $notification->component_action ) {
+
+			$group_id   = $item_id;
+			$group      = groups_get_group( $group_id );
+			$group_link = bp_get_group_permalink( $group );
+			$amount     = 'single';
+
+			$notification_link = $group_link . '?n=1';
+
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+				/* translators: 1. group name. 2. total times. */
+					esc_html__( 'The group details for "%1$s" were updated %2$d times.', 'buddyboss' ),
+					$group->name,
+					(int) $total_items
+				);
+				$amount = 'multiple';
+			} else {
+				$text = sprintf(
+				/* translators: group name */
+					esc_html__( 'The group details for "%s" were updated', 'buddyboss' ),
+					$group->name
+				);
+			}
+
+			$content = apply_filters(
+				'bp_groups_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$group_link,
+				$group->name,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
+		return $content;
 	}
 }

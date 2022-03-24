@@ -394,6 +394,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  * Format notifications for the Groups component.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $action            The kind of notification being rendered.
  * @param int    $item_id           The primary item ID.
@@ -402,9 +403,12 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  *                                  waiting for the user.
  * @param string $format            'string' for BuddyBar-compatible notifications; 'array'
  *                                  for WP Toolbar. Default: 'string'.
+ * @param int    $notification_id   Notification ID.
+ * @param string $screen            Notification Screen type.
+ *
  * @return string
  */
-function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
 
     switch ( $action ) {
 		case 'new_membership_request':
@@ -1018,107 +1022,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 
 			break;
 
-		case 'group_details_updated':
-			$group_id   = $item_id;
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
-			$amount     = 'single';
-
-			$notification_link = $group_link . '?n=1';
-
-			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( 'The group details for "%s" were updated %d times.', 'buddyboss' ), $group->name, (int) $total_items );
-				$amount = 'multiple';
-
-				if ( 'string' == $format ) {
-					/**
-					 * Filters multiple group invitation notification for string format.
-					 * Complete filter - bp_groups_multiple_group_invite_notification.
-					 *
-					 * @since BuddyBoss [BBVERSION]
-					 *
-					 * @param int $total_items Total number of rejected requests.
-					 * @param string $text Notification content.
-					 * @param string $notification_link The permalink for notification.
-					 *
-					 * @param string $string HTML anchor tag for notification.
-					 */
-					return apply_filters( 'bp_groups_' . $amount . '_' . $action . '_notification', '<a href="' . $notification_link . '">' . $text . '</a>', $total_items, $text, $notification_link );
-				} else {
-					/**
-					 * Filters multiple group invitation notification for non-string format.
-					 * Complete filter - bp_groups_multiple_group_invite_notification.
-					 *
-					 * @since BuddyBoss [BBVERSION]
-					 *
-					 * @param int $total_items Total number of rejected requests.
-					 * @param string $text Notification content.
-					 * @param string $notification_link The permalink for notification.
-					 *
-					 * @param array $array Array holding permalink and content for notification.
-					 */
-					return apply_filters(
-						'bp_groups_' . $amount . '_' . $action . '_notification',
-						array(
-							'link' => $notification_link,
-							'text' => $text,
-						),
-						$total_items,
-						$text,
-						$notification_link
-					);
-				}
-			} else {
-				$text   = sprintf( __( 'The group details for "%s" were updated', 'buddyboss' ), $group->name );
-
-				if ( 'string' == $format ) {
-					/**
-					 * Filters single group details update notification for string format.
-					 * Complete filter - bp_groups_single_group_detail_updated_notification.
-					 *
-					 * @since BuddyBoss [BBVERSION]
-					 *
-					 * @param string $string            HTML anchor tag for notification.
-					 * @param int    $group_link        The permalink for the group.
-					 * @param string $group->name       Name of the group.
-					 * @param string $text              Notification content.
-					 * @param string $notification_link The permalink for notification.
-					 */
-					return apply_filters( 'bp_groups_' . $amount . '_' . $action . '_notification', '<a href="' . $notification_link . '">' . $text . '</a>', $group_link, $group->name, $text, $notification_link );
-				} else {
-					/**
-					 * Filters single group invitation notification for non-string format.
-					 * Complete filter - bp_groups_single_group_detail_updated_notification.
-					 *
-					 * @since BuddyBoss [BBVERSION]
-					 *
-					 * @param array  $array             Array holding permalink and content for notification.
-					 * @param int    $group_link        The permalink for the group.
-					 * @param string $group->name       Name of the group.
-					 * @param string $text              Notification content.
-					 * @param string $notification_link The permalink for notification.
-					 */
-					return apply_filters(
-						'bp_groups_' . $amount . '_' . $action . '_notification',
-						array(
-							'link' => $notification_link,
-							'text' => $text,
-						),
-						$group_link,
-						$group->name,
-						$text,
-						$notification_link
-					);
-				}
-			}
-
-			break;
-
 		default:
 			/**
 			 * Filters plugin-added group-related custom component_actions.
 			 *
 			 * @since BuddyPress 2.4.0
+			 * @since BuddyBoss [BBVERSION]
 			 *
 			 * @param string $notification      Null value.
 			 * @param int    $item_id           The primary item ID.
@@ -1127,8 +1036,10 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			 *                                  waiting for the user.
 			 * @param string $format            'string' for BuddyBar-compatible notifications;
 			 *                                  'array' for WP Toolbar.
+			 * @param int    $notification_id   Notification ID.
+			 * @param string $screen            Notification Screen type.
 			 */
-			$custom_action_notification = apply_filters( 'bp_groups_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format );
+			$custom_action_notification = apply_filters( 'bp_groups_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
 
 			if ( ! is_null( $custom_action_notification ) ) {
 				return $custom_action_notification;
@@ -1141,13 +1052,18 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 	 * Fires right before returning the formatted group notifications.
 	 *
 	 * @since BuddyPress 1.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $action            The type of notification being rendered.
 	 * @param int    $item_id           The primary item ID.
 	 * @param int    $secondary_item_id The secondary item ID.
 	 * @param int    $total_items       Total amount of items to format.
+	 * @param string $format            'string' for BuddyBar-compatible notifications;
+	 *                                  'array' for WP Toolbar.
+	 * @param int    $notification_id   Notification ID.
+	 * @param string $screen            Notification Screen type.
 	 */
-	do_action( 'groups_format_notifications', $action, $item_id, $secondary_item_id, $total_items );
+	do_action( 'groups_format_notifications', $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
 
 	return false;
 }
@@ -1519,7 +1435,7 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 						$group_id,
 						$sender_id,
 						buddypress()->groups->id,
-						'group_details_updated',
+						'bb_groups_details_updated',
 						bp_core_current_time(),
 						true,
 					),
@@ -1535,7 +1451,7 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 					'item_id'           => $group_id,
 					'secondary_item_id' => $sender_id,
 					'component_name'    => buddypress()->groups->id,
-					'component_action'  => 'group_details_updated',
+					'component_action'  => 'bb_groups_details_updated',
 					'date_notified'     => bp_core_current_time(),
 					'is_new'            => 1,
 				)
@@ -1553,12 +1469,12 @@ function bb_groups_group_details_update_mark_notifications() {
 	if ( isset( $_GET['n'] ) && bp_is_active( 'notifications' ) && bp_is_group_single() ) {
 
 		// Get the necessary ID's.
-		$group_id = buddypress()->groups->id;
+		$group_id = bp_get_current_group_id();
 		$user_id  = bp_loggedin_user_id();
 
 		// Mark notifications read.
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'group_details_updated' );
+		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_details_updated' );
 	}
-
 }
+
 add_action( 'bp_template_redirect', 'bb_groups_group_details_update_mark_notifications' );

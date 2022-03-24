@@ -229,7 +229,7 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 			if ( 'object' === $format ) {
 
 				// Retrieve the content of the notification using the callback.
-				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'array', $notification_item->id );
+				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'array', $notification_item->id, 'web' );
 
 				// Create the object to be returned.
 				$notification_object = $notification_item;
@@ -248,7 +248,9 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 
 				// Return an array of content strings.
 			} else {
-				$content      = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'string', $notification_item->id );
+
+				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'string', $notification_item->id, 'web' );
+
 				$renderable[] = $content;
 			}
 

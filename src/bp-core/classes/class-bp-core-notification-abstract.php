@@ -72,7 +72,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
-		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 99, 9 );
+		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
 
 		// Register the Notifications filters.
@@ -271,10 +271,11 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function get_notifications_for_user( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen = 'web' ) {
 
-		$custom_content = $this->format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
+		$custom_content = $this->format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
 
 		// Validate the return value & return if validated.
 		if (
+			! empty( $custom_content ) &&
 			is_array( $custom_content ) &&
 			isset( $custom_content['text'] ) &&
 			isset( $custom_content['link'] )
@@ -422,6 +423,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
 	 * @param int    $action_item_count     Number of notifications with the same action.
@@ -436,7 +438,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *  'text' => '' // Notification Text
 	 * }
 	 */
-	abstract public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
+	abstract public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
 
 	/**
 	 * Register the notification filters.
