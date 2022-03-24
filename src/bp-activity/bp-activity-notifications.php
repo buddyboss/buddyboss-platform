@@ -20,48 +20,15 @@ defined( 'ABSPATH' ) || exit;
  * @param int    $total_items       The total number of notifications to format.
  * @param string $format            'string' to get a BuddyBar-compatible notification, 'array' otherwise.
  * @param int    $id                Optional. The notification ID.
+ * @param string $screen            Notification Screen type.
  * @return string $return Formatted @mention notification.
  */
-function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0 ) {
-	$action_filter          = $action;
-	$return                 = false;
-	$activity_id            = $item_id;
-	$user_id                = $secondary_item_id;
-	$user_fullname          = bp_core_get_user_displayname( $user_id );
-	$is_legacy_notification = bb_notifications_is_legacy_notification( $id );
-
-	// Get activity type.
-	$notification_type_html = '';
-	$activity_excerpt       = '';
-
-	if ( ! $is_legacy_notification ) {
-		$notification_type = bp_notifications_get_meta( $id, 'type', true );
-		if ( $notification_type ) {
-			if ( 'post_comment' === $notification_type ) {
-				$notification_type_html = esc_html__( 'post comment', 'buddyboss' );
-			} elseif ( 'activity_comment' === $notification_type ) {
-				$notification_type_html = esc_html__( 'activity comment', 'buddyboss' );
-			} else {
-				$notification_type_html = esc_html__( 'activity post', 'buddyboss' );
-			}
-		}
-
-		// Get activity by activity ID.
-		if ( 'new_at_mention' !== $action ) {
-			$activity         = new BP_Activity_Activity( $activity_id );
-			$activity_excerpt = bp_create_excerpt(
-				wp_strip_all_tags( $activity->content ),
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			);
-
-			if ( '&nbsp;' === $activity_excerpt ) {
-				$activity_excerpt = '';
-			}
-		}
-	}
+function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0, $screen = 'web' ) {
+	$action_filter = $action;
+	$return        = false;
+	$activity_id   = $item_id;
+	$user_id       = $secondary_item_id;
+	$user_fullname = bp_core_get_user_displayname( $user_id );
 
 	switch ( $action ) {
 		case 'new_at_mention':
@@ -89,14 +56,8 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-
-				if ( ! $is_legacy_notification && ! empty( $notification_type_html ) ) {
-					$text = sprintf( __( '%1$s mentioned you in %2$s', 'buddyboss' ), $user_fullname, $notification_type_html );
-				} else {
-					$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
-				}
+				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
 			}
-
 			break;
 
 		case 'update_reply':
@@ -105,57 +66,12 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$link = add_query_arg( 'type', $action, $link );
-				$text = sprintf(
-					/* translators: %s: Total reply count. */
-					__( 'You have %1$d new replies', 'buddyboss' ),
-					(int) $total_items
-				);
+				$link   = add_query_arg( 'type', $action, $link );
+				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'rid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-
-				if ( $is_legacy_notification ) {
-					$text = sprintf(
-						/* translators: %s: User full name. */
-						__( '%1$s commented on one of your updates', 'buddyboss' ),
-						$user_fullname
-					);
-				} else {
-					if ( ! empty( $notification_type_html ) ) {
-						if ( ! empty( $activity_excerpt ) ) {
-							$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
-								__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
-								$user_fullname,
-								$notification_type_html,
-								$activity_excerpt
-							);
-						} else {
-							$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s', 'buddyboss' ),
-								$user_fullname,
-								$notification_type_html
-							);
-						}
-					} else {
-						if ( ! empty( $activity_excerpt ) ) {
-							$text = sprintf(
-							/* translators: 1: User full name, 2: Activity content. */
-								__( '%1$s replied: "%2$s"', 'buddyboss' ),
-								$user_fullname,
-								$activity_excerpt
-							);
-						} else {
-							$text = sprintf(
-								/* translators: %s: User full name. */
-								__( '%1$s replied', 'buddyboss' ),
-								$user_fullname
-							);
-						}
-					}
-				}
+				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss' ), $user_fullname );
 			}
 			break;
 
@@ -165,58 +81,37 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$link = add_query_arg( 'type', $action, $link );
-				$text = sprintf(
-					/* translators: %s: Total reply count. */
-					__( 'You have %1$d new comment replies', 'buddyboss' ),
-					(int) $total_items
-				);
+				$link   = add_query_arg( 'type', $action, $link );
+				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-
-				if ( $is_legacy_notification ) {
-					$text = sprintf(
-						/* translators: %s: User full name. */
-						__( '%1$s replied to one of your activity comments', 'buddyboss' ),
-						$user_fullname
-					);
-				} else {
-					if ( ! empty( $notification_type_html ) ) {
-						if ( ! empty( $activity_excerpt ) ) {
-							$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
-								__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
-								$user_fullname,
-								$notification_type_html,
-								$activity_excerpt
-							);
-						} else {
-							$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s', 'buddyboss' ),
-								$user_fullname,
-								$notification_type_html
-							);
-						}
-					} else {
-						if ( ! empty( $activity_excerpt ) ) {
-							$text = sprintf(
-								/* translators: 1: User full name, 2: Activity content. */
-								__( '%1$s replied: "%2$s"', 'buddyboss' ),
-								$user_fullname,
-								$activity_excerpt
-							);
-						} else {
-							$text = sprintf(
-								/* translators: %s: User full name. */
-								__( '%1$s replied', 'buddyboss' ),
-								$user_fullname
-							);
-						}
-					}
-				}
+				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
 			}
+			break;
+
+		default:
+			/**
+			 * Filters plugin-added group-related custom component_actions.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $notification      Null value.
+			 * @param int    $item_id           The primary item ID.
+			 * @param int    $secondary_item_id The secondary item ID.
+			 * @param int    $total_items       The total number of messaging-related notifications
+			 *                                  waiting for the user.
+			 * @param string $format            'string' for BuddyBar-compatible notifications;
+			 *                                  'array' for WP Toolbar.
+			 * @param int    $id   Notification ID.
+			 * @param string $screen            Notification Screen type.
+			 */
+			$custom_action_notification = apply_filters( 'bp_activity_' . $action . '_notification', null, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
+
+			if ( ! is_null( $custom_action_notification ) ) {
+				return $custom_action_notification;
+			}
+
 			break;
 	}
 
@@ -302,13 +197,20 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
  * @param int    $receiver_user_id   ID of user receiving notification.
  */
 function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
+
+	// Specify the Notification type.
+	$component_action = 'new_at_mention';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$component_action = 'bb_new_mention';
+	}
+
 	$notification_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $receiver_user_id,
 			'item_id'           => $activity->id,
 			'secondary_item_id' => $activity->user_id,
 			'component_name'    => buddypress()->activity->id,
-			'component_action'  => 'new_at_mention',
+			'component_action'  => $component_action,
 			'date_notified'     => bp_core_current_time(),
 			'is_new'            => 1,
 		)
@@ -336,13 +238,20 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * @param int                  $commenter_id ID of the user who made the comment.
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
+
+	// Specify the Notification type.
+	$component_action = 'update_reply';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$component_action = 'bb_activity_comment';
+	}
+
 	$notification_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $activity->user_id,
 			'item_id'           => $comment_id,
 			'secondary_item_id' => $commenter_id,
 			'component_name'    => buddypress()->activity->id,
-			'component_action'  => 'update_reply',
+			'component_action'  => $component_action,
 			'date_notified'     => bp_core_current_time(),
 			'is_new'            => 1,
 		)
@@ -370,13 +279,20 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @param int                  $commenter_id     ID of the user who made the comment.
  */
 function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
+
+	// Specify the Notification type.
+	$component_action = 'comment_reply';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$component_action = 'bb_activity_comment';
+	}
+
 	$notification_id = bp_notifications_add_notification(
 		array(
 			'user_id'           => $activity_comment->user_id,
 			'item_id'           => $comment_id,
 			'secondary_item_id' => $commenter_id,
 			'component_name'    => buddypress()->activity->id,
-			'component_action'  => 'comment_reply',
+			'component_action'  => $component_action,
 			'date_notified'     => bp_core_current_time(),
 			'is_new'            => 1,
 		)
@@ -651,3 +567,4 @@ function bb_activity_add_notification_metas( $notification_id, $activity ) {
 	}
 }
 add_action( 'bb_activity_add_notification', 'bb_activity_add_notification_metas', 10, 2 );
+
