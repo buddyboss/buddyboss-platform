@@ -309,8 +309,13 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 		}
 	}
 
+	$type_key = 'notification_groups_admin_promotion';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	// Bail if admin opted out of receiving this email.
-	if ( false === bb_is_notification_enabled( (int) $user_id, 'notification_groups_admin_promotion' ) ) {
+	if ( false === bb_is_notification_enabled( (int) $user_id, $type_key ) ) {
 		return;
 	}
 
