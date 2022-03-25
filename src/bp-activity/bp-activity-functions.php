@@ -4082,12 +4082,15 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	add_filter( 'bp_get_activity_content_body', 'wpautop' );
 	add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
+	$type_key = 'notification_activity_new_mention';
+
 	if ( ! bb_enabled_legacy_email_preference() ) {
-		$email_type   = 'new-mention';
+		$email_type = 'new-mention';
+		$type_key   = bb_get_prefences_key( 'legacy', $type_key );
 	}
 
 	// Now email the user with the contents of the message (if they have enabled email notifications).
-	if ( true === bb_is_notification_enabled( $receiver_user_id, 'notification_activity_new_mention' ) ) {
+	if ( true === bb_is_notification_enabled( $receiver_user_id, $type_key ) ) {
 		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			$email_type = 'groups-at-message';
 			$group_name = bp_get_current_group_name();
@@ -4160,10 +4163,15 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	add_filter( 'bp_get_activity_content_body', 'wpautop' );
 	add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
+	$type_key = 'notification_activity_new_reply';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	if ( $original_activity->user_id != $commenter_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, 'notification_activity_new_reply' ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4211,7 +4219,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, 'notification_activity_new_reply' ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,

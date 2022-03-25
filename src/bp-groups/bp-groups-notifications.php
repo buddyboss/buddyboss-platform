@@ -72,10 +72,15 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
+	$type_key = 'notification_groups_group_updated';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Continue if member opted out of receiving this email.
-		if ( false === bb_is_notification_enabled( (int) $user_id, 'notification_groups_group_updated' ) ) {
+		if ( false === bb_is_notification_enabled( (int) $user_id, $type_key ) ) {
 			continue;
 		}
 

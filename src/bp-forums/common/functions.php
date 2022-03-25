@@ -1201,6 +1201,11 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
+	$type_key = 'notification_forums_following_reply';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 		global $bb_email_background_updater;
 		$chunk_user_ids = array_chunk( $user_ids, 10 );
@@ -1214,7 +1219,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 								$member_ids,
 								'bbp-new-forum-reply',
 								$reply_author,
-								'notification_forums_following_reply',
+								$type_key,
 								$args
 							),
 						),
@@ -1229,22 +1234,22 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 		// Loop through users.
 		foreach ( (array) $user_ids as $user_id ) {
 
-		// Don't send notifications to the person who made the post.
+			// Don't send notifications to the person who made the post.
 			if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
 				continue;
 			}
 
 			// Bail if member opted out of receiving this email.
-		if ( false === bb_is_notification_enabled( $user_id, 'notification_forums_following_reply' ) ) {
+			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				continue;
 			}
 
-		$unsubscribe_args = array(
-			'user_id'           => $user_id,
-			'notification_type' => 'bbp-new-forum-reply',
-		);
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => 'bbp-new-forum-reply',
+			);
 
-		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+			$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 
 			// Send notification email.
 			bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
@@ -1366,6 +1371,11 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
+	$type_key = 'notification_forums_following_topic';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
 		global $bb_email_background_updater;
 		$chunk_user_ids = array_chunk( $user_ids, 10 );
@@ -1379,7 +1389,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 								$member_ids,
 								'bbp-new-forum-topic',
 								$topic_author,
-								'notification_forums_following_topic',
+								$type_key,
 								$args,
 							),
 						),
@@ -1399,7 +1409,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 			}
 
 			// Bail if member opted out of receiving this email.
-			if ( false === bb_is_notification_enabled( $user_id, 'notification_forums_following_topic' ) ) {
+			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				continue;
 			}
 
