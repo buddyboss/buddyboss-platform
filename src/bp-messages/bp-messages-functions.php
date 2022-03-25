@@ -1002,11 +1002,17 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		}
 	} else {
 		// Send an email to each recipient.
+
+		$type_key = 'notification_group_messages_new_message';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+
 		foreach ( $recipients as $recipient ) {
 
 			if (
 				(int) $sender_id === (int) $recipient->user_id ||
-				false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
+				false === bb_is_notification_enabled( $recipient->user_id, $type_key )
 			) {
 				continue;
 			}
@@ -1456,11 +1462,17 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 	}
 
 	// Send an email to all recipient.
+
+	$type_key = 'notification_group_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	foreach ( $recipients as $recipient ) {
 
 		if (
 			(int) $sender_id === (int) $recipient->user_id ||
-			false === bb_is_notification_enabled( $recipient->user_id, 'notification_group_messages_new_message' )
+			false === bb_is_notification_enabled( $recipient->user_id, $type_key )
 		) {
 			continue;
 		}
