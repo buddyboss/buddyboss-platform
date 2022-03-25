@@ -8762,15 +8762,15 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image > i,
 #item-header a.position-change-cover-image > i,
 #item-header a.link-change-profile-image > i {
-  font-size: 24px;
+  font-size: 34px;
 }
 
 #item-header a.position-change-cover-image > i {
-  font-size: 24px;
+  font-size: 34px;
 }
 
 #item-header a.position-change-cover-image {
-  top: 48px;
+  top: 55px;
   display: none;
 }
 
