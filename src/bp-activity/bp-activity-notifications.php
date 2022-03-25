@@ -201,6 +201,8 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 
 	// Specify the Notification type.
 	$component_action = 'new_at_mention';
+	$component_name   = buddypress()->activity->id;
+
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_new_mention';
 	}
@@ -210,7 +212,7 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 			'user_id'           => $receiver_user_id,
 			'item_id'           => $activity->id,
 			'secondary_item_id' => $activity->user_id,
-			'component_name'    => buddypress()->activity->id,
+			'component_name'    => $component_name,
 			'component_action'  => $component_action,
 			'date_notified'     => bp_core_current_time(),
 			'is_new'            => 1,
@@ -326,7 +328,6 @@ function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 	}
 
 	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'new_at_mention' );
-	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'bb_new_mention' );
 }
 add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
 
@@ -345,7 +346,6 @@ function bp_activity_remove_screen_notifications_single_activity_permalink( $act
 
 	// Mark as read any notifications for the current user related to this activity item.
 	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'new_at_mention' );
-	bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $activity->id, buddypress()->activity->id, 'bb_new_mention' );
 
 	$comment_id = 0;
 	// For replies to a parent update.

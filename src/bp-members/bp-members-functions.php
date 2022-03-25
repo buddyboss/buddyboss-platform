@@ -5119,3 +5119,28 @@ function bb_members_notifications_mark_read() {
 	}
 }
 add_action( 'template_redirect', 'bb_members_notifications_mark_read' );
+
+/**
+ * Determine a user's "mentionname", the name used for that user in @-mentions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|string $user_id ID of the user to get @-mention name for.
+ *
+ * @return string $mentionname User name appropriate for @-mentions.
+ */
+function bb_members_get_user_mentionname( $user_id ) {
+	$mentionname = '';
+
+	$userdata = bp_core_get_core_userdata( $user_id );
+
+	if ( $userdata ) {
+		if ( bp_is_username_compatibility_mode() ) {
+			$mentionname = str_replace( ' ', '-', $userdata->user_login );
+		} else {
+			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
+		}
+	}
+
+	return $mentionname;
+}

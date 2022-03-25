@@ -663,7 +663,6 @@ class BuddyPress {
 			'BP_Walker_Nav_Menu'                           => 'core',
 			'BP_Invitation_Manager'                        => 'core',
 			'BP_Invitation'                                => 'core',
-			'BP_Mentions_Notification'                     => 'core',
 			'BP_Core_Gdpr'                                 => 'gdpr',
 			'BP_Activity_Export'                           => 'gdpr',
 			'BP_Export'                                    => 'gdpr',

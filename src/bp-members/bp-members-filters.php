@@ -728,4 +728,8 @@ function bb_load_members_account_settings_notifications() {
 	if ( class_exists( 'BP_Members_Notification' ) ) {
 		BP_Members_Notification::instance();
 	}
+
+	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
+		BP_Members_Mentions_Notification::instance();
+	}
 }
