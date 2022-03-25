@@ -19783,16 +19783,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   margin-right: 0;
 }
 
-.bp-video-move-file .bb-model-footer a.ac-document-close-button, .bp-video-move-file .bb-model-footer a.ac-folder-close-button, .bp-video-move-file .bb-model-footer a.ac-video-close-button,
-.bp-media-move-file .bb-model-footer a.ac-document-close-button,
-.bp-media-move-file .bb-model-footer a.ac-folder-close-button,
-.bp-media-move-file .bb-model-footer a.ac-video-close-button,
-.bp-media-move-folder .bb-model-footer a.ac-document-close-button,
-.bp-media-move-folder .bb-model-footer a.ac-folder-close-button,
-.bp-media-move-folder .bb-model-footer a.ac-video-close-button {
-  color: #a5a7ab;
-}
-
 .bp-video-move-file .bb-model-footer a.bp-document-open-create-popup-folder, .bp-video-move-file .bb-model-footer a.bp-video-open-create-popup-album, .bp-video-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
 .bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder,
 .bp-media-move-file .bb-model-footer a.bp-video-open-create-popup-album,
@@ -19841,6 +19831,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .bp-media-move-file .close-create-popup-album,
 .bp-media-move-folder .ac-media-close-button,
 .bp-media-move-folder .close-create-popup-album {
+  color: #a5a7ab;
+}
+
+.bb-model-footer a.ac-document-close-button, .bb-model-footer a.ac-folder-close-button, .bb-model-footer a.ac-video-close-button {
   color: #a5a7ab;
 }
 

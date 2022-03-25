@@ -4325,12 +4325,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				margin-right: 0;
 			}
 
-			&.ac-document-close-button,
-			&.ac-folder-close-button,
-			&.ac-video-close-button {
-				color: #a5a7ab;
-			}
-
 			&.bp-document-open-create-popup-folder,
 			&.bp-video-open-create-popup-album,
 			&.bp-media-open-create-popup-folder {
@@ -4371,6 +4365,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		color: #a5a7ab;
 	}
 
+}
+
+.bb-model-footer {
+
+	a {
+
+		&.ac-document-close-button,
+		&.ac-folder-close-button,
+		&.ac-video-close-button {
+			color: #a5a7ab;
+		}
+	}
 }
 
 .bp-video-uploader,
