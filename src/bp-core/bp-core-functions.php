@@ -6922,7 +6922,7 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
 		case 'bp_buddyboss_app-integration':
-			$meta_icon = $bb_icon_bf . ' bb-icon-mobile';
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddyboss-app';
 			break;
 		case 'bp_compatibility-integration':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddypress';
@@ -6933,13 +6933,11 @@ function bb_admin_icons( $id ) {
 		case 'bp_ld-integration':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-learndash';
 			break;
-		case 'default_data':
-			$meta_icon = $bb_icon_bf . ' bb-icon-poll-h';
-			break;
 		case 'repair_community':
 		case 'repair_forums':
 			$meta_icon = $bb_icon_bf . ' bb-icon-tools';
 			break;
+		case 'default_data':
 		case 'bp-member-type-import':
 		case 'bbpress_converter_main':
 			$meta_icon = $bb_icon_bf . ' bb-icon-upload';
