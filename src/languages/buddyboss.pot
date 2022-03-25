@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-24 18:20:48+00:00\n"
+"POT-Creation-Date: 2022-03-25 08:39:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -406,7 +406,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:847
 #: bp-activity/classes/class-bp-activity-list-table.php:671
-#: bp-forums/common/template.php:2444 bp-forums/forums/template.php:55
+#: bp-forums/common/template.php:2442 bp-forums/forums/template.php:55
 #: bp-forums/replies/template.php:55 bp-forums/replies/template.php:2081
 #: bp-forums/topics/template.php:55 bp-forums/topics/template.php:2758
 #: bp-groups/classes/class-bp-groups-list-table.php:570
@@ -2195,7 +2195,7 @@ msgstr ""
 #: bp-core/bp-core-cssjs.php:281 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
-#: bp-forums/common/template.php:2563 bp-forums/search/template.php:233
+#: bp-forums/common/template.php:2561 bp-forums/search/template.php:233
 #: bp-forums/templates/default/bbpress/form-search.php:16
 #: bp-groups/bp-groups-template.php:6310
 #: bp-members/bp-members-template.php:1260
@@ -5438,7 +5438,7 @@ msgstr ""
 #: bp-core/bp-core-adminbar.php:220 bp-core/bp-core-functions.php:2806
 #: bp-core/classes/class-bp-core-login-widget.php:84
 #: bp-core/deprecated/buddypress/1.5.php:325
-#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2741
+#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2739
 #: bp-members/bp-members-template.php:1353
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1269
 msgid "Log Out"
@@ -8922,7 +8922,7 @@ msgstr ""
 msgid "Blog Authors"
 msgstr ""
 
-#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2878
+#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2876
 msgid "Edit %s's Profile"
 msgstr ""
 
@@ -14138,7 +14138,7 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2533
+#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2556
 #: bp-groups/bp-groups-admin.php:1482 bp-groups/bp-groups-functions.php:1356
 #: bp-groups/bp-groups-functions.php:4131
 #: bp-groups/bp-groups-functions.php:4150
@@ -14177,78 +14177,78 @@ msgstr ""
 msgid "None available"
 msgstr ""
 
-#: bp-forums/common/template.php:2366
+#: bp-forums/common/template.php:2364
 msgid "Home"
 msgstr ""
 
-#: bp-forums/common/template.php:2436
+#: bp-forums/common/template.php:2434
 msgid "(Edit)"
 msgstr ""
 
-#: bp-forums/common/template.php:2440 bp-forums/common/template.php:2559
-#: bp-forums/common/template.php:2831 bp-forums/core/theme-compat.php:768
+#: bp-forums/common/template.php:2438 bp-forums/common/template.php:2557
+#: bp-forums/common/template.php:2829 bp-forums/core/theme-compat.php:768
 #: bp-forums/templates/default/extras/taxonomy-topic-tag-edit.php:16
 #: bp-forums/templates/default/extras/taxonomy-topic-tag.php:16
 msgid "Discussion Tag: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2463
+#: bp-forums/common/template.php:2461
 msgid "&lsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2463
+#: bp-forums/common/template.php:2461
 msgid "&rsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2795
+#: bp-forums/common/template.php:2793
 msgid "Forum Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2800
+#: bp-forums/common/template.php:2798
 msgid "Discussion Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2805
+#: bp-forums/common/template.php:2803
 msgid "Reply Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2810
+#: bp-forums/common/template.php:2808
 msgid "Discussion Tag Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2817
+#: bp-forums/common/template.php:2815
 msgid "Forum: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2822
+#: bp-forums/common/template.php:2820
 msgid "Discussion: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2849
+#: bp-forums/common/template.php:2847
 msgid "%s Discussions"
 msgstr ""
 
-#: bp-forums/common/template.php:2853
+#: bp-forums/common/template.php:2851
 msgid "%s Replies"
 msgstr ""
 
-#: bp-forums/common/template.php:2857
+#: bp-forums/common/template.php:2855
 msgid "%s Saved"
 msgstr ""
 
-#: bp-forums/common/template.php:2861
+#: bp-forums/common/template.php:2859
 msgid "%s Subscriptions"
 msgstr ""
 
-#: bp-forums/common/template.php:2865
+#: bp-forums/common/template.php:2863
 msgid "%s Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2873
+#: bp-forums/common/template.php:2871
 msgid "Edit Your Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2886
+#: bp-forums/common/template.php:2884
 msgid "View: %s"
 msgstr ""
 
@@ -14909,7 +14909,7 @@ msgstr ""
 msgid "Replies: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2499 bp-forums/users/template.php:517
+#: bp-forums/replies/functions.php:2522 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1483 bp-groups/bp-groups-functions.php:1364
 #: bp-groups/bp-groups-functions.php:4133
 #: bp-groups/bp-groups-functions.php:4152
@@ -14921,18 +14921,18 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2520 bp-forums/users/template.php:503
+#: bp-forums/replies/functions.php:2543 bp-forums/users/template.php:503
 msgid "Guest"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2524 bp-members/bp-members-functions.php:554
+#: bp-forums/replies/functions.php:2547 bp-members/bp-members-functions.php:554
 #: bp-messages/bp-messages-template.php:1825
 #: bp-messages/bp-messages-template.php:2090
 #: bp-messages/classes/class-bp-messages-thread.php:1524
 msgid "Deleted User"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2529
+#: bp-forums/replies/functions.php:2552
 msgid "Administrator"
 msgstr ""
 
@@ -15090,7 +15090,7 @@ msgid "No forums have been created here yet."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/feedback-no-replies.php:13
-msgid "No replies added here yet."
+msgid "Sorry, there were no replies found."
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/feedback-no-search.php:13
@@ -30003,12 +30003,12 @@ msgctxt "Separator in time since"
 msgid ","
 msgstr ""
 
-#: bp-forums/common/template.php:2840
+#: bp-forums/common/template.php:2838
 msgctxt "User viewing his/her own profile"
 msgid "Your"
 msgstr ""
 
-#: bp-forums/common/template.php:2844
+#: bp-forums/common/template.php:2842
 msgctxt "User viewing another users profile"
 msgid "%s's"
 msgstr ""
