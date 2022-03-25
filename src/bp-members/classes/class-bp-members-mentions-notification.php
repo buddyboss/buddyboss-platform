@@ -233,6 +233,27 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 		}
 
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
 		return $content;
 	}
 

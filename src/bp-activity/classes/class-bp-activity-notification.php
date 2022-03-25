@@ -114,6 +114,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			__( 'New update replies', 'buddyboss' ),
 			15
 		);
+
+		add_filter( 'bp_activity_bb_activity_comment_notification', array( $this, 'bb_render_comment_notification' ), 10, 7 );
 	}
 
 	/**
@@ -134,6 +136,174 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+		return $content;
+	}
+
+	/**
+	 * Format the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content           Notification content.
+	 * @param int    $item_id           Notification item ID.
+	 * @param int    $secondary_item_id Notification secondary item ID.
+	 * @param int    $action_item_count Number of notifications with the same action.
+	 * @param string $format            Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id   Notification ID.
+	 * @param string $screen            Notification Screen type.
+	 *
+	 * @return array|string
+	 */
+	public function bb_render_comment_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen ) {
+		$notification           = bp_notifications_get_notification( $notification_id );
+		$user_id                = $secondary_item_id;
+		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$notification_type_html = '';
+
+		if ( ! empty( $notification ) && 'bb_activity_comment' === $notification->component_action ) {
+
+			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
+			$notification_link = bp_get_notifications_permalink();
+
+			$activity         = new BP_Activity_Activity( $item_id );
+			$activity_excerpt = bp_create_excerpt(
+				wp_strip_all_tags( $activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			);
+			if ( '&nbsp;' === $activity_excerpt ) {
+				$activity_excerpt = '';
+			}
+
+			$parent_activity  = new BP_Activity_Activity( $activity->item_id );
+			$activity_excerpt = bp_create_excerpt(
+				wp_strip_all_tags( $parent_activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			);
+			if ( '&nbsp;' === $activity_excerpt ) {
+				$activity_excerpt = '';
+			}
+
+			if ( $notification_type ) {
+				if ( 'activity_comment' === $notification_type ) {
+					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+				} elseif ( 'post_comment' === $notification_type ) {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+				}
+			}
+
+			$activity         = new BP_Activity_Activity( $item_id );
+			$activity_excerpt = bp_create_excerpt(
+				wp_strip_all_tags( $activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			);
+			if ( '&nbsp;' === $activity_excerpt ) {
+				$activity_excerpt = '';
+			}
+
+			if ( empty( $activity_excerpt ) && ! empty( $activity->item_id ) ) {
+				$parent_activity = new BP_Activity_Activity( $activity->item_id );
+
+				$activity_excerpt = bp_create_excerpt(
+					wp_strip_all_tags( $parent_activity->content ),
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				);
+				if ( '&nbsp;' === $activity_excerpt ) {
+					$activity_excerpt = '';
+				}
+			}
+
+			if ( (int) $action_item_count > 1 ) {
+				$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
+				$text              = sprintf(
+					/* translators: %s: Total reply count. */
+					__( 'You have %1$d new replies', 'buddyboss' ),
+					(int) $action_item_count
+				);
+				$amount = 'multiple';
+			} else {
+				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+				$amount            = 'single';
+
+				if ( ! empty( $notification_type_html ) ) {
+					if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
+							__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html,
+							$activity_excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							__( '%1$s replied to your %2$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
+					}
+				} else {
+					if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity content. */
+							__( '%1$s replied: "%2$s"', 'buddyboss' ),
+							$user_fullname,
+							$activity_excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							__( '%1$s replied', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				}
+			}
+
+			$content = apply_filters(
+				'bb_activity_' . $action_item_count . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$notification,
+				$notification_link,
+				$text
+			);
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
 		return $content;
 	}
 }
