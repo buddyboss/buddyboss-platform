@@ -43,7 +43,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 					<div class="dz-size" data-dz-size></div>
 				</div>
 				<div class="dz-progress-ring-wrap">
-					<i class="bb-icon-f bb-icon-camera"></i>
+					<i class="bb-icon-f bb-icon-image"></i>
 					<svg class="dz-progress-ring" width="54" height="54">
 						<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 					</svg>
@@ -186,7 +186,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 		<div class="post-elements-buttons-item post-media document-support">
 			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-				<i class="bb-icon-l bb-icon-paperclip"></i>
+				<i class="bb-icon-l bb-icon-attach"></i>
 			</a>
 		</div>
 

@@ -53,7 +53,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
 					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-l bb-icon-edit"></i>
+						<i class="bb-icon-rf bb-icon-edit"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 					<?php

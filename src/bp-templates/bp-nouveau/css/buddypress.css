@@ -706,7 +706,7 @@ body.buddypress article.page > .entry-header .entry-title {
 }
 
 .buddypress-wrap .grid-filters a i {
-  font-size: 18px;
+  font-size: 24px;
 }
 
 .buddypress-wrap .grid-filters a,
@@ -1843,12 +1843,6 @@ a.layout-grid-view {
   margin-right: 10px;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .show-toolbar [class*=" bb-icon-"],
-.activity-update-form .activity-form.focus-in #editor-toolbar .show-toolbar [class*=" bb-icon-"] {
-  font-size: 28px;
-  margin-right: 5px;
-}
-
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-attachments .dropzone.open,
 .activity-update-form .activity-form.focus-in #whats-new-attachments .dropzone.open {
   margin: 0 0 10px 0;
@@ -2269,11 +2263,6 @@ a.layout-grid-view {
 #whats-new-messages-toolbar .post-elements-buttons-item {
   margin-right: 10px;
   position: relative;
-}
-
-#whats-new-toolbar .post-elements-buttons-item.show-toolbar,
-#whats-new-messages-toolbar .post-elements-buttons-item.show-toolbar {
-  margin-right: 5px;
 }
 
 #whats-new-messages-toolbar .post-elements-buttons-item,
@@ -3039,11 +3028,13 @@ div[class*="attached-gif-container"] .gif-image-overlay {
   color: #9ea8b3;
   margin-top: 0;
   position: absolute;
+  text-align: center;
 }
 
-div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-close {
+div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-times {
   font-size: 20px;
   vertical-align: top;
+  line-height: 20px;
 }
 
 div[class*="attached-gif-container"] .gif-player {
@@ -3485,6 +3476,7 @@ input.search-query-input {
 .activity-list .activity-item .bp-generic-meta.action .unfav:before {
   content: "\ef41";
   color: #0061ac;
+  font-weight: 300;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .edit-activity:before {
@@ -3857,15 +3849,6 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   font-size: 24px;
   width: auto;
   height: auto;
-}
-
-.ac-reply-toolbar .document-support [class*=" bb-icon-"],
-.ac-reply-toolbar .post-media-document-support [class*=" bb-icon-"],
-#whats-new-toolbar .document-support [class*=" bb-icon-"],
-#whats-new-toolbar .post-media-document-support [class*=" bb-icon-"],
-#whats-new-messages-toolbar .document-support [class*=" bb-icon-"],
-#whats-new-messages-toolbar .post-media-document-support [class*=" bb-icon-"] {
-  font-size: 22px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -4464,9 +4447,8 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .video-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-video-elem .video-action-wrap > a i {
-  font-size: 14px;
+  font-size: 25px;
   padding: 0;
-  border: 1px solid #fff;
   background-color: transparent;
   color: #fff;
   display: inline-block;
@@ -4994,9 +4976,8 @@ span.dashicons.dashicons-admin-file:before {
 #video-stream.video .bb-item-thumb .item-action-wrap > a i,
 #media-stream.media .bb-video-thumb .item-action-wrap > a i,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap > a i {
-  font-size: 14px;
+  font-size: 25px;
   padding: 0;
-  border: 1px solid #fff;
   background-color: transparent;
   color: #fff;
   display: inline-block;
@@ -7786,7 +7767,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 15px;
+  font-size: 22px;
   display: inline-block;
   margin-right: 10px;
   vertical-align: middle;
@@ -7808,22 +7789,6 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\ee9c";
 }
 
-#buddypress .bb_more_options .bb_more_options_list .generic-button > button:before,
-#buddypress .bb_more_options .bb_more_options_list button:before,
-#buddypress .bb_more_options .bb_more_options_list a:before,
-.bb_more_options .bb_more_options_list .generic-button > button:before,
-.bb_more_options .bb_more_options_list button:before,
-.bb_more_options .bb_more_options_list a:before {
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 15px;
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: middle;
-  width: 20px;
-  text-align: center;
-}
-
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list button.back-to-admin:before,
 #buddypress .bb_more_options .bb_more_options_list a.back-to-admin:before,
@@ -7831,7 +7796,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.back-to-admin:before,
 .bb_more_options .bb_more_options_list a.back-to-admin:before {
   content: "\ef0a";
-  font-size: 18px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.view-as:before,
@@ -7843,7 +7807,6 @@ body.buddypress.bp-user #page #primary .entry-header {
   content: "\ee69";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.send-message:before,
@@ -7853,7 +7816,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.send-message:before,
 .bb_more_options .bb_more_options_list a.send-message:before {
   content: "\ee62";
-  font-size: 16px;
   color: inherit !important;
 }
 
@@ -7896,7 +7858,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list button.follow-button:before,
 .bb_more_options .bb_more_options_list a.follow-button:before {
   content: "\ee03";
-  font-size: 14px;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.is_friend:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.pending_friend:before,
@@ -8782,7 +8743,6 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image,
 #item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
-  background: #f9f9f9;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -8796,23 +8756,20 @@ body.register .buddypress-wrap .page ul {
   opacity: 0;
   transition: all 0.2s;
   text-decoration: none;
-  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 #item-header a.link-change-cover-image > i,
 #item-header a.position-change-cover-image > i,
 #item-header a.link-change-profile-image > i {
-  font-size: 18px;
+  font-size: 24px;
 }
 
 #item-header a.position-change-cover-image > i {
-  font-size: 16px;
+  font-size: 24px;
 }
 
 #item-header a.position-change-cover-image {
-  top: 55px;
+  top: 48px;
   display: none;
 }
 
@@ -8861,6 +8818,10 @@ body.register .buddypress-wrap .page ul {
   display: inline-block;
   width: 20px;
   margin-right: 10px;
+}
+
+.social-networks-wrap a i {
+  font-size: 24px;
 }
 
 .social-networks-wrap svg {
@@ -16597,6 +16558,10 @@ a.bb-close-model {
   font-weight: 400;
 }
 
+.bb-media-info-section .activity-media-description .bp-add-media-activity-description > span.bb-icon-edit {
+  font-size: 18px;
+}
+
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description {
   width: 100%;
   margin-bottom: 10px;
@@ -17848,10 +17813,10 @@ img.emojioneemoji {
 }
 
 .dropzone .dz-preview.dz-error .dz-details:before {
-  content: "\ee06";
+  content: "\eeb4";
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 300;
   height: 50px;
   width: 50px;
@@ -18439,7 +18404,7 @@ div.dropzone .dz-preview .dz-filename {
 }
 
 .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > i {
-  font-size: 35px;
+  font-size: 60px;
   margin-bottom: 10px;
   color: #9ca8b4;
 }
@@ -20563,7 +20528,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options a.button > i,
 .directory.document .document-options a.button > i,
 .directory.video .video-options a.button > i {
-  margin-right: 0;
+  margin-right: 7px;
   font-size: 18px;
 }
 

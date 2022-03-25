@@ -809,6 +809,10 @@ a.bb-close-model {
 		.bp-add-media-activity-description > span {
 			font-size: 13px;
 			font-weight: 400;
+
+			&.bb-icon-edit {
+				font-size: 18px;
+			}
 		}
 
 		.bp-edit-media-activity-description {
@@ -2211,9 +2215,9 @@ img.emojioneemoji {
 	.dz-details {
 
 		&:before {
-			content: "\ee06";
+			content: "\eeb4";
 			font-family: "bb-icons"; /* stylelint-disable-line */
-			font-size: 18px;
+			font-size: 22px;
 			font-weight: 300;
 			height: 50px;
 			width: 50px;
@@ -2891,7 +2895,7 @@ div.dropzone .dz-preview {
 				flex-direction: column;
 
 				> i {
-					font-size: 35px;
+					font-size: 60px;
 					margin-bottom: 10px;
 					color: #9ca8b4;
 				}
@@ -4806,7 +4810,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .directory.video .video-options {
 
 	a.button > i {
-		margin-right: 0;
+		margin-right: 7px;
 		font-size: 18px;
 	}
 

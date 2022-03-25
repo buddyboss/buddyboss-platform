@@ -53,7 +53,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 			<?php if ( bp_is_item_admin() ) { ?>
 				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-l bb-icon-edit"></i>
+					<i class="bb-icon-bf bb-icon-edit"></i>
 				</a>
 			<?php } ?>
 
@@ -76,7 +76,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
 					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-l bb-icon-edit"></i>
+						<i class="bb-icon-rf bb-icon-edit"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 				<?php } ?>
@@ -192,7 +192,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 					<header class="bb-model-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Group Description', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-action-popup bb-model-close-button" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-action-popup-content">
@@ -213,7 +213,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						<header class="bb-model-header">
 							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
-								<span class="bb-icon bb-icon-close"></span>
+								<span class="bb-icon-l bb-icon-times"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content bb-action-popup-content">
