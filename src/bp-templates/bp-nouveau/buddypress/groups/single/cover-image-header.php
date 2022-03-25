@@ -53,7 +53,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 			<?php if ( bp_is_item_admin() ) { ?>
 				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-bf bb-icon-edit"></i>
+					<i class="bb-icon-bf bb-icon-camera"></i>
 				</a>
 			<?php } ?>
 
@@ -76,7 +76,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
 					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-rf bb-icon-edit"></i>
+						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 				<?php } ?>
