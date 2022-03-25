@@ -208,7 +208,6 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_new_mention';
-		$component_name   = 'members';
 	}
 
 	$notification_id = bp_notifications_add_notification(

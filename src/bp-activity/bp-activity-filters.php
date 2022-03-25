@@ -2002,7 +2002,6 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$component_action = 'bb_new_mention';
-			$component_name   = 'members';
 		}
 
 		$notification = BP_Notifications_Notification::get(

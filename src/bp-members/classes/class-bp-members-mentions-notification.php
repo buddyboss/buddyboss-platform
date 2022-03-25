@@ -117,6 +117,8 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			__( 'New mentions', 'buddyboss' ),
 			5
 		);
+
+		add_filter( 'bp_activity_bb_new_mention_notification', array( $this, 'bb_render_mention_notification' ), 10, 7 );
 	}
 
 	/**
@@ -138,12 +140,33 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
 
+		$content = $this->bb_render_mention_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen );
+
+		return $content;
+	}
+
+	/**
+	 * Format the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $action_item_count     Number of notifications with the same action.
+	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
+	 *
+	 * @return array|string
+	 */
+	public function bb_render_mention_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen ) {
 		$notification           = bp_notifications_get_notification( $notification_id );
 		$user_id                = $secondary_item_id;
 		$user_fullname          = bp_core_get_user_displayname( $user_id );
 		$notification_type_html = '';
 
-		if ( ! empty( $notification ) && 'bb_new_mention' === $component_action_name && in_array( $component_name, array( 'activity', 'forums', 'members' ), true ) ) {
+		if ( ! empty( $notification ) && 'bb_new_mention' === $notification->component_action && in_array( $notification->component_name, array( 'activity', 'forums', 'members' ), true ) ) {
 
 			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
 			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
@@ -181,7 +204,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				$amount = 'single';
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
-						/* translators: 1: User full name, 2: Activity type. */
+					/* translators: 1: User full name, 2: Activity type. */
 						__( '%1$s mentioned you in %2$s', 'buddyboss' ),
 						$user_fullname,
 						$notification_type_html
@@ -198,7 +221,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
 
 			$content = apply_filters(
-				'bb_members_' . $action_item_count . '_' . $component_action_name . '_notification',
+				'bb_members_' . $action_item_count . '_' . $notification->component_action . '_notification',
 				array(
 					'link' => $notification_link,
 					'text' => $text,
@@ -212,4 +235,5 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 		return $content;
 	}
+
 }
