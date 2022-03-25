@@ -163,7 +163,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Format Group notifications.
+	 * Format friends notifications.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
