@@ -437,6 +437,10 @@ tr.bp-search-parent-field label {
   border-radius: 4px;
 }
 
+.buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none td p {
+  margin: 0;
+}
+
 .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none.child-custom-post-type td {
   margin: 10px 10px 10px 0;
 }

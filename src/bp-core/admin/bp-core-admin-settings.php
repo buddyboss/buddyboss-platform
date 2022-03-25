@@ -1810,8 +1810,8 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 				<?php
 				printf(
 				/* translators: %s: comment post type */
-					esc_html__( 'Comments are not supported for %s', 'buddyboss' ),
-					esc_html( $post_type )
+					esc_html__( 'Comments are not supported for %s.', 'buddyboss' ),
+					esc_html( $post_type_obj->labels->name )
 				);
 				?>
 			</p>
