@@ -385,10 +385,25 @@ tr.bp-search-parent-field label {
   width: 36px;
   margin-right: 16px;
   vertical-align: middle;
+  position: relative;
 }
 
 .bp-admin-card h2 [class*=" bb-icon-"]:before {
   margin: 0;
+  color: #f6f6f6;
+  position: relative;
+  z-index: 2;
+}
+
+.bp-admin-card h2 [class*=" bb-icon-"]:after {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  z-index: 1;
+  content: " ";
+  width: 28px;
+  height: 28px;
+  background: #333;
 }
 
 .bp-admin-card h3 {
@@ -445,31 +460,6 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bp_search_settings_community th[scope="row"],
 .bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
   width: 1px;
-}
-
-/* Integrations - BuddyBoss App */
-.bp-admin-card.section-bp_buddyboss_app-integration h2 > i {
-  color: #e2623d;
-}
-
-/* Integrations - LearnDash */
-.bp-admin-card.section-bp_ld-integration h2 > i,
-.bp-admin-card.section-bp_ld_sync-buddypress h2 > i,
-.bp-admin-card.section-bp_ld_sync-learndash h2 > i,
-.bp-admin-card.section-bp_ld_sync-reports h2 > i,
-.bp-admin-card.section-bp_ld_course_tab-buddypress h2 > i {
-  color: #479BF8;
-}
-
-/* Integrations - BuddyPress Plugins */
-.bp-admin-card.section-bp_compatibility-integration h2 > i {
-  color: #c95836;
-}
-
-/* Integrations - Zoom */
-.bp-admin-card.section-bp_zoom_gutenberg_section h2 > i,
-.bp-admin-card.section-bp_zoom_settings_section h2 > i {
-  color: #0E71EB;
 }
 
 /*

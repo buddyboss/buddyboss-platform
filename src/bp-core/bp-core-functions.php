@@ -6939,7 +6939,7 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_rf . ' bb-icon-brand-learndash';
 			break;
 		case 'default_data':
-			$meta_icon = $bb_icon_rl . ' bb-icon-user-friends-alt';
+			$meta_icon = $bb_icon_rl . ' bb-icon-poll-h';
 			break;
 		case 'repair_community':
 		case 'repair_forums':
@@ -6947,7 +6947,7 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp-member-type-import':
 		case 'bbpress_converter_main':
-			$meta_icon = $bb_icon_rl . ' bb-icon-sort-amount-up';
+			$meta_icon = $bb_icon_rl . ' bb-icon-upload';
 			break;
 		case 'group_access_control_block':
 		case 'activity_access_control_block':

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-24 10:43:00+00:00\n"
+"POT-Creation-Date: 2022-03-25 01:07:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -176,7 +176,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:991
 #: bp-core/admin/templates/update-buddyboss.php:52
 #: bp-forums/admin/forums.php:151 bp-forums/admin/replies.php:133
-#: bp-forums/admin/settings.php:1551 bp-forums/admin/topics.php:134
+#: bp-forums/admin/settings.php:1483 bp-forums/admin/topics.php:134
 #: bp-groups/bp-groups-admin.php:151 bp-groups/bp-groups-admin.php:217
 #: bp-members/classes/class-bp-members-admin.php:926
 #: bp-members/classes/class-bp-members-admin.php:1821
@@ -239,7 +239,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:979
 #: bp-core/admin/bp-core-admin-functions.php:998 bp-forums/admin/forums.php:200
 #: bp-forums/admin/forums.php:269 bp-forums/admin/replies.php:185
-#: bp-forums/admin/replies.php:252 bp-forums/admin/settings.php:1604
+#: bp-forums/admin/replies.php:252 bp-forums/admin/settings.php:1536
 #: bp-forums/admin/topics.php:187 bp-forums/admin/topics.php:252
 #: bp-groups/bp-groups-admin.php:160 bp-groups/bp-groups-admin.php:236
 #: bp-members/classes/class-bp-members-admin.php:936
@@ -256,7 +256,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:980
 #: bp-core/admin/bp-core-admin-functions.php:999 bp-forums/admin/forums.php:201
 #: bp-forums/admin/forums.php:270 bp-forums/admin/replies.php:186
-#: bp-forums/admin/replies.php:253 bp-forums/admin/settings.php:1605
+#: bp-forums/admin/replies.php:253 bp-forums/admin/settings.php:1537
 #: bp-forums/admin/topics.php:188 bp-forums/admin/topics.php:253
 #: bp-groups/bp-groups-admin.php:161 bp-groups/bp-groups-admin.php:237
 #: bp-members/classes/class-bp-members-admin.php:937
@@ -528,7 +528,7 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:573
 #: bp-core/classes/class-bp-email-tokens.php:708
 #: bp-core/classes/class-bp-email-tokens.php:889
-#: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:329
+#: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:336
 #: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1764
 #: bp-forums/replies/template.php:1807 bp-forums/topics/template.php:3341
 #: bp-moderation/classes/class-bp-moderation-activity.php:482
@@ -722,7 +722,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:515
 #: bp-core/classes/class-bp-admin.php:516
 #: bp-core/classes/class-bp-admin.php:538
-#: bp-core/classes/class-bp-admin.php:539 bp-forums/admin/settings.php:1491
+#: bp-core/classes/class-bp-admin.php:539 bp-forums/admin/settings.php:1423
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1764
 #: bp-media/bp-media-filters.php:1361
 msgid "Tools"
@@ -1227,7 +1227,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:431
 #: bp-blogs/bp-blogs-activity.php:80 bp-core/bp-core-functions.php:2896
-#: bp-core/bp-core-template.php:572 bp-forums/admin/settings.php:1700
+#: bp-core/bp-core-template.php:572 bp-forums/admin/settings.php:1632
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
 #: bp-forums/templates/default/bbpress/loop-replies.php:23
 #: bp-forums/templates/default/bbpress/loop-replies.php:68
@@ -1325,7 +1325,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
 #: bp-document/classes/class-bp-document.php:689
-#: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1782
+#: bp-forums/admin/settings.php:254 bp-forums/admin/tools.php:1782
 #: bp-forums/admin.php:28 bp-forums/admin.php:29 bp-forums/admin.php:45
 #: bp-forums/admin.php:46 bp-forums/admin.php:231 bp-forums/admin.php:274
 #: bp-forums/classes/class-bbpress.php:451
@@ -1474,7 +1474,7 @@ msgid "Activity History"
 msgstr ""
 
 #: bp-activity/classes/class-bp-akismet.php:645 bp-forums/admin/admin.php:754
-#: bp-forums/admin/settings.php:719
+#: bp-forums/admin/settings.php:686
 msgid "%1$s - %2$s"
 msgstr ""
 
@@ -2194,7 +2194,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-search.php:22
 #: bp-core/bp-core-cssjs.php:281 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
-#: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
+#: bp-forums/admin/settings.php:156 bp-forums/admin/settings.php:344
 #: bp-forums/common/template.php:2563 bp-forums/search/template.php:233
 #: bp-forums/templates/default/bbpress/form-search.php:16
 #: bp-groups/bp-groups-template.php:6310
@@ -2596,7 +2596,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:326
 #: bp-core/classes/class-bp-admin.php:327
 #: bp-core/classes/class-bp-admin.php:474
-#: bp-core/classes/class-bp-admin.php:475 bp-forums/admin/settings.php:1705
+#: bp-core/classes/class-bp-admin.php:475 bp-forums/admin/settings.php:1637
 #: bp-search/bp-search-functions.php:362
 msgid "Pages"
 msgstr ""
@@ -3031,7 +3031,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3080 bp-forums/admin/admin.php:219
 #: bp-forums/admin/functions.php:243 bp-forums/admin/functions.php:293
-#: bp-forums/admin/settings.php:1243
+#: bp-forums/admin/settings.php:1175
 msgid "Import Forums"
 msgstr ""
 
@@ -3393,7 +3393,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:444
 #: bp-core/admin/bp-core-admin-settings.php:456
 #: bp-forums/admin/metaboxes.php:65 bp-forums/admin/metaboxes.php:481
-#: bp-forums/admin/replies.php:624 bp-forums/admin/settings.php:305
+#: bp-forums/admin/replies.php:624 bp-forums/admin/settings.php:312
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
 #: bp-forums/topics/template.php:51
@@ -4176,7 +4176,7 @@ msgid "Forums in Groups (with data)"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:184 bp-forums/admin/forums.php:498
-#: bp-forums/admin/settings.php:226 bp-forums/admin/settings.php:247
+#: bp-forums/admin/settings.php:262 bp-forums/admin/settings.php:283
 #: bp-forums/admin/tools.php:1783 bp-forums/admin/topics.php:676
 #: bp-forums/admin.php:237 bp-forums/admin.php:293
 #: bp-forums/classes/class-bp-forums-component.php:217
@@ -4191,7 +4191,7 @@ msgid "Discussions"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:193 bp-forums/admin/forums.php:499
-#: bp-forums/admin/settings.php:234 bp-forums/admin/settings.php:255
+#: bp-forums/admin/settings.php:270 bp-forums/admin/settings.php:291
 #: bp-forums/admin/tools.php:1784 bp-forums/admin/topics.php:678
 #: bp-forums/admin.php:249 bp-forums/admin.php:312
 #: bp-forums/classes/class-bp-forums-component.php:228
@@ -4616,7 +4616,7 @@ msgid "Public RSS Feeds"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:115
-#: bp-forums/admin/settings.php:1561
+#: bp-forums/admin/settings.php:1493
 msgid "Main Settings"
 msgstr ""
 
@@ -5262,7 +5262,7 @@ msgid "Marketing and Strategy"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:34
-msgid "80 People and Growing!"
+msgid "Over 100 and Growing!"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:40
@@ -7282,7 +7282,7 @@ msgstr ""
 msgid "BuddyBoss email types"
 msgstr ""
 
-#: bp-core/bp-core-template.php:119 bp-forums/admin/settings.php:1365
+#: bp-core/bp-core-template.php:119 bp-forums/admin/settings.php:1297
 msgid "Options"
 msgstr ""
 
@@ -8671,7 +8671,7 @@ msgstr ""
 msgid "The selected Template Pack will serve all BuddyPress templates."
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/1.0.php:508 bp-forums/admin/settings.php:730
+#: bp-core/deprecated/buddyboss/1.0.php:508 bp-forums/admin/settings.php:697
 msgid "No template packages available."
 msgstr ""
 
@@ -10557,7 +10557,7 @@ msgstr ""
 msgid "Purge Previous Import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:237 bp-forums/admin/settings.php:1482
+#: bp-forums/admin/converter.php:237 bp-forums/admin/settings.php:1414
 msgid "Start"
 msgstr ""
 
@@ -11037,7 +11037,7 @@ msgstr ""
 
 #: bp-forums/admin/forums.php:497 bp-forums/admin/metaboxes.php:48
 #: bp-forums/admin/metaboxes.php:394 bp-forums/admin/metaboxes.php:453
-#: bp-forums/admin/replies.php:623 bp-forums/admin/settings.php:297
+#: bp-forums/admin/replies.php:623 bp-forums/admin/settings.php:304
 #: bp-forums/admin/topics.php:677 bp-forums/forums/functions.php:1679
 #: bp-forums/forums/template.php:51 bp-forums/groups.php:52
 #: bp-forums/templates/default/bbpress/loop-forums.php:18
@@ -11117,7 +11117,7 @@ msgstr ""
 msgid "Reset Forums"
 msgstr ""
 
-#: bp-forums/admin/metaboxes.php:84 bp-forums/admin/settings.php:313
+#: bp-forums/admin/metaboxes.php:84 bp-forums/admin/settings.php:320
 #: bp-forums/topics/template.php:3767
 msgid "Discussion Tag"
 msgid_plural "Discussion Tags"
@@ -11546,255 +11546,232 @@ msgstr ""
 msgid "Reply draft updated. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
 msgstr ""
 
-#: bp-forums/admin/settings.php:25
-msgid "Forum User Settings"
+#: bp-forums/admin/settings.php:25 bp-forums/admin/tools.php:1787
+msgid "Forum Settings"
 msgstr ""
 
-#: bp-forums/admin/settings.php:30
+#: bp-forums/admin/settings.php:29
 msgid "Forum Features"
 msgstr ""
 
-#: bp-forums/admin/settings.php:35
-msgid "Forum Theme Packages"
-msgstr ""
-
-#: bp-forums/admin/settings.php:40
-msgid "Discussions and Replies Per Page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:45
-msgid "Discussions and Replies Per RSS Page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:50
-msgid "Forums Directory"
-msgstr ""
-
-#: bp-forums/admin/settings.php:55
-msgid "Single Forum Slugs"
-msgstr ""
-
-#: bp-forums/admin/settings.php:60
-msgid "Forum Profile Slugs"
-msgstr ""
-
-#: bp-forums/admin/settings.php:65 bp-forums/admin/tools.php:542
+#: bp-forums/admin/settings.php:33 bp-forums/admin/settings.php:212
+#: bp-forums/admin/tools.php:542
 msgid "Group Forums"
 msgstr ""
 
-#: bp-forums/admin/settings.php:70
+#: bp-forums/admin/settings.php:37
+msgid "Forums Directory"
+msgstr ""
+
+#: bp-forums/admin/settings.php:42
+msgid "Forum Theme Packages"
+msgstr ""
+
+#: bp-forums/admin/settings.php:47
+msgid "Discussions and Replies Per Page"
+msgstr ""
+
+#: bp-forums/admin/settings.php:51
+msgid "Discussions and Replies Per RSS Page"
+msgstr ""
+
+#: bp-forums/admin/settings.php:55
+msgid "Forum Permalinks"
+msgstr ""
+
+#: bp-forums/admin/settings.php:60
+msgid "Forum Profile Permalinks"
+msgstr ""
+
+#: bp-forums/admin/settings.php:65
 msgid "Akismet Integration"
 msgstr ""
 
-#: bp-forums/admin/settings.php:95
+#: bp-forums/admin/settings.php:89
 msgid "Disallow editing after"
 msgstr ""
 
-#: bp-forums/admin/settings.php:103
+#: bp-forums/admin/settings.php:97
 msgid "Throttle posting every"
 msgstr ""
 
-#: bp-forums/admin/settings.php:111
+#: bp-forums/admin/settings.php:105
 msgid "Anonymous posting"
 msgstr ""
 
-#: bp-forums/admin/settings.php:130 bp-forums/admin/settings.php:1710
+#: bp-forums/admin/settings.php:124 bp-forums/admin/settings.php:1642
 msgid "Revisions"
 msgstr ""
 
-#: bp-forums/admin/settings.php:138
+#: bp-forums/admin/settings.php:132
 #: bp-forums/classes/class-bp-forums-component.php:240
 msgid "Favorites"
 msgstr ""
 
-#: bp-forums/admin/settings.php:146 bp-forums/admin/settings.php:374
+#: bp-forums/admin/settings.php:140 bp-forums/admin/settings.php:381
 #: bp-forums/classes/class-bp-forums-component.php:253
 #: bp-forums/classes/class-bp-forums-component.php:316
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1180
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-forums/admin/settings.php:154
+#: bp-forums/admin/settings.php:148
 msgid "Discussion tags"
 msgstr ""
 
-#: bp-forums/admin/settings.php:170
+#: bp-forums/admin/settings.php:164
 msgid "Post Formatting"
 msgstr ""
 
-#: bp-forums/admin/settings.php:178
+#: bp-forums/admin/settings.php:172
 msgid "Auto-embed links"
 msgstr ""
 
-#: bp-forums/admin/settings.php:186
+#: bp-forums/admin/settings.php:180
 msgid "Reply Threading"
 msgstr ""
 
-#: bp-forums/admin/settings.php:205
+#: bp-forums/admin/settings.php:199
 msgid "Current Package"
 msgstr ""
 
-#: bp-forums/admin/settings.php:276
+#: bp-forums/admin/settings.php:233
 msgid "Forums Prefix"
 msgstr ""
 
-#: bp-forums/admin/settings.php:284
+#: bp-forums/admin/settings.php:241
 msgid "Forums Directory shows"
 msgstr ""
 
-#: bp-forums/admin/settings.php:321
+#: bp-forums/admin/settings.php:328
 msgid "Discussion View"
 msgstr ""
 
-#: bp-forums/admin/settings.php:358
+#: bp-forums/admin/settings.php:365
 msgid "Replies Created"
 msgstr ""
 
-#: bp-forums/admin/settings.php:366
+#: bp-forums/admin/settings.php:373
 msgid "Favorite Discussions"
 msgstr ""
 
-#: bp-forums/admin/settings.php:387
-msgid "Enable Group Forums"
+#: bp-forums/admin/settings.php:394
+msgid "Akismet Spam Protection"
 msgstr ""
 
-#: bp-forums/admin/settings.php:400
-msgid "Use Akismet"
-msgstr ""
-
-#: bp-forums/admin/settings.php:442
-msgid "Setting time limits and other user posting capabilities"
-msgstr ""
-
-#: bp-forums/admin/settings.php:459 bp-forums/common/functions.php:124
+#: bp-forums/admin/settings.php:439 bp-forums/common/functions.php:124
 msgid "minutes"
 msgstr ""
 
-#: bp-forums/admin/settings.php:475 bp-forums/common/functions.php:125
+#: bp-forums/admin/settings.php:455 bp-forums/common/functions.php:125
 msgid "seconds"
 msgstr ""
 
-#: bp-forums/admin/settings.php:496
+#: bp-forums/admin/settings.php:476
 msgid "Allow guest users without accounts to create discussions and replies"
 msgstr ""
 
-#: bp-forums/admin/settings.php:511
-msgid "Forum features that can be toggled on and off"
+#: bp-forums/admin/settings.php:499
+msgid "Allow members to mark discussions as favorites"
 msgstr ""
 
-#: bp-forums/admin/settings.php:532
-msgid "Allow users to mark discussions as favorites"
+#: bp-forums/admin/settings.php:520
+msgid "Allow members to subscribe to forums and discussions"
 msgstr ""
 
-#: bp-forums/admin/settings.php:553
-msgid "Allow users to subscribe to forums and discussions"
-msgstr ""
-
-#: bp-forums/admin/settings.php:574
+#: bp-forums/admin/settings.php:541
 msgid "Allow discussions to have tags"
 msgstr ""
 
-#: bp-forums/admin/settings.php:595
+#: bp-forums/admin/settings.php:562
 msgid "Allow forum wide search"
 msgstr ""
 
-#: bp-forums/admin/settings.php:639
+#: bp-forums/admin/settings.php:606
 msgid "Enable threaded (nested) replies %s levels deep"
 msgstr ""
 
-#: bp-forums/admin/settings.php:661
+#: bp-forums/admin/settings.php:628
 msgid "Allow discussion and reply revision logging"
 msgstr ""
 
-#: bp-forums/admin/settings.php:682
+#: bp-forums/admin/settings.php:649
 msgid "Add toolbar & buttons to textareas to help with HTML formatting"
 msgstr ""
 
-#: bp-forums/admin/settings.php:695
+#: bp-forums/admin/settings.php:662
 msgid "How your forum content is displayed within your existing theme."
 msgstr ""
 
-#: bp-forums/admin/settings.php:726
+#: bp-forums/admin/settings.php:693
 msgid "will serve all Forums templates"
 msgstr ""
 
-#: bp-forums/admin/settings.php:752
+#: bp-forums/admin/settings.php:719
 msgid ""
 "Embed media (YouTube, Twitter, Vimeo, etc&hellip;) directly into "
 "discussions and replies"
 msgstr ""
 
-#: bp-forums/admin/settings.php:767
-msgid "How many discussions and replies to show per page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:783 bp-forums/admin/settings.php:799
-#: bp-forums/admin/settings.php:815 bp-forums/admin/settings.php:846
-#: bp-forums/admin/settings.php:862
+#: bp-forums/admin/settings.php:735 bp-forums/admin/settings.php:751
+#: bp-forums/admin/settings.php:767 bp-forums/admin/settings.php:785
+#: bp-forums/admin/settings.php:801
 msgid "per page"
 msgstr ""
 
-#: bp-forums/admin/settings.php:830
-msgid "How many discussions and replies to show per RSS page"
+#: bp-forums/admin/settings.php:825
+msgid ""
+"Customize your Forums directory. Use <a href=\"%s\">Shortcodes</a> for more "
+"flexibility."
 msgstr ""
 
-#: bp-forums/admin/settings.php:882
-msgid "Customize your Forums directory. Use Shortcodes for more flexibility."
-msgstr ""
-
-#: bp-forums/admin/settings.php:924
+#: bp-forums/admin/settings.php:878
 msgid ""
 "Prefix all forum content with the  <a href=\"%s\">Forums page</a> slug "
 "(Recommended)"
 msgstr ""
 
-#: bp-forums/admin/settings.php:951
+#: bp-forums/admin/settings.php:905
 msgid "Forum Index"
 msgstr ""
 
-#: bp-forums/admin/settings.php:954
+#: bp-forums/admin/settings.php:908
 msgid "Discussions by Last Post"
 msgstr ""
 
-#: bp-forums/admin/settings.php:982
+#: bp-forums/admin/settings.php:936
 msgid ""
-"Custom slugs for single forums, discussions, replies, tags, views, and "
-"search."
+"Custom URL slugs for Forum content. Slugs should be all lowercase and "
+"contain only letters, numbers, and hyphens."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1100
-msgid "Forum settings for social groups."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1121
+#: bp-forums/admin/settings.php:1061
 msgid "Allow social groups to have their own forums"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1139
+#: bp-forums/admin/settings.php:1078
 msgid "- Forums Directory -"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1149
+#: bp-forums/admin/settings.php:1088
 msgid "is the parent for all group forums"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1150
+#: bp-forums/admin/settings.php:1089
 msgid "Changing this does not move existing forums."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1165
-msgid "Forum settings for Akismet"
+#: bp-forums/admin/settings.php:1116
+msgid ""
+"Allow  <a href=\"%s\" target=\"_blank\">Akismet</a> spam filtering to "
+"actively prevent forum spam."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1187
-msgid "Allow Akismet to actively prevent forum spam."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1207
+#: bp-forums/admin/settings.php:1139
 msgid "Forums Settings"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1216 bp-groups/bp-groups-admin.php:1568
+#: bp-forums/admin/settings.php:1148 bp-groups/bp-groups-admin.php:1568
 #: bp-groups/classes/class-bp-group-extension.php:524
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:66
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:84
@@ -11806,298 +11783,300 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1246
+#: bp-forums/admin/settings.php:1178
 msgid "Database Settings"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1247
+#: bp-forums/admin/settings.php:1179
 msgid ""
 "Information about your previous forums database so that they can be "
 "converted. <strong>Backup your database before proceeding.</strong>"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1280
+#: bp-forums/admin/settings.php:1212
 msgid "is the previous forum software"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1294
+#: bp-forums/admin/settings.php:1226
 msgid "IP or hostname"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1308
+#: bp-forums/admin/settings.php:1240
 msgid "Use default 3306 if unsure"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1322
+#: bp-forums/admin/settings.php:1254
 msgid "User for your database connection"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1339
+#: bp-forums/admin/settings.php:1271
 msgid "Password to access the database"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1353
+#: bp-forums/admin/settings.php:1285
 msgid "Name of the database with your old forum data"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1366
+#: bp-forums/admin/settings.php:1298
 msgid "Some optional parameters to help tune the conversion process."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1380
+#: bp-forums/admin/settings.php:1312
 msgid "(If converting from BuddyBoss Forums, use \"wp_bb_\" or your custom prefix)"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1394
+#: bp-forums/admin/settings.php:1326
 msgid "rows to process at a time"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1395
+#: bp-forums/admin/settings.php:1327
 msgid "Keep this low if you experience out-of-memory issues."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1409
+#: bp-forums/admin/settings.php:1341
 msgid "second(s) delay between each group of rows"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1410
+#: bp-forums/admin/settings.php:1342
 msgid "Keep this high to prevent too-many-connection issues."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1424
+#: bp-forums/admin/settings.php:1356
 msgid "Start a fresh conversion from the beginning"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1425
+#: bp-forums/admin/settings.php:1357
 msgid "You should clean old conversion information before starting over."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1439
+#: bp-forums/admin/settings.php:1371
 msgid "Purge all information from a previously attempted import"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1440
+#: bp-forums/admin/settings.php:1372
 msgid "Use this if an import failed and you want to remove that incomplete data."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1454
+#: bp-forums/admin/settings.php:1386
 msgid "Attempt to import user accounts from previous forums"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1455
+#: bp-forums/admin/settings.php:1387
 msgid ""
 "Non-Forums passwords cannot be automatically converted. They will be "
 "converted as each user logs in."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1476
+#: bp-forums/admin/settings.php:1408
 msgid "Up next: step %s"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1477
+#: bp-forums/admin/settings.php:1409
 msgid "Ready"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1481
+#: bp-forums/admin/settings.php:1413
 msgid "Resume"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1486
+#: bp-forums/admin/settings.php:1418
 msgid "Previously stopped at step %1$d of %2$d"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1487
+#: bp-forums/admin/settings.php:1419
 msgid "Ready to go."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1509
+#: bp-forums/admin/settings.php:1441
 #: bp-templates/bp-nouveau/includes/video/functions.php:162
 msgid "Pause"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1514
+#: bp-forums/admin/settings.php:1446
 msgid "Import Monitor"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1552
+#: bp-forums/admin/settings.php:1484
 msgid "This screen provides access to all of the Forums settings."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1553
+#: bp-forums/admin/settings.php:1485
 msgid ""
 "Please see the additional help tabs for more information on each indiviual "
 "section."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1562
+#: bp-forums/admin/settings.php:1494
 msgid "In the Main Settings you have a number of options:"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1565
+#: bp-forums/admin/settings.php:1497
 msgid ""
 "You can choose to lock a post after a certain number of minutes. \"Locking "
 "post editing\" will prevent the author from editing some amount of time "
 "after saving a post."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1566
+#: bp-forums/admin/settings.php:1498
 msgid ""
 "\"Throttle time\" is the amount of time required between posts from a "
 "single author. The higher the throttle time, the longer a user will need to "
 "wait between posting to the forum."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1567
+#: bp-forums/admin/settings.php:1499
 msgid ""
 "Saving discussions allows users to return later to discussions they are "
 "interested in. This is enabled by default."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1568
+#: bp-forums/admin/settings.php:1500
 msgid ""
 "Subscriptions allow users to subscribe for notifications to discussions "
 "that interest them. This is enabled by default."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1569
+#: bp-forums/admin/settings.php:1501
 msgid ""
 "Discussion-Tags allow users to filter discussions between forums. This is "
 "enabled by default."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1570
+#: bp-forums/admin/settings.php:1502
 msgid ""
 "\"Anonymous Posting\" allows guest users who do not have accounts on your "
 "site to both create discussions as well as replies."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1571
+#: bp-forums/admin/settings.php:1503
 msgid ""
 "The Fancy Editor brings the luxury of the Visual editor and HTML editor "
 "from the traditional WordPress dashboard into your theme."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1572
+#: bp-forums/admin/settings.php:1504
 msgid ""
 "Auto-embed will embed the media content from a URL directly into the "
 "replies. For example: links to Flickr and YouTube."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1575
+#: bp-forums/admin/settings.php:1507
 msgid ""
 "You must click the Save Changes button at the bottom of the screen for new "
 "settings to take effect."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1583
+#: bp-forums/admin/settings.php:1515
 msgid "Per Page"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1584
+#: bp-forums/admin/settings.php:1516
 msgid ""
 "Per Page settings allow you to control the number of discussions and "
 "replies to appear on each page."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1585
+#: bp-forums/admin/settings.php:1517
 msgid ""
 "This is comparable to the WordPress \"Reading Settings\" page, where you "
 "can set the number of posts that should show on blog pages and in feeds."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1586
+#: bp-forums/admin/settings.php:1518
 msgid ""
 "These are broken up into two separate groups: one for what appears in your "
 "theme, another for RSS feeds."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1594
+#: bp-forums/admin/settings.php:1526
 msgid "Slugs"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1595
+#: bp-forums/admin/settings.php:1527
 msgid ""
 "The Slugs section allows you to control the permalink structure for your "
 "forums."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1596
+#: bp-forums/admin/settings.php:1528
 msgid ""
 "\"Archive Slugs\" are used as the \"root\" for your forums and discussions. "
 "If you combine these values with existing page slugs, Forums will attempt "
 "to output the most correct title and content."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1597
+#: bp-forums/admin/settings.php:1529
 msgid ""
 "\"Single Slugs\" are used as a prefix when viewing an individual forum, "
 "discussion, reply, user, or view."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1598
+#: bp-forums/admin/settings.php:1530
 msgid ""
 "In the event of a slug collision with WordPress or BuddyBoss, a warning "
 "will appear next to the problem slug(s)."
 msgstr ""
 
-#: bp-forums/admin/settings.php:1715
+#: bp-forums/admin/settings.php:1647
 msgid "Attachments"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1720
+#: bp-forums/admin/settings.php:1652
 msgid "Menus"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1727
+#: bp-forums/admin/settings.php:1659
 msgid "Tag base"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1734
+#: bp-forums/admin/settings.php:1666
 msgid "Category base"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1743
+#: bp-forums/admin/settings.php:1675
 msgid "Forums base"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1750
+#: bp-forums/admin/settings.php:1682
 msgid "Discussions base"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1757
+#: bp-forums/admin/settings.php:1689
 msgid "Forum slug"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1764
+#: bp-forums/admin/settings.php:1696
 msgid "Discussion slug"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1771
+#: bp-forums/admin/settings.php:1703
 msgid "Reply slug"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1778
+#: bp-forums/admin/settings.php:1710
 msgid "User base"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1785
+#: bp-forums/admin/settings.php:1717
 msgid "View base"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1792
+#: bp-forums/admin/settings.php:1724
 msgid "Discussion tag slug"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1808
+#: bp-forums/admin/settings.php:1740
 msgid "%s page"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1832
+#: bp-forums/admin/settings.php:1764
 msgid "Possible %1$s conflict: %2$s"
 msgstr ""
 
-#: bp-forums/admin/settings.php:1849
-msgid "Custom slugs for member profiles."
+#: bp-forums/admin/settings.php:1781
+msgid ""
+"Custom URL slugs for the Forums tab in member profiles. Slugs should be all "
+"lowercase and contain only letters, numbers, and hyphens."
 msgstr ""
 
 #: bp-forums/admin/tools.php:52
@@ -12316,10 +12295,6 @@ msgstr ""
 
 #: bp-forums/admin/tools.php:1786
 msgid "Related Meta Data"
-msgstr ""
-
-#: bp-forums/admin/tools.php:1787
-msgid "Forum Settings"
 msgstr ""
 
 #: bp-forums/admin/tools.php:1788
@@ -18865,7 +18840,8 @@ msgid ""
 "for WordPress, published under your own Apple and Google Play accounts. The "
 "apps are branded to match your site, and sync community data (members, "
 "groups, forums, etc.) back and forth with WordPress. If using LearnDash "
-"your members can also take their courses in the app."
+"your members can take their courses in the app and can even take them "
+"offline!"
 msgstr ""
 
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:32
@@ -23387,15 +23363,13 @@ msgid "Reported"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:25
-msgid "Blocking"
+#: bp-moderation/bp-moderation-settings.php:51
+msgid "Member Blocking"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:30
-msgid "Reporting"
-msgstr ""
-
-#: bp-moderation/bp-moderation-settings.php:51
-msgid "Member Blocking"
+#: bp-moderation/bp-moderation-settings.php:79
+msgid "Content Reporting"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:58
@@ -23405,10 +23379,6 @@ msgstr ""
 #: bp-moderation/bp-moderation-settings.php:70
 #: bp-moderation/bp-moderation-settings.php:97
 msgid "Email Notification"
-msgstr ""
-
-#: bp-moderation/bp-moderation-settings.php:79
-msgid "Content Reporting"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:86
