@@ -223,8 +223,12 @@ function bp_messages_message_sent_add_notification( $message ) {
 
 		$message_from = bp_messages_get_meta( $message->id, 'message_from', true ); // group.
 		$action       = 'new_message';
-		if ( 'group' === $message_from ) {
-			$action = 'bb_groups_new_message';
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$action = 'bb_messages_new';
+			if ( 'group' === $message_from ) {
+				$action = 'bb_groups_new_message';
+			}
 		}
 
 		if (
