@@ -1464,7 +1464,7 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point.friends .privacy-point-icon:before {
-  content: "\ef5a";
+  content: "\ef5b";
 }
 
 #bp-activity-privacy-point.onlyme .privacy-point-icon:before {
@@ -1669,7 +1669,7 @@ a.layout-grid-view {
 }
 
 .bp-activity-privacy__label .privacy-figure--friends:before {
-  content: "\ef5a";
+  content: "\ef5b";
 }
 
 .bp-activity-privacy__label .privacy-figure--onlyme:before {
