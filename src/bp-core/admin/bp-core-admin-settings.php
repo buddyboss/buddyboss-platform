@@ -1908,7 +1908,7 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 
 	if ( true === $args['description'] ) {
 		?>
-		<p class="description"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
