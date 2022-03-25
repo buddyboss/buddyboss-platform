@@ -83,11 +83,11 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'new-mention',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a {{mentioned.type}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
+				'email_content'       => __( '<a href="{{{poster.url}}}">{{poster.name}}</a> mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is mentioned by another member', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),
@@ -98,11 +98,11 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'new-mention-group',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group {{mentioned.type}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
+				'email_content'       => __( '<a href="{{{poster.url}}}">{{poster.name}}</a> mentioned you in a {{mentioned.type}} in the <b>{{group.name}}</b> group:\n\n{{{mentioned.content}}}', 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+				'email_plain_content' => __( '{{poster.name}} mentioned you in a {{mentioned.type}} in the {{group.name}} group:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}', 'buddyboss' ),
 				'situation_label'     => __( 'A member is mentioned in a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
 			),

@@ -4082,11 +4082,19 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	add_filter( 'bp_get_activity_content_body', 'wpautop' );
 	add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$email_type   = 'new-mention';
+	}
+
 	// Now email the user with the contents of the message (if they have enabled email notifications).
 	if ( true === bb_is_notification_enabled( $receiver_user_id, 'notification_activity_new_mention' ) ) {
 		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			$email_type = 'groups-at-message';
 			$group_name = bp_get_current_group_name();
+
+			if ( ! bb_enabled_legacy_email_preference() ) {
+				$email_type = 'new-mention-group';
+			}
 		}
 
 		$unsubscribe_args = array(
@@ -4096,13 +4104,15 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 
 		$args = array(
 			'tokens' => array(
-				'activity'         => $activity,
-				'usermessage'      => wp_strip_all_tags( $content ),
-				'group.name'       => $group_name,
-				'mentioned.url'    => $message_link,
-				'poster.name'      => $poster_name,
-				'receiver-user.id' => $receiver_user_id,
-				'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				'activity'          => $activity,
+				'usermessage'       => wp_strip_all_tags( $content ),
+				'group.name'        => $group_name,
+				'mentioned.url'     => $message_link,
+				'poster.name'       => $poster_name,
+				'receiver-user.id'  => $receiver_user_id,
+				'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				'mentioned.type'    => '',
+				'mentioned.content' => '',
 			),
 		);
 

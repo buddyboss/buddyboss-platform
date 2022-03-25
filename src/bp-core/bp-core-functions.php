@@ -3821,6 +3821,22 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 function bp_email_get_schema() {
 
 	$schema = array(
+		'activity-at-message'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+		),
+		'groups-at-message'                  => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+		),
 		'core-user-registration'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
@@ -3915,6 +3931,22 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
+	$activity_at_message = array(
+		'description' => __( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_activity_new_mention',
+			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+		),
+	);
+
+	$groups_at_message = array(
+		'description' => __( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_activity_new_mention',
+			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+		),
+	);
+
 	$settings_verify_email_change = array(
 		'description' => __( 'A member\'s email is changed', 'buddyboss' ),
 		'unsubscribe' => false,
@@ -3938,6 +3970,8 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$types = array(
 		'core-user-registration'           => $core_user_registration,
 		'core-user-registration-with-blog' => $core_user_registration_with_blog,
+		'activity-at-message'              => $activity_at_message,
+		'groups-at-message'                => $groups_at_message,
 		'settings-verify-email-change'     => $settings_verify_email_change,
 		'invites-member-invite'            => $invites_member_invite,
 		'content-moderation-email'         => $content_moderation_email,
