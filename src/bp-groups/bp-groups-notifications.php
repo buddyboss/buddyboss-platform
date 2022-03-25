@@ -235,8 +235,8 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 
 	$type_key = 'notification_membership_request_completed';
 	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type = ! empty( $accepted ) ? 'notification_membership_request_completed_0' : 'notification_membership_request_completed_1';
-		$type_key = bb_get_prefences_key( 'legacy', $type );
+		$action   = ! empty( $accepted ) ? '0' : '1';
+		$type_key = bb_get_prefences_key( 'legacy', $type_key, $action );
 	}
 
 	// Bail if member opted out of receiving this email.
