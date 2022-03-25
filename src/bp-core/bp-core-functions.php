@@ -6802,7 +6802,7 @@ function bb_core_remove_unfiltered_html( $content ) {
 }
 
 /**
- * Function will return icon of platform section.
+ * Function will return icon based on section..
  *
  * @since BuddyBoss [BBVERSION]
  *

@@ -22,47 +22,47 @@ function bbp_admin_get_settings_sections() {
 		'bbp_admin_get_settings_sections',
 		array(
 			'bbp_settings_users'        => array(
-				'title'    => __( 'Forum Settings', 'buddyboss' ),
+				'title'    => esc_html__( 'Forum Settings', 'buddyboss' ),
 				'page'     => 'discussion',
 			),
 			'bbp_settings_features'     => array(
-				'title'    => __( 'Forum Features', 'buddyboss' ),
+				'title'    => esc_html__( 'Forum Features', 'buddyboss' ),
 				'page'     => 'discussion',
 			),
 			'bbp_settings_buddypress'   => array(
-				'title'    => __( 'Group Forums', 'buddyboss' ),
+				'title'    => esc_html__( 'Group Forums', 'buddyboss' ),
 				'page'     => 'buddypress',
 			),
 			'bbp_settings_root_slugs'   => array(
-				'title'    => __( 'Forums Directory', 'buddyboss' ),
+				'title'    => esc_html__( 'Forums Directory', 'buddyboss' ),
 				'callback' => 'bbp_admin_setting_callback_root_slug_section',
 				'page'     => 'permalink',
 			),
 			'bbp_settings_theme_compat' => array(
-				'title'    => __( 'Forum Theme Packages', 'buddyboss' ),
+				'title'    => esc_html__( 'Forum Theme Packages', 'buddyboss' ),
 				'callback' => 'bbp_admin_setting_callback_subtheme_section',
 				'page'     => 'general',
 			),
 			'bbp_settings_per_page'     => array(
-				'title'    => __( 'Discussions and Replies Per Page', 'buddyboss' ),
+				'title'    => esc_html__( 'Discussions and Replies Per Page', 'buddyboss' ),
 				'page'     => 'reading',
 			),
 			'bbp_settings_per_rss_page' => array(
-				'title'    => __( 'Discussions and Replies Per RSS Page', 'buddyboss' ),
+				'title'    => esc_html__( 'Discussions and Replies Per RSS Page', 'buddyboss' ),
 				'page'     => 'reading',
 			),
 			'bbp_settings_single_slugs' => array(
-				'title'    => __( 'Forum Permalinks', 'buddyboss' ),
+				'title'    => esc_html__( 'Forum Permalinks', 'buddyboss' ),
 				'callback' => 'bbp_admin_setting_callback_single_slug_section',
 				'page'     => 'permalink',
 			),
 			 'bbp_settings_user_slugs' => array(
-				 'title'    => __( 'Forum Profile Permalinks', 'buddyboss' ),
+				 'title'    => esc_html__( 'Forum Profile Permalinks', 'buddyboss' ),
 				 'callback' => 'bbp_admin_setting_callback_user_slug_section',
 				 'page'     => 'permalink',
 			 ),
 			'bbp_settings_akismet'      => array(
-				'title'    => __( 'Akismet Integration', 'buddyboss' ),
+				'title'    => esc_html__( 'Akismet Integration', 'buddyboss' ),
 				'page'     => 'discussion',
 			),
 		)
@@ -209,7 +209,7 @@ function bbp_admin_get_settings_fields() {
 
 				// Are group forums enabled?
 				'_bbp_enable_group_forums'  => array(
-					'title'             => __( 'Group Forums', 'buddyboss' ),
+					'title'             => esc_html__( 'Group Forums', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_group_forums',
 					'sanitize_callback' => 'intval',
 					'args'              => array(),
@@ -230,7 +230,7 @@ function bbp_admin_get_settings_fields() {
 
 				   // Include root setting
 				   '_bbp_include_root' => array(
-					   'title'             => __( 'Forums Prefix', 'buddyboss' ),
+					   'title'             => esc_html__( 'Forums Prefix', 'buddyboss' ),
 					   'callback'          => 'bbp_admin_setting_callback_include_root',
 					   'sanitize_callback' => 'intval',
 					   'args'              => array(),
@@ -238,7 +238,7 @@ function bbp_admin_get_settings_fields() {
 
 				// What to show on Forum Root
 				'_bbp_show_on_root'    => array(
-					'title'             => __( 'Forums Directory shows', 'buddyboss' ),
+					'title'             => esc_html__( 'Forums Directory shows', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_show_on_root',
 					'sanitize_callback' => 'sanitize_text_field',
 					'args'              => array(),
@@ -391,7 +391,7 @@ function bbp_admin_get_settings_fields() {
 
 				// Should we use Akismet
 				'_bbp_enable_akismet' => array(
-					'title'             => __( 'Akismet Spam Protection', 'buddyboss' ),
+					'title'             => esc_html__( 'Akismet Spam Protection', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_akismet',
 					'sanitize_callback' => 'intval',
 					'args'              => array(),
@@ -820,22 +820,27 @@ function bbp_admin_setting_callback_root_slug_section() {
 
 	<?php
 	printf(
+	/* translators: Description. */
 		'<p>%s</p>',
 		sprintf(
-			__( 'Customize your Forums directory. Use <a href="%s">Shortcodes</a> for more flexibility.', 'buddyboss' ),
-			bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 83108,
-					),
-					'admin.php'
-				)
+		/* translators: Description with link. */
+			esc_html__( 'Customize your Forums directory. Use %s for more flexibility.', 'buddyboss' ),
+			sprintf(
+			/* translators: 1: Link, 2: Text. */
+				'<a href="%1$s">%2$s</a>',
+				esc_url( bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 83108,
+						),
+						'admin.php'
+					)
+				) ),
+				esc_html__( 'Shortcodes', 'buddyboss' )
 			)
 		)
-	); ?>
-
-	<?php
+	);
 }
 
 /**
@@ -1111,14 +1116,19 @@ function bbp_admin_setting_callback_akismet() {
 	 />
 	<?php
 	printf(
+	/* translators: Description. */
 		'<label for="_bbp_enable_akismet">%s</label>',
 		sprintf(
-			__( 'Allow  <a href="%s" target="_blank">Akismet</a> spam filtering to actively prevent forum spam.', 'buddyboss' ),
-			esc_url( 'https://akismet.com/' )
+		/* translators: Description with link. */
+			esc_html__( 'Allow %s spam filtering to actively prevent forum spam.', 'buddyboss' ),
+			sprintf(
+			/* translators: 1: Link, 2: Text. */
+				'<a href="%1$s" target="_blank">%2$s</a>',
+				esc_url( 'https://akismet.com/' ),
+				esc_html__( 'Akismet', 'buddyboss' )
+			)
 		)
-	); ?>
-
-	<?php
+	);
 }
 
 /** Settings Page *************************************************************/
