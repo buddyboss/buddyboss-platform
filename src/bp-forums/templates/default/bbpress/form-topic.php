@@ -156,8 +156,8 @@
 
 						<?php
 						if (
-						   bb_enabled_legacy_email_preference() ||
-						   ( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'notification_forums_following_topic' ) )
+							bb_enabled_legacy_email_preference() ||
+							( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'notification_forums_following_topic' ) )
 						) {
 							?>
 
