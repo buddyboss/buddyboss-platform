@@ -7331,3 +7331,33 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 
 	return false;
 }
+
+/**
+ * Preferences Array Map.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_preferences_key_maps() {
+	return array(
+		'notification_activity_new_mention'         => 'bb_new_mention',
+		'notification_activity_new_reply'           => 'bb_activity_comment',
+		'notification_groups_invite'                => 'bb_groups_new_invite',
+		'notification_groups_group_updated'         => 'bb_groups_details_updated',
+		'notification_groups_admin_promotion'       => 'bb_groups_promoted',
+		'notification_groups_membership_request'    => 'bb_groups_new_request',
+		'notification_membership_request_completed' => array(
+			'bb_groups_request_accepted',
+			'bb_groups_request_rejected',
+		),
+		'notification_group_messages_new_message'   => 'bb_groups_new_message',
+		'notification_zoom_meeting_scheduled'       => 'bb_groups_new_zoom',
+		'notification_zoom_webinar_scheduled'       => 'bb_groups_new_zoom',
+		'notification_forums_following_reply'       => 'bb_forums_subscribed_reply',
+		'notification_forums_following_topic'       => 'bb_forums_subscribed_discussion',
+		'notification_messages_new_message'         => 'bb_messages_new',
+		'notification_friends_friendship_request'   => 'bb_connections_new_request',
+		'notification_friends_friendship_accepted'  => 'bb_connections_request_accepted',
+	);
+}
