@@ -54,7 +54,7 @@ function bp_core_admin_tools() {
 
 			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
 				<fieldset>
-					<legend><?php _e( 'What do you want to import?', 'buddyboss' ); ?></legend>
+					<legend><?php _e( 'What data do you want to import?', 'buddyboss' ); ?></legend>
 					<ul class="items">
 						<li class="users main">
 							<label for="import-users">
