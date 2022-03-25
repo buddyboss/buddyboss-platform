@@ -165,30 +165,6 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
 			$notification_link = bp_get_notifications_permalink();
 
-			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = bp_create_excerpt(
-				wp_strip_all_tags( $activity->content ),
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			);
-			if ( '&nbsp;' === $activity_excerpt ) {
-				$activity_excerpt = '';
-			}
-
-			$parent_activity  = new BP_Activity_Activity( $activity->item_id );
-			$activity_excerpt = bp_create_excerpt(
-				wp_strip_all_tags( $parent_activity->content ),
-				50,
-				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
-				)
-			);
-			if ( '&nbsp;' === $activity_excerpt ) {
-				$activity_excerpt = '';
-			}
-
 			if ( $notification_type ) {
 				if ( 'activity_comment' === $notification_type ) {
 					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
@@ -209,11 +185,11 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				$activity_excerpt = '';
 			}
 
-			if ( empty( $activity_excerpt ) && ! empty( $activity->item_id ) ) {
-				$parent_activity = new BP_Activity_Activity( $activity->item_id );
+			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
+				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
 
 				$activity_excerpt = bp_create_excerpt(
-					wp_strip_all_tags( $parent_activity->content ),
+					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
 						'ending' => __( '&hellip;', 'buddyboss' ),
