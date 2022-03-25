@@ -69,7 +69,7 @@ function bp_custom_pages_do_settings_sections( $page ) {
 		if ( $section['title'] ) {
 			$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 			$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="'.$section['icon'].'"></i>' : '';
-			echo "<h2 class=". $has_tutorial_btn .">" . $has_icon . "{$section['title']}";
+			echo "<h2 class=". esc_attr( $has_tutorial_btn ) .">" . $has_icon . wp_kses_post( $section['title'] );
 			if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
 				?> <div class="bbapp-tutorial-btn"> <?php
 				call_user_func( $section['tutorial_callback'], $section );
