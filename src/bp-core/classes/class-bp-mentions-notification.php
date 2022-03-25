@@ -172,13 +172,6 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		$activity_excerpt       = '';
 
 		$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
-		if ( $notification_type ) {
-			if ( 'post_comment' === $notification_type ) {
-				$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-			} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
-				$notification_type_html = esc_html__( 'post', 'buddyboss' );
-			}
-		}
 
 		// Get activity by activity ID.
 		if ( 'bb_activity_comment' === $action ) {
@@ -212,6 +205,14 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		if ( ! empty( $notification ) && 'bb_new_mention' === $action && ( 'activity' === $notification->component_name || 'forums' === $notification->component_name ) ) {
+
+			if ( $notification_type ) {
+				if ( 'post_comment' === $notification_type ) {
+					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+				} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+				}
+			}
 
 			switch ( $notification->component_name ) {
 				case 'activity':
@@ -304,6 +305,13 @@ class BP_Mentions_Notification extends BP_Core_Notification_Abstract {
 			$link   = bp_get_notifications_permalink();
 			$title  = __( 'New Activity reply', 'buddyboss' );
 			$amount = 'single';
+
+			if ( $notification_type ) {
+				$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+				if ( 'activity_post' === $notification_type ) {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+				}
+			}
 
 			if ( (int) $total_items > 1 ) {
 				$link = add_query_arg( 'type', $action, $link );

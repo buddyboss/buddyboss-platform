@@ -550,6 +550,8 @@ function bb_activity_add_notification_metas( $notification_id, $activity ) {
 		return;
 	}
 
+	$notification_id = (int) $notification_id;
+
 	if ( $notification_id ) {
 		if ( 'activity_comment' === $activity->type ) {
 			if ( ! empty( $activity->item_id ) ) {
