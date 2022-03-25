@@ -73,7 +73,7 @@
 	&.friends {
 
 		.privacy-point-icon:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 	}
 
@@ -310,7 +310,7 @@
 		}
 
 		&--friends:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 
 		&--onlyme:before {
@@ -1438,7 +1438,7 @@
 		}
 
 		&.friends:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 
 		&.loading:before {
@@ -1537,7 +1537,7 @@
 		}
 
 		&.friends:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 
 		&.bb-edit-privacy {
@@ -1555,6 +1555,7 @@
 				text-align: center;
 				display: inline-block;
 				vertical-align: bottom;
+				font-weight: 400;
 			}
 
 			&.public a:before {
