@@ -1464,7 +1464,7 @@ a.layout-grid-view {
 }
 
 #bp-activity-privacy-point.friends .privacy-point-icon:before {
-  content: "\ef5a";
+  content: "\ef5b";
 }
 
 #bp-activity-privacy-point.onlyme .privacy-point-icon:before {
@@ -1669,7 +1669,7 @@ a.layout-grid-view {
 }
 
 .bp-activity-privacy__label .privacy-figure--friends:before {
-  content: "\ef5a";
+  content: "\ef5b";
 }
 
 .bp-activity-privacy__label .privacy-figure--onlyme:before {
@@ -2859,7 +2859,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .bb-document-privacy-wrap .privacy.friends:before,
 .bb-media-privacy-wrap .privacy.friends:before {
-  content: "\ef5a";
+  content: "\ef5b";
 }
 
 .bb-document-privacy-wrap .privacy.loading:before,
@@ -2960,7 +2960,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 .activity-privacy > li.friends:before {
-  content: "\ef5a";
+  content: "\ef5b";
 }
 
 .activity-privacy > li.bb-edit-privacy:before {
@@ -2977,6 +2977,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   text-align: center;
   display: inline-block;
   vertical-align: bottom;
+  font-weight: 400;
 }
 
 .activity-privacy > li.bb-edit-privacy.public a:before {
