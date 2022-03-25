@@ -299,6 +299,8 @@ if ( class_exists( 'Walker' ) ) :
 			'id'     => 'ID',
 		);
 
+		var $total_items_per_page = 0;
+
 		/**
 		 * @see Walker::start_lvl()
 		 *
@@ -358,11 +360,13 @@ if ( class_exists( 'Walker' ) ) :
 				return;
 			}
 
-			// Get element's id
+			$this->total_items_per_page++;
+
+			// Get element's id.
 			$id_field = $this->db_fields['id'];
 			$id       = $element->$id_field;
 
-			// Display element
+			// Display element.
 			parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 
 			// If we're at the max depth and the current element still has children, loop over those
@@ -382,19 +386,19 @@ if ( class_exists( 'Walker' ) ) :
 		 */
 		public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
 
-			// Set up reply
+			// Set up reply.
 			$depth++;
 			bbpress()->reply_query->reply_depth = $depth;
 			bbpress()->reply_query->post        = $object;
 			bbpress()->current_reply_id         = $object->ID;
 
-			// Check for a callback and use it if specified
+			// Check for a callback and use it if specified.
 			if ( ! empty( $args['callback'] ) ) {
 				call_user_func( $args['callback'], $object, $args, $depth );
 				return;
 			}
 
-			// Style for div or list element
+			// Style for div or list element.
 			if ( ! empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
 				echo "<div class='depth-$depth' data-depth='$depth'>\n";
 			} else {
@@ -409,18 +413,157 @@ if ( class_exists( 'Walker' ) ) :
 		 */
 		public function end_el( &$output = '', $object = false, $depth = 0, $args = array() ) {
 
-			// Check for a callback and use it if specified
+			// Check for a callback and use it if specified.
 			if ( ! empty( $args['end-callback'] ) ) {
 				call_user_func( $args['end-callback'], $object, $args, $depth );
 				return;
 			}
 
-			// Style for div or list element
+			// Style for div or list element.
 			if ( ! empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
 				echo "</div>\n";
 			} else {
 				echo "</li>\n";
 			}
 		}
+
+		/**
+		 * paged_walk() - produce a page of nested elements
+		 *
+		 * Given an array of hierarchical elements, the maximum depth, a specific page number,
+		 * and number of elements per page, this function first determines all top level root elements
+		 * belonging to that page, then lists them and all of their children in hierarchical order.
+		 *
+		 * $max_depth = 0 means display all levels.
+		 * $max_depth > 0 specifies the number of display levels.
+		 *
+		 * @since 2.7.0
+		 * @since 5.3.0 Formalized the existing `...$args` parameter by adding it
+		 *              to the function signature.
+		 *
+		 * @param array $elements
+		 * @param int   $max_depth The maximum hierarchical depth.
+		 * @param int   $page_num  The specific page number, beginning with 1.
+		 * @param int   $per_page
+		 * @param mixed ...$args   Optional additional arguments.
+		 * @return string XHTML of the specified page of elements
+		 */
+		public function paged_walk( $elements, $max_depth, $page_num, $per_page, ...$args ) {
+			if ( empty( $elements ) || $max_depth < -1 ) {
+				return '';
+			}
+
+			$output = '';
+
+			$parent_field = $this->db_fields['parent'];
+
+			$count = -1;
+			if ( -1 == $max_depth ) {
+				$total_top = count( $elements );
+			}
+			if ( $page_num < 1 || $per_page < 0 ) {
+				// No paging.
+				$paging = false;
+				$start  = 0;
+				if ( -1 == $max_depth ) {
+					$end = $total_top;
+				}
+				$this->max_pages = 1;
+			} else {
+				$paging = true;
+				$start  = ( (int) $page_num - 1 ) * (int) $per_page;
+				$end    = $start + $per_page;
+				if ( -1 == $max_depth ) {
+					$this->max_pages = ceil( $total_top / $per_page );
+				}
+			}
+
+			// Flat display.
+			if ( -1 == $max_depth ) {
+				if ( ! empty( $args[0]['reverse_top_level'] ) ) {
+					$elements = array_reverse( $elements );
+					$oldstart = $start;
+					$start    = $total_top - $end;
+					$end      = $total_top - $oldstart;
+				}
+
+				$empty_array = array();
+				foreach ( $elements as $e ) {
+					$count++;
+					if ( $count < $start ) {
+						continue;
+					}
+					if ( $count >= $end ) {
+						break;
+					}
+					$this->display_element( $e, $empty_array, 1, 0, $args, $output );
+				}
+				return $output;
+			}
+
+			/*
+			 * Separate elements into two buckets: top level and children elements.
+			 * Children_elements is two dimensional array, e.g.
+			 * $children_elements[10][] contains all sub-elements whose parent is 10.
+			 */
+			$top_level_elements = array();
+			$children_elements  = array();
+			foreach ( $elements as $e ) {
+				if ( empty( $e->$parent_field ) ) {
+					$top_level_elements[] = $e;
+				} else {
+					$children_elements[ $e->$parent_field ][] = $e;
+				}
+			}
+
+			$total_top = count( $top_level_elements );
+			if ( $paging ) {
+				$this->max_pages = ceil( $total_top / $per_page );
+			} else {
+				$end = $total_top;
+			}
+
+			if ( ! empty( $args[0]['reverse_top_level'] ) ) {
+				$top_level_elements = array_reverse( $top_level_elements );
+				$oldstart           = $start;
+				$start              = $total_top - $end;
+				$end                = $total_top - $oldstart;
+			}
+			if ( ! empty( $args[0]['reverse_children'] ) ) {
+				foreach ( $children_elements as $parent => $children ) {
+					$children_elements[ $parent ] = array_reverse( $children );
+				}
+			}
+
+			foreach ( $top_level_elements as $e ) {
+				$count++;
+
+				// For the last page, need to unset earlier children in order to keep track of orphans.
+				if ( $end >= $total_top && $count < $start ) {
+					$this->unset_children( $e, $children_elements );
+				}
+
+				if ( $count < $start ) {
+					continue;
+				}
+
+				if ( $count >= $end ) {
+					break;
+				}
+
+				$this->display_element( $e, $children_elements, $max_depth, 0, $args, $output );
+			}
+
+			if ( $end >= $total_top && count( $children_elements ) > 0 ) {
+				$empty_array = array();
+				foreach ( $children_elements as $orphans ) {
+					foreach ( $orphans as $op ) {
+						$this->display_element( $op, $empty_array, 1, 0, $args, $output );
+					}
+				}
+			}
+
+			return $output;
+		}
 	}
-endif; // class_exists check
+endif; // class_exists check.
