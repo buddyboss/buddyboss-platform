@@ -6812,7 +6812,6 @@ function bb_core_remove_unfiltered_html( $content ) {
  */
 function bb_admin_icons( $id ) {
 	$bb_icon_bf = 'bb-icon-bf';
-	//$bb_icon_bl = 'bb-icon-bl';
 	switch ( $id ) {
 		case 'bp_main':
 			$meta_icon = $bb_icon_bf . ' bb-icon-cog';
@@ -6837,6 +6836,7 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_profile_list_settings':
 		case 'bp_group_list_settings':
+		case 'bbp_settings_root_slugs':
 			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
 			break;
 		case 'bp_member_type_settings':
@@ -6851,6 +6851,7 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-search';
 			break;
 		case 'bp_groups':
+		case 'bbp_settings_buddypress':
 			$meta_icon = $bb_icon_bf . ' bb-icon-users';
 			break;
 		case 'bp_groups_hierarchies':
@@ -6859,12 +6860,6 @@ function bb_admin_icons( $id ) {
 		case 'bbp_settings_users':
 		case 'bbp_settings_features':
 			$meta_icon = $bb_icon_bf . ' bb-icon-comments-square';
-			break;
-		case 'bbp_settings_root_slugs':
-			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
-			break;
-		case 'bbp_settings_buddypress':
-			$meta_icon = $bb_icon_bf . ' bb-icon-users';
 			break;
 		case 'bbp_settings_per_page':
 			$meta_icon = $bb_icon_bf . ' bb-icon-sort-amount-down';
