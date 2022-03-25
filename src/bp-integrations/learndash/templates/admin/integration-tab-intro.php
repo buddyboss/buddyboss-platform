@@ -47,6 +47,7 @@
 					)
 				);
 				echo sprintf(
+				/* translators: 1. Text. 2. Text. */
 					'%1$s&nbsp;<span>&mdash; %2$s</span>',
 					esc_html__( 'LearnDash', 'buddyboss' ),
 					esc_html__( 'requires plugin to activate', 'buddyboss' )
