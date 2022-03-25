@@ -365,6 +365,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 18651 ) {
 			bb_update_to_1_9_1();
 		}
+
+		if ( $raw_db_version < 18701 ) {
+			bb_update_to_1_9_3();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1758,5 +1762,34 @@ function bb_update_to_1_9_1() {
 	if ( ! empty( $group_cover_height ) ) {
 		bp_delete_option( 'bb-pro-cover-group-height' );
 		bp_add_option( 'bb-pro-cover-group-height', $group_cover_height );
+	}
+}
+
+/**
+ * Update routine.
+ * Update the email situation labels.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_1_9_3() {
+	$email_situation_labels = array(
+		'activity-at-message'          => 'A member is mentioned in an activity post',
+		'groups-at-message'            => 'A member is mentioned in a group activity post',
+		'zoom-scheduled-meeting-email' => 'A Zoom meeting is scheduled in a group',
+		'zoom-scheduled-webinar-email' => 'A Zoom webinar is scheduled in a group'
+	);
+
+	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
+		$situation_term = get_term_by( 'slug', $situation_slug, bp_get_email_tax_type() );
+
+		if ( ! empty( $situation_term ) && $situation_term->term_id ) {
+			wp_update_term(
+				(int) $situation_term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $situation_label,
+				)
+			);
+		}
 	}
 }
