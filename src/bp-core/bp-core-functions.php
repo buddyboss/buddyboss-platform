@@ -6580,6 +6580,14 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
+	if ( bb_enabled_legacy_email_preference() ) {
+		if ( 'no' !== bp_get_user_meta( $user_id, $notification_type, true ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	// All preferences registered.
 	$preferences = bb_register_notification_preferences();
 
@@ -6628,7 +6636,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		}
 	}
 
-	if ( ! bb_enabled_legacy_email_preference() && ! empty( $main ) && isset( $main[ $notification_type ] ) && 'no' === $main[ $notification_type ] ) {
+	if ( ! empty( $main ) && isset( $main[ $notification_type ] ) && 'no' === $main[ $notification_type ] ) {
 		return false;
 	}
 
@@ -6637,11 +6645,6 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
 	if (
-		bb_enabled_legacy_email_preference() &&
-		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
-	) {
-		return true;
-	} elseif (
 		array_key_exists( $notification_type, $notifications ) &&
 		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
 		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
@@ -7341,23 +7344,54 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
  */
 function bb_preferences_key_maps() {
 	return array(
-		'notification_activity_new_mention'         => 'bb_new_mention',
-		'notification_activity_new_reply'           => 'bb_activity_comment',
-		'notification_groups_invite'                => 'bb_groups_new_invite',
-		'notification_groups_group_updated'         => 'bb_groups_details_updated',
-		'notification_groups_admin_promotion'       => 'bb_groups_promoted',
-		'notification_groups_membership_request'    => 'bb_groups_new_request',
-		'notification_membership_request_completed' => array(
-			'bb_groups_request_accepted',
-			'bb_groups_request_rejected',
-		),
-		'notification_group_messages_new_message'   => 'bb_groups_new_message',
-		'notification_zoom_meeting_scheduled'       => 'bb_groups_new_zoom',
-		'notification_zoom_webinar_scheduled'       => 'bb_groups_new_zoom',
-		'notification_forums_following_reply'       => 'bb_forums_subscribed_reply',
-		'notification_forums_following_topic'       => 'bb_forums_subscribed_discussion',
-		'notification_messages_new_message'         => 'bb_messages_new',
-		'notification_friends_friendship_request'   => 'bb_connections_new_request',
-		'notification_friends_friendship_accepted'  => 'bb_connections_request_accepted',
+		'notification_activity_new_mention'           => 'bb_new_mention',
+		'notification_activity_new_reply'             => 'bb_activity_comment',
+		'notification_groups_invite'                  => 'bb_groups_new_invite',
+		'notification_groups_group_updated'           => 'bb_groups_details_updated',
+		'notification_groups_admin_promotion'         => 'bb_groups_promoted',
+		'notification_groups_membership_request'      => 'bb_groups_new_request',
+		'notification_membership_request_completed_0' => 'bb_groups_request_accepted',
+		'notification_membership_request_completed_1' => 'bb_groups_request_rejected',
+		'notification_group_messages_new_message'     => 'bb_groups_new_message',
+		'notification_zoom_meeting_scheduled'         => 'bb_groups_new_zoom',
+		'notification_zoom_webinar_scheduled'         => 'bb_groups_new_zoom',
+		'notification_forums_following_reply'         => 'bb_forums_subscribed_reply',
+		'notification_forums_following_topic'         => 'bb_forums_subscribed_discussion',
+		'notification_messages_new_message'           => 'bb_messages_new',
+		'notification_friends_friendship_request'     => 'bb_connections_new_request',
+		'notification_friends_friendship_accepted'    => 'bb_connections_request_accepted',
 	);
+}
+
+/**
+ * Match the Keys with modern to old.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Type of preference 'legacy' or 'modern'
+ * @param string $key Key name.
+ * @param string $action key postfix.
+ *
+ * @return array|int|mixed|string|string[]
+ */
+function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
+	if ( empty( $key ) ) {
+		return '';
+	}
+
+	$keys = bb_preferences_key_maps();
+
+	if ( 'modern' === $type ) {
+		$keys = array_flip( $keys );
+	}
+
+	$key = ( 'legacy' === $type && ! empty( $action ) ? $key . '_' . $action : $key );
+
+	if ( 'legacy' === $type && array_key_exists( $key, $keys ) ) {
+		return $keys[ $key ];
+	} elseif ( 'modern' === $type && array_key_exists( $key, $keys ) ) {
+		return str_replace( $keys[ $key ], '_' . $action, '' );
+	}
+
+	return '';
 }
