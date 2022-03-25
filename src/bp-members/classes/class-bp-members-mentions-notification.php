@@ -143,7 +143,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 		$user_fullname          = bp_core_get_user_displayname( $user_id );
 		$notification_type_html = '';
 
-		if ( ! empty( $notification ) && 'bb_new_mention' === $component_action_name && in_array( $component_name, array( 'activity', 'forums' ), true ) ) {
+		if ( ! empty( $notification ) && 'bb_new_mention' === $component_action_name && in_array( $component_name, array( 'activity', 'forums', 'members' ), true ) ) {
 
 			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
 			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );

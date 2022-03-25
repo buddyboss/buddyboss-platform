@@ -29,6 +29,9 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 	$activity_id   = $item_id;
 	$user_id       = $secondary_item_id;
 	$user_fullname = bp_core_get_user_displayname( $user_id );
+	$amount        = '';
+	$text          = '';
+	$link          = '';
 
 	switch ( $action ) {
 		case 'new_at_mention':
@@ -205,6 +208,7 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$component_action = 'bb_new_mention';
+		$component_name   = 'members';
 	}
 
 	$notification_id = bp_notifications_add_notification(
