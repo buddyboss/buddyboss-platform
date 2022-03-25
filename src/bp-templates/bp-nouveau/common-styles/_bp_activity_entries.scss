@@ -323,6 +323,7 @@
 			.unfav:before {
 				content: "\ef41";
 				color: #0061ac;
+				font-weight: 300;
 			}
 
 			.edit-activity:before {
@@ -749,11 +750,6 @@ ul.medium-editor-toolbar-actions {
 		font-size: 24px;
 		width: auto;
 		height: auto;
-	}
-
-	.document-support [class*=" bb-icon-"],
-	.post-media-document-support  [class*=" bb-icon-"] {
-		font-size: 22px;
 	}
 
 	.emojionearea .emojionearea-button:before {
@@ -1315,9 +1311,8 @@ span.dashicons.dashicons-admin-file:before {
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 14px;
+				font-size: 25px;
 				padding: 0;
-				border: 1px solid #fff;
 				background-color: transparent;
 				color: #fff;
 				display: inline-block;
@@ -1592,9 +1587,8 @@ span.dashicons.dashicons-admin-file:before {
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 14px;
+				font-size: 25px;
 				padding: 0;
-				border: 1px solid #fff;
 				background-color: transparent;
 				color: #fff;
 				display: inline-block;

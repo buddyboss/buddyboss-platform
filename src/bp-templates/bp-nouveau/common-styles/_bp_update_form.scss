@@ -469,11 +469,6 @@
 				margin-right: 10px;
 			}
 
-			.show-toolbar [class*=" bb-icon-"] {
-				font-size: 28px;
-				margin-right: 5px;
-			}
-
 		}
 
 		#whats-new-attachments .dropzone.open {
@@ -852,10 +847,6 @@
 	.post-elements-buttons-item {
 		margin-right: 10px;
 		position: relative;
-
-		&.show-toolbar {
-			margin-right: 5px;
-		}
 	}
 }
 
@@ -1622,10 +1613,12 @@ div[class*="attached-gif-container"] {
 		color: #9ea8b3;
 		margin-top: 0;
 		position: absolute;
+		text-align: center;
 
-		.bb-icon-close {
+		.bb-icon-times {
 			font-size: 20px;
 			vertical-align: top;
+			line-height: 20px;
 		}
 	}
 

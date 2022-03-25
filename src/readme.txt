@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.9.2
 Requires PHP: 5.6.20
-Stable tag: 1.9.1.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.9.2 =
+* Profiles - Handled critical issue in Profile when forum component not enabled
+* Groups - Handled group invitation screen UI issue in profile
+* Groups - Handled memory issue for a non-logged-in member for group with a large number of invitations
+* Groups - Handled hidden group activity privacy issue
+* Activity - Handled activity form, privacy selection issue
+* Media - Handled photo and document update privacy issue in the popup
+* Performance - Improved @mention performance to query for right usernames on page and post
+* REST API - Small improvement in group details API endpoint
+* REST API - Handled message API caching issue
+* Compatibility - Handled WordPress 5.8 compatibility issue on save profile action
 
 = 1.9.1.1 =
 * Private Network - Handled private site ‘Public Website Content’ not working critical issue
