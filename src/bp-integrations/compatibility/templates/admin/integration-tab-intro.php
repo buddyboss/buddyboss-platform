@@ -11,7 +11,7 @@
 			}
 			echo sprintf(
 			/* translators: 1. Text. 2. Text. */
-				'%1$s <span>&mdash; %2$s</span>',
+				'%1$s&nbsp;<span>&mdash; %2$s</span>',
 				esc_html__( 'BuddyPress', 'buddyboss' ),
 				esc_html__( 'Third party plugin settings', 'buddyboss' )
 			);
