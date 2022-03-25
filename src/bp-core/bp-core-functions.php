@@ -6927,7 +6927,7 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
 			break;
 		case 'bp_buddyboss_app-integration':
-			$meta_icon = $bb_icon_bf . ' bb-icon-mobile';
+			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddyboss-app';
 			break;
 		case 'bp_compatibility-integration':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-buddypress';
