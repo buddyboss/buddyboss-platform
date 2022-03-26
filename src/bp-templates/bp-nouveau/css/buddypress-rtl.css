@@ -111,7 +111,6 @@ body.buddypress article.page > .entry-header {
 
 body.buddypress article.page > .entry-header .entry-title {
   font-size: 28px;
-  font-weight: inherit;
   color: #767676;
 }
 
@@ -837,7 +836,6 @@ a.layout-grid-view {
 .bp-list li .item .list-title {
   clear: none;
   font-size: 22px;
-  font-weight: 400;
   line-height: 1.1;
   margin: 0 auto;
 }
@@ -2365,7 +2363,6 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .activity-update-form #activity-header h3 {
   margin: 0;
-  font-weight: 500;
 }
 
 .activity-update-form .activity-link-preview-container {
@@ -7888,7 +7885,6 @@ body.buddypress.bp-user #page #primary .entry-header {
 */
 .buddypress-wrap .item-body .screen-heading {
   font-size: 20px;
-  font-weight: 400;
 }
 
 .buddypress-wrap .item-body .button-tabs {
