@@ -3080,7 +3080,7 @@ div.dropzone .dz-preview {
 			margin-top: 5px;
 
 			&.bb-icon-folder-stacked {
-				font-size: 23px;
+				font-size: 26px;
 			}
 		}
 	}
@@ -4783,6 +4783,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	.subnav-filters .subnav-search .bp-dir-search-form {
 
+		&:before {
+			top: 8px;
+		}
+
 		#dir-media-search,
 		#dir-document-search,
 		#dir-video-search {
@@ -4790,7 +4794,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			background-color: transparent;
 			padding-left: 32px;
 			font-size: 14px;
-			height: 34px;
+			height: 40px;
 		}
 
 	}

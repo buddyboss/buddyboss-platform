@@ -18587,7 +18587,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_icon > a i.bb-icon-folder-stacked,
 #media-folder-document-data-table .media-folder_items .media-folder_icon > a i.bb-icon-folder-stacked {
-  font-size: 23px;
+  font-size: 26px;
 }
 
 .search-document-list .media-folder_items .media-folder_visibility,
@@ -20487,6 +20487,12 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   margin: 0;
 }
 
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form:before,
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form:before,
+.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form:before {
+  top: 8px;
+}
+
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search,
@@ -20500,7 +20506,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   background-color: transparent;
   padding-right: 32px;
   font-size: 14px;
-  height: 34px;
+  height: 40px;
 }
 
 .directory.media .bp-subnavs li.selected a:hover span,
