@@ -20711,6 +20711,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 
 .moderation-popup .modal-container .form-item label > textarea {
   margin-right: 30px;
+  margin-bottom: 0;
   width: calc(100% - 28px);
 }
 
@@ -20770,7 +20771,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 .moderation-popup .bb-report-type-wrp .bb-model-footer {
-  margin-top: 15px;
+  margin-top: 30px;
 }
 
 [dir="rtl"] .moderation-popup .bb-report-type-wrp .bb-model-footer {
