@@ -2291,13 +2291,13 @@ a.layout-grid-view {
   z-index: 1;
   opacity: 1;
   visibility: visible;
-  bottom: 12px;
+  bottom: 13px;
   height: 40px;
 }
 
 div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  bottom: 12px;
+  bottom: 13px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
@@ -3795,6 +3795,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action b:before {
   line-height: 1;
   display: block;
   transform: none;
+  font-size: 24px;
 }
 
 ul.medium-editor-toolbar-actions .medium-editor-action-bold b:before {
@@ -9623,7 +9624,7 @@ input#send-to-input {
   border-radius: 0;
   z-index: 112;
   visibility: visible;
-  bottom: -7px;
+  bottom: -6px;
   height: 40px;
 }
 
