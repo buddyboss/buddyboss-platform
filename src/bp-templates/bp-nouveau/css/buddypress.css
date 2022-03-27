@@ -3455,7 +3455,7 @@ input.search-query-input {
 .activity-list .activity-item .bp-generic-meta.action .icons:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
+  font-size: 20px;
   vertical-align: middle;
 }
 
@@ -3479,7 +3479,7 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .edit-activity:before {
   content: "\ee5a";
-  font-size: 17px !important;
+  font-size: 20px;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .delete-activity:before {
@@ -3490,7 +3490,7 @@ input.search-query-input {
 .activity-list .activity-item .bp-generic-meta.action .report-content:before {
   content: "\ee9c";
   position: relative;
-  font-size: 19px;
+  font-size: 20px;
   width: 22px;
   display: inline-block;
   line-height: 1;
@@ -3655,7 +3655,6 @@ input.search-query-input {
   border-radius: 0;
   padding: 10px 14px;
   color: #7f868f;
-  line-height: 1.1;
   border: 0;
   background-color: transparent;
   box-shadow: none;
@@ -3669,7 +3668,7 @@ input.search-query-input {
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 18px;
+  font-size: 20px;
   display: inline-block;
   margin-right: 10px;
   vertical-align: middle;
@@ -3683,7 +3682,7 @@ input.search-query-input {
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete:before, #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.delete-activity:before {
   content: "\ef48";
-  font-size: 18px;
+  font-size: 20px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.ac-video-thumbnail-edit:before {
@@ -3697,7 +3696,7 @@ input.search-query-input {
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a.edit-activity:before {
   content: "\ee5a";
-  font-size: 17px !important;
+  font-size: 20px;
 }
 
 #buddypress .activity-list .bb-activity-more-options-wrap .bb-activity-more-options .generic-button a span:not(.bp-screen-reader-text) {
@@ -5047,14 +5046,14 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li {
   margin: 0;
   padding: 0;
-  list-style-type: none !important;
+  list-style-type: none;
 }
 
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li a,
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li a,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li a {
-  padding: 10px 14px !important;
-  display: block !important;
+  padding: 10px 14px;
+  display: block;
   font-size: 14px;
   line-height: 1;
   color: #7f868f;
@@ -5063,7 +5062,7 @@ span.dashicons.dashicons-admin-file:before {
 #video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li a:hover,
 #media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li a:hover,
 .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li a:hover {
-  background-color: #f5f5f5 !important;
+  background-color: #f5f5f5;
   color: #5087e5;
 }
 
@@ -7764,7 +7763,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 .bb_more_options .bb_more_options_list a:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 22px;
+  font-size: 20px;
   display: inline-block;
   margin-right: 10px;
   vertical-align: middle;
@@ -20490,7 +20489,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form:before,
 .directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form:before,
 .directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form:before {
-  top: 8px;
+  top: 6px;
 }
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
