@@ -1815,5 +1815,53 @@ function bb_core_update_email_situation_labels() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_core_update_user_settings() {
+	global $bp_background_updater;
 
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'meta_query' => array(
+				array(
+					'key'     => 'last_activity',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 200 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'migrate_notification_preferences',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+function migrate_notification_preferences( $user_ids ) {
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$all_keys = bb_preferences_key_maps();
+
+	foreach ( $user_ids as $user_id ) {
+		foreach ( $all_keys as $old_key => $new_key ) {
+			$old_key = str_replace( '_0', '', $old_key ) . str_replace( '_1', '', $old_key );
+			if ( metadata_exists( 'user', $user_id, $old_key ) ) {
+				$old_val = get_user_meta( $user_id, $old_key, true );
+				update_user_meta( $user_id, $new_key, $old_val );
+			}
+		}
+	}
 }
