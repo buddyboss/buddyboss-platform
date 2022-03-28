@@ -1280,7 +1280,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 			'link_title' => '',
 			'type'       => 'both',
 			'size'       => 80,
-			'sep'        => '&nbsp;',
+			'sep'        => '<span class="bbp-author-link-sep"></span>',
 			'show_role'  => false,
 		),
 		'get_reply_author_link'
