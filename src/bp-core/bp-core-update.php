@@ -1847,6 +1847,12 @@ function bb_core_update_user_settings() {
 	}
 }
 
+/**
+ * Migrate notification preferences.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ */
 function migrate_notification_preferences( $user_ids ) {
 
 	if ( empty( $user_ids ) ) {
