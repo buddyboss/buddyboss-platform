@@ -68,7 +68,7 @@ function bp_is_activation( $basename = '' ) {
 	}
 
 	// The plugin(s) being activated.
-	if ( $action == 'activate' ) {
+	if ( 'activate' === $action ) {
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
@@ -275,17 +275,17 @@ function bp_version_updater() {
 			bp_update_to_2_7();
 		}
 
-		// Version 3.1.1
+		// Version 3.1.1.
 		if ( $raw_db_version < 13731 ) {
 			bp_update_to_3_1_1();
 		}
 
-		// Version 3.1.1
+		// Version 3.1.1.
 		if ( $raw_db_version < 14001 ) {
 			bb_update_to_1_2_3();
 		}
 
-		// Version 3.1.1
+		// Version 3.1.1.
 		if ( $raw_db_version < 14801 ) {
 			bp_update_to_1_2_4();
 		}
@@ -298,12 +298,12 @@ function bp_version_updater() {
 			bp_update_to_1_3_0();
 		}
 
-		// Version 1.3.5
+		// Version 1.3.5.
 		if ( $raw_db_version < 15601 ) {
 			bb_update_to_1_3_5();
 		}
 
-		// Version 1.4.0
+		// Version 1.4.0.
 		if ( $raw_db_version < 15800 ) {
 			bp_update_to_1_4_0();
 		}
@@ -352,6 +352,14 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 18401 ) {
 			bb_update_to_1_8_6();
+		}
+
+		if ( $raw_db_version < 18501 ) {
+			bb_update_to_1_9_0_1();
+		}
+
+		if ( $raw_db_version < 18651 ) {
+			bb_update_to_1_9_1();
 		}
 	}
 
@@ -602,7 +610,7 @@ function bp_update_to_2_5() {
 function bp_update_to_2_7() {
 	bp_add_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
-	// Update post_titles
+	// Update post_titles.
 	bp_migrate_directory_page_titles();
 
 	/*
@@ -995,7 +1003,7 @@ function bp_add_activation_redirect() {
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 				$slug = get_page_uri( $page_id );
 
-				// Set BBPress root Slug
+				// Set BBPress root Slug.
 				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 
 			}
@@ -1224,7 +1232,6 @@ function bp_update_to_1_5_5() {
 	$bp = buddypress();
 
 	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
 }
 
@@ -1473,8 +1480,8 @@ function bb_update_to_1_8_6() {
 					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 				}
-				$fileSystemDirect = new WP_Filesystem_Direct( false );
-				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+				$file_system_direct = new WP_Filesystem_Direct( false );
+				$file_system_direct->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
 				// Delete option after migration.
 				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
@@ -1533,8 +1540,8 @@ function bb_update_to_1_8_6() {
 					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 				}
-				$fileSystemDirect = new WP_Filesystem_Direct( false );
-				$fileSystemDirect->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+				$file_system_direct = new WP_Filesystem_Direct( false );
+				$file_system_direct->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
 				// Delete option after migration.
 				bp_delete_option( 'buddyboss_group_cover_default_migration' );
@@ -1668,4 +1675,84 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
 		'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
 		'error'   => false,
 	);
+}
+
+/**
+ * Clear the scheduled cron job of symlink.
+ *
+ * @since BuddyBoss 1.9.0.1
+ *
+ * @return void
+ */
+function bb_update_to_1_9_0_1() {
+	wp_clear_scheduled_hook( 'bb_bb_video_deleter_older_symlink_hook' );
+	wp_clear_scheduled_hook( 'bb_bb_document_deleter_older_symlink_hook' );
+	wp_clear_scheduled_hook( 'bb_bb_media_deleter_older_symlink_hook' );
+}
+
+/**
+ * Update routine.
+ * Migrate the cover sizes from the theme option.
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_update_to_1_9_1() {
+	// Display plugin update notice.
+	update_option( '_bb_is_update', true );
+
+	// If enabled follow component then return follow as primary action.
+	$primary_action = '';
+	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+		$primary_action = 'follow';
+	}
+	bp_update_option( 'bb-member-profile-primary-action', $primary_action );
+
+	if ( ! function_exists( 'buddyboss_theme' ) ) {
+		return;
+	}
+
+	// Get BuddyBoss theme options.
+	global $buddyboss_theme_options;
+
+	// Get BuddyBoss theme version.
+	$bb_theme_version = wp_get_theme()->get( 'Version' );
+
+	// Check the theme already upto date or not.
+	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.7', '>=' ) ) {
+		return;
+	}
+
+	// Check if options are empty.
+	if ( empty( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = bp_get_option( 'buddyboss_theme_options', array() );
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		bp_update_option( 'old_buddyboss_theme_options_1_8_7', $buddyboss_theme_options );
+	}
+
+	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bp_get_option( 'buddyboss_profile_cover_width' );
+	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? bp_get_option( 'buddyboss_profile_cover_height' );
+	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? bp_get_option( 'buddyboss_group_cover_width' );
+	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? bp_get_option( 'buddyboss_group_cover_height' );
+
+	if ( ! empty( $profile_cover_width ) ) {
+		bp_delete_option( 'bb-pro-cover-profile-width' );
+		bp_add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
+	}
+
+	if ( ! empty( $profile_cover_height ) ) {
+		bp_delete_option( 'bb-pro-cover-profile-height' );
+		bp_add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
+	}
+
+	if ( ! empty( $group_cover_width ) ) {
+		bp_delete_option( 'bb-pro-cover-group-width' );
+		bp_add_option( 'bb-pro-cover-group-width', $group_cover_width );
+	}
+
+	if ( ! empty( $group_cover_height ) ) {
+		bp_delete_option( 'bb-pro-cover-group-height' );
+		bp_add_option( 'bb-pro-cover-group-height', $group_cover_height );
+	}
 }
