@@ -1732,7 +1732,7 @@ ul.bb-albums-list {
 .bb-model-footer {
 
 	.button {
-		min-width: 130px;
+		min-width: 100px;
 
 		&.pull-right {
 			float: right;
@@ -3080,7 +3080,7 @@ div.dropzone .dz-preview {
 			margin-top: 5px;
 
 			&.bb-icon-folder-stacked {
-				font-size: 23px;
+				font-size: 26px;
 			}
 		}
 	}
@@ -4325,12 +4325,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				margin-right: 0;
 			}
 
-			&.ac-document-close-button,
-			&.ac-folder-close-button,
-			&.ac-video-close-button {
-				color: #a5a7ab;
-			}
-
 			&.bp-document-open-create-popup-folder,
 			&.bp-video-open-create-popup-album,
 			&.bp-media-open-create-popup-folder {
@@ -4371,6 +4365,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		color: #a5a7ab;
 	}
 
+}
+
+.bb-model-footer {
+
+	a {
+
+		&.ac-document-close-button,
+		&.ac-folder-close-button,
+		&.ac-video-close-button {
+			color: #a5a7ab;
+		}
+	}
 }
 
 .bp-video-uploader,
@@ -4777,6 +4783,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	.subnav-filters .subnav-search .bp-dir-search-form {
 
+		&:before {
+			top: 6px;
+		}
+
 		#dir-media-search,
 		#dir-document-search,
 		#dir-video-search {
@@ -4784,7 +4794,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			background-color: transparent;
 			padding-left: 32px;
 			font-size: 14px;
-			height: 34px;
+			height: 40px;
 		}
 
 	}
@@ -4985,6 +4995,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 			> textarea {
 				margin-left: 30px;
+				margin-bottom: 0;
 				width: calc(100% - 28px);
 			}
 
@@ -5051,7 +5062,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 
 	.bb-model-footer {
-		margin-top: 15px;
+		margin-top: 30px;
 
 		[dir="rtl"] & {
 			text-align: left;

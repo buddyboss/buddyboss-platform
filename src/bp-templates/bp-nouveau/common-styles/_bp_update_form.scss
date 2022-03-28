@@ -73,7 +73,7 @@
 	&.friends {
 
 		.privacy-point-icon:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 	}
 
@@ -310,7 +310,7 @@
 		}
 
 		&--friends:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 
 		&--onlyme:before {
@@ -882,11 +882,11 @@
 			z-index: 1;
 			opacity: 1;
 			visibility: visible;
-			bottom: 12px;
+			bottom: 13px;
 			height: 40px;
 
 			div & {
-				bottom: 12px;
+				bottom: 13px;
 			}
 		}
 
@@ -959,7 +959,6 @@
 
 	#activity-header h3 {
 		margin: 0;
-		font-weight: 500;
 	}
 
 	.activity-link-preview-container {
@@ -1438,7 +1437,7 @@
 		}
 
 		&.friends:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 
 		&.loading:before {
@@ -1537,7 +1536,7 @@
 		}
 
 		&.friends:before {
-			content: "\ef5a";
+			content: "\ef5b";
 		}
 
 		&.bb-edit-privacy {
@@ -1555,6 +1554,7 @@
 				text-align: center;
 				display: inline-block;
 				vertical-align: bottom;
+				font-weight: 400;
 			}
 
 			&.public a:before {
