@@ -45,7 +45,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bbp_filter_notificati
 function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $action_name, $name, $id, $screen ) {
 
 	// New reply notifications.
-	if ( 'bbp_new_reply' === $action ) {
+	if ( 'bbp_new_reply' === $action_name ) {
 		$topic_id    = bbp_get_reply_topic_id( $item_id );
 		$topic_title = bbp_get_topic_title( $topic_id );
 		$topic_link  = wp_nonce_url(
@@ -103,14 +103,14 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 	}
 
 	// New topic notifications.
-	if ( 'bbp_new_topic' === $action ) {
+	if ( 'bbp_new_topic' === $action_name ) {
 		$topic_id    = bbp_get_topic_id( $item_id );
 		$topic_title = bbp_get_topic_title( $topic_id );
 		$topic_link  = wp_nonce_url(
 			add_query_arg(
 				array(
 					'action'   => 'bbp_mark_read',
-					'topic_id' => $topic_id
+					'topic_id' => $topic_id,
 				),
 				bbp_get_topic_permalink( $topic_id )
 			),
@@ -162,7 +162,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		return $return;
 	}
 
-	if ( 'bbp_new_at_mention' === $action ) {
+	if ( 'bbp_new_at_mention' === $action_name ) {
 		$topic_id = bbp_get_reply_topic_id( $item_id );
 
 		if ( empty( $topic_id ) ) {
@@ -195,11 +195,11 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$filter = 'bbp_single_new_subscription_notification';
 		}
 
-		// WordPress Toolbar
+		// WordPress Toolbar.
 		if ( 'string' === $format ) {
 			$return = apply_filters( $filter, '<a href="' . esc_url( $topic_link ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $text, $topic_link );
 
-			// Deprecated BuddyBar
+			// Deprecated BuddyBar.
 		} else {
 			$return = apply_filters(
 				$filter,
@@ -222,6 +222,31 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
 
 		return $return;
+	}
+
+	if ( 'forums' === $name && ! empty( $action_name ) ) {
+
+		/**
+		 * Filters plugin-added forum-related custom component_actions.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $notification      Null value.
+		 * @param int    $item_id           The primary item id.
+		 * @param int    $secondary_item_id The secondary item id.
+		 * @param int    $total_items       The total number of messaging-related notifications waiting for the user.
+		 * @param string $format            'string' for BuddyBar-compatible notifications; 'array' for WP Toolbar.
+		 * @param string $action_name       Canonical notification action.
+		 * @param string $name              Notification component ID.
+		 * @param int    $id                Notification ID.
+		 * @param string $screen            Notification Screen type.
+		 */
+		$custom_action_notification = apply_filters( 'bp_forums_' . $action_name . '_notification', null, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
+
+		error_log( print_r( $custom_action_notification, 1 ) );
+		if ( ! is_null( $custom_action_notification ) ) {
+			return $custom_action_notification;
+		}
 	}
 
 	return $action;
@@ -376,10 +401,6 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
-
-		if ( ! bb_enabled_legacy_email_preference() ) {
-			$args['component_name'] = 'members';
-		}
 
 		// Send @mentions and setup BP notifications.
 		foreach ( (array) $usernames as $user_id => $username ) {

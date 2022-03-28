@@ -118,6 +118,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			5
 		);
 
+		add_filter( 'bp_forums_bb_new_mention_notification', array( $this, 'bb_render_mention_notification' ), 10, 7 );
 		add_filter( 'bp_activity_bb_new_mention_notification', array( $this, 'bb_render_mention_notification' ), 10, 7 );
 	}
 
@@ -139,9 +140,6 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
-
-		$content = $this->bb_render_mention_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen );
-
 		return $content;
 	}
 
@@ -166,7 +164,11 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 		$user_fullname          = bp_core_get_user_displayname( $user_id );
 		$notification_type_html = '';
 
-		if ( ! empty( $notification ) && 'bb_new_mention' === $notification->component_action && in_array( $notification->component_name, array( 'activity', 'forums', 'members' ), true ) ) {
+		if (
+			! empty( $notification ) &&
+			'bb_new_mention' === $notification->component_action &&
+			in_array( $notification->component_name, array( 'activity', 'forums', 'members' ), true )
+		) {
 
 			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
 			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
@@ -199,9 +201,9 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 					__( 'You have %1$d new mentions', 'buddyboss' ),
 					(int) $action_item_count
 				);
-				$amount = 'multiple';
+				$action_item_count = 'multiple';
 			} else {
-				$amount = 'single';
+				$action_item_count = 'single';
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
 					/* translators: 1: User full name, 2: Activity type. */

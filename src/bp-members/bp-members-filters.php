@@ -725,11 +725,11 @@ add_action( 'bp_members_includes', 'bb_load_members_account_settings_notificatio
  * @since BuddyBoss [BBVERSION]
  */
 function bb_load_members_account_settings_notifications() {
-	if ( class_exists( 'BP_Members_Notification' ) ) {
-		BP_Members_Notification::instance();
-	}
-
 	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
 		BP_Members_Mentions_Notification::instance();
+	}
+
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
 	}
 }
