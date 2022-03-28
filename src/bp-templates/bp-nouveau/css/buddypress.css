@@ -1835,10 +1835,14 @@ a.layout-grid-view {
   position: static;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar [class*=" bb-icon-"],
-.activity-update-form .activity-form.focus-in #editor-toolbar [class*=" bb-icon-"] {
-  font-size: 24px;
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-elements-buttons-item,
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-elements-buttons-item {
   margin-right: 10px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-elements-buttons-item [class*=" bb-icon-"],
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-elements-buttons-item [class*=" bb-icon-"] {
+  font-size: 24px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-attachments .dropzone.open,
@@ -3393,6 +3397,7 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-content .activity-state.has-likes .activity-state-likes {
   display: inline-block;
+  background-color: transparent;
 }
 
 .activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
@@ -5573,12 +5578,10 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor i.document-icon-plus {
-  font-family: dashicons;
   vertical-align: middle;
-}
-
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor i.document-icon-plus:before {
-  content: "\f132";
+  /*&:before {
+						content: "\f132";
+					}*/
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible {
@@ -13907,8 +13910,7 @@ p.form-allowed-tags {
   margin: 0 15px 0 0;
 }
 
-.bbp-logged-in h4 {
-  font-weight: 700;
+.bbp-logged-in h5 {
   font-size: 1.3em;
   clear: none;
   margin-bottom: 10px;
@@ -16317,14 +16319,14 @@ body.login .login-popup .mfp-close:hover {
   font-weight: 400;
   font-family: "bb-icons";
   /* stylelint-disable-line */
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1;
   margin-left: 5px;
   text-align: center;
   display: inline-block;
   vertical-align: middle;
-  -webkit-animation: spin 3s infinite linear;
-  animation: spin 3s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
 }
 
 .bb-item-cover-wrap {
@@ -20490,7 +20492,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form:before,
 .directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form:before,
 .directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form:before {
-  top: 6px;
+  top: 7px;
 }
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
