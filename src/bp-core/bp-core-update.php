@@ -1863,7 +1863,8 @@ function migrate_notification_preferences( $user_ids ) {
 
 	foreach ( $user_ids as $user_id ) {
 		foreach ( $all_keys as $old_key => $new_key ) {
-			$old_key = str_replace( '_0', '', $old_key ) . str_replace( '_1', '', $old_key );
+			$old_key = str_replace( '_0', '', $old_key );
+			$old_key = str_replace( '_1', '', $old_key );
 			if ( metadata_exists( 'user', $user_id, $old_key ) ) {
 				$old_val = get_user_meta( $user_id, $old_key, true );
 				update_user_meta( $user_id, $new_key, $old_val );
