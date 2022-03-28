@@ -1835,10 +1835,14 @@ a.layout-grid-view {
   position: static;
 }
 
-.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar [class*=" bb-icon-"],
-.activity-update-form .activity-form.focus-in #editor-toolbar [class*=" bb-icon-"] {
-  font-size: 24px;
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-elements-buttons-item,
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-elements-buttons-item {
   margin-right: 10px;
+}
+
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar .post-elements-buttons-item [class*=" bb-icon-"],
+.activity-update-form .activity-form.focus-in #editor-toolbar .post-elements-buttons-item [class*=" bb-icon-"] {
+  font-size: 24px;
 }
 
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new-attachments .dropzone.open,

@@ -464,9 +464,13 @@
 				position: static;
 			}
 
-			[class*=" bb-icon-"] {
-				font-size: 24px;
+			.post-elements-buttons-item {
 				margin-right: 10px;
+
+				[class*=" bb-icon-"] {
+					font-size: 24px;
+				}
+
 			}
 
 		}
