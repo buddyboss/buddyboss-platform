@@ -4105,6 +4105,27 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 			'notification_type' => $email_type,
 		);
 
+		$notification_type_html = '';
+
+		if ( 'activity_comment' === $activity->type ) {
+			if ( ! empty( $activity->item_id ) ) {
+				$parent_activity = new BP_Activity_Activity( $activity->item_id );
+				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
+					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+				} else {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+				}
+			} else {
+				$notification_type_html = esc_html__( 'post', 'buddyboss' );
+			}
+		} elseif ( 'blogs' === $activity->component ) {
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+		} else {
+			$notification_type_html = esc_html__( 'post', 'buddyboss' );
+		}
+
+		error_log( print_r( $notification_type_html, 1 ) );
+
 		$args = array(
 			'tokens' => array(
 				'activity'          => $activity,
@@ -4114,7 +4135,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 				'poster.name'       => $poster_name,
 				'receiver-user.id'  => $receiver_user_id,
 				'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-				'mentioned.type'    => '',
+				'mentioned.type'    => $notification_type_html,
 				'mentioned.content' => '',
 			),
 		);
