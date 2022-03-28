@@ -1767,16 +1767,30 @@ function bb_update_to_1_9_1() {
 
 /**
  * Update routine.
- * Update the email situation labels.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_1_9_3() {
+
+	// Update the email situation labels.
+	bb_core_update_email_situation_labels();
+
+	// Update the users settings.
+	bb_core_update_user_settings();
+}
+
+/**
+ * Update the email situation labels.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_update_email_situation_labels() {
+
 	$email_situation_labels = array(
 		'activity-at-message'          => 'A member is mentioned in an activity post',
 		'groups-at-message'            => 'A member is mentioned in a group activity post',
 		'zoom-scheduled-meeting-email' => 'A Zoom meeting is scheduled in a group',
-		'zoom-scheduled-webinar-email' => 'A Zoom webinar is scheduled in a group'
+		'zoom-scheduled-webinar-email' => 'A Zoom webinar is scheduled in a group',
 	);
 
 	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
@@ -1792,4 +1806,14 @@ function bb_update_to_1_9_3() {
 			);
 		}
 	}
+
+}
+
+/**
+ * Update the users settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_update_user_settings() {
+
 }
