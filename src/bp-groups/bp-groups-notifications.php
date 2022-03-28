@@ -234,15 +234,23 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 	}
 
 	$type_key = 'notification_membership_request_completed';
+	error_log( print_r( $type_key, 1 ) );
+
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$action   = ! empty( $accepted ) ? '0' : '1';
+        error_log( print_r( $action, 1 ) );
 		$type_key = bb_get_prefences_key( 'legacy', $type_key, $action );
 	}
+
+    error_log( print_r( $type_key, 1 ) );
 
 	// Bail if member opted out of receiving this email.
 	if ( false === bb_is_notification_enabled( $requesting_user_id, $type_key ) ) {
 		return;
 	}
+
+    error_log( print_r( 'here', 1 ) );
+
 
 	$group = groups_get_group( $group_id );
 	$args  = array(

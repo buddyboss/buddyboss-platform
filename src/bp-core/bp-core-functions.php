@@ -7385,7 +7385,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 		$keys = array_flip( $keys );
 	}
 
-	$key = ( 'legacy' === $type && ! empty( $action ) ? $key . '_' . $action : $key );
+	$key = ( 'legacy' === $type && '' !== $action ? $key . '_' . $action : $key );
 
 	if ( 'legacy' === $type && array_key_exists( $key, $keys ) ) {
 		return $keys[ $key ];
