@@ -243,7 +243,6 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		 */
 		$custom_action_notification = apply_filters( 'bp_forums_' . $action_name . '_notification', null, $item_id, $secondary_item_id, $total_items, $format, $id, $screen );
 
-		error_log( print_r( $custom_action_notification, 1 ) );
 		if ( ! is_null( $custom_action_notification ) ) {
 			return $custom_action_notification;
 		}
