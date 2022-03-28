@@ -107,7 +107,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
-	 * @apiParam {String=active,newest,alphabetical,random,popular} [type=active] Shorthand for certain orderby/order combinations.
+	 * @apiParam {String=active,newest,alphabetical,random,popular,include} [type=active] Shorthand for certain orderby/order combinations.
 	 * @apiParam {String=asc,desc} [order=desc] Order sort attribute ascending or descending.
 	 * @apiParam {String=date_created,last_activity,total_member_count,name,random} [orderby=date_created] Order Groups by which attribute.
 	 * @apiParam {Array=public,private,hidden   } [status] Group statuses to limit results to.
@@ -168,6 +168,23 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			&& empty( $request['parent_id'] )
 		) {
 			$args['exclude'] = array_unique( bp_groups_get_excluded_group_ids_by_type() );
+		}
+
+		if (
+			(
+				! empty( $request['include'] )
+				&& ! empty( $args['orderby'] )
+				&& 'include' === $args['orderby']
+			) ||
+			(
+				! empty( $args['orderby'] )
+				&& 'id' === $args['orderby']
+			)
+		) {
+			if ( 'include' === $args['orderby'] ) {
+				$args['orderby'] = 'in';
+			}
+			$args['type'] = '';
 		}
 
 		/**
@@ -1504,7 +1521,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
 			'default'           => 'active',
 			'type'              => 'string',
-			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'popular' ),
+			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'popular', 'include' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1522,7 +1539,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order Groups by which attribute.', 'buddyboss' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
-			'enum'              => array( 'date_created', 'last_activity', 'total_member_count', 'name', 'random' ),
+			'enum'              => array( 'date_created', 'last_activity', 'total_member_count', 'name', 'random', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);

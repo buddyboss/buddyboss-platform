@@ -117,7 +117,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of topic IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of topics to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of topics.
-	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity} [orderby] Sort retrieved topics by parameter.
+	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity,include} [orderby] Sort retrieved topics by parameter.
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to topic assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve all the topics.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed topics by user.
@@ -189,6 +189,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$bbp_t['orderby'] = 'post__in';
 		}
 
 		/**
@@ -2487,6 +2495,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'rand',
 					'popular',
 					'activity',
+					'include'
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',

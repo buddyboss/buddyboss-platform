@@ -2305,6 +2305,9 @@ function bbp_toggle_topic_handler( $action = '' ) {
 					check_ajax_referer( 'untrash-' . bbp_get_topic_post_type() . '_' . $topic_id );
 
 					$success = wp_untrash_post( $topic_id );
+					if ( $success ) {
+						$success = wp_publish_post( $topic_id );
+					}
 					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the discussion.', 'buddyboss' );
 
 					break;

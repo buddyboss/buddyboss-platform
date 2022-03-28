@@ -57,6 +57,8 @@ function bp_notifications_clear_all_for_user_cache( $user_id = 0 ) {
  */
 function bp_notifications_clear_all_for_user_cache_after_save( BP_Notifications_Notification $n ) {
 	bp_notifications_clear_all_for_user_cache( $n->user_id );
+	wp_cache_delete( $n->id, 'bp_notifications' );
+	wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
 }
 add_action( 'bp_notification_after_save', 'bp_notifications_clear_all_for_user_cache_after_save' );
 
@@ -70,16 +72,21 @@ add_action( 'bp_notification_after_save', 'bp_notifications_clear_all_for_user_c
 function bp_notifications_clear_all_for_user_cache_before_delete( $args ) {
 
 	// Pull up a list of items matching the args (those about te be deleted).
-	$ns = BP_Notifications_Notification::get( $args );
+	$notifications = BP_Notifications_Notification::get( $args );
 
 	$user_ids = array();
-	foreach ( $ns as $n ) {
-		$user_ids[] = $n->user_id;
+	foreach ( $notifications as $notification ) {
+		$user_ids[] = $notification->user_id;
 	}
 
 	$user_ids = array_unique( $user_ids );
 	foreach ( $user_ids as $user_id ) {
 		bp_notifications_clear_all_for_user_cache( $user_id );
+	}
+
+	foreach ( $notifications as $notification ) {
+		wp_cache_delete( $notification->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $notification->user_id . '_' . $notification->id, 'bp_notifications' );
 	}
 }
 add_action( 'bp_notification_before_delete', 'bp_notifications_clear_all_for_user_cache_before_delete' );
@@ -97,11 +104,17 @@ function bp_notifications_clear_all_for_user_cache_before_update( $update_args, 
 	// User ID is passed in where arugments.
 	if ( ! empty( $where_args['user_id'] ) ) {
 		bp_notifications_clear_all_for_user_cache( $where_args['user_id'] );
+		if ( ! empty( $where_args['id'] ) ) {
+			wp_cache_delete( $where_args['id'], 'bp_notifications' );
+			wp_cache_delete( 'bp_notifications_check_access_' . $where_args['user_id'] . '_' . $where_args['id'], 'bp_notifications' );
+		}
 
 		// Get user ID from Notification ID.
 	} elseif ( ! empty( $where_args['id'] ) ) {
 		$n = bp_notifications_get_notification( $where_args['id'] );
 		bp_notifications_clear_all_for_user_cache( $n->user_id );
+		wp_cache_delete( $n->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
 	}
 }
 add_action( 'bp_notification_before_update', 'bp_notifications_clear_all_for_user_cache_before_update', 10, 2 );
