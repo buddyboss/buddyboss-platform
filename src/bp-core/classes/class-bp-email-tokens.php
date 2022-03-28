@@ -1105,7 +1105,11 @@ class BP_Email_Tokens {
 			$group = groups_get_group( $group_id );
 		}
 
+		remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
+
 		$group_excerpt = bp_get_group_description_excerpt( $group );
+
+		add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 
 		if ( empty( $group ) || empty( $group_excerpt ) ) {
 			return $output;
