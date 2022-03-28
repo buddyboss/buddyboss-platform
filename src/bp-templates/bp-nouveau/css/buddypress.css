@@ -3393,6 +3393,7 @@ input.search-query-input {
 
 .activity-list .activity-item .activity-content .activity-state.has-likes .activity-state-likes {
   display: inline-block;
+  background-color: transparent;
 }
 
 .activity-list .activity-item .activity-content .activity-state.has-comments .activity-state-comments {
