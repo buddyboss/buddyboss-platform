@@ -219,6 +219,7 @@
 
 					.activity-state-likes {
 						display: inline-block;
+						background-color: transparent;
 					}
 				}
 
@@ -304,7 +305,7 @@
 			.button:before,
 			.icons:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 18px;
+				font-size: 20px;
 				vertical-align: middle;
 			}
 
@@ -328,7 +329,7 @@
 
 			.edit-activity:before {
 				content: "\ee5a";
-				font-size: 17px !important;
+				font-size: 20px;
 			}
 
 			.delete-activity:before {
@@ -339,7 +340,7 @@
 			.report-content:before {
 				content: "\ee9c";
 				position: relative;
-				font-size: 19px;
+				font-size: 20px;
 				width: 22px;
 				display: inline-block;
 				line-height: 1;
@@ -520,7 +521,6 @@
 						border-radius: 0;
 						padding: 10px 14px;
 						color: #7f868f;
-						line-height: 1.1;
 						border: 0;
 						background-color: transparent;
 						box-shadow: none;
@@ -532,7 +532,7 @@
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 18px;
+							font-size: 20px;
 							display: inline-block;
 							margin-right: 10px;
 							vertical-align: middle;
@@ -543,13 +543,12 @@
 						&.reported-content:before,
 						&.report-content:before {
 							content: "\ee9c";
-							font-size: 15px;
 						}
 
 						&.delete:before,
 						&.delete-activity:before {
 							content: "\ef48";
-							font-size: 18px;
+							font-size: 20px;
 						}
 
 						&.ac-video-thumbnail-edit:before {
@@ -563,7 +562,7 @@
 
 						&.edit-activity:before {
 							content: "\ee5a";
-							font-size: 17px !important;
+							font-size: 20px;
 						}
 
 						span:not(.bp-screen-reader-text) {
@@ -699,6 +698,7 @@ ul.medium-editor-toolbar-actions {
 			line-height: 1;
 			display: block;
 			transform: none;
+			font-size: 24px;
 		}
 	}
 
@@ -1644,23 +1644,23 @@ span.dashicons.dashicons-admin-file:before {
 
 			ul {
 				list-style: none;
-				margin: 5px 0 !important;
-				padding: 0 !important;
+				margin: 5px 0;
+				padding: 0;
 
 				li {
 					margin: 0;
 					padding: 0;
-					list-style-type: none !important;
+					list-style-type: none;
 
 					a {
-						padding: 10px 14px !important;
-						display: block !important;
+						padding: 10px 14px;
+						display: block;
 						font-size: 14px;
 						line-height: 1;
 						color: #7f868f;
 
 						&:hover {
-							background-color: #f5f5f5 !important;
+							background-color: #f5f5f5;
 							color: $blue;
 						}
 

@@ -882,11 +882,11 @@
 			z-index: 1;
 			opacity: 1;
 			visibility: visible;
-			bottom: 12px;
+			bottom: 13px;
 			height: 40px;
 
 			div & {
-				bottom: 12px;
+				bottom: 13px;
 			}
 		}
 
@@ -959,7 +959,6 @@
 
 	#activity-header h3 {
 		margin: 0;
-		font-weight: 500;
 	}
 
 	.activity-link-preview-container {
