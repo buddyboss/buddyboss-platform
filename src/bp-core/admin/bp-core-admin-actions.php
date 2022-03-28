@@ -66,9 +66,6 @@ add_action( 'bp_admin_menu', 'bp_admin_separator' );
 // Check user nickname on backend user edit page.
 add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
-// deregister edit-comments.js file from BB CPT that does not support comments.
-add_action( 'admin_enqueue_scripts', 'bb_deregister_edit_comments_script_from_bb_cpt', 999 );
-
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
@@ -286,22 +283,4 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 	if ( $wpdb->get_var( $sql ) > 0 ) {
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
 	}
-}
-
-/**
- * deregister edit-comments.js file from BB CPT create/edit page that does not support comments.
- * 
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_deregister_edit_comments_script_from_bb_cpt() {
-
-	// BB CPT.
-	$bb_cpt = array( 'forum', 'topic', 'reply', 'bp-group-type', 'bp-member-type' );
-
-	if ( is_admin() && in_array( get_post_type(), $bb_cpt, true ) ) {
-		wp_deregister_script( 'admin-comments' );
-	}
-
 }
