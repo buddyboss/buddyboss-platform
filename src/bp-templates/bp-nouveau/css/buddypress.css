@@ -20492,7 +20492,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form:before,
 .directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form:before,
 .directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form:before {
-  top: 6px;
+  top: 7px;
 }
 
 .directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
