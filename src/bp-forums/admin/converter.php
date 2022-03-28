@@ -123,7 +123,7 @@ class BBP_Converter {
 	private function setup_actions() {
 
 		// Attach to the admin head with our ajax requests cycle and css.
-		add_action( 'bbp_admin_head', array( $this, 'admin_head' ) );
+		add_action( 'admin_head-buddyboss_page_bbp-converter', array( $this, 'admin_head' ) );
 
 		// Attach the bbConverter admin settings action to the WordPress admin init action.
 		add_action( 'bbp_register_admin_settings', array( $this, 'register_admin_settings' ) );
@@ -203,56 +203,54 @@ class BBP_Converter {
 	 * @since bbPress (r3813)
 	 */
 	public function admin_head() {
-		if ( isset( $_GET ) && isset( $_GET['page'] ) && 'bbp-converter' === $_GET['page'] ) {
-			// Enqueue scripts.
-			wp_enqueue_script( 'bbp-converter' );
+		// Enqueue scripts.
+		wp_enqueue_script( 'bbp-converter' );
 
-			// Localize JS.
-			wp_localize_script(
-				'bbp-converter',
-				'BBP_Converter',
-				array(
+		// Localize JS.
+		wp_localize_script(
+			'bbp-converter',
+			'BBP_Converter',
+			array(
 
-					// Nonce.
-					'ajax_nonce' => wp_create_nonce( 'bbp_converter_process' ),
+				// Nonce.
+				'ajax_nonce' => wp_create_nonce( 'bbp_converter_process' ),
 
-					// UI State.
-					'state'      => array(
-						'delay'         => (int) get_option( '_bbp_converter_delay_time', 2 ),
-						'started'       => (bool) get_option( '_bbp_converter_step', 0 ),
-						'running'       => false,
-						'status'        => false,
-						'step_percent'  => $this->step_percentage,
-						'total_percent' => $this->total_percentage,
-					),
+				// UI State.
+				'state'      => array(
+					'delay'         => (int) get_option( '_bbp_converter_delay_time', 2 ),
+					'started'       => (bool) get_option( '_bbp_converter_step', 0 ),
+					'running'       => false,
+					'status'        => false,
+					'step_percent'  => $this->step_percentage,
+					'total_percent' => $this->total_percentage,
+				),
 
-					// Strings.
-					'strings'    => array(
+				// Strings.
+				'strings'    => array(
 
-						// Button text.
-						'button_start'        => esc_html__( 'Start', 'buddyboss' ),
-						'button_continue'     => esc_html__( 'Continue', 'buddyboss' ),
+					// Button text.
+					'button_start'        => esc_html__( 'Start', 'buddyboss' ),
+					'button_continue'     => esc_html__( 'Continue', 'buddyboss' ),
 
-						// Start button clicked.
-						'start_start'         => esc_html__( 'Starting Import...', 'buddyboss' ),
-						'start_continue'      => esc_html__( 'Continuing Import...', 'buddyboss' ),
+					// Start button clicked.
+					'start_start'         => esc_html__( 'Starting Import...', 'buddyboss' ),
+					'start_continue'      => esc_html__( 'Continuing Import...', 'buddyboss' ),
 
-						// Import.
-						'import_complete'     => esc_html__( 'Import Finished.', 'buddyboss' ),
-						'import_stopped_user' => esc_html__( 'Import Stopped (by User.)', 'buddyboss' ),
-						'import_error_halt'   => esc_html__( 'Import Halted (Error.)', 'buddyboss' ),
-						'import_error_db'     => esc_html__( 'Database Connection Failed.', 'buddyboss' ),
+					// Import.
+					'import_complete'     => esc_html__( 'Import Finished.', 'buddyboss' ),
+					'import_stopped_user' => esc_html__( 'Import Stopped (by User.)', 'buddyboss' ),
+					'import_error_halt'   => esc_html__( 'Import Halted (Error.)', 'buddyboss' ),
+					'import_error_db'     => esc_html__( 'Database Connection Failed.', 'buddyboss' ),
 
-						// Status.
-						'status_complete'     => esc_html__( 'Finished', 'buddyboss' ),
-						'status_stopped'      => esc_html__( 'Stopped', 'buddyboss' ),
-						'status_starting'     => esc_html__( 'Starting', 'buddyboss' ),
-						'status_up_next'      => esc_html__( 'Doing step %s...', 'buddyboss' ),
-						'status_counting'     => esc_html__( 'Next in %s seconds...', 'buddyboss' ),
-					),
-				)
-			);
-		}
+					// Status.
+					'status_complete'     => esc_html__( 'Finished', 'buddyboss' ),
+					'status_stopped'      => esc_html__( 'Stopped', 'buddyboss' ),
+					'status_starting'     => esc_html__( 'Starting', 'buddyboss' ),
+					'status_up_next'      => esc_html__( 'Doing step %s...', 'buddyboss' ),
+					'status_counting'     => esc_html__( 'Next in %s seconds...', 'buddyboss' ),
+				),
+			)
+		);
 	}
 
 	/**
