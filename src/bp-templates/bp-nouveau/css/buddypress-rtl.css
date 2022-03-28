@@ -13910,8 +13910,7 @@ p.form-allowed-tags {
   margin: 0 0 0 15px;
 }
 
-.bbp-logged-in h4 {
-  font-weight: 700;
+.bbp-logged-in h5 {
   font-size: 1.3em;
   clear: none;
   margin-bottom: 10px;
