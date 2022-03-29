@@ -602,9 +602,9 @@ class BP_Email_Tokens {
 
 		$settings = bp_email_get_appearance_settings();
 
-		$activity  = $tokens['activity'] ?? false;
-		$content   = $tokens['mentioned.content'] ?? '';
-		$author_id = $tokens['author_id'] ?? 0;
+		$activity   = $tokens['activity'] ?? false;
+		$content    = $tokens['mentioned.content'] ?? '';
+		$author_id  = $tokens['author_id'] ?? 0;
 		$reply_text = $tokens['reply_text'] ?? __( 'Reply', 'buddyboss' );
 
 		if ( empty( $activity ) && empty( $content ) ) {
@@ -870,7 +870,7 @@ class BP_Email_Tokens {
 
 		$allow_type = array(
 			'group-message-email',
-			'messages-unread'
+			'messages-unread',
 		);
 
 		if ( ! in_array( $bp_email->get( 'type' ), $allow_type ) ) {
