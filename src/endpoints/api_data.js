@@ -1604,7 +1604,9 @@ define({ "api": [
               "date_created",
               "date_modified",
               "group_id",
-              "privacy"
+              "privacy",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3045,7 +3047,8 @@ define({ "api": [
               "parent",
               "rand",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3532,7 +3535,8 @@ define({ "api": [
               "menu_order",
               "relevance",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -4280,7 +4284,8 @@ define({ "api": [
               "newest",
               "alphabetical",
               "random",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -4552,6 +4557,30 @@ define({ "api": [
             "field": "invite_sent",
             "defaultValue": "sent",
             "description": "<p>Limit result set to invites that have been sent, not sent, or include all.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "include"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "id",
+            "description": "<p>Order invites by which attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "sort_order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
           }
         ]
       }
@@ -5754,7 +5783,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -6347,7 +6378,8 @@ define({ "api": [
               "alphabetical",
               "random",
               "online",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -7464,7 +7496,8 @@ define({ "api": [
               "item_id",
               "secondary_item_id",
               "component_name",
-              "component_action"
+              "component_action",
+              "include"
             ],
             "optional": true,
             "field": "order_by",
@@ -9332,7 +9365,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",

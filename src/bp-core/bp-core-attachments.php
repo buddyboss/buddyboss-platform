@@ -91,18 +91,27 @@ function bp_attachments_uploads_dir_get( $data = '' ) {
  * @return array See wp_upload_dir().
  */
 function bp_attachments_cover_image_upload_dir( $args = array() ) {
-	// Default values are for profiles.
-	$object_id = bp_displayed_user_id();
+	$object_id           = 0;
+	$object_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : '';
+	$args['object_type'] = $object_type;
 
-	if ( empty( $object_id ) ) {
-		$object_id = bp_loggedin_user_id();
+	// Default values are for profiles.
+	if ( empty( $object_type ) ) {
+		$object_id = bp_displayed_user_id();
+
+		if ( empty( $object_id ) ) {
+			$object_id = bp_loggedin_user_id();
+		}
 	}
 
 	$object_directory = 'members';
 
 	// We're in a group, edit default values.
 	if ( bp_is_group() || bp_is_group_create() ) {
-		$object_id        = bp_get_current_group_id();
+		if ( empty( $object_type ) ) {
+			$object_id = bp_get_current_group_id();
+		}
+
 		$object_directory = 'groups';
 	}
 
@@ -110,6 +119,7 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 		$args,
 		array(
 			'object_id'        => $object_id,
+			'object_type'      => $object_type,
 			'object_directory' => $object_directory,
 		),
 		'cover_image_upload_dir'
@@ -515,16 +525,41 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 		return $attachment_data;
 	}
 
-	$type_subdir = $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'];
-	$type_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $type_subdir;
+	/**
+	 * Filters BuddyPress image attachment sub directory.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $subdir     The sub dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$type_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $r['object_dir'] . '/' . $r['item_id'] . '/' . $r['type'], $r['object_dir'], $r['item_id'], $r['type'] );
+
+	$type_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $type_subdir;
+
+	/**
+	 * Filters BuddyPress image attachment directory.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $dir        The dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$type_dir = apply_filters( 'bb_attachments_get_attachment_dir', $type_dir, $r['object_dir'], $r['item_id'], $r['type'] );
 
 	if ( 1 === validate_file( $type_dir ) || ! is_dir( $type_dir ) ) {
-		return $attachment_data;
+		return bb_get_default_profile_group_cover( $data, $r );
 	}
 
 	if ( ! empty( $r['file'] ) ) {
 		if ( ! file_exists( trailingslashit( $type_dir ) . $r['file'] ) ) {
-			return $attachment_data;
+			return bb_get_default_profile_group_cover( $data, $r );
 		}
 
 		if ( 'url' === $data ) {
@@ -548,7 +583,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 		}
 
 		if ( empty( $file ) ) {
-			return $attachment_data;
+			return bb_get_default_profile_group_cover( $data, $r );
 		}
 
 		if ( 'url' === $data ) {
@@ -572,7 +607,83 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
  * @return bool True if the attachment was deleted, false otherwise.
  */
 function bp_attachments_delete_file( $args = array() ) {
-	$attachment_path = bp_attachments_get_attachment( 'path', $args );
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'object_dir' => 'members',
+			'item_id'    => bp_loggedin_user_id(),
+			'type'       => 'cover-image',
+			'file'       => '',
+		),
+		'bp_attachments_delete_file_agrs'
+	);
+
+	$attachment_path = '';
+	if ( is_admin() && 0 === $r['item_id'] ) {
+
+		$upload_dir = bp_attachments_uploads_dir_get();
+
+		$cover_url = bb_get_default_custom_upload_profile_cover();
+		$subdir    = 'members/0/cover-image';
+		if ( 'groups' === $r['object_dir'] ) {
+			$cover_url = bb_get_default_custom_upload_group_cover();
+			$subdir    = 'groups/0/cover-image';
+		}
+
+		$type_dir = trailingslashit( $upload_dir['basedir'] ) . $subdir;
+
+		if ( 1 === validate_file( $type_dir ) || ! is_dir( $type_dir ) ) {
+			return false;
+		}
+
+		if ( ! empty( $cover_url ) ) {
+
+			$r['file'] = basename( $cover_url );
+
+			if ( ! empty( $r['file'] ) ) {
+				if ( ! file_exists( trailingslashit( $type_dir ) . $r['file'] ) ) {
+					return false;
+				}
+
+				$attachment_path = trailingslashit( $type_dir ) . $r['file'];
+			}
+		} else {
+			$file = false;
+
+			// Open the directory and get the first file.
+			if ( $att_dir = opendir( $type_dir ) ) {
+
+				while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
+					// Look for the first file having the type in its name.
+					if ( false !== strpos( $attachment_file, $r['type'] ) && empty( $file ) ) {
+						$file = $attachment_file;
+						break;
+					}
+				}
+			}
+
+			if ( empty( $file ) ) {
+				return false;
+			}
+
+			$attachment_path = trailingslashit( $type_dir ) . $file;
+		}
+	} else {
+
+		$has_cover = true;
+		if ( 'members' === $r['object_dir'] ) {
+			$has_cover = bp_attachments_get_user_has_cover_image( $r['item_id'] );
+		} elseif ( 'groups' === $r['object_dir'] ) {
+			$has_cover = bp_attachments_get_group_has_cover_image( $r['item_id'] );
+		}
+
+		if ( ! $has_cover ) {
+			return false;
+		}
+
+		$attachment_path = bp_attachments_get_attachment( 'path', $args );
+	}
 
 	/**
 	 * Filters whether or not to handle deleting an existing BuddyPress attachment.
@@ -582,7 +693,7 @@ function bp_attachments_delete_file( $args = array() ) {
 	 * @since BuddyPress 2.5.1
 	 *
 	 * @param bool $value Whether or not to delete the BuddyPress attachment.
-`	 * @param array $args Array of arguments for the attachment deletion.
+	 * @param array $args Array of arguments for the attachment deletion.
 	 */
 	if ( ! apply_filters( 'bp_attachments_pre_delete_file', true, $args ) ) {
 		return true;
@@ -689,9 +800,10 @@ function bp_attachments_get_plupload_l10n() {
 			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss' ),
 			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss' ),
 			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss' ),
-			'avatar_size_warning'       => sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+			'avatar_size_warning'       => sprintf(
+				__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 				bp_core_avatar_full_height(),
-				bp_core_avatar_full_width(),
+				bp_core_avatar_full_width()
 			),
 		)
 	);
@@ -1103,6 +1215,11 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 		return false;
 	}
 
+	// Set default cover if 'default_cover' is not found.
+	if ( empty( $settings['default_cover'] ) ) {
+		$settings['default_cover'] = bb_attachments_get_default_profile_group_cover_image( $component );
+	}
+
 	// Finally return the settings.
 	return $settings;
 }
@@ -1194,6 +1311,10 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 		)
 	);
 
+	if ( false !== strpos( $cover_src, '/0/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
+		$cover_src = '';
+	}
+
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $user_id );
 }
 
@@ -1217,6 +1338,10 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 			'item_id'    => $group_id,
 		)
 	);
+
+	if ( false !== strpos( $cover_src, '/0/' ) || false !== strpos( $cover_src, '/bp-core/' ) ) {
+		$cover_src = '';
+	}
 
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $group_id );
 }
@@ -1329,8 +1454,9 @@ function bp_attachments_cover_image_ajax_upload() {
 	$bp_params = bp_parse_args(
 		$_POST['bp_params'],
 		array(
-			'object'  => 'user',
-			'item_id' => bp_loggedin_user_id(),
+			'object'    => 'user',
+			'item_id'   => bp_loggedin_user_id(),
+			'item_type' => null,
 		),
 		'attachments_cover_image_ajax_upload'
 	);
@@ -1358,7 +1484,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			'component' => 'xprofile',
 		);
 
-		if ( ! bp_displayed_user_id() && ! empty( $bp_params['item_id'] ) ) {
+		if ( ! bp_displayed_user_id() && ( ! empty( $bp_params['item_id'] ) || ( empty( $bp_params['item_id'] ) && ! empty( $bp_params['item_type'] ) ) ) ) {
 			$needs_reset            = array(
 				'key'   => 'displayed_user',
 				'value' => $bp->displayed_user,
@@ -1373,7 +1499,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			'component' => 'groups',
 		);
 
-		if ( ! bp_get_current_group_id() && ! empty( $bp_params['item_id'] ) ) {
+		if ( ! bp_get_current_group_id() && ( ! empty( $bp_params['item_id'] ) || ( empty( $bp_params['item_id'] ) && ! empty( $bp_params['item_type'] ) ) ) ) {
 			$needs_reset               = array(
 				'component' => 'groups',
 				'key'       => 'current_group',
@@ -1449,8 +1575,33 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
-	$cover_subdir = $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image';
-	$cover_dir    = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
+	/**
+	 * Filters BuddyPress image attachment sub directory.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $subdir     The sub dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$cover_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+
+	$cover_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
+
+	/**
+	 * Filters BuddyPress image attachment directory.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $dir        The dir to uploaded BuddyPress image.
+	 * @param string $object_dir The object dir (eg: members/groups). Defaults to members.
+	 * @param int    $item_id    The object id (eg: a user or a group id). Defaults to current user.
+	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
+	 *                           Defaults to 'cover-image'
+	 */
+	$cover_dir = apply_filters( 'bb_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
@@ -1556,7 +1707,9 @@ function bp_attachments_cover_image_ajax_delete() {
 		wp_send_json_error();
 	}
 
-	if ( empty( $_POST['object'] ) || empty( $_POST['item_id'] ) ) {
+	$item_type = isset( $_POST['item_type'] ) ? $_POST['item_type'] : '';
+
+	if ( empty( $_POST['object'] ) || ( empty( $_POST['item_id'] ) && empty( $item_type ) ) ) {
 		wp_send_json_error();
 	}
 
@@ -1609,8 +1762,11 @@ function bp_attachments_cover_image_ajax_delete() {
 			'feedback_code' => 3,
 		);
 
-		// Get cover photo settings in case there's a default header.
-		$cover_params = bp_attachments_get_cover_image_settings( $component );
+		$cover_params = array();
+		if ( ! empty( $args['item_id'] ) ) {
+			// Get cover photo settings in case there's a default header.
+			$cover_params = bp_attachments_get_cover_image_settings( $component );
+		}
 
 		// Check if there's a default cover.
 		if ( ! empty( $cover_params['default_cover'] ) ) {
@@ -1628,3 +1784,54 @@ function bp_attachments_cover_image_ajax_delete() {
 	}
 }
 add_action( 'wp_ajax_bp_cover_image_delete', 'bp_attachments_cover_image_ajax_delete' );
+
+/**
+ * Get default cover image class if cover type is 'BuddyBoss' or 'None'.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param int    $item_id The item id (eg: a user or a group id). Defaults to current user.
+ * @param string $item    The item to get the settings for ("user" or "group").
+ * @return string|null Return the class if the cover type is 'BuddyBoss' or 'None' otherwise null.
+ */
+function bb_attachment_get_cover_image_class( $item_id = 0, $item = 'user' ) {
+
+	$cover_image_class = '';
+
+	if ( 'user' === $item && ! bp_disable_cover_image_uploads() ) {
+
+		if ( empty( $item_id ) ) {
+			$item_id = bp_displayed_user_id();
+		}
+
+		$profile_cover_type = bb_get_default_profile_cover_type();
+		$cover_image_class  = bp_attachments_get_user_has_cover_image( $item_id ) ? '' : ' has-default';
+
+		if ( 'custom' === $profile_cover_type ) {
+			$cover_image_class = '';
+		}
+	} elseif ( 'group' === $item && ! bp_disable_group_cover_image_uploads() ) {
+
+		if ( empty( $item_id ) ) {
+			$item_id = bp_get_current_group_id();
+		}
+
+		$group_cover_type  = bb_get_default_group_cover_type();
+		$cover_image_class = bp_attachments_get_group_has_cover_image( $item_id ) ? '' : ' has-default';
+
+		if ( 'custom' === $group_cover_type ) {
+			$cover_image_class = '';
+		}
+	}
+
+	/**
+	 * Filters default cover image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string|null $cover_image_class The default profile or group cover class.
+	 * @param int         $item_id           The item id (eg: a user or a group id). Defaults to current user.
+	 * @param string      $item              The item to get the settings for ("user" or "group").
+	 */
+	return apply_filters( 'bb_attachment_get_cover_image_class', $cover_image_class, $item_id, $item );
+}

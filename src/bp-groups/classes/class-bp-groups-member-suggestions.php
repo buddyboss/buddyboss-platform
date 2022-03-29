@@ -120,9 +120,10 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 				'count_total' => '',  // Prevents total count.
 				'type'        => 'alphabetical',
 
-				'group_id'    => absint( $this->args['group_id'] ),
-				'group_role'  => array( 'admin', 'member', 'mod' ),
-				'page'        => 1,
+				'group_id'   => absint( $this->args['group_id'] ),
+				'group_role' => array( 'admin', 'member', 'mod' ),
+				'page'       => 1,
+				'per_page'   => $this->args['limit'],
 			);
 			$group_users = new BP_Group_Member_Query( $group_query );
 
@@ -155,7 +156,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		$results = array();
 		foreach ( $user_query->results as $user ) {
 			$result          = new stdClass();
-			$result->ID      = $user->user_nicename;
+			$result->ID      = bp_activity_get_user_mentionname( $user->ID );
 			$result->image   = bp_core_fetch_avatar(
 				array(
 					'html'    => false,
