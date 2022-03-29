@@ -9,12 +9,12 @@
  */
 
 ?>
+<?php
+if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
+	bp_get_template_part( 'groups/single/parts/invite-subnav' );
+}
+?>
 <div id="group-invites-container">
-	<?php
-	if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
-		bp_get_template_part( 'groups/single/parts/invite-subnav' );
-	}
-	?>
 	<div class="bb-groups-invites-left">
 		<div class="bb-groups-invites-left-inner">
 			<div class="bb-panel-head">
