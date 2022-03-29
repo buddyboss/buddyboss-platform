@@ -3728,7 +3728,7 @@ input.search-query-input {
 .activity-list .comment-item .bb-activity-more-options-wrap {
   position: absolute;
   left: 0;
-  top: 0;
+  top: -7px;
 }
 
 @media screen and (min-width: 46.8em) {
