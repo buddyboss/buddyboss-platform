@@ -380,6 +380,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				// Strip tags from text and setup mail data.
 				$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
 				$reply_url     = bbp_get_reply_url( $reply_id );
+				$title_text    = bbp_get_topic_title( $topic_id );
 
 				$email_type = 'new-mention';
 
@@ -401,6 +402,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 						'mentioned.content' => $reply_content,
 						'author_id'         => $author_id,
 						'reply_text'        => esc_html__( 'View Reply', 'buddyboss' ),
+						'title_text'        => $title_text,
 					),
 				);
 
@@ -495,6 +497,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
 				$topic_url     = bbp_get_topic_permalink( $topic_id );
 				$author_id     = bbp_get_topic_author_id( $topic_id );
+				$title_text    = bbp_get_topic_title( $topic_id );
 
 				$email_type = 'new-mention';
 
@@ -516,6 +519,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 						'mentioned.content' => $topic_content,
 						'author_id'         => $author_id,
 						'reply_text'        => esc_html__( 'View Discussion', 'buddyboss' ),
+						'title_text'        => $title_text,
 					),
 				);
 

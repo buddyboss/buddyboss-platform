@@ -606,6 +606,7 @@ class BP_Email_Tokens {
 		$content    = $tokens['mentioned.content'] ?? '';
 		$author_id  = $tokens['author_id'] ?? 0;
 		$reply_text = $tokens['reply_text'] ?? __( 'Reply', 'buddyboss' );
+		$title      = $tokens['title_text'] ?? '';
 
 		if ( empty( $activity ) && empty( $content ) ) {
 			return $output;
@@ -614,6 +615,12 @@ class BP_Email_Tokens {
 		$user_id = isset( $activity->user_id ) ? $activity->user_id : $author_id;
 
 		ob_start();
+
+		if ( $title ) {
+			?>
+            <p><div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $title ) ?></div></p>
+			<?php
+		}
 		?>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
