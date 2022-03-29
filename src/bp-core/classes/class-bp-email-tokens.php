@@ -602,8 +602,9 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 
 		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
+		$content  = isset( $tokens['mentioned.content'] ) ? $tokens['mentioned.content'] : '';
 
-		if ( empty( $activity ) ) {
+		if ( empty( $activity ) && empty( $content ) ) {
 			return $output;
 		}
 
@@ -626,13 +627,17 @@ class BP_Email_Tokens {
                                         <td>
                                             <div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 												<?php
-												echo apply_filters_ref_array(
-													'bp_get_activity_content_body',
-													array(
-														$activity->content,
-														&$activity,
-													)
-												);
+												if ( ! empty( $activity ) ) {
+													echo apply_filters_ref_array(
+														'bp_get_activity_content_body',
+														array(
+															$activity->content,
+															&$activity,
+														)
+													);
+												} else {
+                                                    echo $content;
+												}
 												?>
                                             </div>
                                         </td>
