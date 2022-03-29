@@ -6880,7 +6880,7 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
 		case 'bp_custom_post_type':
-			$meta_icon = $bb_icon_bf . ' bb-icon-pin';
+			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
 			break;
 		case 'bp_notifications':
 			$meta_icon = $bb_icon_bf . ' bb-icon-desktop';
