@@ -601,16 +601,53 @@ class BP_Email_Tokens {
 
 		$settings = bp_email_get_appearance_settings();
 
-		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
-		$content  = isset( $tokens['mentioned.content'] ) ? $tokens['mentioned.content'] : '';
+		$activity  = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
+		$content   = isset( $tokens['mentioned.content'] ) ? $tokens['mentioned.content'] : '';
+		$author_id = isset( $tokens['author_id'] ) ? $tokens['author_id'] : 0;
 
 		if ( empty( $activity ) && empty( $content ) ) {
 			return $output;
 		}
 
+		$user_id = isset( $activity->user_id ) ? $activity->user_id : $author_id;
+
 		ob_start();
 		?>
         <table cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td align="center">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tbody>
+                        <tr>
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
+                                <a style="display: block; width: 47px;" href="<?php echo esc_url( bp_core_get_user_domain( $user_id ) ); ?>" target="_blank" rel="nofollow">
+							        <?php
+							        $avatar_url = bp_core_fetch_avatar(
+								        array(
+									        'item_id' => $user_id,
+									        'width'   => 100,
+									        'height'  => 100,
+									        'type'    => 'full',
+									        'html'    => false,
+								        )
+							        );
+							        ?>
+                                    <img alt="" src="<?php echo esc_url( $avatar_url ); ?>" width="47" height="47" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" border="0" />
+                                </a>
+                            </td>
+                            <td width="88%" style="vertical-align: middle;">
+                                <div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $user_id ); ?></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+            </tr>
+
             <tr>
                 <td>
                     <table cellspacing="0" cellpadding="0" border="0" width="100%"

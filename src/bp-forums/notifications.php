@@ -373,6 +373,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 				// Poster name.
 				$reply_author_name = bbp_get_reply_author_display_name( $reply_id );
+				$author_id         = bbp_get_reply_author_id( $reply_id );
 
 				/** Mail */
 
@@ -398,6 +399,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $reply_content,
+						'author_id'         => $author_id,
 					),
 				);
 
@@ -491,6 +493,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				// Strip tags from text and setup mail data.
 				$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
 				$topic_url     = bbp_get_topic_permalink( $topic_id );
+				$author_id     = bbp_get_topic_author_id( $topic_id );
 
 				$email_type = 'new-mention';
 
@@ -510,6 +513,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $topic_content,
+						'author_id'         => $author_id,
 					),
 				);
 
