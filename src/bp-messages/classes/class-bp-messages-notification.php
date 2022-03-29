@@ -94,9 +94,12 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'messages',
 			'bb_messages_new',
 			'bb_messages_new',
-			true,
-			__( 'New private messages', 'buddyboss' ),
-			155
+		);
+
+		$this->register_notification_filter(
+			__( 'New messages', 'buddyboss' ),
+			array( 'bb_messages_new' ),
+			30
 		);
 
 		add_filter( 'bp_messages_bb_groups_new_message_notification', array( $this, 'bb_format_messages_notification' ), 10, 7 );

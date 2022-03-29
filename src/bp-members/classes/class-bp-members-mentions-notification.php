@@ -113,9 +113,12 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_new_mention',
 			'bb_new_mention',
-			true,
+		);
+
+		$this->register_notification_filter(
 			__( 'New mentions', 'buddyboss' ),
-			5
+			array( 'bb_new_mention' ),
+			10
 		);
 
 		add_filter( 'bp_forums_bb_new_mention_notification', array( $this, 'bb_render_mention_notification' ), 10, 7 );

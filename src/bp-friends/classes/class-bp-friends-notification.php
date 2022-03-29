@@ -63,6 +63,12 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_for_friendship_request();
 		$this->register_notification_for_friendship_accept();
+
+		$this->register_notification_filter(
+			__( 'Connection requests', 'buddyboss' ),
+			array( 'bb_connections_new_request', 'bb_connections_request_accepted' ),
+			45
+		);
 	}
 
 	/**
@@ -95,9 +101,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends',
 			'bb_connections_new_request',
 			'bb_connections_new_request',
-			true,
-			__( 'Pending connection requests', 'buddyboss' ),
-			45
 		);
 
 		add_filter( 'bb_friends_bb_connections_new_request_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
@@ -133,9 +136,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends',
 			'bb_connections_request_accepted',
 			'bb_connections_request_accepted',
-			true,
-			__( 'Accepted connection requests', 'buddyboss' ),
-			35
 		);
 
 		add_filter( 'bb_friends_bb_connections_request_accepted_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
@@ -264,4 +264,5 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		return $content;
 	}
+
 }
