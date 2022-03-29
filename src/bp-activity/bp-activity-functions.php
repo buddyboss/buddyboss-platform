@@ -4107,12 +4107,15 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 
 		$notification_type_html = '';
 		$reply_text             = '';
+		$title_text             = '';
 
 		if ( 'activity_comment' === $activity->type ) {
 			if ( ! empty( $activity->item_id ) ) {
 				$parent_activity = new BP_Activity_Activity( $activity->item_id );
 				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
 					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+					$title_text             = get_the_title( $parent_activity->secondary_item_id );
+					$message_link           = get_permalink( $activity->secondary_item_id );
 				} else {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 				}
@@ -4123,6 +4126,8 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 		} elseif ( 'blogs' === $activity->component ) {
 			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
 			$reply_text             = esc_html__( 'View Post', 'buddyboss' );
+			$title_text             = get_the_title( $activity->secondary_item_id );
+			$message_link           = get_permalink( $activity->secondary_item_id );
 		} else {
 			$notification_type_html = esc_html__( 'post', 'buddyboss' );
 			$reply_text             = esc_html__( 'View Post', 'buddyboss' );
@@ -4140,6 +4145,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 				'mentioned.type'    => $notification_type_html,
 				'mentioned.content' => '',
 				'reply_text'        => $reply_text,
+				'title_text'        => $title_text,
 			),
 		);
 
