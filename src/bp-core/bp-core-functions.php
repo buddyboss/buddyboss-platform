@@ -7390,7 +7390,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 	if ( 'legacy' === $type && array_key_exists( $key, $keys ) ) {
 		return $keys[ $key ];
 	} elseif ( 'modern' === $type && array_key_exists( $key, $keys ) ) {
-		return str_replace( $keys[ $key ], '_' . $action, '' );
+		return ( '' !== $action ? str_replace( '_' . $action, '', $keys[ $key ] ) : $keys[ $key ] );
 	}
 
 	return '';
