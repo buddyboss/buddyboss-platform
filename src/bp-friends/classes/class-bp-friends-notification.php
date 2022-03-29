@@ -58,7 +58,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends',
 			esc_html__( 'Connections', 'buddyboss' ),
 			esc_html__( 'Connections Notifications', 'buddyboss' ),
-			10
+			22
 		);
 
 		$this->register_notification_for_friendship_request();
@@ -70,8 +70,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_request() {
 		$this->register_notification_type(
-			'notification_friends_friendship_request',
-			esc_html__( 'A member invites you to connect', 'buddyboss' ),
+			'bb_connections_new_request',
+			esc_html__( 'You receive a new connection request', 'buddyboss' ),
 			esc_html__( 'A member receives a new connection request', 'buddyboss' ),
 			'friends'
 		);
@@ -85,17 +85,22 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
+				'situation_label'     => __( 'A member recieves a new connection request', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
 			),
-			'notification_friends_friendship_request'
+			'bb_connections_new_request'
 		);
 
 		$this->register_notification(
 			'friends',
-			'friendship_request',
-			'notification_friends_friendship_request'
+			'bb_connections_new_request',
+			'bb_connections_new_request',
+			true,
+			__( 'Pending connection requests', 'buddyboss' ),
+			45
 		);
+
+		add_filter( 'bb_friends_bb_connections_new_request_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
 	}
 
 	/**
@@ -103,8 +108,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_friendship_accept() {
 		$this->register_notification_type(
-			'notification_friends_friendship_accepted',
-			esc_html__( 'A member accepts your connection request', 'buddyboss' ),
+			'bb_connections_request_accepted',
+			esc_html__( 'Your connection request is accepted', 'buddyboss' ),
 			esc_html__( 'A member\'s connection request is accepted', 'buddyboss' ),
 			'friends'
 		);
@@ -118,17 +123,22 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
+				'situation_label'     => __( 'A member\'s connection request is accepted', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
 			),
-			'notification_friends_friendship_accepted'
+			'bb_connections_request_accepted'
 		);
 
 		$this->register_notification(
 			'friends',
-			'friendship_accepted',
-			'notification_friends_friendship_accepted'
+			'bb_connections_request_accepted',
+			'bb_connections_request_accepted',
+			true,
+			__( 'Accepted connection requests', 'buddyboss' ),
+			35
 		);
+
+		add_filter( 'bb_friends_bb_connections_request_accepted_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
 	}
 
 	/**
@@ -136,6 +146,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
 	 * @param int    $action_item_count     Number of notifications with the same action.
@@ -143,10 +154,114 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
 	 *
 	 * @return array
 	 */
-	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
-		return array();
+	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+		return $content;
+	}
+
+	/**
+	 * Format friends notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content               Notification content.
+	 * @param int    $item_id               Notification item ID.
+	 * @param int    $secondary_item_id     Notification secondary item ID.
+	 * @param int    $total_items           Number of notifications with the same action.
+	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
+	 *
+	 * @return array
+	 */
+	public function bb_format_friends_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+
+		$notification = bp_notifications_get_notification( $notification_id );
+
+		// Friends request accepted.
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_request_accepted' === $notification->component_action ) {
+
+			$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+
+			// Set up the string and the filter.
+			if ( (int) $total_items > 1 ) {
+				$text = sprintf(
+				/* translators: total members count */
+					esc_html__( '%d members accepted your connection requests', 'buddyboss' ),
+					(int) $total_items
+				);
+				$amount = 'multiple';
+			} else {
+				$text = sprintf(
+				/* translators: member name */
+					esc_html__( '%s has accepted your connection request', 'buddyboss' ),
+					bp_core_get_user_displayname( $item_id )
+				);
+				$amount = 'single';
+			}
+
+			$content = apply_filters(
+				'bb_friends_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$notification,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Friends request sent.
+		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_new_request' === $notification->component_action ) {
+
+			$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
+
+			// Set up the string and the filter.
+			if ( (int) $total_items > 1 ) {
+				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
+				$amount = 'multiple';
+			} else {
+				$text   = sprintf( __( '%s has sent you a connection request', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				$amount = 'single';
+			}
+
+			$content = apply_filters(
+				'bb_friends_' . $amount . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$notification,
+				$text,
+				$notification_link
+			);
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
+		return $content;
 	}
 }

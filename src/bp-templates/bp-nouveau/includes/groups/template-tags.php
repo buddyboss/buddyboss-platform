@@ -1592,7 +1592,7 @@ function bp_nouveau_add_notify_group_members_checkbox() {
 		}
 
 		$keys = array_column( $fields, 'key' );
-		if ( ! empty( $keys ) && in_array( 'notification_groups_group_updated', $keys, true ) ) {
+		if ( ! empty( $keys ) && in_array( 'bb_groups_details_updated', $keys, true ) ) {
 			printf(
 				'<p class="bp-controls-wrap">
                     <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />

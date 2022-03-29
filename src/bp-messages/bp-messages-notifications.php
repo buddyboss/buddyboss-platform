@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *                                  notifications; 'array' for WP Toolbar. Default: 'string'.
  * @return string|array Formatted notifications.
  */
-function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
@@ -33,7 +33,11 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 	if ( 'new_message' === $action ) {
 		if ( $total_items > 1 ) {
 			$amount = 'multiple';
-			$text   = sprintf( __( 'You have %d new messages', 'buddyboss' ), $total_items );
+			$text   = sprintf(
+				/* translators: %d total messages */
+				__( 'You have %d new messages', 'buddyboss' ),
+				$total_items
+			);
 
 		} else {
 			// Get message thread ID.
@@ -47,30 +51,66 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 
 				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
 
-					$group         = bp_messages_get_meta( $item_id, 'group_id', true ); // group id
-					$message_users = bp_messages_get_meta( $item_id, 'group_message_users', true ); // all - individual
-					$message_type  = bp_messages_get_meta( $item_id, 'group_message_type', true ); // open - private
-					$message_from  = bp_messages_get_meta( $item_id, 'message_from', true ); // group
+					$group         = bp_messages_get_meta( $item_id, 'group_id', true ); // group id.
+					$message_users = bp_messages_get_meta( $item_id, 'group_message_users', true ); // all - individual.
+					$message_type  = bp_messages_get_meta( $item_id, 'group_message_type', true ); // open - private.
+					$message_from  = bp_messages_get_meta( $item_id, 'message_from', true ); // group.
 					$group_name    = bp_get_group_name( groups_get_group( $group ) );
 
 					if ( empty( $message_from ) ) {
-						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						$text = sprintf(
+							/* translators: %s user name */
+							__( '%s sent you a new private message', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id )
+						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
-						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf(
+							/* translators: %1$s and %2$s is replaced with the username and group name */
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$group_name
+						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf(
+							/* translators: %1$s and %2$s is replaced with the username and group name */
+							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$group_name
+						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
-						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $group_name );
+						$text = sprintf(
+							/* translators: %1$s and %2$s is replaced with the username and group name */
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$group_name
+						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
-						$text = sprintf( __( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						$text = sprintf(
+							/* translators: %1$s and %2$s is replaced with the username and group name */
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$group_name
+						);
 					} else {
-						$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+						$text = sprintf(
+							/* translators: %s user name */
+							__( '%s sent you a new private message', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id )
+						);
 					}
 				} else {
-					$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
+					$text = sprintf(
+						/* translators: %s user name */
+						__( '%s sent you a new private message', 'buddyboss' ),
+						bp_core_get_user_displayname( $secondary_item_id )
+					);
 				}
 			} else {
-				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ), bp_core_number_format( $total_items ) );
+				$text = sprintf(
+					/* translators: Number of total private messages */
+					_n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ),
+					bp_core_number_format( $total_items )
+				);
 			}
 		}
 
@@ -112,7 +152,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 			);
 		}
 
-		// Custom notification action for the Messages component
+		// Custom notification action for the Messages component.
 	} else {
 		if ( 'string' === $format ) {
 			$return = $text;
@@ -153,7 +193,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 		 * @param string $format            Return value format. 'string' for BuddyBar-compatible
 		 *                                  notifications; 'array' for WP Toolbar. Default: 'string'.
 		 */
-		$return = apply_filters( "bp_messages_{$action}_notification", $return, $item_id, $secondary_item_id, $total_items, $format );
+		$return = apply_filters( "bp_messages_{$action}_notification", $return, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen );
 	}
 
 	/**
@@ -180,6 +220,17 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
  */
 function bp_messages_message_sent_add_notification( $message ) {
 	if ( ! empty( $message->recipients ) ) {
+
+		$message_from = bp_messages_get_meta( $message->id, 'message_from', true ); // group.
+		$action       = 'new_message';
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$action = 'bb_messages_new';
+			if ( 'group' === $message_from ) {
+				$action = 'bb_groups_new_message';
+			}
+		}
+
 		if (
 			function_exists( 'bb_notifications_background_enabled' ) &&
 			true === bb_notifications_background_enabled() &&
@@ -197,7 +248,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 							$message->id,
 							$message->sender_id,
 							buddypress()->messages->id,
-							'new_message',
+							$action,
 							bp_core_current_time(),
 							true,
 						),
@@ -213,7 +264,7 @@ function bp_messages_message_sent_add_notification( $message ) {
 						'item_id'           => $message->id,
 						'secondary_item_id' => $message->sender_id,
 						'component_name'    => buddypress()->messages->id,
-						'component_action'  => 'new_message',
+						'component_action'  => $action,
 						'date_notified'     => bp_core_current_time(),
 						'is_new'            => 1,
 					)
@@ -245,7 +296,7 @@ function bp_messages_screen_conversation_mark_notifications() {
 		array(
 			'user_id'          => bp_loggedin_user_id(),
 			'component_name'   => buddypress()->messages->id,
-			'component_action' => 'new_message',
+			'component_action' => array( 'new_message', 'bb_groups_new_message', 'bb_messages_new' ),
 			'is_new'           => 1,
 		)
 	);
@@ -262,6 +313,8 @@ function bp_messages_screen_conversation_mark_notifications() {
 	// Mark each notification for each PM message as read.
 	foreach ( $message_ids as $message_id ) {
 		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
 	}
 }
 add_action( 'thread_loop_start', 'bp_messages_screen_conversation_mark_notifications', 10 );
@@ -280,6 +333,8 @@ function bp_messages_mark_notification_on_mark_thread( $thread_id ) {
 
 	foreach ( $thread_messages as $thread_message ) {
 		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $thread_message->id, buddypress()->messages->id, 'new_message' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $thread_message->id, buddypress()->messages->id, 'bb_messages_new' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $thread_message->id, buddypress()->messages->id, 'bb_groups_new_message' );
 	}
 }
 add_action( 'messages_thread_mark_as_read', 'bp_messages_mark_notification_on_mark_thread' );
@@ -298,6 +353,8 @@ function bp_messages_message_delete_notifications( $thread_id, $message_ids ) {
 	foreach ( $thread->get_recipients() as $recipient ) {
 		foreach ( $message_ids as $message_id ) {
 			bp_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, buddypress()->messages->id, 'new_message' );
+			bp_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
+			bp_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
 		}
 	}
 }

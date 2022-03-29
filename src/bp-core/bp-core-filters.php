@@ -1122,6 +1122,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	// These options are escaped with esc_html on the way into the database in sanitize_option().
 	$tokens['site.description'] = wp_specialchars_decode( bp_get_option( 'blogdescription' ), ENT_QUOTES );
 	$tokens['site.name']        = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
+	$tokens['reset.url']        = esc_url( wp_lostpassword_url() );
 
 	// Default values for tokens set conditionally below.
 	$tokens['email.preheader']    = '';
@@ -1164,7 +1165,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$tokens['unsubscribe'] = wp_login_url();
 	}
 
-	// Email preheader.
+	// Email pre header.
 	$post = $email->get_post_object();
 	if ( $post ) {
 		$tokens['email.preheader'] = sanitize_text_field( get_post_meta( $post->ID, 'bp_email_preheader', true ) );

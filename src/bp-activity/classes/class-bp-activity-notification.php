@@ -58,63 +58,10 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'activity',
 			esc_html__( 'Activity Feed', 'buddyboss' ),
 			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
-			2
+			6
 		);
 
-		$this->register_notification_for_mentions();
 		$this->register_notification_for_reply();
-	}
-
-	/**
-	 * Register notification for user mention.
-	 */
-	public function register_notification_for_mentions() {
-		$this->register_notification_type(
-			'notification_activity_new_mention',
-			sprintf(
-			/* translators: %s: users mention name. */
-				__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
-				bp_activity_get_user_mentionname( get_current_user_id() )
-			),
-			esc_html__( 'A member is mentioned in another member\'s update', 'buddyboss' ),
-			'activity'
-		);
-
-		$this->register_email_type(
-			'activity-at-message',
-			array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'Recipient was mentioned in an activity update.', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
-			),
-			'notification_activity_new_mention'
-		);
-
-		$this->register_email_type(
-			'groups-at-message',
-			array(
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
-				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
-			),
-			'notification_activity_new_mention'
-		);
-
-		$this->register_notification(
-			'activity',
-			'new_at_mention',
-			'notification_activity_new_mention'
-		);
 	}
 
 	/**
@@ -122,9 +69,9 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_reply() {
 		$this->register_notification_type(
-			'notification_activity_new_reply',
-			esc_html__( 'A member replies to an update or comment you’ve posted', 'buddyboss' ),
-			esc_html__( 'A member receives a reply to an update or comment they’ve posted', 'buddyboss' ),
+			'bb_activity_comment',
+			esc_html__( 'A member replies to your post or comment', 'buddyboss' ),
+			esc_html__( 'A member receives a reply to their post or comment', 'buddyboss' ),
 			'activity'
 		);
 
@@ -137,10 +84,10 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a reply to their activity post', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 			),
-			'notification_activity_new_reply'
+			'bb_activity_comment'
 		);
 
 		$this->register_email_type(
@@ -152,24 +99,23 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
 				/* translators: do not remove {} brackets or translate its contents. */
 				'email_plain_content' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddyboss' ),
+				'situation_label'     => __( 'A member receives a reply to their activity comment', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 
 			),
-			'notification_activity_new_reply'
+			'bb_activity_comment'
 		);
 
 		$this->register_notification(
 			'activity',
-			'update_reply',
-			'notification_activity_new_reply'
+			'bb_activity_comment',
+			'bb_activity_comment',
+			true,
+			__( 'New update replies', 'buddyboss' ),
+			15
 		);
 
-		$this->register_notification(
-			'activity',
-			'comment_reply',
-			'notification_activity_new_reply'
-		);
+		add_filter( 'bp_activity_bb_activity_comment_notification', array( $this, 'bb_render_comment_notification' ), 10, 7 );
 	}
 
 	/**
@@ -177,6 +123,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
 	 * @param int    $action_item_count     Number of notifications with the same action.
@@ -184,10 +131,155 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
 	 *
 	 * @return array
 	 */
-	public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
-		return array();
+	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+		return $content;
+	}
+
+	/**
+	 * Format the notifications.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content           Notification content.
+	 * @param int    $item_id           Notification item ID.
+	 * @param int    $secondary_item_id Notification secondary item ID.
+	 * @param int    $action_item_count Number of notifications with the same action.
+	 * @param string $format            Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id   Notification ID.
+	 * @param string $screen            Notification Screen type.
+	 *
+	 * @return array|string
+	 */
+	public function bb_render_comment_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen ) {
+		$notification           = bp_notifications_get_notification( $notification_id );
+		$user_id                = $secondary_item_id;
+		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$notification_type_html = '';
+
+		if ( ! empty( $notification ) && 'bb_activity_comment' === $notification->component_action ) {
+
+			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
+			$notification_link = bp_get_notifications_permalink();
+
+			if ( $notification_type ) {
+				if ( 'activity_comment' === $notification_type ) {
+					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+				} elseif ( 'post_comment' === $notification_type ) {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+				}
+			}
+
+			$activity         = new BP_Activity_Activity( $item_id );
+			$activity_excerpt = bp_create_excerpt(
+				wp_strip_all_tags( $activity->content ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			);
+			if ( '&nbsp;' === $activity_excerpt ) {
+				$activity_excerpt = '';
+			}
+
+			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
+				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
+
+				$activity_excerpt = bp_create_excerpt(
+					wp_strip_all_tags( $activity_excerpt ),
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				);
+				if ( '&nbsp;' === $activity_excerpt ) {
+					$activity_excerpt = '';
+				}
+			}
+
+			if ( (int) $action_item_count > 1 ) {
+				$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
+				$text              = sprintf(
+					/* translators: %s: Total reply count. */
+					__( 'You have %1$d new replies', 'buddyboss' ),
+					(int) $action_item_count
+				);
+				$amount = 'multiple';
+			} else {
+				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+				$amount            = 'single';
+
+				if ( ! empty( $notification_type_html ) ) {
+					if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
+							__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html,
+							$activity_excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							__( '%1$s replied to your %2$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
+					}
+				} else {
+					if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity content. */
+							__( '%1$s replied: "%2$s"', 'buddyboss' ),
+							$user_fullname,
+							$activity_excerpt
+						);
+					} else {
+						$text = sprintf(
+						/* translators: %s: User full name. */
+							__( '%1$s replied', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				}
+			}
+
+			$content = apply_filters(
+				'bb_activity_' . $action_item_count . '_' . $notification->component_action . '_notification',
+				array(
+					'link' => $notification_link,
+					'text' => $text,
+				),
+				$notification,
+				$notification_link,
+				$text
+			);
+		}
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
+		return $content;
 	}
 }
