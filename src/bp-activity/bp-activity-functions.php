@@ -4124,8 +4124,6 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 			$notification_type_html = esc_html__( 'post', 'buddyboss' );
 		}
 
-		error_log( print_r( $notification_type_html, 1 ) );
-
 		$args = array(
 			'tokens' => array(
 				'activity'          => $activity,
