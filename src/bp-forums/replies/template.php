@@ -1157,31 +1157,31 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
 function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
-	// User is not a guest
+	// User is not a guest.
 	if ( ! bbp_is_reply_anonymous( $reply_id ) ) {
 
-		// Get the author ID
+		// Get the author ID.
 		$author_id = bbp_get_reply_author_id( $reply_id );
 
-		// Try to get a display name
-		$author_name = get_the_author_meta( 'display_name', $author_id );
+		// Try to get a display name.
+		$author_name = bp_core_get_user_displayname( $author_id );
 
-		// Fall back to user login
+		// Fall back to user login.
 		if ( empty( $author_name ) ) {
 			$author_name = get_the_author_meta( 'user_login', $author_id );
 		}
 
-		// User does not have an account
+		// User does not have an account.
 	} else {
 		$author_name = get_post_meta( $reply_id, '_bbp_anonymous_name', true );
 	}
 
-	// If nothing could be found anywhere, use Anonymous
+	// If nothing could be found anywhere, use Anonymous.
 	if ( empty( $author_name ) ) {
 		$author_name = __( 'Anonymous', 'buddyboss' );
 	}
 
-	// Encode possible UTF8 display names
+	// Encode possible UTF8 display names.
 	if ( seems_utf8( $author_name ) === false ) {
 		$author_name = utf8_encode( $author_name );
 	}
@@ -2830,9 +2830,9 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 				// Get child reply.
 				$post_status   = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
 				$bbp_gtcpq_sql = $wpdb->prepare(
-					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} 
-				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status 
-				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s' 
+					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
+				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status
+				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s'
 				AND {$wpdb->postmeta}.meta_key = '%s';",
 					$topic_id,
 					bbp_get_reply_post_type(),
