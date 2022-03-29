@@ -697,9 +697,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						);if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {?>
 
 						 <div class="bbapp-tutorial-btn">
-
-							<?phpcall_user_func( $section['tutorial_callback'], $section );
-						?>
+							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
 						 </div>
 						<?php
 					}
