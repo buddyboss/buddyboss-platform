@@ -329,7 +329,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		foreach ( (array) $usernames as $user_id => $username ) {
 
 			// Current user is the same user then do not send notification.
-			if ( $user_id === get_current_user_id() ) {
+			if ( get_current_user_id() === $user_id ) {
 				continue;
 			}
 
@@ -363,6 +363,45 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 			$n_id = bp_notifications_add_notification( $args );
 			if ( $n_id ) {
 				bp_notifications_update_meta( $n_id, 'type', 'forum_reply' );
+			}
+
+			// User Mentions email.
+			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+				$reply_id = bbp_get_reply_id( $reply_id );
+				$topic_id = bbp_get_topic_id( $topic_id );
+				$forum_id = bbp_get_forum_id( $forum_id );
+
+				// Poster name.
+				$reply_author_name = bbp_get_reply_author_display_name( $reply_id );
+
+				/** Mail */
+
+				// Strip tags from text and setup mail data.
+				$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
+				$reply_url     = bbp_get_reply_url( $reply_id );
+
+				$email_type = 'new-mention';
+
+				$unsubscribe_args = array(
+					'user_id'           => $user_id,
+					'notification_type' => $email_type,
+				);
+
+				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
+
+				$args = array(
+					'tokens' => array(
+						'usermessage'       => wp_strip_all_tags( $reply_content ),
+						'mentioned.url'     => $reply_url,
+						'poster.name'       => $reply_author_name,
+						'receiver-user.id'  => $user_id,
+						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'mentioned.type'    => $notification_type_html,
+						'mentioned.content' => $reply_content,
+					),
+				);
+
+				bp_send_email( $email_type, $user_id, $args );
 			}
 		}
 	}
@@ -405,7 +444,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 		foreach ( (array) $usernames as $user_id => $username ) {
 
 			// Current user is the same user then do not send notification.
-			if ( $user_id === get_current_user_id() ) {
+			if ( get_current_user_id() === $user_id ) {
 				continue;
 			}
 
@@ -437,6 +476,44 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 			$n_id = bp_notifications_add_notification( $args );
 			if ( $n_id ) {
 				bp_notifications_update_meta( $n_id, 'type', 'forum_topic' );
+			}
+
+			// User Mentions email.
+			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+				$topic_id = bbp_get_topic_id( $topic_id );
+				$forum_id = bbp_get_forum_id( $forum_id );
+
+				// Poster name.
+				$reply_author_name = bbp_get_reply_author_display_name( $topic_id );
+
+				/** Mail */
+
+				// Strip tags from text and setup mail data.
+				$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
+				$topic_url     = bbp_get_topic_permalink( $topic_id );
+
+				$email_type = 'new-mention';
+
+				$unsubscribe_args = array(
+					'user_id'           => $user_id,
+					'notification_type' => $email_type,
+				);
+
+				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
+
+				$args = array(
+					'tokens' => array(
+						'usermessage'       => wp_strip_all_tags( $topic_content ),
+						'mentioned.url'     => $topic_url,
+						'poster.name'       => $reply_author_name,
+						'receiver-user.id'  => $user_id,
+						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'mentioned.type'    => $notification_type_html,
+						'mentioned.content' => $topic_content,
+					),
+				);
+
+				bp_send_email( $email_type, $user_id, $args );
 			}
 		}
 	}
