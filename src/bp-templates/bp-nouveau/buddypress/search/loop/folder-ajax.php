@@ -9,7 +9,7 @@
  * @version 1.0.0
  */
 
-$folder_link      = bp_get_folder_folder_link();
+$folder_link = bp_get_folder_folder_link();
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
@@ -31,7 +31,7 @@ $folder_link      = bp_get_folder_folder_link();
 			<div class="media-folder_modified">
 				<div class="media-folder_details__bottom">
 					<span class="media-folder_date"><?php bp_document_folder_date(); ?></span>
-					<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo trailingslashit(bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ) ; ?>"><?php bp_folder_author(); ?></a></span>
+					<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ); ?>"><?php bp_folder_author(); ?></a></span>
 				</div>
 			</div>
 
@@ -46,14 +46,14 @@ $folder_link      = bp_get_folder_folder_link();
 							// Get the group from the database.
 							$group = groups_get_group( $group_id );
 
-							$group_name = isset( $group->name ) ? bp_get_group_name( $group ) : '';
-							$group_link = sprintf(
-									'<a href="%s" class="bp-group-home-link %s-home-link">%s</a>',
-									esc_url( trailingslashit( bp_get_group_permalink( $group ) . bp_get_document_slug() ) ),
-									esc_attr( bp_get_group_slug( $group ) ),
-									esc_html( bp_get_group_name( $group ) )
+							$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
+							$group_link   = sprintf(
+								'<a href="%s" class="bp-group-home-link %s-home-link">%s</a>',
+								esc_url( trailingslashit( bp_get_group_permalink( $group ) . bp_get_document_slug() ) ),
+								esc_attr( bp_get_group_slug( $group ) ),
+								esc_html( bp_get_group_name( $group ) )
 							);
-							$group_status     = bp_get_group_status( $group );
+							$group_status = bp_get_group_status( $group );
 							?>
 							<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
 							<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
