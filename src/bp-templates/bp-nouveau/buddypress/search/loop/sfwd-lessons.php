@@ -14,11 +14,17 @@ $total = bp_search_get_total_topics_count( get_the_ID() ) ?>
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
-				<img
-					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
-					class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-					alt="<?php the_title(); ?>"
-				/>
+				<?php
+				if ( get_the_post_thumbnail_url() ) {
+				?>
+					<img src="<?php echo get_the_post_thumbnail_url(); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image"alt="<?php the_title(); ?>"  />
+				<?php
+				} else {
+					?>
+					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+				<?php
+				}
+				?>
 			</a>
 		</div>
 
