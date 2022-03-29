@@ -382,7 +382,17 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				$reply_url     = bbp_get_reply_url( $reply_id );
 				$title_text    = bbp_get_topic_title( $topic_id );
 
-				$email_type = 'new-mention';
+				$group_ids  = bbp_get_forum_group_ids( $forum_id );
+				$group_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+				$group_name = '';
+
+				if ( $group_id && bp_is_active( 'groups' ) ) {
+					$email_type = 'new-mention-group';
+					$group      = groups_get_group( $group_id );
+					$group_name = bp_get_group_name( $group );
+				} else {
+					$email_type = 'new-mention';
+				}
 
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
@@ -395,6 +405,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 					'tokens' => array(
 						'usermessage'       => wp_strip_all_tags( $reply_content ),
 						'mentioned.url'     => $reply_url,
+						'group.name'        => $group_name,
 						'poster.name'       => $reply_author_name,
 						'receiver-user.id'  => $user_id,
 						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
@@ -499,7 +510,17 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				$author_id     = bbp_get_topic_author_id( $topic_id );
 				$title_text    = bbp_get_topic_title( $topic_id );
 
-				$email_type = 'new-mention';
+				$group_ids  = bbp_get_forum_group_ids( $forum_id );
+				$group_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+				$group_name = '';
+
+				if ( $group_id && bp_is_active( 'groups' ) ) {
+					$email_type = 'new-mention-group';
+					$group      = groups_get_group( $group_id );
+					$group_name = bp_get_group_name( $group );
+				} else {
+					$email_type = 'new-mention';
+				}
 
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,
@@ -512,6 +533,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 					'tokens' => array(
 						'usermessage'       => wp_strip_all_tags( $topic_content ),
 						'mentioned.url'     => $topic_url,
+						'group.name'        => $group_name,
 						'poster.name'       => $reply_author_name,
 						'receiver-user.id'  => $user_id,
 						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
