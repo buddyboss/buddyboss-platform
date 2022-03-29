@@ -649,7 +649,7 @@
 .bb-action-check-wrap {
 	position: absolute;
 	transition: 0.3s all;
-	top: 25px;
+	top: 21px;
 	left: 15px;
 	color: #fff;
 	width: 20px;
@@ -3078,10 +3078,6 @@ div.dropzone .dz-preview {
 			font-size: 30px;
 			color: #9ca8b4;
 			margin-top: 5px;
-
-			&.bb-icon-folder-stacked {
-				font-size: 26px;
-			}
 		}
 	}
 

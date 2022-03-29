@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-28 20:51:43+00:00\n"
+"POT-Creation-Date: 2022-03-29 16:04:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8296,8 +8296,8 @@ msgstr ""
 #: bp-core/classes/class-bp-core-network-posts-widget.php:213
 #: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
 #: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
-#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
-#: bp-forums/common/widgets.php:1360
+#: bp-forums/common/widgets.php:973 bp-forums/common/widgets.php:1135
+#: bp-forums/common/widgets.php:1367
 #: bp-groups/classes/class-bp-groups-widget.php:232
 #: bp-members/classes/class-bp-core-members-widget.php:252
 #: bp-members/classes/class-bp-core-recently-active-widget.php:155
@@ -14332,11 +14332,11 @@ msgstr ""
 msgid "(BB) Forums List"
 msgstr ""
 
-#: bp-forums/common/widgets.php:704 bp-forums/common/widgets.php:970
+#: bp-forums/common/widgets.php:704 bp-forums/common/widgets.php:977
 msgid "Parent Forum ID:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:710 bp-forums/common/widgets.php:976
+#: bp-forums/common/widgets.php:710 bp-forums/common/widgets.php:983
 msgid "\"0\" to show only root - \"any\" to show all"
 msgstr ""
 
@@ -14348,96 +14348,96 @@ msgstr ""
 msgid "(BB) Forum Recent Topics"
 msgstr ""
 
-#: bp-forums/common/widgets.php:895
+#: bp-forums/common/widgets.php:902
 msgid "by %1$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:967
+#: bp-forums/common/widgets.php:974
 msgid "Maximum topics to show:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:979 bp-forums/common/widgets.php:1362
+#: bp-forums/common/widgets.php:986 bp-forums/common/widgets.php:1369
 msgid "Show post date:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:980
+#: bp-forums/common/widgets.php:987
 msgid "Show discussion author:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5526
+#: bp-forums/common/widgets.php:990 bp-groups/bp-groups-template.php:5526
 #: bp-notifications/bp-notifications-template.php:1002
 #: bp-templates/bp-nouveau/includes/template-tags.php:2164
 msgid "Order By:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:985
+#: bp-forums/common/widgets.php:992
 msgid "Newest Discussions"
 msgstr ""
 
-#: bp-forums/common/widgets.php:986
+#: bp-forums/common/widgets.php:993
 #: bp-forums/templates/default/extras/page-forum-statistics.php:36
 msgid "Popular Discussions"
 msgstr ""
 
-#: bp-forums/common/widgets.php:987
+#: bp-forums/common/widgets.php:994
 msgid "Discussions With Recent Replies"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1006
+#: bp-forums/common/widgets.php:1013
 msgid "Recent Discussions"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1044
+#: bp-forums/common/widgets.php:1051
 msgid "Some statistics from your forum."
 msgstr ""
 
-#: bp-forums/common/widgets.php:1048
+#: bp-forums/common/widgets.php:1055
 msgid "(BB) Forum Statistics"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1148
+#: bp-forums/common/widgets.php:1155
 msgid "Forum Statistics"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1181
+#: bp-forums/common/widgets.php:1188
 msgid "A list of the most recent replies."
 msgstr ""
 
-#: bp-forums/common/widgets.php:1185
+#: bp-forums/common/widgets.php:1192
 msgid "(BB) Forum Recent Replies"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1282
+#: bp-forums/common/widgets.php:1289
 #. translators: 1: reply author, 2: reply link, 3: reply timestamp
 msgid "%1$s on %2$s %3$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1288
+#: bp-forums/common/widgets.php:1295
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:152
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:157
 #. translators: 1: reply link, 2: reply timestamp
 msgid "%1$s %2$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1294
+#: bp-forums/common/widgets.php:1301
 #. translators: 1: reply author, 2: reply link
 msgid "%1$s on %2$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1300
+#: bp-forums/common/widgets.php:1307
 #. translators: 1: reply link
 msgid "%1$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1361
+#: bp-forums/common/widgets.php:1368
 msgid "Maximum replies to show:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1363
+#: bp-forums/common/widgets.php:1370
 msgid "Show reply author:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1380
+#: bp-forums/common/widgets.php:1387
 msgid "Recent Replies"
 msgstr ""
 
