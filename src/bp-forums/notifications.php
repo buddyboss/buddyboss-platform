@@ -258,13 +258,13 @@ add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypres
  *
  * @since bbPress (r5156)
  *
- * @param int   $reply_id
- * @param int   $topic_id
- * @param int   $forum_id (not used)
- * @param array $anonymous_data (not used)
- * @param int   $author_id
- * @param bool  $is_edit Used to bail if this gets hooked to an edit action
- * @param int   $reply_to
+ * @param int   $reply_id Reply id.
+ * @param int   $topic_id Topic id.
+ * @param int   $forum_id (not used) Forum id.
+ * @param array $anonymous_data (not used) Anonymous data.
+ * @param int   $author_id Author id.
+ * @param bool  $is_edit Used to bail if this gets hooked to an edit action.
+ * @param int   $reply_to Reply to id.
  */
 function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
 
@@ -380,6 +380,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				// Strip tags from text and setup mail data.
 				$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
 				$reply_url     = bbp_get_reply_url( $reply_id );
+				$title_text    = bbp_get_topic_title( $topic_id );
 
 				$email_type = 'new-mention';
 
@@ -400,6 +401,8 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $reply_content,
 						'author_id'         => $author_id,
+						'reply_text'        => esc_html__( 'View Reply', 'buddyboss' ),
+						'title_text'        => $title_text,
 					),
 				);
 
@@ -452,7 +455,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 			$args['user_id'] = $user_id;
 
-			// If forum is not accesible to user, do not send notification.
+			// If forum is not accessible to user, do not send notification.
 			$can_access = bbp_user_can_view_forum(
 				array(
 					'user_id'         => $user_id,
@@ -494,6 +497,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
 				$topic_url     = bbp_get_topic_permalink( $topic_id );
 				$author_id     = bbp_get_topic_author_id( $topic_id );
+				$title_text    = bbp_get_topic_title( $topic_id );
 
 				$email_type = 'new-mention';
 
@@ -514,6 +518,8 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $topic_content,
 						'author_id'         => $author_id,
+						'reply_text'        => esc_html__( 'View Discussion', 'buddyboss' ),
+						'title_text'        => $title_text,
 					),
 				);
 
