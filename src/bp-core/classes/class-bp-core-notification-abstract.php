@@ -463,13 +463,13 @@ abstract class BP_Core_Notification_Abstract {
 					if ( is_array( $n_types ) ) {
 						foreach ( $n_types as $k => $type ) {
 							$component_action = isset( $filtered_notifications[ $type ] ) ? $filtered_notifications[ $type ] : '';
-							if ( ! empty( $component_action ) && bb_get_modern_notification_admin_settings_is_enabled( $component_action ) ) {
+							if ( ! empty( $component_action ) && bb_get_modern_notification_admin_settings_is_enabled( $type ) ) {
 								$component_actions[] = $component_action;
 							}
 						}
 					} else {
 						$component_action = isset( $filtered_notifications[ $n_types ] ) ? $filtered_notifications[ $n_types ] : '';
-						if ( ! empty( $component_action ) && bb_get_modern_notification_admin_settings_is_enabled( $component_action, $n_group ) ) {
+						if ( ! empty( $component_action ) && bb_get_modern_notification_admin_settings_is_enabled( $n_types ) ) {
 							$component_actions[] = $component_action;
 						}
 					}
