@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 			<li class="wp-person" id="wp-person-buddyboss">
 				<a class="web" href="https://www.buddyboss.com/careers/"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . 'bp-core/images/admin/credits-buddyboss.png' . '" />'; ?>
 				BuddyBoss Team</a>
-				<span class="title"><?php _e( '80 People and Growing!', 'buddyboss' ); ?></span>
+				<span class="title"><?php esc_html_e( 'Over 100 and Growing!', 'buddyboss' ); ?></span>
 			</li>
 		</ul>
 	</div>

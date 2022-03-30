@@ -70,19 +70,19 @@ if ( bp_is_my_profile() ) {
 			if ( bp_is_my_profile() ) {
 				?>
 				<a href="<?php echo esc_url( bp_get_members_component_link( 'profile', 'change-cover-image' ) ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
-					<i class="bb-icon-camera"></i>
+					<i class="bb-icon-bf bb-icon-camera"></i>
 				</a>
 
 				<?php
 				if ( ! empty( $cover_image_url ) && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
 					?>
 					<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-move"></i>
+						<i class="bb-icon-bf bb-icon-arrows"></i>
 					</a>
 					<div class="header-cover-reposition-wrap">
 						<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></a>
-						<span class="drag-element-helper"><i class="bb-icon-menu"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
+						<span class="drag-element-helper"><i class="bb-icon-l bb-icon-bars"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
 						<img src="<?php echo esc_url( $cover_image_url ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss' ); ?>"/>
 					</div>
 					<?php
@@ -102,7 +102,7 @@ if ( bp_is_my_profile() ) {
 				if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) {
 					?>
 					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-camera"></i>
+						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 					<?php
@@ -254,7 +254,7 @@ endif;
 					<header class="bb-model-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-model-close-button" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">

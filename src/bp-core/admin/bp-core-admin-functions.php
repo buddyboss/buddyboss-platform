@@ -1710,6 +1710,7 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-label-color', esc_html__( 'Label Colors', 'buddyboss' ), 'bb_member_type_labelcolor_metabox', null, 'normal', 'high' );
 	if ( 'add' != $screen->action ) {
 		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	}
@@ -2215,6 +2216,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive.
 	$enable_search_remove = isset( $data['enable_search_remove'] ) ? absint( $data['enable_search_remove'] ) : 0; // default inactive.
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active.
+	$label_color          = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array.
 	$wp_roles         = isset( $data['wp_roles'] ) ? $data['wp_roles'] : '';
@@ -2248,6 +2250,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
 	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
+	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -2468,7 +2471,16 @@ function bp_member_type_import_submenu_page() {
 			<div class="boss-import-area">
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
-						<h2><?php esc_html_e( 'Import Profile Types', 'buddyboss' ); ?></h2>
+						<h2>
+							<?php
+							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
+							if ( ! empty( $meta_icon ) ) {
+								?>
+								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+								<?php
+							}
+							esc_html_e( 'Import Profile Types', 'buddyboss' ); ?>
+						</h2>
 						<p>
 							<?php
 							printf(
@@ -3367,3 +3379,47 @@ function bb_get_pro_fields_class() {
 	return $pro_class;
 }
 
+/**
+ * Added new meta box as text and background color for member types label.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $post Post data object.
+ */
+function bb_member_type_labelcolor_metabox( $post ) {
+	$post_type         = isset( $post->post_type ) ? $post->post_type : 'bp-member-type';
+	$meta_data         = get_post_meta( $post->ID, '_bp_member_type_label_color', true );
+	$label_color_data  = ! empty( $meta_data ) ? maybe_unserialize( $meta_data ) : array();
+	$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+	$colorpicker_class = 'default' === $color_type ? $post_type . '-hide-colorpicker' : $post_type . '-show-colorpicker';
+	if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+		$background_color = buddyboss_theme_get_option( 'label_background_color' );
+		$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+	} else {
+		$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+		$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+	}
+	?>
+	<div class="bb-meta-box-label-color-main">
+		<p><?php esc_html_e( 'Select which label colors to use for profiles using this profile type. Profile Type labels are used in places such as member directories and profile headers.', 'buddyboss' ); ?></p>
+		<p>
+			<select name="<?php echo esc_attr( $post_type ); ?>[label_color][type]" id="<?php echo esc_attr( $post_type ); ?>-label-color-type">
+				<option value="default" <?php selected( $color_type, 'default' ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+				<option value="custom" <?php selected( $color_type, 'custom' ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
+			</select>
+		</p>
+		<div id="<?php echo esc_attr( $post_type ); ?>-color-settings" class="<?php echo esc_attr( $post_type ); ?>-colorpicker <?php echo esc_attr( $colorpicker_class ); ?>">
+			<div class="bb-meta-box-colorpicker">
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-background-color-colorpicker">
+					<label class="bb-colorpicker-label"><?php esc_html_e( 'Background Color', 'buddyboss' ); ?></label>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-background-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][background_color]" type="text" value="<?php echo esc_attr( $background_color ); ?>"/>
+				</div>
+				<div class="bb-colorpicker-row-one" id="<?php echo esc_attr( $post_type ); ?>-text-color-colorpicker">
+					<label class="bb-colorpicker-label"><?php esc_html_e( 'Text Color', 'buddyboss' ); ?></label>
+					<input id="<?php echo esc_attr( $post_type ); ?>-label-text-color" name="<?php echo esc_attr( $post_type ); ?>[label_color][text_color]" type="text" value="<?php echo esc_attr( $text_color ); ?>"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php
+}

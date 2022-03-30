@@ -52,7 +52,7 @@ $albums_link = bp_get_album_link();
 								esc_attr( bp_core_number_format( $media_album_template->album->media['total_video'] ) )
 							);
 							?>
-						</span> <!-- Get the count of photos in that album -->
+						</span> <!-- Get the count of photos on that album -->
 						<?php
 					}
 					?>

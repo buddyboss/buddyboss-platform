@@ -37,7 +37,17 @@ function bbp_admin_repair() {
 
 		<div class="bp-admin-card section-repair_forums">
 
-			<h2><?php esc_html_e( 'Repair Forums', 'buddyboss' ); ?></h2>
+			<h2>
+				<?php
+				$meta_icon = bb_admin_icons( 'repair_forums' );
+				if ( ! empty( $meta_icon ) ) {
+					?>
+					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+					<?php
+				}
+				esc_html_e( 'Repair Forums', 'buddyboss' );
+				?>
+			</h2>
 
 			<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 

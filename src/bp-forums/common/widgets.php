@@ -142,7 +142,7 @@ class BBP_Login_Widget extends WP_Widget {
 
 			<div class="bbp-logged-in">
 				<a href="<?php bbp_user_profile_url( bbp_get_current_user_id() ); ?>" class="submit user-submit"><?php echo get_avatar( bbp_get_current_user_id(), '40' ); ?></a>
-				<h4><?php bbp_user_profile_link( bbp_get_current_user_id() ); ?></h4>
+				<h5><?php bbp_user_profile_link( bbp_get_current_user_id() ); ?></h5>
 
 				<?php bbp_logout_link(); ?>
 			</div>
@@ -885,14 +885,21 @@ class BBP_Topics_Widget extends WP_Widget {
 						)
 					);
 				endif;
+
+				$author_url = bbp_get_reply_author_url( $topic_id );
 				?>
 
 				<li>
+					<span class="bbp-topic-author-wrapper">
+						<?php if ( ! empty( $author_link ) ) : ?>
+							<a href="<?php echo $author_url; ?>"><?php echo bbp_get_reply_author_avatar( $topic_id ); ?></a>
+						<?php endif; ?>
+					</span>
 					<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-						<?php printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author">' . $author_link . '</span>' ); ?>
+						<?php printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . $author_url . '">' . bbp_get_reply_author_display_name( $topic_id ) . '</a></span>' ); ?>
 
 					<?php endif; ?>
 
