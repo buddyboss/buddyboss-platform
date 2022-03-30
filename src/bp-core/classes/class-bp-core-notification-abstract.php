@@ -19,40 +19,42 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Preferences Group.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $prefernce_groups = array();
 
 	/**
 	 * Preferences.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $preferences = array();
 
 	/**
 	 * Notifications.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $notifications = array();
 
 	/** Email Types.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $email_types = array();
 
 	/**
 	 * Notification load default priority.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var int
 	 */
@@ -61,18 +63,18 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Notifications filters.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $notifications_filters = array();
 
 	/**
 	 * Initialize.
 	 *
-	 * @return void
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
 	 */
 	final public function start() {
 		$this->load();
@@ -102,11 +104,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register notifications.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $notifications Notification array.
 	 *
 	 * @return array|mixed
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_preferences( array $notifications ) {
 
@@ -178,11 +180,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register the notifications.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $notifications List of notifications.
 	 *
 	 * @return array
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notifications( array $notifications ) {
 
@@ -195,11 +197,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Email Schema.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $schema List of schema.
 	 *
 	 * @return array|mixed
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function email_schema( array $schema ) {
 
@@ -216,11 +218,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Email Type Schema.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $type_schema List of types schema.
 	 *
 	 * @return array
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function email_type_schema( array $type_schema ) {
 
@@ -237,11 +239,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register email with associated preference type.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $emails Registered Emails.
 	 *
 	 * @return array
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_emails( array $emails ) {
 		if ( ! empty( $this->email_types ) ) {
@@ -334,14 +336,14 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Group.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $group_key         Group key.
 	 * @param string $group_label       Group label.
 	 * @param string $group_admin_label Group admin label.
 	 * @param int    $priority          Priority of the group.
 	 *
 	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
 		$this->prefernce_groups[] = array(
@@ -355,6 +357,8 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Type.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $notification_type        Notification Type key.
 	 * @param string $notification_label       Notification label.
 	 * @param string $notification_admin_label Notification admin label.
@@ -362,8 +366,6 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param bool   $default                  Default status.
 	 *
 	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
 		$this->preferences[] = array(
@@ -378,13 +380,13 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register notification.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $component         Component name.
 	 * @param string $component_action  Component action.
 	 * @param string $notification_type Notification Type key.
 	 *
 	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification( string $component, string $component_action, string $notification_type ) {
 		$this->notifications[] = array(

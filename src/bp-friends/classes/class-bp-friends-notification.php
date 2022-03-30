@@ -19,6 +19,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var object
 	 */
 	private static $instance = null;
@@ -51,6 +53,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return mixed|void
 	 */
 	public function load() {
@@ -73,6 +77,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for user friendship request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_friendship_request() {
 		$this->register_notification_type(
@@ -108,6 +114,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for friendship accept.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_friendship_accept() {
 		$this->register_notification_type(
@@ -222,10 +230,20 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
+				$text = sprintf(
+					/* translators: total number. */
+					esc_html__( 'You have %d pending requests to connect', 'buddyboss' ),
+					(int) $total_items
+				);
+
 				$amount = 'multiple';
 			} else {
-				$text   = sprintf( __( '%s has sent you a connection request', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				$text = sprintf(
+					/* translators: users display name. */
+					esc_html__( '%s has sent you a connection request', 'buddyboss' ),
+					bp_core_get_user_displayname( $item_id )
+				);
+
 				$amount = 'single';
 			}
 

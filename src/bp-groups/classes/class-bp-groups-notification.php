@@ -19,6 +19,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var object
 	 */
 	private static $instance = null;
@@ -50,6 +52,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Initialize all methods inside it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return mixed|void
 	 */
@@ -104,6 +108,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for group update.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_updated() {
 		$this->register_notification_type(
@@ -139,6 +145,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for group user has been promoted as admin/mod.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_user_promotion() {
 		$this->register_notification_type(
@@ -174,6 +182,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for user invites.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_invite() {
 		$this->register_notification_type(
@@ -209,6 +219,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for the group membership.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_membership_request() {
 		$this->register_notification_type(
@@ -245,6 +257,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for membership request has been accepted.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_membership_request_accepted() {
 		$this->register_notification_type(
@@ -281,6 +295,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for membership request has been rejected.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_membership_request_rejected() {
 		$this->register_notification_type(
@@ -315,7 +331,9 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	}
 
 	/**
-	 * Register notification for group messages
+	 * Register notification for group messages.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_group_user_messages() {
 		$this->register_notification_type(

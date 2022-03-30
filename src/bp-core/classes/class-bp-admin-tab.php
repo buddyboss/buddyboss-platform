@@ -302,7 +302,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
 						'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
 					),
-					'email_template'       => array(
+					'email_template'      => array(
 						'html' => $email_template,
 					),
 				)
@@ -685,7 +685,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ). '>' .
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
 						wp_kses(
 							$section['title'],
 							array(
@@ -694,13 +694,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 									'rel'  => array(),
 								),
 							)
-						);if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {?>
+						);
 
-						 <div class="bbapp-tutorial-btn">
-							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
-						 </div>
-						<?php
-					}
+						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+						?>
+							<div class="bbapp-tutorial-btn">
+								<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+							</div>
+							<?php
+						}
+
 					echo "</h2>\n";
 				}
 
