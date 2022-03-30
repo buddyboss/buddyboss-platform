@@ -105,7 +105,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			 * @param int    $secondary_item_id The secondary item ID.
 			 * @param int    $total_items       The total number of messaging-related notifications
 			 *                                  waiting for the user.
-			 * @param string $format            'string' for BuddyBar-compatible notifications;
+			 * @param string $format            'string' for compatible notifications;
 			 *                                  'array' for WP Toolbar.
 			 * @param int    $id                Notification ID.
 			 * @param string $screen            Notification Screen type.
@@ -227,8 +227,8 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param object $notification_id Notification ID.
-	 * @param string $activity        Activity object.
+	 * @param int    $notification_id Notification ID.
+	 * @param object $activity        Activity object.
 	 */
 	do_action( 'bb_activity_add_notification', $notification_id, $activity );
 }
@@ -268,8 +268,8 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param object $notification_id Notification ID.
-	 * @param string $activity        Activity object.
+	 * @param int    $notification_id Notification ID.
+	 * @param object $activity        Activity object.
 	 */
 	do_action( 'bb_activity_add_notification', $notification_id, $activity );
 }
@@ -309,8 +309,8 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param object $notification_id Notification ID.
-	 * @param string $activity        Activity object.
+	 * @param int    $notification_id Notification ID.
+	 * @param object $activity        Activity object.
 	 */
 	do_action( 'bb_activity_add_notification', $notification_id, $activity_comment );
 }
@@ -544,8 +544,8 @@ add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param object $notification_id Notification ID.
- * @param string $activity        Activity object.
+ * @param int    $notification_id Notification ID.
+ * @param object $activity        Activity object.
  */
 function bb_activity_add_notification_metas( $notification_id, $activity ) {
 

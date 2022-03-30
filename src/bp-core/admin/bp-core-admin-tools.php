@@ -319,13 +319,13 @@ function bp_admin_repair_list() {
 	// - last_activity migration (2.0).
 	$repair_list[20] = array(
 		'bp-total-member-count',
-		__( 'Repair total members count', 'buddyboss' ),
+		esc_html__( 'Repair total members count', 'buddyboss' ),
 		'bp_admin_repair_count_members',
 	);
 
 	$repair_list[25] = array(
 		'bp-last-activity',
-		__( 'Repair member "last activity" data', 'buddyboss' ),
+		esc_html__( 'Repair member "last activity" data', 'buddyboss' ),
 		'bp_admin_repair_last_activity',
 	);
 
@@ -333,25 +333,25 @@ function bp_admin_repair_list() {
 	// - default xprofile groups/fields
 	$repair_list[35] = array(
 		'bp-xprofile-fields',
-		__( 'Repair default profile set and fields', 'buddyboss' ),
+		esc_html__( 'Repair default profile set and fields', 'buddyboss' ),
 		'repair_default_profiles_fields',
 	);
 
 	$repair_list[36] = array(
 		'bp-xprofile-wordpress-resync',
-		__( 'Re-sync BuddyBoss profile fields to WordPress profile fields', 'buddyboss' ),
+		esc_html__( 'Re-sync BuddyBoss profile fields to WordPress profile fields', 'buddyboss' ),
 		'resync_xprofile_wordpress_fields',
 	);
 
 	$repair_list[37] = array(
 		'bp-wordpress-xprofile-resync',
-		__( 'Re-sync WordPress profile fields to BuddyBoss profile fields', 'buddyboss' ),
+		esc_html__( 'Re-sync WordPress profile fields to BuddyBoss profile fields', 'buddyboss' ),
 		'resync_wordpress_xprofile_fields',
 	);
 
 	$repair_list[38] = array(
 		'bp-wordpress-update-display-name',
-		__( 'Update display name to selected format in profile settings', 'buddyboss' ),
+		esc_html__( 'Update display name to selected format in profile settings', 'buddyboss' ),
 		'xprofile_update_display_names',
 	);
 
@@ -360,7 +360,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'friends' ) ) {
 		$repair_list[0] = array(
 			'bp-user-friends',
-			__( 'Repair total connections count for each member', 'buddyboss' ),
+			esc_html__( 'Repair total connections count for each member', 'buddyboss' ),
 			'bp_admin_repair_friend_count',
 		);
 	}
@@ -370,7 +370,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'groups' ) ) {
 		$repair_list[10] = array(
 			'bp-group-count',
-			__( 'Repair total groups count for each member', 'buddyboss' ),
+			esc_html__( 'Repair total groups count for each member', 'buddyboss' ),
 			'bp_admin_repair_group_count',
 		);
 	}
@@ -380,7 +380,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'blogs' ) ) {
 		$repair_list[90] = array(
 			'bp-blog-records',
-			__( 'Repopulate site tracking records', 'buddyboss' ),
+			esc_html__( 'Repopulate site tracking records', 'buddyboss' ),
 			'bp_admin_repair_blog_records',
 		);
 	}
@@ -410,7 +410,7 @@ function bp_admin_repair_list() {
 			// - Assign default member type.
 			$repair_list[101] = array(
 				'bp-assign-member-type',
-				__( 'Assign members without a profile type to the default profile type (excludes admins)', 'buddyboss' ),
+				esc_html__( 'Assign members without a profile type to the default profile type (excludes admins)', 'buddyboss' ),
 				'bp_admin_assign_member_type',
 			);
 		}
@@ -420,7 +420,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
-			__( 'Update activity favorites data', 'buddyboss' ),
+			esc_html__( 'Update activity favorites data', 'buddyboss' ),
 			'bp_admin_update_activity_favourite',
 		);
 	}
@@ -429,7 +429,7 @@ function bp_admin_repair_list() {
 	// - maybe create the database table and migrate any existing group invitations.
 	$repair_list[110] = array(
 		'bp-invitations-table',
-		__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss' ),
+		esc_html__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss' ),
 		'bp_admin_invitations_table',
 	);
 

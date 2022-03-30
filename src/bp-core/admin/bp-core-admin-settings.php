@@ -2838,7 +2838,7 @@ function bb_labs_get_settings_sections() {
 	$settings = array(
 		'bp_labs_settings_notifications' => array(
 			'page'     => 'labs',
-			'title'    => __( 'BuddyBoss Labs', 'buddyboss' ),
+			'title'    => esc_html__( 'BuddyBoss Labs', 'buddyboss' ),
 			'callback' => 'bb_labs_notification_preferences_info_section_callback',
 		),
 	);
@@ -2894,7 +2894,7 @@ function bb_labs_get_settings_fields() {
 }
 
 /**
- * Setting > Media > Profile support
+ * Setting > Media > Profile support.
  *
  * @since BuddyBoss [BBVERSION]
  */

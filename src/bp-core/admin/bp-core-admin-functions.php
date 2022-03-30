@@ -3373,9 +3373,9 @@ add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
 /**
  * Disable the multi select in situation.
  *
- * @return void
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_disable_multiple_select_situation() {
 

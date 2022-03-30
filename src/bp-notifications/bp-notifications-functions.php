@@ -1069,9 +1069,9 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 /**
  * Exclude the messages notifications.
  *
- * @param array $component_names Component names.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $component_names Component names.
  *
  * @return array Return the component name.
  */

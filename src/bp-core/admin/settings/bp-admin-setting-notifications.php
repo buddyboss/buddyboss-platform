@@ -49,7 +49,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$mobile_support       = empty( $_POST['_bp_on_screen_notifications_mobile_support'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_mobile_support'] );
 		$visibility           = empty( $_POST['_bp_on_screen_notifications_visibility'] ) ? '' : sanitize_text_field( $_POST['_bp_on_screen_notifications_visibility'] );
 		$browser_tab          = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
-		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
+		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : sanitize_text_field( $_POST['bb_enabled_notification'] );
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$hide_message_notification = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 1;
@@ -75,31 +75,33 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 
 		$sections = bb_notification_get_settings_sections();
 
-		foreach ( (array) $sections as $section_id => $section ) {
+		if ( ! empty( $sections ) ) {
+			foreach ( (array) $sections as $section_id => $section ) {
 
-			// Only add section and fields if section has fields.
-			$fields = bb_notification_get_settings_fields_for_section( $section_id );
+				// Only add section and fields if section has fields.
+				$fields = bb_notification_get_settings_fields_for_section( $section_id );
 
-			if ( empty( $fields ) ) {
-				continue;
-			}
+				if ( empty( $fields ) ) {
+					continue;
+				}
 
-			$section_title     = ! empty( $section['title'] ) ? $section['title'] : '';
-			$section_callback  = ! empty( $section['callback'] ) ? $section['callback'] : false;
-			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
-			$notice            = ! empty( $section['notice'] ) ? $section['notice'] : false;
+				$section_title     = ! empty( $section['title'] ) ? $section['title'] : '';
+				$section_callback  = ! empty( $section['callback'] ) ? $section['callback'] : false;
+				$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
+				$notice            = ! empty( $section['notice'] ) ? $section['notice'] : false;
 
-			// Add the section.
-			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback, $notice );
+				// Add the section.
+				$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback, $notice );
 
-			// Loop through fields for this section.
-			foreach ( (array) $fields as $field_id => $field ) {
+				// Loop through fields for this section.
+				foreach ( (array) $fields as $field_id => $field ) {
 
-				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
+					$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
 
-				if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
-					$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : array();
-					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
+					if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
+						$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : array();
+						$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
+					}
 				}
 			}
 		}

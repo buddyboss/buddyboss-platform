@@ -2778,11 +2778,11 @@ function bp_nouveau_get_nav_link_class() {
 	/**
 	 * Filter to edit the link class attribute of the nav.
 	 *
-	 * @param string $link_class The link class attribute for the nav item.
-	 * @param object $nav_item The current nav item object.
-	 * @param string $value The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $link_class The link class attribute for the nav item.
+	 * @param object $nav_item   The current nav item object.
+	 * @param string $value      The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
 	 */
 	return apply_filters( 'bp_nouveau_get_nav_link_class', $link_class, $nav_item, $bp_nouveau->displayed_nav );
 }

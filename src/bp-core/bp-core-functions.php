@@ -3922,48 +3922,48 @@ function bp_email_get_schema() {
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
-		'description' => __( 'Activate a new account', 'buddyboss' ),
+		'description' => esc_html__( 'Activate a new account', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$core_user_registration_with_blog = array(
-		'description' => __( 'Activate a new account and site', 'buddyboss' ),
+		'description' => esc_html__( 'Activate a new account and site', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$activity_at_message = array(
-		'description' => __( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'description' => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_activity_new_mention',
-			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$groups_at_message = array(
-		'description' => __( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'description' => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_activity_new_mention',
-			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$settings_verify_email_change = array(
-		'description' => __( 'A member\'s email is changed', 'buddyboss' ),
+		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$invites_member_invite = array(
-		'description' => __( 'Recepient is invited to the site by a member', 'buddyboss' ),
+		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$content_moderation_email = array(
-		'description' => __( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
 	$user_moderation_email = array(
-		'description' => __( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
@@ -6658,9 +6658,9 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 /**
  * Functions to get all registered notifications.
  *
- * @param string $component component name.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component component name.
  */
 function bb_register_notifications( $component = '' ) {
 
@@ -6676,9 +6676,9 @@ function bb_register_notifications( $component = '' ) {
 /**
  * Functions to get all registered notifications.
  *
- * @param string $component component name.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component component name.
  */
 function bb_register_notification_preferences( $component = '' ) {
 
@@ -6694,14 +6694,14 @@ function bb_register_notification_preferences( $component = '' ) {
 /**
  * Check whether to send notification to user or not based on their preferences.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int    $user_id          User id.
  * @param string $component_name   Component Name.
  * @param string $component_action Component Action.
  * @param string $pref_type        Preference type.
  *
  * @return bool
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bp_can_send_notification( $user_id, $component_name, $component_action = '', $pref_type = 'email' ) {
 
@@ -6730,12 +6730,12 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 /**
  * Get user notification preference values.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int    $user_id   User id.
  * @param string $pref_type Notification preference type.
  *
  * @return array
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_type = 'email' ) {
 
@@ -6759,9 +6759,9 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
 /**
  * Functions to get all/specific email templates which associates with notification type.
  *
- * @param string $notification_type Notification type.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $notification_type Notification type.
  */
 function bb_register_notification_email_templates( $notification_type = '' ) {
 
@@ -6811,12 +6811,12 @@ function bb_app_notification_enabled() {
 /**
  * List preferences types.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param array $field   Field data.
  * @param int   $user_id User id.
  *
  * @return array list of options.
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$options                  = array();
@@ -6932,11 +6932,11 @@ function bb_check_email_type_registered( string $notification_type ) {
 /**
  * Checks if notification preference is enabled or not with from buddyboss labs.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int $default Default false.
  *
  * @return bool Is media profile media support enabled or not.
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
@@ -7270,10 +7270,10 @@ function bb_render_manual_notification() {
 /**
  * Fetch the settings based on the notification component and notification key.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $notification_key Notification key.
  * @param string $component        Component name.
- *
- * @since BuddyBoss [BBVERSION]
  *
  * @return bool|void
  */
@@ -7368,8 +7368,8 @@ function bb_preferences_key_maps() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $type Type of preference 'legacy' or 'modern'
- * @param string $key Key name.
+ * @param string $type   Type of preference 'legacy' or 'modern'.
+ * @param string $key    Key name.
  * @param string $action key postfix.
  *
  * @return array|int|mixed|string|string[]
