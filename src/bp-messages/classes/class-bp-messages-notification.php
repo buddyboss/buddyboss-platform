@@ -156,7 +156,14 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		$link         = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
 		$amount       = 'single';
 
-		if ( ! empty( $notification ) && 'messages' === $notification->component_name && ( 'bb_groups_new_message' === $notification->component_action || 'bb_messages_new' === $notification->component_action ) ) {
+		if (
+			! empty( $notification ) &&
+			'messages' === $notification->component_name &&
+			(
+				'bb_groups_new_message' === $notification->component_action ||
+				'bb_messages_new' === $notification->component_action
+			)
+		) {
 
 			if ( $total_items > 1 ) {
 				$amount = 'multiple';
