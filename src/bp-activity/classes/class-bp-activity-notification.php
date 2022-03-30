@@ -171,7 +171,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			if ( $notification_type ) {
 				if ( 'activity_comment' === $notification_type ) {
 					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-				} elseif ( 'post_comment' === $notification_type ) {
+				} elseif ( 'post_comment' === $notification_type || 'activity_post' === $notification_type ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 				}
 			}
