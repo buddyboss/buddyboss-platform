@@ -6804,7 +6804,7 @@ function bb_core_remove_unfiltered_html( $content ) {
 /**
  * Function will return icon based on section..
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param $id Id of the section.
  *

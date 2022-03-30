@@ -4419,7 +4419,7 @@ function bbp_get_form_topic_edit_reason() {
  * @param int $topic_id Optional. Topic id
  *
  * @return string Topic freshness
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @uses                  bbp_get_topic_id() To get topic id
  * @uses                  get_post_meta() To get the topic lst active meta

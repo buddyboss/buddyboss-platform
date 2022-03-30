@@ -966,7 +966,7 @@ add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_gro
 /**
  * Custom css for all group type's label. ( i.e - Background color, Text color)
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  */
 function bb_load_group_type_label_custom_css() {
 	if ( true === bp_disable_group_type_creation() ) {

@@ -5088,7 +5088,7 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
 /**
  * Function will return label background and text color's for specific member type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param $type Type of the member
  *
