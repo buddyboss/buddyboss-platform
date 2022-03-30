@@ -119,7 +119,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			__( 'New activity comments', 'buddyboss' ),
+			esc_html__( 'New activity comments', 'buddyboss' ),
 			array( 'bb_activity_comment' ),
 			15
 		);

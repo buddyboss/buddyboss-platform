@@ -104,7 +104,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			__( 'Password changed', 'buddyboss' ),
+			esc_html__( 'Password changed', 'buddyboss' ),
 			array( 'bb_account_password' ),
 			125
 		);

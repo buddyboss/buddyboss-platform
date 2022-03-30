@@ -69,7 +69,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_for_friendship_accept();
 
 		$this->register_notification_filter(
-			__( 'Connection requests', 'buddyboss' ),
+			esc_html__( 'Connection requests', 'buddyboss' ),
 			array( 'bb_connections_new_request', 'bb_connections_request_accepted' ),
 			45
 		);

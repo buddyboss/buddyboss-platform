@@ -4593,6 +4593,7 @@ function bp_array_flatten( $array ) {
 	}
 	return $result;
 }
+
 /**
  * Get Group avatar.
  *

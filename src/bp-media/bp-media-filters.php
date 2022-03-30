@@ -1650,17 +1650,17 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			__( 'Repair media', 'buddyboss' ),
+			esc_html__( 'Repair media', 'buddyboss' ),
 			'bp_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			__( 'Repair forum media privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss' ),
 			'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			__( 'Repair messages media', 'buddyboss' ),
+			esc_html__( 'Repair messages media', 'buddyboss' ),
 			'bp_media_message_privacy_repair',
 		);
 	}

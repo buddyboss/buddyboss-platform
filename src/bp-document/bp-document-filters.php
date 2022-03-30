@@ -1506,7 +1506,7 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 /**
  * Add document repair list item.
  *
- * @param $repair_list
+ * @param array $repair_list Repair list.
  *
  * @since BuddyBoss 1.4.4
  * @return array Repair list items.
@@ -1514,11 +1514,12 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
-				'bp-repair-document',
-				__( 'Repair documents', 'buddyboss' ),
-				'bp_document_admin_repair_document',
+			'bp-repair-document',
+			esc_html__( 'Repair documents', 'buddyboss' ),
+			'bp_document_admin_repair_document',
 		);
 	}
+
 	return $repair_list;
 }
 

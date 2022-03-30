@@ -122,7 +122,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			__( 'New mentions', 'buddyboss' ),
+			esc_html__( 'New mentions', 'buddyboss' ),
 			array( 'bb_new_mention' ),
 			10
 		);
@@ -215,15 +215,15 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				$action_item_count = 'single';
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
-					/* translators: 1: User full name, 2: Activity type. */
-						__( '%1$s mentioned you in %2$s', 'buddyboss' ),
+						/* translators: 1: User full name, 2: Activity type. */
+						esc_html__( '%1$s mentioned you in %2$s', 'buddyboss' ),
 						$user_fullname,
 						$notification_type_html
 					);
 				} else {
 					$text = sprintf(
-					/* translators: %s: User full name. */
-						__( '%1$s mentioned you', 'buddyboss' ),
+						/* translators: %s: User full name. */
+						esc_html__( '%1$s mentioned you', 'buddyboss' ),
 						$user_fullname
 					);
 				}

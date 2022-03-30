@@ -618,7 +618,7 @@ class BP_Email_Tokens {
 
 		if ( $title ) {
 			?>
-            <p><div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $title ) ?></div></p>
+			<p><div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $title ); ?></div></p>
 			<?php
 		}
 		?>

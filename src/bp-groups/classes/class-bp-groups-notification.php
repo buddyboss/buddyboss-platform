@@ -88,19 +88,19 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		$this->register_notification_filter(
-			__( 'Group invitations and requests', 'buddyboss' ),
+			esc_html__( 'Group invitations and requests', 'buddyboss' ),
 			array( 'bb_groups_new_invite', 'bb_groups_new_request', 'bb_groups_request_accepted', 'bb_groups_request_rejected' ),
 			60
 		);
 
 		$this->register_notification_filter(
-			__( 'Group promotions', 'buddyboss' ),
+			esc_html__( 'Group promotions', 'buddyboss' ),
 			array( 'bb_groups_promoted' ),
 			75
 		);
 
 		$this->register_notification_filter(
-			__( 'Group details changed', 'buddyboss' ),
+			esc_html__( 'Group details changed', 'buddyboss' ),
 			array( 'bb_groups_details_updated' ),
 			80
 		);

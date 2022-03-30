@@ -103,7 +103,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			__( 'New messages', 'buddyboss' ),
+			esc_html__( 'New messages', 'buddyboss' ),
 			array( 'bb_messages_new' ),
 			30
 		);

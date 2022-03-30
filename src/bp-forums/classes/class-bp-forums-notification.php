@@ -72,7 +72,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_for_forums_following_topic();
 
 		$this->register_notification_filter(
-			__( 'Forum subscriptions', 'buddyboss' ),
+			esc_html__( 'Forum subscriptions', 'buddyboss' ),
 			array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
 			110
 		);
