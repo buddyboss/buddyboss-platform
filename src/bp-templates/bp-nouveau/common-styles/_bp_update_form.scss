@@ -101,6 +101,15 @@
 
 	}
 
+	.bp-activity-edit--privacy-idle & {
+		cursor: default;
+
+		span,
+		i {
+			opacity: 0.5;
+		}
+	}
+
 	&.bp-activity-focus-group-active {
 		opacity: 0.5;
 		cursor: default;
@@ -120,6 +129,17 @@
 
 	.bb-icon-chevron-down {
 		margin-left: 2px;
+	}
+}
+
+#whats-new-form:not(.bp-activity-edit--privacy-idle) {
+
+	#bp-activity-privacy-point {
+
+		&[data-bp-tooltip][data-bp-tooltip-pos="up"]:before,
+		&[data-bp-tooltip][data-bp-tooltip-pos="up"]:after {
+			display: none;
+		}
 	}
 }
 
@@ -1772,4 +1792,12 @@ input.search-query-input {
 			padding: 10px 0;
 		}
 	}
+}
+
+.media-support-hide,
+.document-support-hide,
+.video-support-hide,
+.post-emoji-hide,
+.post-gif-hide {
+	display: none;
 }

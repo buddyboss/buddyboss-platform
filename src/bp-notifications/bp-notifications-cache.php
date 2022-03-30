@@ -72,11 +72,11 @@ add_action( 'bp_notification_after_save', 'bp_notifications_clear_all_for_user_c
 function bp_notifications_clear_all_for_user_cache_before_delete( $args ) {
 
 	// Pull up a list of items matching the args (those about te be deleted).
-	$ns = BP_Notifications_Notification::get( $args );
+	$notifications = BP_Notifications_Notification::get( $args );
 
 	$user_ids = array();
-	foreach ( $ns as $n ) {
-		$user_ids[] = $n->user_id;
+	foreach ( $notifications as $notification ) {
+		$user_ids[] = $notification->user_id;
 	}
 
 	$user_ids = array_unique( $user_ids );
@@ -84,9 +84,9 @@ function bp_notifications_clear_all_for_user_cache_before_delete( $args ) {
 		bp_notifications_clear_all_for_user_cache( $user_id );
 	}
 
-	foreach ( $ns as $n ) {
-		wp_cache_delete( $n->id, 'bp_notifications' );
-		wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
+	foreach ( $notifications as $notification ) {
+		wp_cache_delete( $notification->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $notification->user_id . '_' . $notification->id, 'bp_notifications' );
 	}
 }
 add_action( 'bp_notification_before_delete', 'bp_notifications_clear_all_for_user_cache_before_delete' );

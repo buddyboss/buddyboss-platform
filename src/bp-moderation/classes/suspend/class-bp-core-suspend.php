@@ -162,11 +162,11 @@ class BP_Core_Suspend {
 		$bp = buddypress();
 
 		$cache_key = 'bb_get_recode_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result ) {
 			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->table_prefix}bp_suspend s WHERE s.item_id = %d AND s.item_type = %s limit 1", $item_id, $item_type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return ! empty( $result ) ? $result : false;
@@ -396,11 +396,11 @@ class BP_Core_Suspend {
 		global $wpdb;
 		$bp        = buddypress();
 		$cache_key = 'bb_check_hidden_content_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s AND ( hide_sitewide = 1 OR hide_parent = 1 )", $item_id, $item_type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return ! empty( $result );
@@ -455,11 +455,11 @@ class BP_Core_Suspend {
 		global $wpdb;
 		$bp        = buddypress();
 		$cache_key = 'bb_check_blocked_user_content_' . $user_id . '_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend s INNER JOIN {$bp->table_prefix}bp_suspend_details sd ON ( s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s  ) WHERE `user_id` = %d limit 1", (int) $item_id, $item_type, $user_id ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return ! empty( $result );
@@ -480,11 +480,11 @@ class BP_Core_Suspend {
 		global $wpdb;
 		$bp        = buddypress();
 		$cache_key = 'bb_check_suspended_content_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result || true === $force ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s AND user_suspended = 1", $item_id, $item_type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return ! empty( $result );
@@ -512,12 +512,12 @@ class BP_Core_Suspend {
 		}
 
 		$cache_key = 'bb_check_user_suspend_user_' . BP_Suspend_Member::$type . '_' . md5( maybe_serialize( $user_id ) );
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result ) {
 			$user_ids = sprintf( 'item_id IN(\'%s\')', implode( "','", $user_id ) );
 			$result   = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE {$user_ids} AND item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return ! empty( $result );

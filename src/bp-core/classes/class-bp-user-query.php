@@ -260,6 +260,10 @@ class BP_User_Query {
 			'limit'   => '',
 		);
 
+		// 'include' - User ids to include in the results.
+		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
+		$include_ids = $this->get_include_ids( $include );
+
 		/* TYPE **************************************************************/
 
 		// Determines the sort order, which means it also determines where the
@@ -355,6 +359,18 @@ class BP_User_Query {
 
 				break;
 
+			// Support order by fields for generally.
+			case 'in':
+				$this->uid_name  = 'ID';
+				$this->uid_table = $wpdb->users;
+				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
+				if ( ! empty( $include_ids ) ) {
+					$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
+					$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
+					$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
+				}
+				break;
+
 			// Any other 'type' falls through.
 			default:
 				$this->uid_name  = 'ID';
@@ -379,12 +395,8 @@ class BP_User_Query {
 
 		/* WHERE *************************************************************/
 
-		// 'include' - User ids to include in the results.
-		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
-		$include_ids = $this->get_include_ids( $include );
-
 		// An array containing nothing but 0 should always fail.
-		if ( 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
+		if ( is_array( $include_ids ) && 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
 			$sql['where'][] = $this->no_results['where'];
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
@@ -417,7 +429,7 @@ class BP_User_Query {
 
 		// 'search_terms' searches user_login and user_nicename
 		// xprofile field matches happen in bp_xprofile_bp_user_query_search().
-		if ( false !== $search_terms ) {
+		if ( false !== (bool) $search_terms ) {
 			$search_terms = bp_esc_like( wp_kses_normalize_entities( $search_terms ) );
 
 			if ( $search_wildcard === 'left' ) {

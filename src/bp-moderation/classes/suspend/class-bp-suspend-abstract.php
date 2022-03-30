@@ -460,11 +460,11 @@ abstract class BP_Suspend_Abstract {
 		global $wpdb, $bp;
 
 		$cache_key = 'bb_is_content_reported_hidden_' . $item_type . '_' . $item_id;
-		$result    = wp_cache_get( $cache_key, 'bb' );
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
 		if ( false === $result ) {
 			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
-			wp_cache_set( $cache_key, $result, 'bb' );
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
 		}
 
 		return ! empty( $result );

@@ -71,7 +71,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function initialize() {
-			// nothing
+			// nothing.
 		}
 
 		/**
@@ -113,9 +113,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'bp-admin',
 				'BP_ADMIN',
 				array(
-					'ajax_url'             => admin_url( 'admin-ajax.php' ),
-					'select_document'      => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
-					'tools'                => array(
+					'ajax_url'            => admin_url( 'admin-ajax.php' ),
+					'select_document'     => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+					'tools'               => array(
 						'default_data'  => array(
 							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
 							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
@@ -124,24 +124,25 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 						),
 					),
-					'moderation'           => array(
+					'moderation'          => array(
 						'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 						'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 					),
-					'avatar_cover_preview' => array(
-						'nonce'  => wp_create_nonce( 'bb-avatar-cover-live-preview' ),
-						'action' => 'bb_profile_group_get_live_preview_urls',
+					'cover_size_alert'    => array(
+						'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
+						'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
 					),
-					'avatar_settings'      => array(
+					'avatar_settings'     => array(
 						'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
 						'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
 						'wordpress_avatar_types'   => array( 'mystery', 'blank', 'gravatar_default', 'identicon', 'wavatar', 'monsterid', 'retro' ),
 					),
-					'profile_group_cover'  => array(
+					'profile_group_cover' => array(
 						'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
 						'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
 						'feedback_messages' => array(
 							0 => sprintf(
+								/* translators: 1. Cover image width. 2. Cover image height. */
 								esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 								(int) $cover_dimensions['width'],
 								(int) $cover_dimensions['height']
@@ -164,6 +165,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'json'   => true,
 						),
 					),
+					'member_directories'  => array(
+						'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
+						'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
+					),
 				)
 			);
 
@@ -185,7 +190,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_fields() {
-			// nothing
+			// nothing.
 		}
 
 		/**
@@ -243,7 +248,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( $fields as $section => $settings ) {
 				foreach ( $settings as $setting_name => $setting ) {
-					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
+
+					if ( in_array( $setting_name, array( 'bp-enable-private-network-public-content', 'bb-enable-private-rss-feeds-public-content', 'bb-enable-private-rest-apis-public-content' ), true ) ) {
+						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					} else {
+						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					}
+
 					bp_update_option( $setting_name, $value );
 				}
 			}
@@ -298,17 +309,19 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
 				<a class="button" href="
 				<?php
-				echo bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 87474,
-						),
-						'admin.php'
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 87474,
+							),
+							'admin.php'
+						)
 					)
 				);
 				?>
-				"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+				"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 			</p>
 				<?php
 			} else {
@@ -530,13 +543,24 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
-				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				if ( $section['title'] ) {
-					echo "<h2 class=". $has_tutorial_btn .">{$section['title']}";
-					if( isset( $section['tutorial_callback'] ) && !empty( $section['tutorial_callback'] ) ) {
-						?> <div class="bbapp-tutorial-btn"> <?php
-						call_user_func( $section['tutorial_callback'], $section );
-						?> </div> <?php
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
+						wp_kses(
+							$section['title'],
+							array(
+								'a' => array(
+									'href' => array(),
+									'rel'  => array(),
+								),
+							)
+						);
+					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+						?>
+						<div class="bbapp-tutorial-btn">
+							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+						</div>
+						<?php
 					}
 					echo "</h2>\n";
 				}
@@ -550,7 +574,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				}
 
 				echo '<table class="form-table">';
-				$this->bp_custom_do_settings_fields( $page, $section['id'] );
+					$this->bp_custom_do_settings_fields( $page, $section['id'] );
 				echo '</table></div>';
 			}
 		}

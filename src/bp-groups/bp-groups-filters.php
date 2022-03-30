@@ -34,6 +34,8 @@ add_filter( 'bp_get_group_description_excerpt', 'make_clickable', 9 );
 add_filter( 'bp_get_group_name', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_permalink', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_description', 'bp_groups_filter_kses', 1 );
+add_filter( 'bp_get_new_group_description', 'bp_groups_filter_kses', 1 );
+
 add_filter( 'bp_get_group_description_excerpt', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_name_before_save', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_description_before_save', 'bp_groups_filter_kses', 1 );
@@ -80,6 +82,10 @@ add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10
 add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_video_scope', 10, 2 );
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
+
+add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
+add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
+add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.

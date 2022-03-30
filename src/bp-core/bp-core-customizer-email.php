@@ -79,6 +79,9 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 
 		// Include the preview loading style.
 		add_action( 'wp_footer', array( $wp_customize, 'customize_preview_loading_style' ) );
+
+		remove_action( 'wp_footer', 'bb_moderation_content_report_popup' );
+		remove_action( 'wp_footer', 'bb_on_screen_notification_template' );
 	}
 }
 add_action( 'bp_customize_register', 'bp_email_init_customizer' );

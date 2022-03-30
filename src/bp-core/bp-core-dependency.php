@@ -809,7 +809,7 @@ function bb_init_email_background_updater() {
 /**
  * Fire the 'bb_init_notifications_background_updater' action, where BP Notification updates data.
  *
- * @since BuddyBoss 1.9.0.1
+ * @since BuddyBoss 1.9.0
  */
 function bb_init_notifications_background_updater() {
 
@@ -826,7 +826,7 @@ function bb_init_notifications_background_updater() {
 	/**
 	 * Fires inside the 'bb_init_notifications_background_updater' function, where BP Notification updates data.
 	 *
-	 * @since BuddyBoss 1.9.0.1
+	 * @since BuddyBoss 1.9.0
 	 */
 	do_action( 'bb_init_notifications_background_updater' );
 }

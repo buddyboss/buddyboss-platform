@@ -1989,6 +1989,7 @@ function bp_activity_get( $args = '' ) {
 			'page'              => 1,            // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,        // results per page
 			'sort'              => 'DESC',       // sort ASC or DESC
+			'order_by'          => false,         // order by.
 			'display_comments'  => false,        // False for no comments. 'stream' for within stream display, 'threaded' for below each activity item.
 
 			'privacy'           => false,        // Privacy of activity
@@ -2026,6 +2027,7 @@ function bp_activity_get( $args = '' ) {
 			'per_page'          => $r['per_page'],
 			'max'               => $r['max'],
 			'sort'              => $r['sort'],
+			'order_by'          => $r['order_by'],
 			'privacy'           => $r['privacy'],
 			'search_terms'      => $r['search_terms'],
 			'meta_query'        => $r['meta_query'],
@@ -5420,14 +5422,15 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		return false;
 	}
 
-	$can_edit_privacy = true;
-	$album_id         = 0;
-	$folder_id        = 0;
-	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
-	$group_name       = '';
+	$can_edit_privacy        = true;
+	$album_id                = 0;
+	$folder_id               = 0;
+	$group_id                = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name              = '';
+	$album_activity_id       = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	$album_video_activity_id = bp_activity_get_meta( $activity_id, 'bp_video_album_activity', true );
 
-	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
-	if ( ! empty( $album_activity_id ) ) {
+	if ( ! empty( $album_activity_id ) || ! empty( $album_video_activity_id ) ) {
 		$album_id = $album_activity_id;
 	}
 

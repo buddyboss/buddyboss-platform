@@ -915,29 +915,32 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$group_link = bp_get_group_permalink( $group );
 				}
 
-				$group_avatar = bp_core_fetch_avatar(
-					array(
-						'item_id'    => $group_id,
-						'object'     => 'group',
-						'type'       => 'full',
-						'avatar_dir' => 'group-avatars',
-						'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
-						'title'      => $group_name,
-						'html'       => false,
-					)
-				);
+				if ( ! bp_disable_group_avatar_uploads() ) {
+					$group_avatar = bp_core_fetch_avatar(
+						array(
+							'item_id'    => $group_id,
+							'object'     => 'group',
+							'type'       => 'full',
+							'avatar_dir' => 'group-avatars',
+							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+							'title'      => $group_name,
+							'html'       => false,
+						)
+					);
+				} else {
+					$group_avatar = bb_get_buddyboss_group_avatar();
+				}
 			} else {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 				$group_link               = 'javascript:void(0);';
-				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
+				$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 				$legacy_group_avatar_name = '-groupavatar-full';
 				$legacy_user_avatar_name  = '-avatar2';
 
-				if ( ! empty( $group_name ) ) {
-					$group_link        = 'javascript:void(0);';
+				if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
 					$directory         = 'group-avatars';
 					$avatar_size       = '-bpfull';
 					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
@@ -960,33 +963,40 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$group_id      = ( isset( $first_message->id ) ) ? (int) bp_messages_get_meta( $first_message->id, 'group_id', true ) : 0;
 
 			if ( $group_id ) {
+
+				$group_avatar = '';
+
 				if ( bp_is_active( 'groups' ) ) {
 					$group        = empty( $group ) ? groups_get_group( $group_id ) : $group;
-					$group_name   = bp_get_group_name( $group );
-					$group_link   = bp_get_group_permalink( $group );
-					$group_avatar = bp_core_fetch_avatar(
-						array(
-							'item_id'    => $group_id,
-							'object'     => 'group',
-							'type'       => 'full',
-							'avatar_dir' => 'group-avatars',
-							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
-							'title'      => $group_name,
-							'html'       => false,
-						)
-					);
+					$group_name = bp_get_group_name( $group );
+					$group_link = bp_get_group_permalink( $group );
+
+					if ( ! bp_disable_group_avatar_uploads() ) {
+						$group_avatar = bp_core_fetch_avatar(
+							array(
+								'item_id'    => $group_id,
+								'object'     => 'group',
+								'type'       => 'full',
+								'avatar_dir' => 'group-avatars',
+								'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+								'title'      => $group_name,
+								'html'       => false,
+							)
+						);
+					} else {
+						$group_avatar = bb_get_buddyboss_group_avatar();
+					}
 				} else {
 
 					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table             = $prefix . 'bp_groups';
 					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 					$group_link               = 'javascript:void(0);';
-					$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
+					$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 					$legacy_group_avatar_name = '-groupavatar-full';
 					$legacy_user_avatar_name  = '-avatar2';
 
-					if ( ! empty( $group_name ) ) {
-						$group_link        = 'javascript:void(0);';
+					if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
 						$directory         = 'group-avatars';
 						$avatar_size       = '-bpfull';
 						$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
@@ -2849,7 +2859,7 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 						data-tp="<?php echo esc_attr( ceil( (int) $thread->total_recipients_count / (int) bb_messages_recipients_per_page() ) ); ?>"
 						data-tc="<?php echo esc_attr( $thread->total_recipients_count ); ?>"
 						data-pp="<?php echo esc_attr( bb_messages_recipients_per_page() ); ?>" data-cp="2"
-						data-action="bp_load_more"><?php echo esc_html_e( 'Load More', 'buddyboss' ); ?>
+						data-action="bp_load_more"><?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 					</a>
 				</p>
 			</div>

@@ -2200,7 +2200,7 @@ function bbp_set_404() {
 /**
  * Render forum/topic subscriber into background.
  *
- * @since BuddyBoss 1.9.0.1
+ * @since BuddyBoss 1.9.0
  *
  * @param array  $user_ids   Array of members ids.
  * @param string $email_type Email type.

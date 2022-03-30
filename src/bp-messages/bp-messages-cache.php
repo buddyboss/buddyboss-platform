@@ -133,13 +133,13 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
  *
  * @since BuddyBoss 1.9.0
  */
-function bp_core_clear_message_cache() {
+function bb_core_clear_message_cache() {
 	bp_core_reset_incrementor( 'bp_messages' );
 }
 
-add_action( 'messages_message_after_save', 'bp_core_clear_message_cache' );
-add_action( 'messages_delete_thread', 'bp_core_clear_message_cache' );
-add_action( 'messages_send_notice', 'bp_core_clear_message_cache' );
-add_action( 'messages_message_sent', 'bp_core_clear_message_cache' );
-add_action( 'messages_message_after_save', 'bp_core_clear_message_cache' );
-add_action( 'messages_thread_mark_as_read', 'bp_core_clear_message_cache' );
+add_action( 'messages_message_after_save', 'bb_core_clear_message_cache' );
+add_action( 'messages_delete_thread', 'bb_core_clear_message_cache' );
+add_action( 'messages_send_notice', 'bb_core_clear_message_cache' );
+add_action( 'messages_message_sent', 'bb_core_clear_message_cache' );
+add_action( 'messages_message_after_save', 'bb_core_clear_message_cache' );
+add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );

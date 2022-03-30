@@ -152,9 +152,7 @@ class BP_Moderation_Component extends BP_Component {
 		// Global groups.
 		wp_cache_add_global_groups(
 			array(
-				'bb',
 				'bp_moderation',
-				'bb_moderation',
 				'bp_moderation_reporters',
 			)
 		);

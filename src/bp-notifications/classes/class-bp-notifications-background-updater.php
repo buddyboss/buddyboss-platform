@@ -2,7 +2,7 @@
 /**
  * Notifications Background Updater
  *
- * @since BuddyBoss 1.9.0.1
+ * @since BuddyBoss 1.9.0
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -1093,11 +1093,17 @@ class BP_Messages_Thread {
 		}
 
 		// Set up SQL array.
-		$sql           = array();
-		$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
-		$sql['from']   = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
-		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
-		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
+		$sql = array();
+
+		if ( ! empty( $r['having_sql'] ) ) {
+			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
+		} else {
+			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
+		}
+
+		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
+		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
+		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
 		/**
 		 * Filters the Where SQL statement.
@@ -1244,19 +1250,27 @@ class BP_Messages_Thread {
 				bp_loggedin_user_id();
 
 		$bp     = buddypress();
-		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
+		$retval = false;
 
-		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
-		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
+		// phpcs:ignore
+		$is_unread = $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count > 0", $user_id, $thread_id ) );
 
-		/**
-		 * Fires when messages thread was marked as read.
-		 *
-		 * @since BuddyPress 2.8.0
-		 *
-		 * @param int $thread_id The message thread ID.
-		 */
-		do_action( 'messages_thread_mark_as_read', $thread_id );
+		if ( ! empty( $is_unread ) ) {
+			// phpcs:ignore
+			$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
+
+			wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
+			wp_cache_delete( $user_id, 'bp_messages_unread_count' );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @since BuddyPress 2.8.0
+			 *
+			 * @param int $thread_id The message thread ID.
+			 */
+			do_action( 'messages_thread_mark_as_read', $thread_id );
+		}
 
 		return $retval;
 	}

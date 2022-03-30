@@ -311,7 +311,7 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 function bp_get_member_invitation_subject() {
 	global $bp;
 
-	$query = bp_get_member_invitation_query();
+	$query = bb_get_member_invitation_query();
 
 	$title = bp_get_member_invites_wildcard_replace( $query->posts[0]->post_title );
 
@@ -328,7 +328,7 @@ function bp_get_member_invitation_subject() {
 function bp_get_member_invitation_message() {
 	global $bp;
 
-	$query = bp_get_member_invitation_query();
+	$query = bb_get_member_invitation_query();
 
 	$wp_html_emails    = null;
 	$is_default_wpmail = null;
@@ -612,9 +612,8 @@ function bp_nouveau_send_invite_content_css( $mceInit ) {
  * @since BuddyBoss 1.9.0
  *
  * @return object $query
- *
  */
-function bp_get_member_invitation_query() {
+function bb_get_member_invitation_query() {
 	static $cache = null;
 	if ( null === $cache ) {
 		$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
@@ -633,5 +632,5 @@ function bp_get_member_invitation_query() {
 		$cache = new WP_Query( $args );
 	}
 
-	return apply_filters( 'bp_get_member_invitation_query', $cache );
+	return apply_filters( 'bb_get_member_invitation_query', $cache );
 }
