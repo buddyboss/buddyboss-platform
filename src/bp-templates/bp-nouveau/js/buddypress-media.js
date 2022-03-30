@@ -4998,9 +4998,14 @@ window.bp = window.bp || {};
 
 				var targetPopup = $( event.currentTarget ).closest( '.open-popup' );
 				var selectedAlbum = targetPopup.find( '.bb-folder-selected-id' ).val();
+				var currentAlbum = targetPopup.find( '.bb-folder-selected-id' ).data( 'value' );
 				var hasNotAlbum = true;
 				if ( selectedAlbum.length && parseInt( selectedAlbum ) > 0 ) {
-					hasNotAlbum = false;
+
+					if ( typeof currentAlbum !== 'undefined' && parseInt( selectedAlbum ) !== parseInt( currentAlbum ) ) {
+						hasNotAlbum = false;
+					}
+
 					selectedAlbum = selectedAlbum;
 					for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 						self.dropzone_media[ i ].folder_id = selectedAlbum;
