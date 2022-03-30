@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $scripts  The array of scripts to register
+ * @param  array $scripts  The array of scripts to register
  * @return array  The same array with the specific notifications scripts.
  */
 function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
@@ -23,13 +23,16 @@ function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-notifications' => array(
-			'file'         => 'js/buddypress-notifications%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-notifications' => array(
+				'file'         => 'js/buddypress-notifications%s.js',
+				'dependencies' => array( 'bp-nouveau' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -72,8 +75,8 @@ function bp_nouveau_notifications_init_filters() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $args {
- *     Array of arguments.
+ * @param  array $args {
+ *    Array of arguments.
  *
  *     @type string      $id         The unique string to identify your "component action". Required.
  *     @type string      $label      The human readable notification type. Required.
@@ -84,11 +87,14 @@ function bp_nouveau_notifications_init_filters() {
 function bp_nouveau_notifications_register_filter( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$r = wp_parse_args( $args, array(
-		'id'       => '',
-		'label'    => '',
-		'position' => 99,
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'id'       => '',
+			'label'    => '',
+			'position' => 99,
+		)
+	);
 
 	if ( empty( $r['id'] ) || empty( $r['label'] ) ) {
 		return false;
@@ -118,7 +124,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
 	if ( empty( $id ) ) {
 		return $bp_nouveau->notifications->filters;
 
-	// Get a specific filter
+		// Get a specific filter
 	} elseif ( ! empty( $id ) && isset( $bp_nouveau->notifications->filters[ $id ] ) ) {
 		return $bp_nouveau->notifications->filters[ $id ];
 
@@ -132,7 +138,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $filters The notifications filters to order.
+ * @param  array $filters The notifications filters to order.
  * @return array  The sorted filters.
  */
 function bp_nouveau_notifications_sort( $filters = array() ) {
@@ -254,8 +260,9 @@ function bp_nouveau_notifications_delete_link( $link = '' ) {
  * @return void
  */
 function bb_notification_avatar() {
-	$notification = buddypress()->notifications->query_loop->notification;
-	$component    = $notification->component_name;
+	$notification     = buddypress()->notifications->query_loop->notification;
+	$component        = $notification->component_name;
+	$component_action = $notification->component_action;
 
 	switch ( $component ) {
 		case 'groups':
@@ -280,6 +287,15 @@ function bb_notification_avatar() {
 				$object  = 'user';
 			} else {
 				$item_id = $notification->item_id;
+				$object  = 'user';
+			}
+			break;
+	}
+
+	switch ( $component_action ) {
+		case 'new_membership_request':
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
 				$object  = 'user';
 			}
 			break;
