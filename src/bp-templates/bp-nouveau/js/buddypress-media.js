@@ -4259,6 +4259,10 @@ window.bp = window.bp || {};
 		 */
 		editPrivacyDocument: function ( event ) {
 			event.preventDefault();
+
+			// Reset all privacy dropdown.
+			$( event.currentTarget ).closest( '#media-folder-document-data-table' ).find( '.media-folder_visibility .media-folder_details__bottom span' ).show().siblings( 'select' ).addClass( 'hide' );
+
 			var current_privacy = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_visibility' );
 
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
