@@ -65,11 +65,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			15
 		);
 
-		// Replies to a discussion you are subscribed.
-		$this->register_notification_for_forums_following_reply();
-
 		// Creates discussion in a forum you are subscribed.
 		$this->register_notification_for_forums_following_topic();
+
+		// Replies to a discussion you are subscribed.
+		$this->register_notification_for_forums_following_reply();
 
 		$this->register_notification_filter(
 			esc_html__( 'Forum subscriptions', 'buddyboss' ),
