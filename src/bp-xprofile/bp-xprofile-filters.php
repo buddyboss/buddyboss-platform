@@ -174,8 +174,9 @@ function bp_xprofile_sanitize_field_default( $field_default = '' ) {
 function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	global $allowedtags;
 
-	$xprofile_allowedtags             = $allowedtags;
-	$xprofile_allowedtags['a']['rel'] = array();
+	$xprofile_allowedtags                = $allowedtags;
+	$xprofile_allowedtags['a']['rel']    = array();
+	$xprofile_allowedtags['a']['target'] = array();
 
 	if ( null === $field_id && $data_obj instanceof BP_XProfile_ProfileData ) {
 		$field_id = $data_obj->field_id;
@@ -185,27 +186,31 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	if ( $field_id && bp_xprofile_is_richtext_enabled_for_field( $field_id ) ) {
 		$richtext_tags = array(
 			'img'  => array(
-				'id'     => 1,
-				'class'  => 1,
-				'src'    => 1,
-				'alt'    => 1,
-				'width'  => 1,
-				'height' => 1,
+				'id'      => 1,
+				'class'   => 1,
+				'src'     => 1,
+				'alt'     => 1,
+				'width'   => 1,
+				'height'  => 1,
 			),
 			'ul'   => array(
-				'id'    => 1,
-				'class' => 1,
+				'id'     => 1,
+				'class'  => 1,
 			),
 			'ol'   => array(
-				'id'    => 1,
-				'class' => 1,
+				'id'     => 1,
+				'class'  => 1,
 			),
 			'li'   => array(
-				'id'    => 1,
-				'class' => 1,
+				'id'     => 1,
+				'class'  => 1,
 			),
 			'span' => array(),
 			'p'    => array(),
+			'a'    => array(
+				'href'   => 1,
+				'target' => 1
+			)
 		);
 
 		// Allow style attributes on certain elements for capable users
