@@ -157,8 +157,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
-	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
@@ -166,7 +165,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 		return $content;
 	}
 

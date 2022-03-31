@@ -135,8 +135,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
-	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
@@ -144,7 +143,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 		return $content;
 	}
 
@@ -156,14 +155,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $content           Notification content.
 	 * @param int    $item_id           Notification item ID.
 	 * @param int    $secondary_item_id Notification secondary item ID.
-	 * @param int    $action_item_count Number of notifications with the same action.
+	 * @param int    $total_items       Number of notifications with the same action.
 	 * @param string $format            Format of return. Either 'string' or 'object'.
 	 * @param int    $notification_id   Notification ID.
 	 * @param string $screen            Notification Screen type.
 	 *
 	 * @return array|string
 	 */
-	public function bb_render_comment_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen ) {
+	public function bb_render_comment_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
 		$notification           = bp_notifications_get_notification( $notification_id );
 		$user_id                = $secondary_item_id;
 		$user_fullname          = bp_core_get_user_displayname( $user_id );
@@ -209,12 +208,12 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-			if ( (int) $action_item_count > 1 ) {
+			if ( (int) $total_items > 1 ) {
 				$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 				$text              = sprintf(
 					/* translators: %s: Total reply count. */
 					__( 'You have %1$d new replies', 'buddyboss' ),
-					(int) $action_item_count
+					(int) $total_items
 				);
 				$amount = 'multiple';
 			} else {
@@ -257,7 +256,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$content = apply_filters(
-				'bb_activity_' . $action_item_count . '_' . $notification->component_action . '_notification',
+				'bb_activity_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
 					'link' => $notification_link,
 					'text' => $text,

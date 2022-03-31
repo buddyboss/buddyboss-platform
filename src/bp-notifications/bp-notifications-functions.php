@@ -290,7 +290,7 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 				 *                                      the 6th parameter instead - $component_action_name.
 				 * @param int    $item_id               Notification item ID.
 				 * @param int    $secondary_item_id     Notification secondary item ID.
-				 * @param int    $action_item_count     Number of notifications with the same action.
+				 * @param int    $total_items           Number of notifications with the same action.
 				 * @param string $format                Format of return. Either 'string' or 'object'.
 				 * @param string $component_action_name Canonical notification action.
 				 * @param string $component_name        Notification component ID.
