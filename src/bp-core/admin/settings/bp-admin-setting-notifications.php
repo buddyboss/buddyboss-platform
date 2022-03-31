@@ -49,7 +49,7 @@ class BB_Admin_Setting_Notifications extends BP_Admin_Setting_tab {
 		$mobile_support       = empty( $_POST['_bp_on_screen_notifications_mobile_support'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_mobile_support'] );
 		$visibility           = empty( $_POST['_bp_on_screen_notifications_visibility'] ) ? '' : sanitize_text_field( $_POST['_bp_on_screen_notifications_visibility'] );
 		$browser_tab          = empty( $_POST['_bp_on_screen_notifications_browser_tab'] ) ? 0 : sanitize_text_field( $_POST['_bp_on_screen_notifications_browser_tab'] );
-		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : sanitize_text_field( $_POST['bb_enabled_notification'] );
+		$enabled_notification = empty( $_POST['bb_enabled_notification'] ) ? array() : $_POST['bb_enabled_notification'];
 
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$hide_message_notification = isset( $_POST['hide_message_notification'] ) ? sanitize_text_field( $_POST['hide_message_notification'] ) : 1;
