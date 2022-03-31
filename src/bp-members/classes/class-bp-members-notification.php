@@ -119,7 +119,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $format                Format of return. Either 'string' or 'object'.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
@@ -128,15 +128,15 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $component_action_name, $component_name, $notification_id, $screen ) {
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
 		if ( 'members' === $component_name && 'bb_account_password' === $component_action_name ) {
 
 			// Set up the string and the filter.
-			if ( (int) $action_item_count > 1 ) {
-				$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $action_item_count );
+			if ( (int) $total_items > 1 ) {
+				$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$text   = __( 'Your password was changed', 'buddyboss' );
@@ -145,7 +145,6 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 
 			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
 			$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
-
 
 			return apply_filters(
 				'bb_members_' . $amount . '_' . $component_action_name . '_notification',

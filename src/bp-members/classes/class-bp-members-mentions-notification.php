@@ -139,7 +139,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $format                Format of return. Either 'string' or 'object'.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
@@ -148,7 +148,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array|string
 	 */
-	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $component_action_name, $component_name, $notification_id, $screen ) {
 		return $content;
 	}
 
@@ -157,17 +157,17 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $content               Notification content.
-	 * @param int    $item_id               Notification item ID.
-	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
-	 * @param string $format                Format of return. Either 'string' or 'object'.
-	 * @param int    $notification_id       Notification ID.
-	 * @param string $screen                Notification Screen type.
+	 * @param string $content           Notification content.
+	 * @param int    $item_id           Notification item ID.
+	 * @param int    $secondary_item_id Notification secondary item ID.
+	 * @param int    $total_items       Number of notifications with the same action.
+	 * @param string $format            Format of return. Either 'string' or 'object'.
+	 * @param int    $notification_id   Notification ID.
+	 * @param string $screen            Notification Screen type.
 	 *
 	 * @return array|string
 	 */
-	public function bb_render_mention_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $notification_id, $screen ) {
+	public function bb_render_mention_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
 		$notification           = bp_notifications_get_notification( $notification_id );
 		$user_id                = $secondary_item_id;
 		$user_fullname          = bp_core_get_user_displayname( $user_id );
@@ -188,7 +188,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$notification_link = bp_activity_get_permalink( $item_id );
-						$notification_link = apply_filters( 'bp_activity_new_at_mention_permalink', $notification_link, $item_id, $secondary_item_id, $action_item_count );
+						$notification_link = apply_filters( 'bp_activity_new_at_mention_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
 					}
 				} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
@@ -204,15 +204,15 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-			if ( (int) $action_item_count > 1 ) {
+			if ( (int) $total_items > 1 ) {
 				$text = sprintf(
 				/* translators: %s: Total mentioned count. */
 					__( 'You have %1$d new mentions', 'buddyboss' ),
-					(int) $action_item_count
+					(int) $total_items
 				);
-				$action_item_count = 'multiple';
+				$amount = 'multiple';
 			} else {
-				$action_item_count = 'single';
+				$amount = 'single';
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
 						/* translators: 1: User full name, 2: Activity type. */
@@ -232,7 +232,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			$notification_link = add_query_arg( 'rid', (int) $notification_id, $notification_link );
 
 			$content = apply_filters(
-				'bb_members_' . $action_item_count . '_' . $notification->component_action . '_notification',
+				'bb_members_' . $amount . '_' . $notification->component_action . '_notification',
 				array(
 					'link' => $notification_link,
 					'text' => $text,
