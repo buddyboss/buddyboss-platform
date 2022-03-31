@@ -15828,7 +15828,11 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-media-length-1 .bb-activity-media-elem .entry-img {
-  padding-top: 42.56%;
+  padding-top: 0;
+}
+
+.bb-media-length-1 .bb-activity-media-elem .entry-img img {
+  position: static;
 }
 
 .bb-media-length-2 .bb-activity-media-elem .entry-img {
