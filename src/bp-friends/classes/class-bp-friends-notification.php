@@ -19,6 +19,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var object
 	 */
 	private static $instance = null;
@@ -51,6 +53,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return mixed|void
 	 */
 	public function load() {
@@ -63,10 +67,18 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		$this->register_notification_for_friendship_request();
 		$this->register_notification_for_friendship_accept();
+
+		$this->register_notification_filter(
+			esc_html__( 'Connection requests', 'buddyboss' ),
+			array( 'bb_connections_new_request', 'bb_connections_request_accepted' ),
+			45
+		);
 	}
 
 	/**
 	 * Register notification for user friendship request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_friendship_request() {
 		$this->register_notification_type(
@@ -95,9 +107,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends',
 			'bb_connections_new_request',
 			'bb_connections_new_request',
-			true,
-			__( 'Pending connection requests', 'buddyboss' ),
-			45
 		);
 
 		add_filter( 'bb_friends_bb_connections_new_request_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
@@ -105,6 +114,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for friendship accept.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_friendship_accept() {
 		$this->register_notification_type(
@@ -133,9 +144,6 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 			'friends',
 			'bb_connections_request_accepted',
 			'bb_connections_request_accepted',
-			true,
-			__( 'Accepted connection requests', 'buddyboss' ),
-			35
 		);
 
 		add_filter( 'bb_friends_bb_connections_request_accepted_notification', array( $this, 'bb_format_friends_notification' ), 10, 7 );
@@ -222,10 +230,20 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
+				$text = sprintf(
+					/* translators: total number. */
+					esc_html__( 'You have %d pending requests to connect', 'buddyboss' ),
+					(int) $total_items
+				);
+
 				$amount = 'multiple';
 			} else {
-				$text   = sprintf( __( '%s has sent you a connection request', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				$text = sprintf(
+					/* translators: users display name. */
+					esc_html__( '%s has sent you a connection request', 'buddyboss' ),
+					bp_core_get_user_displayname( $item_id )
+				);
+
 				$amount = 'single';
 			}
 
@@ -264,4 +282,5 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 		return $content;
 	}
+
 }

@@ -31,7 +31,7 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
 				bp_update_user_meta( $user_id, 'bb_groups_request_accepted', 'no' );
 				bp_update_user_meta( $user_id, 'bb_groups_request_rejected', 'no' );
 			} else {
-				$all_keys = bb_get_prefences_key( 'modern', $setting_key );
+				$all_keys = bb_get_prefences_key( 'legacy', $setting_key );
 				bp_update_user_meta( $user_id, $all_keys, $setting_value );
 			}
 		} else {
@@ -66,7 +66,7 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
 			) {
 				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'no' );
 			} else {
-				$all_keys = bb_get_prefences_key( 'legacy', $setting_key );
+				$all_keys = bb_get_prefences_key( 'modern', $setting_key );
 				bp_update_user_meta( $user_id, $all_keys, $setting_value );
 			}
 		}

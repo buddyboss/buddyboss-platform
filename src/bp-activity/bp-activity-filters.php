@@ -3189,11 +3189,11 @@ function bp_activity_screen_notification_settings() {
 		</thead>
 
 		<tbody>
-		<?php if ( bp_activity_do_mentions() ) : ?>
-			<?php $current_user = wp_get_current_user(); ?>
+		<?php if ( bp_activity_do_mentions() ) :
+            $current_user = wp_get_current_user(); ?>
 			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
+				<td><?php printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"

@@ -193,7 +193,7 @@ class BP_Notifications_Template {
 		$this->search_terms = $r['search_terms'];
 		$this->order_by     = $r['order_by'];
 		$this->sort_order   = $r['sort_order'];
-		$this->query_vars = array(
+		$this->query_vars   = array(
 			'id'                => $r['id'],
 			'user_id'           => $this->user_id,
 			'item_id'           => $r['item_id'],

@@ -1788,10 +1788,10 @@ function bb_update_to_1_9_3() {
 function bb_core_update_email_situation_labels() {
 
 	$email_situation_labels = array(
-		'activity-at-message'          => 'A member is mentioned in an activity post',
-		'groups-at-message'            => 'A member is mentioned in a group activity post',
-		'zoom-scheduled-meeting-email' => 'A Zoom meeting is scheduled in a group',
-		'zoom-scheduled-webinar-email' => 'A Zoom webinar is scheduled in a group',
+		'activity-at-message'          => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'groups-at-message'            => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'zoom-scheduled-meeting-email' => esc_html__( 'A Zoom meeting is scheduled in a group', 'buddyboss' ),
+		'zoom-scheduled-webinar-email' => esc_html__( 'A Zoom webinar is scheduled in a group', 'buddyboss' ),
 	);
 
 	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
@@ -1852,14 +1852,17 @@ function bb_core_update_user_settings() {
  * Migrate notification preferences.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids Array of user ids.
+ *
+ * @return void
  */
 function migrate_notification_preferences( $user_ids ) {
+	$all_keys = bb_preferences_key_maps();
 
-	if ( empty( $user_ids ) ) {
+	if ( empty( $user_ids ) || empty( $all_keys ) ) {
 		return;
 	}
-
-	$all_keys = bb_preferences_key_maps();
 
 	foreach ( $user_ids as $user_id ) {
 		foreach ( $all_keys as $old_key => $new_key ) {
@@ -1871,3 +1874,4 @@ function migrate_notification_preferences( $user_ids ) {
 		}
 	}
 }
+

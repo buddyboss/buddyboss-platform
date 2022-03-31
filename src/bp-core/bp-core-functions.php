@@ -3821,7 +3821,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 function bp_email_get_schema() {
 
 	$schema = array(
-		'activity-at-message'                => array(
+		'activity-at-message'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3829,7 +3829,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
-		'groups-at-message'                  => array(
+		'groups-at-message'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3922,48 +3922,48 @@ function bp_email_get_schema() {
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
-		'description' => __( 'Activate a new account', 'buddyboss' ),
+		'description' => esc_html__( 'Activate a new account', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$core_user_registration_with_blog = array(
-		'description' => __( 'Activate a new account and site', 'buddyboss' ),
+		'description' => esc_html__( 'Activate a new account and site', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$activity_at_message = array(
-		'description' => __( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'description' => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_activity_new_mention',
-			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$groups_at_message = array(
-		'description' => __( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'description' => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_activity_new_mention',
-			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$settings_verify_email_change = array(
-		'description' => __( 'A member\'s email is changed', 'buddyboss' ),
+		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$invites_member_invite = array(
-		'description' => __( 'Recepient is invited to the site by a member', 'buddyboss' ),
+		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss' ),
 		'unsubscribe' => false,
 	);
 
 	$content_moderation_email = array(
-		'description' => __( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
 	$user_moderation_email = array(
-		'description' => __( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 	);
 
@@ -4593,6 +4593,7 @@ function bp_array_flatten( $array ) {
 	}
 	return $result;
 }
+
 /**
  * Get Group avatar.
  *
@@ -6658,9 +6659,9 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 /**
  * Functions to get all registered notifications.
  *
- * @param string $component component name.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component component name.
  */
 function bb_register_notifications( $component = '' ) {
 
@@ -6676,9 +6677,9 @@ function bb_register_notifications( $component = '' ) {
 /**
  * Functions to get all registered notifications.
  *
- * @param string $component component name.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component component name.
  */
 function bb_register_notification_preferences( $component = '' ) {
 
@@ -6694,14 +6695,14 @@ function bb_register_notification_preferences( $component = '' ) {
 /**
  * Check whether to send notification to user or not based on their preferences.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int    $user_id          User id.
  * @param string $component_name   Component Name.
  * @param string $component_action Component Action.
  * @param string $pref_type        Preference type.
  *
  * @return bool
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bp_can_send_notification( $user_id, $component_name, $component_action = '', $pref_type = 'email' ) {
 
@@ -6730,12 +6731,12 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 /**
  * Get user notification preference values.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int    $user_id   User id.
  * @param string $pref_type Notification preference type.
  *
  * @return array
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_type = 'email' ) {
 
@@ -6759,9 +6760,9 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
 /**
  * Functions to get all/specific email templates which associates with notification type.
  *
- * @param string $notification_type Notification type.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $notification_type Notification type.
  */
 function bb_register_notification_email_templates( $notification_type = '' ) {
 
@@ -6811,12 +6812,12 @@ function bb_app_notification_enabled() {
 /**
  * List preferences types.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param array $field   Field data.
  * @param int   $user_id User id.
  *
  * @return array list of options.
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$options                  = array();
@@ -6932,11 +6933,11 @@ function bb_check_email_type_registered( string $notification_type ) {
 /**
  * Checks if notification preference is enabled or not with from buddyboss labs.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int $default Default false.
  *
  * @return bool Is media profile media support enabled or not.
- *
- * @since BuddyBoss [BBVERSION]
  */
 function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_labs_notification_preferences_support_enabled', (bool) get_option( 'bp_labs_notification_preferences_enabled', $default ) );
@@ -7005,24 +7006,26 @@ function bb_render_notification( $notification_group ) {
 					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
 
 					<?php
-					foreach ( $options as $key => $v ) {
-						$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-						$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $field['key'], $key );
-						$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
-						if ( $is_render ) {
-							?>
-							<td class="<?php echo esc_attr( $key ) . esc_attr( true === $is_disabled ? ' disabled' : '' ); ?>">
-								<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" <?php disabled( $is_disabled ); ?> />
-								<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled ); ?> />
-								<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
-							</td>
-							<?php
-						} else {
-							?>
-							<td class="<?php echo esc_attr( $key ); ?> notification_no_option">
-								<?php esc_html_e( '-', 'buddyboss' ); ?>
-							</td>
-							<?php
+					if ( ! empty( $options ) ) {
+						foreach ( $options as $key => $v ) {
+							$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+							$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $field['key'], $key );
+							$name        = ( 'email' === $key ) ? 'notifications[' . $field['key'] . ']' : 'notifications[' . $field['key'] . '_' . $key . ']';
+							if ( $is_render ) {
+								?>
+								<td class="<?php echo esc_attr( $key ) . esc_attr( true === $is_disabled ? ' disabled' : '' ); ?>">
+									<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" <?php disabled( $is_disabled ); ?> />
+									<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled ); ?> />
+									<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+								</td>
+								<?php
+							} else {
+								?>
+								<td class="<?php echo esc_attr( $key ); ?> notification_no_option">
+									<?php esc_html_e( '-', 'buddyboss' ); ?>
+								</td>
+								<?php
+							}
 						}
 					}
 					?>
@@ -7091,6 +7094,7 @@ function bb_core_notification_preferences_data() {
 
 	return $data;
 }
+
 /**
  * Create an option to render the manual notification options.
  *
@@ -7142,26 +7146,28 @@ function bb_render_enable_notification_options() {
 			<tr>
 				<th class="title"><?php echo esc_html( $enable_notifications['label'] ); ?></th>
 				<?php
-				foreach ( $enable_notifications['fields'] as $key => $label ) {
-					$class = 'email';
-					if ( 'enable_notification_web' === $key ) {
-						$class = 'web';
-					} elseif ( 'enable_notification_app' === $key ) {
-						$class = 'app';
-					}
-					if ( ! empty( $key ) && ! empty( $label ) ) {
-						$name    = 'notifications[' . $key . ']';
-						$checked = bp_get_user_meta( $user_id, $key, true );
-						if ( 'no' !== $checked ) {
-							$checked = 'yes';
+				if ( ! empty( $enable_notifications['fields'] ) ) {
+					foreach ( $enable_notifications['fields'] as $key => $label ) {
+						$class = 'email';
+						if ( 'enable_notification_web' === $key ) {
+							$class = 'web';
+						} elseif ( 'enable_notification_app' === $key ) {
+							$class = 'app';
 						}
-						?>
-						<th class="<?php echo esc_attr( $class ); ?>">
-							<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" />
-							<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
-							<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
-						</th>
-						<?php
+						if ( ! empty( $key ) && ! empty( $label ) ) {
+							$name    = 'notifications[' . $key . ']';
+							$checked = bp_get_user_meta( $user_id, $key, true );
+							if ( 'no' !== $checked ) {
+								$checked = 'yes';
+							}
+							?>
+							<th class="<?php echo esc_attr( $class ); ?>">
+								<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no" />
+								<input type="checkbox" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $name ); ?>" class="bs-styled-checkbox" value="yes" <?php checked( $checked, 'yes' ); ?> />
+								<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
+							</th>
+							<?php
+						}
 					}
 				}
 				?>
@@ -7270,10 +7276,10 @@ function bb_render_manual_notification() {
 /**
  * Fetch the settings based on the notification component and notification key.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $notification_key Notification key.
  * @param string $component        Component name.
- *
- * @since BuddyBoss [BBVERSION]
  *
  * @return bool|void
  */
@@ -7368,8 +7374,8 @@ function bb_preferences_key_maps() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $type Type of preference 'legacy' or 'modern'
- * @param string $key Key name.
+ * @param string $type   Type of preference 'legacy' or 'modern'.
+ * @param string $key    Key name.
  * @param string $action key postfix.
  *
  * @return array|int|mixed|string|string[]
@@ -7390,7 +7396,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 	if ( 'legacy' === $type && array_key_exists( $key, $keys ) ) {
 		return $keys[ $key ];
 	} elseif ( 'modern' === $type && array_key_exists( $key, $keys ) ) {
-		return str_replace( $keys[ $key ], '_' . $action, '' );
+		return ( '' !== $action ? str_replace( '_' . $action, '', $keys[ $key ] ) : $keys[ $key ] );
 	}
 
 	return '';

@@ -22,6 +22,28 @@ add_action( 'bb_core_before_install', 'bb_core_default_install_emails' );
  */
 function bb_core_default_install_emails( $default_components ) {
 
+	// Called members Notification class.
+	if ( ! class_exists( 'BP_Members_Notification' ) ) {
+
+		// Load members notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php' ) ) {
+		require buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-notification.php';
+		}
+
+		BP_Members_Notification::instance();
+	}
+
+	// Called members mentions Notification class.
+	if ( ! class_exists( 'BP_Members_Mentions_Notification' ) ) {
+
+		// Load members mentions notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-mentions-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-members/classes/class-bp-members-mentions-notification.php';
+		}
+
+		BP_Members_Mentions_Notification::instance();
+	}
+
 	// Load Activity notification file.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php' ) ) {
 		require buddypress()->plugin_dir . 'bp-activity/classes/class-bp-activity-notification.php';

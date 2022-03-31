@@ -19,6 +19,8 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var object
 	 */
 	private static $instance = null;
@@ -51,6 +53,8 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return mixed|void
 	 */
 	public function load() {
@@ -66,6 +70,8 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for user mention.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_mentions() {
 		$this->register_notification_type(
@@ -113,9 +119,12 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_new_mention',
 			'bb_new_mention',
-			true,
-			__( 'New mentions', 'buddyboss' ),
-			5
+		);
+
+		$this->register_notification_filter(
+			esc_html__( 'New mentions', 'buddyboss' ),
+			array( 'bb_new_mention' ),
+			10
 		);
 
 		add_filter( 'bp_forums_bb_new_mention_notification', array( $this, 'bb_render_mention_notification' ), 10, 7 );
@@ -206,15 +215,15 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				$action_item_count = 'single';
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
-					/* translators: 1: User full name, 2: Activity type. */
-						__( '%1$s mentioned you in %2$s', 'buddyboss' ),
+						/* translators: 1: User full name, 2: Activity type. */
+						esc_html__( '%1$s mentioned you in %2$s', 'buddyboss' ),
 						$user_fullname,
 						$notification_type_html
 					);
 				} else {
 					$text = sprintf(
-					/* translators: %s: User full name. */
-						__( '%1$s mentioned you', 'buddyboss' ),
+						/* translators: %s: User full name. */
+						esc_html__( '%1$s mentioned you', 'buddyboss' ),
 						$user_fullname
 					);
 				}

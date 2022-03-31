@@ -19,6 +19,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var object
 	 */
 	private static $instance = null;
@@ -51,6 +53,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return mixed|void
 	 */
 	public function load() {
@@ -61,17 +65,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			15
 		);
 
+		// Creates discussion in a forum you are subscribed.
+		$this->register_notification_for_forums_following_topic();
+
 		// Replies to a discussion you are subscribed.
 		$this->register_notification_for_forums_following_reply();
 
-		// Creates discussion in a forum you are subscribed.
-		$this->register_notification_for_forums_following_topic();
+		$this->register_notification_filter(
+			esc_html__( 'Forum subscriptions', 'buddyboss' ),
+			array( 'bb_forums_subscribed_discussion', 'bb_forums_subscribed_reply' ),
+			110
+		);
 	}
-
-
 
 	/**
 	 * Register notification for replies to a discussion you are subscribed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$this->register_notification_type(
@@ -106,6 +116,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for creates discussion in a forum you are subscribed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$this->register_notification_type(

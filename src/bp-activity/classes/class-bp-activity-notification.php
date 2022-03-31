@@ -19,6 +19,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var object
 	 */
 	private static $instance = null;
@@ -51,6 +53,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return mixed|void
 	 */
 	public function load() {
@@ -66,6 +70,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Register notification for activity reply.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_for_reply() {
 		$this->register_notification_type(
@@ -110,8 +116,11 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'activity',
 			'bb_activity_comment',
 			'bb_activity_comment',
-			true,
-			__( 'New update replies', 'buddyboss' ),
+		);
+
+		$this->register_notification_filter(
+			esc_html__( 'New activity comments', 'buddyboss' ),
+			array( 'bb_activity_comment' ),
 			15
 		);
 
@@ -168,7 +177,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			if ( $notification_type ) {
 				if ( 'activity_comment' === $notification_type ) {
 					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-				} elseif ( 'post_comment' === $notification_type ) {
+				} elseif ( 'post_comment' === $notification_type || 'activity_post' === $notification_type ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
 				}
 			}
