@@ -77,6 +77,8 @@ class BP_XProfile_Group {
 		}
 	}
 
+	public static $bp_xprofile_group_ids = array();
+
 	/**
 	 * Populate a profile field group.
 	 *
@@ -270,7 +272,6 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
-		static $bp_xprofile_group_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
@@ -296,8 +297,8 @@ class BP_XProfile_Group {
 
 		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
 
-		if ( isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
-			return $bp_xprofile_group_ids[ $cache_key ];
+		if ( isset( static::$bp_xprofile_group_ids[ $cache_key ] ) ) {
+			return static::$bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Keep track of object IDs for cache-priming.
@@ -331,7 +332,7 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
-			$bp_xprofile_group_ids[ $cache_key ] = $groups;
+			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -343,7 +344,7 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
-			$bp_xprofile_group_ids[ $cache_key ] = $groups;
+			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -435,7 +436,7 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
-			$bp_xprofile_group_ids[ $cache_key ] = $groups;
+			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;			
 			return $groups;
 		}
 
@@ -572,8 +573,7 @@ class BP_XProfile_Group {
 			$groups = array_values( $groups );
 		}
 
-		$bp_xprofile_group_ids[ $cache_key ] = $groups;
-
+		static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 		return $groups;
 	}
 

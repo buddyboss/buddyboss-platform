@@ -5366,6 +5366,15 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 }
 
 /**
+ * Function trigger when fieldset is added or deleted or field deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_core_xprofile_clear_group_cache() {
+	BP_XProfile_Group::$bp_xprofile_group_ids = array();
+}
+
+/**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
  * @since BuddyBoss 1.6.3
