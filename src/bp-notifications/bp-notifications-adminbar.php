@@ -81,17 +81,12 @@ function bp_notifications_toolbar_menu() {
 			)
 		);
 
-		if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' . get_current_user_id() . '&is_new=1' ) ) {
+		if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&per_page=6&user_id=' . get_current_user_id() . '&is_new=1' ) ) {
 
-			$count    = 0;
-			$is_break = false;
+			$total = buddypress()->notifications->query_loop->total_notification_count;
 			while ( bp_the_notifications() ) :
 				bp_the_notification();
 
-				if ( $count > 5 ) {
-					$is_break = true;
-					break;
-				}
 				ob_start();
 				?>
 				<span class="bb-full-link">
@@ -114,7 +109,7 @@ function bp_notifications_toolbar_menu() {
 				</div>
 				<?php
 
-				$html = ob_get_contents();
+				$html = ob_get_clean();
 				$wp_admin_bar->add_menu(
 					array(
 						'parent' => 'bp-notifications',
@@ -124,12 +119,9 @@ function bp_notifications_toolbar_menu() {
 					)
 				);
 
-				ob_end_clean();
-				$count++;
-
 			endwhile;
 
-			if ( $is_break ) {
+			if ( $total ) {
 				$menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 				$wp_admin_bar->add_menu(
 					array(
