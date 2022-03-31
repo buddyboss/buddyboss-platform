@@ -269,7 +269,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $content               Component action.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $format                Format of return. Either 'string' or 'object'.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
@@ -280,9 +280,9 @@ abstract class BP_Core_Notification_Abstract {
 	 *                      If $format is 'object', return an array formatted like:
 	 *                      array( 'text' => 'CONTENT', 'link' => 'LINK' ).
 	 */
-	public function get_notifications_for_user( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen = 'web' ) {
+	public function get_notifications_for_user( $content, $item_id, $secondary_item_id, $total_items, $format, $component_action_name, $component_name, $notification_id, $screen = 'web' ) {
 
-		$custom_content = $this->format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
+		$custom_content = $this->format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen );
 
 		// Validate the return value & return if validated.
 		if (
@@ -433,8 +433,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
-	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
@@ -445,7 +444,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *  'text' => '' // Notification Text
 	 * }
 	 */
-	abstract public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
+	abstract public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen );
 
 	/**
 	 * Register the notification filters.

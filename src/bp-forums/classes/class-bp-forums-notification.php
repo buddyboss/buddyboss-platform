@@ -157,8 +157,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
-	 * @param int    $action_item_count     Number of notifications with the same action.
-	 * @param string $format                Format of return. Either 'string' or 'object'.
+	 * @param int    $total_items           Number of notifications with the same action.
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
@@ -166,7 +165,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @return array
 	 */
-	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen ) {
+	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_reply' === $component_action_name ) {
 			$topic_id    = bbp_get_reply_topic_id( $item_id );
@@ -183,11 +182,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			if ( (int) $action_item_count > 1 ) {
+			if ( (int) $total_items > 1 ) {
 				$text = sprintf(
 					/* translators: replies count. */
 					esc_html__( 'You have %d new replies', 'buddyboss' ),
-					(int) $action_item_count
+					(int) $total_items
 				);
 			} else {
 				$except = bbp_get_reply_excerpt( $item_id, 50 );
@@ -233,9 +232,9 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			if ( (int) $action_item_count > 1 ) {
+			if ( (int) $total_items > 1 ) {
 				/* translators: discussions count. */
-				$text = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $action_item_count );
+				$text = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $total_items );
 			} else {
 
 				if ( ! empty( $secondary_item_id ) ) {
