@@ -2096,14 +2096,22 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 
 	$activity_obj = new BP_Activity_Activity( $item_id );
 
-	if ( 'activity_comment' == $activity_obj->type ) {
+	if ( 'activity_comment' === $activity_obj->type ) {
+
+		$component_action = 'new_at_mention';
+		$component_name   = 'activity';
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$component_action = 'bb_new_mention';
+		}
+
 		$notification = BP_Notifications_Notification::get(
 			array(
 				'user_id'           => bp_loggedin_user_id(),
 				'item_id'           => $item_id,
 				'secondary_item_id' => $secondary_item_id,
-				'component_name'    => 'activity',
-				'component_action'  => 'new_at_mention',
+				'component_name'    => $component_name,
+				'component_action'  => $component_action,
 			)
 		);
 
@@ -3153,11 +3161,11 @@ function bp_activity_screen_notification_settings() {
 		</thead>
 
 		<tbody>
-		<?php if ( bp_activity_do_mentions() ) : ?>
-			<?php $current_user = wp_get_current_user(); ?>
+		<?php if ( bp_activity_do_mentions() ) :
+            $current_user = wp_get_current_user(); ?>
 			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
+				<td><?php printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"

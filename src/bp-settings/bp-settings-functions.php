@@ -22,6 +22,55 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
 
 	$settings = bp_settings_sanitize_notification_settings( $settings );
 	foreach ( $settings as $setting_key => $setting_value ) {
+
+		if ( bb_enabled_legacy_email_preference() ) {
+			if ( 'notification_membership_request_completed' === $setting_key && 'yes' === $setting_value ) {
+				bp_update_user_meta( $user_id, 'bb_groups_request_accepted', 'yes' );
+				bp_update_user_meta( $user_id, 'bb_groups_request_rejected', 'yes' );
+			} elseif ( 'notification_membership_request_completed' === $setting_key && 'no' === $setting_value ) {
+				bp_update_user_meta( $user_id, 'bb_groups_request_accepted', 'no' );
+				bp_update_user_meta( $user_id, 'bb_groups_request_rejected', 'no' );
+			} else {
+				$all_keys = bb_get_prefences_key( 'legacy', $setting_key );
+				bp_update_user_meta( $user_id, $all_keys, $setting_value );
+			}
+		} else {
+
+			if (
+				(
+					'bb_groups_request_accepted' === $setting_key ||
+					'bb_groups_request_rejected' === $setting_key
+				) &&
+				'yes' === $setting_value
+			) {
+				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
+			} elseif (
+				'bb_groups_request_rejected' === $setting_key &&
+				'yes' === $setting_value
+			) {
+				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
+			} elseif (
+				'bb_groups_request_accepted' === $setting_key &&
+				'yes' === $setting_value
+			) {
+				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'yes' );
+			} elseif (
+				(
+					'bb_groups_request_accepted' === $setting_key ||
+					'bb_groups_request_rejected' === $setting_key
+				) &&
+				isset( $settings['bb_groups_request_accepted'] ) &&
+				'no' === $settings['bb_groups_request_accepted'] &&
+				isset( $settings['bb_groups_request_rejected'] ) &&
+				'no' === $settings['bb_groups_request_rejected']
+			) {
+				bp_update_user_meta( $user_id, 'notification_membership_request_completed', 'no' );
+			} else {
+				$all_keys = bb_get_prefences_key( 'modern', $setting_key );
+				bp_update_user_meta( $user_id, $all_keys, $setting_value );
+			}
+		}
+
 		bp_update_user_meta( $user_id, $setting_key, $setting_value );
 	}
 }

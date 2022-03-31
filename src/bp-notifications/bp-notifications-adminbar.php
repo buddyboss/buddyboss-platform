@@ -25,6 +25,10 @@ function bp_notifications_toolbar_menu() {
 		return false;
 	}
 
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return false;
+	}
+
 	$notifications = bp_notifications_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
 	$count         = ! empty( $notifications ) ? count( $notifications ) : 0;
 	$alert_class   = (int) $count > 0 ? 'pending-count alert' : 'count no-alert';

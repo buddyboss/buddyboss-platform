@@ -229,7 +229,7 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 			if ( 'object' === $format ) {
 
 				// Retrieve the content of the notification using the callback.
-				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'array', $notification_item->id );
+				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'array', $notification_item->id, 'web' );
 
 				// Create the object to be returned.
 				$notification_object = $notification_item;
@@ -248,7 +248,9 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 
 				// Return an array of content strings.
 			} else {
-				$content      = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'string', $notification_item->id );
+
+				$content = call_user_func( $bp->{$component_name}->notification_callback, $notification_item->component_action, $notification_item->item_id, $notification_item->secondary_item_id, $notification_item->total_count, 'string', $notification_item->id, 'web' );
+
 				$renderable[] = $content;
 			}
 
@@ -269,6 +271,7 @@ function bp_notifications_get_notifications_for_user( $user_id, $format = 'strin
 				$notification_item->component_action, // Duplicated so plugins can check the canonical action name.
 				$component_name,
 				$notification_item->id,
+				'web',
 			);
 
 			// Function should return an object.
@@ -1066,9 +1069,9 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 /**
  * Exclude the messages notifications.
  *
- * @param array $component_names Component names.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $component_names Component names.
  *
  * @return array Return the component name.
  */
@@ -1091,3 +1094,24 @@ function bb_notification_exclude_group_message_notification( $component_names ) 
 // Hide messages notifications from the notifications list.
 add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 
+/**
+ * Check the notification is legacy or modern.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $notification_id Notification ID.
+ *
+ * @return bool True if the notification is legacy otherwise false.
+ */
+function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
+
+	/**
+	 * Filters the notification is legacy or modern.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $is_legacy_notification The notification is legacy or modern.
+	 * @param int  $notification_id        Notification ID.
+	 */
+	return (bool) apply_filters( 'bb_notifications_is_legacy_notification', (bool) ! bp_notifications_get_meta( $notification_id, 'is_modern', true ), $notification_id );
+}

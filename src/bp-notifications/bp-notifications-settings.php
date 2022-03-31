@@ -14,21 +14,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the Notification settings sections.
  *
- * @return array
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_notification_get_settings_sections() {
 
 	$settings = array(
 		'bp_notifications'                   => array(
 			'page'              => 'notifications',
-			'title'             => __( 'On-screen Notifications', 'buddyboss' ),
+			'title'             => esc_html__( 'On-screen Notifications', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_on_screen_notification_setting_tutorial',
 			'notice'            => ( ! bb_enabled_legacy_email_preference() ) ? __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ) : '',
 		),
 		'bp_notification_settings_automatic' => array(
 			'page'              => 'notifications',
-			'title'             => __( 'Notification Types', 'buddyboss' ),
+			'title'             => esc_html__( 'Notification Types', 'buddyboss' ),
 			'tutorial_callback' => 'bb_automatic_notifications_tutorial',
 			'notice'            => (
 				false === bb_enabled_legacy_email_preference() ?
@@ -90,10 +91,11 @@ function bb_automatic_notifications_tutorial() {
 /**
  * Get settings fields by section.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss [BBVERSION]
  */
 function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -111,9 +113,9 @@ function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all the settings fields.
  *
- * @return array
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
  */
 function bb_notification_get_settings_fields() {
 
@@ -121,31 +123,31 @@ function bb_notification_get_settings_fields() {
 
 	$fields['bp_notifications'] = array(
 		'_bp_on_screen_notifications_enable'        => array(
-			'title'             => __( 'On-screen notifications', 'buddyboss' ),
+			'title'             => esc_html__( 'On-screen notifications', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_enable',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 		'_bp_on_screen_notification_position'       => array(
-			'title'             => __( 'Position on Screen', 'buddyboss' ),
+			'title'             => esc_html__( 'Position on Screen', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_position',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 		'_bp_on_screen_notification_mobile_support' => array(
-			'title'             => __( 'Mobile Support', 'buddyboss' ),
+			'title'             => esc_html__( 'Mobile Support', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_mobile_support',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 		'_bp_on_screen_notification_visibility'     => array(
-			'title'             => __( 'Automatically Hide', 'buddyboss' ),
+			'title'             => esc_html__( 'Automatically Hide', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_visibility',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
 		'_bp_on_screen_notification_browser_tab'    => array(
-			'title'             => __( 'Show in Browser Tab', 'buddyboss' ),
+			'title'             => esc_html__( 'Show in Browser Tab', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_screen_notifications_browser_tab',
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
@@ -156,21 +158,21 @@ function bb_notification_get_settings_fields() {
 
 	if ( false === bb_enabled_legacy_email_preference() ) {
 		$fields['bp_notification_settings_automatic']['infos'] = array(
-			'title'             => __( 'Notes', 'buddyboss' ),
+			'title'             => esc_html__( 'Notes', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_automatic_notification_information',
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header' ),
 		);
 
 		$fields['bp_notification_settings_automatic']['fields'] = array(
-			'title'             => __( 'Notification Fields', 'buddyboss' ),
+			'title'             => esc_html__( 'Notification Fields', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_on_automatic_notification_fields',
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
 		);
 	} else {
 		$fields['bp_notification_settings_automatic']['infos'] = array(
-			'title'             => __( 'Notes', 'buddyboss' ),
+			'title'             => esc_html__( 'Notes', 'buddyboss' ),
 			'callback'          => 'bb_admin_setting_callback_notification_warning',
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header' ),
@@ -298,23 +300,25 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 									<a href="javascript:void(0);" class="notification-defaults"><?php esc_html_e( 'Manage Defaults', 'buddyboss' ); ?></a>
 									<div class="manage-defaults manage-defaults-hide <?php echo esc_attr( $field['key'] ); ?> " data-id="<?php echo esc_attr( $field['key'] ); ?>">
 										<?php
-										$options = bb_notification_preferences_types( $field, 0 );
+										$options = bb_notification_preferences_types( $field );
 
-										foreach ( $options as $key => $v ) {
-											$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
-											$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
-											if ( $is_render ) {
-												?>
-												<div class="field-wrap <?php echo esc_attr( $key ); ?>">
-													<input type="hidden" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="no" <?php disabled( $is_disabled, true ); ?> />
-													<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled, true ); ?> />
-													<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
-												</div>
-												<?php
-											} else {
-												?>
-												<div class="field-wrap <?php echo esc_attr( $key ); ?>"> -- </div>
-												<?php
+										if ( ! empty( $options ) ) {
+											foreach ( $options as $key => $v ) {
+												$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_enabled', ! $checked );
+												$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
+												if ( $is_render ) {
+													?>
+													<div class="field-wrap <?php echo esc_attr( $key ); ?>">
+														<input type="hidden" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="no" <?php disabled( $is_disabled, true ); ?> />
+														<input type="checkbox" id="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>" name="bb_enabled_notification[<?php echo esc_attr( $field['key'] ); ?>][<?php echo esc_attr( $key ); ?>]" class="bs-styled-checkbox" value="yes" <?php checked( $v['is_checked'], 'yes' ); ?> <?php disabled( $is_disabled, true ); ?> />
+														<label for="<?php echo esc_attr( $field['key'] . '_' . $key ); ?>"><?php echo esc_html( $v['label'] ); ?></label>
+													</div>
+													<?php
+												} else {
+													?>
+													<div class="field-wrap <?php echo esc_attr( $key ); ?>"> -- </div>
+													<?php
+												}
 											}
 										}
 										?>
@@ -397,4 +401,3 @@ function bb_activate_notification( $field, $checked ) {
 
 	<?php
 }
-

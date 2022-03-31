@@ -3120,6 +3120,7 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 #bp_notification_settings_automatic table.form-table tbody tr th {
   margin-bottom: 15px;
+  width: 100%;
 }
 
 #bp_notification_settings_automatic .field-set {
@@ -3188,11 +3189,13 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   display: none;
 }
 
-table.form-table.dynamic-notification-after tbody tr th {
+#bp_notification_settings_automatic table.form-table.dynamic-notification-after tbody tr th {
+  min-width: 200px;
   padding: 15px 20px 0 0;
+  width: auto;
 }
 
-table.form-table.dynamic-notification-after tbody tr td {
+#bp_notification_settings_automatic table.form-table.dynamic-notification-after tbody tr td {
   padding: 15px 10px 15px 0;
 }
 

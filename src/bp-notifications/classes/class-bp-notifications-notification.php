@@ -164,6 +164,9 @@ class BP_Notifications_Notification {
 
 			if ( empty( $this->id ) ) {
 				$this->id = $wpdb->insert_id;
+
+				// Set the notification type.
+				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
 			}
 			$retval = $this->id;
 		}
@@ -278,7 +281,19 @@ class BP_Notifications_Notification {
 	 */
 	protected static function _delete( $where = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->delete( buddypress()->notifications->table_name, $where, $where_format );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( ! empty( $notifications ) ) {
+			foreach ( $notifications as $notification ) {
+				bp_notifications_delete_meta( $notification->id );
+			}
+		}
+
+		return $wpdb->delete( $bp->notifications->table_name, $where, $where_format );
 	}
 
 	/**

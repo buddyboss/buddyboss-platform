@@ -798,7 +798,12 @@ add_action( 'bp_make_spam_user', 'friends_remove_data' );
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_new_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( false === bb_is_notification_enabled( (int) $friend_id, 'notification_friends_friendship_request' ) ) {
+	$type_key = 'notification_friends_friendship_request';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
+	if ( false === bb_is_notification_enabled( (int) $friend_id, $type_key ) ) {
 		return;
 	}
 
@@ -835,7 +840,12 @@ add_action( 'friends_friendship_requested', 'friends_notification_new_request', 
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_accepted_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( false === bb_is_notification_enabled( (int) $initiator_id, 'notification_friends_friendship_accepted' ) ) {
+	$type_key = 'notification_friends_friendship_accepted';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
+	if ( false === bb_is_notification_enabled( (int) $initiator_id, $type_key ) ) {
 		return;
 	}
 

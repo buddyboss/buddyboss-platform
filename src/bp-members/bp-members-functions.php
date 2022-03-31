@@ -5116,3 +5116,63 @@ function bb_get_member_type_label_colors( $type ) {
 
 	return apply_filters( 'bb_get_member_type_label_colors', $bp_member_type_label_color );
 }
+
+/**
+ * Mark Member notification read.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_members_notifications_mark_read() {
+	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() || ! bp_current_action() ) {
+		return;
+	}
+
+	if ( 'general' === bp_current_action() ) {
+		$n_id = 0;
+		// For replies to a parent update.
+		if ( ! empty( $_GET['rid'] ) ) {
+			$n_id = (int) $_GET['rid'];
+		}
+
+		// Mark individual notification as read.
+		if ( ! empty( $n_id ) ) {
+			BP_Notifications_Notification::update(
+				array(
+					'is_new' => false,
+				),
+				array(
+					'user_id' => bp_loggedin_user_id(),
+					'id'      => $n_id,
+				)
+			);
+		}
+	}
+}
+add_action( 'template_redirect', 'bb_members_notifications_mark_read' );
+
+/**
+ * Determine a user's "mentionname", the name used for that user in @-mentions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|string $user_id ID of the user to get @-mention name for.
+ *
+ * @return string $mentionname User name appropriate for @-mentions.
+ */
+function bb_members_get_user_mentionname( $user_id ) {
+	$mentionname = '';
+
+	$userdata = bp_core_get_core_userdata( $user_id );
+
+	if ( $userdata ) {
+		if ( bp_is_username_compatibility_mode() ) {
+			$mentionname = str_replace( ' ', '-', $userdata->user_login );
+		} else {
+			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
+		}
+	}
+
+	return $mentionname;
+}

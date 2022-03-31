@@ -3337,6 +3337,7 @@ table tbody td .bb-description {
 
 			th {
 				margin-bottom: 15px;
+				width: 100%;
 			}
 
 		}
@@ -3409,10 +3410,12 @@ table tbody td .bb-description {
 	}
 }
 
-table.form-table.dynamic-notification-after tbody tr {
+#bp_notification_settings_automatic table.form-table.dynamic-notification-after tbody tr {
 
 	th {
+		min-width: 200px;
 		padding: 15px 20px 0 0;
+		width: auto;
 	}
 
 	td {

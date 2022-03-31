@@ -19,51 +19,62 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Preferences Group.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $prefernce_groups = array();
 
 	/**
 	 * Preferences.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
-	private $prefernces = array();
+	private $preferences = array();
 
 	/**
 	 * Notifications.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $notifications = array();
 
 	/** Email Types.
 	 *
-	 * @var array
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
 	 */
 	private $email_types = array();
 
 	/**
 	 * Notification load default priority.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var int
 	 */
 	private $priority = 20;
 
 	/**
-	 * Initialize.
-	 *
-	 * @return void
+	 * Notifications filters.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	private $notifications_filters = array();
+
+	/**
+	 * Initialize.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
 	 */
 	final public function start() {
 		$this->load();
@@ -72,8 +83,11 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
-		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 99, 8 );
+		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
+
+		// Register the Notifications filters.
+		add_action( 'bp_nouveau_notifications_init_filters', array( $this, 'register_notification_filters' ) );
 	}
 
 	/**
@@ -90,11 +104,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register notifications.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $notifications Notification array.
 	 *
 	 * @return array|mixed
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_preferences( array $notifications ) {
 
@@ -129,8 +143,8 @@ abstract class BP_Core_Notification_Abstract {
 			}
 		}
 
-		if ( ! empty( $this->prefernces ) ) {
-			foreach ( $this->prefernces as $preference ) {
+		if ( ! empty( $this->preferences ) ) {
+			foreach ( $this->preferences as $preference ) {
 				$notifications[ $preference['notification_group'] ]['fields'][] = array(
 					'key'           => $preference['notification_type'],
 					'label'         => $preference['notification_label'],
@@ -166,11 +180,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register the notifications.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $notifications List of notifications.
 	 *
 	 * @return array
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notifications( array $notifications ) {
 
@@ -183,11 +197,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Email Schema.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $schema List of schema.
 	 *
 	 * @return array|mixed
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function email_schema( array $schema ) {
 
@@ -204,11 +218,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Email Type Schema.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $type_schema List of types schema.
 	 *
 	 * @return array
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function email_type_schema( array $type_schema ) {
 
@@ -225,11 +239,11 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register email with associated preference type.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param array $emails Registered Emails.
 	 *
 	 * @return array
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function register_notification_emails( array $emails ) {
 		if ( ! empty( $this->email_types ) ) {
@@ -260,17 +274,19 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
 	 *
 	 * @return string|array If $format is 'string', return a string of the notification content.
 	 *                      If $format is 'object', return an array formatted like:
 	 *                      array( 'text' => 'CONTENT', 'link' => 'LINK' ).
 	 */
-	public function get_notifications_for_user( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id ) {
+	public function get_notifications_for_user( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen = 'web' ) {
 
-		$custom_content = $this->format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id );
+		$custom_content = $this->format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
 
 		// Validate the return value & return if validated.
 		if (
+			! empty( $custom_content ) &&
 			is_array( $custom_content ) &&
 			isset( $custom_content['text'] ) &&
 			isset( $custom_content['link'] )
@@ -320,14 +336,14 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Group.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $group_key         Group key.
 	 * @param string $group_label       Group label.
 	 * @param string $group_admin_label Group admin label.
 	 * @param int    $priority          Priority of the group.
 	 *
 	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification_group( string $group_key, string $group_label, string $group_admin_label = '', int $priority = 0 ) {
 		$this->prefernce_groups[] = array(
@@ -341,6 +357,8 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Type.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $notification_type        Notification Type key.
 	 * @param string $notification_label       Notification label.
 	 * @param string $notification_admin_label Notification admin label.
@@ -348,11 +366,9 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param bool   $default                  Default status.
 	 *
 	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification_type( string $notification_type, string $notification_label, string $notification_admin_label = '', string $notification_group = 'other', bool $default = true ) {
-		$this->prefernces[] = array(
+		$this->preferences[] = array(
 			'notification_type'        => $notification_type,
 			'notification_label'       => $notification_label,
 			'notification_admin_label' => $notification_admin_label,
@@ -364,13 +380,13 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register notification.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $component         Component name.
 	 * @param string $component_action  Component action.
 	 * @param string $notification_type Notification Type key.
 	 *
 	 * @return void
-	 *
-	 * @since BuddyBoss [BBVERSION]
 	 */
 	final public function register_notification( string $component, string $component_action, string $notification_type ) {
 		$this->notifications[] = array(
@@ -414,6 +430,7 @@ abstract class BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
 	 * @param int    $secondary_item_id     Notification secondary item ID.
 	 * @param int    $action_item_count     Number of notifications with the same action.
@@ -421,12 +438,76 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $component_action_name Canonical notification action.
 	 * @param string $component_name        Notification component ID.
 	 * @param int    $notification_id       Notification ID.
+	 * @param string $screen                Notification Screen type.
 	 *
 	 * @return array {
 	 *  'link' => '' // Notification URL.
 	 *  'text' => '' // Notification Text
 	 * }
 	 */
-	abstract public function format_notification( $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id );
+	abstract public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $format, $component_action_name, $component_name, $notification_id, $screen );
+
+	/**
+	 * Register the notification filters.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function register_notification_filters() {
+		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
+			$filtered_notifications = array_column( $this->notifications, 'component_action', 'notification_type' );
+			foreach ( $this->notifications_filters as $filters ) {
+				$label             = ( isset( $filters['label'] ) ? $filters['label'] : '' );
+				$position          = ( isset( $filters['position'] ) ? $filters['position'] : 0 );
+				$n_types           = ( isset( $filters['notification_types'] ) ? $filters['notification_types'] : '' );
+				$component_actions = array();
+
+				if ( ! empty( $n_types ) ) {
+					if ( is_array( $n_types ) ) {
+						foreach ( $n_types as $k => $type ) {
+							$component_action = isset( $filtered_notifications[ $type ] ) ? $filtered_notifications[ $type ] : '';
+							if ( ! empty( $component_action ) && bb_get_modern_notification_admin_settings_is_enabled( $type ) ) {
+								$component_actions[] = $component_action;
+							}
+						}
+					} else {
+						$component_action = isset( $filtered_notifications[ $n_types ] ) ? $filtered_notifications[ $n_types ] : '';
+						if ( ! empty( $component_action ) && bb_get_modern_notification_admin_settings_is_enabled( $n_types ) ) {
+							$component_actions[] = $component_action;
+						}
+					}
+				}
+
+				if ( ! empty( $component_actions ) && ! empty( $label ) ) {
+					bp_nouveau_notifications_register_filter(
+						array(
+							'id'       => ( is_array( $component_actions ) ? implode( ',', $component_actions ) : $component_actions ),
+							'label'    => $label,
+							'position' => $position,
+						)
+					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Register Notification Filter.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $notification_label    Notification label.
+	 * @param array  $notification_types    Notification types.
+	 * @param int    $notification_position Notification position.
+	 *
+	 * @return void
+	 */
+	public function register_notification_filter( string $notification_label, array $notification_types, int $notification_position = 0 ) {
+		$this->notifications_filters[] = array(
+			'label'              => $notification_label,
+			'notification_types' => $notification_types,
+			'position'           => $notification_position,
+		);
+	}
+
 }
 
