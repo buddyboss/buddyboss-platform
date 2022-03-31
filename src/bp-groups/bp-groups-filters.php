@@ -962,3 +962,34 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
 add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+
+/**
+ * Filters the my-groups menu url for the logged in group member.
+ *
+ * When there is My gorups menu available on the website,
+ * use this filter to fix the current user's gorups link.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $sorted_menu_objects Array of menu objects.
+ * @param array $args                Array of arguments.
+ */
+function bb_my_group_menu_url( $sorted_menu_objects, $args ) {
+
+	if ( 'header-menu' !== $args->theme_location ) {
+		return $sorted_menu_objects;
+	}
+
+	foreach ( $sorted_menu_objects as $key => $menu_object ) {
+
+		// Replace the URL when bp_loggedin_user_domain && bp_displayed_user_domain are not same.
+		if ( class_exists( 'BuddyPress' ) ) {
+			if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+				$menu_object->url = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $menu_object->url );
+			}
+		}
+	}
+
+	return $sorted_menu_objects;
+}
+add_filter( 'wp_nav_menu_objects', 'bb_my_group_menu_url', 10, 2 );
