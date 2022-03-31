@@ -16,38 +16,39 @@
 
 bp_nouveau_xprofile_hook( 'before', 'loop_content' );
 
-	if ( bp_has_profile() ) :
+add_filter( 'bp_after_has_profile_parse_args', 'bb_has_profile_parse_social_networks' );
+add_filter( 'bp_get_the_profile_field_value', 'bb_get_the_profile_social_network_field_value', 10, 3 );
 
-		while ( bp_profile_groups() ) :
-			bp_the_profile_group();
+if ( bp_has_profile() ) :
 
-			if ( bp_profile_group_has_fields() ) :
+	while ( bp_profile_groups() ) :
+		bp_the_profile_group();
 
-				bp_nouveau_xprofile_hook( 'before', 'field_content' );
+		if ( bp_profile_group_has_fields() ) :
 
-				?>
-				<div class="bp-widget <?php bp_the_profile_group_slug(); ?>">
+			bp_nouveau_xprofile_hook( 'before', 'field_content' );
+			?>
+			<div class="bp-widget <?php bp_the_profile_group_slug(); ?>">
 
-					<h3 class="screen-heading profile-group-title">
-						<?php bp_the_profile_group_name(); ?>
-					</h3>
+				<h3 class="screen-heading profile-group-title">
+				<?php bp_the_profile_group_name(); ?>
+				</h3>
 
-					<table class="profile-fields bp-tables-user">
-						<?php
-						while ( bp_profile_fields() ) :
-							bp_the_profile_field();
+				<table class="profile-fields bp-tables-user">
+					<?php
+					while ( bp_profile_fields() ) :
+						bp_the_profile_field();
 
-							if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-								if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
-									continue;
-								}
+						if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+							if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
+								continue;
 							}
+						}
 
-							bp_nouveau_xprofile_hook( 'before', 'field_item' );
+						bp_nouveau_xprofile_hook( 'before', 'field_item' );
 
-							if ( bp_field_has_data() ) :
-								?>
-
+						if ( bp_field_has_data() ) :
+							?>
 								<tr<?php bp_field_css_class(); ?>>
 
 									<td class="label"><?php bp_the_profile_field_name(); ?></td>
@@ -55,44 +56,46 @@ bp_nouveau_xprofile_hook( 'before', 'loop_content' );
 									<td class="data"><?php bp_the_profile_field_value(); ?></td>
 
 								</tr>
-								<?php
-							endif;
+							<?php
+						endif;
 
-							bp_nouveau_xprofile_hook( '', 'field_item' );
+						bp_nouveau_xprofile_hook( '', 'field_item' );
 
-						endwhile;
+					endwhile;
 
-						bp_nouveau_xprofile_hook( 'after', 'field_items' );
-						?>
+					bp_nouveau_xprofile_hook( 'after', 'field_items' );
+					?>
+				</table>
 
-					</table>
+			</div>
+			<?php
+			bp_nouveau_xprofile_hook( 'after', 'field_content' );
+		endif;
 
-				</div>
+	endwhile;
 
-				<?php
-				bp_nouveau_xprofile_hook( 'after', 'field_content' );
-			endif;
+	bp_nouveau_xprofile_hook( '', 'field_buttons' );
 
-		endwhile;
+else :
+	?>
 
-		bp_nouveau_xprofile_hook( '', 'field_buttons' );
+	<div class="info bp-feedback">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
+			<?php
+			if ( bp_is_my_profile() ) {
+				esc_html_e( 'You have not yet added details to your profile.', 'buddyboss' );
+			} else {
+				esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss' );
+			}
+			?>
+		</p>
+	</div>
+	<?php
 
-	else :
-		?>
+endif;
 
-		<div class="info bp-feedback">
-			<span class="bp-icon" aria-hidden="true"></span>
-			<p>
-				<?php
-				if ( bp_is_my_profile() ) {
-					esc_html_e( 'You have not yet added details to your profile.', 'buddyboss' );
-				} else {
-					esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss' );
-				}
-				?>
-			</p>
-		</div><?php
-
-	endif;
+remove_filter( 'bp_after_has_profile_parse_args', 'bb_has_profile_parse_social_networks' );
+remove_filter( 'bp_get_the_profile_field_value', 'bb_get_the_profile_social_network_field_value', 10, 3 );
 
 bp_nouveau_xprofile_hook( 'after', 'loop_content' );

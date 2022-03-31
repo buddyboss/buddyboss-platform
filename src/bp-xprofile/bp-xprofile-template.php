@@ -1682,3 +1682,42 @@ function bb_get_user_social_networks_urls_with_visibility( $html, $original_opti
 
 	return $html;
 }
+
+/**
+ * Add social network argument if disabled to show in header from BuddyBoss -> Settings -> Profiles -> Profile Headers.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args The arguments array.
+ *
+ * @return array.
+ */
+function bb_has_profile_parse_social_networks( $args = array() ) {
+	$is_enabled_social_networks = function_exists( 'bb_enabled_profile_header_layout_element' ) ? bb_enabled_profile_header_layout_element( 'social-networks' ) : true;
+	$is_active_social_networks  = function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+
+	if ( ! $is_enabled_social_networks && $is_active_social_networks ) {
+		$args['fetch_social_network_fields'] = true;
+	}
+
+	return $args;
+}
+
+/**
+ * Replace social network URL to icon.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $value Value for the profile field.
+ * @param string $type  Type for the profile field.
+ * @param int    $id    ID for the profile field.
+ *
+ * @return string.
+ */
+function bb_get_the_profile_social_network_field_value( $value, $type, $id ) {
+	if ( 'socialnetworks' === $type ) {
+		return bp_get_user_social_networks_urls();
+	}
+
+	return $value;
+}
