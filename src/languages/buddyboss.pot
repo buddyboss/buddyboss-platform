@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-03-29 16:04:26+00:00\n"
+"POT-Creation-Date: 2022-03-31 12:35:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -388,7 +388,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-akismet.php:242
 #: bp-core/admin/bp-core-admin-functions.php:1541
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
-#: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2332
+#: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2336
 #: bp-forums/topics/template.php:3232
 msgid "Spam"
 msgstr ""
@@ -407,7 +407,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:847
 #: bp-activity/classes/class-bp-activity-list-table.php:671
 #: bp-forums/common/template.php:2442 bp-forums/forums/template.php:55
-#: bp-forums/replies/template.php:55 bp-forums/replies/template.php:2081
+#: bp-forums/replies/template.php:55 bp-forums/replies/template.php:2085
 #: bp-forums/topics/template.php:55 bp-forums/topics/template.php:2758
 #: bp-groups/classes/class-bp-groups-list-table.php:570
 #: bp-invites/bp-invites-admin.php:268
@@ -529,8 +529,8 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:708
 #: bp-core/classes/class-bp-email-tokens.php:889
 #: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:336
-#: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1764
-#: bp-forums/replies/template.php:1807 bp-forums/topics/template.php:3341
+#: bp-forums/replies/template.php:51 bp-forums/replies/template.php:1768
+#: bp-forums/replies/template.php:1811 bp-forums/topics/template.php:3341
 #: bp-moderation/classes/class-bp-moderation-activity.php:482
 #: bp-moderation/classes/class-bp-moderation-forum-replies.php:258
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:403
@@ -542,7 +542,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:1156
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:45
-#: bp-forums/replies/template.php:1843 bp-groups/bp-groups-admin.php:1069
+#: bp-forums/replies/template.php:1847 bp-groups/bp-groups-admin.php:1069
 #: bp-members/classes/class-bp-members-admin.php:2532
 #: bp-moderation/screens/block-member-form.php:75
 #: bp-moderation/screens/content-report-form.php:62
@@ -1010,7 +1010,7 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:2792
 #: bp-core/bp-core-attachments.php:926
 #: bp-forums/classes/class-bp-forums-component.php:546
-#: bp-forums/replies/template.php:2224
+#: bp-forums/replies/template.php:2228
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2901
@@ -2019,6 +2019,7 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
+#: bp-members/bp-members-template.php:3032
 #: bp-messages/bp-messages-functions.php:314
 #: bp-messages/bp-messages-template.php:2155
 #: bp-search/bp-search-settings.php:1031 bp-settings/actions/export.php:35
@@ -2092,6 +2093,7 @@ msgid "active %s"
 msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:659 bp-members/bp-members-template.php:1034
+#: bp-members/bp-members-template.php:3050
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1495
 msgid "Never active"
 msgstr ""
@@ -8297,7 +8299,7 @@ msgstr ""
 #: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
 #: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
 #: bp-forums/common/widgets.php:973 bp-forums/common/widgets.php:1135
-#: bp-forums/common/widgets.php:1367
+#: bp-forums/common/widgets.php:1369
 #: bp-groups/classes/class-bp-groups-widget.php:232
 #: bp-members/classes/class-bp-core-members-widget.php:252
 #: bp-members/classes/class-bp-core-recently-active-widget.php:155
@@ -8313,11 +8315,12 @@ msgid "A dynamic list of network posts"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-network-posts-widget.php:148
-#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:24
-#: bp-templates/bp-nouveau/buddypress/search/loop/product.php:31
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:36
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:27
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:27
+#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:38
+#: bp-templates/bp-nouveau/buddypress/search/loop/product.php:35
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:40
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:33
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:33
+#. translators: %s title attribute.
 msgid "Permalink to %s"
 msgstr ""
 
@@ -11526,27 +11529,27 @@ msgid "Mark this reply as spam"
 msgstr ""
 
 #: bp-forums/admin/replies.php:815 bp-forums/admin/topics.php:907
-#: bp-forums/replies/template.php:2237 bp-forums/topics/template.php:2914
+#: bp-forums/replies/template.php:2241 bp-forums/topics/template.php:2914
 msgid "Restore this item from the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:815 bp-forums/admin/topics.php:907
-#: bp-forums/replies/template.php:2223 bp-forums/topics/template.php:2900
+#: bp-forums/replies/template.php:2227 bp-forums/topics/template.php:2900
 msgid "Restore"
 msgstr ""
 
 #: bp-forums/admin/replies.php:817 bp-forums/admin/topics.php:909
-#: bp-forums/replies/template.php:2250 bp-forums/topics/template.php:2927
+#: bp-forums/replies/template.php:2254 bp-forums/topics/template.php:2927
 msgid "Move this item to the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:817 bp-forums/admin/topics.php:909
-#: bp-forums/replies/template.php:2222 bp-forums/topics/template.php:2899
+#: bp-forums/replies/template.php:2226 bp-forums/topics/template.php:2899
 msgid "Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:821 bp-forums/admin/topics.php:913
-#: bp-forums/replies/template.php:2265 bp-forums/topics/template.php:2942
+#: bp-forums/replies/template.php:2269 bp-forums/topics/template.php:2942
 msgid "Delete this item permanently"
 msgstr ""
 
@@ -14356,7 +14359,7 @@ msgstr ""
 msgid "Maximum topics to show:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:986 bp-forums/common/widgets.php:1369
+#: bp-forums/common/widgets.php:986 bp-forums/common/widgets.php:1371
 msgid "Show post date:"
 msgstr ""
 
@@ -14407,37 +14410,37 @@ msgstr ""
 msgid "(BB) Forum Recent Replies"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1289
+#: bp-forums/common/widgets.php:1291
 #. translators: 1: reply author, 2: reply link, 3: reply timestamp
 msgid "%1$s on %2$s %3$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1295
+#: bp-forums/common/widgets.php:1297
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:152
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:157
 #. translators: 1: reply link, 2: reply timestamp
 msgid "%1$s %2$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1301
+#: bp-forums/common/widgets.php:1303
 #. translators: 1: reply author, 2: reply link
 msgid "%1$s on %2$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1307
+#: bp-forums/common/widgets.php:1309
 #. translators: 1: reply link
 msgid "%1$s"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1368
+#: bp-forums/common/widgets.php:1370
 msgid "Maximum replies to show:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1370
+#: bp-forums/common/widgets.php:1372
 msgid "Show reply author:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:1387
+#: bp-forums/common/widgets.php:1389
 msgid "Recent Replies"
 msgstr ""
 
@@ -15004,30 +15007,30 @@ msgstr ""
 msgid "This reply was modified %1$s by %2$s."
 msgstr ""
 
-#: bp-forums/replies/template.php:1181 bp-forums/topics/template.php:1515
+#: bp-forums/replies/template.php:1185 bp-forums/topics/template.php:1515
 #: bp-forums/users/template.php:183
 msgid "Anonymous"
 msgstr ""
 
-#: bp-forums/replies/template.php:1308 bp-forums/topics/template.php:1643
+#: bp-forums/replies/template.php:1312 bp-forums/topics/template.php:1643
 #: bp-forums/users/template.php:1718
 msgid "View %s's profile"
 msgstr ""
 
-#: bp-forums/replies/template.php:1308 bp-forums/topics/template.php:1643
+#: bp-forums/replies/template.php:1312 bp-forums/topics/template.php:1643
 #: bp-forums/users/template.php:1718
 msgid "Visit %s's website"
 msgstr ""
 
-#: bp-forums/replies/template.php:2276 bp-forums/topics/template.php:2953
+#: bp-forums/replies/template.php:2280 bp-forums/topics/template.php:2953
 msgid "Are you sure you want to delete that permanently?"
 msgstr ""
 
-#: bp-forums/replies/template.php:2333 bp-forums/topics/template.php:3233
+#: bp-forums/replies/template.php:2337 bp-forums/topics/template.php:3233
 msgid "Unspam"
 msgstr ""
 
-#: bp-forums/replies/template.php:2408
+#: bp-forums/replies/template.php:2412
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:56
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:63
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:30
@@ -15049,19 +15052,19 @@ msgstr ""
 msgid "Move"
 msgstr ""
 
-#: bp-forums/replies/template.php:2409
+#: bp-forums/replies/template.php:2413
 msgid "Move this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2485
+#: bp-forums/replies/template.php:2489
 msgid "Split"
 msgstr ""
 
-#: bp-forums/replies/template.php:2486
+#: bp-forums/replies/template.php:2490
 msgid "Split the topic from this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2590
+#: bp-forums/replies/template.php:2594
 msgid "Page %1$s of %2$s"
 msgstr ""
 
@@ -19627,30 +19630,30 @@ msgstr ""
 msgid "BuddyBoss LearnDash"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:118
+#: bp-integrations/learndash/core/Core.php:119
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1131
 #. translators: My Courses
 msgid "My %s"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:119
+#: bp-integrations/learndash/core/Core.php:120
 msgid "Create a %s"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:125
+#: bp-integrations/learndash/core/Core.php:126
 msgid "My Certificates"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:126
+#: bp-integrations/learndash/core/Core.php:127
 msgid "Certificates"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:144
+#: bp-integrations/learndash/core/Core.php:145
 #. translators: %s: Group count for the current user
 msgid "%s %s"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:621
+#: bp-integrations/learndash/core/Core.php:622
 msgid "RESUME"
 msgstr ""
 
@@ -24573,22 +24576,21 @@ msgstr ""
 msgid "View all"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:379
-#. translators: %s: search term
-msgid "Nothing found for '%s'"
+#: bp-search/classes/class-bp-search.php:377
+msgid "No results found."
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:608
+#: bp-search/classes/class-bp-search.php:604
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:624
+#: bp-search/classes/class-bp-search.php:620
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:862
+#: bp-search/classes/class-bp-search.php:858
 msgid "All Results"
 msgstr ""
 
@@ -26196,27 +26198,52 @@ msgstr ""
 msgid "moderated"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:31
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-ajax.php:37
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment-ajax.php:37
+msgid " ago"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment-ajax.php:28
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:24
+msgid "replied to a post"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/search/loop/activity-comment.php:32
 #: bp-templates/bp-nouveau/buddypress/search/loop/activity.php:31
 msgid "ago"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:30
-#: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:34
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons-ajax.php:27
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:31
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:43
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:47
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons-ajax.php:45
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:45
+#. translators: total topics
 msgid "%d topic"
 msgid_plural "%d topics"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:36
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:31
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:37
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:53
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:57
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:44
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:47
+#. translators: total replies
 msgid "%d reply"
 msgid_plural "%d replies"
 msgstr[0] ""
 msgstr[1] ""
+
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:65
+#: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:70
+#: bp-templates/bp-nouveau/buddypress/search/loop/group-ajax.php:26
+#: bp-templates/bp-nouveau/buddypress/search/loop/group.php:29
+msgid "Last active "
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/search/loop/member-ajax.php:24
+#: bp-templates/bp-nouveau/buddypress/search/loop/member.php:26
+msgid "Last active"
+msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/message-ajax.php:20
 msgid "From:"
@@ -26226,41 +26253,49 @@ msgstr ""
 msgid "Conversation between"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/message.php:25
+#: bp-templates/bp-nouveau/buddypress/search/loop/message.php:26
 msgid "and you."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/message.php:30
+#: bp-templates/bp-nouveau/buddypress/search/loop/message.php:31
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:536
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:541
 msgid "View Conversation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:36
+#: bp-templates/bp-nouveau/buddypress/search/loop/post-ajax.php:43
+#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:52
+#. translators: %s author name
 msgid "By %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/product.php:39
-msgid "Sale!"
+#: bp-templates/bp-nouveau/buddypress/search/loop/reply-ajax.php:34
+#: bp-templates/bp-nouveau/buddypress/search/loop/reply.php:40
+msgid "replied to a discussion"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses-ajax.php:27
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:32
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses-ajax.php:52
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:62
 msgid "%d lesson"
 msgid_plural "%d lessons"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic-ajax.php:27
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:31
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic-ajax.php:45
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:47
 msgid "%d quiz"
 msgid_plural "%d quizzes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:42
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:52
-msgid "Tags:"
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:40
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:44
+msgid "By "
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:48
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:51
+msgid "Started "
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/no-results-groups.php:12
@@ -28159,7 +28194,7 @@ msgid "Mark Read"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/search/functions.php:55
-msgid "Loading Suggestions"
+msgid "Loading suggestions..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/template-tags.php:2167
