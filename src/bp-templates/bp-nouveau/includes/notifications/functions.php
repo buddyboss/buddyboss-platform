@@ -293,7 +293,7 @@ function bb_notification_avatar() {
 	}
 
 	switch ( $component_action ) {
-		case 'new_membership_request':
+		case 'bb_groups_new_request':
 			if ( ! empty( $notification->secondary_item_id ) ) {
 				$item_id = $notification->secondary_item_id;
 				$object  = 'user';
