@@ -38,6 +38,7 @@ TABLE OF CONTENTS:
 12.0 Profile Photo
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
+15.0 Admin bar Notification
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -3245,4 +3246,60 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 .bb-lab-notice.notification-information:first-child {
   margin-top: 0;
+}
+
+/*------------------------------------------------------------------------------
+ * 15.0 Admin bar Notification
+ *----------------------------------------------------------------------------*/
+#wpadminbar #wp-admin-bar-bp-notifications-default {
+  width: 300px;
+  max-height: calc(90vh - 50px);
+  overflow: auto;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default > li {
+  display: inline-block;
+  width: 100%;
+  padding: 5px 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default > li#wp-admin-bar-notification-view-all {
+  text-align: center;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar {
+  float: right;
+  width: 40px;
+  margin-top: 4px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .member-status {
+  display: none;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a {
+  height: auto;
+  padding: 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a img {
+  max-width: 36px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content {
+  float: left;
+  width: calc(100% - 60px);
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .bb-full-link > a {
+  opacity: 1;
+  padding: 0;
+  height: auto;
+  position: static;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
+  line-height: 1.4;
 }

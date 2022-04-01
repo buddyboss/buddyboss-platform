@@ -48,23 +48,14 @@ function bp_notifications_toolbar_menu() {
 
 			ob_start();
 			?>
-				<span class="bb-full-link">
-				<?php bp_the_notification_description(); ?>
-				</span>
 				<div class="notification-avatar">
 				<?php bb_notification_avatar(); ?>
 				</div>
 				<div class="notification-content">
-					<span class="bb-full-link">
-					<?php bp_the_notification_description(); ?>
-					</span>
-					<span><?php bp_the_notification_description(); ?></span>
-					<span class="posted"><?php bp_the_notification_time_since(); ?></span>
-				</div>
-				<div class="actions">
-					<a class="mark-read action-unread primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_html_e( 'Mark Read', 'buddyboss' ); ?>" data-notification-id="<?php bp_the_notification_id(); ?>">
-						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
-					</a>
+					<div class="bb-full-link">
+						<?php bp_the_notification_description(); ?>
+					</div>
+					<div class="posted"><?php bp_the_notification_time_since(); ?></div>
 				</div>
 				<?php
 
@@ -74,13 +65,12 @@ function bp_notifications_toolbar_menu() {
 						'parent' => 'bp-notifications',
 						'id'     => 'notification-' . bp_get_the_notification_id(),
 						'title'  => $html,
-						'href'   => bp_get_the_notification_mark_unread_url( get_current_user_id() ),
 					)
 				);
 
 			endwhile;
 
-		if ( $total ) {
+		if ( $total > 6 ) {
 			$menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 			$wp_admin_bar->add_menu(
 				array(
