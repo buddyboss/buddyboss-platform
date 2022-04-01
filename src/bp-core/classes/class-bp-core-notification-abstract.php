@@ -385,14 +385,16 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $component         Component name.
 	 * @param string $component_action  Component action.
 	 * @param string $notification_type Notification Type key.
+	 * @param string $icon_class        Notification Small Icon.
 	 *
 	 * @return void
 	 */
-	final public function register_notification( string $component, string $component_action, string $notification_type ) {
+	final public function register_notification( string $component, string $component_action, string $notification_type, string $icon_class = '' ) {
 		$this->notifications[] = array(
 			'component'         => $component,
 			'component_action'  => $component_action,
 			'notification_type' => $notification_type,
+			'icon_class'        => $icon_class,
 		);
 	}
 
