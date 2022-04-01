@@ -2637,3 +2637,24 @@ function bb_setup_template_for_media_preview( $template ) {
 
 	return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/media/preview.php';
 }
+
+/**
+ * Embed gif in single activity content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content  content.
+ * @param object $activity Activity object.
+ *
+ * @return string
+ */
+function bp_media_activity_append_gif( $content, $activity ) {
+
+	// check if profile and groups activity gif support enabled.
+	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profile_media_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_group_media_support_enabled() ) ) {
+		return $content;
+	}
+
+	return $content . bp_media_activity_embed_gif_content( $activity->id );
+}
+
