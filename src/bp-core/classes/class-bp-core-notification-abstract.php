@@ -453,7 +453,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
-			$filtered_notifications = array_column( $this->notifications, 'component_action', 'notification_type' );
+			$filtered_notifications = array_column( bb_register_notifications(), 'component_action', 'notification_type' );
 			foreach ( $this->notifications_filters as $filters ) {
 				$label             = ( isset( $filters['label'] ) ? $filters['label'] : '' );
 				$position          = ( isset( $filters['position'] ) ? $filters['position'] : 0 );
