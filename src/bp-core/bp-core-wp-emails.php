@@ -1560,7 +1560,11 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 	 */
 	function bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
 		// Get the request data.
-		$request = wp_get_user_request_data( $request_id );
+		if ( function_exists( 'wp_get_user_request' ) ) {
+			$request = wp_get_user_request( $request_id );
+		} else {
+			$request = wp_get_user_request_data( $request_id );
+		}
 
 		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss' ) . '</p>';
