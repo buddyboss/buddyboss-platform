@@ -1562,43 +1562,15 @@ function bp_nouveau_add_notify_group_members_checkbox() {
 
 	if ( ! bb_enabled_legacy_email_preference() ) {
 
-		// Groups preferences registered.
-		$options = bb_register_notification_preferences( 'groups' );
+		$is_enabled_admin = bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' );
 
-		if ( empty( $options ) ) {
-			return;
-		}
-
-		// Saved notification from backend default settings.
-		$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-
-		if ( empty( $options['fields'] ) ) {
-			return;
-		}
-
-		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
-		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
-
-		$fields = array_filter(
-			$options['fields'],
-			function ( $var ) use ( $enabled_notification ) {
-				return ( key_exists( $var['key'], $enabled_notification ) && 'yes' === $enabled_notification[ $var['key'] ] );
-			}
-		);
-
-		if ( empty( $fields ) ) {
-			return;
-		}
-
-		$keys = array_column( $fields, 'key' );
-		if ( ! empty( $keys ) && in_array( 'bb_groups_details_updated', $keys, true ) ) {
+		if ( $is_enabled_admin ) {
 			printf(
 				'<p class="bp-controls-wrap">
                     <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
                     <label for="group-notify-members" class="bp-label-text">%s</label>
                 </p>',
-				esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+				esc_html__( 'Notify group members of these changes', 'buddyboss' )
 			);
 		}
 	} else {
