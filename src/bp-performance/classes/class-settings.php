@@ -104,7 +104,7 @@ class Settings {
 					'cache_bb_member_connections' => array(
 						'label'          => __( 'Member Connections', 'buddyboss' ),
 						'label_checkbox' => __( 'Cache Member Connections', 'buddyboss' ),
-						'purge_url'      => admin_url( $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce ),
+						'purge_url'      => $purge_url . '&group=bbplatform&component=bp-friends&nonce=' . self::$purge_nonce,
 						'type'           => 'checkbox',
 						'value'          => true,
 					),
