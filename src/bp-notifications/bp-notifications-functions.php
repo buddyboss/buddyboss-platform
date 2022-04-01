@@ -1115,3 +1115,138 @@ function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
 	 */
 	return (bool) apply_filters( 'bb_notifications_is_legacy_notification', (bool) ! bp_notifications_get_meta( $notification_id, 'is_modern', true ), $notification_id );
 }
+
+/**
+ * Get avatar for notification user.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return void
+ */
+function bb_notification_avatar() {
+	$notification     = buddypress()->notifications->query_loop->notification;
+	$component        = $notification->component_name;
+	$component_action = $notification->component_action;
+
+	switch ( $component ) {
+		case 'groups':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'group';
+			}
+			break;
+		case 'follow':
+		case 'friends':
+			if ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			}
+			break;
+		case has_action( 'bb_notification_avatar_' . $component ):
+			do_action( 'bb_notification_avatar_' . $component );
+			break;
+		default:
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			} elseif ( ! empty( $notification->item_id ) ) {
+				$item_id = $notification->item_id;
+				$object  = 'user';
+			} else {
+				$item_id = 0;
+				$object  = 'notification';
+			}
+			break;
+	}
+
+	switch ( $component_action ) {
+		case 'bb_groups_new_request':
+			if ( ! empty( $notification->secondary_item_id ) ) {
+				$item_id = $notification->secondary_item_id;
+				$object  = 'user';
+			}
+			break;
+	}
+
+	if ( isset( $item_id, $object ) ) {
+
+		if ( 'notification' === $object ) {
+			bb_get_default_notification_avatar( 'thumb', $notification );
+		} else {
+			if ( 'group' === $object ) {
+				$group = new BP_Groups_Group( $item_id );
+				$link  = bp_get_group_permalink( $group );
+			} else {
+				$user = new WP_User( $item_id );
+				$link = bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login );
+			}
+
+			?>
+			<a href="<?php echo esc_url( $link ); ?>">
+				<?php
+				echo bp_core_fetch_avatar(
+					array(
+						'item_id' => $item_id,
+						'object'  => $object,
+					)
+				);
+				?>
+				<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
+			</a>
+			<?php
+		}
+	}
+}
+
+/**
+ * Get Default Avatar for notification.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size         Size of the notification icon, 'full' or 'thumb'.
+ * @param object $notification Notification object.
+ *
+ * @return void
+ */
+function bb_get_default_notification_avatar( $size = 'full', $notification ) {
+	if ( ! in_array( $size, array( 'thumb', 'full' ) ) ) {
+		$size = 'full';
+	}
+
+	$image_url = bb_get_notification_avatar_url( $size );
+
+	printf(
+		'<img src="%1$s" class="avatar photo %2$s" width="%3$s" height="%3$s" alt="%4$s">',
+		esc_url( $image_url ),
+		esc_attr( ( 'thumb' === $size ? 'avatar-150' : 'avatar-300 ' ) ),
+		esc_attr( ( 'thumb' === $size ? '150' : '300 ' ) ),
+		esc_attr__( 'Notification Icon', 'buddyboss' ),
+	);
+}
+
+/**
+ * Get Default notification avatar URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size Size of the notification icon, 'full' or 'thumb'.
+ *
+ * @return mixed|void
+ */
+function bb_get_notification_avatar_url( $size = 'full' ) {
+
+	$bb_avatar_filename = 'notification.png';
+	if ( 'full' !== $size ) {
+		$bb_avatar_filename = 'notification-50.png';
+	}
+
+	/**
+	 * Filters default BuddyBoss notification avatar URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Default BuddyBoss notification avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_buddyboss_avatar_avatar_url', esc_url( buddypress()->plugin_url . 'bp-core/images/' . $bb_avatar_filename ), $size );
+}
