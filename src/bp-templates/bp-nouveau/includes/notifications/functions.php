@@ -251,36 +251,3 @@ function bp_nouveau_notifications_delete_link( $link = '' ) {
 		'dashicons-trash'
 	);
 }
-
-
-/**
- * Get the small icon for the notification which will print beside the avatar.
- *
- * @since BuddyBoss [BBVERSION]
- * @param string $component_action Component Action.
- * @param bool   $html             Whether to get only class or with i tag.
- *
- * @return mixed|string|void
- */
-function bb_notification_small_icon( $component_action, $html = true ) {
-
-	$all_registered_notifications = bb_register_notifications();
-
-	if ( empty( $component_action ) || empty( $all_registered_notifications ) ) {
-		return;
-	}
-
-	$icons = array_column( $all_registered_notifications, 'icon_class', 'component_action' );
-
-	if ( isset( $icons[ $component_action ] ) && ! empty( $icons[ $component_action ] ) ) {
-		if ( $html ) {
-			return '<i class=" ' . esc_attr( $icons[ $component_action ] ) . '"></i>';
-		} else {
-			return $icons[ $component_action ];
-		}
-	}
-
-    return;
-
-}
-
