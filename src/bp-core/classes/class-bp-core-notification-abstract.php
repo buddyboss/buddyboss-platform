@@ -385,14 +385,16 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $component         Component name.
 	 * @param string $component_action  Component action.
 	 * @param string $notification_type Notification Type key.
+	 * @param string $icon_class        Notification Small Icon.
 	 *
 	 * @return void
 	 */
-	final public function register_notification( string $component, string $component_action, string $notification_type ) {
+	final public function register_notification( string $component, string $component_action, string $notification_type, string $icon_class = '' ) {
 		$this->notifications[] = array(
 			'component'         => $component,
 			'component_action'  => $component_action,
 			'notification_type' => $notification_type,
+			'icon_class'        => $icon_class,
 		);
 	}
 
@@ -453,7 +455,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
-			$filtered_notifications = array_column( $this->notifications, 'component_action', 'notification_type' );
+			$filtered_notifications = array_column( bb_register_notifications(), 'component_action', 'notification_type' );
 			foreach ( $this->notifications_filters as $filters ) {
 				$label             = ( isset( $filters['label'] ) ? $filters['label'] : '' );
 				$position          = ( isset( $filters['position'] ) ? $filters['position'] : 0 );

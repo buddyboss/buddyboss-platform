@@ -215,7 +215,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $notification_type_html ) ) {
 					$text = sprintf(
 						/* translators: 1: User full name, 2: Activity type. */
-						esc_html__( '%1$s mentioned you in %2$s', 'buddyboss' ),
+						esc_html__( '%1$s mentioned you in a %2$s', 'buddyboss' ),
 						$user_fullname,
 						$notification_type_html
 					);
