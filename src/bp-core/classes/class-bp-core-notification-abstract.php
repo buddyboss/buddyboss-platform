@@ -83,6 +83,7 @@ abstract class BP_Core_Notification_Abstract {
 		add_filter( 'bp_email_get_schema', array( $this, 'email_schema' ), 999 );
 		add_filter( 'bp_email_get_type_schema', array( $this, 'email_type_schema' ), 999 );
 		add_filter( 'bb_register_notification_emails', array( $this, 'register_notification_emails' ), 999 );
+		add_filter( 'bb_notifications_get_component_notification', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_notifications_for_user', array( $this, 'get_notifications_for_user' ), 9999, 9 );
 		add_filter( 'bp_notifications_get_registered_components', array( $this, 'get_registered_components' ), 99, 1 );
 
@@ -385,14 +386,16 @@ abstract class BP_Core_Notification_Abstract {
 	 * @param string $component         Component name.
 	 * @param string $component_action  Component action.
 	 * @param string $notification_type Notification Type key.
+	 * @param string $icon_class        Notification Small Icon.
 	 *
 	 * @return void
 	 */
-	final public function register_notification( string $component, string $component_action, string $notification_type ) {
+	final public function register_notification( string $component, string $component_action, string $notification_type, string $icon_class = '' ) {
 		$this->notifications[] = array(
 			'component'         => $component,
 			'component_action'  => $component_action,
 			'notification_type' => $notification_type,
+			'icon_class'        => $icon_class,
 		);
 	}
 
@@ -453,7 +456,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
-			$filtered_notifications = array_column( $this->notifications, 'component_action', 'notification_type' );
+			$filtered_notifications = array_column( bb_register_notifications(), 'component_action', 'notification_type' );
 			foreach ( $this->notifications_filters as $filters ) {
 				$label             = ( isset( $filters['label'] ) ? $filters['label'] : '' );
 				$position          = ( isset( $filters['position'] ) ? $filters['position'] : 0 );
