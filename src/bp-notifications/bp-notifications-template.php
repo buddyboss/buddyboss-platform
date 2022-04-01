@@ -510,7 +510,20 @@ function bp_get_the_notification_description() {
 	// Callback function exists.
 	if ( isset( $bp->{ $notification->component_name }->notification_callback ) && is_callable( $bp->{ $notification->component_name }->notification_callback ) ) {
 		$description = call_user_func( $bp->{ $notification->component_name }->notification_callback, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->id, 'web' );
-		$description = apply_filters( 'bb_notifications_get_component_notification', $description, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->id, 'web' );
+
+		$description = apply_filters(
+			'bb_notifications_get_component_notification',
+			$description,
+			$notification->item_id,
+			$notification->secondary_item_id,
+			1,
+			'string',
+			$notification->component_action,
+			$notification->component_name,
+			$notification->id,
+			'web'
+		);
+
 		// @deprecated format_notification_function - 1.5
 	} elseif ( isset( $bp->{ $notification->component_name }->format_notification_function ) && function_exists( $bp->{ $notification->component_name }->format_notification_function ) ) {
 		$description = call_user_func( $bp->{ $notification->component_name }->format_notification_function, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1 );
