@@ -102,11 +102,19 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 			'bb_messages_new',
 		);
 
-		$this->register_notification_filter(
-			esc_html__( 'New messages', 'buddyboss' ),
-			array( 'bb_messages_new' ),
-			30
-		);
+		$filter_types = array( 'bb_messages_new' );
+
+		if ( true === bp_disable_group_messages() ) {
+			$filter_types[] = 'bb_groups_new_message';
+		}
+
+		if ( ! (bool) bp_get_option( 'hide_message_notification', 1 ) ) {
+			$this->register_notification_filter(
+				esc_html__( 'New messages', 'buddyboss' ),
+				$filter_types,
+				30
+			);
+		}
 
 		add_filter( 'bp_messages_bb_groups_new_message_notification', array( $this, 'bb_format_messages_notification' ), 10, 7 );
 		add_filter( 'bp_messages_bb_messages_new_notification', array( $this, 'bb_format_messages_notification' ), 10, 7 );
