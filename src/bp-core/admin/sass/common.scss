@@ -3400,6 +3400,21 @@ table tbody td .bb-description {
 					margin-left: 15px;
 					min-width: 58px;
 					text-align: center;
+
+					&.disabled {
+						pointer-events: none;
+
+						input[type="checkbox"] {
+							opacity: 0.7;
+							background: rgba(255, 255, 255, 0.5);
+							border-color: rgba(220, 220, 222, 0.75);
+							color: rgba(44, 51, 56, 0.5);
+
+							&::before {
+								opacity: 0.7;
+							}
+						}
+					}
 				}
 			}
 

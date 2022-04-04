@@ -960,8 +960,13 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	// set the limit to 30 seconds ago.
-	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( '-30 seconds' ) );
+	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+	$global_pulse       = 30;
+	if ( ! empty( $heartbeat_settings['interval'] ) ) {
+		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
+	}
+
+	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
 	$querystring               = wp_parse_args( $querystring );
 	$querystring['is_new']     = 1;
 	$querystring['user_id']    = get_current_user_id();
