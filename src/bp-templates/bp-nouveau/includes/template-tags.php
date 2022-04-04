@@ -1290,7 +1290,7 @@ function bp_nouveau_nav_has_count() {
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'invites' === $nav_item->slug ) {
 		$count = 0 !== (int) groups_get_invite_count_for_user( bp_loggedin_user_id() );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'albums' === $nav_item->slug ) {
-		$count = 0 !== (int) bp_media_get_total_user_album_count();
+		$count = 0 !== (int) bb_media_get_total_user_album_count();
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'documents' === $nav_item->slug ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
@@ -1363,7 +1363,7 @@ function bp_nouveau_get_nav_count() {
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'invites' === $nav_item->slug ) {
 		$count = (int) groups_get_invite_count_for_user( bp_loggedin_user_id() );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'albums' === $nav_item->slug ) {
-		$count = (int) bp_media_get_total_user_album_count();
+		$count = (int) bb_media_get_total_user_album_count();
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'documents' === $nav_item->slug ) {
 		$span = strpos( $nav_item->name, '<span' );
 		

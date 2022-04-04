@@ -3934,13 +3934,13 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
 /**
  * Get the album count based on a given user id.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int $user_id ID of the user whose album are being counted.
  *
  * @return int album count for a logged in user.
- *
- * @since BuddyBoss x.x.x
  */
-function bp_media_get_total_user_album_count( $user_id = 0 ) {
+function bb_media_get_total_user_album_count( $user_id = 0 ) {
 	if ( empty( $user_id ) && bp_loggedin_user_id() ) {
 		$user_id = bp_loggedin_user_id();
 	}
@@ -3949,13 +3949,13 @@ function bp_media_get_total_user_album_count( $user_id = 0 ) {
 		$count = BP_Media_Album::total_group_album_count( 0, $user_id );
 		wp_cache_set( 'bp_total_album_for_user_' . $user_id, $count, 'bp' );
 	}
-	
+
 	/**
 	 * Filters the total album count for a logged in user.
 	 *
-	 * @param int $count Total album count for a logged in user.
+	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @since BuddyBoss x.x.x
+	 * @param int $count Total album count for a logged in user.
 	 */
-	return apply_filters( 'bp_media_get_total_user_album_count', (int) $count );
+	return apply_filters( 'bb_media_get_total_user_album_count', (int) $count );
 }
