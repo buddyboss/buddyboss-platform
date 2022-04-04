@@ -2216,9 +2216,9 @@ window.bp = window.bp || {};
 				'.bb-notification-checkbox',
 				function () {
 					if ( false === $( this ).prop( 'checked' ) ) {
-						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).attr( 'disabled', true );
+						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).addClass( 'disabled' );
 					} else {
-						$( this ).parents( '.field-block' ).find( '.manage-defaults input[type=checkbox]' ).removeAttr( 'disabled' );
+						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).removeClass( 'disabled' );
 					}
 				}
 			);

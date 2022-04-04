@@ -3145,6 +3145,21 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
   text-align: center;
 }
 
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap.disabled {
+  pointer-events: none;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap.disabled input[type="checkbox"] {
+  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(220, 220, 222, 0.75);
+  color: rgba(44, 51, 56, 0.5);
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap.disabled input[type="checkbox"]::before {
+  opacity: 0.7;
+}
+
 #bp_notification_settings_automatic .field-set .field-block .manage-defaults-hide {
   display: none;
 }
