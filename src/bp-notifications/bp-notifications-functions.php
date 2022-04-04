@@ -960,21 +960,21 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
-	$global_pulse       = 30;
-	if ( ! empty( $heartbeat_settings['interval'] ) ) {
-		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
-	}
-
-	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
+//	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+//	$global_pulse       = 30;
+//	if ( ! empty( $heartbeat_settings['interval'] ) ) {
+//		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
+//	}
+//
+//	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
 	$querystring               = wp_parse_args( $querystring );
 	$querystring['is_new']     = 1;
 	$querystring['user_id']    = get_current_user_id();
-	$querystring['date_query'] = array(
-		array(
-			'after' => $date_limit,
-		),
-	);
+//	$querystring['date_query'] = array(
+//		array(
+//			'after' => $date_limit,
+//		),
+//	);
 
 	if ( bb_enabled_legacy_email_preference() ) {
 		return http_build_query( $querystring );
