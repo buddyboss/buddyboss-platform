@@ -960,9 +960,16 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$querystring            = wp_parse_args( $querystring );
-	$querystring['is_new']  = 1;
-	$querystring['user_id'] = get_current_user_id();
+	// set the limit to 30 seconds ago.
+	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( '-30 seconds' ) );
+	$querystring               = wp_parse_args( $querystring );
+	$querystring['is_new']     = 1;
+	$querystring['user_id']    = get_current_user_id();
+	$querystring['date_query'] = array(
+		array(
+			'after' => $date_limit,
+		),
+	);
 
 	if ( bb_enabled_legacy_email_preference() ) {
 		return http_build_query( $querystring );
@@ -1202,7 +1209,7 @@ function bb_notification_avatar() {
 		}
 
 		?>
-        <a href="<?php echo esc_url( $link ); ?>">
+		<a href="<?php echo esc_url( $link ); ?>">
 			<?php
 			echo bp_core_fetch_avatar(
 				array(
@@ -1212,7 +1219,7 @@ function bb_notification_avatar() {
 			);
 			?>
 			<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
-        </a>
+		</a>
 		<?php
 	}
 }
