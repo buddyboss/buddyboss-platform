@@ -1646,10 +1646,12 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
+	$component = ( 'xprofile' === $component ? 'members' : $component );
+
 	$cover_url = bp_attachments_get_attachment(
 		'url',
 		array(
-			'object_dir' => ( 'xprofile' === $component ) ? 'members' : $component,
+			'object_dir' => $component,
 			'item_id'    => $item_id,
 		)
 	);
@@ -1657,8 +1659,6 @@ function bp_attachments_cover_image_ajax_upload() {
 	if ( '' === $cover_url ) {
 		$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
 	}
-
-	$component = ( 'xprofile' === $component ? 'members' : $component );
 
 	/**
 	 * Filters groups/members cover image attachment URL.
