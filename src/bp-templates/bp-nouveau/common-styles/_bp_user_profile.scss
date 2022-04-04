@@ -288,14 +288,14 @@ body.register .buddypress-wrap .page ul {
 #item-header a.link-change-cover-image,
 #item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
-	background: rgba(255, 255, 255, 0.9);
+	background: #f9f9f9;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: absolute;
-	width: 30px;
-	height: 30px;
+	width: 34px;
+	height: 34px;
 	left: 12px;
 	top: 12px;
 	z-index: 3;
@@ -306,11 +306,11 @@ body.register .buddypress-wrap .page ul {
 	@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
 
 	> i {
-		font-size: 20px;
+		font-size: 18px;
 	}
 }
 
-#item-header a.link-change-cover-image > i {
+#item-header a.position-change-cover-image > i {
 	font-size: 16px;
 }
 
@@ -347,6 +347,27 @@ body.register .buddypress-wrap .page ul {
 #item-header-avatar:hover a.link-change-profile-image,
 #header-cover-image:hover a.position-change-cover-image {
 	opacity: 1;
+}
+
+.users-header #item-header-avatar {
+
+	a.link-change-profile-image {
+		top: 71px;
+		left: 50%;
+		margin-left: 0;
+		transform: translateX(-50%);
+	}
+
+	&:hover .link-change-overlay {
+		position: absolute;
+		left: 3px;
+		right: 3px;
+		top: 3px;
+		height: 164px;
+		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: 50%;
+	}
+
 }
 
 .social-networks-wrap {

@@ -37,6 +37,11 @@ function bp_core_install( $active_components = false ) {
 		}
 	}
 
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+
 	// Install Activity Feeds even when inactive (to store last_activity data).
 	bp_core_install_activity_streams();
 
@@ -87,7 +92,7 @@ function bp_core_install( $active_components = false ) {
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 		bp_core_install_document();
-		bb_core_enable_default_symlink_support();
+		bp_update_option( 'bp_media_symlink_support', 1 );
 	}
 
 	if ( ! empty( $active_components['moderation'] ) ) {
@@ -96,6 +101,9 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	do_action( 'bp_core_install', $active_components );
+
+	// Needs to flush all cache when component activate/deactivate.
+	wp_cache_flush();
 
 	// Reset the permalink to fix the 404 on some pages.
 	flush_rewrite_rules();
