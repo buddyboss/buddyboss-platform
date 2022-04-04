@@ -9,57 +9,59 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_init', function() {
-	$ajax_actions = array(
-		array(
-			'friends_remove_friend' => array(
-				'function' => 'bp_nouveau_ajax_addremove_friend',
-				'nopriv'   => false,
+add_action(
+	'admin_init',
+	function() {
+		$ajax_actions = array(
+			array(
+				'friends_remove_friend' => array(
+					'function' => 'bp_nouveau_ajax_addremove_friend',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'friends_add_friend' => array(
-				'function' => 'bp_nouveau_ajax_addremove_friend',
-				'nopriv'   => false,
+			array(
+				'friends_add_friend' => array(
+					'function' => 'bp_nouveau_ajax_addremove_friend',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'friends_withdraw_friendship' => array(
-				'function' => 'bp_nouveau_ajax_addremove_friend',
-				'nopriv'   => false,
+			array(
+				'friends_withdraw_friendship' => array(
+					'function' => 'bp_nouveau_ajax_addremove_friend',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'friends_accept_friendship' => array(
-				'function' => 'bp_nouveau_ajax_addremove_friend',
-				'nopriv'   => false,
+			array(
+				'friends_accept_friendship' => array(
+					'function' => 'bp_nouveau_ajax_addremove_friend',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'friends_reject_friendship' => array(
-				'function' => 'bp_nouveau_ajax_addremove_friend',
-				'nopriv'   => false,
+			array(
+				'friends_reject_friendship' => array(
+					'function' => 'bp_nouveau_ajax_addremove_friend',
+					'nopriv'   => false,
+				),
 			),
-		),
-	);
+		);
 
-	foreach ( $ajax_actions as $ajax_action ) {
-		$action = key( $ajax_action );
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
 
-		add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+			add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
 
-		if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
-			add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
+				add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			}
 		}
-	}
-}, 12 );
+	},
+	12
+);
 
 /**
  * Friend/un-friend a user via a POST request.
  *
  * @since BuddyPress 3.0.0
- *
- * @return string HTML
  */
 function bp_nouveau_ajax_addremove_friend() {
 	$response = array(
@@ -78,14 +80,14 @@ function bp_nouveau_ajax_addremove_friend() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
-	$nonce = $_POST['nonce'];
+	// Use default nonce.
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_friends';
 
-	// Use a specific one for actions needed it
+	// Use a specific one for actions needed it.
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -96,8 +98,21 @@ function bp_nouveau_ajax_addremove_friend() {
 	// Cast fid as an integer.
 	$friend_id = (int) $_POST['item_id'];
 
+	$current_page     = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
+	$button_clicked   = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
+	$button_arguments = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( $current_page, $button_clicked ) : array();
+
+	// Actions button arguments to display different style based on arguments.
+	$button_arguments = array_merge(
+		$button_arguments,
+		array(
+			'parent_element' => 'li',
+			'button_element' => 'button',
+		)
+	);
+
 	// Check if the user exists only when the Friend ID is not a Frienship ID.
-	if ( isset( $_POST['action'] ) && $_POST['action'] !== 'friends_accept_friendship' && $_POST['action'] !== 'friends_reject_friendship' ) {
+	if ( isset( $_POST['action'] ) && 'friends_accept_friendship' !== $_POST['action'] && 'friends_reject_friendship' !== $_POST['action'] ) {
 		$user = get_user_by( 'id', $friend_id );
 		if ( ! $user ) {
 			wp_send_json_error(
@@ -137,7 +152,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			);
 		}
 
-	// Rejecting a friendship
+		// Rejecting a friendship.
 	} elseif ( ! empty( $_POST['action'] ) && 'friends_reject_friendship' === $_POST['action'] ) {
 		if ( ! friends_reject_friendship( $friend_id ) ) {
 			wp_send_json_error(
@@ -163,7 +178,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			);
 		}
 
-	// Trying to cancel friendship.
+		// Trying to cancel friendship.
 	} elseif ( 'is_friend' === BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $friend_id ) ) {
 		if ( ! friends_remove_friend( bp_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
@@ -176,10 +191,14 @@ function bp_nouveau_ajax_addremove_friend() {
 			$is_user = bp_is_my_profile();
 
 			if ( ! $is_user ) {
-				$response = array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
-					'parent_element' => 'li',
-					'button_element' => 'button'
-				) ), 'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ) );
+				$response = array(
+					'contents'     => bp_get_add_friend_button(
+						$friend_id,
+						false,
+						$button_arguments
+					),
+					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+				);
 			} else {
 				$response = array(
 					'feedback'             => sprintf(
@@ -196,7 +215,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			wp_send_json_success( $response );
 		}
 
-	// Trying to request friendship.
+		// Trying to request friendship.
 	} elseif ( 'not_friends' === BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $friend_id ) ) {
 		if ( ! friends_add_friend( bp_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
@@ -206,19 +225,31 @@ function bp_nouveau_ajax_addremove_friend() {
 
 			wp_send_json_error( $response );
 		} else {
-			wp_send_json_success( array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
-				'parent_element' => 'li',
-				'button_element' => 'button'
-			) ) ) );
+
+			$response = array(
+				'contents' => bp_get_add_friend_button(
+					$friend_id,
+					false,
+					$button_arguments
+				),
+			);
+
+			wp_send_json_success( $response );
 		}
 
-	// Trying to cancel pending request.
+		// Trying to cancel pending request.
 	} elseif ( 'pending' === BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $friend_id ) ) {
 		if ( friends_withdraw_friendship( bp_loggedin_user_id(), $friend_id ) ) {
-			wp_send_json_success( array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
-				'parent_element' => 'li',
-				'button_element' => 'button'
-			) ) ) );
+
+			$response = array(
+				'contents' => bp_get_add_friend_button(
+					$friend_id,
+					false,
+					$button_arguments
+				),
+			);
+
+			wp_send_json_success( $response );
 		} else {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
@@ -228,7 +259,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			wp_send_json_error( $response );
 		}
 
-	// Request already pending.
+		// Request already pending.
 	} else {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
