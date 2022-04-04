@@ -1658,6 +1658,8 @@ function bp_attachments_cover_image_ajax_upload() {
 		$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
 	}
 
+	$component = ( 'xprofile' === $component ? 'members' : $component );
+
 	/**
 	 * Filters groups/members cover image attachment URL.
 	 *
@@ -1668,7 +1670,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $component Component either groups or members.
 	 * @param int    $item_id   Inform about the item id the cover image was set for either group id or member id.
 	 */
-	$cover_url = apply_filters( 'bp_' . ( 'xprofile' === $component ) ? 'members' : $component . '_attachments_cover_image_url', $cover_url, $cover, ( 'xprofile' === $component ) ? 'members' : $component, $item_id );
+	$cover_url = apply_filters( 'bp_' . $component . '_attachments_cover_image_url', $cover_url, $cover, $component, $item_id );
 
 	// 1 is success.
 	$feedback_code = 1;
