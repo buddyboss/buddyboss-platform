@@ -803,7 +803,7 @@ function bp_messages_admin_repair_unread_messages_count() {
  * @return string Exclude admin users from message block list.
  */
 function bp_recipients_recipient_get_where_conditions_callback( $where_conditions, $r ) {
-	if ( isset( $r['exclude_current_user'] ) && true === (bool) $r['exclude_current_user'] && ! empty( $r['exclude_admin_user'] ) ) {
+	if ( ! empty( $r['exclude_admin_user'] ) ) {
 		$where_conditions['exclude_active_users'] = 'user_id NOT IN ( ' . implode( ', ', $r['exclude_admin_user'] ) .' )';
 	}
 	return $where_conditions;
