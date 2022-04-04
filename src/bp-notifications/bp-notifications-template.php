@@ -1068,7 +1068,10 @@ function bb_on_screen_notification_template() {
 		return;
 	}
 
-	$user_unread_notification     = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+	$user_unread_notification = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+
 	$user_unread_notification_ids = wp_list_pluck( $user_unread_notification, 'id' );
 	$position                     = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
 	$has_mobile_support           = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
