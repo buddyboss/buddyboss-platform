@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-01 15:19:54+00:00\n"
+"POT-Creation-Date: 2022-04-04 09:05:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7454,7 +7454,7 @@ msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1092 bp-core/bp-core-wp-emails.php:1103
 #: bp-core/bp-core-wp-emails.php:1109 bp-core/bp-core-wp-emails.php:1157
-#: bp-core/bp-core-wp-emails.php:1565
+#: bp-core/bp-core-wp-emails.php:1569
 #. translators: Do not translate SITENAME, SITEURL; those are placeholders.
 #. translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those
 #. are placeholders.
@@ -7632,7 +7632,7 @@ msgstr ""
 msgid "[%s] Notice of Admin Email Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1566
+#: bp-core/bp-core-wp-emails.php:1570
 msgid ""
 "Your request for an export of personal data has been completed. You may "
 "download your personal data by clicking on the link below. For privacy and "
@@ -7640,11 +7640,11 @@ msgid ""
 "please download it before then."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1567
+#: bp-core/bp-core-wp-emails.php:1571
 msgid "###LINK###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1568
+#: bp-core/bp-core-wp-emails.php:1572
 msgid ""
 "Regards, <br /> All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /> "
 "<a href=\"###SITEURL###\">###SITEURL###</a>"
@@ -8633,13 +8633,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -31017,14 +31017,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 

@@ -6825,13 +6825,13 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
-	if ( ! $email_checked ) {
+    if ( ! $email_checked ) {
 		$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
 	}
 
 	$options['email'] = array(
 		'is_render'  => bb_check_email_type_registered( $field['key'] ),
-		'is_checked' => ( ! $email_checked ? $field['default'] : $email_checked ),
+		'is_checked' => $email_checked,
 		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
 		'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification', true ),
 	);
@@ -6844,7 +6844,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 		$options['web'] = array(
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
-			'is_checked' => ( ! $web_checked ? $field['default'] : $web_checked ),
+			'is_checked' => $web_checked,
 			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
 			'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification_web', true ),
 		);
@@ -6857,7 +6857,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 		}
 		$options['app'] = array(
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
-			'is_checked' => ( ! $app_checked ? $field['default'] : $app_checked ),
+			'is_checked' => $app_checked,
 			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
 			'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification_app', true ),
 		);
