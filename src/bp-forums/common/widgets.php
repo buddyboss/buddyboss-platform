@@ -1278,15 +1278,17 @@ class BBP_Replies_Widget extends WP_Widget {
 								'size'    => 14,
 							)
 						);
+						$author_related_class = "bbp-reply-topic-has-avatar";
 					else :
 						$author_link = false;
+						$author_related_class = "bbp-reply-topic-no-avatar";
 					endif;
 
 					// Reply author, link, and timestamp
 					if ( ! empty( $settings['show_date'] ) && ! empty( $author_link ) ) :
 
 						// translators: 1: reply author, 2: reply link, 3: reply timestamp
-						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="' . $author_related_class . '">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
 						// Reply link and timestamp
 					elseif ( ! empty( $settings['show_date'] ) ) :
