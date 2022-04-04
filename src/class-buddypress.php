@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 17951;
+		$this->db_version = 18651;
 
 		/** Loading */
 
@@ -585,6 +585,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.6.4.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.7.0.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.8.6.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {

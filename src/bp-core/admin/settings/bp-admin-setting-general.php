@@ -83,7 +83,29 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-enable-private-network', __( 'Private Website', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
 		$enable_private_network = bp_enable_private_network();
 		if ( ! $enable_private_network ) {
-			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
+			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Website Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
+		}
+		
+		// Private REST APIs Settings.
+		$this->add_field( 'bb-enable-private-rest-apis', esc_html__( 'Private REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis', 'intval' );
+		if (
+			(
+				true === bp_enable_private_rest_apis() &&
+				function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bbapp_is_private_app_enabled()
+			) ||
+			(
+				! function_exists( 'bbapp_is_private_app_enabled' ) &&
+				true === bp_enable_private_rest_apis()
+			)
+		) {
+			$this->add_field( 'bb-enable-private-rest-apis-public-content', __( 'Public REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis_public_content', 'stripslashes' );
+		}
+		
+		// Private RSS Feeds Settings.
+		$this->add_field( 'bb-enable-private-rss-feeds', esc_html__( 'Private RSS Feeds', 'buddyboss' ), 'bb_admin_setting_callback_private_rss_feeds', 'intval' );
+		if ( true === bp_enable_private_rss_feeds() ) {
+			$this->add_field( 'bb-enable-private-rss-feeds-public-content', __( 'Public RSS Feeds', 'buddyboss' ), 'bb_admin_setting_callback_private_rss_feeds_public_content', 'stripslashes' );
 		}
 
 		/**
