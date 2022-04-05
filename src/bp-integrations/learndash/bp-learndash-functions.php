@@ -254,10 +254,11 @@ function learndash_integration_prepare_price_str( $price ) {
  * @since BuddyBoss 1.2.0
  *
  * @param string $user_id
+ * @param bool   $count   If want to count then pass true otherwise default it will false.
  *
  * @return array|bool
  */
-function bp_learndash_get_users_certificates( $user_id = '' ) {
+function bp_learndash_get_users_certificates( $user_id = '', $count = false ) {
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -351,6 +352,11 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 	usort( $certificates, function ( $a, $b ) {
 		return strcmp( $b->time, $a->time );
 	} );
+
+	// It will return count only if $count will true.
+	if ( true === $count ) {
+		return count( $certificates );
+	}
 
 	return $certificates;
 }

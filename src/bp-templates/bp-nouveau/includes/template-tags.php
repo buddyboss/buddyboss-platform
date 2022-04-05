@@ -1295,6 +1295,14 @@ function bp_nouveau_nav_has_count() {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'sent-invites' === $nav_item->slug ) {
 		$count = 0 !== (int) bb_get_total_invitation_count( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'discussions' === $nav_item->slug ) {
+		$count = 0 !== (int) bbp_get_user_topic_count_raw( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'replies' === $nav_item->slug ) {
+		$count = 0 !== (int) bbp_get_user_reply_count_raw( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'favorites' === $nav_item->slug ) {
+		$count = 0 !== (int) count( bbp_get_user_favorites_topic_ids( bp_loggedin_user_id() ) );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'certificates' === $nav_item->slug ) {
+		$count = 0 !== (int) bp_learndash_get_users_certificates( bp_loggedin_user_id(), true );
 	}
 
 	/**
@@ -1377,6 +1385,14 @@ function bp_nouveau_get_nav_count() {
 		}
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'sent-invites' === $nav_item->slug ) {
 		$count = (int) bb_get_total_invitation_count( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'discussions' === $nav_item->slug ) {
+		$count = (int) bbp_get_user_topic_count_raw( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'replies' === $nav_item->slug ) {
+		$count = (int) bbp_get_user_reply_count_raw( bp_loggedin_user_id() );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'favorites' === $nav_item->slug ) {
+		$count = (int) count( bbp_get_user_favorites_topic_ids( bp_loggedin_user_id() ) );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'certificates' === $nav_item->slug ) {
+		$count = (int) bp_learndash_get_users_certificates( bp_loggedin_user_id(), true );
 	}
 
 	/**
