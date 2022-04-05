@@ -151,8 +151,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_user_promotion() {
 		$this->register_notification_type(
 			'bb_groups_promoted',
-			esc_html__( 'You\'re promoted in a group', 'buddyboss' ),
-			esc_html__( 'A member is promoted in a group', 'buddyboss' ),
+			__( 'You\'re promoted in a group', 'buddyboss' ),
+			__( 'A member is promoted in a group', 'buddyboss' ),
 			'groups'
 		);
 
