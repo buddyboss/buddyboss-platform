@@ -96,6 +96,11 @@ add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 add_filter( 'bp_recipients_recipient_get_where_conditions', 'bp_recipients_recipient_get_where_conditions_callback', 10, 2 );
 add_filter( 'bp_core_get_js_strings', 'bp_core_get_js_strings_callback', 10, 1 );
+
+// Load Messages Notifications.
+add_action( 'bp_messages_includes', 'bb_load_messages_notifications', 20 );
+add_action( 'bp_notification_settings', 'messages_screen_notification_settings', 2 );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -699,7 +704,7 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 function bp_messages_repair_items_unread_count( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-messages-unread-count',
-		__( 'Repair unread messages count on the site.', 'buddyboss' ),
+		esc_html__( 'Repair unread messages count', 'buddyboss' ),
 		'bp_messages_admin_repair_unread_messages_count',
 	);
 	return $repair_list;
@@ -729,7 +734,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s message threads updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -739,7 +744,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'thread update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing unread messages count &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -768,4 +773,80 @@ function bp_recipients_recipient_get_where_conditions_callback( $where_condition
 function bp_core_get_js_strings_callback( $params ) {
 	$params['nonce']['bp_moderation_content_nonce'] = wp_create_nonce( 'bp-moderation-content' );
 	return $params;
+}
+
+/**
+ * Register the messages notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_messages_notifications() {
+	if ( class_exists( 'BP_Messages_Notification' ) ) {
+		BP_Messages_Notification::instance();
+	}
+}
+
+/**
+ * Render the markup for the Messages section of Settings > Notifications.
+ *
+ * @since BuddyPress 1.0.0
+ */
+function messages_screen_notification_settings() {
+
+	if ( bp_action_variables() ) {
+		bp_do_404();
+		return;
+	}
+
+	// Bail out if legacy method not enabled.
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
+	if ( ! $new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
+		$new_messages = 'yes';
+	} ?>
+
+	<table class="notification-settings" id="messages-notification-settings">
+		<thead>
+		<tr>
+			<th class="icon"></th>
+			<th class="title"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr id="messages-notification-settings-new-message">
+			<td></td>
+			<td><?php esc_html_e( 'A member sends you a new message', 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $new_messages, 'yes', true ); ?> />
+					<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $new_messages, 'no', true ); ?> />
+					<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+
+		<?php
+
+		/**
+		 * Fires inside the closing </tbody> tag for messages screen notification settings.
+		 *
+		 * @since BuddyPress 1.0.0
+		 */
+		do_action( 'messages_screen_notification_settings' );
+		?>
+		</tbody>
+	</table>
+
+	<?php
+
 }
