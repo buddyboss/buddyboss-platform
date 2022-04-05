@@ -960,16 +960,16 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
+	$querystring               = wp_parse_args( $querystring );
+	$querystring['is_new']     = 1;
+	$querystring['user_id']    = get_current_user_id();
+
 //	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
 //	$global_pulse       = 30;
 //	if ( ! empty( $heartbeat_settings['interval'] ) ) {
 //		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
 //	}
-//
 //	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
-	$querystring               = wp_parse_args( $querystring );
-	$querystring['is_new']     = 1;
-	$querystring['user_id']    = get_current_user_id();
 //	$querystring['date_query'] = array(
 //		array(
 //			'after' => $date_limit,
@@ -1233,6 +1233,7 @@ function bb_notification_avatar() {
  * Get the small icon for the notification which will print beside the avatar.
  *
  * @since BuddyBoss [BBVERSION]
+ *
  * @param string $component_action Component Action.
  * @param bool   $html             Whether to get only class or with i tag.
  *
