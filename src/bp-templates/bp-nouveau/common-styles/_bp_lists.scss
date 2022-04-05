@@ -562,6 +562,14 @@
 
 	}
 
+	@media screen and (max-width: 375px) {
+
+		> li {
+			min-width: 280px;
+		}
+
+	}
+
 }
 
 // Ensure there's space between parent act list wrapper and filters bar

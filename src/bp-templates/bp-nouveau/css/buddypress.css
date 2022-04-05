@@ -1302,6 +1302,12 @@ a.layout-grid-view {
   float: left;
 }
 
+@media screen and (max-width: 375px) {
+  .buddypress-wrap ul.bp-list.groups-dir-list > li {
+    min-width: 280px;
+  }
+}
+
 @media screen and (min-width: 32em) {
   #activity-stream {
     clear: both;
