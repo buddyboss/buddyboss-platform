@@ -627,8 +627,8 @@ class BP_Media_Album {
 	public static function total_group_album_count( $group_id = 0, $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$cache_key = 'bp_total_group_album_count_' . $group_id;
-		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
+		$cache_key   = 'bp_total_group_album_count_' . $group_id;
+		$total_count = wp_cache_get( $cache_key, 'bp_media_album' );
 
 		if ( false === $total_count ) {
 			$sql = "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}";

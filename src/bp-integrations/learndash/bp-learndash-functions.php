@@ -254,7 +254,7 @@ function learndash_integration_prepare_price_str( $price ) {
  * @since BuddyBoss 1.2.0
  *
  * @param string $user_id
- * @param bool   $count   If want to count then pass true otherwise default it will false.
+ * @param bool   $count   Display count then pass true as $count otherwise default it will false as $count.
  *
  * @return array|bool
  */
