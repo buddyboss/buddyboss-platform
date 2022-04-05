@@ -655,11 +655,7 @@ function bb_get_total_invitation_count( $user_id = 0 ) {
 			'post_type'      => bp_get_invite_post_type(),
 			'author'         => $user_id,
 			'posts_per_page' => - 1,
-			'meta_query'     => array(
-				array(
-					'key' => '_bp_invitee_email',
-				),
-			),
+			'meta_key'       => '_bp_invitee_email',
 		);
 
 		$bp_get_invitee_email = new WP_Query( $args );
