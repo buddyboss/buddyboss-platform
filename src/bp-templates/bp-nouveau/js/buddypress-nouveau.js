@@ -3125,6 +3125,8 @@ window.bp = window.bp || {};
 		 * Update group invitation count as well as update group count in main nav.
 		 *
 		 * @since BuddyBoss [BBVERSION]
+		 * @param {object} self The event object.
+		 * @param {string} action Current action name.
 		 */
 		 invitationCount: function( self, action ) {
 			var groupNavArray = ['[data-bp-user-scope="invites"]', '#groups-personal-li'];
