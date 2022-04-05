@@ -1648,17 +1648,7 @@ function bp_attachments_cover_image_ajax_upload() {
 
 	$component = ( 'xprofile' === $component ? 'members' : $component );
 
-	$cover_url = bp_attachments_get_attachment(
-		'url',
-		array(
-			'object_dir' => $component,
-			'item_id'    => $item_id,
-		)
-	);
-
-	if ( '' === $cover_url ) {
-		$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
-	}
+	$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
 
 	/**
 	 * Filters groups/members cover image attachment URL.
@@ -1709,13 +1699,27 @@ function bp_attachments_cover_image_ajax_upload() {
 		$feedback_code
 	);
 
+	// Give 3rd party plugins a chance to calculate the URL based on the id. I.e. if
+	// the image is offloaded to external storage.
+	$return_url = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => $component,
+			'item_id'    => $item_id,
+		)
+	);
+
+	if ( '' === $return_url ) {
+		$return_url = $cover_url;
+	}
+
 	// Finally, return the cover photo url to the UI.
 	bp_attachments_json_response(
 		true,
 		$is_html4,
 		array(
 			'name'          => $name,
-			'url'           => $cover_url,
+			'url'           => $return_url,
 			'feedback_code' => $feedback_code,
 		)
 	);
