@@ -654,13 +654,15 @@ function bb_get_total_invitation_count( $user_id = 0 ) {
 		$args = array(
 			'post_type'      => bp_get_invite_post_type(),
 			'author'         => $user_id,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
 			'posts_per_page' => - 1,
 			'meta_key'       => '_bp_invitee_email',
 		);
 
 		$bp_get_invitee_email = new WP_Query( $args );
 		if ( $bp_get_invitee_email->have_posts() ) {
-			$count = $bp_get_invitee_email->found_posts;
+			$count = $bp_get_invitee_email->post_count;
 			wp_cache_set( 'bb_get_total_invitation_count_' . $user_id, $count, 'bp_invites' );
 		}
 	}
