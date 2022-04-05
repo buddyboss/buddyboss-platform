@@ -370,4 +370,21 @@ class BP_Invites_Component extends BP_Component {
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array( 'BP_REST_Invites_Endpoint' ) );
 	}
+
+	/**
+	 * Setup cache groups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function setup_cache_groups() {
+
+		// Global groups.
+		wp_cache_add_global_groups(
+			array(
+				'bp_invites',
+			)
+		);
+
+		parent::setup_cache_groups();
+	}
 }

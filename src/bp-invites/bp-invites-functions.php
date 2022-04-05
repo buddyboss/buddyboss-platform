@@ -634,3 +634,47 @@ function bb_get_member_invitation_query() {
 
 	return apply_filters( 'bb_get_member_invitation_query', $cache );
 }
+
+/**
+ * Get the sent invites count based on a given user id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the user whose invites are being counted.
+ *
+ * @return int $count invitation count for a logged in user.
+ */
+function bb_get_total_invitation_count( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$count = wp_cache_get( 'bb_get_total_invitation_count_' . $user_id, 'bp_invites' );
+	if ( false === $count ) {
+		$args = array(
+			'post_type'      => bp_get_invite_post_type(),
+			'author'         => $user_id,
+			'posts_per_page' => - 1,
+			'meta_query'     => array(
+				array(
+					'key' => '_bp_invitee_email',
+				),
+			),
+		);
+
+		$bp_get_invitee_email = new WP_Query( $args );
+		if ( $bp_get_invitee_email->have_posts() ) {
+			$count = $bp_get_invitee_email->found_posts;
+			wp_cache_set( 'bb_get_total_invitation_count_' . $user_id, $count, 'bp_invites' );
+		}
+	}
+
+	/**
+	 * Filters the total invitation count for a logged in user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $count Total invitation count for a logged in user.
+	 */
+	return apply_filters( 'bb_get_total_invitation_count', (int) $count );
+}

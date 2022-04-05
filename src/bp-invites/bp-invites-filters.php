@@ -39,3 +39,16 @@ function bb_sent_invite_email_avatar_default_avatar( $avatar = '' ) {
 
 	return $avatar;
 }
+
+/**
+ * Clear cache after send invites/revoke invites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @param int $post_id Post ID.
+ */
+function bb_member_invitation_count_clear_cache( $user_id, $post_id ) {
+	wp_cache_delete( 'bb_get_total_invitation_count_' . $user_id, 'bp_invites' );
+}
+add_action( 'bp_member_invite_submit', 'bb_member_invitation_count_clear_cache', 10, 2 );

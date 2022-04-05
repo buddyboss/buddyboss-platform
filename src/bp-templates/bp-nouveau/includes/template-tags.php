@@ -1293,6 +1293,8 @@ function bp_nouveau_nav_has_count() {
 		$count = 0 !== (int) BP_Media_Album::total_group_album_count( 0, bp_loggedin_user_id() );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'documents' === $nav_item->slug ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'sent-invites' === $nav_item->slug ) {
+		$count = 0 !== (int) bb_get_total_invitation_count( bp_loggedin_user_id() );
 	}
 
 	/**
@@ -1373,6 +1375,8 @@ function bp_nouveau_get_nav_count() {
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
 			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
 		}
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && 'sent-invites' === $nav_item->slug ) {
+		$count = (int) bb_get_total_invitation_count( bp_loggedin_user_id() );
 	}
 
 	/**

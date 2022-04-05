@@ -50,6 +50,10 @@ function bp_member_revoke_invite() {
 
 	$post_id = filter_input( INPUT_POST, 'item_id', FILTER_VALIDATE_INT );
 	if ( isset( $post_id ) && '' !== $post_id ) {
+		// Clear cache for invitation count once revoke invite.
+		if ( function_exists( 'bb_member_invitation_count_clear_cache' ) ) {
+			bb_member_invitation_count_clear_cache( bp_loggedin_user_id(), $post_id );
+		}
 		wp_delete_post( $post_id, true );
 	}
 
