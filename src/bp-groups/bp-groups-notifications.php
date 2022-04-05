@@ -1455,6 +1455,8 @@ add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
 /**
  * Fire user notification when group information has been updated.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int $group_id Group id.
  *
  * @return void
