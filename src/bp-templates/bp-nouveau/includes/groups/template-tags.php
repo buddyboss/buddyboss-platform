@@ -1567,7 +1567,7 @@ function bp_nouveau_add_notify_group_members_checkbox() {
 		if ( $is_enabled_admin ) {
 			printf(
 				'<p class="bp-controls-wrap">
-                    <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+                    <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" checked />
                     <label for="group-notify-members" class="bp-label-text">%s</label>
                 </p>',
 				esc_html__( 'Notify group members of these changes', 'buddyboss' )
