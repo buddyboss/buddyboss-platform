@@ -307,7 +307,10 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
 	// Trigger a BuddyPress Notification.
 	if ( bp_is_active( 'notifications' ) ) {
-		$n_id = bp_notifications_add_notification(
+
+		add_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
+
+		bp_notifications_add_notification(
 			array(
 				'user_id'          => $user_id,
 				'item_id'          => $group_id,
@@ -316,9 +319,7 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 			)
 		);
 
-		if ( ! bb_enabled_legacy_email_preference() ) {
-			bp_notifications_update_meta( $n_id, 'promoted_to', $promoted_to );
-		}
+		remove_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
 	}
 
 	$type_key = 'notification_groups_admin_promotion';
@@ -463,7 +464,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  */
 function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
 
-    switch ( $action ) {
+	switch ( $action ) {
 		case 'new_membership_request':
 			$group_id           = $item_id;
 			$requesting_user_id = $secondary_item_id;
@@ -1543,3 +1544,34 @@ function bb_groups_group_details_update_mark_notifications() {
 }
 
 add_action( 'bp_template_redirect', 'bb_groups_group_details_update_mark_notifications' );
+
+/**
+ * Create notification meta based on groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification object.
+ */
+function bb_groups_add_notification_metas( $notification ) {
+	if (
+		bb_enabled_legacy_email_preference() ||
+		empty( $notification->id ) ||
+		empty( $notification->item_id ) ||
+		empty( $notification->user_id ) ||
+		empty( $notification->component_action ) ||
+		'bb_groups_promoted' !== $notification->component_action
+	) {
+		return;
+	}
+
+	$group_id = $notification->item_id;
+	$user_id  = $notification->user_id;
+
+	if ( groups_is_user_admin( $user_id, $group_id ) ) {
+		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
+	} else {
+		$promoted_to = get_group_role_label( $group_id, 'moderator_singular_label_name' );
+	}
+
+	bp_notifications_update_meta( $notification->id, 'promoted_to', $promoted_to );
+}
