@@ -816,12 +816,9 @@ function bb_forums_add_notification_metas( $notification ) {
 		return;
 	}
 
-	$reply_id = bbp_get_reply_id( $notification->item_id );
-	$topic_id = bbp_get_topic_id( $notification->item_id );
-
-	if ( $reply_id ) {
+	if ( bbp_is_reply( $notification->item_id ) ) {
 		bp_notifications_update_meta( $notification->id, 'type', 'forum_reply' );
-	} elseif ( $topic_id ) {
+	} elseif ( bbp_is_topic( $notification->item_id ) ) {
 		bp_notifications_update_meta( $notification->id, 'type', 'forum_topic' );
 	}
 }
