@@ -1259,6 +1259,7 @@ class BP_Messages_Thread {
 			// phpcs:ignore
 			$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
+			wp_cache_delete( "bb_message_thread_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 			wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 			wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 
@@ -1295,6 +1296,7 @@ class BP_Messages_Thread {
 		$bp     = buddypress();
 		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
+		wp_cache_delete( "bb_message_thread_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 
