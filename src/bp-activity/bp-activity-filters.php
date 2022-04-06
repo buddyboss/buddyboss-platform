@@ -164,7 +164,7 @@ add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty'
 add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
 
 // Action notification for mentions in single page blog comments
-add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
+//add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_notification', 999, 4 );
 
 /**
  * Notification for mentions in blog comment
