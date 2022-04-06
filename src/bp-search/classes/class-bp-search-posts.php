@@ -60,27 +60,15 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			*/
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$select      = '';
+			$where       = '';
+			$placeholder = '%' . $search_term . '%';
+			$tax         = array();
 
-			$query_placeholder = array();
+			// Get the search words from the search string.
+			$search_term_array = $this->get_search_terms( $search_term );
 
-			$sql = ' SELECT ';
-
-			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT id ) ';
-			} else {
-				$sql                .= ' DISTINCT id , %s as type, post_title LIKE %s AS relevance, post_date as entry_date  ';
-				$query_placeholder[] = $this->search_type;
-				$query_placeholder[] = '%' . $search_term . '%';
-			}
-
-			$sql .= " FROM {$wpdb->posts} p ";
-
-			/*
-			++++++++++++++++++++++++++++++++
-			 * wp_posts table fields
-			+++++++++++++++++++++++++++++++
-			*/
+			// Get taxonomy.
 			$taxonomies = get_object_taxonomies( $this->pt_name );
 			foreach ( $taxonomies as $taxonomy ) {
 				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->pt_name ) ) {
@@ -88,49 +76,53 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				}
 			}
 
+			$select .= ' SELECT ';
+
+			if ( $only_totalrow_count ) {
+				$select .= ' COUNT( DISTINCT id ) ';
+			} else {
+				$select .= $wpdb->prepare( ' DISTINCT id , %s as type, post_title LIKE %s AS relevance, post_date as entry_date ', $this->search_type, $placeholder );
+			}
+
+			$select .= " FROM {$wpdb->posts} p ";
+
 			// Tax query left join.
 			if ( ! empty( $tax ) ) {
-				$sql .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
+				$select .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
 			}
 
 			// WHERE.
-			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR ExtractValue(p.post_content, '//text()') LIKE %s OR ExtractValue(REPLACE(p.post_content, '&nbsp;', ' '), '//text()') LIKE %s ";
-
-			$query_placeholder[] = '%' . $search_term . '%';
-			$query_placeholder[] = '%' . $search_term . '%';
-			$query_placeholder[] = '%' . $search_term . '%';
+			$where .= ' WHERE 1=1 AND (';
+			$where .= $this->parse_search_query( $search_term_array );
 
 			// Tax query.
 			if ( ! empty( $tax ) ) {
 
 				$tax_in_arr = array_map(
 					function( $t_name ) {
-							return "'" . $t_name . "'";
+						return "'" . $t_name . "'";
 					},
 					$tax
 				);
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$sql                    .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
-					$query_placeholder[] = '%' . $search_term . '%';
-					$query_placeholder[] = '%' . $search_term . '%';
+				$where .= $wpdb->prepare( " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN (%s) )", $placeholder, $placeholder, $tax_in );
 			}
 
 			// Meta query.
 			if ( bp_is_search_post_type_meta_enable( $this->pt_name ) ) {
-				$sql                .= " OR p.ID IN (SELECT post_id FROM {$wpdb->postmeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s )";
-				$query_placeholder[] = '%' . $search_term . '%';
+				$where .= $this->parse_search_meta_query( $search_term_array );
 			}
 
-			// Post should be publish.
-			$sql .= ") AND p.post_type = '{$this->pt_name}' AND p.post_status = 'publish' ";
+			// Post should be published.
+			$where .= ") AND p.post_type = '{$this->pt_name}' AND p.post_status = 'publish' ";
 
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			$sql_query = "{$select}{$where}";
 
 			return apply_filters(
 				'Bp_Search_Posts_sql',
-				$sql,
+				$sql_query,
 				array(
 					'search_term'         => $search_term,
 					'only_totalrow_count' => $only_totalrow_count,
@@ -204,6 +196,132 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
+		}
+
+		public function parse_search_query( $search_terms = array() ) {
+			global $wpdb;
+
+			$search    = '';
+			$searchand = '';
+
+			if ( empty( $search_terms ) ) {
+				return $search;
+			}
+
+			foreach ( $search_terms as $term ) {
+				$like      = '%' . $wpdb->esc_like( $term ) . '%';
+				$search   .= $searchand . $wpdb->prepare( '((p.post_title LIKE %s) OR (p.post_excerpt LIKE %s) OR (p.post_content LIKE %s))', $like, $like, $like );
+				$searchand = ' AND ';
+			}
+
+			return $search;
+		}
+
+		public function parse_search_meta_query( $search_terms = array() ) {
+			global $wpdb;
+
+			$meta_query = '';
+			$meta_where = '';
+			$searchand  = '';
+
+			if ( empty( $search_terms ) ) {
+				return $meta_query;
+			}
+
+			foreach ( $search_terms as $term ) {
+				$like        = '%' . $wpdb->esc_like( $term ) . '%';
+				$meta_where .= $wpdb->prepare( "{$searchand}( meta_value LIKE %s )", $like );
+				$searchand   = ' AND ';
+			}
+
+			if ( ! empty( $meta_where ) ) {
+				$meta_query = " OR p.ID IN ( SELECT post_id FROM {$wpdb->postmeta} WHERE ({$meta_where}) )";
+			}
+
+			return $meta_query;
+		}
+
+		public function get_search_terms( $search_term = '' ) {
+			$search_term_array = array();
+
+			if ( empty( $search_term ) ) {
+				return $search_term_array;
+			}
+
+			// There are no line breaks in <input /> fields.
+			$search_term = str_replace( array( "\r", "\n" ), '', stripslashes( $search_term ) );
+
+			if ( preg_match_all( '/".*?("|$)|((?<=[\t ",+])|^)[^\t ",+]+/', $search_term, $matches ) ) {
+				$search_term_array = $this->parse_search_terms( $matches[0] );
+
+				// If the search string has only short terms or stopwords, or is 10+ terms long, match it as sentence.
+				if ( empty( $search_term_array ) || count( $search_term_array ) > 9 ) {
+					$search_term_array = array( $search_term );
+				}
+			} else {
+				$search_term_array = array( $search_term );
+			}
+
+			return $search_term_array;
+		}
+
+		public function parse_search_terms( $terms ) {
+			$strtolower = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strtolower';
+			$checked    = array();
+
+			$stopwords = $this->get_search_stopwords();
+
+			foreach ( $terms as $term ) {
+				// Keep before/after spaces when term is for exact match.
+				if ( preg_match( '/^".+"$/', $term ) ) {
+					$term = trim( $term, "\"'" );
+				} else {
+					$term = trim( $term, "\"' " );
+				}
+
+				// Avoid single A-Z and single dashes.
+				if ( ! $term || ( 1 === strlen( $term ) && preg_match( '/^[a-z\-]$/i', $term ) ) ) {
+					continue;
+				}
+
+				if ( in_array( call_user_func( $strtolower, $term ), $stopwords, true ) ) {
+					continue;
+				}
+
+				$checked[] = $term;
+			}
+
+			return $checked;
+		}
+
+		public function get_search_stopwords() {
+			static $stoped_keywords = array();
+
+			if ( ! empty( $stoped_keywords ) ) {
+				return $stoped_keywords;
+			}
+
+			/*
+			 * translators: This is a comma-separated list of very common words that should be excluded from a search,
+			 * like a, an, and the. These are usually called "stopwords". You should not simply translate these individual
+			 * words into your language. Instead, look for and provide commonly accepted stopwords in your language.
+			 */
+			$words = explode(
+				',',
+				_x(
+					'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
+					'Comma-separated list of search stopwords in your language'
+				)
+			);
+
+			foreach ( $words as $word ) {
+				$word = trim( $word, "\r\n\t " );
+				if ( $word ) {
+					$stoped_keywords[] = $word;
+				}
+			}
+
+			return $stoped_keywords;
 		}
 
 	}
