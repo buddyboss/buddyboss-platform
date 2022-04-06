@@ -625,6 +625,8 @@ function messages_get_unread_count( $user_id = 0 ) {
 /**
  * Get the thread unread messages count for a user.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param int $thread_id Thread ID of the message.
  * @param int $user_id Optional. ID of the user. Default: ID of the logged-in user.
  *
