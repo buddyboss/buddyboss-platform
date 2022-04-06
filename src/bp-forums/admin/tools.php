@@ -41,9 +41,7 @@ function bbp_admin_repair() {
 				<?php
 				$meta_icon = bb_admin_icons( 'repair_forums' );
 				if ( ! empty( $meta_icon ) ) {
-					?>
-					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-					<?php
+					echo '<i class="' . esc_attr( $meta_icon ) . ' "></i>';
 				}
 				esc_html_e( 'Repair Forums', 'buddyboss' );
 				?>
