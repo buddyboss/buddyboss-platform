@@ -61,7 +61,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_group(
 			'forums',
 			esc_html__( 'Forums', 'buddyboss' ),
-			esc_html__( 'Forums Notifications', 'buddyboss' ),
+			esc_html__( 'Forums', 'buddyboss' ),
 			15
 		);
 
