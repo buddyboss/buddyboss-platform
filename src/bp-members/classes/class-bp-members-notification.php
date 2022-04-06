@@ -61,7 +61,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_group(
 			'members',
 			esc_html__( 'Account Settings', 'buddyboss' ),
-			esc_html__( 'Account Settings Notifications', 'buddyboss' ),
+			esc_html__( 'Account Settings', 'buddyboss' ),
 			6
 		);
 

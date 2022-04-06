@@ -60,8 +60,8 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'messages',
-			esc_html__( 'Messages', 'buddyboss' ),
-			esc_html__( 'Private Messaging', 'buddyboss' ),
+			esc_html__( 'Private Messages', 'buddyboss' ),
+			esc_html__( 'Private Messages', 'buddyboss' ),
 			18
 		);
 
@@ -191,17 +191,19 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
 				$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
 
-				$excerpt = bp_create_excerpt(
+				$excerpt = '"' . bp_create_excerpt(
 					wp_strip_all_tags( $message->message ),
 					50,
 					array(
 						'ending' => __( '&hellip;', 'buddyboss' ),
 					)
-				);
+				) . '"';
 
 				if ( '&nbsp;' === $excerpt ) {
 					$excerpt = '';
 				}
+
+				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
 
 				if ( ! empty( $secondary_item_id ) ) {
 
@@ -215,7 +217,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 								/* translators: 1. user display name 2. exceprt */
-									esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+									esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$excerpt
 								);
@@ -288,7 +290,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 									/* translators: 1. user display name 2. group name 3. excerpt */
-									esc_html__( '%1$s sent a message to %2$s: "%3$s"', 'buddyboss' ),
+									esc_html__( '%1$s sent a message to %2$s: %3$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$group_name,
 									$excerpt
@@ -370,7 +372,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 									/* translators: 1. user display name 2. exceprt */
-									esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+									esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$excerpt
 								);
@@ -445,7 +447,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 						if ( ! empty( $excerpt ) ) {
 							$text = sprintf(
 								/* translators: 1. user display name 2. except text */
-								esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+								esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 								bp_core_get_user_displayname( $secondary_item_id ),
 								$excerpt
 							);
@@ -520,7 +522,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $excerpt ) ) {
 						$text = sprintf(
 							/* translators: 1. user display name 2. gif text */
-							esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+							esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$excerpt
 						);

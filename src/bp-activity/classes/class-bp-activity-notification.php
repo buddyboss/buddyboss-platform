@@ -60,8 +60,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'activity',
-			esc_html__( 'Activity Feed', 'buddyboss' ),
-			esc_html__( 'Activity Feed Notifications', 'buddyboss' ),
+			esc_html__( 'Activity Feeds', 'buddyboss' ),
+			esc_html__( 'Activity Feeds', 'buddyboss' ),
 			6
 		);
 
@@ -182,13 +182,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = bp_create_excerpt(
+			$activity_excerpt = '"' . bp_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
 					'ending' => __( '&hellip;', 'buddyboss' ),
 				)
-			);
+			) . '"';
+
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
 			}
@@ -196,17 +197,20 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
 				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
 
-				$activity_excerpt = bp_create_excerpt(
+				$activity_excerpt = '"' . bp_create_excerpt(
 					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
 						'ending' => __( '&hellip;', 'buddyboss' ),
 					)
-				);
+				) . '"';
+
 				if ( '&nbsp;' === $activity_excerpt ) {
 					$activity_excerpt = '';
 				}
 			}
+
+			$activity_excerpt = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
 
 			if ( (int) $total_items > 1 ) {
 				$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
@@ -224,7 +228,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
-							__( '%1$s replied to your %2$s: "%3$s"', 'buddyboss' ),
+							__( '%1$s replied to your %2$s: %3$s', 'buddyboss' ),
 							$user_fullname,
 							$notification_type_html,
 							$activity_excerpt
@@ -241,7 +245,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Activity content. */
-							__( '%1$s replied: "%2$s"', 'buddyboss' ),
+							__( '%1$s replied: %2$s', 'buddyboss' ),
 							$user_fullname,
 							$activity_excerpt
 						);
