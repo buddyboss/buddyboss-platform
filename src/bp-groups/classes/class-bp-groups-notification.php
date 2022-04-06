@@ -61,7 +61,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_group(
 			'groups',
 			esc_html__( 'Social Groups', 'buddyboss' ),
-			esc_html__( 'Social Groups Notifications', 'buddyboss' ),
+			esc_html__( 'Social Groups', 'buddyboss' ),
 			9
 		);
 

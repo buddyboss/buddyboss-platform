@@ -61,7 +61,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_group(
 			'mentions',
 			esc_html__( 'Mentions', 'buddyboss' ),
-			esc_html__( 'Mentions Notifications', 'buddyboss' ),
+			esc_html__( 'Mentions', 'buddyboss' ),
 			3
 		);
 
