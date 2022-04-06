@@ -1,8 +1,16 @@
 <?php
 /**
+ * Template for displaying the search results of the page
+ *
  * the template file to display search result page having buddypress container
  * dont make changes to this file,
  * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/results-page.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 $post_title = '';

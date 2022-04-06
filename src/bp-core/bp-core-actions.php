@@ -80,6 +80,7 @@ add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 add_action( 'bp_init', 'bp_add_permastructs', 40 );
 add_action( 'bp_init', 'bp_init_background_updater', 50 );
 add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
+add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -398,3 +399,94 @@ function bb_email_handle_cron_healthcheck() {
 }
 
 add_action( 'bb_init_email_background_updater', 'bb_email_handle_cron_healthcheck' );
+
+/**
+ * Check and reschedule the background process if queue is not empty.
+ *
+ * @since BuddyBoss 1.8.3
+ */
+function bb_handle_cron_healthcheck() {
+	global $bp_background_updater;
+	if ( $bp_background_updater->is_updating() ) {
+		$bp_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
+
+/**
+ * Function will remove RSS Feeds.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_restricate_rss_feed_callback() {
+	if ( is_user_logged_in() ) {
+		return;
+	}
+	if ( true === bp_enable_private_rss_feeds() ) {
+		bb_restricate_rss_feed();
+	}
+}
+add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
+
+/**
+ * Function will remove REST APIs endpoint.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ *                                                                   Usually a WP_REST_Response or WP_Error.
+ * @param array                                            $handler  Route handler used for the request.
+ * @param WP_REST_Request                                  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+ */
+function bb_restricate_rest_api_callback( $response, $handler, $request ) {
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	if (
+		! is_user_logged_in() &&
+		! empty( $handler['permission_callback'] ) &&
+		(
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is active.
+				true === bbapp_is_private_app_enabled() && // private app is enabled.
+				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+			) ||
+			(
+				! function_exists( 'bbapp_is_private_app_enabled' ) && // buddyboss-app is not active.
+				true === bp_enable_private_rest_apis() // BB private rest api is enabled.
+			)
+		)
+	) {
+		return bb_restricate_rest_api( $response, $handler, $request );
+	}
+
+	return $response;
+}
+
+add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 100, 3 );
+
+/**
+ * Function will run after plugin successfully update.
+ *
+ * @param $upgrader_object WP_Upgrader instance.
+ * @param $options         Array of bulk item update data
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
+	$show_display_popup = false;
+	// The path to our plugin's main file
+	$our_plugin = 'buddyboss-platform/bp-loader.php';
+	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+		foreach ( $options['plugins'] as $plugin ) {
+			if ( ! empty( $plugin ) && $plugin === $our_plugin ) {
+				update_option( '_bb_is_update', $show_display_popup );
+			}
+		}
+	}
+}
+add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2);

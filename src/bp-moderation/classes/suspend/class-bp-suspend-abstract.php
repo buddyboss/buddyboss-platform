@@ -21,7 +21,14 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @var string
 	 */
-	public $backgroup_diabled = false;
+	public $background_disabled = false;
+
+	/**
+	 * Item per page
+	 *
+	 * @var integer
+	 */
+	public static $item_per_page = 10;
 
 	/**
 	 * Item type
@@ -124,7 +131,9 @@ abstract class BP_Suspend_Abstract {
 	 * @param int|null $hide_sitewide item hidden sitewide or user specific.
 	 * @param array    $args          parent args.
 	 */
-	public function hide_related_content( $item_id, $hide_sitewide, $args = array() ) {
+	public function hide_related_content( $item_id, $hide_sitewide = 0, $args = array() ) {
+		global $bp_background_updater;
+
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
 		if ( empty( $args['action'] ) ) {
@@ -138,48 +147,80 @@ abstract class BP_Suspend_Abstract {
 		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$suspended_user = ! empty( $args['user_suspended'] ) ? $args['user_suspended'] : '';
 
-		$related_contents = $this->get_related_contents( $item_id, $args );
+		if ( ! isset( $args['enable_pagination'] ) ) {
+			$args['enable_pagination'] = 1;
+		}
 
-		foreach ( $related_contents as $content_type => $content_ids ) {
-			if ( ! empty( $content_ids ) ) {
-				foreach ( $content_ids as $content_id ) {
+		$page = 1;
 
-					if (
-						BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-						BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
-					) {
-						continue;
+		if ( empty( $args['page'] ) ) {
+			$args['page'] = $page;
+		} else {
+			$page = $args['page'];
+		}
+
+		$related_contents = array_filter( $this->get_related_contents( $item_id, $args ) );
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $content_type => $content_ids ) {
+				if ( ! empty( $content_ids ) ) {
+					foreach ( $content_ids as $content_id ) {
+
+						if (
+							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
+							BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+						) {
+							continue;
+						}
+
+						if (
+							! empty( $blocked_user ) &&
+							empty( $suspended_user ) &&
+							BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
+						) {
+							continue;
+						}
+
+						/**
+						 * Fire before hide item
+						 *
+						 * @since BuddyBoss 1.6.2
+						 *
+						 * @param string $content_type content type
+						 * @param int    $content_id   item id
+						 * @param array  $args         unhide item arguments
+						 */
+						do_action( 'bb_suspend_hide_before', $content_type, $content_id, $args );
+
+						$args['page'] = 1;
+
+						/**
+						 * Add related content of reported item into hidden list
+						 *
+						 * @since BuddyBoss 1.5.6
+						 *
+						 * @param int $content_id    item id
+						 * @param int $hide_sitewide item hidden sitewide or user specific
+						 */
+						do_action( 'bp_suspend_hide_' . $content_type, $content_id, null, $args );
 					}
-
-					if (
-						! empty( $blocked_user ) &&
-						empty( $suspended_user ) &&
-						BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
-					) {
-						continue;
-					}
-
-					/**
-					 * Fire before hide item
-					 *
-					 * @since BuddyBoss 1.6.2
-					 *
-					 * @param string $content_type content type
-					 * @param int    $content_id   item id
-					 * @param array  $args         unhide item arguments
-					 */
-					do_action( 'bb_suspend_hide_before', $content_type, $content_id, $args );
-
-					/**
-					 * Add related content of reported item into hidden list
-					 *
-					 * @since BuddyBoss 1.5.6
-					 *
-					 * @param int $content_id    item id
-					 * @param int $hide_sitewide item hidden sitewide or user specific
-					 */
-					do_action( 'bp_suspend_hide_' . $content_type, $content_id, null, $args );
 				}
+			}
+
+			if ( $this->background_disabled ) {
+				$args['page'] = ++$page;
+				$this->hide_related_content( $item_id, $hide_sitewide, $args );
+			} else {
+				$args['page'] = ++$page;
+				$bp_background_updater->data(
+					array(
+						array(
+							'callback' => array( $this, 'hide_related_content' ),
+							'args'     => array( $item_id, $hide_sitewide, $args ),
+						),
+					)
+				);
+				$bp_background_updater->save()->schedule_event();
 			}
 		}
 	}
@@ -225,7 +266,9 @@ abstract class BP_Suspend_Abstract {
 	 * @param int      $force_all     un-hide for all users.
 	 * @param array    $args          parent args.
 	 */
-	public function unhide_related_content( $item_id, $hide_sitewide, $force_all, $args = array() ) {
+	public function unhide_related_content( $item_id, $hide_sitewide = 0, $force_all = 0, $args = array() ) {
+		global $bp_background_updater;
+
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
 		if ( empty( $item_id ) ) {
@@ -240,54 +283,86 @@ abstract class BP_Suspend_Abstract {
 		$action_suspend = ! empty( $args['action_suspend'] ) ? $args['action_suspend'] : '';
 		$hide_parent    = ! empty( $args['hide_parent'] ) ? $args['hide_parent'] : '';
 
-		$related_contents = $this->get_related_contents( $item_id, $args );
+		if ( ! isset( $args['enable_pagination'] ) ) {
+			$args['enable_pagination'] = 1;
+		}
 
-		foreach ( $related_contents as $content_type => $content_ids ) {
-			if ( ! empty( $content_ids ) ) {
-				foreach ( $content_ids as $content_id ) {
+		$page = 1;
 
-					if (
-						! empty( $blocked_user ) &&
-						empty( $action_suspend ) &&
-						! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
-					) {
-						continue;
+		if ( empty( $args['page'] ) ) {
+			$args['page'] = $page;
+		} else {
+			$page = $args['page'];
+		}
+
+		$related_contents = array_filter( $this->get_related_contents( $item_id, $args ) );
+
+		if ( ! empty( $related_contents ) ) {
+			foreach ( $related_contents as $content_type => $content_ids ) {
+				if ( ! empty( $content_ids ) ) {
+					foreach ( $content_ids as $content_id ) {
+
+						if (
+							! empty( $blocked_user ) &&
+							empty( $action_suspend ) &&
+							! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
+						) {
+							continue;
+						}
+
+						if (
+							(
+								! empty( $action_suspend )
+								|| empty( $hide_parent )
+							) &&
+							! (
+								BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
+								BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
+							)
+						) {
+							continue;
+						}
+
+						/**
+						 * Fire before unhide item
+						 *
+						 * @since BuddyBoss 1.6.2
+						 *
+						 * @param string $content_type content type
+						 * @param int    $content_id   item id
+						 * @param array  $args         unhide item arguments
+						 */
+						do_action( 'bb_suspend_unhide_before', $content_type, $content_id, $args );
+
+						$args['page'] = 1;
+
+						/**
+						 * Remove related content of reported item from hidden list.
+						 *
+						 * @since BuddyBoss 1.5.6
+						 *
+						 * @param int $content_id    item id
+						 * @param int $hide_sitewide item hidden sitewide or user specific
+						 */
+						do_action( 'bp_suspend_unhide_' . $content_type, $content_id, null, $force_all, $args );
 					}
-
-					if (
-						(
-							! empty( $action_suspend )
-							|| empty( $hide_parent )
-						) &&
-						! (
-							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-							BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
-						)
-					) {
-						continue;
-					}
-
-					/**
-					 * Fire before unhide item
-					 *
-					 * @since BuddyBoss 1.6.2
-					 *
-					 * @param string $content_type content type
-					 * @param int    $content_id   item id
-					 * @param array  $args         unhide item arguments
-					 */
-					do_action( 'bb_suspend_unhide_before', $content_type, $content_id, $args );
-
-					/**
-					 * Remove related content of reported item from hidden list.
-					 *
-					 * @since BuddyBoss 1.5.6
-					 *
-					 * @param int $content_id    item id
-					 * @param int $hide_sitewide item hidden sitewide or user specific
-					 */
-					do_action( 'bp_suspend_unhide_' . $content_type, $content_id, null, $force_all, $args );
 				}
+			}
+
+			if ( $this->background_disabled ) {
+				$args['page'] = ++$page;
+				$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$args['page'] = ++$page;
+				$bp_background_updater->data(
+					array(
+						array(
+							'callback' => array( $this, 'unhide_related_content' ),
+							'args'     => array( $item_id, $hide_sitewide, $force_all, $args ),
+						),
+					)
+				);
+				$bp_background_updater->save()->schedule_event();
 			}
 		}
 	}
@@ -384,7 +459,13 @@ abstract class BP_Suspend_Abstract {
 	public static function is_content_reported_hidden( $item_id, $item_type ) {
 		global $wpdb, $bp;
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
+		$cache_key = 'bb_is_content_reported_hidden_' . $item_type . '_' . $item_id;
+		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
+
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.reported = 1 AND ms.hide_sitewide = 1", $item_id, $item_type ) ); // phpcs:ignore
+			wp_cache_set( $cache_key, $result, 'bp_moderation' );
+		}
 
 		return ! empty( $result );
 	}
