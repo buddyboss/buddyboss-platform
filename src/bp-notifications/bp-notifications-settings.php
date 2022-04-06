@@ -44,7 +44,7 @@ function bb_notification_get_settings_sections() {
 							add_query_arg(
 								array(
 									'page'    => 'bp-help',
-									'article' => 0,
+									'article' => 125373,
 								),
 								'admin.php'
 							)
@@ -75,7 +75,7 @@ function bb_automatic_notifications_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62829,
+						'article' => 125369,
 					),
 					'admin.php'
 				)
