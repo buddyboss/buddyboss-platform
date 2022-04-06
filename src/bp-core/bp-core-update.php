@@ -1778,6 +1778,9 @@ function bb_update_to_1_9_3() {
 
 	// Update the users settings.
 	bb_core_update_user_settings();
+
+	// Installed missing emails.
+	bp_admin_install_emails();
 }
 
 /**
