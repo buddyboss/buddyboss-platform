@@ -60,8 +60,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'friends',
-			esc_html__( 'Connections', 'buddyboss' ),
-			esc_html__( 'Connections Notifications', 'buddyboss' ),
+			esc_html__( 'Member Connections', 'buddyboss' ),
+			esc_html__( 'Member Connections', 'buddyboss' ),
 			22
 		);
 
