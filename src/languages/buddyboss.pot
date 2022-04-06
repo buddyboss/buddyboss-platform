@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-04 11:43:40+00:00\n"
+"POT-Creation-Date: 2022-04-06 13:23:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1052,8 +1052,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2896 bp-blogs/bp-blogs-filters.php:161
 #: bp-core/admin/bp-core-admin-functions.php:1580
-#: bp-core/admin/bp-core-admin-pages.php:356
-#: bp-core/admin/bp-core-admin-pages.php:390
+#: bp-core/admin/bp-core-admin-pages.php:358
+#: bp-core/admin/bp-core-admin-pages.php:392
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:326 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
@@ -3158,71 +3158,71 @@ msgstr ""
 msgid "You need to switch to your Default language in WPML to save these settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:147
+#: bp-core/admin/bp-core-admin-pages.php:149
 msgid "Component Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:154
+#: bp-core/admin/bp-core-admin-pages.php:156
 msgid "This directory shows a listing of all members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:156
+#: bp-core/admin/bp-core-admin-pages.php:158
 msgid "This directory shows a listing of all groups."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:158
+#: bp-core/admin/bp-core-admin-pages.php:160
 msgid "This directory shows a listing of all forums."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:160
+#: bp-core/admin/bp-core-admin-pages.php:162
 msgid "This directory shows all sitewide activity."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:162
+#: bp-core/admin/bp-core-admin-pages.php:164
 msgid "This directory shows all photos uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:164
+#: bp-core/admin/bp-core-admin-pages.php:166
 msgid "This directory shows all documents uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:166
+#: bp-core/admin/bp-core-admin-pages.php:168
 msgid "This directory shows all video uploaded by members."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:189
+#: bp-core/admin/bp-core-admin-pages.php:191
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:191
+#: bp-core/admin/bp-core-admin-pages.php:193
 msgid "Login Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:210
+#: bp-core/admin/bp-core-admin-pages.php:212
 msgid "New users fill out this form to register their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:213
-#: bp-core/admin/bp-core-admin-pages.php:219
+#: bp-core/admin/bp-core-admin-pages.php:215
+#: bp-core/admin/bp-core-admin-pages.php:221
 msgid ""
 "If a page is added, its contents will display in a popup on the register "
 "and login forms."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:215
-#: bp-core/admin/bp-core-admin-pages.php:221
+#: bp-core/admin/bp-core-admin-pages.php:217
+#: bp-core/admin/bp-core-admin-pages.php:223
 msgid "If a page is added, its contents will display in a popup on the login form."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:224
+#: bp-core/admin/bp-core-admin-pages.php:226
 msgid "After registering, users are sent to this page to activate their accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:244
+#: bp-core/admin/bp-core-admin-pages.php:246
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:264
+#: bp-core/admin/bp-core-admin-pages.php:266
 #: bp-core/admin/bp-core-admin-settings.php:91
 #: bp-core/admin/bp-core-admin-settings.php:156
 #: bp-core/admin/bp-core-admin-settings.php:213
@@ -3255,33 +3255,33 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:277
+#: bp-core/admin/bp-core-admin-pages.php:279
 msgid ""
 "Associate a WordPress page with the following Registration and Login "
 "sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:283
+#: bp-core/admin/bp-core-admin-pages.php:285
 #: bp-core/admin/bp-core-admin-settings.php:1878
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:299
+#: bp-core/admin/bp-core-admin-pages.php:301
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:347
-#: bp-core/admin/bp-core-admin-pages.php:381
+#: bp-core/admin/bp-core-admin-pages.php:349
+#: bp-core/admin/bp-core-admin-pages.php:383
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:363
-#: bp-core/admin/bp-core-admin-pages.php:397
+#: bp-core/admin/bp-core-admin-pages.php:365
+#: bp-core/admin/bp-core-admin-pages.php:399
 msgid "Create Page"
 msgstr ""
 
@@ -14369,7 +14369,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:990 bp-groups/bp-groups-template.php:5526
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2164
+#: bp-templates/bp-nouveau/includes/template-tags.php:2166
 msgid "Order By:"
 msgstr ""
 
@@ -22172,22 +22172,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2405
+#: bp-templates/bp-nouveau/includes/template-tags.php:2407
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2587
+#: bp-templates/bp-nouveau/includes/template-tags.php:2589
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2619
-#: bp-templates/bp-nouveau/includes/template-tags.php:2643
+#: bp-templates/bp-nouveau/includes/template-tags.php:2621
+#: bp-templates/bp-nouveau/includes/template-tags.php:2645
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -24142,10 +24142,10 @@ msgstr ""
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:155
-#: bp-templates/bp-nouveau/includes/template-tags.php:2601
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
-#: bp-templates/bp-nouveau/includes/template-tags.php:2633
-#: bp-templates/bp-nouveau/includes/template-tags.php:2658
+#: bp-templates/bp-nouveau/includes/template-tags.php:2603
+#: bp-templates/bp-nouveau/includes/template-tags.php:2611
+#: bp-templates/bp-nouveau/includes/template-tags.php:2635
+#: bp-templates/bp-nouveau/includes/template-tags.php:2660
 msgid "Close (Esc)"
 msgstr ""
 
@@ -28197,29 +28197,29 @@ msgstr ""
 msgid "Loading suggestions..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2167
+#: bp-templates/bp-nouveau/includes/template-tags.php:2169
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2386
+#: bp-templates/bp-nouveau/includes/template-tags.php:2388
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2592
+#: bp-templates/bp-nouveau/includes/template-tags.php:2594
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2601
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
-#: bp-templates/bp-nouveau/includes/template-tags.php:2633
-#: bp-templates/bp-nouveau/includes/template-tags.php:2658
+#: bp-templates/bp-nouveau/includes/template-tags.php:2603
+#: bp-templates/bp-nouveau/includes/template-tags.php:2611
+#: bp-templates/bp-nouveau/includes/template-tags.php:2635
+#: bp-templates/bp-nouveau/includes/template-tags.php:2660
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2624
-#: bp-templates/bp-nouveau/includes/template-tags.php:2648
+#: bp-templates/bp-nouveau/includes/template-tags.php:2626
+#: bp-templates/bp-nouveau/includes/template-tags.php:2650
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
