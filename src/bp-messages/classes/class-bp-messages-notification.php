@@ -60,8 +60,8 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'messages',
-			esc_html__( 'Messages', 'buddyboss' ),
-			esc_html__( 'Private Messaging', 'buddyboss' ),
+			esc_html__( 'Private Messages', 'buddyboss' ),
+			esc_html__( 'Private Messages', 'buddyboss' ),
 			18
 		);
 
