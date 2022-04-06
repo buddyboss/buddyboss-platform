@@ -189,11 +189,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					(int) $total_items
 				);
 			} else {
-				$except = bbp_get_reply_excerpt( $item_id, 50 );
+				$except = '"' . bbp_get_reply_excerpt( $item_id, 50 ) . '"';
+				$except = str_replace( '&hellip;"', '&hellip;', $except );
 				if ( ! empty( $except ) && ! empty( $secondary_item_id ) ) {
 					$text = sprintf(
 						/* translators: 1. Member display name. 2. excerpt. */
-						esc_html__( '%1$s replied to a discussion: "%2$s"', 'buddyboss' ),
+						esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
 						bp_core_get_user_displayname( $secondary_item_id ),
 						$except
 					);
@@ -220,8 +221,17 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_discussion' === $component_action_name ) {
 			$topic_id    = bbp_get_topic_id( $item_id );
-			$topic_title = bbp_get_topic_title( $topic_id );
-			$topic_link  = wp_nonce_url(
+			$topic_title = '"' . bp_create_excerpt(
+				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
+
+			$topic_title = str_replace( '&hellip;"', '&hellip;', $topic_title );
+
+			$topic_link = wp_nonce_url(
 				add_query_arg(
 					array(
 						'action'   => 'bbp_mark_read',
@@ -240,14 +250,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $secondary_item_id ) ) {
 					$text = sprintf(
 						/* translators: 1.Member display name 2. discussions title. */
-						esc_html__( '%1$s started a discussion: "%2$s"', 'buddyboss' ),
+						esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
 						bp_core_get_user_displayname( $secondary_item_id ),
 						$topic_title
 					);
 				} else {
 					$text = sprintf(
 						/* translators: discussions title. */
-						esc_html__( 'You have a new discussion: "%s"', 'buddyboss' ),
+						esc_html__( 'You have a new discussion: %s', 'buddyboss' ),
 						$topic_title
 					);
 				}
