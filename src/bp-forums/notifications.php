@@ -360,10 +360,11 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				continue;
 			}
 
-			$n_id = bp_notifications_add_notification( $args );
-			if ( $n_id ) {
-				bp_notifications_update_meta( $n_id, 'type', 'forum_reply' );
-			}
+			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+
+			bp_notifications_add_notification( $args );
+
+			remove_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
@@ -489,10 +490,11 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				continue;
 			}
 
-			$n_id = bp_notifications_add_notification( $args );
-			if ( $n_id ) {
-				bp_notifications_update_meta( $n_id, 'type', 'forum_topic' );
-			}
+			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+
+			bp_notifications_add_notification( $args );
+
+			remove_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
@@ -796,3 +798,27 @@ function bb_mark_modern_notifications( $success, $user_id, $topic_id ) {
 
 add_action( 'bbp_notifications_handler', 'bb_mark_modern_notifications', 10, 3 );
 
+/**
+ * Create notification meta based on forums.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification object.
+ */
+function bb_forums_add_notification_metas( $notification ) {
+	if (
+		bb_enabled_legacy_email_preference() ||
+		empty( $notification->id ) ||
+		empty( $notification->item_id ) ||
+		empty( $notification->component_action ) ||
+		'bb_new_mention' !== $notification->component_action
+	) {
+		return;
+	}
+
+	if ( bbp_is_reply( $notification->item_id ) ) {
+		bp_notifications_update_meta( $notification->id, 'type', 'forum_reply' );
+	} elseif ( bbp_is_topic( $notification->item_id ) ) {
+		bp_notifications_update_meta( $notification->id, 'type', 'forum_topic' );
+	}
+}
