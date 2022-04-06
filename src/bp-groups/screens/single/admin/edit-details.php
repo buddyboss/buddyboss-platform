@@ -40,6 +40,7 @@ function groups_screen_group_admin_edit_details() {
 					'slug'           => null, // @TODO: Add to settings pane? If yes, editable by site admin only, or allow group admins to do this?
 					'description'    => $_POST['group-desc'],
 					'notify_members' => $group_notify_members,
+					'parent_id'      => isset( $_POST['parent-id'] ) ? (int) $_POST['parent-id'] : 0
 				)
 			) ) {
 				bp_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddyboss' ), 'error' );

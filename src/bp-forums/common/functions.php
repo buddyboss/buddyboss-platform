@@ -1165,7 +1165,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	$reply_content = bbp_filter_kses( bbp_get_reply_content( $reply_id ) );
+	$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
 	$reply_url     = bbp_get_reply_url( $reply_id );
 
 	$forum_title = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
@@ -1201,25 +1201,45 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
-	// Loop through users
-	foreach ( (array) $user_ids as $user_id ) {
-
-		// Don't send notifications to the person who made the post
-		if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
-			continue;
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+		global $bb_email_background_updater;
+		$chunk_user_ids = array_chunk( $user_ids, 10 );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $member_ids ) {
+				$bb_email_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_render_email_notify_subscribers',
+							'args'     => array(
+								$member_ids,
+								'bbp-new-forum-reply',
+								$reply_author,
+								'notification_forums_following_reply',
+								$args
+							),
+						),
+					)
+				);
+				$bb_email_background_updater->save();
+			}
+			$bb_email_background_updater->dispatch();
 		}
 
-		// Bail if member opted out of receiving this email.
-		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
-			continue;
-		}
+	} else {
+		// Loop through users
+		foreach ( (array) $user_ids as $user_id ) {
 
-		// Send notification email.
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-			bb_email_queue()->add_record( 'bbp-new-forum-reply', (int) $user_id, $args );
-			// call email background process.
-			bb_email_queue()->bb_email_background_process();
-		} else {
+			// Don't send notifications to the person who made the post
+			if ( ! empty( $reply_author ) && (int) $user_id === (int) $reply_author ) {
+				continue;
+			}
+
+			// Bail if member opted out of receiving this email.
+			if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_reply', true ) ) {
+				continue;
+			}
+
+			// Send notification email.
 			bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
 		}
 	}
@@ -1305,7 +1325,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
-	$topic_content = bbp_filter_kses( bbp_get_topic_content( $topic_id ) );
+	$topic_content = bbp_kses_data( bbp_get_topic_content( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
 	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
 	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
@@ -1339,25 +1359,45 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
-	// Loop through users
-	foreach ( (array) $user_ids as $user_id ) {
-
-		// Don't send notifications to the person who made the post
-		if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
-			continue;
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+		global $bb_email_background_updater;
+		$chunk_user_ids = array_chunk( $user_ids, 10 );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $member_ids ) {
+				$bb_email_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_render_email_notify_subscribers',
+							'args'     => array(
+								$member_ids,
+								'bbp-new-forum-topic',
+								$topic_author,
+								'notification_forums_following_topic',
+								$args
+							),
+						),
+					)
+				);
+				$bb_email_background_updater->save();
+			}
+			$bb_email_background_updater->dispatch();
 		}
 
-		// Bail if member opted out of receiving this email.
-		if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
-			continue;
-		}
+	} else {
+		// Loop through users
+		foreach ( (array) $user_ids as $user_id ) {
 
-		// Send notification email.
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-			bb_email_queue()->add_record( 'bbp-new-forum-topic', (int) $user_id, $args );
-			// call email background process.
-			bb_email_queue()->bb_email_background_process();
-		} else {
+			// Don't send notifications to the person who made the post
+			if ( ! empty( $topic_author ) && (int) $user_id === (int) $topic_author ) {
+				continue;
+			}
+
+			// Bail if member opted out of receiving this email.
+			if ( 'no' === bp_get_user_meta( $user_id, 'notification_forums_following_topic', true ) ) {
+				continue;
+			}
+
+			// Send notification email.
 			bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
 		}
 	}
@@ -2155,4 +2195,39 @@ function bbp_set_404() {
 	}
 
 	$wp_query->set_404();
+}
+
+/**
+ * Render forum/topic subscriber into background.
+ *
+ * @since BuddyBoss 1.9.0
+ *
+ * @param array  $user_ids   Array of members ids.
+ * @param string $email_type Email type.
+ * @param int    $sender_id  Sender user id.
+ * @param string $meta_key   Meta key to verify the notification enabled or not.
+ * @param array  $args       Array of email arguments with token.
+ */
+function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id, $meta_key, $args ) {
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	// Loop through users
+	foreach ( (array) $user_ids as $user_id ) {
+
+		// Don't send notifications to the person who made the post
+		if ( ! empty( $sender_id ) && (int) $user_id === (int) $sender_id ) {
+			continue;
+		}
+
+		// Bail if member opted out of receiving this email.
+		if ( 'no' === bp_get_user_meta( $user_id, $meta_key, true ) ) {
+			continue;
+		}
+
+		// Send notification email.
+		bp_send_email( $email_type, (int) $user_id, $args );
+	}
 }

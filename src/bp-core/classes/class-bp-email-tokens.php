@@ -240,15 +240,34 @@ class BP_Email_Tokens {
 																			</tr>
 																		</tbody>
 																	</table>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
-																		<tbody>
+																	<?php
+																	if ( 'hidden' === $group->status ) {
+																		$invite_url = isset( $tokens['invites.url'] ) ? $tokens['invites.url'] : bp_get_group_permalink( $group );
+																		?>
+																		<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+																			<tbody>
+																			<tr>
+																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
+																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;border-radius: 100px;text-align: center; height: 16px;line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
+																				</td>
+																			</tr>
+																			</tbody>
+																		</table>
+																		<?php
+																	} else {
+																		?>
+																		<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
 																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: inline-block;border-radius: 100px;text-align: center; line-height: 16px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;min-width: 110px;padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss' ); ?></font></a>
 																				</td>
 																			</tr>
-																		</tbody>
-																	</table>
+																			</tbody>
+																		</table>
+																		<?php
+																	}
+																	?>
 																</td>
 															</tr>
 															</tbody>

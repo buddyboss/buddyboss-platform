@@ -1348,7 +1348,7 @@ function bp_nouveau_get_nav_count() {
 		if ( false !== $span ) {
 			$count_start = strpos( $nav_item->name, '>', $span ) + 1;
 			$count_end   = strpos( $nav_item->name, '<', $count_start );
-			$count       = number_format_i18n( (int) substr( $nav_item->name, $count_start, $count_end - $count_start ) );
+			$count       = bp_core_number_format( (int) substr( $nav_item->name, $count_start, $count_end - $count_start ) );
 		}
 	}
 
