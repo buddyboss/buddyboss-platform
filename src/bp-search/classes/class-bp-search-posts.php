@@ -198,6 +198,15 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			echo '</div><!-- .wp-user-fields -->';
 		}
 
+		/**
+		 * Generates SQL for the WHERE clause based on passed search terms.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $search_terms Search string.
+		 *
+		 * @return string WHERE clause.
+		 */
 		public function parse_search_query( $search_terms = array() ) {
 			global $wpdb;
 
@@ -217,6 +226,15 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			return $search;
 		}
 
+		/**
+		 * Generates meta query based on passed search terms.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $search_terms Search string.
+		 *
+		 * @return string Return meta query.
+		 */
 		public function parse_search_meta_query( $search_terms = array() ) {
 			global $wpdb;
 
@@ -230,7 +248,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 			foreach ( $search_terms as $term ) {
 				$like        = '%' . $wpdb->esc_like( $term ) . '%';
-				$meta_where .= $wpdb->prepare( "{$searchand}( meta_value LIKE %s )", $like );
+				$meta_where .= $searchand . $wpdb->prepare( '( meta_value LIKE %s )', $like );
 				$searchand   = ' AND ';
 			}
 
@@ -241,6 +259,15 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			return $meta_query;
 		}
 
+		/**
+		 * Generates keywords based on passed search terms.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term Search string.
+		 *
+		 * @return array Array of search string.
+		 */
 		public function get_search_terms( $search_term = '' ) {
 			$search_term_array = array();
 
@@ -265,9 +292,22 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			return $search_term_array;
 		}
 
-		public function parse_search_terms( $terms ) {
+		/**
+		 * Filter the generated keywords based on passed search terms.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $terms Search keywords.
+		 *
+		 * @return array Array contains validate search string.
+		 */
+		public function parse_search_terms( $terms = array() ) {
 			$strtolower = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strtolower';
 			$checked    = array();
+
+			if ( empty( $terms ) ) {
+				return $checked;
+			}
 
 			$stopwords = $this->get_search_stopwords();
 
@@ -294,6 +334,13 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			return $checked;
 		}
 
+		/**
+		 * Retrieve stopwords used when parsing search terms.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Stopwords.
+		 */
 		public function get_search_stopwords() {
 			static $stoped_keywords = array();
 
@@ -310,7 +357,8 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				',',
 				_x(
 					'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
-					'Comma-separated list of search stopwords in your language'
+					'Comma-separated list of search stopwords in your language',
+					'buddyboss'
 				)
 			);
 
@@ -322,6 +370,32 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			}
 
 			return $stoped_keywords;
+		}
+
+		/**
+		 * Get total result count.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term Search string.
+		 *
+		 * @return int Total result count.
+		 */
+		public function get_total_match_count( $search_term ) {
+			global $wpdb;
+			static $bbp_search_term = array();
+			$cache_key              = 'bb_search_term_total_match_count_' . $this->pt_name . sanitize_title( $search_term );
+
+			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
+				$sql    = $this->sql( $search_term, true );
+				$result = $wpdb->get_var( $sql ); // phpcs:ignore
+
+				$bbp_search_term[ $cache_key ] = $result;
+			} else {
+				$result = $bbp_search_term[ $cache_key ];
+			}
+
+			return $result;
 		}
 
 	}
