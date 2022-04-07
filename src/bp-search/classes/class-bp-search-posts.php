@@ -1,6 +1,6 @@
 <?php
 /**
- * @todo add description
+ * Network search class to search Post and Page types.
  *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
@@ -15,7 +15,18 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 	 * BuddyPress Global Search  - search posts class
 	 */
 	class Bp_Search_Posts extends Bp_Search_Type {
+		/**
+		 * Post type.
+		 *
+		 * @var string
+		 */
 		private $pt_name;
+
+		/**
+		 * Search type.
+		 *
+		 * @var string
+		 */
 		private $search_type;
 
 		/**
@@ -23,6 +34,9 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		 * The idea is to have one object for each searchable custom post type.
 		 *
 		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param string  $pt_name     Post type.
+		 * @param boolean $search_type Search type.
 		 */
 		public function __construct( $pt_name, $search_type ) {
 			$this->pt_name     = $pt_name;
@@ -31,7 +45,16 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			add_action( "bp_search_settings_item_{$this->search_type}", array( $this, 'print_search_options' ) );
 		}
 
-
+		/**
+		 * Generate the SQL query to search.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param string  $search_term         Search term.
+		 * @param boolean $only_totalrow_count True get total count otherwise generate the result.
+		 *
+		 * @return string SQL query.
+		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			/*
 			An example UNION query :-
@@ -130,14 +153,21 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			);
 		}
 
+		/**
+		 * Get the html for given search result.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param string $template_type Optional.
+		 */
 		protected function generate_html( $template_type = '' ) {
 			$post_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
 				$post_ids[] = $item_id;
 			}
 
-			// now we have all the posts
-			// lets do a wp_query and generate html for all posts
+			// now we have all the posts.
+			// lets do a wp_query and generate html for all posts.
 			$qry = new WP_Query(
 				array(
 					'post_type' => $this->pt_name,
@@ -170,18 +200,26 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		 * post type e.g $this->cpt_name
 		 *
 		 * Print options to search through Post Meta
+		 *
+		 * @param array $items_to_search Search type.
 		 */
-		function print_search_options( $items_to_search ) {
+		public function print_search_options( $items_to_search ) {
 			global $wp_taxonomies;
 			echo "<div class='wp-posts-fields' style='margin: 10px 0 10px 30px'>";
 
 			/**  Post Meta Field */
 
-			$label   = sprintf( __( '%s Meta', 'buddyboss' ), ucfirst( $this->pt_name ) );
+			$label = sprintf(
+			/* translators: %s: The post type */
+				__( '%s Meta', 'buddyboss' ),
+				ucfirst( $this->pt_name )
+			);
 			$item    = 'post_field_' . $this->pt_name . '_meta';
-			$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
+			$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search, true ) ? ' checked' : '';
+			?>
 
-			echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+			<label><input type="checkbox" value="<?php echo esc_attr( $item ); ?>" name="bp_search_plugin_options[items-to-search][]" <?php echo esc_attr( $checked ); ?>><?php echo wp_kses_post( $label ); ?></label><br>
+			<?php
 
 			/** Post Taxonomies Fields */
 			$pt_taxonomy = get_object_taxonomies( $this->pt_name );
@@ -190,9 +228,11 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 				$label   = ucwords( str_replace( '_', ' ', $tax ) );
 				$value   = $this->search_type . '-tax-' . $tax;
-				$checked = ! empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
+				$checked = ! empty( $items_to_search ) && in_array( $value, $items_to_search, true ) ? ' checked' : '';
+				?>
 
-				echo "<label><input type='checkbox' value='{$value}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				<label><input type="checkbox" value="<?php echo esc_attr( $value ); ?>" name="bp_search_plugin_options[items-to-search][]" <?php echo esc_attr( $checked ); ?>><?php echo wp_kses_post( $label ); ?></label><br>
+				<?php
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
@@ -399,8 +439,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		}
 
 	}
-
-	// End class Bp_Search_Posts
+	// End class Bp_Search_Posts.
 
 endif;
 
