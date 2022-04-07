@@ -5,9 +5,7 @@
 			<?php
 			$meta_icon = bb_admin_icons( 'bp_buddyboss_app-integration' );
 			if ( ! empty( $meta_icon ) ) {
-				?>
-				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-				<?php
+				echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 			}
 			esc_html_e( 'BuddyBoss App', 'buddyboss' );
 			?>
