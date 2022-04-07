@@ -42,6 +42,7 @@
 
 		#view_more_members {
 			font-size: 13px;
+			display: inline-block;
 		}
 	}
 
@@ -214,6 +215,7 @@
 			img.avatar {
 				max-width: 60px;
 				width: 100%;
+				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
 		}
 
@@ -578,6 +580,7 @@
 	img.avatar {
 		float: left;
 		margin: 0 $marg-sml 0 0;
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 	}
 
 	.actions {
@@ -718,7 +721,7 @@ input#send-to-input {
 			border-radius: 0;
 			z-index: 112;
 			visibility: visible;
-			bottom: -3px;
+			bottom: -7px;
 			height: 40px;
 		}
 
@@ -737,10 +740,8 @@ input#send-to-input {
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 
@@ -753,7 +754,7 @@ input#send-to-input {
 		}
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
-			width: 220px;
+			width: calc(100% - 80px);
 		}
 
 	}
@@ -985,7 +986,7 @@ input#send-to-input {
 	#messages-post-media-uploader.open {
 		position: absolute;
 		top: 0;
-		z-index: 112;
+		z-index: 11;
 		background: rgba(255, 255, 255, 0.99);
 		height: calc(100% - 245px);
 		width: 100%;
@@ -1126,17 +1127,30 @@ body .bp-messages-user-threads {
 				min-width: 30px;
 			}
 
-			.medium-editor-toolbar-form .medium-editor-toolbar-input {
-				max-width: calc(100% - 90px);
-				width: auto;
-			}
-
 		}
 	}
 
 	.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
 		left: 10px;
 	}
+}
+
+.mass-user-block-list #moderated_user_list:not(.is_not_empty) {
+	text-align: center;
+
+	&:before {
+		content: "\E838";
+		font: normal normal normal 20px/1 "bb-icons";/* stylelint-disable-line */
+		speak: none;
+		display: inline-block !important;
+		text-decoration: inherit;
+		text-transform: none;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-animation: spin 2s infinite linear;
+		animation: spin 2s infinite linear;
+	}
+
 }
 
 .bb-report-type-pagination .page-data {

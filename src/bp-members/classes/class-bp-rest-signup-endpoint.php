@@ -131,12 +131,13 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		// Register the activate route.
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->rest_base . '/activate/(?P<id>[\w-]+)',
+			'/' . $this->rest_base . '/activate/(?P<activation_key>[\w-]+)',
 			array(
 				'args'   => array(
-					'id' => array(
-						'description' => __( 'Identifier for the signup. Can be a signup ID, an email address, or a user_login.', 'buddyboss' ),
+					'activation_key' => array(
+						'description' => __( 'Activation key of the signup.', 'buddyboss' ),
 						'type'        => 'string',
+						'required'    => true,
 					),
 				),
 				array(
@@ -828,7 +829,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'bp_rest_register_errors',
 				$bp->signup->errors,
 				array(
-					'status' => 200,
+					'status' => 400,
 				)
 			);
 		}
@@ -922,7 +923,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$signup        = $this->get_signup_object( $user_name );
+		$signup        = $this->get_signup_object( $user_email );
 		$signup_update = $this->update_additional_fields_for_object( $signup, $request );
 
 		if ( is_wp_error( $signup_update ) ) {
@@ -1083,21 +1084,24 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {PATCH} /wp-json/buddyboss/v1/signup/activate/:id Delete signup
+	 * @api            {PATCH} /wp-json/buddyboss/v1/signup/activate/:activation_key Activate a signup
 	 * @apiName        ActivateBBSignups
 	 * @apiGroup       Signups
 	 * @apiDescription Activate a signup.
 	 * @apiVersion     1.0.0
-	 * @apiParam {String} id Identifier for the signup. Can be a signup ID, an email address, or a user_login.
+	 * @apiParam {String} activation_key Identifier for the signup.
 	 */
 	public function activate_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		// Get the signup.
-		$signup    = $this->get_signup_object( $request['id'] );
-		$activated = bp_core_activate_signup( $signup->activation_key );
+		// Get the activation key.
+		$activation_key = $request->get_param( 'activation_key' );
 
-		if ( ! $activated ) {
+		// Get the signup to activate thanks to the activation key.
+		$signup    = $this->get_signup_object( $activation_key );
+		$activated = bp_core_activate_signup( $activation_key );
+
+		if ( is_wp_error( $activated ) ) {
 			return new WP_Error(
 				'bp_rest_signup_activate_fail',
 				__( 'Fail to activate the signup.', 'buddyboss' ),
@@ -1137,16 +1141,18 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 */
 	public function activate_item_permissions_check( $request ) {
 		$retval = new WP_Error(
-			'bp_rest_invalid_id',
-			__( 'Invalid signup id.', 'buddyboss' ),
+			'bp_rest_invalid_activation_key',
+			__( 'Invalid activation key.', 'buddyboss' ),
 			array(
 				'status' => 404,
 			)
 		);
 
-		$signup = $this->get_signup_object( $request['id'] );
+		// Get the activation key.
+		$activation_key = $request->get_param( 'activation_key' );
 
-		if ( ! empty( $signup ) ) {
+		// Check the activation key is valid.
+		if ( $this->get_signup_object( $activation_key ) ) {
 			$retval = true;
 		}
 
@@ -1181,8 +1187,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
 		if ( 'edit' === $context ) {
-			$data['activation_key'] = $signup->activation_key;
-			$data['user_email']     = $signup->user_email;
+			$data['user_email'] = $signup->user_email;
 		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
@@ -1219,7 +1224,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		} elseif ( is_email( $identifier ) ) {
 			$signup_args['usersearch'] = $identifier;
 		} else {
-			$signup_args['user_login'] = $identifier;
+			// The activation key is used when activating a signup.
+			$signup_args['activation_key'] = $identifier;
 		}
 
 		// Get signups.
@@ -1431,7 +1437,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 				),
 				'activation_key' => array(
-					'context'     => array( 'edit' ),
+					'context'     => array(),
 					'description' => __( 'Activation key of the signup.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
