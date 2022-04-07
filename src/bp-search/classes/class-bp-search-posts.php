@@ -191,7 +191,6 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			wp_reset_postdata();
 		}
 
-
 		/**
 		 * What taxonomy should be searched on?
 		 * Should search on the Post Meta?
@@ -309,10 +308,17 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		 * @return array Array of search string.
 		 */
 		public function get_search_terms( $search_term = '' ) {
+			static $cache_search_terms = array();
+
 			$search_term_array = array();
 
 			if ( empty( $search_term ) ) {
 				return $search_term_array;
+			}
+
+			$cache_key = 'bb_search_terms_' . $this->pt_name . '_' . sanitize_title( $search_term );
+			if ( isset( $cache_search_terms[ $cache_key ] ) ) {
+				return $cache_search_terms[ $cache_key ];
 			}
 
 			// There are no line breaks in <input /> fields.
@@ -328,6 +334,9 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			} else {
 				$search_term_array = array( $search_term );
 			}
+
+			// Set cache for search keywords.
+			$cache_search_terms[ $cache_key ] = $search_term_array;
 
 			return $search_term_array;
 		}
@@ -424,7 +433,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		public function get_total_match_count( $search_term ) {
 			global $wpdb;
 			static $bbp_search_term = array();
-			$cache_key              = 'bb_search_term_total_match_count_' . $this->pt_name . sanitize_title( $search_term );
+			$cache_key              = 'bb_search_term_total_match_count_' . $this->pt_name . '_' . sanitize_title( $search_term );
 
 			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
 				$sql    = $this->sql( $search_term, true );
