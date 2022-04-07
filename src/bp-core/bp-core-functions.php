@@ -6824,8 +6824,12 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
-    if ( ! $email_checked ) {
-		$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
+	if ( ! $email_checked ) {
+		if ( $user_id ) {
+			$email_checked = 'yes';
+		} else {
+			$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
+		}
 	}
 
 	$options['email'] = array(
@@ -6838,7 +6842,11 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	if ( bb_web_notification_enabled() ) {
 		$web_checked = bp_get_user_meta( $user_id, $field['key'] . '_web', true );
 		if ( ! $web_checked ) {
-			$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
+			if ( $user_id ) {
+				$web_checked = 'yes';
+			} else {
+				$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
+			}
 		}
 
 		$options['web'] = array(
@@ -6852,8 +6860,13 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	if ( bb_app_notification_enabled() ) {
 		$app_checked = bp_get_user_meta( $user_id, $field['key'] . '_app', true );
 		if ( ! $app_checked ) {
-			$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
+			if ( $user_id ) {
+				$app_checked = 'yes';
+			} else {
+				$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
+			}
 		}
+
 		$options['app'] = array(
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => $app_checked,
