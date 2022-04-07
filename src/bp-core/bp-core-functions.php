@@ -6632,7 +6632,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 			}
 			if ( isset( $types[ $type ] ) ) {
 				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
-				$default_by_admin[ $key_type ] = $types[ $type ];
+				$default_by_admin[ $key_type ] = 'yes';
 			}
 		}
 	}
