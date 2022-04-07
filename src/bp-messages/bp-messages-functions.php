@@ -1334,8 +1334,6 @@ function bb_messages_recipients_per_page() {
  */
 function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
 
-	$temp_post = $_POST;
-
 	// setup post data into $_POST.
 	$_POST        = $post_data;
 	$message_args = array();
@@ -1450,8 +1448,6 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 			remove_filter( 'bb_is_email_queue', 'bb_disabled_email_queue' );
 		}
 	}
-
-	$_POST = $temp_post;
 
 	return $message;
 }
