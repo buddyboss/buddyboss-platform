@@ -146,7 +146,7 @@ function bp_nouveau_ajax_addremove_friend() {
 					),
 					'type'         => 'success',
 					'is_user'      => true,
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'friend_count' => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
 				)
 			);
 		}
@@ -171,7 +171,7 @@ function bp_nouveau_ajax_addremove_friend() {
 					),
 					'type'         => 'success',
 					'is_user'      => true,
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'friend_count' => bp_core_number_format( friends_get_friend_count_for_user( bp_loggedin_user_id() ) ),
 				)
 			);
 		}
@@ -195,7 +195,7 @@ function bp_nouveau_ajax_addremove_friend() {
 						false,
 						$button_arguments
 					),
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'friend_count' => bp_core_number_format( bp_get_total_friend_count( bp_loggedin_user_id() ) ),
 				);
 			} else {
 				$response = array(
@@ -205,7 +205,7 @@ function bp_nouveau_ajax_addremove_friend() {
 					),
 					'type'         => 'success',
 					'is_user'      => $is_user,
-					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+					'friend_count' => bp_core_number_format( bp_get_total_friend_count( bp_loggedin_user_id() ) ),
 				);
 			}
 
