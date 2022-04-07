@@ -1108,13 +1108,27 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			// Clear cached data, so that the changed settings take effect on the current page load.
 			clean_user_cache( bp_displayed_user_id() );
-			
+
+			if (
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				! bb_enabled_legacy_email_preference()
+			) {
+				add_filter( 'send_password_change_email', '__return_false' );
+			}
+
 			if (
 				( false === $email_error )
 				&& ( false === $pass_error )
 				&& ( wp_update_user( $update_user ) )
 			) {
 				$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+			}
+
+			if (
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				! bb_enabled_legacy_email_preference()
+			) {
+				remove_filter( 'send_password_change_email', '__return_false' );
 			}
 
 			// Password Error.
