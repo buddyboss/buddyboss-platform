@@ -271,7 +271,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
 			return null;
 		}
 
