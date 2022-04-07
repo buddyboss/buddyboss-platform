@@ -5161,6 +5161,10 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 		return false;
 	}
 
+	if ( ! $user_id ) {
+		return false;
+	}
+
 	// All preferences registered.
 	$preferences = bb_register_notification_preferences();
 
@@ -5213,7 +5217,6 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 			}
 		}
 	}
-
 
 }
 add_action( 'user_register', 'bb_core_sync_user_notification_settings' );
