@@ -89,7 +89,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$tax         = array();
 
 			// Get the search words from the search string.
-			$search_term_array = $this->get_search_terms( $search_term );
+			$search_term_array = bb_search_get_search_keywords_by_term( $search_term, $this->pt_name );
 
 			// Get taxonomy.
 			$taxonomies = get_object_taxonomies( $this->pt_name );
@@ -296,129 +296,6 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			}
 
 			return $meta_query;
-		}
-
-		/**
-		 * Generates keywords based on passed search terms.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $search_term Search string.
-		 *
-		 * @return array Array of search string.
-		 */
-		public function get_search_terms( $search_term = '' ) {
-			static $cache_search_terms = array();
-
-			$search_term_array = array();
-
-			if ( empty( $search_term ) ) {
-				return $search_term_array;
-			}
-
-			$cache_key = 'bb_search_terms_' . $this->pt_name . '_' . sanitize_title( $search_term );
-			if ( isset( $cache_search_terms[ $cache_key ] ) ) {
-				return $cache_search_terms[ $cache_key ];
-			}
-
-			// There are no line breaks in <input /> fields.
-			$search_term = str_replace( array( "\r", "\n" ), '', stripslashes( $search_term ) );
-
-			if ( preg_match_all( '/".*?("|$)|((?<=[\t ",+])|^)[^\t ",+]+/', $search_term, $matches ) ) {
-				$search_term_array = $this->parse_search_terms( $matches[0] );
-
-				// If the search string has only short terms or stopwords, or is 10+ terms long, match it as sentence.
-				if ( empty( $search_term_array ) || count( $search_term_array ) > 9 ) {
-					$search_term_array = array( $search_term );
-				}
-			} else {
-				$search_term_array = array( $search_term );
-			}
-
-			// Set cache for search keywords.
-			$cache_search_terms[ $cache_key ] = $search_term_array;
-
-			return $search_term_array;
-		}
-
-		/**
-		 * Filter the generated keywords based on passed search terms.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $terms Search keywords.
-		 *
-		 * @return array Array contains validate search string.
-		 */
-		public function parse_search_terms( $terms = array() ) {
-			$strtolower = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strtolower';
-			$checked    = array();
-
-			if ( empty( $terms ) ) {
-				return $checked;
-			}
-
-			$stopwords = $this->get_search_stopwords();
-
-			foreach ( $terms as $term ) {
-				// Keep before/after spaces when term is for exact match.
-				if ( preg_match( '/^".+"$/', $term ) ) {
-					$term = trim( $term, "\"'" );
-				} else {
-					$term = trim( $term, "\"' " );
-				}
-
-				// Avoid single A-Z and single dashes.
-				if ( ! $term || ( 1 === strlen( $term ) && preg_match( '/^[a-z\-]$/i', $term ) ) ) {
-					continue;
-				}
-
-				if ( in_array( call_user_func( $strtolower, $term ), $stopwords, true ) ) {
-					continue;
-				}
-
-				$checked[] = $term;
-			}
-
-			return $checked;
-		}
-
-		/**
-		 * Retrieve stopwords used when parsing search terms.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return array Stopwords.
-		 */
-		public function get_search_stopwords() {
-			static $stoped_keywords = array();
-
-			if ( ! empty( $stoped_keywords ) ) {
-				return $stoped_keywords;
-			}
-
-			/*
-			 * translators: This is a comma-separated list of very common words that should be excluded from a search,
-			 * like a, an, and the. These are usually called "stopwords". You should not simply translate these individual
-			 * words into your language. Instead, look for and provide commonly accepted stopwords in your language.
-			 */
-			$words = explode(
-				',',
-				_x(
-					'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
-					'Comma-separated list of search stopwords in your language',
-					'buddyboss'
-				)
-			);
-
-			foreach ( $words as $word ) {
-				$word = trim( $word, "\r\n\t " );
-				if ( $word ) {
-					$stoped_keywords[] = $word;
-				}
-			}
-
-			return $stoped_keywords;
 		}
 
 		/**
