@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.2
+Tested up to: 5.9.2
 Requires PHP: 5.6.20
-Stable tag: 1.8.4
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,99 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.9.2 =
+* Profiles - Handled critical issue in Profile when forum component not enabled
+* Groups - Handled group invitation screen UI issue in profile
+* Groups - Handled memory issue for a non-logged-in member for group with a large number of invitations
+* Groups - Handled hidden group activity privacy issue
+* Activity - Handled activity form, privacy selection issue
+* Media - Handled photo and document update privacy issue in the popup
+* Performance - Improved @mention performance to query for right usernames on page and post
+* REST API - Small improvement in group details API endpoint
+* REST API - Handled message API caching issue
+* Compatibility - Handled WordPress 5.8 compatibility issue on save profile action
+
+= 1.9.1.1 =
+* Private Network - Handled private site ‘Public Website Content’ not working critical issue
+
+= 1.9.1 =
+* Profiles - Provided support to customize Profile header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Profiles - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to customize Group header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Handled Group type direct URL issue when Group type and its label name is same
+* Forums - Handled forum discussion js error for non-English language
+* Activity - Handled activity formatting issue for auto-generated discussion replies
+* Activity - Improved responsiveness of activity form
+* Coding Standards - Refactored since time output across all components
+* Updater - Provided 'Release Notes' modal to show information about the release
+* REST API - Handled API performance table column size issue for specific server
+* REST API - Handled Forum APIs wrong permissions issue
+* REST API - Update to send activity with embed in the API as a separate object
+
+= 1.9.0.1 =
+* Media - Fixed critical API caching purge issue on symlink delete cron
+
+= 1.9.0 =
+* Performance - Optimized core functions, loops, and SQL queries
+* Performance - Extended object caching support
+* Performance - Removed duplicate SQL queries significantly
+* Performance - Optimized a bunch of specific page and functionality performance
+* Forums - Provided edit option for forums and discussion in the WordPress toolbar
+* Activity - Show preview when link added with text
+* Activity - Improved embedded video width and UI
+* Activity - Improved activity form upload media UI
+* Profiles - Handled profile completion widget string translation issue
+* REST API - Handled caching issues in the API to improve performance
+* REST API - Provided order by and include options in the API
+* REST API - Provided moderation can report parameters in the API
+* Compatibility - Show title properly when RankMath plugin is active
+
+= 1.8.7 =
+* Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled
+* Groups - Fixed group title and description critical security issue
+* Activity - Fixed critical issue to restrict photos and videos privacy update when uploaded to a specific album
+* Activity - Fixed small UI issue showing text close to ellipsis icon
+* Activity - Fixed @mention issue with space when user created from the dashboard
+* Activity - Fixed activity form upload UX issue with preview
+* Activity - Fixed activity form preview URL issue not rendered on paste
+* Media - Fixed documents directory screen small UI issues
+* Media - Fixed videos directory screen small UI issues
+* Media - Fixed edit action not working issue in media popup
+* Media - small improvement for video upload progress logic
+* Moderation - Fixed moderation markup issue in email customizer
+* REST API - Fixed group message thread permission issue in the API
+* REST API - Fixed media edit issue in the API
+* REST API - Fixed default avatar issue in the API when group avatar is disabled
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+
+= 1.8.6 =
+* Profiles - Provided WordPress, BuddyBoss, and Custom option to change default profile avatar image
+* Profiles - Provided BuddyBoss and Custom option to change default profile cover image
+* Groups - Provided BuddyBoss and Custom option to change default group avatar and cover image
+* Activity - significantly enhanced activity form interface with modal layout
+* Private Network - Provided option to restrict REST APIs and RSS feed public access
+* Media - Fixed generating thumbnail infinite loading issue for uploaded video
+* Media - Fixed portrait video thumbnail wrong size issues
+* Network Search - Fixed search issue with ampersand character in group and activities
+* REST API - Provided default cover and avatar image API support for profile and group
+* REST API - Provided caching support in the APIs for restrict Rest API and RSS feed option
+* REST API - Fixed activity like and comment parameter issue in the API
+* REST API - Fixed forum reply permission issue in the API
+
+= 1.8.5 =
+* Profiles - Fixed profile type search settings to show when the Network Search component is active
+* Profiles - Fixed exported data to show profile type field value to name instead of id
+* Groups - Fixed changing group photo updates user avatar temporarily in the header
+* Forums - Fixed discussion reply notification issue showing wrong member name
+* Activity - Fixed public URL link preview issue for private network
+* Media - Fixed bunch of non-translatable strings related to the media component
+* Media - Fixed missing 'video-js-rtl.min.css' file error when a site using RTL language
+* Text Editor - Fixed HTML copy paste issue
+* LearnDash - Code refactoring to fix warnings and notices
+* REST API - Fixed sign up user exists endpoint error message status code in the API
+* REST API - Fixed activity uploaded media order in the API
 
 = 1.8.4 =
 * Groups - Fixed group private messages screen, members load more issue on scroll
