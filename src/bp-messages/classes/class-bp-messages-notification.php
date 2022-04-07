@@ -191,19 +191,21 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
 				$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
 
-				$excerpt = '"' . bp_create_excerpt(
-					wp_strip_all_tags( $message->message ),
-					50,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				) . '"';
+				$excerpt = wp_strip_all_tags( $message->message );
 
 				if ( '&nbsp;' === $excerpt ) {
 					$excerpt = '';
-				}
+				} else {
+					$excerpt = '"' . bp_create_excerpt(
+						$excerpt,
+						50,
+						array(
+							'ending' => __( '&hellip;', 'buddyboss' ),
+						)
+					) . '"';
 
-				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+					$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+				}
 
 				if ( ! empty( $secondary_item_id ) ) {
 
