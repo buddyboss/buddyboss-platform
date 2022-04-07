@@ -4897,6 +4897,12 @@ window.bp = window.bp || {};
 								if ( response.data.media_group_count ) {
 									$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
 								}
+								
+								if ( 'yes' === BP_Nouveau.media.is_media_directory ) {
+									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
+									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
+									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+								}
 
 								for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 									self.dropzone_media[ i ].saved = true;

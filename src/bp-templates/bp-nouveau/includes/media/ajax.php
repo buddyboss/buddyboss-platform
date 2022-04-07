@@ -284,6 +284,7 @@ function bp_nouveau_ajax_media_save() {
 
 	$media_personal_count = 0;
 	$media_group_count    = 0;
+	$media_all_count      = 0;
 	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 		bp_has_media( bp_ajax_querystring( 'media' ) );
@@ -295,11 +296,30 @@ function bp_nouveau_ajax_media_save() {
 		$media_group_count = bp_media_get_total_group_media_count();
 	}
 
+	if ( bp_is_media_directory() ) {
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$media_all_count = $GLOBALS['media_template']->total_media_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'media' ) );
+		$media_personal_count = $GLOBALS['media_template']->total_media_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+
+		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+		bp_has_media( bp_ajax_querystring( 'groups' ) );
+		$media_group_count = $GLOBALS['media_template']->total_media_count;
+		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+
+	}
 	wp_send_json_success(
 		array(
 			'media'                => $media,
 			'media_personal_count' => $media_personal_count,
 			'media_group_count'    => $media_group_count,
+			'media_all_count'      => $media_all_count,
 		)
 	);
 
