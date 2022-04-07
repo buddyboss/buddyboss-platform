@@ -107,6 +107,139 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
+			$screen         = get_current_screen();
+			$screen_id      = $screen ? $screen->id : '';
+			$email_template = '';
+
+			if ( 'edit-bp-email' === $screen_id ) {
+
+				$emails              = bp_email_get_schema();
+				$descriptions        = bp_email_get_type_schema( 'description' );
+				$total_missing_count = 0;
+				$missing_email_label = array();
+
+				ob_start();
+
+				// Add these emails to the database.
+				foreach ( $emails as $id => $email ) {
+					if (
+						term_exists( $id, bp_get_email_tax_type() ) &&
+						get_terms(
+							array(
+								'taxonomy' => bp_get_email_tax_type(),
+								'slug'     => $id,
+								'fields'   => 'count',
+							)
+						) > 0
+					) {
+						continue;
+					}
+
+					// Some emails are multisite-only.
+					if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+						continue;
+					}
+
+					if ( array_key_exists( $id, $descriptions ) ) {
+						$total_missing_count ++;
+						$missing_email_label[] = $descriptions[ $id ];
+					}
+				}
+
+				if ( $total_missing_count > 0 ) {
+					?>
+					<a href="javascript:void(0);" class="page-title-action btn-open-missing-email">
+						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
+						<?php
+						if ( $total_missing_count > 1 ) {
+							esc_html_e( 'Emails Missing', 'buddyboss' );
+						} else {
+							esc_html_e( 'Email Missing', 'buddyboss' );
+						}
+						?>
+					</a>
+					<div id="bp-hello-container" class="bp-hello-email" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+						<div class="bp-hello-header">
+							<div class="bp-hello-title">
+								<h2 id="bp-hello-title" tabindex="-1">
+									<span class="count">
+										<?php echo esc_html( $total_missing_count ); ?> </span>
+									<?php
+									if ( $total_missing_count > 1 ) {
+										esc_html_e( 'Emails Missing', 'buddyboss' );
+									} else {
+										esc_html_e( 'Email Missing', 'buddyboss' );
+									}
+									?>
+							</div>
+							<div class="bp-hello-close">
+								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
+									<?php esc_html_e( 'Close', 'buddyboss' ); ?>
+								</button>
+							</div>
+						</div>
+
+						<div class="bp-hello-content">
+							<?php
+							if ( ! empty( $missing_email_label ) ) {
+								echo '<div class="missing-email-list"><ul>';
+
+								foreach ( $missing_email_label as $label ) {
+									echo '<li>' . wp_kses_post( $label ) . '</li>';
+								}
+
+								echo '</ul></div>';
+							}
+							?>
+							<div class="bb-popup-buttons">
+								<a href="
+								<?php
+								echo esc_url(
+									bp_get_admin_url(
+										add_query_arg(
+											array(
+												'page'     => 'bp-repair-community',
+												'tab'      => 'bp-repair-community',
+												'tool'     => 'bp-reinstall-emails',
+												'scrollto' => 'bpreinstallemails',
+											),
+											'admin.php'
+										)
+									)
+								);
+								?>
+								" class="button">
+									<?php esc_html_e( 'Reset All Emails', 'buddyboss' ); ?>
+								</a>
+								<a href="
+								<?php
+								echo esc_url(
+									bp_get_admin_url(
+										add_query_arg(
+											array(
+												'page'     => 'bp-repair-community',
+												'tab'      => 'bp-repair-community',
+												'tool'     => 'bp-missing-emails',
+												'scrollto' => 'bpmissingemails',
+											),
+											'admin.php'
+										)
+									)
+								);
+								?>
+								" class="button button-primary">
+									<?php esc_html_e( 'Install Missing Emails', 'buddyboss' ); ?>
+								</a>
+							</div>
+						</div>
+					</div>
+					<?php
+				}
+
+				// Get the output buffer contents.
+				$email_template = trim( ob_get_clean() );
+			}
+
 			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
 			wp_localize_script(
@@ -168,6 +301,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					'member_directories'  => array(
 						'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
 						'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
+					),
+					'email_template'      => array(
+						'html' => $email_template,
 					),
 				)
 			);
@@ -339,12 +475,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '' ) {
+		public function add_section( $id, $title, $callback = '__return_null', $tutorial_callback = '', $notice = '' ) {
 			global $wp_settings_sections;
 			add_settings_section( $id, $title, $callback, $this->tab_name );
 			$this->active_section = $id;
 			if ( ! empty( $tutorial_callback ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
+			}
+
+			if ( ! empty( $notice ) ) {
+				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
 			}
 
 			return $this;
@@ -555,13 +695,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 								),
 							)
 						);
-					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+
+						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
 						?>
-						<div class="bbapp-tutorial-btn">
-							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
-						</div>
-						<?php
-					}
+							<div class="bbapp-tutorial-btn">
+								<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+							</div>
+							<?php
+						}
+
 					echo "</h2>\n";
 				}
 
@@ -575,6 +717,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 				echo '<table class="form-table">';
 					$this->bp_custom_do_settings_fields( $page, $section['id'] );
+				echo '</table>';
+
+				if ( isset( $section['notice'] ) && ! empty( $section['notice'] ) ) {
+					?>
+					<div class="display-notice bb-bottom-notice">
+						<?php echo wp_kses_post( $section['notice'] ); ?>
+					</div>
+					<?php
+				}
 				echo '</table></div>';
 			}
 		}

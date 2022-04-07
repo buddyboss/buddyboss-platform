@@ -38,6 +38,7 @@ TABLE OF CONTENTS:
 12.0 Profile Photo
 13.0 Group Directories Enhancement
 14.0 BB Pro Active/Inactive Notices
+15.0 Admin bar Notification
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -560,6 +561,16 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
+}
+
+/* Notification */
+.bp-admin-card.section-bp_notification_settings_automatic h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
+}
+
+/* Labs */
+.bp-admin-card.section-bp_labs_settings_notifications h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
@@ -1311,7 +1322,9 @@ body.post-type-bp-email .categorydiv label {
   clear: right;
   display: block;
   line-height: 1.5;
-  margin: 0 0 1em;
+  margin: 0 0 7px;
+  padding: 3px;
+  border-radius: 3px;
 }
 
 @media screen and (max-width: 782px) {
@@ -2969,4 +2982,298 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 .bb-pro-active .bb-head-notice {
   display: none;
+}
+
+.bp-hello-email .bp-hello-title .count,
+.btn-open-missing-email .count {
+  display: inline-block;
+  background-color: #2271b1;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  line-height: 1.3;
+  font-size: smaller;
+}
+
+.btn-open-missing-email + #bp-hello-backdrop {
+  display: block;
+}
+
+.bp-hello-email .bp-hello-title .count {
+  font-size: inherit;
+  padding: 2px 10px;
+  margin-left: 10px;
+}
+
+.bp-hello-email .bp-hello-content {
+  height: auto;
+  padding: 0 23px;
+  min-height: 180px;
+  max-height: calc(100vh - 320px);
+  margin-bottom: 62px;
+}
+
+.bp-hello-email .missing-email-list ul {
+  list-style: disc;
+  margin: 25px 20px 25px 0;
+}
+
+.bp-hello-email .bb-popup-buttons {
+  position: absolute;
+  bottom: 0;
+  padding: 15px;
+  text-align: left;
+  width: calc(100% - 30px);
+  margin: 0 -23px;
+  border-top: 1px solid var(--bp-hello-color-secondary);
+  background-color: #f0f0f1;
+}
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+  .bp-hello-email .bp-hello-content {
+    min-height: 110px;
+  }
+}
+
+#bp-hello-container.bp-hello-email {
+  top: 50%;
+  bottom: initial;
+  transform: translateY(-50%);
+  margin-top: 32px;
+}
+
+#bp-hello-container.bp-hello-email .button-primary {
+  color: #fff;
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 480px) {
+  #bp-hello-container.bp-hello-email .button-primary {
+    margin-right: 0;
+  }
+}
+
+#bp_notification_settings_automatic table.render-dynamic-notification,
+#bp_notification_settings_automatic table.render-dynamic-notification tbody,
+#bp_notification_settings_automatic table.render-dynamic-notification tr,
+#bp_notification_settings_automatic table.render-dynamic-notification th,
+#bp_notification_settings_automatic table.render-dynamic-notification td {
+  display: block;
+}
+
+#bp_notification_settings_automatic table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_notification_settings_automatic table.form-table .notes-hidden-header > th + td {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#bp_notification_settings_automatic table.form-table .no-padding {
+  padding: 0;
+}
+
+#bp_notification_settings_automatic table.form-table tbody tr {
+  margin-bottom: 20px;
+}
+
+#bp_notification_settings_automatic table.form-table tbody tr th {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+#bp_notification_settings_automatic .field-set {
+  margin-top: 10px;
+  background-color: #f6f6f8;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+}
+
+#bp_notification_settings_automatic .field-set .field-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px;
+}
+
+#bp_notification_settings_automatic .field-set .field-block + .field-block {
+  border-top: 1px solid #ccd0d4;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .no-email-info {
+  margin-left: 15px;
+  margin-right: auto;
+  background-color: #ffdcdc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: #8c0202;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .email-info {
+  margin-left: 15px;
+  margin-right: auto;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  text-decoration: none;
+  background-color: #dfe5ea;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .notification-defaults {
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+#bp_notification_settings_automatic .field-set .field-block input[type="checkbox"] {
+  margin-top: 0;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults {
+  margin-top: 15px;
+  justify-content: flex-end;
+  width: 100%;
+  display: flex;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap {
+  margin-right: 15px;
+  min-width: 58px;
+  text-align: center;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap.disabled {
+  pointer-events: none;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap.disabled input[type="checkbox"] {
+  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(220, 220, 222, 0.75);
+  color: rgba(44, 51, 56, 0.5);
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults .field-wrap.disabled input[type="checkbox"]::before {
+  opacity: 0.7;
+}
+
+#bp_notification_settings_automatic .field-set .field-block .manage-defaults-hide {
+  display: none;
+}
+
+#bp_notification_settings_automatic table.form-table.dynamic-notification-after tbody tr th {
+  min-width: 200px;
+  padding: 15px 0 0 20px;
+  width: auto;
+}
+
+#bp_notification_settings_automatic table.form-table.dynamic-notification-after tbody tr td {
+  padding: 15px 0 15px 10px;
+}
+
+.bb-bottom-notice {
+  margin: 2.2em -2.8em -2.2em;
+  background: #f6f6f8;
+  padding: 2.2em 2.8em;
+  border-radius: 0 0 5px 5px;
+  border-top: 1px solid #ccd0d4;
+}
+
+.bp-admin-card .form-table .bb-lab-notice {
+  background: #f6f6f8;
+  padding: 1.2em;
+  margin-top: 1.2em;
+  border-radius: 3px;
+  border: 1px solid #ccd0d4;
+}
+
+.bp-admin-card .form-table .bp-new-notice-panel-notice {
+  color: #8b6300;
+  background-color: #fff3c8;
+  padding: 1.2em;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 3px;
+  margin: 20px 0;
+}
+
+.bp-admin-card .form-table .bp-new-notice-panel-notice a {
+  color: inherit;
+}
+
+.bp-admin-card .form-table .bp-new-notice-panel-notice + p.description {
+  margin-bottom: 15px;
+}
+
+.bb-lab-notice.notification-information:before {
+  content: "\e8c2";
+  display: inline-block;
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 16px;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+.bb-lab-notice.notification-information:first-child {
+  margin-top: 0;
+}
+
+/*------------------------------------------------------------------------------
+ * 15.0 Admin bar Notification
+ *----------------------------------------------------------------------------*/
+#wpadminbar #wp-admin-bar-bp-notifications-default {
+  width: 300px;
+  max-height: calc(90vh - 50px);
+  overflow: auto;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default > li {
+  display: inline-block;
+  width: 100%;
+  padding: 5px 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default > li#wp-admin-bar-notification-view-all {
+  text-align: center;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar {
+  float: right;
+  width: 40px;
+  margin-top: 4px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .member-status {
+  display: none;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a {
+  height: auto;
+  padding: 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a img {
+  max-width: 36px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content {
+  float: left;
+  width: calc(100% - 60px);
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .bb-full-link > a {
+  opacity: 1;
+  padding: 0;
+  height: auto;
+  position: static;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
+  line-height: 1.4;
 }

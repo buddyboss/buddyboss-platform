@@ -87,6 +87,9 @@ add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 
+// Load Group Notifications.
+add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -962,3 +965,14 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
 add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+
+/**
+ * Register the group notifications.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_groups_notifications() {
+	if ( class_exists( 'BP_Groups_Notification' ) ) {
+		BP_Groups_Notification::instance();
+	}
+}
