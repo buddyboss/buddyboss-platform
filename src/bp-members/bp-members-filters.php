@@ -729,7 +729,7 @@ function bb_load_member_type_label_custom_css() {
 				) {
 					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
 					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
-					$class_name             = 'body .bp-member-type.bb-current-member-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-member-' . $type : '.bp-member-type.bb-current-member-' . $type;
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
 					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}
