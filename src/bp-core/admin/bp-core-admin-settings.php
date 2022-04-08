@@ -2981,18 +2981,8 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 			/* translators: Tutorial link. */
 			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
 			sprintf(
-				'<a href="%s">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
-				esc_url(
-					bp_get_admin_url(
-						add_query_arg(
-							array(
-								'page'    => 'bp-help',
-								'article' => 125373,
-							),
-							'admin.php'
-						)
-					)
-				)
+				'<a href="%s" target="_blank" >' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
+				'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
 			)
 		)
 		?>

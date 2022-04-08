@@ -39,18 +39,8 @@ function bb_notification_get_settings_sections() {
 						__( 'You can register your own notifications types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' )
 					),
 					'<a href="' .
-					esc_url(
-						bp_get_admin_url(
-							add_query_arg(
-								array(
-									'page'    => 'bp-help',
-									'article' => 125373,
-								),
-								'admin.php'
-							)
-						)
-					)
-					. '">' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
+					'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
+					. '" target="_blank" >' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
 				) : ''
 			),
 		),
