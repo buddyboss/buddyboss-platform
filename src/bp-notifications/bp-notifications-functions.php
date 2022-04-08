@@ -947,7 +947,7 @@ add_action( 'bb_init_notifications_background_updater', 'bb_notifications_handle
 /**
  * Add only notifications which are user selected.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $querystring Query String.
  * @param string $object      Object.
@@ -992,7 +992,7 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 /**
  * Excluded disabled notification actions by user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int    $user_id Current user id.
  * @param string $type    Type of notification preference. email, web or app.
@@ -1107,7 +1107,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 /**
  * Exclude the messages notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param array $component_names Component names.
  *
@@ -1135,7 +1135,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclu
 /**
  * Check the notification is legacy or modern.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int $notification_id Notification ID.
  *
@@ -1146,7 +1146,7 @@ function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
 	/**
 	 * Filters the notification is legacy or modern.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param bool $is_legacy_notification The notification is legacy or modern.
 	 * @param int  $notification_id        Notification ID.
@@ -1232,7 +1232,7 @@ function bb_notification_avatar() {
 /**
  * Get the small icon for the notification which will print beside the avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $component_action Component Action.
  * @param bool   $html             Whether to get only class or with i tag.

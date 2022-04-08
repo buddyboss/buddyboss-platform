@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Activity
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BP_Activity_Notification class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var object
 	 */
@@ -28,7 +28,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return null|BP_Activity_Notification|Controller|object
 	 */
@@ -43,7 +43,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function __construct() {
 		// Initialize.
@@ -53,7 +53,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return mixed|void
 	 */
@@ -71,7 +71,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for activity reply.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_reply() {
 		$this->register_notification_type(
@@ -130,7 +130,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -150,7 +150,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content           Notification content.
 	 * @param int    $item_id           Notification item ID.

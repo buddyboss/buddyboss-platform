@@ -5088,7 +5088,7 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
 /**
  * Mark Member notification read.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return void
  */
@@ -5123,7 +5123,7 @@ add_action( 'template_redirect', 'bb_members_notifications_mark_read' );
 /**
  * Determine a user's "mentionname", the name used for that user in @-mentions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int|string $user_id ID of the user to get @-mention name for.
  *
@@ -5148,7 +5148,7 @@ function bb_members_get_user_mentionname( $user_id ) {
 /**
  * Sync the user's notification settings based on the admin default settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int $user_id ID of the user.
  */

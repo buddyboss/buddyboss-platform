@@ -2655,7 +2655,7 @@ function bp_nouveau_ajax_hide_thread() {
 		/**
 		 * Fires when messages thread was marked as read.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.3
 		 *
 		 * @param int $thread_id The message thread ID.
 		 */
