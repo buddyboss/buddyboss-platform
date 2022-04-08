@@ -26,7 +26,7 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 					echo wp_kses_post( $avatar );
 				} else {
 					?>
-				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+					<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 					<?php
 				}
 				?>
