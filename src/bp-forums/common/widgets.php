@@ -1306,7 +1306,7 @@ class BBP_Replies_Widget extends WP_Widget {
 					if ( ! empty( $settings['show_date'] ) && ! empty( $author_link ) ) :
 
 						// translators: 1: reply author, 2: reply link, 3: reply timestamp.
-						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="' . $author_related_class . '">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="' . esc_attr( $author_related_class ) . '">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
 						// Reply link and timestamp.
 					elseif ( ! empty( $settings['show_date'] ) ) :
