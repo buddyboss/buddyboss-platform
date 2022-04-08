@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-06 14:09:35+00:00\n"
+"POT-Creation-Date: 2022-04-08 12:05:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -616,6 +616,12 @@ msgstr ""
 #: bp-activity/bp-activity-filters.php:2413
 #: bp-activity/bp-activity-filters.php:2437
 #: bp-activity/bp-activity-filters.php:2470
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:42
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:50
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic-ajax.php:39
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic-ajax.php:47
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:43
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:51
 msgid "&hellip;"
 msgstr ""
 
@@ -1140,7 +1146,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:743 bp-groups/bp-groups-template.php:744
 #: bp-groups/bp-groups-template.php:762 bp-groups/bp-groups-template.php:1497
 #: bp-groups/classes/class-bp-groups-list-table.php:646
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:332
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:334
 #: bp-media/classes/class-bp-media-component.php:169
 #: bp-media/classes/class-bp-media-privacy.php:52
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:17
@@ -1334,7 +1340,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:284
 #: bp-forums/classes/class-bp-forums-component.php:335
 #: bp-forums/common/widgets.php:741 bp-forums/forums/template.php:49
-#: bp-forums/groups.php:1563 bp-media/bp-media-filters.php:1423
+#: bp-forums/groups.php:1563 bp-media/bp-media-filters.php:1421
 #: bp-media/bp-media-settings.php:239 bp-media/bp-media-settings.php:246
 #: bp-media/bp-media-settings.php:253 bp-media/bp-media-settings.php:260
 #: bp-media/bp-media-settings.php:267 bp-media/classes/class-bp-media.php:751
@@ -2494,7 +2500,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
 #: bp-media/bp-media-settings.php:1261 bp-media/bp-media-settings.php:1294
-#: bp-media/bp-media-settings.php:1820 bp-media/bp-media-settings.php:1845
+#: bp-media/bp-media-settings.php:1818 bp-media/bp-media-settings.php:1843
 msgid "Description"
 msgstr ""
 
@@ -2961,7 +2967,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2497
-#: bp-media/bp-media-filters.php:1471
+#: bp-media/bp-media-filters.php:1469
 msgid "Run Migration"
 msgstr ""
 
@@ -3150,7 +3156,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:46
 #: bp-core/classes/class-bp-admin-tab.php:326
 #: bp-core/classes/class-bp-admin-tab.php:349 bp-forums/groups.php:347
-#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:50
+#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:48
 msgid "Save Settings"
 msgstr ""
 
@@ -3523,11 +3529,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:584
 #: bp-core/admin/bp-core-admin-settings.php:969
 #: bp-core/admin/bp-core-admin-settings.php:1326
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:217
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:232
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:246
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:374
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:390
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:218
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:233
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:247
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:376
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:392
 #: bp-integrations/learndash/templates/admin/buddypress/sync-meta-box.php:19
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:18
 msgid "None"
@@ -3722,8 +3728,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1639
 #: bp-integrations/buddyboss-app/bp-buddyboss-app-integration.php:22
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:12
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:22
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
 msgid "BuddyBoss App"
 msgstr ""
 
@@ -4054,7 +4060,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:313
 #: bp-document/classes/class-bp-document-theme-compat.php:165
 #: bp-groups/classes/class-bp-groups-component.php:812
-#: bp-media/bp-media-settings.php:30 bp-media/bp-media-settings.php:1449
+#: bp-media/bp-media-settings.php:30 bp-media/bp-media-settings.php:1447
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1226
 #: bp-moderation/classes/class-bp-moderation-document.php:119
 #: bp-performance/classes/class-settings.php:147
@@ -4071,7 +4077,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:57 bp-core/bp-core-functions.php:786
 #: bp-groups/classes/class-bp-groups-component.php:832
-#: bp-media/bp-media-settings.php:36 bp-media/bp-media-settings.php:1713
+#: bp-media/bp-media-settings.php:36 bp-media/bp-media-settings.php:1711
 #: bp-moderation/classes/class-bp-moderation-video.php:119
 #: bp-performance/classes/class-settings.php:154
 #: bp-search/bp-search-settings.php:808
@@ -4121,7 +4127,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:645
 #: bp-groups/classes/class-bp-groups-component.php:974
 #: bp-groups/classes/class-bp-groups-list-table.php:439
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:493
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:495
 #: bp-members/classes/class-bp-core-members-widget.php:307
 #: bp-members/classes/class-bp-members-component.php:37
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:516
@@ -4212,7 +4218,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:49 bp-forums/topics/template.php:50
-#: bp-media/bp-media-filters.php:1429
+#: bp-media/bp-media-filters.php:1427
 #: bp-templates/bp-nouveau/includes/groups/classes.php:316
 msgid "Discussions"
 msgstr ""
@@ -4229,7 +4235,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:1435
+#: bp-media/bp-media-filters.php:1433
 msgid "Replies"
 msgstr ""
 
@@ -4367,7 +4373,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1591 bp-forums/admin/tools.php:1593
 #: bp-forums/admin/tools.php:1667 bp-forums/admin/tools.php:1669
 #: bp-forums/admin/tools.php:1741 bp-forums/admin/tools.php:1743
-#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1818
+#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1816
 #: bp-video/bp-video-filters.php:996
 msgid "Complete!"
 msgstr ""
@@ -4833,7 +4839,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:1417
+#: bp-media/bp-media-filters.php:1415
 msgid "Media"
 msgstr ""
 
@@ -4919,7 +4925,7 @@ msgid "Video"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:24
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:455
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:457
 #: bp-media/bp-media-settings.php:69 bp-media/bp-media-settings.php:88
 #: bp-media/bp-media-settings.php:119 bp-media/bp-media-settings.php:127
 #: bp-media/bp-media-settings.php:135 bp-media/bp-media-settings.php:142
@@ -5282,8 +5288,8 @@ msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:44
 #: bp-core/admin/templates/check-video-mime-type.php:44
-#: bp-media/bp-media-settings.php:1263 bp-media/bp-media-settings.php:1324
-#: bp-media/bp-media-settings.php:1821 bp-media/bp-media-settings.php:1848
+#: bp-media/bp-media-settings.php:1263 bp-media/bp-media-settings.php:1322
+#: bp-media/bp-media-settings.php:1819 bp-media/bp-media-settings.php:1846
 msgid "MIME Type"
 msgstr ""
 
@@ -7996,7 +8002,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:457
 #: bp-integrations/compatibility/bp-compatibility-integration.php:21
-#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:15
+#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:13
 #. translators: 1. Text. 2. Text.
 msgid "BuddyPress"
 msgstr ""
@@ -8315,7 +8321,7 @@ msgid "A dynamic list of network posts"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-network-posts-widget.php:148
-#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:38
+#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:39
 #: bp-templates/bp-nouveau/buddypress/search/loop/product.php:35
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-courses.php:40
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:33
@@ -8415,7 +8421,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1214 bp-groups/bp-groups-template.php:748
 #: bp-groups/bp-groups-template.php:749 bp-groups/bp-groups-template.php:764
 #: bp-groups/classes/class-bp-groups-list-table.php:652
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:334
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:336
 #: bp-moderation/classes/class-bp-moderation-list-table.php:298
 msgid "Hidden"
 msgstr ""
@@ -8427,7 +8433,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:754 bp-groups/bp-groups-template.php:766
 #: bp-groups/bp-groups-template.php:1499
 #: bp-groups/classes/class-bp-groups-list-table.php:649
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:333
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:335
 msgid "Private"
 msgstr ""
 
@@ -9764,7 +9770,7 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1207 bp-media/bp-media-filters.php:1913
+#: bp-document/bp-document-filters.php:1207 bp-media/bp-media-filters.php:1911
 #: bp-video/bp-video-filters.php:1089
 msgid "File not found"
 msgstr ""
@@ -9791,7 +9797,7 @@ msgid_plural "%s documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-document/bp-document-filters.php:1790 bp-media/bp-media-filters.php:2330
+#: bp-document/bp-document-filters.php:1790 bp-media/bp-media-filters.php:2328
 #: bp-video/bp-video-filters.php:1494
 msgid "<a href=\"%1$s\" target=\"_blank\">%2$s uploaded</a>"
 msgstr ""
@@ -9886,7 +9892,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-privacy.php:58
 #: bp-document/classes/class-bp-document.php:675
 #: bp-document/classes/class-bp-document.php:1374
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:181
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:182
 #: bp-media/classes/class-bp-media-album.php:520
 #: bp-media/classes/class-bp-media-privacy.php:59
 #: bp-media/classes/class-bp-media.php:740
@@ -14167,8 +14173,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4129
 #: bp-groups/bp-groups-functions.php:4148
 #: bp-groups/bp-groups-functions.php:4165
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:371
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:387
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:373
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:389
 #. translators: user role
 msgid "Organizer"
 msgstr ""
@@ -14178,8 +14184,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4131
 #: bp-groups/bp-groups-functions.php:4150
 #: bp-groups/bp-groups-functions.php:4167
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:372
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:388
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:374
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:390
 #. translators: user role
 msgid "Moderator"
 msgstr ""
@@ -14416,9 +14422,11 @@ msgid "%1$s on %2$s %3$s"
 msgstr ""
 
 #: bp-forums/common/widgets.php:1315
+#: bp-integrations/learndash/core/Core.php:140
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:152
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:157
 #. translators: 1: reply link, 2: reply timestamp.
+#. translators: %s: Group count for the current user
 msgid "%1$s %2$s"
 msgstr ""
 
@@ -14949,8 +14957,8 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4133
 #: bp-groups/bp-groups-functions.php:4152
 #: bp-groups/bp-groups-functions.php:4169
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:373
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:389
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:375
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-members/bp-members-functions.php:3887
 #: bp-members/classes/class-bp-members-admin.php:971
 msgid "Member"
@@ -16909,7 +16917,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4123
 #: bp-groups/bp-groups-functions.php:4142
 #: bp-groups/bp-groups-functions.php:4159
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:491
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:493
 msgid "Organizers"
 msgstr ""
 
@@ -16925,7 +16933,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:688
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:718
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:748
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:347
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:349
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:85
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:106
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:129
@@ -17011,7 +17019,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4125
 #: bp-groups/bp-groups-functions.php:4144
 #: bp-groups/bp-groups-functions.php:4161
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:492
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:494
 msgid "Moderators"
 msgstr ""
 
@@ -17609,7 +17617,7 @@ msgid "Pending Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:797
-#: bp-media/bp-media-filters.php:94 bp-media/bp-media-filters.php:1411
+#: bp-media/bp-media-filters.php:94 bp-media/bp-media-filters.php:1409
 #: bp-media/classes/class-bp-media-component.php:300
 #: bp-search/bp-search-settings.php:786
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:14
@@ -18897,7 +18905,7 @@ msgstr ""
 msgid "Group invite rejected"
 msgstr ""
 
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:18
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:16
 msgid ""
 "Access your community from a native mobile app using the %s. BuddyBoss App "
 "is a paid product built by BuddyBoss, providing native iOS and Android apps "
@@ -18908,19 +18916,19 @@ msgid ""
 "offline!"
 msgstr ""
 
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:32
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:30
 msgid "Video Demo"
 msgstr ""
 
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:39
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:37
 msgid "More Info"
 msgstr ""
 
-#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:16
+#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:14
 msgid "Third party plugin settings"
 msgstr ""
 
-#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:52
+#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:50
 msgid ""
 "In BuddyPress, developers frequently added their plugin options into "
 "Settings > BuddyPress > Options. If you enable any third party BuddyPress "
@@ -18935,249 +18943,249 @@ msgstr ""
 msgid "Social Group Sync"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:113
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:276
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:114
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:278
 #. translators: 1. From text. 2. Group link. 3. To text link. 4. post type
 #. group link.
-msgid "Enable group sync functionality %1$s %2$s %3$s %4$s"
+msgid "Enable group sync functionality "
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:117
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:280
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:118
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:282
 #. translators: 1. From text.
 msgid "from"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:130
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:311
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:131
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:313
 #. translators: 1. Group link. 2. Group Text.
 msgid "BuddyBoss Social Groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:135
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:298
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:136
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:300
 #. translators: 1. To text.
 msgid "to"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:148
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:293
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:149
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:295
 #. translators: 1. Post type group link. 2. Post type group text.
 msgid "LearnDash Groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:157
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:158
 msgid "Create LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:159
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:160
 msgid ""
 "Allow social group organizers to create associated LearnDash groups during "
 "the group creation process"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:167
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:168
 msgid "Manage LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:169
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:170
 msgid ""
 "Allow social group organizers to manage associated LearnDash groups after "
 "the group creation process"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:176
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:177
 msgid "Course Tab Visibility"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:179
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:180
 msgid "Anyone"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:180
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:181
 msgid "Loggedin Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:182
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:183
 msgid "No one"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:185
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:186
 msgid "Select who can see the course tab in social groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:192
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:193
 msgid "Auto Create LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:194
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:195
 msgid "Automatically create and associate a LearnDash group upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:195
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:196
 msgid ""
 "Required if you want an associated LearnDash group, and course tab is "
 "disabled during creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:202
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:203
 msgid "Auto Delete LearnDash Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:204
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:205
 msgid ""
 "Automatically delete the associated LearnDash group when the social group "
 "is deleted"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:205
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:206
 msgid "Uncheck this to delete the group manually"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:212
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:213
 msgid "Sync Organizers"
-msgstr ""
-
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:215
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:230
-msgid "Group Leader"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:216
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:231
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:245
+msgid "Group Leader"
+msgstr ""
+
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:217
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:232
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:246
 msgid "Group User"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:220
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:221
 msgid ""
 "Social group \"Organizers\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:227
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:228
 msgid "Sync Moderators"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:235
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:236
 msgid ""
 "Social group \"Moderators\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:242
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:243
 msgid "Sync Members"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:249
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:250
 msgid ""
 "Social group \"Members\" will be assigned to the above role in LearnDash "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:265
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:266
 msgid "LearnDash groups <span>&rarr; Social groups</span>"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:272
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:273
 msgid "LearnDash Group Sync"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:320
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:322
 msgid "Auto Create Social Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:322
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:324
 msgid "Automatically create and associate a Social Group upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:329
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:331
 msgid "Social Group Privacy"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:337
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:339
 msgid "Select the default social group Privacy setting upon creation"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:344
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:346
 msgid "Social Group Invite Status"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:348
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:350
 msgid "Group organizers and moderators only"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:349
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:351
 msgid "Group organizers only"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:352
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:354
 msgid "Select which group members can invite others to join the group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:359
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:361
 msgid "Auto Delete Social Group"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:361
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:363
 msgid ""
 "Automatically delete the associated Social Group when the LearnDash group "
 "is deleted"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:368
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:370
 msgid "Sync Leaders"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:377
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:379
 msgid ""
 "LearnDash \"Group Leaders\" will be assigned to the above role in social "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:384
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:386
 msgid "Sync Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:393
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:395
 msgid ""
 "LearnDash \"Group Users\" will be assigned to the above role in social "
 "groups"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:412
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:414
 msgid "Group Reports Settings"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:418
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:420
 msgid "Group Reports"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:420
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:422
 msgid "Enable Social Group Report for LearnDash"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:427
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:429
 msgid "Report Access"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:437
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:439
 msgid "Report Results Per Page"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:440
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:442
 msgid "Number of report results displayed per page"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:462
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:464
 msgid "My Courses Tab"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:464
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:466
 msgid "Display \"Courses\" tab in profiles"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:465
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:467
 msgid ""
 "Adds a tab to the logged in member's profile displaying all courses they "
 "are enrolled in, and a matching link in the profile dropdown. If any "
@@ -19185,11 +19193,11 @@ msgid ""
 "member has earned."
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:477
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:479
 msgid "Control the setting for social group's reports."
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:513
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:515
 msgid "Select which roles can view reports"
 msgstr ""
 
@@ -19630,30 +19638,25 @@ msgstr ""
 msgid "BuddyBoss LearnDash"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:119
+#: bp-integrations/learndash/core/Core.php:114
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1131
 #. translators: My Courses
 msgid "My %s"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:120
+#: bp-integrations/learndash/core/Core.php:115
 msgid "Create a %s"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:126
+#: bp-integrations/learndash/core/Core.php:121
 msgid "My Certificates"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:127
+#: bp-integrations/learndash/core/Core.php:122
 msgid "Certificates"
 msgstr ""
 
-#: bp-integrations/learndash/core/Core.php:145
-#. translators: %s: Group count for the current user
-msgid "%s %s"
-msgstr ""
-
-#: bp-integrations/learndash/core/Core.php:622
+#: bp-integrations/learndash/core/Core.php:628
 msgid "RESUME"
 msgstr ""
 
@@ -20166,42 +20169,42 @@ msgid ""
 msgstr ""
 
 #: bp-media/bp-media-filters.php:1290 bp-media/bp-media-filters.php:1306
-#: bp-media/bp-media-filters.php:1307 bp-media/bp-media-filters.php:1381
-#: bp-media/bp-media-filters.php:1519
+#: bp-media/bp-media-filters.php:1307 bp-media/bp-media-filters.php:1379
+#: bp-media/bp-media-filters.php:1517
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1388
+#: bp-media/bp-media-filters.php:1386
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1405
+#: bp-media/bp-media-filters.php:1403
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1408
+#: bp-media/bp-media-filters.php:1406
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1413 bp-media/bp-media-filters.php:1419
-#: bp-media/bp-media-filters.php:1425 bp-media/bp-media-filters.php:1431
-#: bp-media/bp-media-filters.php:1437
+#: bp-media/bp-media-filters.php:1411 bp-media/bp-media-filters.php:1417
+#: bp-media/bp-media-filters.php:1423 bp-media/bp-media-filters.php:1429
+#: bp-media/bp-media-filters.php:1435
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1449 bp-media/bp-media-filters.php:1463
+#: bp-media/bp-media-filters.php:1447 bp-media/bp-media-filters.php:1461
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1458 bp-media/bp-media-functions.php:2196
+#: bp-media/bp-media-filters.php:1456 bp-media/bp-media-functions.php:2196
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1470
+#: bp-media/bp-media-filters.php:1468
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -20209,7 +20212,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1517
+#: bp-media/bp-media-filters.php:1515
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -20218,39 +20221,39 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1663
+#: bp-media/bp-media-filters.php:1661
 msgid "Repair media on the site."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1668
+#: bp-media/bp-media-filters.php:1666
 msgid "Repair forum media privacy"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1673
+#: bp-media/bp-media-filters.php:1671
 msgid "Repair messages media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1706 bp-media/bp-media-filters.php:1768
+#: bp-media/bp-media-filters.php:1704 bp-media/bp-media-filters.php:1766
 msgid "%s media updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1716 bp-media/bp-media-filters.php:1778
+#: bp-media/bp-media-filters.php:1714 bp-media/bp-media-filters.php:1776
 msgid "Media update complete!"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1806
+#: bp-media/bp-media-filters.php:1804
 msgid "%s Forums media privacy updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1814
+#: bp-media/bp-media-filters.php:1812
 msgid "Forums media privacy updated %s"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1931
+#: bp-media/bp-media-filters.php:1929
 msgid "Go to media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:2325
+#: bp-media/bp-media-filters.php:2323
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:41
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:39
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:39
@@ -20448,7 +20451,7 @@ msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1260 bp-media/bp-media-settings.php:1290
-#: bp-media/bp-media-settings.php:1819 bp-media/bp-media-settings.php:1841
+#: bp-media/bp-media-settings.php:1817 bp-media/bp-media-settings.php:1839
 msgid "Extension"
 msgstr ""
 
@@ -20456,133 +20459,133 @@ msgstr ""
 msgid "Icon"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1291 bp-media/bp-media-settings.php:1347
-#: bp-media/bp-media-settings.php:1842 bp-media/bp-media-settings.php:1871
+#: bp-media/bp-media-settings.php:1291 bp-media/bp-media-settings.php:1345
+#: bp-media/bp-media-settings.php:1840 bp-media/bp-media-settings.php:1869
 msgid ".extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1295 bp-media/bp-media-settings.php:1351
-#: bp-media/bp-media-settings.php:1846 bp-media/bp-media-settings.php:1875
+#: bp-media/bp-media-settings.php:1295 bp-media/bp-media-settings.php:1349
+#: bp-media/bp-media-settings.php:1844 bp-media/bp-media-settings.php:1873
 msgid "description"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1325 bp-media/bp-media-settings.php:1366
-#: bp-media/bp-media-settings.php:1849 bp-media/bp-media-settings.php:1878
+#: bp-media/bp-media-settings.php:1323 bp-media/bp-media-settings.php:1364
+#: bp-media/bp-media-settings.php:1847 bp-media/bp-media-settings.php:1876
 msgid "MIME type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1329 bp-media/bp-media-settings.php:1367
-#: bp-media/bp-media-settings.php:1853 bp-media/bp-media-settings.php:1879
+#: bp-media/bp-media-settings.php:1327 bp-media/bp-media-settings.php:1365
+#: bp-media/bp-media-settings.php:1851 bp-media/bp-media-settings.php:1877
 msgid "MIME Checker"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1375 bp-media/bp-media-settings.php:1887
+#: bp-media/bp-media-settings.php:1373 bp-media/bp-media-settings.php:1885
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1388 bp-video/bp-video-settings.php:318
+#: bp-media/bp-media-settings.php:1386 bp-video/bp-video-settings.php:318
 msgid "<a href=\"%s\">Manage</a> which file extensions are allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1450 bp-media/bp-media-settings.php:1714
+#: bp-media/bp-media-settings.php:1448 bp-media/bp-media-settings.php:1712
 msgid "&#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1493 bp-media/bp-media-settings.php:1776
+#: bp-media/bp-media-settings.php:1491 bp-media/bp-media-settings.php:1774
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1512 bp-media/bp-media-settings.php:1729
+#: bp-media/bp-media-settings.php:1510 bp-media/bp-media-settings.php:1727
 msgid ""
 "Check which file extensions are allowed to be uploaded. Add custom "
 "extensions at the bottom of the table."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1534 bp-media/bp-media-settings.php:1579
+#: bp-media/bp-media-settings.php:1532 bp-media/bp-media-settings.php:1577
 #: bp-video/bp-video-settings.php:276
 msgid "MB"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1539
+#: bp-media/bp-media-settings.php:1537
 msgid ""
 "Set a maximum file size for photo uploads, in megabytes. Your server's "
 "maximum upload size is "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1584
+#: bp-media/bp-media-settings.php:1582
 msgid ""
 "Set a maximum file size for document uploads, in megabytes. Your server's "
 "maximum upload size is "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1619 bp-media/bp-media-settings.php:1653
+#: bp-media/bp-media-settings.php:1617 bp-media/bp-media-settings.php:1651
 msgid "per batch"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1622
+#: bp-media/bp-media-settings.php:1620
 msgid ""
 "Set a maximum number of images that can be added to one activity post or "
 "photo upload."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1656
+#: bp-media/bp-media-settings.php:1654
 msgid ""
 "Set a maximum number of files that can be added to one activity post or "
 "document upload."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1905
+#: bp-media/bp-media-settings.php:1903
 msgid ""
 "Enable symbolic links. If you are having issues with media display, try "
 "disabling this option."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1917
+#: bp-media/bp-media-settings.php:1915
 msgid ""
 "Symbolic function disabled on your server. Please contact your hosting "
 "provider."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1928 bp-media/bp-media-settings.php:1939
+#: bp-media/bp-media-settings.php:1926 bp-media/bp-media-settings.php:1937
 msgid ""
 "Symbolic links don't seem to work on your server. Please contact BuddyBoss "
 "for support."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1950
+#: bp-media/bp-media-settings.php:1948
 msgid "Symbolic links are disabled"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1959
+#: bp-media/bp-media-settings.php:1957
 msgid "Symbolic links are activated"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1966
+#: bp-media/bp-media-settings.php:1964
 msgid ""
 "Symbolic links are used to create \"shortcuts\" to media files uploaded by "
 "members, providing optimal security and performance. If symbolic links are "
 "disabled, a fallback method will be used to protect your media files."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2071
+#: bp-media/bp-media-settings.php:2069
 msgid "Direct access to your media files and folders is not blocked"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2077 bp-media/bp-media-settings.php:2083
+#: bp-media/bp-media-settings.php:2075 bp-media/bp-media-settings.php:2081
 msgid "Direct access to your media files and folders is blocked"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2089
+#: bp-media/bp-media-settings.php:2087
 msgid ""
 "If our plugin is unable to automatically block direct access to your media "
 "files and folders, please follow the steps in our "
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2091
+#: bp-media/bp-media-settings.php:2089
 msgid "Media Permissions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:2092
+#: bp-media/bp-media-settings.php:2090
 msgid " tutorial to configure your server."
 msgstr ""
 
@@ -26216,7 +26219,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:43
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:47
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons-ajax.php:45
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:45
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons.php:57
 #. translators: total topics
 msgid "%d topic"
 msgid_plural "%d topics"
@@ -26264,7 +26267,7 @@ msgid "View Conversation"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/post-ajax.php:43
-#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:52
+#: bp-templates/bp-nouveau/buddypress/search/loop/post.php:54
 #. translators: %s author name
 msgid "By %s"
 msgstr ""
@@ -26281,8 +26284,8 @@ msgid_plural "%d lessons"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic-ajax.php:45
-#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:47
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic-ajax.php:57
+#: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-topic.php:59
 msgid "%d quiz"
 msgid_plural "%d quizzes"
 msgstr[0] ""
