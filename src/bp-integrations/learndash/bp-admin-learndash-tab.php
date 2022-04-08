@@ -110,7 +110,8 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			array(
 				'input_text'   => sprintf(
 				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
-					esc_html__( 'Enable group sync functionality %1$s %2$s %3$s %4$s', 'buddyboss' ),
+					'%1$s %2$s %3$s %4$s %5$s',
+					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
 					sprintf(
 					/* translators: 1. From text. */
 						'<strong><em>%s</em></strong>',
@@ -273,7 +274,8 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			array(
 				'input_text'   => sprintf(
 				/* translators: 1. From text. 2. Group link. 3. To text link. 4. post type group link. */
-					esc_html__( 'Enable group sync functionality %1$s %2$s %3$s %4$s', 'buddyboss' ),
+					'%1$s %2$s %3$s %4$s %5$s',
+					esc_html__( 'Enable group sync functionality ', 'buddyboss' ),
 					sprintf(
 					/* translators: 1. From text. */
 						'<strong><em>%s</em></strong>',
