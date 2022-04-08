@@ -1768,7 +1768,7 @@ function bb_update_to_1_9_1() {
 /**
  * Update routine.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_update_to_1_9_3() {
 
@@ -1785,7 +1785,7 @@ function bb_update_to_1_9_3() {
 /**
  * Update the email situation labels.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_core_update_email_situation_labels() {
 
@@ -1815,7 +1815,7 @@ function bb_core_update_email_situation_labels() {
 /**
  * Update the users settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_core_update_user_settings() {
 	global $bp_background_updater;
@@ -1853,7 +1853,7 @@ function bb_core_update_user_settings() {
 /**
  * Migrate notification preferences.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param array $user_ids Array of user ids.
  *

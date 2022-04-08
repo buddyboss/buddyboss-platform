@@ -69,7 +69,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 			/**
 			 * Filters plugin-added friends-related custom component_actions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 1.9.3
 			 *
 			 * @param string $notification      Null value.
 			 * @param int    $item_id           The primary item ID.

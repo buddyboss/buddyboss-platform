@@ -504,7 +504,7 @@ add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 
 /**
  * Render registered notifications into frontend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_render_notification_settings() {
 	$registered_notification = bb_register_notification_preferences();

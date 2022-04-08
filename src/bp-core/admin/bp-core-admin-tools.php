@@ -918,7 +918,7 @@ function bp_core_admin_available_tools_intro() {
 /**
  * Install Missing emails from defaults.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array
  */

@@ -778,7 +778,7 @@ function bp_core_get_js_strings_callback( $params ) {
 /**
  * Register the messages notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_load_messages_notifications() {
 	if ( class_exists( 'BP_Messages_Notification' ) ) {
