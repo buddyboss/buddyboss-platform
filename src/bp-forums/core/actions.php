@@ -305,7 +305,7 @@ add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 /**
  * Register the forum notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_load_forums_notifications() {
 	if ( class_exists( 'BP_Forums_Notification' ) ) {
