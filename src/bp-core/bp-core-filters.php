@@ -1122,6 +1122,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	// These options are escaped with esc_html on the way into the database in sanitize_option().
 	$tokens['site.description'] = wp_specialchars_decode( bp_get_option( 'blogdescription' ), ENT_QUOTES );
 	$tokens['site.name']        = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
+	$tokens['reset.url']        = esc_url( wp_lostpassword_url() );
 
 	// Default values for tokens set conditionally below.
 	$tokens['email.preheader']    = '';
@@ -1164,7 +1165,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$tokens['unsubscribe'] = wp_login_url();
 	}
 
-	// Email preheader.
+	// Email pre header.
 	$post = $email->get_post_object();
 	if ( $post ) {
 		$tokens['email.preheader'] = sanitize_text_field( get_post_meta( $post->ID, 'bp_email_preheader', true ) );
@@ -2063,3 +2064,29 @@ function bb_member_enabled_gravatar( $no_grav, $params ) {
 	return $no_grav;
 }
 add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 );
+
+/**
+ * Filter the admin emails by notification preference.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ */
+function bb_filter_admin_emails( $query ) {
+	if (
+		is_admin() &&
+		$query->get( 'post_type' ) === bp_get_email_post_type() &&
+		! empty( $_GET['terms'] ) // phpcs:ignore
+	) {
+		$taxquery = array(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'field'    => 'slug',
+				'terms'    => explode( ',', $_GET['terms'] ), // phpcs:ignore
+			),
+		);
+
+		$query->set( 'tax_query', $taxquery );
+	}
+}
+add_action( 'pre_get_posts', 'bb_filter_admin_emails' );

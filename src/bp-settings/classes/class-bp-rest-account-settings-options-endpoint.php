@@ -914,6 +914,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			}
 
 			if ( bp_is_active( 'forums' ) ) {
+        
 				$fields_forums[] = array(
 					'name'        => '',
 					'label'       => '',
