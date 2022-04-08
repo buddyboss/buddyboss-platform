@@ -972,7 +972,7 @@ add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_gro
  * When there is My gorups menu available on the website,
  * use this filter to fix the current user's gorups link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param array $sorted_menu_objects Array of menu objects.
  * @param array $args                Array of arguments.
@@ -1000,7 +1000,7 @@ add_filter( 'wp_nav_menu_objects', 'bb_my_group_menu_url', 10, 2 );
 /**
  * Register the group notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_load_groups_notifications() {
 	if ( class_exists( 'BP_Groups_Notification' ) ) {

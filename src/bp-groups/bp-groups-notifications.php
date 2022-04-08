@@ -448,7 +448,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  * Format notifications for the Groups component.
  *
  * @since BuddyPress 1.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $action            The kind of notification being rendered.
  * @param int    $item_id           The primary item ID.
@@ -1081,7 +1081,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			 * Filters plugin-added group-related custom component_actions.
 			 *
 			 * @since BuddyPress 2.4.0
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 1.9.3
 			 *
 			 * @param string $notification      Null value.
 			 * @param int    $item_id           The primary item ID.
@@ -1106,7 +1106,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 	 * Fires right before returning the formatted group notifications.
 	 *
 	 * @since BuddyPress 1.0.0
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $action            The type of notification being rendered.
 	 * @param int    $item_id           The primary item ID.
@@ -1456,7 +1456,7 @@ add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
 /**
  * Fire user notification when group information has been updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int $group_id Group id.
  *
@@ -1528,7 +1528,7 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 /**
  * Mark group detail update notifications as read when a member views their group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_groups_group_details_update_mark_notifications() {
 	if ( isset( $_GET['n'] ) && bp_is_active( 'notifications' ) && bp_is_group_single() ) {
@@ -1548,7 +1548,7 @@ add_action( 'bp_template_redirect', 'bb_groups_group_details_update_mark_notific
 /**
  * Create notification meta based on groups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param object $notification Notification object.
  */

@@ -447,7 +447,7 @@ add_action( 'bp_notification_settings', 'friends_screen_notification_settings', 
 /**
  * Register the friends notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_load_friends_notifications() {
 	if ( class_exists( 'BP_Friends_Notification' ) ) {

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the Notification Abstract class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 abstract class BP_Core_Notification_Abstract {
 
 	/**
 	 * Preferences Group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var array
 	 */
@@ -28,7 +28,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Preferences.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var array
 	 */
@@ -37,7 +37,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var array
 	 */
@@ -45,7 +45,7 @@ abstract class BP_Core_Notification_Abstract {
 
 	/** Email Types.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var array
 	 */
@@ -54,7 +54,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Notification load default priority.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var int
 	 */
@@ -63,7 +63,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Notifications filters.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var array
 	 */
@@ -72,7 +72,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Initialize.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return void
 	 */
@@ -94,7 +94,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Abstract method to call the other methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return mixed|void
 	 */
@@ -105,7 +105,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param array $notifications Notification array.
 	 *
@@ -181,7 +181,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param array $notifications List of notifications.
 	 *
@@ -198,7 +198,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Email Schema.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param array $schema List of schema.
 	 *
@@ -219,7 +219,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Email Type Schema.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param array $type_schema List of types schema.
 	 *
@@ -240,7 +240,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register email with associated preference type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param array $emails Registered Emails.
 	 *
@@ -265,7 +265,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Filters the notification content for notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content               Component action.
 	 * @param int    $item_id               Notification item ID.
@@ -312,7 +312,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Filters active components with registered notifications callbacks.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 1.9.3
 	 *
 	 * @param array $component_names   Array of registered component names.
 	 */
@@ -337,7 +337,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $group_key         Group key.
 	 * @param string $group_label       Group label.
@@ -358,7 +358,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $notification_type        Notification Type key.
 	 * @param string $notification_label       Notification label.
@@ -381,7 +381,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register notification.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $component         Component name.
 	 * @param string $component_action  Component action.
@@ -402,7 +402,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Add email schema.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $email_type        Type of email being sent.
 	 * @param array  $args              Email arguments.
@@ -431,7 +431,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -452,7 +452,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register the notification filters.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_filters() {
 		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
@@ -495,7 +495,7 @@ abstract class BP_Core_Notification_Abstract {
 	/**
 	 * Register Notification Filter.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $notification_label    Notification label.
 	 * @param array  $notification_types    Notification types.

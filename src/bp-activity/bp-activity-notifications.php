@@ -98,7 +98,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			/**
 			 * Filters plugin-added activity-related custom component_actions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 1.9.3
 			 *
 			 * @param string $notification      Null value.
 			 * @param int    $item_id           The primary item ID.
@@ -526,7 +526,7 @@ add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single
 /**
  * Create notification meta based on activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param object $notification Notification object.
  */

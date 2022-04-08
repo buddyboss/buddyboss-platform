@@ -242,8 +242,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$cache_key = 'nested_child_forum_ids_' . bbp_get_forum_post_type() . '_' . $forum_id;
 			if ( ! isset( $bp_nested_child_forum_ids[ $cache_key ] ) ) {
 				// SQL query for getting all nested child forum id from parent forum id.
-			// @pvv variable is for storing the value of concatenation and used in FIND_IN_SET function.
-			// Default value of @pvv is the same as @pv that's why passing same forum_id twice.
 			$sql = "SELECT ID
 				FROM  ( SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ( 'publish', 'private', 'hidden' ) ) forum_sorted,
 					  ( SELECT @pv := %d, @pvv := %d ) initialisation

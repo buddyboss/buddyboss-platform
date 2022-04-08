@@ -6569,7 +6569,7 @@ function bb_core_remove_unfiltered_html( $content ) {
 /**
  * Check the notification is enabled for the user ot not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int    $user_id           User ID.
  * @param string $notification_type Notification type.
@@ -6661,7 +6661,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 /**
  * Functions to get all registered notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $component component name.
  */
@@ -6679,7 +6679,7 @@ function bb_register_notifications( $component = '' ) {
 /**
  * Functions to get all registered notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $component component name.
  */
@@ -6697,7 +6697,7 @@ function bb_register_notification_preferences( $component = '' ) {
 /**
  * Check whether to send notification to user or not based on their preferences.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int    $user_id          User id.
  * @param string $component_name   Component Name.
@@ -6733,7 +6733,7 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 /**
  * Get user notification preference values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int    $user_id   User id.
  * @param string $pref_type Notification preference type.
@@ -6762,7 +6762,7 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
 /**
  * Functions to get all/specific email templates which associates with notification type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $notification_type Notification type.
  */
@@ -6780,7 +6780,7 @@ function bb_register_notification_email_templates( $notification_type = '' ) {
 /**
  * Function to check the web notification enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return bool
  */
@@ -6791,7 +6791,7 @@ function bb_web_notification_enabled() {
 /**
  * Function to check the web push notification enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return bool
  */
@@ -6803,7 +6803,7 @@ function bb_web_push_notification_enabled() {
  * Function to check the app push notification enabled or not.
  * - enabled from app plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return bool
  */
@@ -6814,7 +6814,7 @@ function bb_app_notification_enabled() {
 /**
  * List preferences types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param array $field   Field data.
  * @param int   $user_id User id.
@@ -6884,7 +6884,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 /**
  * Check the notification registered with specific notification type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $notification_type Notification Type.
  *
@@ -6916,7 +6916,7 @@ function bb_check_notification_registered( string $notification_type ) {
 /**
  * Check the email type registered with specific notification type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $notification_type Notification Type.
  *
@@ -6948,7 +6948,7 @@ function bb_check_email_type_registered( string $notification_type ) {
 /**
  * Checks if notification preference is enabled or not with from buddyboss labs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int $default Default false.
  *
@@ -6961,7 +6961,7 @@ function bp_is_labs_notification_preferences_support_enabled( $default = 0 ) {
 /**
  * Enabled legacy email preferences.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return bool
  */
@@ -6972,7 +6972,7 @@ function bb_enabled_legacy_email_preference() {
 /**
  * Render the notification settings on the front end.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $notification_group Notification group name.
  */
@@ -7081,7 +7081,7 @@ function bb_render_notification( $notification_group ) {
 /**
  * Function to update the screen label based on the different scenarios.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array Settings data.
  */
@@ -7113,7 +7113,7 @@ function bb_core_notification_preferences_data() {
 /**
  * Create an option to render the manual notification options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array|void
  */
@@ -7144,7 +7144,7 @@ function bb_enable_notifications_options() {
 /**
  * Render the enable notification settings on the front end.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_render_enable_notification_options() {
 	$enable_notifications = bb_enable_notifications_options();
@@ -7195,7 +7195,7 @@ function bb_render_enable_notification_options() {
 /**
  * Create an option to render the manual notification options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array|void
  */
@@ -7226,7 +7226,7 @@ function bb_manual_notification_options() {
 /**
  * Render the manual notification settings on the front end.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_render_manual_notification() {
 
@@ -7291,7 +7291,7 @@ function bb_render_manual_notification() {
 /**
  * Fetch the settings based on the notification component and notification key.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $notification_key Notification key.
  * @param string $component        Component name.
@@ -7359,7 +7359,7 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 /**
  * Preferences Array Map.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array
  */
@@ -7387,7 +7387,7 @@ function bb_preferences_key_maps() {
 /**
  * Match the Keys with modern to old.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $type   Type of preference 'legacy' or 'modern'.
  * @param string $key    Key name.

@@ -3102,7 +3102,7 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 /**
  * Register the activity notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_load_activity_notifications() {
 	if ( class_exists( 'BP_Activity_Notification' ) ) {
@@ -3208,7 +3208,7 @@ add_action( 'bp_notification_settings', 'bp_activity_screen_notification_setting
 /**
  * Fire an email when some one mentioned users into the blog post comment and post published.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int  $comment_id  ID of the comment.
  * @param bool $is_approved Whether the comment is approved or not.

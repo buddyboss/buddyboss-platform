@@ -2068,7 +2068,7 @@ add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 
 /**
  * Filter the admin emails by notification preference.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param WP_Query $query The WP_Query instance (passed by reference).
  */
