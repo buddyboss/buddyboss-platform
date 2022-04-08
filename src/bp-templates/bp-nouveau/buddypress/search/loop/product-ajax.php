@@ -28,8 +28,8 @@ $product = wc_get_product( get_the_ID() ); ?>
 
 		<div class="item">
 			<div class="item-title"><?php the_title(); ?></div>
-            <?php wc_get_template( 'single-product/short-description.php' ); ?>
-            <div class="entry-meta">
+			<?php wc_get_template( 'single-product/short-description.php' ); ?>
+			<div class="entry-meta">
 				<?php
 				$category = wc_get_product_category_list( get_the_ID() );
 				if ( $category ) {

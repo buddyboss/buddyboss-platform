@@ -1297,9 +1297,7 @@ function bp_media_settings_callback_extension_document_support() {
 				<td data-colname="<?php esc_attr_e( 'Icon', 'buddyboss' ); ?>">
 					<?php
 					if ( $is_default ) {
-						?>
-						<i class="bb-icon-l <?php echo $document_icon; ?>"></i>
-						<?php
+						echo '<i class="bb-icon-l ' . esc_attr( $document_icon ) .  '"></i>';
 					}
 					if ( ! $is_default ) {
 						?>
