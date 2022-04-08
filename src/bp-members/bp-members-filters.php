@@ -798,7 +798,7 @@ add_action( 'bp_members_includes', 'bb_load_members_account_settings_notificatio
 /**
  * Register the Account Settings notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_load_members_account_settings_notifications() {
 	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {

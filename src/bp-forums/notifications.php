@@ -155,7 +155,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		/**
 		 * Format notification.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.3
 		 */
 		do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
 
@@ -229,7 +229,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		/**
 		 * Filters plugin-added forum-related custom component_actions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.3
 		 *
 		 * @param string $notification      Null value.
 		 * @param int    $item_id           The primary item id.
@@ -628,7 +628,7 @@ add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
 /**
  * Add notifications for the forum subscribers for creating a new discussion.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int   $topic_id Topic id.
  * @param int   $forum_id Forum id.
@@ -694,7 +694,7 @@ add_action( 'bbp_pre_notify_forum_subscribers', 'bb_pre_notify_forum_subscribers
 /**
  * Add notifications for the forum subscribers for creating a new discussion.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int   $reply_id Topic id.
  * @param int   $topic_id Forum id.
@@ -773,7 +773,7 @@ add_action( 'bbp_pre_notify_subscribers', 'bb_pre_notify_reply_subscribers', 10,
 /**
  * Mark notifications as read when reading a topic or reply subscribed notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param bool $success  any sucess ready performed or not.
  * @param int  $user_id  Current user ID.
@@ -801,7 +801,7 @@ add_action( 'bbp_notifications_handler', 'bb_mark_modern_notifications', 10, 3 )
 /**
  * Create notification meta based on forums.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param object $notification Notification object.
  */

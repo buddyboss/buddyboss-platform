@@ -3,7 +3,7 @@
  * Notifications Settings
  *
  * @package BuddyBoss\Notifications
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the Notification settings sections.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array
  */
@@ -39,18 +39,8 @@ function bb_notification_get_settings_sections() {
 						__( 'You can register your own notifications types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' )
 					),
 					'<a href="' .
-					esc_url(
-						bp_get_admin_url(
-							add_query_arg(
-								array(
-									'page'    => 'bp-help',
-									'article' => 125373,
-								),
-								'admin.php'
-							)
-						)
-					)
-					. '">' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
+					'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
+					. '" target="_blank" >' . esc_html__( 'this tutorial', 'buddyboss' ) . '</a>'
 				) : ''
 			),
 		),
@@ -62,7 +52,7 @@ function bb_notification_get_settings_sections() {
 /**
  * Link to Automatic Notification tutorial
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_automatic_notifications_tutorial() {
 	?>
@@ -91,7 +81,7 @@ function bb_automatic_notifications_tutorial() {
 /**
  * Get settings fields by section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $section_id Section id.
  *
@@ -113,7 +103,7 @@ function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all the settings fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array
  */
@@ -185,7 +175,7 @@ function bb_notification_get_settings_fields() {
 /**
  * Added instructions for the notification type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_admin_setting_callback_on_automatic_notification_information() {
 	echo '<p class="description notification-information">' .
@@ -196,7 +186,7 @@ function bb_admin_setting_callback_on_automatic_notification_information() {
 /**
  * Callback fields for the notification fields options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_admin_setting_callback_on_automatic_notification_fields() {
 	$all_notifications    = bb_register_notification_preferences();
@@ -358,7 +348,7 @@ function bb_admin_setting_callback_on_automatic_notification_fields() {
 /**
  * Callback fields for the notification warning.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_admin_setting_callback_notification_warning() {
 	echo '<p class="description notification-information bb-lab-notice">' .
@@ -386,7 +376,7 @@ function bb_admin_setting_callback_notification_warning() {
 /**
  * Callback fields for the notification fields options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param array $field   Fieldset data.
  * @param bool  $checked Is checked or not.

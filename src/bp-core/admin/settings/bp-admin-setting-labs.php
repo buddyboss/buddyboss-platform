@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main notification settings class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 class BB_Admin_Setting_Labs extends BP_Admin_Setting_tab {
 
 	/**
 	 * Initial method for this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return void
 	 */
@@ -33,7 +33,7 @@ class BB_Admin_Setting_Labs extends BP_Admin_Setting_tab {
 	/**
 	 * Register setting fields
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return void
 	 */
@@ -75,7 +75,7 @@ class BB_Admin_Setting_Labs extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register labs tab settings fields and section.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.3
 		 *
 		 * @param Object $this BB_Admin_Setting_Labs.
 		 */

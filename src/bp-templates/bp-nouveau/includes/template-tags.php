@@ -2776,7 +2776,7 @@ function nouveau_error_template( $message = '', $type = '' ) {
 /**
  * Displays the nav item link class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bp_nouveau_nav_link_class() {
 	echo esc_attr( bp_nouveau_get_nav_link_class() );
@@ -2785,7 +2785,7 @@ function bp_nouveau_nav_link_class() {
 /**
  * Retrieve the class attribute of the link for the current nav item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return string The link class for the nav item.
  */
@@ -2801,7 +2801,7 @@ function bp_nouveau_get_nav_link_class() {
 	/**
 	 * Filter to edit the link class attribute of the nav.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $link_class The link class attribute for the nav item.
 	 * @param object $nav_item   The current nav item object.

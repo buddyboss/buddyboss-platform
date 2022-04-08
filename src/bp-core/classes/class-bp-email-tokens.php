@@ -589,7 +589,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token mentioned.content
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
