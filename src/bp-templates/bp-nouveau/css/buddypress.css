@@ -4351,6 +4351,7 @@ span.dashicons.dashicons-admin-file:before {
     flex: 0 0 100% !important;
     max-width: 100% !important;
     min-width: auto !important;
+    position: relative;
   }
   .bb-activity-media-wrap .bb-activity-media-elem .entry-img,
   .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem .entry-img {
