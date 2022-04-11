@@ -850,10 +850,15 @@ function messages_notification_new_message( $raw_args = array() ) {
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
 
+	$type_key = 'notification_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
 
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+		if ( $sender_id == $recipient->user_id || false === bb_is_notification_enabled( $recipient->user_id, $type_key ) ) {
 			continue;
 		}
 
@@ -990,7 +995,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 									'message'     => stripslashes( $message ),
 									'sender.name' => $sender_name,
 									'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-									'group.name'  => $group_name
+									'group.name'  => $group_name,
 								),
 							),
 						),
@@ -1000,12 +1005,20 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			}
 			$bb_email_background_updater->dispatch();
 		}
-
 	} else {
 		// Send an email to each recipient.
+
+		$type_key = 'notification_group_messages_new_message';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+
 		foreach ( $recipients as $recipient ) {
 
-			if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+			if (
+				(int) $sender_id === (int) $recipient->user_id ||
+				false === bb_is_notification_enabled( $recipient->user_id, $type_key )
+			) {
 				continue;
 			}
 
@@ -1318,7 +1331,9 @@ function bb_messages_recipients_per_page() {
 function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
 
 	// setup post data into $_POST.
-	$_POST        = $post_data;
+	if ( is_array( $post_data ) ) {
+		$_POST = $post_data;
+	}
 	$message_args = array();
 	$message      = '';
 
@@ -1454,9 +1469,18 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 	}
 
 	// Send an email to all recipient.
+
+	$type_key = 'notification_group_messages_new_message';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	foreach ( $recipients as $recipient ) {
 
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_group_messages_new_message', true ) ) {
+		if (
+			(int) $sender_id === (int) $recipient->user_id ||
+			false === bb_is_notification_enabled( $recipient->user_id, $type_key )
+		) {
 			continue;
 		}
 
