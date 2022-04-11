@@ -583,7 +583,7 @@ window.bp = window.bp || {};
 			// Edit Activity Loader.
 			this.openEditActivityPopup();
 
-			// Navigate to specific comment when there's e.g. #acomment123 in url
+			// Navigate to specific comment when there's e.g. #acomment123 in url.
 			this.navigateToSpecificComment();
 
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
