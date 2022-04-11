@@ -1966,7 +1966,7 @@ window.bp = window.bp || {};
 							// Check friend count set.
 							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
 								// Check friend count > 0 then show the count span.
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
@@ -1979,7 +1979,7 @@ window.bp = window.bp || {};
 									$( friend_with_count ).hide();
 								}
 							} else if ( undefined !== response.data.friend_count ) {
-								if ( response.data.friend_count > 0 ) {
+								if ( '0' !== response.data.friend_count ) {
 									if ( ( friend_with_count ).length ) {
 										// Update count span.
 										$( friend_with_count ).html( response.data.friend_count );
