@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Single Group Invites
+ * The template for members single group invites
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/groups/invites.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -37,9 +39,18 @@
                             <?php if ( ! empty( $inviter ) ) : ?>
                                 <span class="small">
                                 <?php
-                                //@todo NO HTML in text domain please
-								$member = new BP_Groups_Member( bp_displayed_user_id(), bp_get_group_id() );
-                                printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>', 'buddyboss' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
+								printf(
+										__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
+										sprintf(
+												'<a href="%s">%s</a>',
+												$inviter['url'],
+												$inviter['name']
+										),
+										sprintf(
+												'<span class="last-activity">%s</span>',
+												bp_core_time_since( $inviter['date_modified'] )
+										)
+								);
                                 ?>
                                 </span>
                             <?php endif; ?>

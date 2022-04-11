@@ -25,7 +25,7 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 
 	return array_merge( $styles, array(
 		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/css/mentions%1$s%2$s.css',
+			'file'         => buddypress()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 		),
@@ -48,7 +48,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 
 	return array_merge( $scripts, array(
 		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
+			'file'         => buddypress()->plugin_url . 'bp-core/js/mentions%s.js',
 			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
 			'version'      => bp_get_version(),
 			'footer'       => true,
@@ -98,43 +98,45 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	}
 
 	$params['messages'] = array(
-		'errors'              => array(
+		'errors'                     => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
 			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss' ),
 		),
-		'nonces'              => array(
+		'nonces'                     => array(
 			'send'           => wp_create_nonce( 'messages_send_message' ),
 			'load_recipient' => wp_create_nonce( 'messages_load_recipient' ),
 		),
-		'loading'             => __( 'Loading messages. Please wait.', 'buddyboss' ),
-		'doingAction'         => array(
-			'read'   => __( 'Marking messages as read. Please wait.', 'buddyboss' ),
-			'unread' => __( 'Marking messages as unread. Please wait.', 'buddyboss' ),
-			'delete' => __( 'Deleting messages. Please wait.', 'buddyboss' ),
-			'star'   => __( 'Starring messages. Please wait.', 'buddyboss' ),
-			'unstar' => __( 'Unstarring messages. Please wait.', 'buddyboss' ),
+		'loading'                    => __( 'Loading messages.', 'buddyboss' ),
+		'doingAction'                => array(
+			'read'        => __( 'Marking read.', 'buddyboss' ),
+			'unread'      => __( 'Marking unread.', 'buddyboss' ),
+			'delete'      => __( 'Deleting messages.', 'buddyboss' ),
+			'star'        => __( 'Starring messages.', 'buddyboss' ),
+			'unstar'      => __( 'Unstarring messages.', 'buddyboss' ),
+			'hide_thread' => __( 'Hiding conversation.', 'buddyboss' ),
 		),
-		'type_message'        => __( 'Type message', 'buddyboss' ),
-		'delete_confirmation' => __( 'Are you sure you want to delete this conversation? This will permanently delete the conversation history and cannot be undone.', 'buddyboss' ),
-		'bulk_actions'        => bp_nouveau_messages_get_bulk_actions(),
-		'howtoBulk'           => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
-		'toOthers'            => array(
+		'type_message'               => __( 'Type message', 'buddyboss' ),
+		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
+		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss' ),
+		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
+		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
+		'toOthers'                   => array(
 			'one'  => __( '1 other', 'buddyboss' ),
 			'more' => __( '%d others', 'buddyboss' ),
 		),
-		'rootUrl'             => parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
-		'hasThreads'          => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
+		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
+		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
 	);
 
 	// Star private messages.
 	if ( bp_is_active( 'messages', 'star' ) ) {
 		$params['messages'] = array_merge( $params['messages'], array(
-			'strings' => array(
-				'text_unstar'  => __( 'Unstar', 'buddyboss' ),
-				'text_star'    => __( 'Star', 'buddyboss' ),
-				'title_unstar' => __( 'Starred', 'buddyboss' ),
-				'title_star'   => __( 'Not starred', 'buddyboss' ),
+			'strings'          => array(
+				'text_unstar'         => __( 'Unstar', 'buddyboss' ),
+				'text_star'           => __( 'Star', 'buddyboss' ),
+				'title_unstar'        => __( 'Starred', 'buddyboss' ),
+				'title_star'          => __( 'Not starred', 'buddyboss' ),
 				'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
 				'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
 			),
@@ -142,11 +144,6 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'star_counter'     => 0,
 			'unstar_counter'   => 0
 		) );
-	}
-
-	// Friends active for force friendship to message.
-	if ( bp_is_active( 'friends' ) ) {
-		$params['messages']['force_friendship_to_message'] = bp_force_friendship_to_message();
 	}
 
 	return $params;
@@ -477,6 +474,11 @@ function bp_nouveau_messages_get_bulk_actions() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_notification_filters() {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	bp_nouveau_notifications_register_filter(
 		array(
 			'id'       => 'new_message',

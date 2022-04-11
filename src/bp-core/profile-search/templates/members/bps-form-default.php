@@ -130,7 +130,7 @@ foreach ( $F->fields as $f ) {
 			$km          = __( 'km', 'buddyboss' );
 			$miles       = __( 'miles', 'buddyboss' );
 			$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-			$icon_url    = plugins_url( 'bp-profile-search/templates/members/locator.png' );
+			$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
 			$icon_title  = __( 'get current location', 'buddyboss' );
 			?>
 			<input type="number" min="1" style="width: 5em;" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>">
@@ -160,7 +160,7 @@ foreach ( $F->fields as $f ) {
 			?>
 			<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<option 
+				<option
 				<?php
 				if ( $key == $value ) {
 					echo 'selected="selected"';}
@@ -175,7 +175,7 @@ foreach ( $F->fields as $f ) {
 			?>
 			<select id="<?php echo $id; ?>" name="<?php echo $name . '[]'; ?>" multiple="multiple">
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<option 
+				<option
 				<?php
 				if ( in_array( $key, $f->values ) ) {
 					echo 'selected="selected"';}
@@ -189,7 +189,7 @@ foreach ( $F->fields as $f ) {
 		case 'radio':
 			?>
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<label><input type="radio" 
+				<label><input type="radio"
 				<?php
 				if ( $key == $value ) {
 					echo 'checked="checked"';}
@@ -203,7 +203,7 @@ foreach ( $F->fields as $f ) {
 		case 'checkbox':
 			?>
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<label><input type="checkbox" 
+				<label><input type="checkbox"
 				<?php
 				if ( in_array( $key, $f->values ) ) {
 					echo 'checked="checked"';}

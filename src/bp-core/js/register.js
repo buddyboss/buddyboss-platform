@@ -4,7 +4,7 @@
 jQuery( document ).ready( function() {
 
 	// Get Existing Register page field ids.
-	var getExistingFieldsSelector = jQuery('body #profile-details-section #signup_profile_field_ids');
+	var getExistingFieldsSelector = jQuery('body .layout-wrap #profile-details-section #signup_profile_field_ids');
 
 	// Add new hidden field for keep existing field to add again in change profile type action.
 	var hiddenField  = jQuery('<input type="hidden" class="onloadfields" value="" />');
@@ -28,7 +28,7 @@ jQuery( document ).ready( function() {
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
 
-	if ( dropDownSelected.val().length ) {
+	if ( typeof dropDownSelected.val() !== 'undefined' && dropDownSelected.val().length ) {
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
@@ -67,13 +67,13 @@ jQuery( document ).ready( function() {
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
 
-					var divList = jQuery( 'body #profile-details-section > .editfield' );
+					var divList = jQuery( 'body .layout-wrap #profile-details-section > .editfield' );
 					divList.sort(function(a, b){
 						return jQuery(a).data('index' ) - jQuery(b).data('index' );
 					});
 
-					jQuery( '#profile-details-section' ).html( divList );
-					jQuery( 'body #profile-details-section' ).append( existsField );
+					jQuery( '.layout-wrap #profile-details-section' ).html( divList );
+					jQuery( 'body .layout-wrap #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
 					if ( typeof window.tinymce !== 'undefined' ) {
@@ -82,7 +82,7 @@ jQuery( document ).ready( function() {
 
 						window.tinymce.init(
 							{
-								selector: 'textarea',
+								selector: 'textarea.wp-editor-area',
 								branding: false,
 								menubar:false,
 								statusbar: false,
@@ -165,13 +165,13 @@ jQuery( document ).ready( function() {
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
 
-					var divList = jQuery( 'body #profile-details-section > .editfield' );
+					var divList = jQuery( 'body .layout-wrap #profile-details-section > .editfield' );
 					divList.sort(function(a, b){
 						return jQuery(a).data('index' ) - jQuery(b).data('index' );
 					});
 
-					jQuery( '#profile-details-section' ).html( divList );
-					jQuery( 'body #profile-details-section' ).append( existsField );
+					jQuery( '.layout-wrap #profile-details-section' ).html( divList );
+					jQuery( 'body .layout-wrap #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
 					if ( typeof window.tinymce !== 'undefined' ) {
@@ -180,7 +180,7 @@ jQuery( document ).ready( function() {
 
 						window.tinymce.init(
 							{
-								selector: 'textarea',
+								selector: 'textarea.wp-editor-area',
 								branding: false,
 								menubar:false,
 								statusbar: false,

@@ -3,7 +3,7 @@
 /**
  * Forums Formatting
  *
- * @package BuddyBoss/Formatting
+ * @package BuddyBoss\Formatting
  */
 
 // Exit if accessed directly
@@ -84,8 +84,11 @@ function bbp_kses_allowed_tags() {
 			'ul'         => array(),
 			'ol'         => array(
 				'start' => true,
+				'class' => true,
 			),
-			'li'         => array(),
+			'li'         => array(
+				'class' => true,
+			),
 
 			// Images
 			'img'        => array(
@@ -520,4 +523,21 @@ function bbp_convert_mentions( $data ) {
 	}
 
 	return $data;
+}
+
+/**
+ * Remove HTML tags from the content.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param string $content Content to filter.
+ *
+ * @return null|string|string[]
+ */
+function bbp_remove_html_tags( $content ) {
+	// Removed html comments.
+	$content = preg_replace( '/<!--(.|\s)*?-->/', '', $content );
+	$content = preg_replace( '/&lt;!&#8211;(.|\s)*?&#8211;&gt;/', '', $content );
+
+	return $content;
 }

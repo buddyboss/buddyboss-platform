@@ -53,6 +53,8 @@ function bp_groups_update_meta_cache( $group_ids = false ) {
  */
 function groups_clear_group_object_cache( $group_id ) {
 	wp_cache_delete( 'bp_total_group_count', 'bp' );
+	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
+	wp_cache_delete( 'bp_get_moderator_total_group_count', 'bp_groups' );
 }
 add_action( 'groups_group_deleted', 'groups_clear_group_object_cache' );
 add_action( 'groups_settings_updated', 'groups_clear_group_object_cache' );
@@ -69,6 +71,10 @@ add_action( 'groups_create_group_step_complete', 'groups_clear_group_object_cach
  */
 function bp_groups_delete_group_cache( $group_id = 0 ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_slug_by_id_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
 }
 add_action( 'groups_delete_group', 'bp_groups_delete_group_cache' );
 add_action( 'groups_update_group', 'bp_groups_delete_group_cache' );
@@ -85,6 +91,10 @@ add_action( 'groups_settings_updated', 'bp_groups_delete_group_cache' );
  */
 function bp_groups_delete_group_cache_on_metadata_change( $meta_id, $group_id ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_slug_by_id_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
 }
 add_action( 'updated_group_meta', 'bp_groups_delete_group_cache_on_metadata_change', 10, 2 );
 add_action( 'added_group_meta', 'bp_groups_delete_group_cache_on_metadata_change', 10, 2 );
@@ -126,10 +136,20 @@ add_action( 'bp_groups_delete_group', 'bp_groups_clear_group_members_caches', 10
  *
  * @since BuddyPress 2.0.0
  *
- * @param int $user_id The user ID.
+ * @param int $user_id  The user ID.
+ * @param int $group_id The Group ID.
  */
-function bp_groups_clear_invite_count_for_user( $user_id ) {
+function bp_groups_clear_invite_count_for_user( $user_id, $group_id = 0 ) {
 	wp_cache_delete( $user_id, 'bp_group_invite_count' );
+
+	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
+	wp_cache_delete( 'bp_get_moderator_total_group_count', 'bp_groups' );
+
+	if ( $group_id ) {
+		wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
+		wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
+		wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
+	}
 }
 add_action( 'groups_accept_invite', 'bp_groups_clear_invite_count_for_user' );
 add_action( 'groups_reject_invite', 'bp_groups_clear_invite_count_for_user' );
@@ -175,6 +195,13 @@ add_action( 'groups_send_invites', 'bp_groups_clear_invite_count_on_send', 10, 2
  */
 function groups_clear_group_user_object_cache( $group_id, $user_id ) {
 	wp_cache_delete( 'bp_total_groups_for_user_' . $user_id, 'bp' );
+
+	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
+	wp_cache_delete( 'bp_get_moderator_total_group_count', 'bp_groups' );
+
+	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
 }
 add_action( 'groups_join_group', 'groups_clear_group_user_object_cache', 10, 2 );
 add_action( 'groups_leave_group', 'groups_clear_group_user_object_cache', 10, 2 );
@@ -210,8 +237,30 @@ add_action( 'groups_delete_group', 'groups_clear_group_administrator_cache' );
  */
 function groups_clear_group_administrator_cache_on_member_save( BP_Groups_Member $member ) {
 	groups_clear_group_administrator_cache( $member->group_id );
+
+	wp_cache_delete( 'bp_group_has_members_' . $member->group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_membership_requests_' . $member->group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_get_total_member_count_' . $member->group_id, 'bp_groups' );
 }
 add_action( 'groups_member_after_save', 'groups_clear_group_administrator_cache_on_member_save' );
+
+/**
+ * Clear group administrator and moderator cache when a group member is deleted.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 4.0.0
+ *
+ * @param int $user_id  User ID.
+ * @param int $group_id Group ID.
+ */
+function bp_groups_clear_group_administrator_cache_on_member_delete( $user_id, $group_id ) {
+	groups_clear_group_administrator_cache( $group_id );
+
+	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
+	wp_cache_delete( 'bp_group_get_total_member_count_' . $group_id, 'bp_groups' );
+}
+add_action( 'bp_groups_member_after_delete', 'bp_groups_clear_group_administrator_cache_on_member_delete', 10, 2 );
 
 /**
  * Clear the group type cache for a group.
@@ -242,6 +291,44 @@ add_action( 'groups_member_before_save', 'bp_groups_clear_user_group_cache_on_me
 add_action( 'groups_member_before_remove', 'bp_groups_clear_user_group_cache_on_membership_save' );
 
 /**
+ * Clear caches on saving a group invitation or request.
+ * The save action is called when inserting a new record or using the save() method
+ * to update an existing record.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param BP_Invitation object $invitation Characteristics of the invitation just saved.
+ */
+function bp_groups_clear_user_group_cache_on_invitation_save( BP_Invitation $invitation ) {
+	if ( sanitize_key( 'BP_Groups_Invitation_Manager' ) !== $invitation->class ) {
+		return;
+	}
+
+	wp_cache_delete( $invitation->id, 'bp_groups_invitations_as_memberships' );
+}
+add_action( 'bp_invitation_after_save', 'bp_groups_clear_user_group_cache_on_invitation_save', 10, 2 );
+
+/**
+ * Clear caches on invitation deletion or update.
+ * This also catches changes like sending an invite or marking one as accepted.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param array $args Associative array of columns/values describing invitations about to be deleted.
+ */
+function bp_groups_clear_user_group_cache_on_invitation_change( $args ) {
+	$args['fields' ] = 'ids';
+	$affected_invitation_ids = groups_get_invites( $args );
+	foreach ( $affected_invitation_ids as $invitation_id ) {
+		wp_cache_delete( $invitation_id, 'bp_groups_invitations_as_memberships' );
+	}
+}
+add_action( 'bp_invitation_before_delete', 'bp_groups_clear_user_group_cache_on_invitation_change' );
+add_action( 'bp_invitation_before_update', 'bp_groups_clear_user_group_cache_on_invitation_change' );
+
+/**
  * Clear group memberships cache on miscellaneous actions not covered by the 'after_save' hook.
  *
  * @since BuddyPress 2.6.0
@@ -256,8 +343,6 @@ function bp_groups_clear_user_group_cache_on_other_events( $user_id, $group_id )
 	wp_cache_delete( $membership->id, 'bp_groups_memberships' );
 }
 add_action( 'bp_groups_member_before_delete', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
-add_action( 'bp_groups_member_before_delete_invite', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
-add_action( 'groups_accept_invite', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
 
 /**
  * Reset cache incrementor for the Groups component.

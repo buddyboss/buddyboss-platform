@@ -23,16 +23,19 @@ function bp_search_get_settings_sections() {
 				'page'     => 'search',
 				'title'    => __( 'Network Search', 'buddyboss' ),
 				'callback' => 'bp_search_settings_callback_community_section',
+				'tutorial_callback' => '',
 			),
 			'bp_search_settings_post_types' => array(
 				'page'     => 'search',
 				'title'    => __( 'Pages and Posts Search', 'buddyboss' ),
 				'callback' => 'bp_search_settings_callback_post_type_section',
+				'tutorial_callback' => '',
 			),
 			'bp_search_settings_general'    => array(
 				'page'     => 'search',
 				'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
 				'callback' => '',
+				'tutorial_callback' => 'bp_search_settings_tutorial',
 			),
 		)
 	);
@@ -65,10 +68,6 @@ function bp_search_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bp_search_tutorial'          => array(
-			'title'    => __( '&#65279', 'buddyboss' ),
-			'callback' => 'bp_search_settings_tutorial',
-		),
 	);
 
 	$fields['bp_search_settings_community'] = array(
@@ -127,6 +126,11 @@ function bp_search_get_settings_fields() {
 				);
 
 				foreach ( $group->fields as $field ) {
+
+					if ( true === bp_core_hide_display_name_field( $field->id ) ) {
+						continue;
+					}
+
 					$fields['bp_search_settings_community'][ "bp_search_xprofile_{$field->id}" ] = array(
 						'title'             => '&#65279;',
 						'callback'          => 'bp_search_settings_callback_xprofile',
@@ -168,7 +172,7 @@ function bp_search_get_settings_fields() {
 			'sanitize_callback' => 'intval',
 			'args'              => array(
 				'post_type' => 'topic',
-				'taxonomy'  =>'topic-tag',
+				'taxonomy'  => 'topic-tag',
 				'class'     => 'bp-search-child-field',
 			),
 		);
@@ -191,6 +195,53 @@ function bp_search_get_settings_fields() {
 			'sanitize_callback' => 'intval',
 			'args'              => array(
 				'class' => 'bp-search-parent-field',
+			),
+		);
+	}
+
+	if ( bp_is_active( 'media' ) ) {
+		$fields['bp_search_settings_community']['bp_search_photos'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_photos',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
+		$fields['bp_search_settings_community']['bp_search_albums'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_albums',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-child-field',
+			),
+		);
+		$fields['bp_search_settings_community']['bp_search_videos'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_videos',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
+
+	}
+
+	if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+		$fields['bp_search_settings_community']['bp_search_documents'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_documents',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
+		$fields['bp_search_settings_community']['bp_search_folders']   = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_folders',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-child-field',
 			),
 		);
 	}
@@ -694,6 +745,116 @@ function bp_search_settings_callback_groups() {
 }
 
 /**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_photos() {
+	?>
+	<input
+			name="bp_search_photos"
+			id="bp_search_photos"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_photos_enable( false ) ); ?>
+	/>
+	<label for="bp_search_photos">
+		<?php esc_html_e( 'Photos', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_albums() {
+	?>
+	<input
+			name="bp_search_albums"
+			id="bp_search_albums"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_albums_enable( false ) ); ?>
+	/>
+	<label for="bp_search_albums">
+		<?php esc_html_e( 'Albums', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @uses checked() To display the checked attribute.
+ */
+function bp_search_settings_callback_videos() {
+	?>
+	<input
+			name="bp_search_videos"
+			id="bp_search_videos"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_videos_enable( false ) ); ?>
+	/>
+	<label for="bp_search_videos">
+		<?php esc_html_e( 'Videos', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_documents() {
+	?>
+	<input
+			name="bp_search_documents"
+			id="bp_search_documents"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_documents_enable( false ) ); ?>
+	/>
+	<label for="bp_search_documents">
+		<?php esc_html_e( 'Documents', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_folders() {
+	?>
+	<input
+			name="bp_search_folders"
+			id="bp_search_folders"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_folders_enable( false ) ); ?>
+	/>
+	<label for="bp_search_folders">
+		<?php esc_html_e( 'Folders', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
  * Checks if groups search is enabled.
  *
  * @since BuddyBoss 1.0.0
@@ -704,6 +865,71 @@ function bp_search_settings_callback_groups() {
  */
 function bp_is_search_groups_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_groups_enable', (bool) get_option( 'bp_search_groups', $default ) );
+}
+
+/**
+ * Checks if photos search is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media search enabled or not
+ */
+function bp_is_search_photos_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_photos_enable', (bool) get_option( 'bp_search_photos', $default ) );
+}
+
+/**
+ * Checks if albums search is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is albums search enabled or not
+ */
+function bp_is_search_albums_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_albums_enable', (bool) get_option( 'bp_search_albums', $default ) );
+}
+
+/**
+ * Checks if video search is enabled.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int $default whether video search enabled or not.
+ *
+ * @return bool Is video media search enabled or not.
+ */
+function bp_is_search_videos_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_videos_enable', (bool) get_option( 'bp_search_videos', $default ) );
+}
+
+/**
+ * Checks if document search is enabled.
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is documents search enabled or not
+ */
+function bp_is_search_documents_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_documents_enable', (bool) get_option( 'bp_search_documents', $default ) );
+}
+
+/**
+ * Checks if folder search is enabled.
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is documents search enabled or not
+ */
+function bp_is_search_folders_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_folders_enable', (bool) get_option( 'bp_search_folders', $default ) );
 }
 
 /**
@@ -812,8 +1038,8 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string post type name
- * @param $taxonomy string taxonomy name
+ * @param $post_type string post type name.
+ * @param $taxonomy  string taxonomy name.
  *
  * @return bool Is post type Taxonomy search enabled or not
  */

@@ -63,28 +63,101 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			global $wpdb, $bp;
 
 			$bp_prefix = bp_core_get_table_prefix();
+			$search_term = htmlspecialchars( $search_term );
 
 			$query_placeholder = array();
 
-			$sql = ' SELECT ';
+			$user_groups = array();
+			if ( bp_is_active( 'groups' ) ) {
 
-			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT id ) ';
-			} else {
-				$sql                .= " DISTINCT a.id , 'activity' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
-				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
+				// Fetch public groups.
+				$public_groups = groups_get_groups(
+					array(
+						'fields'   => 'ids',
+						'status'   => 'public',
+						'per_page' => - 1,
+					)
+				);
+				if ( ! empty( $public_groups['groups'] ) ) {
+					$public_groups = $public_groups['groups'];
+				} else {
+					$public_groups = array();
+				}
+
+				$groups = groups_get_user_groups( bp_loggedin_user_id() );
+				if ( ! empty( $groups['groups'] ) ) {
+					$user_groups = $groups['groups'];
+				} else {
+					$user_groups = array();
+				}
+
+				$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
 			}
 
+			$friends = array();
+			if ( bp_is_active( 'friends' ) ) {
+
+				// Determine friends of user.
+				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				if ( empty( $friends ) ) {
+					$friends = array( 0 );
+				}
+				array_push( $friends, bp_loggedin_user_id() );
+			}
+
+			$sql['select'] = 'SELECT';
+
+			if ( $only_totalrow_count ) {
+				$sql['select'] .= ' COUNT( DISTINCT a.id ) ';
+			} else {
+				$sql['select'] .= $wpdb->prepare( " DISTINCT a.id , 'activity' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+			}
+
+			$privacy = array( 'public' );
+			if ( is_user_logged_in() ) {
+				$privacy[] = 'loggedin';
+			}
+
+			$sql['from'] = "FROM {$bp->activity->table_name} a";
+
+			/**
+			 * Filter the MySQL JOIN clause for the activity Search query.
+			 *
+             * @since BuddyBoss 1.5.6
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_activity_search_join_sql', $sql['from'] );
+
 			// searching only activity updates, others don't make sense
-			$sql                .= " FROM 
-						{$bp->activity->table_name} a 
-					WHERE 
-						1=1 
-						AND is_spam = 0 
-						AND ExtractValue(a.content, '//text()') LIKE %s 
-						AND a.hide_sitewide = 0 
-						AND a.type = 'activity_update' 
-				";
+			$where_conditions   = array( '1=1' );
+			$where_conditions[] = "is_spam = 0
+						AND ExtractValue(a.content, '//text()') LIKE %s
+						AND a.hide_sitewide = 0
+						AND a.type = 'activity_update'
+						AND
+						(
+							( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) and a.component != 'groups' ) " .
+			                      ( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' )" : '' ) .
+			                      ( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' )" : '' ) .
+			                      ( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
+			                      ")";
+
+			/**
+			 * Filters the MySQL WHERE conditions for the activity Search query.
+			 *
+             * @since BuddyBoss 1.5.6
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_activity_search_where_conditions', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
+
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 

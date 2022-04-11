@@ -46,6 +46,7 @@ class BP_Notifications_Component extends BP_Component {
 			'adminbar',
 			'template',
 			'functions',
+			'settings',
 			'cache',
 		);
 
@@ -156,14 +157,11 @@ class BP_Notifications_Component extends BP_Component {
 		if ( bp_is_user() && bp_user_has_access() ) {
 			$count    = bp_notifications_get_unread_notification_count( bp_displayed_user_id() );
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name = sprintf(
-				/* translators: %s: Unread notification count for the current user */
-				__( 'Notifications %s', 'buddyboss' ),
-				sprintf(
-					'<span class="%s">%s</span>',
-					esc_attr( $class ),
-					bp_core_number_format( $count )
-				)
+			$nav_name = __( 'Notifications', 'buddyboss' );
+			$nav_name .= sprintf(
+				' <span class="%s">%s</span>',
+				esc_attr( $class ),
+				bp_core_number_format( $count )
 			);
 		} else {
 			$nav_name = __( 'Notifications', 'buddyboss' );
@@ -312,9 +310,22 @@ class BP_Notifications_Component extends BP_Component {
 			array(
 				'bp_notifications',
 				'notification_meta',
+				'bp_notifications_unread_count',
+				'bp_notifications_grouped_notifications',
 			)
 		);
 
 		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array( 'BP_REST_Notifications_Endpoint' ) );
 	}
 }

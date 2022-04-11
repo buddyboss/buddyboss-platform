@@ -56,6 +56,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 		'secondary_item_id',
 		'hide_sitewide',
 		'is_spam',
+		'privacy',
 	);
 
 	/**

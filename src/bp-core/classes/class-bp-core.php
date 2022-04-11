@@ -169,7 +169,7 @@ class BP_Core extends BP_Component {
 		$bp->available_integrations = apply_filters(
 			'bp_integrations',
 			array(
-				'appboss',
+				'buddyboss-app',
 				'learndash',
 				'compatibility',
 			)
@@ -189,7 +189,7 @@ class BP_Core extends BP_Component {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action( 'bp_core_inetegrations_included' );
+		do_action( 'bp_core_integrations_included' );
 	}
 
 	/**
@@ -335,6 +335,8 @@ class BP_Core extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp',
+				'bp_pages',
+				'bp_invitations',
 			)
 		);
 
@@ -380,12 +382,12 @@ class BP_Core extends BP_Component {
 					array(
 						'description'        => __( 'BuddyBoss group type', 'buddyboss' ),
 						'labels'             => bp_groups_get_group_type_post_type_labels(),
-						'public'             => true,
-						'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+						'public'             => false,
+						'publicly_queryable' => false,
 						'query_var'          => false,
 						'rewrite'            => false,
 						'show_in_admin_bar'  => false,
-						'show_in_menu'       => '',
+						'show_in_menu'       => false,
 						'map_meta_cap'       => true,
 						'show_in_rest'       => true,
 						'show_ui'            => bp_current_user_can( 'bp_moderate' ),

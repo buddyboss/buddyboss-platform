@@ -3,7 +3,7 @@
  * Core component classes.
  *
  * @package BuddyBoss\Core
- * @since BuddyPress 1.7.0
+ * @since   BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -17,40 +17,41 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  *
- * @param array $query {
- *     Query arguments. All items are optional.
- *     @type string            $type                Determines sort order. Select from 'newest', 'active', 'online',
+ * @param array            $query               {
+ *                                              Query arguments. All items are optional.
+ *
+ * @type string            $type                Determines sort order. Select from 'newest', 'active', 'online',
  *                                                  'random', 'popular', 'alphabetical'. Default: 'newest'.
- *     @type int               $per_page            Number of results to return. Default: 0 (no limit).
- *     @type int               $page                Page offset (together with $per_page). Default: 1.
- *     @type int               $user_id             ID of a user. If present, and if the friends component is activated,
+ * @type int               $per_page            Number of results to return. Default: 0 (no limit).
+ * @type int               $page                Page offset (together with $per_page). Default: 1.
+ * @type int               $user_id             ID of a user. If present, and if the friends component is activated,
  *                                                  results will be limited to the friends of that user. Default: 0.
- *     @type string|bool       $search_terms        Terms to search by. Search happens across xprofile fields. Requires
+ * @type string|bool       $search_terms        Terms to search by. Search happens across xprofile fields. Requires
  *                                                  XProfile component. Default: false.
- *     @type string            $search_wildcard     When searching with $search_terms, set where wildcards around the
+ * @type string            $search_wildcard     When searching with $search_terms, set where wildcards around the
  *                                                  term should be positioned. Accepts 'both', 'left', 'right'.
  *                                                  Default: 'both'.
- *     @type array|string|bool $include             An array or comma-separated list of user IDs to which query should
+ * @type array|string|bool $include             An array or comma-separated list of user IDs to which query should
  *                                                  be limited. Default: false.
- *     @type array|string|bool $exclude             An array or comma-separated list of user IDs that will be excluded
+ * @type array|string|bool $exclude             An array or comma-separated list of user IDs that will be excluded
  *                                                  from query results. Default: false.
- *     @type array|string|bool $user_ids            An array or comma-separated list of IDs corresponding to the users
+ * @type array|string|bool $user_ids            An array or comma-separated list of IDs corresponding to the users
  *                                                  that should be returned. When this parameter is passed, it will
  *                                                  override all others; BP User objects will be constructed using these
  *                                                  IDs only. Default: false.
- *     @type array|string      $member_type         Array or comma-separated list of profile types to limit results to.
- *     @type array|string      $member_type__in     Array or comma-separated list of profile types to limit results to.
- *     @type array|string      $member_type__not_in Array or comma-separated list of profile types that will be
+ * @type array|string      $member_type         Array or comma-separated list of profile types to limit results to.
+ * @type array|string      $member_type__in     Array or comma-separated list of profile types to limit results to.
+ * @type array|string      $member_type__not_in Array or comma-separated list of profile types that will be
  *                                                       excluded from results.
- *     @type string|bool       $meta_key            Limit results to users that have usermeta associated with this meta_key.
+ * @type string|bool       $meta_key            Limit results to users that have usermeta associated with this meta_key.
  *                                                  Usually used with $meta_value. Default: false.
- *     @type string|bool       $meta_value          When used with $meta_key, limits results to users whose usermeta value
+ * @type string|bool       $meta_value          When used with $meta_key, limits results to users whose usermeta value
  *                                                  associated with $meta_key matches $meta_value. Default: false.
- *     @type array             $xprofile_query      Filter results by xprofile data. Requires the xprofile component.
+ * @type array             $xprofile_query      Filter results by xprofile data. Requires the xprofile component.
  *                                                  See {@see BP_XProfile_Query} for details.
- *     @type bool              $populate_extras     True if you want to fetch extra metadata
+ * @type bool              $populate_extras     True if you want to fetch extra metadata
  *                                                  about returned users, such as total group and friend counts.
- *     @type string            $count_total         Determines how BP_User_Query will do a count of total users matching
+ * @type string            $count_total         Determines how BP_User_Query will do a count of total users matching
  *                                                  the other filter criteria. Default value is 'count_query', which
  *                                                  does a separate SELECT COUNT query to determine the total.
  *                                                  'sql_count_found_rows' uses SQL_COUNT_FOUND_ROWS and
@@ -224,7 +225,8 @@ class BP_User_Query {
 	 *
 	 * @since BuddyPress 1.8.0
 	 */
-	public function setup_hooks() {}
+	public function setup_hooks() {
+	}
 
 	/**
 	 * Prepare the query for user_ids.
@@ -257,6 +259,10 @@ class BP_User_Query {
 			'order'   => '',
 			'limit'   => '',
 		);
+
+		// 'include' - User ids to include in the results.
+		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
+		$include_ids = $this->get_include_ids( $include );
 
 		/* TYPE **************************************************************/
 
@@ -353,6 +359,18 @@ class BP_User_Query {
 
 				break;
 
+			// Support order by fields for generally.
+			case 'in':
+				$this->uid_name  = 'ID';
+				$this->uid_table = $wpdb->users;
+				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
+				if ( ! empty( $include_ids ) ) {
+					$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
+					$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
+					$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
+				}
+				break;
+
 			// Any other 'type' falls through.
 			default:
 				$this->uid_name  = 'ID';
@@ -365,14 +383,20 @@ class BP_User_Query {
 				break;
 		}
 
+		/**
+		 * Filters the Join SQL statement.
+		 *
+         * @since BuddyBoss 1.5.6
+		 *
+		 * @param string $sql      From SQL statement.
+		 * @param string $uid_name User ID field name.
+		 */
+		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], $this->uid_name );
+
 		/* WHERE *************************************************************/
 
-		// 'include' - User ids to include in the results.
-		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
-		$include_ids = $this->get_include_ids( $include );
-
 		// An array containing nothing but 0 should always fail.
-		if ( 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
+		if ( is_array( $include_ids ) && 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
 			$sql['where'][] = $this->no_results['where'];
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
@@ -405,7 +429,7 @@ class BP_User_Query {
 
 		// 'search_terms' searches user_login and user_nicename
 		// xprofile field matches happen in bp_xprofile_bp_user_query_search().
-		if ( false !== $search_terms ) {
+		if ( false !== (bool) $search_terms ) {
 			$search_terms = bp_esc_like( wp_kses_normalize_entities( $search_terms ) );
 
 			if ( $search_wildcard === 'left' ) {
@@ -466,6 +490,16 @@ class BP_User_Query {
 				$sql['where'][] = '1 = 0';
 			}
 		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+         * @since BuddyBoss 1.5.6
+		 *
+		 * @param string $sql      From SQL statement.
+		 * @param string $uid_name User ID field name.
+		 */
+		$sql['where'] = apply_filters( 'bp_user_query_where_sql', $sql['where'], $this->uid_name );
 
 		// 'per_page', 'page' - handles LIMIT.
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
@@ -562,7 +596,19 @@ class BP_User_Query {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function do_wp_user_query() {
-		$fields = array( 'ID', 'user_login', 'user_pass', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'user_activation_key', 'user_status', 'display_name' );
+		static $do_wp_user_query;
+		$fields = array(
+			'ID',
+			'user_login',
+			'user_pass',
+			'user_nicename',
+			'user_email',
+			'user_url',
+			'user_registered',
+			'user_activation_key',
+			'user_status',
+			'display_name'
+		);
 
 		if ( is_multisite() ) {
 			$fields[] = 'spam';
@@ -577,23 +623,25 @@ class BP_User_Query {
 		 * @param array         $value Array of arguments for the user query.
 		 * @param BP_User_Query $this  Current BP_User_Query instance.
 		 */
-		$wp_user_query = new WP_User_Query(
-			apply_filters(
-				'bp_wp_user_query_args',
-				array(
+		$args = apply_filters( 'bp_wp_user_query_args', array(
+			// Relevant.
+			'fields'      => $fields,
+			'include'     => $this->user_ids,
 
-					// Relevant.
-					'fields'      => $fields,
-					'include'     => $this->user_ids,
+			// Overrides
+			'blog_id'     => 0,    // BP does not require blog roles.
+			'count_total' => false, // We already have a count.
+		), $this );
 
-					// Overrides
-					'blog_id'     => 0,    // BP does not require blog roles.
-					'count_total' => false, // We already have a count.
+		$cache_key = 'bb_do_wp_user_query_' . md5( maybe_serialize( $args ) );
 
-				),
-				$this
-			)
-		);
+		if ( ! isset( $do_wp_user_query[ $cache_key ] ) ) {
+			$wp_user_query = new WP_User_Query( $args );
+
+			$do_wp_user_query[ $cache_key ] = $wp_user_query;
+		} else {
+			$wp_user_query = $do_wp_user_query[ $cache_key ];
+		}
 
 		// We calculate total_users using a standalone query, except
 		// when a whitelist of user_ids is passed to the constructor.
@@ -642,6 +690,7 @@ class BP_User_Query {
 	 *
 	 * @param array $include Sanitized array of user IDs, as passed to the 'include'
 	 *                       parameter of the class constructor.
+	 *
 	 * @return array The list of users to which the main query should be
 	 *               limited.
 	 */
@@ -691,8 +740,8 @@ class BP_User_Query {
 		 * - XProfile: To override display names.
 		 * - Connections:  To set whether or not a user is the current users friend.
 		 *
-		 * @see bp_xprofile_filter_user_query_populate_extras()
-		 * @see bp_friends_filter_user_query_populate_extras()
+		 * @see   bp_xprofile_filter_user_query_populate_extras()
+		 * @see   bp_friends_filter_user_query_populate_extras()
 		 *
 		 * @since BuddyPress 1.7.0
 		 *
@@ -706,7 +755,7 @@ class BP_User_Query {
 
 		// Set a last_activity value for each user, even if it's empty.
 		foreach ( $this->results as $user_id => $user ) {
-			$user_last_activity                       = isset( $last_activities[ $user_id ] ) ? $last_activities[ $user_id ]['date_recorded'] : '';
+			$user_last_activity                       = isset( $last_activities[ $user_id ]['date_recorded'] ) ? $last_activities[ $user_id ]['date_recorded'] : '';
 			$this->results[ $user_id ]->last_activity = $user_last_activity;
 		}
 
@@ -780,6 +829,7 @@ class BP_User_Query {
 	 *
 	 * @param string|array $member_types Array or comma-separated list of profile types.
 	 * @param string       $operator     'IN' or 'NOT IN'.
+	 *
 	 * @return string
 	 */
 	protected function get_sql_clause_for_member_types( $member_types, $operator ) {

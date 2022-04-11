@@ -1,16 +1,38 @@
 <?php
 
-global $courses_new;
+$ld_group_id = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( bp_get_current_group_id() );
+
+if ( $ld_group_id ) {
+	$post_label_prefix = 'group';
+	$meta              = learndash_get_setting( $ld_group_id );
+	$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
+	$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
+	// format the Course price to be proper XXX.YY no leading dollar signs or other values.
+	if ( ( 'paynow' === $post_price_type ) || ( 'subscribe' === $post_price_type ) ) {
+		if ( '' !== $post_price ) {
+			$post_price = preg_replace( '/[^0-9.]/', '', $post_price );
+			$post_price = number_format( floatval( $post_price ), 2, '.', '' );
+		}
+	}
+	if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $ld_group_id ) ) {
+		?>
+		<div class="bp-feedback error">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php echo esc_html__( 'You are not allowed to access group courses. Please purchase membership and try again.', 'buddyboss' ); ?></p>
+		</div>
+		<?php
+		return;
+	}
+}
+
+
+global $courses_new, $course_id, $course;
 
 if ( is_user_logged_in() ) {
 	$user_id = get_current_user_id();
 } else {
 	$user_id = 0;
 }
-
-
-global $course_id;
-global $course;
 
 $course_id                  = $courses_new[0]->ID;
 $course                     = $courses_new[0];
@@ -89,7 +111,8 @@ $template_args = array(
 	'lesson_topics'              => $lesson_topics,
 );
 
-$has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?>
+$has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons );
+?>
 
 
 
@@ -113,29 +136,6 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	do_action( 'learndash-course-certificate-link-before', $course_id, $user_id );
 
 	/**
-	 * Certificate link
-	 */
-
-	if ( $course_certficate_link && ! empty( $course_certficate_link ) ) :
-
-		learndash_get_template_part(
-			'modules/alert.php',
-			array(
-				'type'    => 'success ld-alert-certificate',
-				'icon'    => 'certificate',
-				'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
-				'button'  => array(
-					'url'   => $course_certficate_link,
-					'icon'  => 'download',
-					'label' => __( 'Download Certificate', 'buddyboss' ),
-				),
-			),
-			true
-		);
-
-	endif;
-
-	/**
 	 * Action to add custom content after the course certificate link
 	 *
 	 * @since 3.0
@@ -147,16 +147,38 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 
 		<div class="bb-learndash-content-wrap">
 
-
 			<h1 class="entry-title"><?php echo get_the_title( $course_id ); ?></h1>
 
-			<?php if ( has_excerpt( $course_id ) ) { ?>
+			<?php
+			/**
+			 * Certificate link
+			 */
+			if ( $course_certficate_link && ! empty( $course_certficate_link ) ) :
+
+				learndash_get_template_part(
+					'modules/alert.php',
+					array(
+						'type'    => 'success ld-alert-certificate',
+						'icon'    => 'certificate',
+						'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
+						'button'  => array(
+							'url'   => $course_certficate_link,
+							'icon'  => 'download',
+							'label' => __( 'Download Certificate', 'buddyboss' ),
+						),
+					),
+					true
+				);
+			endif;
+
+			if ( has_excerpt( $course_id ) ) {
+				?>
 				<div class="bb-course-excerpt">
 					<?php echo get_the_excerpt( $course_id ); ?>
 				</div>
-			<?php } ?>
+				<?php
+			}
 
-			<?php
 			/**
 			 * Course info bar
 			 */
@@ -260,27 +282,18 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 							?>
 
 							<?php
-							// Only display if there is something to expand
+							// Only display if there is something to expand.
 							if ( $has_topics || $has_lesson_quizzes ) :
 								?>
-								<div class="ld-expand-button ld-primary-background" id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-text="
-																								   <?php
-																									echo esc_attr_e(
-																										'Expand All',
-																										'buddyboss'
-																									);
-																									?>
-																																																													" data-ld-collapse-text="
-																																																													<?php
-																																																													echo esc_attr_e(
-																																																														'Collapse All',
-																																																														'buddyboss'
-																																																													);
-																																																													?>
-																">
+								<div class="ld-expand-button ld-primary-background"
+									 id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>"
+									 data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>"
+									 data-ld-expand-text="<?php esc_attr_e( 'Expand All', 'buddyboss' ); ?>"
+									 data-ld-collapse-text="<?php esc_attr_e( 'Collapse All', 'buddyboss' ); ?>">
+
 									<span class="ld-icon-arrow-down ld-icon"></span>
-									<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'buddyboss' ); ?></span>
-								</div> <!--/.ld-expand-button-->							
+									<span class="ld-text"><?php esc_html_e( 'Expand All', 'buddyboss' ); ?></span>
+								</div> <!--/.ld-expand-button-->
 								<?php
 								// TODO @37designs Need to test this
 								if ( apply_filters(

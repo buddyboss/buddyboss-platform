@@ -1,10 +1,13 @@
 <?php
 /**
- * BP Object search form
+ * The template for BP Object search form
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/search/search-form.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
+
 $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 ?>
 
@@ -16,7 +19,7 @@ $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo $search_term ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit" name="<?php bp_nouveau_search_selector_name( 'search_submit' ); ?>">
-			<span class="dashicons dashicons-search" aria-hidden="true"></span>
+			<span class="bb-icon-search" aria-hidden="true"></span>
 			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 		</button>
 

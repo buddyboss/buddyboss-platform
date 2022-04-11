@@ -270,6 +270,8 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
+		static $bp_xprofile_group_ids = array();
+		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
@@ -289,6 +291,7 @@ class BP_XProfile_Group {
 				'include_fields'                 => false,
 				'update_meta_cache'              => true,
 				'repeater_show_main_fields_only' => false,
+				'fetch_social_network_fields'    => false,
 			)
 		);
 
@@ -312,10 +315,16 @@ class BP_XProfile_Group {
 		$bp = buddypress();
 
 		// Include or exclude empty groups.
-		if ( ! empty( $r['hide_empty_groups'] ) ) {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) . '_' . maybe_serialize( $where_sql ) );
+		if ( ! isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
+			if ( ! empty( $r['hide_empty_groups'] ) ) {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
+			} else {
+				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			}
+			$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
 		} else {
-			$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
+			$group_ids = $bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Get all group data.
@@ -417,7 +426,13 @@ class BP_XProfile_Group {
 		}
 
 		// Fetch the fields.
-		$field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
+		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) ) {
+			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
+		} else {
+			$field_ids = $bp_xprofile_field_ids[ $cache_field_key ];
+		}
 
 		foreach ( $groups as $group ) {
 			$group->fields = array();
@@ -442,7 +457,7 @@ class BP_XProfile_Group {
 		}
 
 		// If social networks field found then remove from the $field_ids array.
-		if ( $social_networks_key > 0 ) {
+		if ( $social_networks_key > 0 && empty( $r['fetch_social_network_fields'] ) ) {
 			if ( ( $key = array_search( $social_networks_key, $field_ids ) ) !== false ) {
 				unset( $field_ids[ $key ] );
 			}
@@ -766,23 +781,41 @@ class BP_XProfile_Group {
 				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
 			}
 
-			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
+			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_fields ) ) {
+				$profile_table = $bp->profile->table_name_fields;
+			} else {
+				$profile_table = $bp->table_prefix . 'bp_xprofile_fields';
+			}
+
+			$levels = $wpdb->get_results(
+				"SELECT xf.id,
+				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
+				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values
+				FROM {$profile_table} as xf
+				INNER JOIN {$profile_meta_table} as xm on xf.id = xm.object_id
+				WHERE ( xm.meta_key = 'default_visibility' OR xm.meta_key = 'allow_custom_visibility' )
+				GROUP BY xf.id
+				ORDER BY xf.id"
+			);
+
+			$default_visibility_levels = array();
 
 			// Arrange so that the field id is the key and the visibility level the value.
-			$default_visibility_levels = array();
-			foreach ( $levels as $level ) {
-				switch ( $level->meta_key ) {
-					case 'default_visibility':
-						$default_visibility_levels[ $level->object_id ]['default'] = $level->meta_value;
-						break;
-					case 'allow_custom_visibility':
-						$default_visibility_levels[ $level->object_id ]['allow_custom'] = $level->meta_value;
-						break;
+			if ( ! empty( $levels ) ) {
+
+				foreach ( $levels as $level ) {
+
+					$meta_keys   = explode( ',', $level->meta_keys );
+					$meta_values = explode( ',', $level->meta_values );
+
+					$meta_keys                               = json_decode( str_replace( '_visibility', '', wp_json_encode( $meta_keys ) ), true );
+					$default_visibility_levels[ $level->id ] = array_combine( $meta_keys, $meta_values );
 				}
 			}
 
 			wp_cache_set( 'default_visibility_levels', $default_visibility_levels, 'bp_xprofile' );
 		}
+
 
 		return $default_visibility_levels;
 	}

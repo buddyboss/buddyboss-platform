@@ -28,14 +28,11 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ), '', array( $this, 'bp_connection_settings_tutorial' ) );
 
 		if ( bp_is_active( 'messages' ) ) {
 			$this->add_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_force_friendship_to_message' ), array( $this, 'bp_admin_sanitize_callback_force_friendship_to_message' ) );
 		}
-
-		// Connection Settings tutorial
-		$this->add_field( 'bp-connection-settings-tutorial', '', array( $this, 'bp_connection_settings_tutorial' ) );
 
 		/**
 		 * Fires to register Friends tab settings fields and section.
@@ -55,7 +52,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_force_friendship_to_message() {
 		?>
 		<input id="bp-force-friendship-to-message" name="bp-force-friendship-to-message" type="checkbox" value="1" <?php checked( bp_force_friendship_to_message( false ) ); ?> />
-		<label for="bp-force-friendship-to-message"><?php _e( 'Require users to be connected before they can message each other', 'buddyboss' ); ?></label>
+		<label for="bp-force-friendship-to-message"><?php _e( 'Require non-admin members to be connected before they can message each other', 'buddyboss' ); ?></label>
 		<?php
 	}
 

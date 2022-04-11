@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the post ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/post-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_post">
@@ -7,7 +17,7 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 			<img
 				src="<?php echo $result['post_thumbnail']; ?>"
 				class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-				alt="<?php the_title() ?>"
+				alt="<?php echo esc_attr( get_the_title() ); ?>"
 			/>
 		</div>
 

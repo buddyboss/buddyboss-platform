@@ -353,17 +353,25 @@ function bbp_post_request() {
 		return;
 	}
 
-	// Bail if no action
-	if ( empty( $_POST['action'] ) ) {
+	// Bail if no action, or if not a string (arrays not supported)
+	if ( empty( $_POST['action'] ) || ! is_string( $_POST['action'] ) ) {
+		return;
+	}
+
+	// Sanitize the POST action
+	$action = sanitize_key( $_POST['action'] );
+
+	// Bail if action was totally invalid
+	if ( empty( $action ) ) {
 		return;
 	}
 
 	// This dynamic action is probably the one you want to use. It narrows down
 	// the scope of the 'action' without needing to check it in your function.
-	do_action( 'bbp_post_request_' . $_POST['action'] );
+	do_action( 'bbp_post_request_' . $action );
 
 	// Use this static action if you don't mind checking the 'action' yourself.
-	do_action( 'bbp_post_request', $_POST['action'] );
+	do_action( 'bbp_post_request',   $action );
 }
 
 /**
@@ -379,17 +387,25 @@ function bbp_get_request() {
 		return;
 	}
 
-	// Bail if no action
-	if ( empty( $_GET['action'] ) ) {
+	// Bail if no action, or if not a string (arrays not supported)
+	if ( empty( $_GET['action'] ) || ! is_string( $_GET['action'] ) ) {
+		return;
+	}
+
+	// Sanitize the GET action
+	$action = sanitize_key( $_GET['action'] );
+
+	// Bail if action was totally invalid
+	if ( empty( $action ) ) {
 		return;
 	}
 
 	// This dynamic action is probably the one you want to use. It narrows down
 	// the scope of the 'action' without needing to check it in your function.
-	do_action( 'bbp_get_request_' . $_GET['action'] );
+	do_action( 'bbp_get_request_' . $action );
 
 	// Use this static action if you don't mind checking the 'action' yourself.
-	do_action( 'bbp_get_request', $_GET['action'] );
+	do_action( 'bbp_get_request',   $action );
 }
 
 /** Filters *******************************************************************/

@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members/Blogs Registration forms
+ * The template for members/blogs registration forms
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/register.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 ?>
@@ -47,28 +49,6 @@
 
 							<?php while ( bp_profile_fields() ) : bp_the_profile_field();
 
-								// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-								$current_value = bp_get_option( 'bp-display-name-format' );
-
-								// If First Name selected then do not add last name field.
-								if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
-									if ( function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
-										continue;
-									}
-									// If Nick Name selected then do not add first & last name field.
-								} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
-									if ( function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
-										continue;
-									}
-								} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_firstname_field_id() ) {
-									if ( function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
-										continue;
-									}
-								}
-
-							?>
-
-								<?php
 								if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
 									if ( function_exists( 'bp_get_xprofile_member_type_field_id') && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
 										continue;

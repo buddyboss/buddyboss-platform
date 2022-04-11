@@ -869,7 +869,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
 /**
- * Syncs Xprofile data to the standard built in WordPress profile data.
+ * Sync xprofile data to the standard built in WordPress profile data.
  *
  * @since BuddyPress 1.0.0
  *
@@ -917,38 +917,6 @@ add_action( 'bp_core_signup_user', 'xprofile_sync_wp_profile' );
 add_action( 'bp_core_activated_user', 'xprofile_sync_wp_profile' );
 
 /**
- * Syncs the standard built in WordPress profile data to XProfile.
- *
- * @since BuddyPress 1.2.4
- *
- * @param object $errors Array of errors. Passed by reference.
- * @param bool   $update Whether or not being upated.
- * @param object $user   User object whose profile is being synced. Passed by reference.
- */
-function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
-
-	// Bail if profile syncing is disabled.
-	if ( bp_disable_profile_sync() || ! $update || $errors->get_error_codes() ) {
-		return;
-	}
-
-	if ( isset( $user->first_name ) ) {
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
-	}
-
-	if ( isset( $user->last_name ) ) {
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
-	}
-
-	if ( isset( $user->nickname ) ) {
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
-	}
-
-	$user->display_name = bp_core_get_user_displayname( $user->ID );
-}
-add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
-
-/**
  * Update display_name in user database.
  *
  * @since BuddyBoss 1.0.0
@@ -961,53 +929,6 @@ function bp_xprofile_update_display_name( $user_id ) {
 		)
 	);
 }
-
-/**
- * Validate nickname when updated and return error if invalid.
- *
- * @since BuddyBoss 1.0.0
- */
-function user_profile_update_validate_nickname( &$errors, $update, &$user ) {
-	// Bail if not updating or already has error
-	if ( ! $update || $errors->get_error_codes() ) {
-		return;
-	}
-
-	$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $user->nickname, $user->ID );
-
-	if ( $invalid ) {
-		$errors->add(
-			'nickname_invalid',
-			$invalid,
-			array( 'form-field' => 'nickname' )
-		);
-	}
-}
-add_action( 'user_profile_update_errors', 'user_profile_update_validate_nickname', 10, 3 );
-
-/**
- * Update the WP display, last, and first name fields when the xprofile display name field is updated.
- *
- * @since BuddyPress 3.0.0
- *
- * @param BP_XProfile_ProfileData $data Current instance of the profile data being saved.
- */
-function xprofile_sync_wp_profile_on_single_field_set( $data ) {
-	$synced_fields = array_filter(
-		array(
-			bp_xprofile_firstname_field_id(),
-			bp_xprofile_lastname_field_id(),
-			bp_xprofile_nickname_field_id(),
-		)
-	);
-
-	if ( ! in_array( $data->field_id, $synced_fields ) ) {
-		return;
-	}
-
-	xprofile_sync_wp_profile( $data->user_id, $data->field_id );
-}
-add_action( 'xprofile_data_after_save', 'xprofile_sync_wp_profile_on_single_field_set' );
 
 /**
  * When a user is deleted, we need to clean up the database and remove all the
@@ -1466,7 +1387,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
-		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( $displayed_user_id, $current_user_id ) ) {
+		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( (int) $displayed_user_id, (int) $current_user_id ) ) {
 			$hidden_levels = array( 'adminsonly' );
 
 			// Current user is logged in but not friends, so exclude friends-only.
@@ -1509,6 +1430,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
+		$user_visibility_levels = array();
+	}
 
 	// Parse the user-provided visibility levels with the default levels, which may take
 	// precedence.
@@ -1529,8 +1453,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		}
 	}
 
-	// Never allow the fullname field to be excluded.
-	if ( in_array( 1, $field_ids ) ) {
+	// Never allow the Nickname field to be excluded.
+	$nickname_field_id = bp_xprofile_nickname_field_id();
+	if ( in_array( $nickname_field_id, $field_ids ) ) {
 		$key = array_search( 1, $field_ids );
 		unset( $field_ids[ $key ] );
 	}
@@ -1553,8 +1478,11 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
 			// Concatenate the values.
 			$date_value = $_POST[ 'field_' . $field_id . '_day' ] . ' ' . $_POST[ 'field_' . $field_id . '_month' ] . ' ' . $_POST[ 'field_' . $field_id . '_year' ];
 
+			$timestamp = strtotime( $date_value );
+
 			// Check that the concatenated value can be turned into a timestamp.
-			if ( $timestamp = strtotime( $date_value ) ) {
+			if ( false !== $timestamp ) {
+
 				// Add the timestamp to the global $_POST that should contain the datebox data.
 				$_POST[ 'field_' . $field_id ] = date( 'Y-m-d H:i:s', $timestamp );
 			}
@@ -1685,28 +1613,56 @@ function bp_xprofile_social_network_provider() {
 		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M17.109 18.234c0.141 0.141 0.141 0.359 0 0.484-0.891 0.891-2.609 0.969-3.109 0.969s-2.219-0.078-3.109-0.969c-0.141-0.125-0.141-0.344 0-0.484 0.125-0.125 0.344-0.125 0.469 0 0.562 0.578 1.781 0.766 2.641 0.766s2.063-0.187 2.641-0.766c0.125-0.125 0.344-0.125 0.469 0zM12.313 15.406c0 0.766-0.625 1.391-1.391 1.391-0.781 0-1.406-0.625-1.406-1.391 0-0.781 0.625-1.406 1.406-1.406 0.766 0 1.391 0.625 1.391 1.406zM18.484 15.406c0 0.766-0.625 1.391-1.406 1.391-0.766 0-1.391-0.625-1.391-1.391 0-0.781 0.625-1.406 1.391-1.406 0.781 0 1.406 0.625 1.406 1.406zM22.406 13.531c0-1.031-0.844-1.859-1.875-1.859-0.531 0-1 0.219-1.344 0.562-1.266-0.875-2.969-1.437-4.859-1.5l0.984-4.422 3.125 0.703c0 0.766 0.625 1.391 1.391 1.391 0.781 0 1.406-0.641 1.406-1.406s-0.625-1.406-1.406-1.406c-0.547 0-1.016 0.328-1.25 0.781l-3.453-0.766c-0.172-0.047-0.344 0.078-0.391 0.25l-1.078 4.875c-1.875 0.078-3.563 0.641-4.828 1.516-0.344-0.359-0.828-0.578-1.359-0.578-1.031 0-1.875 0.828-1.875 1.859 0 0.75 0.438 1.375 1.062 1.687-0.063 0.281-0.094 0.578-0.094 0.875 0 2.969 3.344 5.375 7.453 5.375 4.125 0 7.469-2.406 7.469-5.375 0-0.297-0.031-0.609-0.109-0.891 0.609-0.313 1.031-0.938 1.031-1.672zM28 14c0 7.734-6.266 14-14 14s-14-6.266-14-14 6.266-14 14-14 14 6.266 14 14z"></path></svg>',
 	);
 	$options[] = (object) array(
-		'id'                => 14,
+		'id'                => 11,
 		'is_default_option' => false,
 		'name'              => __( 'Snapchat', 'buddyboss' ),
 		'value'             => 'snapchat',
 		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.126 16.475c-.057.077-.103.4-.178.655-.086.295-.356.262-.656.203-.437-.085-.827-.109-1.281-.034-.785.131-1.601 1.292-2.969 1.292-1.472 0-2.238-1.156-3.054-1.292-.832-.138-1.31.084-1.597.084-.221 0-.307-.135-.34-.247-.074-.251-.12-.581-.178-.66-.565-.087-1.84-.309-1.873-.878-.008-.148.096-.279.243-.303 1.872-.308 3.063-2.419 2.869-2.877-.138-.325-.735-.442-.986-.541-.648-.256-.739-.55-.7-.752.053-.28.395-.468.68-.468.275 0 .76.367 1.138.158-.055-.982-.194-2.387.156-3.171.667-1.496 2.129-2.236 3.592-2.236 1.473 0 2.946.75 3.608 2.235.349.783.212 2.181.156 3.172.357.197.799-.167 1.107-.167.302 0 .712.204.719.545.005.267-.233.497-.708.684-.255.101-.848.217-.986.541-.198.468 1.03 2.573 2.869 2.876.146.024.251.154.243.303-.033.569-1.314.791-1.874.878z"/></svg>',
 	);
 	$options[] = (object) array(
-		'id'                => 11,
+		'id'                => 12,
+		'is_default_option' => false,
+		'name'              => __( 'Telegram', 'buddyboss' ),
+		'value'             => 'telegram',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000"><g fill="#333" transform="matrix(0.10801485,0,0,-0.10804828,-68.2169,2112.9105)"><path d="M 9680,19553 C 8348,19524 7000,19183 5730,18554 4664,18027 3741,17331 3029,16520 2267,15650 1708,14741 1295,13700 1016,12998 825,12287 721,11570 609,10796 602,9963 701,9170 895,7612 1551,5987 2501,4710 2989,4053 3482,3554 4165,3023 5450,2027 7020,1358 8610,1130 c 484,-69 716,-85 1280,-85 477,0 563,4 930,41 1173,117 2426,511 3535,1110 837,451 1651,1068 2209,1673 999,1083 1678,2232 2129,3606 591,1800 606,3697 43,5510 -173,559 -328,930 -620,1490 -539,1035 -1238,1989 -1882,2572 -1057,956 -2188,1616 -3514,2051 -985,324 -2018,478 -3040,455 z m 4495,-5612 c 28,-14 81,-55 118,-92 115,-114 153,-230 144,-436 -4,-108 -68,-414 -771,-3723 -421,-1983 -778,-3651 -792,-3707 -106,-428 -321,-562 -684,-424 -126,48 -12,-34 -2045,1475 -214,159 -394,289 -401,290 -6,1 -258,-237 -559,-529 -301,-291 -582,-556 -624,-587 -128,-97 -288,-168 -378,-168 -18,0 -33,5 -33,10 0,17 180,2323 183,2342 1,9 457,432 1012,940 556,508 1529,1397 2163,1976 633,579 1159,1066 1167,1082 36,70 6,103 -98,108 -67,3 -77,1 -147,-35 -41,-22 -739,-458 -1550,-969 C 8047,9709 7059,9088 7042,9083 c -10,-2 -535,154 -1168,347 -632,193 -1186,362 -1230,376 -104,31 -195,90 -230,151 -71,120 -1,279 172,393 100,66 167,93 989,410 402,155 984,380 1295,500 311,120 1011,390 1555,600 545,210 1661,641 2480,957 820,316 1744,673 2055,793 311,120 619,239 685,265 210,81 267,95 380,92 82,-2 109,-6 150,-26 z" /></g></svg>',
+	);
+	$options[] = (object) array(
+		'id'                => 13,
 		'is_default_option' => false,
 		'name'              => __( 'Tumblr', 'buddyboss' ),
 		'value'             => 'tumblr',
 		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#333" d="M10 0.4c-5.302 0-9.6 4.298-9.6 9.6s4.298 9.6 9.6 9.6 9.6-4.298 9.6-9.6-4.298-9.6-9.6-9.6zM12.577 14.141c-0.393 0.188-0.748 0.318-1.066 0.395-0.318 0.074-0.662 0.113-1.031 0.113-0.42 0-0.791-0.055-1.114-0.162s-0.598-0.26-0.826-0.459c-0.228-0.197-0.386-0.41-0.474-0.633-0.088-0.225-0.132-0.549-0.132-0.973v-3.262h-1.016v-1.314c0.359-0.119 0.67-0.289 0.927-0.512 0.257-0.221 0.464-0.486 0.619-0.797s0.263-0.707 0.322-1.185h1.307v2.35h2.18v1.458h-2.18v2.385c0 0.539 0.028 0.885 0.085 1.037 0.056 0.154 0.161 0.275 0.315 0.367 0.204 0.123 0.437 0.185 0.697 0.185 0.466 0 0.928-0.154 1.388-0.461v1.468z"></path></svg>',
 	);
 	$options[] = (object) array(
-		'id'                => 12,
+		'id'                => 14,
+		'is_default_option' => false,
+		'name'              => __( 'Twitch', 'buddyboss' ),
+		'value'             => 'twitch',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 333334 333334" fill-rule="evenodd" clip-rule="evenodd"><path fill="#333" d="M166667 0c92047 0 166667 74620 166667 166667s-74620 166667-166667 166667S0 258714 0 166667 74620 0 166667 0zm-55369 98779v105771h35251v20048c545-519 851-797 1144-1090 5944-5930 11904-11845 17813-17811 843-851 1685-1196 2882-1192 12319 40 24639 48 36958-24 905-5 2030-472 2674-1108 7680-7575 15274-15237 22935-22831 859-851 1170-1700 1169-2885-30-25681-22-51361-22-77043v-1836H111299zm95369 75234h-14630v-44767h14630v44767zm-40077-44764v44706h-14896v-44706h14896zm-40007 120108v-19807H86463c-40-830-98-1472-98-2115-4-37267-4-74534 18-111802 1-1078 192-2200 529-3224 2956-8996 5991-17968 8931-26969 381-1166 861-1584 2105-1596h60c49098 38 98194 33 147291 33 481-1 963 0 1647 0v2079c0 32119-8 64237 29 96356v63c-11 1306-409 2217-1339 3143-14244 14187-28460 28404-42648 42649-941 945-1864 1340-3205 1331-8642-61-17285 9-25927-67-1656-15-2839 418-4017 1622-5701 5827-11486 11572-17287 17300-551 545-1418 1083-2144 1090-3620 35-7240 47-10860 49h-2173c-3379-2-6758-8-10137-13-170 0-341-61-654-121z"/></svg>',
+	);
+	$options[] = (object) array(
+		'id'                => 15,
 		'is_default_option' => false,
 		'name'              => __( 'Twitter', 'buddyboss' ),
 		'value'             => 'twitter',
 		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM22.4 12.704v0.384c0 4.32-3.296 9.312-9.312 9.312-1.888 0-3.584-0.512-4.992-1.504h0.8c1.504 0 3.008-0.512 4.096-1.408-1.376 0-2.592-0.992-3.104-2.304 0.224 0 0.416 0.128 0.608 0.128 0.32 0 0.608 0 0.896-0.128-1.504-0.288-2.592-1.6-2.592-3.2v0c0.416 0.224 0.896 0.416 1.504 0.416-0.896-0.608-1.504-1.6-1.504-2.688 0-0.608 0.192-1.216 0.416-1.728 1.6 2.016 4 3.328 6.784 3.424-0.096-0.224-0.096-0.512-0.096-0.704 0-1.792 1.504-3.296 3.296-3.296 0.896 0 1.792 0.384 2.4 0.992 0.704-0.096 1.504-0.416 2.112-0.8-0.224 0.8-0.8 1.408-1.408 1.792 0.704-0.096 1.312-0.288 1.888-0.48-0.576 0.8-1.184 1.376-1.792 1.792v0z"></path></svg>',
 	);
 	$options[] = (object) array(
-		'id'                => 13,
+		'id'                => 16,
+		'is_default_option' => false,
+		'name'              => __( 'VK', 'buddyboss' ),
+		'value'             => 'vk',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#333" d="M 10,0 C 4.4770833,0 0,4.4770833 0,10 0,15.522917 4.4770833,20 10,20 15.522917,20 20,15.522917 20,10 20,4.4770833 15.522917,0 10,0 Z m 3.845833,11.282292 c 0,0 0.884375,0.872916 1.102084,1.278125 0.0062,0.0083 0.0094,0.01667 0.01146,0.02083 0.08854,0.148958 0.109375,0.264583 0.06563,0.351042 -0.07292,0.14375 -0.322917,0.214583 -0.408333,0.220833 h -1.5625 c -0.108334,0 -0.335417,-0.02813 -0.610417,-0.217708 -0.211458,-0.147917 -0.419792,-0.390625 -0.622917,-0.627084 -0.303125,-0.352083 -0.565625,-0.65625 -0.830208,-0.65625 a 0.31770833,0.31770833 0 0 0 -0.09896,0.01563 c -0.2,0.06458 -0.45625,0.35 -0.45625,1.110417 0,0.2375 -0.1875,0.373958 -0.319792,0.373958 H 9.4 c -0.24375,0 -1.5135417,-0.08542 -2.6385417,-1.271875 C 5.384375,10.427083 4.1447917,7.5125 4.134375,7.4854167 4.05625,7.296875 4.2177083,7.1958333 4.39375,7.1958333 h 1.578125 c 0.2104167,0 0.2791667,0.128125 0.3270833,0.2416667 0.05625,0.1322917 0.2625,0.6583333 0.6010417,1.25 0.5489583,0.9645833 0.8854167,1.35625 1.1552083,1.35625 A 0.3125,0.3125 0 0 0 8.2,10.00625 C 8.5520833,9.8104167 8.4864583,8.5552083 8.4708333,8.2947917 c 0,-0.048958 -0.00104,-0.5614584 -0.18125,-0.8072917 C 8.1604167,7.309375 7.940625,7.2416667 7.8072917,7.2166667 A 0.57291667,0.57291667 0 0 1 8.0145833,7.040625 C 8.25625,6.9197917 8.6916667,6.9020833 9.1239583,6.9020833 h 0.240625 c 0.4687497,0.00625 0.5895837,0.036458 0.7593747,0.079167 0.34375,0.082292 0.351042,0.3041667 0.320834,1.0635417 -0.0094,0.215625 -0.01875,0.459375 -0.01875,0.746875 0,0.0625 -0.0031,0.1291666 -0.0031,0.2 -0.01042,0.3864583 -0.02292,0.825 0.25,1.0052083 a 0.225,0.225 0 0 0 0.11875,0.034375 c 0.09479,0 0.380208,0 1.153125,-1.3260414 A 10.122917,10.122917 0 0 0 12.564608,7.378125 c 0.01563,-0.027083 0.06146,-0.1104167 0.115625,-0.1427083 A 0.27708333,0.27708333 0 0 1 12.8094,7.2052083 h 1.855208 c 0.202084,0 0.340625,0.030208 0.366667,0.1083334 C 15.077105,7.4375 15.022975,7.815625 14.176067,8.9625 l -0.378125,0.4989583 c -0.767709,1.0062497 -0.767709,1.0572917 0.04792,1.8208337 z" /></svg>',
+	);
+	$options[] = (object) array(
+		'id'                => 17,
+		'is_default_option' => false,
+		'name'              => __( 'WhatsApp', 'buddyboss' ),
+		'value'             => 'whatsapp',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960"><g fill="#333" transform="matrix(0.1202871,0,0,-0.12028135,-73.507161,1105.1649)"><path d="m 4370,9183 c -19,-1 -87,-8 -150,-14 C 3870,9137 3530,9058 3200,8935 2127,8532 1268,7673 865,6600 547,5752 527,4817 809,3953 1236,2644 2331,1636 3676,1315 c 519,-125 1088,-142 1622,-49 362,62 742,189 1092,363 763,380 1401,1017 1781,1781 283,569 420,1148 421,1780 1,836 -241,1607 -720,2297 -226,325 -550,659 -877,905 -696,521 -1550,804 -2410,796 -99,0 -196,-3 -215,-5 z m 650,-1443 c 356,-55 643,-159 930,-338 567,-354 938,-843 1106,-1457 72,-264 99,-493 91,-782 -5,-215 -24,-362 -67,-528 -75,-286 -203,-555 -384,-811 -387,-545 -896,-880 -1536,-1013 -197,-40 -310,-51 -529,-51 -380,-1 -709,74 -1060,241 -68,33 -131,59 -140,59 -9,0 -70,-18 -136,-39 -329,-107 -1223,-391 -1232,-391 -13,0 4,54 246,773 l 191,567 -51,92 c -145,261 -251,591 -290,903 -19,151 -16,474 5,629 78,569 328,1063 737,1461 314,305 644,498 1048,614 124,36 374,84 491,95 112,10 449,-3 580,-24 z" /><path d="m 4400,7329 c -514,-63 -1008,-330 -1338,-724 -258,-307 -425,-687 -478,-1090 -25,-187 -14,-465 25,-656 50,-242 130,-450 248,-645 36,-60 75,-125 86,-145 l 21,-36 -127,-374 c -69,-205 -124,-375 -122,-377 2,-2 175,50 384,117 208,66 387,121 397,121 9,0 51,-20 93,-45 174,-101 416,-200 591,-239 169,-39 276,-50 465,-50 322,1 596,60 872,189 570,266 991,772 1143,1373 46,184 62,313 62,512 0,201 -18,353 -61,516 -101,383 -293,709 -578,984 -304,294 -665,478 -1079,551 -136,24 -477,34 -604,18 z m -389,-860 c 10,-5 26,-24 38,-42 36,-58 221,-565 221,-605 0,-52 -43,-121 -139,-224 -101,-109 -102,-118 -28,-241 125,-210 308,-413 487,-539 111,-79 338,-198 378,-198 31,0 83,49 211,200 40,47 82,93 93,103 44,38 93,19 446,-169 108,-57 205,-114 215,-126 21,-26 22,-84 1,-185 -30,-145 -78,-221 -186,-295 -209,-141 -443,-175 -658,-95 -551,205 -714,298 -986,563 -280,274 -578,711 -666,979 -71,216 -53,449 49,635 45,80 193,231 243,248 39,13 254,6 281,-9 z" /></g></svg>',
+	);
+	$options[] = (object) array(
+		'id'                => 18,
 		'is_default_option' => false,
 		'name'              => __( 'YouTube', 'buddyboss' ),
 		'value'             => 'youTube',
@@ -1740,7 +1696,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		if ( isset( $original_option_values ) && ! empty( $original_option_values ) ) {
+		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
@@ -1786,14 +1742,20 @@ function bp_check_member_type_field_have_options() {
 	$arr = array();
 
 	// Get posts of custom post type selected.
-	$posts = new \WP_Query(
-		array(
-			'posts_per_page' => - 1,
-			'post_type'      => bp_get_member_type_post_type(),
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		)
-	);
+	$cache_key = 'bp_get_all_member_types_posts';
+	$posts     = wp_cache_get( $cache_key, 'bp_member_member_type' );
+
+	if ( false === $posts ) {
+		$posts = new \WP_Query(
+			array(
+				'posts_per_page' => - 1,
+				'post_type'      => bp_get_member_type_post_type(),
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			)
+		);
+		wp_cache_set( $cache_key, $posts, 'bp_member_member_type' );
+	}
 	if ( $posts ) {
 		foreach ( $posts->posts as $post ) {
 			$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
@@ -1822,12 +1784,27 @@ function bp_check_member_type_field_have_options() {
  * @return string
  */
 function bp_xprofile_get_member_display_name( $user_id = null ) {
+	static $cache;
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
 		return false;
 	}
 
-	$format = bp_get_option( 'bp-display-name-format' );
+	$cache_key = 'bp_xprofile_get_member_display_name_' . trim( $user_id );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
+	$user = get_userdata( $user_id );
+
+	// empty user or deleted user check.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	$format = bp_core_display_name_format();
+
+	$display_name = '';
 
 	switch ( $format ) {
 		case 'first_name':
@@ -1849,7 +1826,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $nick_name ) ) {
-				$user = get_userdata( $user_id );
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
@@ -1857,7 +1833,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 				// or use the user_nicename
 				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
+					$nickname = ( isset( $user->user_nicename ) ) ? $user->user_nicename : '';
 				}
 				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
 			}
@@ -1899,7 +1875,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $nick_name ) ) {
-				$user = get_userdata( $user_id );
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
@@ -1919,7 +1894,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			$display_name = xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $display_name ) ) {
-				$user = get_userdata( $user_id );
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
@@ -1936,5 +1910,500 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			break;
 	}
 
-	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
+	$name = apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
+
+	$cache[ $cache_key ] = $name;
+
+	return $name;
 }
+
+/**
+ * Sync the standard built in WordPress profile data to xprofile data.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int $user_id sync specified user id first name, last name and nickname.
+ *
+ * @return void
+ */
+function bp_xprofile_sync_bp_profile( $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$user = get_user_by( 'id', $user_id );
+
+	if ( isset( $user->first_name ) ) {
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+	}
+
+	if ( isset( $user->last_name ) ) {
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
+	}
+
+	if ( isset( $user->nickname ) ) {
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
+	}
+
+}
+add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
+
+/**
+ * Sync the standard built in xprofile data to WordPress data.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int   $user_id          ID for the user whose profile is being saved.
+ * @param array $posted_field_ids Array of field IDs that were edited.
+ * @param bool  $errors           Whether or not any errors occurred.
+ * @param array $old_values       Array of original values before update.
+ * @param array $new_values       Array of newly saved values after update.
+ *
+ * @return void
+ */
+
+function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+
+	if ( ! empty( $errors ) ) {
+		return;
+	}
+
+	foreach ( $new_values as $field_id => $new_value ) {
+
+		// Get First, Last and Nickname field id from DB.
+		$firstname_id = bp_xprofile_firstname_field_id();
+		$lastname_id  = bp_xprofile_lastname_field_id();
+		$nickname_id  = bp_xprofile_nickname_field_id();
+
+		if ( ! $field_id || $field_id == $firstname_id ) {
+			bp_update_user_meta( $user_id, 'first_name', $new_value['value'] );
+		}
+
+		if ( ! $field_id || $field_id == $lastname_id ) {
+			bp_update_user_meta( $user_id, 'last_name', $new_value['value'] );
+		}
+
+		if ( ! $field_id || $field_id == $nickname_id ) {
+			bp_update_user_meta( $user_id, 'nickname', $new_value['value'] );
+		}
+
+	}
+
+	bp_xprofile_update_display_name( $user_id );
+}
+add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
+
+/**
+ * Return Transient name using logged in User ID.
+ *
+ * @param string $key - Transient prefix key
+ * @param int $widget_id - Widget id part of transient name string
+ *
+ * @return string $transient_name
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
+
+	$user_id        = get_current_user_id();
+	$transient_name = $key . $user_id . $widget_id;
+
+	return apply_filters( 'bp_xprofile_get_profile_completion_transient_name', $transient_name );
+
+}
+
+/**
+ * Function returns user progress data by checking if data already exists in transient first. IF NO then follow
+ * checking the progress logic.
+ *
+ * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields
+ * added/updated/deleted.
+ *
+ * @param array $settings - set of fieldset selected to show in progress & profile or cover photo selected to show in
+ *                        progress.
+ *
+ * @return array $user_progress - user progress to render profile completion
+ *
+ * @since BuddyBoss 1.5.3
+ */
+function bp_xprofile_get_user_profile_progress_data( $settings ) {
+
+	$user_progress         = array();
+	$user_progress_options = bp_xprofile_get_selected_options_user_progress( $settings );
+
+	// Do not proceed if no fields found based on settings.
+	if ( isset( $user_progress_options['total_fields'] ) && $user_progress_options['total_fields'] <= 0 ) {
+		return $user_progress;
+	}
+
+	// Format User Progress array to pass on to the template.
+	$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_options );
+
+	return $user_progress;
+}
+
+/**
+ * Function returns logged in user progress based on options selected in the widget form.
+ *
+ * @param array $group_ids - set of fieldset selected to show in progress
+ * @param array $photo_types - profile or cover photo selected to show in progress
+ *
+ * @return array progress_details - raw details to calculate user progress
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
+
+	if( empty($group_ids) ){
+		$group_ids = array();
+	}
+
+	/* User Progress specific VARS. */
+	$user_id                = get_current_user_id();
+	$progress_details       = array();
+	$grand_total_fields     = 0;
+	$grand_completed_fields = 0;
+
+	/* Profile Photo */
+
+	// check if profile photo option still enabled.
+	$is_profile_photo_disabled = bp_disable_avatar_uploads();
+	if ( ! $is_profile_photo_disabled && in_array( 'profile_photo', $photo_types ) ) {
+
+		++ $grand_total_fields;
+
+		$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user_id ) ) ? 1 : 0;
+
+		if ( $is_profile_photo_uploaded ) {
+			++ $grand_completed_fields;
+		} else {
+
+			// check if profile gravatar option enabled.
+			// blank setting will remove gravatar also
+			if ( bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' ) ) {
+
+				/**
+				 * There is not any direct way to check gravatar set for user.
+				 * Need to check $profile_url is send 200 status or not.
+				 */
+				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
+				$profile_url      = get_avatar_url( $user_id, array( 'default' => '404' ) );
+				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
+
+				$headers = get_headers($profile_url, 1);
+				if ($headers[0] === 'HTTP/1.1 200 OK') {
+					$is_profile_photo_uploaded = 1;
+					++ $grand_completed_fields;
+				}
+			}
+		}
+
+		$progress_details['photo_type']['profile_photo'] = array(
+			'is_uploaded' => $is_profile_photo_uploaded,
+			'name'        => __( 'Profile Photo', 'buddyboss' ),
+		);
+
+	}
+
+	/* Cover Photo */
+
+	// check if cover photo option still enabled.
+	$is_cover_photo_disabled = bp_disable_cover_image_uploads();
+	if ( ! $is_cover_photo_disabled && in_array( 'cover_photo', $photo_types ) ) {
+
+		++ $grand_total_fields;
+
+		$is_cover_photo_uploaded = ( bp_attachments_get_user_has_cover_image( $user_id ) ) ? 1 : 0;
+
+		if ( $is_cover_photo_uploaded ) {
+			++ $grand_completed_fields;
+		}
+
+		$progress_details['photo_type']['cover_photo'] = array(
+			'is_uploaded' => $is_cover_photo_uploaded,
+			'name'        => __( 'Cover Photo', 'buddyboss' ),
+		);
+
+	}
+
+	/* Groups Fields */
+
+	// Get Groups and Group fields with Loggedin user data.
+	$profile_groups = bp_xprofile_get_groups(
+		array(
+			'fetch_fields'                   => true,
+			'fetch_field_data'               => true,
+			'user_id'                        => $user_id,
+			'repeater_show_main_fields_only' => false,
+			'fetch_social_network_fields'    => true,
+		)
+	);
+
+	foreach ( $profile_groups as $single_group_details ) {
+
+		if ( empty( $single_group_details->fields ) ) {
+			continue;
+		}
+
+		/* Single Group Specific VARS */
+		$group_id              = $single_group_details->id;
+		$single_group_progress = array();
+
+		// Consider only selected Groups ids from the widget form settings, skip all others.
+		if ( ! in_array( $group_id, $group_ids ) ) {
+			continue;
+		}
+
+		// Check if Current Group is repeater if YES then get number of fields inside current group.
+		$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
+		$is_group_repeater     = ( 'on' === $is_group_repeater_str ) ? true : false;
+
+		/* Loop through all the fields and check if fields completed or not. */
+		$group_total_fields     = 0;
+		$group_completed_fields = 0;
+		foreach ( $single_group_details->fields as $group_single_field ) {
+
+			/**
+			 * Added support for display name format support from platform.
+			 * Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+			 */
+			if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $group_single_field->id ) ) {
+				continue;
+			}
+
+			// If current group is repeater then only consider first set of fields.
+			if ( $is_group_repeater ) {
+
+				// If field not a "clone number 1" then stop. That means proceed with the first set of fields and restrict others.
+				$field_id     = $group_single_field->id;
+				$clone_number = bp_xprofile_get_meta( $field_id, 'field', '_clone_number', true );
+				if ( $clone_number > 1 ) {
+					continue;
+				}
+			}
+
+			// For Social networks field check child field is completed or not
+			if  ( 'socialnetworks' == $group_single_field->type ){
+				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$children = $group_single_field->type_obj->field_obj->get_children();
+				foreach ( $children as $child ){
+					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
+						++ $group_completed_fields;
+					}
+					++ $group_total_fields;
+				}
+			} else{
+				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+
+				if ( ! empty( $field_data_value ) ) {
+					++ $group_completed_fields;
+				}
+
+				++ $group_total_fields;
+			}
+		}
+
+		/* Prepare array to return group specific progress details */
+		$single_group_progress['group_name']             = $single_group_details->name;
+		$single_group_progress['group_total_fields']     = $group_total_fields;
+		$single_group_progress['group_completed_fields'] = $group_completed_fields;
+
+		$grand_total_fields     += $group_total_fields;
+		$grand_completed_fields += $group_completed_fields;
+
+		$progress_details['groups'][ $group_id ] = $single_group_progress;
+
+	}
+
+	/* Total Fields vs completed fields to calculate progress percentage. */
+	$progress_details['total_fields']     = $grand_total_fields;
+	$progress_details['completed_fields'] = $grand_completed_fields;
+
+	/**
+	 * Filter returns User Progress array.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 */
+	return apply_filters( 'xprofile_pc_user_progress', $progress_details );
+}
+
+/**
+ * Function formats user progress to pass on to templates.
+ *
+ * @param array $user_progress_arr - raw details to calculate user progress
+ *
+ * @return array $user_prgress_formatted - user progress to render profile completion
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
+
+	/* Groups */
+
+	$loggedin_user_domain = bp_loggedin_user_domain();
+	$profile_slug          = bp_get_profile_slug();
+
+	// Calculate Total Progress percentage.
+	$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
+	$user_prgress_formatted        = array(
+		'completion_percentage' => $profile_completion_percentage,
+	);
+
+	// Group specific details
+	$listing_number = 1;
+	if( isset( $user_progress_arr['groups'] ) ){
+		foreach ( $user_progress_arr['groups'] as $group_id => $group_details ) {
+
+			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
+
+			$user_prgress_formatted['groups'][] = array(
+				'number'             => $listing_number,
+				'label'              => $group_details['group_name'],
+				'link'               => $group_link,
+				'is_group_completed' => ( $group_details['group_total_fields'] === $group_details['group_completed_fields'] ) ? true : false,
+				'total'              => $group_details['group_total_fields'],
+				'completed'          => $group_details['group_completed_fields'],
+			);
+
+			$listing_number ++;
+		}
+	}
+
+	/* Profile Photo */
+	if ( isset( $user_progress_arr['photo_type']['profile_photo'] ) ) {
+
+		$change_avatar_link  = trailingslashit( $loggedin_user_domain . $profile_slug . '/change-avatar' );
+		$is_profile_uploaded = ( 1 === $user_progress_arr['photo_type']['profile_photo']['is_uploaded'] );
+
+		$user_prgress_formatted['groups'][] = array(
+			'number'             => $listing_number,
+			'label'              => $user_progress_arr['photo_type']['profile_photo']['name'],
+			'link'               => $change_avatar_link,
+			'is_group_completed' => ( $is_profile_uploaded ) ? true : false,
+			'total'              => 1,
+			'completed'          => ( $is_profile_uploaded ) ? 1 : 0,
+		);
+
+		$listing_number ++;
+	}
+
+	/* Cover Photo */
+	if ( isset( $user_progress_arr['photo_type']['cover_photo'] ) ) {
+
+		$change_cover_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/change-cover-image' );
+		$is_cover_uploaded = ( 1 === $user_progress_arr['photo_type']['cover_photo']['is_uploaded'] );
+
+		$user_prgress_formatted['groups'][] = array(
+			'number'             => $listing_number,
+			'label'              => $user_progress_arr['photo_type']['cover_photo']['name'],
+			'link'               => $change_cover_link,
+			'is_group_completed' => ( $is_cover_uploaded ) ? true : false,
+			'total'              => 1,
+			'completed'          => ( $is_cover_uploaded ) ? 1 : 0,
+		);
+
+		$listing_number ++;
+	}
+
+	/**
+	 * Filter returns User Progress array in the template friendly format.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 */
+	return apply_filters( 'xprofile_pc_user_progress_formatted', $user_prgress_formatted );
+}
+
+/**
+ * Reset cover image position while uploading/deleting profile cover photo.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $user_id User ID.
+ */
+function bp_xprofile_reset_cover_image_position( $user_id ) {
+	if ( ! empty( (int) $user_id ) ) {
+		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
+	}
+}
+add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+
+/**
+ * Function will return the users id based on given xprofile field id and field value.
+ *
+ * @param int    $field_id  to check against the filed id.
+ * @param string $field_val to check against the filed value.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool|array
+ */
+function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
+	global $wpdb, $bp;
+
+	$bp_table = $bp->profile->table_name_data;
+
+	$query = $wpdb->prepare(
+		"SELECT U.ID " .
+		"FROM $bp_table B, $wpdb->users U " .
+		"WHERE B.user_id = U.ID " .
+		"AND B.field_id = %d " .
+		"AND B.value = %s"
+		, $field_id
+		, $field_val
+	);
+
+	$get_desired = $wpdb->get_results( $query );
+
+	if( count( $get_desired ) ) {
+		return $get_desired;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Enabled the social networks for members or not.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @return bool True if enabled the social networks otherwise false.
+ */
+function bb_enabled_member_social_networks() {
+	static $social_networks_id = '';
+
+	if ( '' === $social_networks_id ) {
+		global $wpdb, $bp;
+
+		$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+
+	return apply_filters( 'bb_enabled_member_social_networks', (bool) $social_networks_id );
+}
+
+/**
+ * Get social networks field values.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param int|null $user_id ID of the user or null. Default current displayed user profile ID.
+ *
+ * @return array
+ */
+function bb_get_user_social_networks_field_value( $user_id = null ) {
+	global $wpdb, $bp;
+
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	$original_option_values = array();
+
+	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) {
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+	}
+
+	return $original_option_values;
+}
+

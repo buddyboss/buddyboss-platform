@@ -57,11 +57,11 @@ add_filter( 'bp_search_additional_search_helpers', 'bp_search_helpers_cpts' );
 function bp_search_helpers_cpts( $helpers ) {
 
 	$post_types          = get_post_types( array( 'public' => true ) );
-	$custom_handler_cpts = array( 'post', 'forum', 'topic', 'reply' );
+	$custom_handler_cpts = array( 'post', 'forum', 'topic', 'reply', 'page' );
 
 	foreach ( $post_types as $post_type ) {
 		// if name starts with cpt-
-		if ( ! in_array( $post_type, $custom_handler_cpts ) && bp_is_search_post_type_enable( $post_type, 0 ) ) {
+		if ( ! in_array( $post_type, $custom_handler_cpts ) && bp_is_search_post_type_enable( $post_type ) ) {
 			$searchable_type = 'cpt-' . $post_type;
 			$cpt_obj         = get_post_type_object( $post_type );
 			// is cpt still valid?

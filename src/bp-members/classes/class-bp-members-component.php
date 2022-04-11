@@ -257,6 +257,14 @@ class BP_Members_Component extends BP_Component {
 			$default_tab = 'photos';
 		}
 
+		if ( 'document' === $default_tab ) {
+			$default_tab = 'documents';
+		}
+
+		if ( 'video' === $default_tab ) {
+			$default_tab = 'videos';
+		}
+
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************
@@ -293,6 +301,16 @@ class BP_Members_Component extends BP_Component {
 			// redirected to the root of the spammer's profile page.  this occurs by
 			// by removing the component in the canonical stack.
 			if ( bp_is_user_spammer( bp_displayed_user_id() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+				unset( $bp->canonical_stack['component'] );
+			}
+
+			// If we're on a suspender's profile page, only users with the 'bp_moderate' cap
+			// can view subpages on the spammer's profile.
+			//
+			// users without the cap trying to access a spammer's subnav page will get
+			// redirected to the root of the suspender's profile page.  this occurs by
+			// by removing the component in the canonical stack.
+			if ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( bp_displayed_user_id() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 				unset( $bp->canonical_stack['component'] );
 			}
 		}
@@ -464,9 +482,48 @@ class BP_Members_Component extends BP_Component {
 			array(
 				'bp_last_activity',
 				'bp_member_type',
+				'bp_member_member_type',
+				'bp_member',
 			)
 		);
 
 		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			/**
+			 * As the Members component is always loaded,
+			 * let's register the Components endpoint here.
+			 */
+			'BP_REST_Components_Endpoint',
+			'BP_REST_Settings_Endpoint',
+			'BP_REST_Members_Endpoint',
+			'BP_REST_Members_Permissions_Endpoint',
+			'BP_REST_Members_Actions_Endpoint',
+			'BP_REST_Members_Details_Endpoint',
+			'BP_REST_Attachments_Member_Avatar_Endpoint',
+		);
+
+		if ( function_exists( 'bp_core_get_suggestions' ) ) {
+			$controllers[] = 'BP_REST_Mention_Endpoint';
+		}
+
+		if ( bp_is_active( 'members', 'cover_image' ) || bp_is_active( 'xprofile', 'cover_image' ) ) {
+			$controllers[] = 'BP_REST_Attachments_Member_Cover_Endpoint';
+		}
+
+		if ( bp_get_signup_allowed() ) {
+			$controllers[] = 'BP_REST_Signup_Endpoint';
+		}
+
+		parent::rest_api_init( $controllers );
 	}
 }

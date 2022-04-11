@@ -78,6 +78,22 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			return $this->group_member_ids;
 		}
 
+		// Fetch **all** invited users.
+		$pending_invites = groups_get_invites( array(
+			'item_id'     => $this->query_vars['group_id'],
+			'invite_sent' => 'sent',
+			'fields'      => 'user_ids'
+		) );
+
+		// This is a clue that we only want the invitations.
+		if ( false === $this->query_vars['is_confirmed'] ) {
+			return $pending_invites;
+		}
+
+		/**
+		 * Otherwise, we want group members _and_ users with outstanding invitations,
+		 * because we're doing an "exclude" query.
+		 */
 		$bp  = buddypress();
 		$sql = array(
 			'select'  => "SELECT user_id FROM {$bp->groups->table_name_members}",
@@ -107,7 +123,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		/** LIMIT clause ******************************************************/
 		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" );
 
-		return $this->group_member_ids;
+		return array_merge( $this->group_member_ids, $pending_invites );
 	}
 
 	/**
@@ -138,9 +154,12 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			return array();
 		}
 
-		$bp = buddypress();
-
-		return $wpdb->get_col( $wpdb->prepare( "SELECT inviter_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $user_id, $group_id ) );
+		return groups_get_invites( array(
+			'user_id'     => $user_id,
+			'item_id'     => $group_id,
+			'invite_sent' => 'sent',
+			'fields'      => 'inviter_ids'
+		) );
 	}
 }
 
@@ -247,7 +266,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Send Invites', 'buddyboss' ),
 				'slug'        => 'invite',
 				'parent_slug' => $this->group->slug,
-				'position'    => 70,
+				'position'    => 30,
 			),
 			'manage'  => array(
 				'name'        => __( 'Manage', 'buddyboss' ),
@@ -262,17 +281,33 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Photos', 'buddyboss' ),
 				'slug'        => 'photos',
 				'parent_slug' => $this->group->slug,
-				'position'    => 80,
+				'position'    => 21,
 			);
+
+			if ( bp_is_group_video_support_enabled() ) {
+				// Checked if order already set before, New menu(video) will be added at last
+				$video_menu_position = 22;
+				$orders              = get_option( 'bp_nouveau_appearance' );
+				if ( isset( $orders['group_nav_order'] ) && ! empty( $orders['group_nav_order'] ) && ! in_array( 'vide', $orders['group_nav_order'] ) ) {
+					$video_menu_position = 1001;
+				}
+				$nav_items['videos'] = array(
+					'name'        => __( 'Videos', 'buddyboss' ),
+					'slug'        => 'videos',
+					'parent_slug' => $this->group->slug,
+					'position'    => $video_menu_position,
+				);
+			}
 
 			if ( bp_is_group_albums_support_enabled() ) {
 				$nav_items['albums'] = array(
 					'name'        => __( 'Albums', 'buddyboss' ),
 					'slug'        => 'albums',
 					'parent_slug' => $this->group->slug,
-					'position'    => 85,
+					'position'    => 23,
 				);
 			}
+
 		}
 
 		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
@@ -291,7 +326,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'name'        => __( 'Subgroups', 'buddyboss' ),
 				'slug'        => 'subgroups',
 				'parent_slug' => $this->group->slug,
-				'position'    => 30,
+				'position'    => 28,
 			);
 		}
 
@@ -328,6 +363,24 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			);
 		}
 
+		if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() && groups_can_user_manage_messages( bp_loggedin_user_id(), $this->group->id ) ) {
+			$nav_items['messages'] = array(
+				'name'        => __( 'Send Messages', 'buddyboss' ),
+				'slug'        => 'messages',
+				'parent_slug' => $this->group->slug,
+				'position'    => 25,
+			);
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+			$nav_items['documents'] = array(
+				'name'        => __( 'Documents', 'buddyboss' ),
+				'slug'        => 'documents',
+				'parent_slug' => $this->group->slug,
+				'position'    => 24,
+			);
+		}
+
 		// Required params
 		$required_params = array(
 			'slug'              => true,
@@ -350,6 +403,13 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				}
 			}
 		}
+
+		/**
+		 * Filters group customizer navigation items.
+		 *
+		 * @since BuddyBoss 1.4.4
+		 */
+		$nav_items = apply_filters( 'bp_nouveau_customizer_group_nav_items', $nav_items, $this->group );
 
 		// Now we got all, create the temporary nav.
 		foreach ( $nav_items as $nav_item ) {

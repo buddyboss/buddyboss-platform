@@ -76,11 +76,11 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		}
 
 		// File size is too big.
-		if ( $file['size'] > $this->original_max_filesize ) {
+		if ( isset( $file['size'] ) && ( $file['size'] > $this->original_max_filesize ) ) {
 			$file['error'] = 11;
 
 			// File is of invalid type.
-		} elseif ( ! bp_attachments_check_filetype( $file['tmp_name'], $file['name'], bp_attachments_get_allowed_mimes( 'cover_image' ) ) ) {
+		} elseif ( isset( $file['tmp_name'] ) && isset( $file['name'] ) && ! bp_attachments_check_filetype( $file['tmp_name'], $file['name'], bp_attachments_get_allowed_mimes( 'cover_image' ) ) ) {
 			$file['error'] = 12;
 		}
 
@@ -117,16 +117,33 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		// Get image size.
 		$cover_data = parent::get_image_data( $file );
 
+		$image_width  = $cover_data['width'];
+		$image_height = $cover_data['height'];
+
+		$max_width  = ( ! empty( $image_width ) && ! empty( $image_height ) && $image_height > $dimensions['height'] ? ( $image_width * $dimensions['height'] ) / $image_height : 0 );
+		$max_height = ( ! empty( $image_width ) && ! empty( $image_height ) && $image_width > $dimensions['width'] ? ( $image_height * $dimensions['width'] ) / $image_width : 0 );
+
 		// Init the edit args.
 		$edit_args = array();
 
 		// Do we need to resize the image?
-		if ( ( isset( $cover_data['width'] ) && $cover_data['width'] > $dimensions['width'] ) ||
-		( isset( $cover_data['height'] ) && $cover_data['height'] > $dimensions['height'] ) ) {
+		if (
+			isset( $cover_data['width'] )
+			&& $cover_data['width'] > $dimensions['width']
+			&& $max_height >= $dimensions['height']
+		) {
 			$edit_args = array(
 				'max_w' => $dimensions['width'],
+				'crop'  => false,
+			);
+		} elseif (
+			isset( $cover_data['height'] )
+			&& $cover_data['height'] > $dimensions['height']
+			&& $max_width >= $dimensions['width']
+		) {
+			$edit_args = array(
 				'max_h' => $dimensions['height'],
-				'crop'  => true,
+				'crop'  => false,
 			);
 		}
 
@@ -204,10 +221,11 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			$item_id = bp_displayed_user_id();
 
 			$script_data['bp_params'] = array(
-				'object'          => 'user',
-				'item_id'         => $item_id,
-				'has_cover_image' => bp_attachments_get_user_has_cover_image( $item_id ),
-				'nonces'          => array(
+				'object'            => 'user',
+				'item_id'           => $item_id,
+				'has_cover_image'   => bp_attachments_get_user_has_cover_image( $item_id ),
+				'has_default_class' => ( ! bp_disable_cover_image_uploads() && 'custom' !== bb_get_default_profile_cover_type() ) ? 'has-default' : '',
+				'nonces'            => array(
 					'remove' => wp_create_nonce( 'bp_delete_cover_image' ),
 				),
 			);
@@ -222,10 +240,11 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			$item_id = bp_get_current_group_id();
 
 			$script_data['bp_params'] = array(
-				'object'          => 'group',
-				'item_id'         => bp_get_current_group_id(),
-				'has_cover_image' => bp_attachments_get_group_has_cover_image( $item_id ),
-				'nonces'          => array(
+				'object'            => 'group',
+				'item_id'           => bp_get_current_group_id(),
+				'has_cover_image'   => bp_attachments_get_group_has_cover_image( $item_id ),
+				'has_default_class' => ( ! bp_disable_group_cover_image_uploads() && 'custom' !== bb_get_default_group_cover_type() ) ? 'has-default' : '',
+				'nonces'            => array(
 					'remove' => wp_create_nonce( 'bp_delete_cover_image' ),
 				),
 			);

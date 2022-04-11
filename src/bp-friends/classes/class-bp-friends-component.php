@@ -172,15 +172,11 @@ class BP_Friends_Component extends BP_Component {
 		// Add 'Connections' to the main navigation.
 		$count = friends_get_total_friend_count();
 		$class = ( 0 === $count ) ? 'no-count' : 'count';
-
-		$main_nav_name = sprintf(
-			/* translators: %s: Connection count for the current user */
-			__( 'Connections %s', 'buddyboss' ),
-			sprintf(
-				'<span class="%s">%s</span>',
-				esc_attr( $class ),
-				bp_core_number_format( $count )
-			)
+		$main_nav_name = __( 'Connections', 'buddyboss' );
+		$main_nav_name .= sprintf(
+			' <span class="%s">%s</span>',
+			esc_attr( $class ),
+			bp_core_number_format( $count )
 		);
 
 		$main_nav = array(
@@ -339,5 +335,18 @@ class BP_Friends_Component extends BP_Component {
 		);
 
 		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array(
+			'BP_REST_Friends_Endpoint',
+		) );
 	}
 }

@@ -19,6 +19,16 @@ defined( 'ABSPATH' ) || exit;
 class BP_Activity_Component extends BP_Component {
 
 	/**
+	 * The acceptable visibility levels for activity.
+	 *
+	 * @see bp_activity_get_visibility_levels()
+	 *
+	 * @since BuddyBoss 1.2.3
+	 * @var array
+	 */
+	public $visibility_levels = array();
+
+	/**
 	 * Start the activity component setup process.
 	 *
 	 * @since BuddyPress 1.5.0
@@ -70,7 +80,7 @@ class BP_Activity_Component extends BP_Component {
 			$includes[] = 'akismet';
 		}
 
-		// Embeds
+		// Embeds.
 		if ( bp_is_active( $this->id, 'embeds' ) ) {
 			$includes[] = 'embeds';
 		}
@@ -162,6 +172,18 @@ class BP_Activity_Component extends BP_Component {
 			define( 'BP_FOLLOW_SLUG', $this->id . '_follow' );
 		}
 
+		// Register the visibility levels. See bp_activity_get_visibility_levels() to filter.
+		$this->visibility_levels = array(
+			'public'   => __( 'Public', 'buddyboss' ),
+			'loggedin' => __( 'All Members', 'buddyboss' ),
+		);
+
+		if ( bp_is_active( 'friends' ) ) {
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		}
+
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+
 		// Global tables for activity component.
 		$global_tables = array(
 			'table_name'        => $bp->table_prefix . 'bp_activity',
@@ -194,7 +216,7 @@ class BP_Activity_Component extends BP_Component {
 		parent::setup_globals( $args );
 
 		if ( bp_is_activity_follow_active() ) {
-			// locally cache total count values for logged-in user
+			// locally cache total count values for logged-in user.
 			if ( is_user_logged_in() ) {
 				$bp->loggedin_user->total_follow_counts = bp_total_follow_counts(
 					array(
@@ -203,8 +225,8 @@ class BP_Activity_Component extends BP_Component {
 				);
 			}
 
-			// locally cache total count values for displayed user
-			if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
+			// locally cache total count values for displayed user.
+			if ( bp_is_user() && ( bp_loggedin_user_id() !== bp_displayed_user_id() ) ) {
 				$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
 					array(
 						'user_id' => bp_displayed_user_id(),
@@ -519,5 +541,21 @@ class BP_Activity_Component extends BP_Component {
 		);
 
 		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array(
+			'BP_REST_Activity_Endpoint',
+			'BP_REST_Activity_Comment_Endpoint',
+			'BP_REST_Activity_Details_Endpoint',
+			'BP_REST_Activity_Link_Preview_Endpoint',
+		) );
 	}
 }

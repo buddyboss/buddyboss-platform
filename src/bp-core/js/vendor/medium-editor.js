@@ -920,6 +920,10 @@ MediumEditor.extensions = {};
             var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
                 childNodes;
 
+                if ( tagName === 'pre' ) {
+                    doc.execCommand('outdent', false, tagName);
+                }
+
             // Special handling for blockquote
             if (tagName === 'blockquote') {
                 if (blockContainer) {
@@ -1442,7 +1446,10 @@ MediumEditor.extensions = {};
 
         cleanupAttrs: function (el, attrs) {
             attrs.forEach(function (attr) {
-                el.removeAttribute(attr);
+                // Added support for emoji class - BuddyBoss.
+                if ( !jQuery( el ).hasClass( 'emojioneemoji' ) && !jQuery( el ).hasClass( 'emoji' ) ) {
+                    el.removeAttribute( attr );
+                }
             });
         },
 
@@ -4023,14 +4030,23 @@ MediumEditor.extensions = {};
             event.stopPropagation();
         },
 
-        handleSaveClick: function (event) {
+        handleSaveClick: function ( event ) {
             // Clicking Save -> create the anchor
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            if ( toolbarInput.classList.contains( 'isNotValid' ) ) {
+                toolbarInput.classList.add( 'validate' );
+                return false;
+            } else {
+                toolbarInput.classList.remove( 'validate' );
+            }
             event.preventDefault();
             this.doFormSave();
         },
 
-        handleCloseClick: function (event) {
+        handleCloseClick: function ( event ) {
             // Click Close -> close the form
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
         }
@@ -5244,6 +5260,14 @@ MediumEditor.extensions = {};
         return data;
     }
 
+    // Added support for removing image while pasting - BuddyBoss.
+    var isFilePaste = function (event) {
+        return event &&
+            event.clipboardData &&
+            event.clipboardData.items &&
+            event.clipboardData.types.includes( 'Files' );
+    }
+
     var PasteHandler = MediumEditor.Extension.extend({
         /* Paste Options */
 
@@ -5320,6 +5344,12 @@ MediumEditor.extensions = {};
                 return;
             }
 
+            // Added support for removing image while pasting - BuddyBoss.
+            if ( isFilePaste( event ) ) {
+                event.preventDefault();
+                return;
+            }
+
             var clipboardContent = getClipboardContent(event, this.window, this.document),
                 pastedHTML = clipboardContent['text/html'],
                 pastedPlain = clipboardContent['text/plain'];
@@ -5374,6 +5404,11 @@ MediumEditor.extensions = {};
         handlePasteBinPaste: function (event) {
             if (event.defaultPrevented) {
                 this.removePasteBin();
+                return;
+            }
+
+            // Added support for removing image while pasting - BuddyBoss.
+            if ( isFilePaste( event ) ) {
                 return;
             }
 
@@ -5588,6 +5623,10 @@ MediumEditor.extensions = {};
             pasteBlock.appendChild(this.document.createElement('body'));
 
             fragmentBody = pasteBlock.querySelector('body');
+
+            // Remove html comments while pasting the content.
+            html = html.replace( /<\!--.*?-->/g, '' );
+
             fragmentBody.innerHTML = html;
 
             this.cleanupSpans(fragmentBody);
@@ -6594,6 +6633,7 @@ MediumEditor.extensions = {};
         // Override tab only for pre nodes
         var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
             tag = node && node.nodeName.toLowerCase();
+            parent = node && node.parentNode.nodeName.toLowerCase();
 
         if (tag === 'pre') {
             event.preventDefault();
@@ -6604,11 +6644,37 @@ MediumEditor.extensions = {};
         if (MediumEditor.util.isListItem(node)) {
             event.preventDefault();
 
+            var elementsContainer = MediumEditor.selection.getSelectionStart(this.options.ownerDocument);
+
             // If Shift is down, outdent, otherwise indent
             if (event.shiftKey) {
-                this.options.ownerDocument.execCommand('outdent', false, null);
+                var elementsContainercontent = elementsContainer.innerHTML.replace('<br>','');
+                var li = this.options.ownerDocument.createElement('li');
+                var newLI = elementsContainer.parentNode.parentNode.parentNode.appendChild(li);
+                MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
+
+                //Delete if current list item is blank
+                if( elementsContainercontent === '' ) {
+                    elementsContainer.remove();
+                }
+
             } else {
-                this.options.ownerDocument.execCommand('indent', false, null);
+                var elementsContainercontent = elementsContainer.innerHTML.replace('<br>','');
+                //Do not indent if current list item is blank
+                if( elementsContainercontent === '' || elementsContainer.innerText === '') {
+                    return;
+                }
+                var wrap;
+                if( parent == 'ul' ){
+                    wrap = this.options.ownerDocument.createElement('ul');
+                } else if( parent == 'ol' ) {
+                    wrap = this.options.ownerDocument.createElement('ol');
+                }
+
+                var li = this.options.ownerDocument.createElement('li');
+                var newWrap = wrap.appendChild(li);
+                elementsContainer.appendChild(wrap);
+                MediumEditor.selection.moveCursor(this.options.ownerDocument, newWrap);
             }
         }
     }
@@ -6715,6 +6781,64 @@ MediumEditor.extensions = {};
 
             event.preventDefault();
         } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
+                (MediumEditor.util.getClosestTag(node, 'pre') !== false) &&
+                MediumEditor.selection.getCaretOffsets(node).left === 0) {
+
+            // when cursor is at the begining of the element and the element is <pre>
+            // then pressing backspace key should change the <pre> to a <p> tag
+            event.preventDefault();
+            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p');
+        }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) &&
+                (MediumEditor.util.getClosestTag(node, 'pre') !== false) &&
+                MediumEditor.selection.getCaretOffsets(node).right === 0) {
+
+            // when cursor is at the end of <pre>,
+            // then pressing enter key should create <p> tag, not <pre>
+            p = this.options.ownerDocument.createElement('p');
+            p.innerHTML = '<br>';
+            node.parentElement.insertBefore(p, node.nextSibling);
+
+            // move the cursor into the new paragraph
+            MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
+
+            event.preventDefault();
+        }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) &&
+        (MediumEditor.util.getClosestTag(node, 'li') !== false) &&
+        MediumEditor.selection.getCaretOffsets(node).left === 0) {
+
+            // when cursor is at the <li> and is empty,
+            // then pressing enter key should remove li and cursor should be go to parent with new li or p
+            event.preventDefault();
+            if( isEmpty.test(node.innerHTML)){
+                if( node.parentNode.parentNode.parentNode.tagName.toLowerCase() == 'ul' || node.parentNode.parentNode.parentNode.tagName.toLowerCase() == 'ol'){
+                    var li = this.options.ownerDocument.createElement('li');
+                    var newLI = node.parentNode.parentNode.parentNode.insertBefore(li, node.parentNode.parentNode.nextSibling);
+                    node.remove();
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
+
+                } else {
+                   var  p = this.options.ownerDocument.createElement('p');
+                    p.innerHTML = '<br>';
+                    var newP;
+                    if(node.parentNode.nextSibling){
+                        newP = node.parentNode.parentNode.insertBefore(p, node.parentNode.nextSibling);
+                    }else{
+                        newP = node.parentNode.parentNode.appendChild(p);
+                    }
+                    node.remove();
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, newP);
+                }
+            }else if( !node.previousElementSibling && node.nextElementSibling){
+                // when cursor is at the first <li>,
+                // then pressing enter key should add <p> above listing
+                if(node.parentNode.parentNode.tagName.toLowerCase() !== 'li'){
+                    var p = this.options.ownerDocument.createElement('p');
+                    p.innerHTML = '<br>';
+                    var newP = node.parentNode.parentNode.prepend(p);
+                    MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
+                }
+            }
+        }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
                 MediumEditor.util.isMediumEditorElement(node.parentElement) &&
                 !node.previousElementSibling &&
                 node.nextElementSibling &&

@@ -49,6 +49,14 @@ function bp_core_admin_get_directory_pages() {
 		}
 	}
 
+	if ( bp_is_active( 'media' ) && ( bp_is_profile_document_support_enabled() || bp_is_forums_document_support_enabled() || bp_is_group_document_support_enabled() || bp_is_messages_document_support_enabled() ) ) {
+		$directory_pages['document'] = __( 'Documents', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_video_support_enabled' ) &&  ( bp_is_profile_video_support_enabled() || bp_is_forums_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_messages_video_support_enabled() ) ) {
+		$directory_pages['video'] = __( 'Videos', 'buddyboss' );
+	}
+
 	/** Directory Display */
 
 	/**

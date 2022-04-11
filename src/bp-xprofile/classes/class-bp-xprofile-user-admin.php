@@ -128,7 +128,19 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				'user_id'      => $user_id,
 			);
 
-			if ( ! bp_is_user_spammer( $user_id ) && bp_has_profile( $profile_args ) ) {
+			if ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( $user_id ) && bp_has_profile( $profile_args ) ) {
+
+				// If member is already a suspended , show a generic metabox.
+				add_meta_box(
+						'bp_xprofile_user_admin_empty_profile',
+						__( 'Member marked as suspended', 'buddyboss' ),
+						array( $this, 'user_admin_suspended_metabox' ),
+						$screen_id,
+						'normal',
+						'core'
+				);
+
+			} elseif ( ! bp_is_user_spammer( $user_id ) && bp_has_profile( $profile_args ) ) {
 
 				// Loop through field groups and add a metabox for each one.
 				while ( bp_profile_groups() ) :
@@ -143,7 +155,6 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 						array( 'profile_group_id' => bp_get_the_profile_group_id() )
 					);
 				endwhile;
-
 			} else {
 				// If member is already a spammer, show a generic metabox.
 				add_meta_box(
@@ -156,7 +167,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				);
 			}
 
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 				// Avatar Metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_avatar',
@@ -397,27 +408,6 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					}
 					?>
 
-					<?php
-					// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-					$current_value = bp_get_option( 'bp-display-name-format' );
-
-					// If First Name selected then do not add last name field.
-					if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
-						if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-							continue;
-						}
-						// If Nick Name selected then do not add first & last name field.
-					} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
-						if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-							continue;
-						}
-					} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_firstname_field_id() ) {
-						if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-							continue;
-						}
-					}
-					?>
-
 				<div<?php bp_field_css_class( 'bp-profile-field' ); ?>>
 					<fieldset>
 
@@ -495,7 +485,20 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+		<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<?php
+		}
+
+		/**
+		 * Render the fallback metabox in case a user has been marked as a suspended.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param WP_User|null $user The WP_User object for the user being edited.
+		 */
+		public function user_admin_suspended_metabox( $user = null ) {
+			?>
+			<p><?php printf( __( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 

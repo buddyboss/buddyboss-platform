@@ -89,7 +89,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 				'name' => $post_type,
 			);
 
-			$output = 'objects'; // names or objects
+			$output = 'objects'; // names or objects.
 
 			$cu_post_types = get_post_types( $args, $output );
 
@@ -126,7 +126,23 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		 *
 		 * @param array $value Array of post types to track.
 		 */
-		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', array( 'post' ) );
+
+		$post_types = get_post_types( array( 'public' => true ) );
+
+		// Exclude BP CPT.
+		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+
+		$bp_allowed_cpt = array();
+		foreach ( $post_types as $p_type ) {
+			// Exclude all the custom post type which is already in BuddyPress Activity support.
+			if ( in_array( $p_type, $bp_exclude_cpt, true ) ) {
+				continue;
+			}
+
+			$bp_allowed_cpt[] = $p_type;
+		}
+
+		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_allowed_cpt );
 		$comment_post_types_array = array_flip( $comment_post_types );
 
 		if ( isset( $comment_post_types_array[ $post_type ] ) ) {
@@ -260,16 +276,13 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 		restore_current_blog();
 	}
 
-	// Build the 'post link' part of the activity action string.
-	$post_link = '<a href="' . esc_url( $post_url ) . '">' . $post_title . '</a>';
-
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
-		$action = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
+		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 	}
 
 	// Legacy filter - requires the post object.
@@ -898,6 +911,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 */
 	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
+	$resave_activity->content = '';
 	$resave_activity->save();
 
 	// Add the edit activity comment hook back.
@@ -1281,15 +1295,19 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 	global $activities_template;
 
 	// If activity commenting is disabled, return current value.
-	if ( bp_disable_blogforum_comments() || ! isset( $activities_template->in_the_loop ) ) {
+	if ( ! isset( $activities_template->in_the_loop ) ) {
 		return $retval;
+	}
+
+	if ( bp_disable_blogforum_comments() ) {
+		$retval = false;
 	}
 
 	$type = bp_get_activity_type();
 
 	// It's a post type supporting comment tracking.
 	if ( bp_activity_type_supports( $type, 'post-type-comment-tracking' ) ) {
-		// The activity type is supporting comments or replies
+		// The activity type is supporting comments or replies.
 		if ( bp_activity_type_supports( $type, 'post-type-comment-reply' ) ) {
 			// Setup some globals we'll need to reference later.
 			bp_blogs_setup_activity_loop_globals( $activities_template->activity );
@@ -1304,7 +1322,7 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 			if ( ! empty( buddypress()->blogs->comment_moderation[ bp_get_activity_id() ] ) ) {
 				$retval = false;
 			}
-			// The activity type does not support comments or replies
+			// The activity type does not support comments or replies.
 		} else {
 			$retval = false;
 		}
@@ -1601,7 +1619,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	}
 
 	// Build the 'post link' part of the activity action string.
-	$post_link = '<a href="' . esc_url( $post_url ) . '">' . $post_title . '</a>';
+	$post_link = '<span class="bb-post-singular">' . $post_title . '</span>';
 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
@@ -1625,16 +1643,16 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
-			$action = sprintf( __( '%1$s posted a new %2$s, %3$s, on the site %4$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+			$action = sprintf( __( '%1$s posted a new %2$s, on the site %3$s', 'buddyboss' ), $user_link, $singular_label_name, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
-			$action = sprintf( __( '%1$s posted a new %2$s, %3$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link );
+			$action = sprintf( __( '%1$s posted a new %2$s.', 'buddyboss' ), $user_link, $singular_label_name );
 		}
 	} else {
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
-			$action = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+			$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
-			$action = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
+			$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 		}
 	}
 

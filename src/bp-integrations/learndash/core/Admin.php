@@ -24,7 +24,7 @@ class Admin {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		 add_action( 'bp_ld_sync/depencencies_failed', array( $this, 'registerDependencyNotices' ) );
+		add_action( 'bp_ld_sync/depencencies_failed', array( $this, 'registerDependencyNotices' ) );
 		add_action( 'bp_ld_sync/requirements_failed', array( $this, 'registerRequirementNotices' ) );
 	}
 
@@ -56,13 +56,7 @@ class Admin {
 		$missingDepencencies = bp_ld_sync()->dependencies->getMissingDepencencies();
 
 		$message = sprintf(
-			_n(
-				'%1$s is not initilized, the following required plugins are missing: %2$s',
-				'%1$s is not initilized, the following required plugin is missing: %2$s',
-				count( $missingDepencencies ),
-				'buddyboss'
-			),
-			'<b>' . bp_ld_sync()->pluginName . '</b>',
+			__( 'The following required plugins are missing: %s', 'buddyboss' ),
 			'<b>' . implode( ',', $missingDepencencies ) . '</b>'
 		);
 

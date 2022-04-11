@@ -30,6 +30,10 @@ function add_option(forWhat) {
 		newOption.setAttribute( 'type', 'text' );
 		newOption.setAttribute( 'name', forWhat + '_option[' + theId + '_other]' );
 		newOption.setAttribute( 'id', forWhat + '_option' + theId );
+		var order_field = document.createElement( 'input' );
+		order_field.setAttribute( 'type', 'hidden' );
+		order_field.setAttribute( 'name', forWhat + '-option-order[]' );
+		newDiv.appendChild( order_field );
 	} else if ( 'socialnetworks' === forWhat ) {
 		newOption.setAttribute( 'name', forWhat + '_option[' + theId + ']' );
 		newOption.setAttribute( 'id', forWhat + '_option' + theId );
@@ -59,8 +63,11 @@ function add_option(forWhat) {
 	}
 
 	isDefault.setAttribute( 'value', theId );
-
-	toDelete.setAttribute( 'href', 'javascript:hide("' + forWhat + '_div' + theId + '")' );
+	if ( 'gender' === forWhat ) {
+		toDelete.setAttribute('href', 'javascript:remove_div("' + forWhat + '_div' + theId + '")');
+	} else {
+		toDelete.setAttribute('href', 'javascript:hide("' + forWhat + '_div' + theId + '")');
+	}
 	toDelete.setAttribute( 'class', 'delete' );
 	toDelete.appendChild( toDeleteText );
 
@@ -336,6 +343,17 @@ function hide( id ) {
 	var field_id                              = id.replace( 'div', 'option' );
 	document.getElementById( field_id ).value = '';
 }
+
+// ignoring this because it is used as javascript attribute and added via code.
+/* jshint ignore:start */
+function remove_div( id ) {
+	if ( ! document.getElementById( id ) ) {
+		return false;
+	}
+
+	document.getElementById( id ).remove();
+}
+/* jshint ignore:end */
 
 /**
  * @summary Toggles "no profile type" notice.
@@ -677,6 +695,12 @@ jQuery( document ).ready(
 			jQuery( '.delete-profile-field-group' ).click(
 				function( ){
 					return confirm( XProfileAdmin.confirm_delete_field_group );
+				}
+			);
+
+			jQuery( '.bb-delete-profile-field' ).click(
+				function( ){
+					return confirm( XProfileAdmin.confirm_delete_field );
 				}
 			);
 

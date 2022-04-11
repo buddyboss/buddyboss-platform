@@ -138,10 +138,10 @@ class BP_Embed extends WP_Embed {
 
 		// Set up a new WP oEmbed object to check URL with registered oEmbed providers.
 		if ( file_exists( ABSPATH . WPINC . '/class-wp-oembed.php' ) ) {
-			require_once( ABSPATH . WPINC . '/class-wp-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-wp-oembed.php';
 		} else {
 			// class-oembed.php is deprecated in WordPress 5.3.0.
-			require_once( ABSPATH . WPINC . '/class-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-oembed.php';
 		}
 
 		$oembed_obj = _wp_oembed_get_object();
@@ -261,10 +261,11 @@ class BP_Embed extends WP_Embed {
 	 */
 	public function autoembed( $content, $type = '' ) {
 		$is_activity = isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type );
+		$link_embed  = false;
 
 		if ( $is_activity ) {
 
-			if ( false !== strpos( '<iframe', $content ) ) {
+			if ( ! empty( $content ) && false !== strpos( '<iframe', $content ) ) {
 				return apply_filters( 'bp_embeds', $content );
 			}
 
@@ -272,9 +273,41 @@ class BP_Embed extends WP_Embed {
 			$link_embed = bp_activity_get_meta( $type->id, '_link_embed', true );
 			if ( '0' === $link_embed ) {
 				return $content;
-			} else if ( ! empty( $link_embed ) ) {
-				if ( false !== wp_oembed_get( $link_embed ) ) {
-					$content .= '<p>' . $link_embed . '</p>';
+			} elseif ( ! empty( $link_embed ) ) {
+				$embed_data = bp_core_parse_url( $link_embed );
+
+				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+					$embed_code = $embed_data['description'];
+				} else {
+					$embed_code = wp_oembed_get( $link_embed, array( 'discover' => false ) );
+
+					if ( ! empty( $embed_code ) ) {
+						$parsed_url_data = array(
+							'title'       => ' ',
+							'description' => $embed_code,
+							'images'      => '',
+							'error'       => '',
+							'wp_embed'    => true,
+						);
+						$cache_key       = 'bp_activity_oembed_' . md5( maybe_serialize( $link_embed ) );
+						// set the transient.
+						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+					}
+				}
+
+				if ( ! empty( $embed_code ) ) {
+
+					if ( ! empty( $content ) ) {
+						preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+						preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+						if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+							$content = sprintf( '<p>%s</p>', $content );
+						}
+					}
+
+					$content   .= $embed_code;
+					$link_embed = true;
 				}
 			} else {
 
@@ -289,34 +322,81 @@ class BP_Embed extends WP_Embed {
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 
-		if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
+		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) && ! ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) ) {
 			// Find URLs on their own line.
 			if ( ! $is_activity ) {
 				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
 			}
 
 			// Find URLs in their own paragraph.
-			$content = preg_replace_callback( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', array( $this, 'autoembed_callback' ), $content );
+			$content = $this->bb_get_content_autoembed_callback( $content );
 		}
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
 
-		//todo: lazy load for iframe is not good enough for all the sites. we need to have proper solution here.
-//		if ( $is_activity && ! empty( $content ) ) {
-//
-//			$content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
-//
-//			// add the lazy class to the img element
-//			if ( preg_match( '/class=["\']/i', $content ) ) {
-//				$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
-//			} else {
-//				$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
-//			}
-//
-//			return apply_filters( 'bp_autoembed', $content );
-//		}
+		// add lazy loads for iframes to load on front end.
+		if ( $is_activity && ! empty( $content ) ) {
+
+			$old_content = $content;
+			$content     = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
+
+			// add the lazy class to the iframe element.
+			if ( $content !== $old_content ) {
+				preg_match( '/<iframe[^>]+(?:class)="([^"]*)"[^>]*>/', $content, $match );
+				if ( ! empty( $match[0] ) ) {
+					$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
+				} else {
+					$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
+				}
+			}
+		}
 
 		// Put the line breaks back.
 		return apply_filters( 'bp_autoembed', $content );
+	}
+
+	/**
+	 * Add oembed to content.
+	 *
+	 * @since BuddyBoss 1.8.3
+	 *
+	 * @param string $content The content to be searched.
+	 *
+	 * @return string
+	 */
+	public function bb_get_content_autoembed_callback( $content ) {
+		if ( false !== strpos( $content, '<iframe' ) ) {
+			return $content;
+		}
+
+		$embed_urls = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = $this->shortcode( array(), $url );
+				if ( false !== strpos( $embed, '<iframe' ) ) {
+					$is_embed = strpos( $content, $url );
+
+					if ( false !== $is_embed ) {
+						$flag    = false;
+						$content = substr_replace( $content, $embed, $is_embed, strlen( $url ) );
+					}
+				}
+			}
+		}
+
+		return $content;
 	}
 }

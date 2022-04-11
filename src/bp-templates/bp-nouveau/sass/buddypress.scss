@@ -476,6 +476,10 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 // Import global media styles
 
 @import "../common-styles/_bp_media";
+@import "../common-styles/_codemirror";
+
+// Import Video style
+@import "../common-styles/_bp_video";
 
 /**
 *-------------------------------------------------------------------------------
@@ -485,3 +489,45 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 // Import global dropzone styles
 
 @import "../common-styles/_bp_dropzone";
+
+/*
+*-----------------------------------------
+* @section 16.0 - Group Messages
+*-----------------------------------------
+*/
+
+// Import Group Messages screens
+
+@import "../common-styles/_bp_groups_messages";
+
+/*
+*-----------------------------------------
+* @section 17.0 - On-screen Notifications
+*-----------------------------------------
+*/
+
+// Import Group Messages screens
+
+@import "../common-styles/_bp_on_screen_notification";
+
+
+/*
+*-----------------------------------------
+* @section 18.0 - Moderation Popup
+*-----------------------------------------
+*/
+
+// Import Moderation Popup
+
+@import "../common-styles/_bp_modration_popup";
+
+
+/*
+*-----------------------------------------
+* @section 18.0 - Admin bar Notification dropdown
+*-----------------------------------------
+*/
+
+// Import Notification dropdown
+
+@import "../common-styles/_bp_admin_notification_dropdown";

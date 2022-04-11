@@ -295,9 +295,13 @@ abstract class BP_Attachment {
 			// Use WP's built-in function to convert accents to their ASCII equivalent.
 			$retval = remove_accents( $retval );
 
+			$new_retval = wp_check_invalid_utf8( $retval, true );
+
 			// Still here? use iconv().
-			if ( function_exists( 'iconv' ) && seems_utf8( $retval ) ) {
+			if ( empty( $new_retval ) && function_exists( 'iconv' ) && seems_utf8( $retval ) ) {
 				$retval = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $retval );
+			} else {
+				$retval = $new_retval;
 			}
 		}
 

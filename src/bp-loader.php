@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.2.8
+ * Version:     1.9.3
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -16,12 +16,19 @@
  * PHP supported by WordPress.
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+	require dirname( __FILE__ ) . '/vendor/autoload.php';
+}
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '1.2.8' );
+	define( 'BP_PLATFORM_VERSION', '1.9.3' );
+}
+
+if ( ! defined( 'BP_PLATFORM_API' ) ) {
+	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
 global $bp_incompatible_plugins;
@@ -47,7 +54,7 @@ $bp_is_multisite         = is_multisite();
 $bp_incompatible_plugins = array();
 
 if ( $bp_is_multisite ) {
-	// get network-activated plugins
+	// get network-activated plugins.
 	foreach ( get_site_option( 'active_sitewide_plugins', array() ) as $key => $value ) {
 		$bp_sitewide_plugins[] = $key;
 	}
@@ -55,12 +62,12 @@ if ( $bp_is_multisite ) {
 $bp_plugins   = array_merge( $bp_sitewide_plugins, get_option( 'active_plugins' ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
-// check if BuddyPress is activated
+// check if BuddyPress is activated.
 if ( in_array( $bp_plugin_file, $bp_plugins ) ) {
 	$is_bp_active = true;
 }
 
-// check if bbPress is activated
+// check if bbPress is activated.
 if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
 	$is_bb_active = true;
 }
@@ -108,9 +115,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
 		global $bp_is_multisite;
 
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		if ( $bp_is_multisite ) {
-			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
 
@@ -123,19 +130,22 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return mixed
 	 */
-	function bp_core_set_bbpress_buddypress_active( $value = array(), $option ) {
+	function bp_core_set_bbpress_buddypress_active( $value = array() ) {
 
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 
-		$plugins_path = '/wp-admin/plugins.php';
-		$ajax_path    = '/wp-admin/admin-ajax.php';
+		$admin_url    = admin_url();
+		$site_url     = site_url();
+		$root_path    = str_replace( $site_url, '', $admin_url );
+		$plugins_path = $root_path . 'plugins.php';
+		$ajax_path    = $root_path . 'admin-ajax.php';
 
-		// Hide My WP plugin compatibility
+		// Hide My WP plugin compatibility.
 		if ( class_exists( 'HideMyWP' ) ) {
 			if ( is_multisite() ) {
-				// Get the current site ID
+				// Get the current site ID.
 				$site_id = get_current_blog_id();
 				$options = get_blog_option( $site_id, 'hide_my_wp' );
 			} else {
@@ -147,12 +157,42 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			if ( '' !== $new_admin_path ) {
 				$plugins_path = '/' . $new_admin_path . '/plugins.php';
+
+				/**
+				 * Admin plugins directory path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $plugins_path Admin plugins directory path.
+				 *
+				 */
+				$plugins_path = apply_filters( 'bp_admin_plugins_path', $plugins_path );
 			}
 
 			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
 				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
+
+				/**
+				 * admin-ajax.php path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
+				 */
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
 				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
+
+				/**
+				 * admin-ajax.php path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
+				 */
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			}
 		}
 
@@ -189,13 +229,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		if ( $bp_is_multisite ) {
-			// Check if Forum Component is enabled if so then add
+			// Check if Forum Component is enabled if so then add.
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 				$value[ $bb_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 			}
 			$value[ $bp_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 		} else {
-			// Check if Forum Component is enabled if so then add
+			// Check if Forum Component is enabled if so then add.
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 				array_push( $value, $bb_plugin_file );
 			}
@@ -247,13 +287,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	if ( ! is_network_admin() ) {
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 	}
 	// Filter for setting the spoofing of BuddyPress.
 	add_filter( 'pre_update_option_active_plugins', 'bp_pre_update_option_active_plugins' );
 
 	if ( $bp_is_multisite ) {
-		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 	}
@@ -307,7 +347,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	} else {
 		require dirname( __FILE__ ) . '/class-buddypress.php';
 
-		// load the member switch class so all the hook prior to bp_init can be hook in
+		// load the member switch class so all the hook prior to bp_init can be hook in.
 		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
 
 		/*
@@ -324,7 +364,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			// A lot of actions in bbpress require before component init,
 			// hence we grab the pure db value and load the class
-			// so all the hook prior to bp_init can be hook in
+			// so all the hook prior to bp_init can be hook in.
 			if ( $bp_forum_active ) {
 				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
 				add_action( 'plugins_loaded', 'bbpress', (int) BUDDYPRESS_LATE_LOAD );
@@ -358,7 +398,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		global $is_bp_active;
 		global $is_bb_active;
 
-		// Disable BuddyPress message
+		// Disable BuddyPress message.
 		if ( $is_bp_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
@@ -372,7 +412,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			<?php
 		}
 
-		// Disable bbPress message
+		// Disable bbPress message.
 		if ( $is_bb_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );

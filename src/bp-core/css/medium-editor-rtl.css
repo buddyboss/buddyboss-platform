@@ -121,6 +121,7 @@
 	right: 0;
 	top: 0;
 	padding: inherit;
+	font-style: normal;
 }
 
 .medium-editor-placeholder-relative {
@@ -279,7 +280,7 @@
 }
 
 .medium-editor-element {
-	word-wrap: break-word;
+	word-break: break-word;
 	min-height: 30px;
 }
 
@@ -345,4 +346,7 @@
 
 .medium-editor-action-anchor b:before {
 	content: "\f103";
+}
+.medium-editor-action-pre b:before {
+	content: "\f475";
 }

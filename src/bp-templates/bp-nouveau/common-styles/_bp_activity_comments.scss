@@ -11,7 +11,7 @@
 		ul {
 			clear: both;
 			list-style: none;
-			margin: $marg-med 0 0;
+			margin: 0;
 			padding: 0;
 
 			li {
@@ -19,15 +19,23 @@
 				border-bottom: 0;
 				padding: $pad-med 0 0;
 
-				ul {
-					// indent any nested comments - comment to a comment
-					margin-left: 5%;
+				&:not(.detached-comment-item) {
+					margin-left: $marg-med;
 
-					// When comment threading limit is reached, the comments should not indent
-					li.detached-comment-item {
-						margin-left: -5%;
+					@media screen and (max-width: 560px) {
+						margin-left: 0;
 					}
+
 				}
+
+				@media screen and (max-width: 560px) {
+
+					.bb-media-length-1 .bb-activity-media-elem.media-activity {
+						min-width: auto;
+					}
+
+				}
+
 			}
 
 			li:first-child {
@@ -39,6 +47,10 @@
 			}
 		} // close ul
 
+		> ul > li > ul {
+			margin-left: 5%;
+		}
+
 		div.acomment-avatar {
 			width: auto;
 
@@ -48,6 +60,7 @@
 				height: 25px;
 				max-width: none;
 				width: 25px;
+				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
 		}
 
@@ -71,6 +84,12 @@
 			p {
 				margin-bottom: 0.5em;
 			}
+
+			.bb-activity-video-wrap,
+			.bb-activity-media-wrap {
+				margin: 15px 0;
+			}
+
 		}
 
 		.acomment-options {
@@ -125,6 +144,30 @@
 			}
 		}
 
+		.comment-item.suspended-comment-item {
+
+			> .item-avatar {
+				position: relative;
+				pointer-events: none;
+				opacity: 0.7;
+			}
+
+			> .acomment-content {
+				pointer-events: none;
+				opacity: 0.7;
+			}
+
+			> .acomment-meta {
+				pointer-events: none;
+				opacity: 0.7;
+
+				.activity-time-since {
+					display: none;
+				}
+
+			}
+		}
+
 	} // close .activity-comments
 
 	// Activity li.mini Comments
@@ -136,6 +179,14 @@
 			margin-top: 0;
 		}
 
+	}
+
+	.bb-media-model-wrapper .activity-comments ul li:not(.detached-comment-item) {
+		margin-left: 10px;
+
+		@media screen and (max-width: 560px) {
+			margin-left: 0;
+		}
 	}
 
 } // close .buddypress-wrap

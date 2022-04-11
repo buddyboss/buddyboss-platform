@@ -79,6 +79,9 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 
 		// Include the preview loading style.
 		add_action( 'wp_footer', array( $wp_customize, 'customize_preview_loading_style' ) );
+
+		remove_action( 'wp_footer', 'bb_moderation_content_report_popup' );
+		remove_action( 'wp_footer', 'bb_on_screen_notification_template' );
 	}
 }
 add_action( 'bp_customize_register', 'bp_email_init_customizer' );
@@ -91,7 +94,7 @@ add_action( 'bp_customize_register', 'bp_email_init_customizer' );
  * @return bool
  */
 function bp_is_email_customizer() {
-	return isset( $_GET['bp_customizer'] ) && $_GET['bp_customizer'] === 'email';
+	return isset( $_GET['bp_customizer'] ) && 'email' === $_GET['bp_customizer']; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 }
 
 /**
@@ -312,12 +315,14 @@ function bp_email_get_customizer_controls() {
 		'bp_email_get_customizer_controls',
 		array(
 			'bp_mailtpl_logo'                      => array(
-				'class'    => 'WP_Customize_Cropped_Image_Control',
-				'label'    => __( 'Upload Logo', 'buddyboss' ),
-				'section'  => 'section_bp_mailtpl_header',
-				'settings' => 'bp_email_options[logo]',
-				'width'    => 180,
-				'height'   => 41,
+				'class'       => 'WP_Customize_Cropped_Image_Control',
+				'label'       => __( 'Upload Logo', 'buddyboss' ),
+				'section'     => 'section_bp_mailtpl_header',
+				'settings'    => 'bp_email_options[logo]',
+				'width'       => 180,
+				'height'      => 45,
+				'flex_width'  => true,
+				'flex_height' => true,
 			),
 
 			'bp_mailtpl_site_title_logo_size'      => array(
@@ -486,12 +491,14 @@ function bp_email_get_redirect_to_customizer_url() {
 
 	$email = get_posts(
 		array(
-			'fields'           => 'ids',
-			// 'orderby'          => 'rand',
-			'post_status'      => 'publish',
-			'post_type'        => bp_get_email_post_type(),
-			'posts_per_page'   => 1,
-			'suppress_filters' => false,
+			'fields'                 => 'ids',
+			// 'orderby'                => 'rand',
+			'post_status'            => 'publish',
+			'post_type'              => bp_get_email_post_type(),
+			'posts_per_page'         => 1,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 
@@ -559,3 +566,34 @@ function bp_email_remove_widgets_panel( $components ) {
 }
 
 add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
+
+/**
+ * Set default avatar to customise email template.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $avatar Default avatar.
+ * @return string The default avatar URL based on backend setting.
+ */
+function bb_email_customizer_default_avatar( $avatar = '' ) {
+
+	if ( empty( $avatar ) ) {
+		$show_avatar                 = bp_get_option( 'show_avatars' );
+		$profile_avatar_type         = bb_get_profile_avatar_type();
+		$default_profile_avatar_type = bb_get_default_profile_avatar_type();
+
+		if ( $show_avatar && 'WordPress' === $profile_avatar_type && 'blank' !== bp_get_option( 'avatar_default', 'mystery' ) ) {
+			$avatar = get_avatar_url(
+				'',
+				array(
+					'size' => 300,
+				)
+			);
+		}
+	}
+
+	return $avatar;
+}
+
+add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
+add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );

@@ -25,7 +25,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 		'li_class'  => array(),
 		'link'      => bp_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
-		'count'     => bp_get_total_member_count(),
+		'count'     => bp_core_get_all_member_count(),
 		'position'  => 5,
 	);
 
@@ -192,11 +192,11 @@ function bp_nouveau_get_hooked_member_meta() {
 
 /**
  * Adds a 'Dashbaord' link in admin bar.
- * 
+ *
  * @global \WP_Admin_Bar $wp_admin_bar
- * 
+ *
  * @since BuddyBoss 1.0.0
- * 
+ *
  * @param array $wp_admin_nav
  * @return void
  */
@@ -262,7 +262,7 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
 	// Use a global to avoid requesting the hierarchy for each template
 	if ( ! isset( $bp_nouveau->members->displayed_user_hierarchy ) ) {
 		$bp_nouveau->members->displayed_user_hierarchy = array(
-			'members/single/%s-id-' . sanitize_file_name( $displayed_user->id ) . '.php',
+			'members/single/%s-id-' . (int) $displayed_user->id . '.php',
 			'members/single/%s-nicename-' . sanitize_file_name( $displayed_user->userdata->user_nicename ) . '.php',
 		);
 

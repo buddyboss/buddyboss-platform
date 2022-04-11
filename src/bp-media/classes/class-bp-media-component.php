@@ -50,6 +50,16 @@ class BP_Media_Component extends BP_Component {
 	public $forbidden_names;
 
 	/**
+	 * The acceptable visibility levels for media.
+	 *
+	 * @see bp_media_get_visibility_levels()
+	 *
+	 * @since BuddyBoss 1.2.3
+	 * @var array
+	 */
+	public $visibility_levels = array();
+
+	/**
 	 * Start the media component creation process.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -100,6 +110,12 @@ class BP_Media_Component extends BP_Component {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function late_includes() {
+
+		if ( ! class_exists( 'BP_Media_Stream' ) ) {
+			// Include Media Streamline.
+			require $this->path . 'bp-media/classes/class-bp-media-stream.php';
+		}
+
 		// Bail if PHPUnit is running.
 		if ( defined( 'BP_TESTS_DIR' ) ) {
 			return;
@@ -148,6 +164,18 @@ class BP_Media_Component extends BP_Component {
 			define( 'BP_MEDIA_SLUG', $this->id );
 		}
 
+		// Register the visibility levels. See bp_media_get_visibility_levels() to filter.
+		$this->visibility_levels = array(
+			'public'   => __( 'Public', 'buddyboss' ),
+			'loggedin' => __( 'All Members', 'buddyboss' ),
+		);
+
+		if ( bp_is_active( 'friends' ) ) {
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		}
+
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+
 		// Global tables for media component.
 		$global_tables = array(
 			'table_name'        => $bp->table_prefix . 'bp_media',
@@ -162,13 +190,12 @@ class BP_Media_Component extends BP_Component {
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                                    => 'photos',
-				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
-				'has_directory'                           => true,
-				// 'notification_callback' => 'bp_media_format_notifications',
-										  'global_tables' => $global_tables,
-				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
+				'slug'            => 'photos',
+				'root_slug'       => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
+				'has_directory'   => true,
+				'global_tables'   => $global_tables,
+				'directory_title' => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss' ),
 			)
 		);
 
@@ -233,16 +260,13 @@ class BP_Media_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
-				$class    = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name = sprintf(
-					/* translators: %s: total media count for the current user */
-					__( 'Photos %s', 'buddyboss' ),
-					sprintf(
-						'<span class="%s">%s</span>',
-						esc_attr( $class ),
-						bp_core_number_format( $count )
-					)
+				$count     = bp_media_get_total_media_count( bp_displayed_user_id() );
+				$class     = ( 0 === $count ) ? 'no-count' : 'count';
+				$nav_name  = __( 'Photos', 'buddyboss' );
+				$nav_name .= sprintf(
+					' <span class="%s">%s</span>',
+					esc_attr( $class ),
+					bp_core_number_format( $count )
 				);
 			} else {
 				$nav_name = __( 'Photos', 'buddyboss' );
@@ -375,10 +399,27 @@ class BP_Media_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp_media',
-				'bp_media_albums',
+				'bp_media_album',
 			)
 		);
 
 		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init(
+			array(
+				'BP_REST_Media_Endpoint',
+				'BP_REST_Media_Albums_Endpoint',
+				'BP_REST_Media_Details_Endpoint',
+			)
+		);
 	}
 }

@@ -121,9 +121,10 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
+		$members_page_id = bp_core_get_directory_page_id( 'members' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $members_page_id ) ? $members_page_id : 0,
 				'post_title'     => bp_get_directory_title( 'members' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -173,7 +174,7 @@ class BP_Members_Theme_Compat {
 		$new_templates = apply_filters(
 			'bp_template_hierarchy_members_single_item',
 			array(
-				'members/single/index-id-' . sanitize_file_name( bp_displayed_user_id() ) . '.php',
+				'members/single/index-id-' . (int) bp_displayed_user_id() . '.php',
 				'members/single/index-nicename-' . sanitize_file_name( $user_nicename ) . '.php',
 				'members/single/index-action-' . sanitize_file_name( bp_current_action() ) . '.php',
 				'members/single/index-component-' . sanitize_file_name( bp_current_component() ) . '.php',
@@ -194,9 +195,10 @@ class BP_Members_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
+		$members_page_id = bp_core_get_directory_page_id( 'members' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $members_page_id ) ? $members_page_id : 0,
 				'post_title'     => bp_get_displayed_user_fullname(),
 				'post_author'    => 0,
 				'post_date'      => 0,

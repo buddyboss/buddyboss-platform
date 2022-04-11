@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-Loaded in wp-admin for query string `hello=buddyboss` and `hello=appboss`.
+Loaded in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
 
 @since BuddyPress 3.0.0
 
@@ -24,6 +24,9 @@ TABLE OF CONTENTS:
 	6.2 - Desktop Small
 	6.3 - Desktop Medium
 	6.4 - Desktop Large
+7.0 - Document Mime Type check
+8.0 - Update Modal
+9.0 - Tabs
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -62,6 +65,14 @@ TABLE OF CONTENTS:
 
 	p {
 		font-size: 16px;
+	}
+
+	.bb-release-changelog ul,
+	ul.bp-hello-list {
+		list-style: disc;
+		margin-left: 25px;
+		font-size: 16px;
+		line-height: 1.3;
 	}
 
 	.video-wrapper {
@@ -160,6 +171,22 @@ TABLE OF CONTENTS:
 	overflow: hidden;
 }
 
+@media screen and (max-width: 1023px) {
+
+	.admin-bar #bp-hello-container {
+		top: 32px;
+	}
+
+}
+
+@media screen and (max-width: 782px) {
+
+	.admin-bar #bp-hello-container {
+		top: 46px;
+	}
+
+}
+
 /*
  * 3.2 - Modal footer
  */
@@ -252,7 +279,7 @@ TABLE OF CONTENTS:
 	}
 }
 
-.bp-hello-appboss .bp-hello-footer {
+.bp-hello-buddyboss-app .bp-hello-footer {
 	border-top: none;
 }
 
@@ -310,7 +337,7 @@ TABLE OF CONTENTS:
 	background-color: rgb(255, 255, 255);
 }
 
-.bp-hello-appboss .bp-hello-content {
+.bp-hello-buddyboss-app .bp-hello-content {
 	padding: 0;
 }
 
@@ -372,7 +399,7 @@ TABLE OF CONTENTS:
 			}
 		}
 
-		&.bp-hello-appboss {
+		&.bp-hello-buddyboss-app {
 			bottom: auto;
 			width: 105vmin;
 			max-width: 900px;
@@ -423,7 +450,7 @@ TABLE OF CONTENTS:
 		padding: 0 23px;
 	}
 
-	.bp-hello-appboss .bp-hello-content {
+	.bp-hello-buddyboss-app .bp-hello-content {
 		height: calc(100% - 120px);
 		padding: 0;
 	}
@@ -448,9 +475,173 @@ TABLE OF CONTENTS:
 		right: calc((100% - 896px) / 2);
 	}
 
-	.bp-hello-appboss .bp-hello-content {
+	.bp-hello-buddyboss-app .bp-hello-content {
 		height: calc(100% - 120px);
 		padding: 0;
+	}
+
+}
+
+/**
+ * 7.0 - Document Mime Type check
+ */
+
+#document-upload-check-mime-type #bp-document-file-input,
+#document-upload-check-mime-type input[type="submit"],
+.show-document-mime-type .mime-copy {
+	color: #0071a1;
+	border: 1px solid #0071a1;
+	background: #f3f5f6;
+	font-size: 13px;
+	border-radius: 3px;
+	padding: 8px 10px;
+	display: block;
+	margin: 15px 0;
+	cursor: pointer;
+}
+
+.show-document-mime-type {
+
+	.type {
+		font-weight: 500;
+		font-size: 14px;
+	}
+
+	.mime-copy {
+		display: inline-block;
+	}
+}
+
+/**
+ * 8.0 - Update Modal
+ */
+
+.bb-update-modal {
+
+	&#bp-hello-container {
+		bottom: initial;
+		margin-top: 15px;
+		max-height: calc(100% - 70px);
+		overflow-x: hidden;
+		overflow-y: auto;
+		top: 50%;
+		transform: translateY(-50%);
+
+		h1#bp-hello-title {
+			font-weight: 600;
+		}
+
+	}
+
+	.bp-hello-content {
+		border-radius: 0 0 3px 3px;
+		height: auto;
+		min-height: 200px;
+		max-height: calc(100% - 90px);
+	}
+
+	.bb-release-changelog ul,
+	ul.bp-hello-list {
+		font-size: 14px;
+	}
+
+	.bb-release-changelog h2 {
+		font-weight: 400;
+		font-size: 14px;
+		margin-bottom: 25px;
+	}
+
+	.video-wrapper {
+		height: auto;
+	}
+
+	.bp-hello-header {
+		height: auto;
+		max-height: initial;
+	}
+
+	#bb-release-content a {
+		text-decoration: none;
+	}
+
+
+}
+
+.bb-release-content {
+	margin-bottom: 20px;
+}
+
+
+/**
+ * 9.0 - Tabs
+ */
+
+.bp-hello-title {
+
+	h1 {
+		display: inline-block;
+		font-weight: 600;
+		margin-right: 10px;
+		vertical-align: middle;
+		width: initial;
+	}
+
+	.bb-version {
+		background-color: #f1f6fb;
+		border-radius: 3px;
+		color: #0073aa;
+		font-size: 13px;
+		font-weight: 600;
+		display: inline-block;
+		padding: 5px 10px;
+		vertical-align: middle;
+	}
+}
+
+
+.bb-hello-tabs {
+	display: flex;
+	margin: 7px 0 -13px;
+
+	li {
+		margin-right: 15px;
+	}
+
+	.bb-hello-tabs_anchor {
+		border-bottom: 1px solid transparent;
+		display: inline-block;
+		font-size: 14px;
+		padding: 10px 0;
+		position: relative;
+		text-decoration: none;
+		font-weight: 600;
+
+		#bp-hello-container & {
+			box-shadow: none;
+			color: #1d2327;
+			transition: none;
+
+			&.is_active {
+				border-color: var(--bp-hello-color-primary);
+				color: var(--bp-hello-color-primary);
+			}
+
+		}
+
+	}
+
+}
+
+.bb-hello-tabs_content {
+	padding-top: 10px;
+
+	ul,
+	p {
+		margin-bottom: 20px;
+	}
+
+	&:not(.is_active) {
+		display: none;
 	}
 
 }

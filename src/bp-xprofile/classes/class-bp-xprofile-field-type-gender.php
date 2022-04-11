@@ -115,6 +115,12 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 		}
 
+		if ( isset( $this->field_obj->id) && ! empty( $this->field_obj->id ) ) {
+			$order = bp_xprofile_get_meta( $this->field_obj->id, 'field', 'gender-option-order' );
+		} else {
+			$order = array();
+		}
+
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
 		for ( $k = 0, $count = count( $options ); $k < $count; ++$k ) {
 			$selected = '';
@@ -129,12 +135,24 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				}
 			}
 
-			if ( '1' === $options[ $k ]->option_order ) {
-				$option_value = 'his_' . $options[ $k ]->name;
-			} elseif ( '2' === $options[ $k ]->option_order ) {
-				$option_value = 'her_' . $options[ $k ]->name;
+			if ( ! empty( $order ) ) {
+				$key = $order[ $k ];
+
+				if ( 'male' === $key ) {
+					$option_value = 'his_' . $options[ $k ]->name;
+				} elseif ( 'female' === $key ) {
+					$option_value = 'her_' . $options[ $k ]->name;
+				} else {
+					$option_value = 'their_' . $options[ $k ]->name;
+				}
 			} else {
-				$option_value = 'their_' . $options[ $k ]->name;
+				if ( '1' === $options[ $k ]->option_order ) {
+					$option_value = 'his_' . $options[ $k ]->name;
+				} elseif ( '2' === $options[ $k ]->option_order ) {
+					$option_value = 'her_' . $options[ $k ]->name;
+				} else {
+					$option_value = 'their_' . $options[ $k ]->name;
+				}
 			}
 
 			// Run the allowed option name through the before_save filter, so
@@ -231,22 +249,36 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				// Does option have children?
 				$options = $current_field->get_children( true );
 
+				// Set position of Gender fields option.
+				if ( isset( $_POST['gender-option-order'] ) && ! empty( $_POST['gender-option-order'] ) ) {
+					bp_xprofile_update_field_meta( $current_field->id, 'gender-option-order', $_POST['gender-option-order'] );
+				}
+
+				if ( isset( $current_field->id ) && ! empty( $current_field->id ) ) {
+					$order = bp_xprofile_get_meta( $current_field->id, 'field', 'gender-option-order' );
+				} else {
+					$order = array();
+				}
+
 				if ( empty( $options ) ) {
 					$options   = array();
 					$options[] = (object) array(
 						'id'                => 1,
 						'is_default_option' => false,
-						'name'              => 'Male',
+						'name'              => __( 'Male', 'buddyboss' ),
+						'key'               => 'male',
 					);
 					$options[] = (object) array(
 						'id'                => 2,
 						'is_default_option' => false,
-						'name'              => 'Female',
+						'name'              => __( 'Female', 'buddyboss' ),
+						'key'               => 'female',
 					);
 					$options[] = (object) array(
 						'id'                => 3,
 						'is_default_option' => false,
-						'name'              => 'Prefer Not to Answer',
+						'name'              => __( 'Prefer Not to Answer', 'buddyboss' ),
+						'key'               => 'other',
 					);
 				}
 
@@ -300,11 +332,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							$default_name = '[' . $j . ']';
 						}
 
-						if ( 1 === $j || 2 === $j ) {
-							$class = '';
-						} else {
-							$class = 'sortable';
-						}
+						$class = 'sortable';
 						?>
 
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
@@ -316,20 +344,34 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 													?>
 								</label>
 							<?php
-							if ( 1 === $j ) {
-								$key = sanitize_key( 'male' );
-							} elseif ( 2 === $j ) {
-								$key = sanitize_key( 'female' );
+							if ( isset( $options[ $i ]->key ) ) {
+								$key = $options[ $i ]->key;
+							} else if ( ! empty( $order ) ) {
+								if ( ! empty( $order[ $i ] ) ) {
+									$key = $order[ $i ];
+								} else {
+									$key = sanitize_key( $options[ $i ]->name );
+								}
 							} else {
-								$key = sanitize_key( 'other' );
+								if ( 1 === $j ) {
+									$key = sanitize_key( 'male' );
+								} elseif ( 2 === $j ) {
+									$key = sanitize_key( 'female' );
+								} elseif ( 3 === $j ) {
+									$key = sanitize_key( 'other' );
+								} else {
+									$key = sanitize_key( $options[ $i ]->name );
+								}
 							}
+
 							?>
+							<input type="hidden" name="<?php echo esc_attr( "{$type}-option-order[]" ); ?>" value="<?php echo $key; ?>" />
 							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}_{$key}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php
-								if ( 1 === $j ) {
+								if ( 'male' === $key ) {
 									_e( 'Male', 'buddyboss' );
-								} elseif ( 2 === $j ) {
+								} elseif ( 'female' === $key ) {
 									_e( 'Female', 'buddyboss' );
 								} else {
 									_e( 'Other', 'buddyboss' );
@@ -337,9 +379,9 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 								?>
 							</label>
 
-							<?php if ( 1 !== $j && 2 !== $j ) : ?>
+							<?php if ( ! in_array( $key, array( 'male', 'female' ) ) ) : ?>
 								<div class ="delete-button">
-									<a href='javascript:hide("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+									<a href='javascript:remove_div("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 								</div>
 							<?php endif; ?>
 
@@ -378,7 +420,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 * @return bool
 	 */
 	public function is_valid( $values = '' ) {
-
+		static $get_parent_id_of_gender_field = null;
+		static $count_cache = array();
 		global $wpdb;
 
 		if ( empty( $values ) ) {
@@ -388,9 +431,21 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		$split_value = explode( '_', $values, 2 );
 		if ( 2 === count( $split_value ) ) {
 			if ( '' !== $split_value[1] && '' !== $split_value[0] ) {
-				$table_name                    = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-				$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table_name} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
-				$count                         = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table_name} WHERE type = %s AND name = %s AND parent_id = %d ", 'option', $split_value[1], $get_parent_id_of_gender_field ) );
+				$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+
+				if ( null === $get_parent_id_of_gender_field ) {
+					$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table_name} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+				}
+
+				$count_cache_key = 'bb_count_cache_' . $split_value[1] . $get_parent_id_of_gender_field;
+				if ( ! isset( $count_cache[ $count_cache_key ] ) ) {
+					$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table_name} WHERE type = %s AND name = %s AND parent_id = %d ", 'option', $split_value[1], $get_parent_id_of_gender_field ) );
+
+					$count_cache[ $count_cache_key ] = $count;
+				} else {
+					$count = $count_cache[ $count_cache_key ];
+				}
+
 				if ( '1' === $count ) {
 					return true;
 				} else {

@@ -143,7 +143,7 @@ class BP_Core_Members_Switching {
 				// Switch user:
 				$user = bp_member_switch_to( $user_id, self::remember() );
 				if ( $user ) {
-					$redirect_to = $_GET['redirect_to'] ?: self::get_redirect( $user, $current_user );
+					$redirect_to = ( ! empty( $_GET['redirect_to'] ) ) ? $_GET['redirect_to'] : self::get_redirect( $user, $current_user );
 
 					// Redirect to the dashboard or the home URL depending on capabilities:
 					$args = array(
@@ -241,7 +241,7 @@ class BP_Core_Members_Switching {
 		if ( $old_user ) {
 			?>
 			<div id="bp_member_switching" class="updated notice is-dismissible">
-				<p><span class="dashicons dashicons-admin-users" style="color:#56c234" aria-hidden="true"></span>
+				<p><span class="dashicons dashicons-admin-users" aria-hidden="true"></span>
 					<?php
 					$message       = '';
 					$just_switched = isset( $_GET['user_switched'] );
@@ -505,10 +505,9 @@ class BP_Core_Members_Switching {
 				);
 			}
 
-			$message .= '<p class="message" id="bp_member_switching_switch_on">';
-			$message .= '<span class="dashicons dashicons-admin-users" style="color:#56c234" aria-hidden="true"></span> ';
+			$message .= '<div class="message" id="bp_member_switching_switch_on">';
 			$message .= '<a href="' . esc_url( $url ) . '" onclick="window.location.href=\'' . esc_url( $url ) . '\';return false;">' . esc_html( $link ) . '</a>';
-			$message .= '</p>';
+			$message .= '</div>';
 		}
 
 		return $message;
@@ -868,6 +867,10 @@ class BP_Core_Members_Switching {
 				$user_caps['switch_to_user'] = $user_caps['switch_users'];
 
 				return $user_caps;
+			}
+
+			if ( ! isset( $args[2] ) ) {
+				$args[2] = array();
 			}
 
 			$user_caps['switch_to_user'] = ( user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );

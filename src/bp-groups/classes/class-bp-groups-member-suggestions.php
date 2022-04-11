@@ -105,6 +105,11 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 			$user_query['user_id'] = get_current_user_id();
 		}
 
+		// Exclude current user from mention list.
+		if ( is_user_logged_in() ) {
+			$user_query['exclude'] = get_current_user_id();
+		}
+
 		// Positive Group IDs will restrict the search to members in that group.
 		if ( $this->args['group_id'] > 0 ) {
 			$user_query['group_id'] = $this->args['group_id'];
@@ -115,9 +120,10 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 				'count_total' => '',  // Prevents total count.
 				'type'        => 'alphabetical',
 
-				'group_id'    => absint( $this->args['group_id'] ),
-				'group_role'  => array( 'admin', 'member', 'mod' ),
-				'page'        => 1,
+				'group_id'   => absint( $this->args['group_id'] ),
+				'group_role' => array( 'admin', 'member', 'mod' ),
+				'page'       => 1,
+				'per_page'   => $this->args['limit'],
 			);
 			$group_users = new BP_Group_Member_Query( $group_query );
 
@@ -149,16 +155,17 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 
 		$results = array();
 		foreach ( $user_query->results as $user ) {
-			$result          = new stdClass();
-			$result->ID      = $user->user_nicename;
-			$result->image   = bp_core_fetch_avatar(
+			$result                = new stdClass();
+			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
+			$result->user_nicename = $user->user_nicename;
+			$result->image         = bp_core_fetch_avatar(
 				array(
 					'html'    => false,
 					'item_id' => $user->ID,
 				)
 			);
-			$result->name    = bp_core_get_user_displayname( $user->ID );
-			$result->user_id = $user->ID;
+			$result->name          = bp_core_get_user_displayname( $user->ID );
+			$result->user_id       = $user->ID;
 
 			$results[] = $result;
 		}

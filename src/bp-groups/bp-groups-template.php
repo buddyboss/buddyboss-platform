@@ -371,12 +371,12 @@ function bp_has_groups( $args = '' ) {
 	}
 
 	$group_type = bp_get_current_group_directory_type();
-	if ( ! $group_type && ! empty( $_GET['group_type'] ) ) {
-		if ( is_array( $_GET['group_type'] ) ) {
-			$group_type = $_GET['group_type'];
+	if ( ! $group_type && ! empty( $_REQUEST['group_type'] ) ) {
+		if ( is_array( $_REQUEST['group_type'] ) ) {
+			$group_type = $_REQUEST['group_type'];
 		} else {
 			// Can be a comma-separated list.
-			$group_type = explode( ',', $_GET['group_type'] );
+			$group_type = explode( ',', $_REQUEST['group_type'] );
 		}
 	}
 
@@ -390,6 +390,35 @@ function bp_has_groups( $args = '' ) {
 		$search_terms = $_REQUEST['s'];
 	}
 
+	$group_type__not_in = array();
+
+	$args = bp_parse_args( $args, array() );
+	// Exclude Group Types
+	if (
+		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
+		! bp_is_user_groups() && ! bp_is_group_subgroups() &&
+		( wp_doing_ajax() && empty( $group_type ) )
+	) {
+		// get all excluded group types.
+		$bp_group_type_ids = bp_groups_get_excluded_group_types();
+		if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
+			foreach ( $bp_group_type_ids as $single ) {
+				$group_type__not_in[] = $single['name'];
+			}
+		}
+	}
+
+	$parent_id = null;
+
+	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+		$parent_id = 0;
+	}
+
+	$show_hidden = true;
+	if ( ! empty( bp_displayed_user_id() ) && ! empty( bp_current_user_id() ) && bp_displayed_user_id() === bp_current_user_id() ) {
+		$show_hidden = false;
+	}
+
 	// Parse defaults and requested arguments.
 	$r = bp_parse_args(
 		$args,
@@ -400,18 +429,18 @@ function bp_has_groups( $args = '' ) {
 			'page'               => 1,
 			'per_page'           => 20,
 			'max'                => false,
-			'show_hidden'        => false,
+			'show_hidden'        => $show_hidden,
 			'page_arg'           => 'grpage',
 			'user_id'            => bp_displayed_user_id(),
 			'slug'               => $slug,
 			'search_terms'       => $search_terms,
 			'group_type'         => $group_type,
 			'group_type__in'     => '',
-			'group_type__not_in' => '',
+			'group_type__not_in' => $group_type__not_in,
 			'meta_query'         => false,
 			'include'            => false,
 			'exclude'            => false,
-			'parent_id'          => null,
+			'parent_id'          => $parent_id,
 			'update_meta_cache'  => true,
 			'update_admin_cache' => bp_is_groups_directory() || bp_is_user_groups(),
 		),
@@ -707,36 +736,36 @@ function bp_get_group_type( $group = false ) {
 
 		$group_type = bp_groups_get_group_type( $group->id );
 		$group_type = bp_groups_get_group_type_object( $group_type );
-		$group_type = isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : '';
+		$group_type = $group_type->labels['singular_name'] ?? '';
 
 		if ( 'public' == $group->status ) {
 
-			$group_visibility = __( 'Public', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$group_visibility = esc_html__( 'Public', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
-			$group_visibility = __( 'Hidden', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$group_visibility = esc_html__( 'Hidden', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
-			$group_visibility = __( 'Private', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
+			$group_visibility = esc_html__( 'Private', 'buddyboss' );
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
-			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = '<span class="group-visibility public">' . __( 'Public Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . __( 'Hidden Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . __( 'Private Group', 'buddyboss' ) . '</span>';
+			$type = '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 		} else {
-			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	}
 
@@ -821,7 +850,7 @@ function bp_get_group_status_description( $group = false ) {
 	if ( 'public' == $group->status ) {
 		$description = __( 'This group\'s content, including its members and activity, are visible to any site member.', 'buddyboss' );
 	} elseif ( 'hidden' == $group->status ) {
-		$description = __( 'Only group members can view its content, including its members and activity.', 'buddyboss' );
+		$description = __( 'This group and its content are only visible to members of the group.', 'buddyboss' );
 	} elseif ( 'private' == $group->status ) {
 		$description = __( 'This group\'s content is only visible to members of the group.', 'buddyboss' );
 	} else {
@@ -983,6 +1012,33 @@ function bp_get_group_avatar_mini( $group = false ) {
 	);
 }
 
+/**
+ * Returns the group avatar URL.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param object|bool $group Optional. Group object. Default current group in loop.
+ * @param string      $type  Optional. The type of the avatar ('full' or 'thumb'). Default 'full'.
+ * @return string The avatar URL.
+ */
+function bp_get_group_avatar_url( $group = false, $type = 'full' ) {
+	$group_id = bp_get_group_id( $group );
+
+	if ( ! $group_id ) {
+		return '';
+	}
+
+	return bp_core_fetch_avatar(
+		array(
+			'type'    => $type,
+			'object'  => 'group',
+			'item_id' => $group_id,
+			'html'    => false,
+		)
+	);
+}
+
 /** Group cover photo *********************************************************/
 
 /**
@@ -995,6 +1051,37 @@ function bp_get_group_avatar_mini( $group = false ) {
  */
 function bp_group_use_cover_image_header() {
 	return (bool) bp_is_active( 'groups', 'cover_image' ) && ! bp_disable_group_cover_image_uploads() && bp_attachments_is_wp_version_supported();
+}
+
+/**
+ * Returns the group cover image URL.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param object|bool $group Optional. Group object. Default current group in loop.
+ * @return string The cover image URL or empty string if not found.
+ */
+function bp_get_group_cover_url( $group = false ) {
+	$group_id = bp_get_group_id( $group );
+
+	if ( ! $group_id ) {
+		return '';
+	}
+
+	$cover_url = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => 'groups',
+			'item_id'    => $group_id,
+		)
+	);
+
+	if ( ! $cover_url ) {
+		return '';
+	}
+
+	return $cover_url;
 }
 
 /**
@@ -1355,6 +1442,24 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 	 * @param object $group Object for group whose description is made into an excerpt.
 	 */
 	return apply_filters( 'bp_get_group_description_excerpt', bp_create_excerpt( $group->description, $length ), $group );
+}
+
+
+/**
+ * Get an excerpt of a group description with view more link.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param string      $excerpt  The group being referenced.
+ * @param object|bool $group    The group being referenced.
+ * @return string Excerpt.
+ */
+function bb_get_group_description_excerpt_view_more( $excerpt, $group ) {
+	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+	if ( bp_is_single_item() ) {
+		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+	}
+	return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
 }
 
 /**
@@ -1757,30 +1862,51 @@ function bp_group_list_admins( $group = false ) {
 
 	if ( ! empty( $group->admins ) ) { ?>
 		<ul id="group-admins">
-			<?php foreach ( (array) $group->admins as $admin ) { ?>
+			<?php
+			$i = 0;
+			foreach ( (array) $group->admins as $admin ) {
+				$i++;
+				if ( $i > 3 ) {
+					break;
+				}
+				?>
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_core_get_user_displayname( $admin->user_id ) ); ?>">
-										<?php
-										echo bp_core_fetch_avatar(
-											array(
-												'item_id' => $admin->user_id,
-												'email'   => $admin->user_email,
-												'alt'     => sprintf(
-													__(
-														'Profile photo of %s',
-														'buddyboss'
-													),
-													bp_core_get_user_displayname( $admin->user_id )
-												),
-											)
-										);
-										?>
-										</a>
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
+					<?php
+					echo bp_core_fetch_avatar(
+						array(
+							'item_id' => $admin->user_id,
+							'email'   => $admin->user_email,
+							'alt'     => sprintf( // translators: Profile photo of %s.
+								esc_html__(
+									'Profile photo of %s',
+									'buddyboss'
+								),
+								bp_core_get_user_displayname( $admin->user_id )
+							),
+						)
+					);
+					?>
+					</a>
+				</li>
+			<?php } ?>
+			<?php
+			if ( count( (array) $group->admins ) > 3 ) {
+				$member_count = count( (array) $group->admins ) - 3;
+				?>
+				<li>
+					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) . 'members' ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="+
+						<?php
+						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
+						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
+						?>">
+						<span class="bb-icon bb-icon-menu-dots-h"></span>
+					</a>
 				</li>
 			<?php } ?>
 		</ul>
 	<?php } else { ?>
-		<span class="activity"><?php _e( 'No Organizers', 'buddyboss' ); ?></span>
+		<span class="activity"><?php esc_html_e( 'No Organizers', 'buddyboss' ); ?></span>
 	<?php } ?>
 	<?php
 }
@@ -1811,17 +1937,17 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>                        						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
-														   <?php
-															echo bp_core_fetch_avatar(
-																array(
-																	'item_id' => $parent_group->id,
-																	'object'  => 'group',
-																	'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) ),
-																)
-															)
-															?>
-							</a>
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<?php
+						echo bp_core_fetch_avatar(
+							array(
+								'item_id' => $parent_group->id,
+								'object'  => 'group',
+								'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) ),
+							)
+						)
+						?>
+						</a>
 					</li>
 				</ul>
 			</dd>
@@ -1855,34 +1981,34 @@ function bp_group_list_mods( $group = false ) {
 
 				<li>
 					<a href="<?php echo bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_core_get_user_displayname( $mod->user_id ) ); ?>">
-										<?php
-										echo bp_core_fetch_avatar(
-											array(
-												'item_id' => $mod->user_id,
-												'email'   => $mod->user_email,
-												'alt'     => sprintf(
-													__(
-														'Profile photo of %s',
-														'buddyboss'
-													),
-													bp_core_get_user_displayname( $mod->user_id )
-												),
-											)
-										);
-										?>
-										</a>
+						<?php
+						echo bp_core_fetch_avatar(
+							array(
+								'item_id' => $mod->user_id,
+								'email'   => $mod->user_email,
+								'alt'     => sprintf(
+									__(
+										'Profile photo of %s',
+										'buddyboss'
+									),
+									bp_core_get_user_displayname( $mod->user_id )
+								),
+							)
+						);
+						?>
+					</a>
 				</li>
 
 			<?php } ?>
 
 		</ul>
 
-<?php else : ?>
+	<?php else : ?>
 
 		<span class="activity"><?php _e( 'No Moderators', 'buddyboss' ); ?></span>
 
-	<?php
-endif;
+		<?php
+	endif;
 
 }
 
@@ -2563,6 +2689,44 @@ function bp_group_show_media_status_setting( $setting, $group = false ) {
 }
 
 /**
+ * Output the 'checked' value, if needed, for a given document_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_document_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$document_status = bp_group_get_document_status( $group_id );
+
+	if ( $setting === $document_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
+ * Output the 'checked' value, if needed, for a given video_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_video_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$video_status = bp_group_get_video_status( $group_id );
+
+	if ( $setting === $video_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
  * Get the media status of a group.
  *
  * This function can be used either in or out of the loop.
@@ -2611,6 +2775,57 @@ function bp_group_get_media_status( $group_id = false ) {
 	 * @param int    $group_id      ID of the group whose status is being checked.
 	 */
 	return apply_filters( 'bp_group_get_media_status', $media_status, $group_id );
+}
+
+/**
+ * Get the media status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_document_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$document_status = groups_get_groupmeta( $group_id, 'document_status' );
+
+	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
+	if ( ! $document_status ) {
+		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $media_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_document_status', $document_status, $group_id );
 }
 
 /**
@@ -4026,16 +4241,16 @@ function bp_get_group_join_button( $group = false ) {
 		$is_only_admin = false;
 		// Stop sole admins from abandoning their group.
 		$group_admins = groups_get_group_admins( $group->id );
-		if ( ( 1 == count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
+		if ( ( 1 === count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
 			$is_only_admin = true;
 		}
 
 		if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
-			$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
+			$button_text = apply_filters( 'bp_group_organizer_label_text', get_group_role_label( $group->id, 'organizer_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
 		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
-			$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'moderator_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
+			$button_text = apply_filters( 'bp_group_moderator_label_text', get_group_role_label( $group->id, 'moderator_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
 		} else {
-			$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'member_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
+			$button_text = apply_filters( 'bp_group_member_label_text', get_group_role_label( $group->id, 'member_singular_label_name' ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
 		}
 
 		// Setup button attributes.
@@ -4050,8 +4265,10 @@ function bp_get_group_join_button( $group = false ) {
 			'link_text'         => $button_text,
 			'link_class'        => 'group-button leave-group bp-toggle-action-button',
 			'button_attr'       => array(
-				'data-title'           => __( 'Leave group', 'buddyboss' ),
+				'data-title'           => esc_html__( 'Leave Group', 'buddyboss' ),
 				'data-title-displayed' => $button_text,
+				'data-bb-group-name'   => esc_attr( $group->name ),
+				'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
 			),
 		);
 
@@ -4076,7 +4293,7 @@ function bp_get_group_join_button( $group = false ) {
 					'wrapper_class'     => 'group-button ' . $group->status,
 					'wrapper_id'        => 'groupbutton-' . $group->id,
 					'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'join' ), 'groups_join_group' ),
-					'link_text'         => __( 'Join group', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
 					'link_class'        => 'group-button join-group',
 				);
 				break;
@@ -4093,7 +4310,7 @@ function bp_get_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => add_query_arg( 'redirect_to', bp_get_group_permalink( $group ), bp_get_group_accept_invite_link( $group ) ),
-						'link_text'         => __( 'Accept Invitation', 'buddyboss' ),
+						'link_text'         => esc_html__( 'Accept Invitation', 'buddyboss' ),
 						'link_class'        => 'group-button accept-invite',
 					);
 
@@ -4108,7 +4325,7 @@ function bp_get_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button pending ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => bp_get_group_permalink( $group ),
-						'link_text'         => __( 'Request Sent', 'buddyboss' ),
+						'link_text'         => esc_html__( 'Request Sent', 'buddyboss' ),
 						'link_class'        => 'group-button pending membership-requested',
 					);
 
@@ -4122,13 +4339,11 @@ function bp_get_group_join_button( $group = false ) {
 
 						$group_type_id = bp_group_get_group_type_id( $group_type );
 
-						$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
-
-						$get_selected_member_type_join = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
-
+						$get_selected_member_type_join   = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+						$get_selected_member_type_join   = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
 						$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 
-						if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+						if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
 							$button = array(
 								'id'                => 'request_membership',
 								'component'         => 'groups',
@@ -4137,7 +4352,7 @@ function bp_get_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => __( 'Join group', 'buddyboss' ),
+								'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						} else {
@@ -4149,7 +4364,7 @@ function bp_get_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => __( 'Request Access', 'buddyboss' ),
+								'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						}
@@ -4162,7 +4377,7 @@ function bp_get_group_join_button( $group = false ) {
 							'wrapper_class'     => 'group-button ' . $group->status,
 							'wrapper_id'        => 'groupbutton-' . $group->id,
 							'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-							'link_text'         => __( 'Request Access', 'buddyboss' ),
+							'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
 							'link_class'        => 'group-button request-membership',
 						);
 					}
@@ -4171,6 +4386,16 @@ function bp_get_group_join_button( $group = false ) {
 				break;
 		}
 	}
+
+	/**
+	 * Filters if the current logged in user can join group.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param string $button HTML button for joining a group.
+	 * @param object $group BuddyPress group object
+	 */
+	$button = apply_filters( 'bp_user_can_join_groups', $button, $group );
 
 	/**
 	 * Filters the HTML button for joining a group.
@@ -4572,12 +4797,10 @@ function bp_group_member_section_title() {
 	 */
 function bp_get_group_member_section_title() {
 	static $last_user_group_role_title = null;
+
 	$user_id               = bp_get_group_member_id();
 	$group_id              = bp_get_current_group_id();
 	$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
-	$group_admin           = groups_get_group_admins( $group_id );
-	$group_mode            = groups_get_group_mods( $group_id );
-	$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
 
 	ob_start();
 
@@ -4590,23 +4813,11 @@ function bp_get_group_member_section_title() {
 
 				<?php
 				if ( groups_is_user_admin( $user_id, $group_id ) ) {
-					if ( isset( $group_admin ) && count( $group_admin ) > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
 				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-					if ( isset( $group_mode ) && count( $group_mode ) > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
 				} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-					if ( isset( $group_member['count'] ) && (int) $group_member['count'] > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
 				}
 				?>
 
@@ -4804,7 +5015,7 @@ function bp_get_group_member_link() {
 	 *
 	 * @param string $value HTML link for the current user.
 	 */
-	return apply_filters( 'bp_get_group_member_link', '<a href="' . bp_core_get_user_domain( $members_template->member->user_id, $members_template->member->user_nicename, $members_template->member->user_login ) . '">' . $members_template->member->display_name . '</a>' );
+	return apply_filters( 'bp_get_group_member_link', '<a href="' . bp_core_get_user_domain( $members_template->member->user_id, $members_template->member->user_nicename, $members_template->member->user_login ) . '">' . bp_core_get_user_displayname( $members_template->member->user_id ) . '</a>' );
 }
 
 /**
@@ -4995,7 +5206,14 @@ function bp_get_group_member_joined_since( $args = array() ) {
 	 *
 	 * @param string $value Joined since time.
 	 */
-	return apply_filters( 'bp_get_group_member_joined_since', bp_core_get_last_activity( $members_template->member->date_modified, __( 'joined %s', 'buddyboss' ) ) );
+	return apply_filters(
+		'bp_get_group_member_joined_since',
+		bp_core_get_last_activity(
+			$members_template->member->date_modified,
+			/* translators: %s: Last joined date of member in the group. */
+			esc_html__( 'Joined %s', 'buddyboss' )
+		)
+	);
 }
 
 /**
@@ -5220,7 +5438,7 @@ function bp_groups_get_front_template( $group = null ) {
 	}
 
 	$template_names = array(
-		'groups/single/front-id-' . sanitize_file_name( $group->id ) . '.php',
+		'groups/single/front-id-' . (int) $group->id . '.php',
 		'groups/single/front-slug-' . sanitize_file_name( $group->slug ) . '.php',
 	);
 
@@ -6118,32 +6336,32 @@ function bp_groups_header_tabs() {
 	<?php
 	if ( ! bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'recently-joined', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php _e( 'Recently Joined', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php _e( 'Recently Joined', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'most-popular', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php _e( 'Most Popular', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php _e( 'Most Popular', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'admin-of', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php _e( 'Organizer Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php _e( 'Organizer Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'mod-of', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php _e( 'Moderator Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php _e( 'Moderator Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'alphabetically' ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
 
 	<?php
 	do_action( 'groups_header_tabs' );
@@ -6346,21 +6564,21 @@ function bp_get_group_has_avatar( $group_id = false ) {
 		$group_id = bp_get_current_group_id();
 	}
 
-	$avatar_args = array(
-		'item_id' => $group_id,
-		'object'  => 'group',
-		'no_grav' => true,
-		'html'    => false,
-		'type'    => 'thumb',
+	$group_avatar = bp_core_fetch_avatar(
+		array(
+			'item_id' => $group_id,
+			'object'  => 'group',
+			'no_grav' => true,
+			'html'    => false,
+			'type'    => 'thumb',
+		)
 	);
 
-	$group_avatar = bp_core_fetch_avatar( $avatar_args );
-
-	if ( bp_core_avatar_default( 'local', $avatar_args ) === $group_avatar ) {
-		return false;
+	if ( false !== strpos( $group_avatar, '/' . $group_id . '/' ) ) {
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 /**
@@ -6556,6 +6774,15 @@ function bp_group_request_reject_link() {
 function bp_get_group_request_reject_link() {
 	global $requests_template;
 
+	$link = add_query_arg(
+		array(
+			'_wpnonce' => wp_create_nonce( 'groups_reject_membership_request' ),
+			'user_id'  => $requests_template->request->user_id,
+			'action'   => 'reject',
+		),
+		trailingslashit( bp_get_group_permalink( groups_get_current_group() ) ) . 'admin/membership-requests/'
+	);
+
 	/**
 	 * Filters the URL to use to reject a membership request.
 	 *
@@ -6563,7 +6790,7 @@ function bp_get_group_request_reject_link() {
 	 *
 	 * @param string $value URL to use to reject a membership request.
 	 */
-	return apply_filters( 'bp_get_group_request_reject_link', wp_nonce_url( trailingslashit( bp_get_group_permalink( groups_get_current_group() ) . 'admin/membership-requests/reject/' . $requests_template->request->membership_id ), 'groups_reject_membership_request' ) );
+	return apply_filters( 'bp_get_group_request_reject_link', $link );
 }
 
 /**
@@ -6584,6 +6811,15 @@ function bp_group_request_accept_link() {
 function bp_get_group_request_accept_link() {
 	global $requests_template;
 
+	$link = add_query_arg(
+		array(
+			'_wpnonce' => wp_create_nonce( 'groups_accept_membership_request' ),
+			'user_id'  => $requests_template->request->user_id,
+			'action'   => 'accept',
+		),
+		trailingslashit( bp_get_group_permalink( groups_get_current_group() ) ) . 'admin/membership-requests/'
+	);
+
 	/**
 	 * Filters the URL to use to accept a membership request.
 	 *
@@ -6591,7 +6827,7 @@ function bp_get_group_request_accept_link() {
 	 *
 	 * @param string $value URL to use to accept a membership request.
 	 */
-	return apply_filters( 'bp_get_group_request_accept_link', wp_nonce_url( trailingslashit( bp_get_group_permalink( groups_get_current_group() ) . 'admin/membership-requests/accept/' . $requests_template->request->membership_id ), 'groups_accept_membership_request' ) );
+	return apply_filters( 'bp_get_group_request_accept_link', $link );
 }
 
 /**
@@ -6743,7 +6979,7 @@ function bp_group_has_invites( $args = '' ) {
 		array(
 			'group_id' => false,
 			'user_id'  => bp_loggedin_user_id(),
-			'per_page' => false,
+			'per_page' => 20,
 			'page'     => 1,
 		),
 		'group_has_invites'
@@ -7297,18 +7533,18 @@ function bp_groups_get_profile_stats( $args = '' ) {
 		'groups_get_profile_stats'
 	);
 
-	// Allow completely overloaded output
+	// Allow completely overloaded output.
 	if ( empty( $r['output'] ) ) {
 
-		// Only proceed if a user ID was passed
+		// Only proceed if a user ID was passed.
 		if ( ! empty( $r['user_id'] ) ) {
 
-			// Get the user groups
+			// Get the user groups.
 			if ( empty( $r['groups'] ) ) {
 				$r['groups'] = absint( bp_get_total_group_count_for_user( $r['user_id'] ) );
 			}
 
-			// If groups exist, show some formatted output
+			// If groups exist, show some formatted output.
 			$r['output'] = $r['before'] . sprintf( _n( '%s group', '%s groups', $r['groups'], 'buddyboss' ), '<strong>' . $r['groups'] . '</strong>' ) . $r['after'];
 		}
 	}
@@ -7332,6 +7568,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
 function bp_group_current_invite_tab() {
 	echo bp_get_group_current_invite_tab();
 }
+
 /**
  * Returns the current group invite tab slug.
  *
@@ -7354,6 +7591,38 @@ function bp_get_group_current_invite_tab() {
 	 * @param string $tab Current group invite tab slug.
 	 */
 	return apply_filters( 'bp_get_group_current_invite_tab', $tab );
+}
+
+/**
+ * Echo the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bp_group_current_messages_tab() {
+	echo bp_get_group_current_messages_tab();
+}
+/**
+ * Returns the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group invite tab slug.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $tab Current group invite tab slug.
+	 */
+	return apply_filters( 'bp_get_group_current_messages_tab', $tab );
 }
 
 /**
@@ -7387,4 +7656,279 @@ function bp_get_article_prefix( $string ) {
 
 	return apply_filters( 'bp_get_article_prefix', $prefix . ' ' . $string, $string );
 
+}
+
+/**
+ * Get the message status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group message status, from among 'mods', and 'admins'.
+ */
+function bp_group_get_message_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$message_status = groups_get_groupmeta( $group_id, 'message_status' );
+
+	// Backward compatibility. When 'message_status' is not set, fall back to a default value.
+	if ( ! $message_status ) {
+		$message_status = apply_filters( 'bp_group_message_status_fallback', 'mods' );
+	}
+
+	/**
+	 * Filters the message status of a group.
+	 *
+	 * Message status in this case means who from the group can send messages.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $message_status Membership level needed to manage messages.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_message_status', $message_status, $group_id );
+}
+
+/**
+ * Output the 'checked' value, if needed, for a given message_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param string      $setting The setting you want to check against ('mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_messages_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$message_status = bp_group_get_message_status( $group_id );
+
+	if ( $setting == $message_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
+ * Echo the current group message tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ */
+function bb_group_current_messages_tab() {
+	echo bb_get_group_current_messages_tab();
+}
+
+/**
+ * Returns the current group message tab slug.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bb_get_group_current_messages_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group message tab slug.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param string $tab Current group message tab slug.
+	 */
+	return apply_filters( 'bb_get_group_current_messages_tab', $tab );
+}
+
+/**
+ * Get the video status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_video_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$video_status = groups_get_groupmeta( $group_id, 'video_status' );
+
+	// Backward compatibility. When 'video_status' is not set, fall back to a default value.
+	if ( ! $video_status ) {
+		$video_status = apply_filters( 'bp_group_video_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the video status of a group.
+	 *
+	 * Video status in this case means who can manage the videos.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param string $video_status Membership level needed to manage video.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_video_status', $video_status, $group_id );
+}
+
+/**
+ * Get the video album status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_video_album_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$album_status = groups_get_groupmeta( $group_id, 'video_album_status' );
+
+	// Backward compatibility. When 'album_status' is not set, fall back to a default value.
+	if ( ! $album_status ) {
+		$album_status = apply_filters( 'bp_group_video_album_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param string $album_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_video_album_status', $album_status, $group_id );
+}
+
+/**
+ * Checks if default platform group element is enabled.
+ *
+ * @since 1.9.1
+ *
+ * @param string $element Group element.
+ * @return bool Is group element enabled or not
+ */
+function bb_platform_group_headers_element_enable( $element ) {
+
+	if ( function_exists( 'bb_platform_pro_group_headers_element_enable' ) ) {
+		return bb_platform_pro_group_headers_element_enable( $element );
+	}
+
+	return true;
+}
+
+/**
+ * Get group grid style setting
+ *
+ * @since 1.9.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: left.
+ *
+ * @return string grid style for group directory
+ */
+function bb_platform_group_header_style( $default = 'left' ) {
+
+	if ( function_exists( 'bb_platform_pro_group_header_style' ) ) {
+		return bb_platform_pro_group_header_style();
+	}
+
+	return $default;
+}
+
+/**
+ * Checks if default platform group element is enabled.
+ *
+ * @since 1.9.1
+ *
+ * @param string $element Group element.
+ * @return bool Is group element enabled or not
+ */
+function bb_platform_group_element_enable( $element ) {
+
+	if ( function_exists( 'bb_platform_pro_group_element_enable' ) ) {
+		return bb_platform_pro_group_element_enable( $element );
+	}
+
+	return true;
+}
+
+/**
+ * Get group grid style setting
+ *
+ * @since 1.9.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: left.
+ *
+ * @return string grid style for group directory
+ */
+function bb_platform_group_grid_style( $default = 'left' ) {
+
+	if ( function_exists( 'bb_platform_pro_group_grid_style' ) ) {
+		return bb_platform_pro_group_grid_style();
+	}
+
+	return $default;
 }

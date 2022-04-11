@@ -181,10 +181,6 @@ class BP_XProfile_Component extends BP_Component {
 				'id'    => 'public',
 				'label' => __( 'Public', 'buddyboss' ),
 			),
-			'adminsonly' => array(
-				'id'    => 'adminsonly',
-				'label' => __( 'Only Me', 'buddyboss' ),
-			),
 			'loggedin'   => array(
 				'id'    => 'loggedin',
 				'label' => __( 'All Members', 'buddyboss' ),
@@ -197,6 +193,11 @@ class BP_XProfile_Component extends BP_Component {
 				'label' => __( 'My Connections', 'buddyboss' ),
 			);
 		}
+
+		$this->visibility_levels['adminsonly'] = array(
+			'id'    => 'adminsonly',
+			'label' => __( 'Only Me', 'buddyboss' ),
+		);
 
 		// Tables.
 		$global_tables = array(
@@ -280,7 +281,7 @@ class BP_XProfile_Component extends BP_Component {
 		);
 
 		// Change Avatar.
-		if ( buddypress()->avatar->show_avatars ) {
+		if ( buddypress()->avatar->show_avatars && ! bp_disable_avatar_uploads() ) {
 			$sub_nav[] = array(
 				'name'            => __( 'Profile Photo', 'buddyboss' ),
 				'slug'            => 'change-avatar',
@@ -393,7 +394,7 @@ class BP_XProfile_Component extends BP_Component {
 			);
 
 			// Edit Avatar.
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
@@ -468,6 +469,7 @@ class BP_XProfile_Component extends BP_Component {
 				'bp_xprofile_fields',
 				'bp_xprofile_groups',
 				'xprofile_meta',
+				'field_children_options',
 			)
 		);
 
@@ -497,5 +499,24 @@ class BP_XProfile_Component extends BP_Component {
 		);
 
 		return $wp_admin_nav;
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array(
+			'BP_REST_XProfile_Fields_Endpoint',
+			'BP_REST_XProfile_Field_Groups_Endpoint',
+			'BP_REST_XProfile_Data_Endpoint',
+			'BP_REST_XProfile_Update_Endpoint',
+			'BP_REST_XProfile_Repeater_Endpoint',
+			'BP_REST_XProfile_Search_Form_Fields_Endpoint',
+			'BP_REST_XProfile_Types_Endpoint',
+		) );
 	}
 }

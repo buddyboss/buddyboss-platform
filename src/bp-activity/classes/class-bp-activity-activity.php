@@ -197,6 +197,21 @@ class BP_Activity_Activity {
 			return;
 		}
 
+		/**
+		 * Pre validate the activity before fetch.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 *
+		 * @param boolean $validate Whether to check the activity is valid or not.
+		 * @param object  $row      Activity object.
+		 */
+		$validate = apply_filters( 'bp_activity_activity_pre_validate', true, $row );
+
+		if ( empty( $validate ) ) {
+			$this->id = 0;
+			return;
+		}
+
 		$this->id                = (int) $row->id;
 		$this->item_id           = (int) $row->item_id;
 		$this->secondary_item_id = (int) $row->secondary_item_id;
@@ -370,8 +385,10 @@ class BP_Activity_Activity {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
+		$function_args = func_get_args();
+
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -388,7 +405,7 @@ class BP_Activity_Activity {
 				10 => 'spam',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$bp = buddypress();
@@ -510,11 +527,20 @@ class BP_Activity_Activity {
 			case 'is_spam':
 				break;
 
+			case 'in':
+				$r['order_by'] = 'in';
+				break;
+
 			default:
 				$r['order_by'] = 'date_recorded';
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(a.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -576,6 +602,18 @@ class BP_Activity_Activity {
 			$where_conditions['excluded_types'] = "a.type NOT IN ({$not_in})";
 		}
 
+		// Remove forums activity while component is disabled.
+		if ( ! function_exists( 'bbpress' ) || ! bp_is_active( 'forums' ) ) {
+			$not_in_type                                = "'" . implode( "', '", esc_sql( array( 'bbp_topic_create', 'bbp_reply_create' ) ) ) . "'";
+			$where_conditions['exclude_forum_activity'] = "a.type NOT IN ({$not_in_type})";
+		}
+
+		// Remove groups activity while component is disabled.
+		if ( ! bp_is_active( 'groups' ) ) {
+			$not_in_type                                 = "'" . implode( "', '", esc_sql( array( 'groups' ) ) ) . "'";
+			$where_conditions['exclude_groups_activity'] = "a.component NOT IN ({$not_in_type})";
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the Activity items get method.
 		 *
@@ -631,7 +669,6 @@ class BP_Activity_Activity {
 			// Legacy queries joined against the user table.
 			$select_sql = 'SELECT DISTINCT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name';
 			$from_sql   = " FROM {$bp->activity->table_name} a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID";
-
 			if ( ! empty( $page ) && ! empty( $per_page ) ) {
 				$pag_sql = $wpdb->prepare( 'LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page );
 
@@ -696,7 +733,6 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
-
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
@@ -800,6 +836,7 @@ class BP_Activity_Activity {
 	 */
 	protected static function get_activity_data( $activity_ids = array() ) {
 		global $wpdb;
+		static $user_query_cache = array();
 
 		// Bail if no activity ID's passed.
 		if ( empty( $activity_ids ) ) {
@@ -845,13 +882,22 @@ class BP_Activity_Activity {
 			$activities[] = $activity;
 		}
 
+		$user_ids  = wp_list_pluck( $activities, 'user_id' );
+		$cache_key = 'bp_user_' . md5( maybe_serialize( $user_ids ) );
+
 		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $activities, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
+		if ( isset( $user_query_cache[ $cache_key ] ) ) {
+			$user_query = $user_query_cache[ $cache_key ];
+		} else {
+			$user_query = new BP_User_Query(
+				array(
+					'user_ids'        => $user_ids,
+					'populate_extras' => false,
+				)
+			);
+
+			$user_query_cache[ $cache_key ] = $user_query;
+		}
 
 		// Associated located user data with activity items.
 		foreach ( $activities as $a_index => $a_item ) {
@@ -1493,6 +1539,8 @@ class BP_Activity_Activity {
 	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0 ) {
 		global $wpdb;
 
+		$function_args = func_get_args();
+
 		if ( empty( $top_level_parent_id ) ) {
 			$top_level_parent_id = $activity_id;
 		}
@@ -1540,7 +1588,35 @@ class BP_Activity_Activity {
 			 * @param BP_Activity_Activity $value     Magic method referring to currently called method.
 			 * @param array                $func_args Array of the method's argument list.
 			 */
-			if ( apply_filters( 'bp_use_legacy_activity_query', false, __METHOD__, func_get_args() ) ) {
+			if ( apply_filters( 'bp_use_legacy_activity_query', false, __METHOD__, $function_args ) ) {
+
+				$sql['select'] = "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} ";
+				$sql['from']   = "FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} ";
+				$sql['where']  = "WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d";
+				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+
+				/**
+				 * Filters the MySQL From query for legacy activity comment.
+				 *
+				 * @since BuddyPress 2.0.0
+				 *
+				 * @param string $from Activity Comment from query
+				 *
+				 */
+				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
+
+				/**
+				 * Filters the MySQL Where query for legacy activity comment.
+				 *
+				 * @since BuddyPress 2.0.0
+				 *
+				 * @param string $where Activity Comment from query
+				 *
+				 */
+				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
+
+
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
 
 				/**
 				 * Filters the MySQL prepared statement for the legacy activity query.
@@ -1553,14 +1629,42 @@ class BP_Activity_Activity {
 				 * @param int    $right       Right-most node boundary.
 				 * @param string $spam_sql    SQL Statement portion to differentiate between ham or spam.
 				 */
-				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d ORDER BY a.date_recorded ASC", $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
+				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
 
 				$descendants = $wpdb->get_results( $sql );
 
 				// We use the mptt BETWEEN clause to limit returned
 				// descendants to the correct part of the tree.
 			} else {
-				$sql = $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} a WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d ORDER BY a.date_recorded ASC", $top_level_parent_id, $left, $right );
+
+				$sql['select'] = "SELECT a.id";
+				$sql['from']   = "FROM {$bp->activity->table_name} a";
+				$sql['where']  = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d";
+				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+
+				/**
+				 * Filters the MySQL From query for legacy activity comment.
+				 *
+                 * @since BuddyBoss 1.5.6
+				 *
+				 * @param string $from Activity Comment from query
+				 *
+				 */
+				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
+
+				/**
+				 * Filters the MySQL Where query for legacy activity comment.
+				 *
+                 * @since BuddyBoss 1.5.6
+				 *
+				 * @param string $where Activity Comment from query
+				 *
+				 */
+				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
+
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
+
+				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
 
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
@@ -1686,9 +1790,17 @@ class BP_Activity_Activity {
 	public static function get_child_comments( $parent_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_get_child_comments_' . $parent_id;
+		$result    = wp_cache_get( $cache_key, 'bp_activity_comments' );
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND secondary_item_id = %d", $parent_id ) );
+		if ( false === $result ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND secondary_item_id = %d", $parent_id ) );
+			wp_cache_set( $cache_key, $result, 'bp_activity_comments' );
+		}
+
+		return $result;
 	}
 
 	/**

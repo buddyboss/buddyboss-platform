@@ -133,7 +133,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	}
 	$display_name = $current_user->data->display_name;
 	$avatar       = get_avatar( $user_id, 26 );
-	$name         = bp_xprofile_get_member_display_name( $user_id );
+	$name         = bp_core_get_user_displayname( $user_id );
 
 	// my account
 	$wp_admin_bar->add_node(
@@ -181,8 +181,9 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		if ( 'nickname' !== $current_value ) {
 
 			$username = bp_activity_get_user_mentionname( $current_user->ID );
+			$at = __( '@', 'buddyboss' );
 			if ( '' !== $username ) {
-				$user_info .= "<span class='username'>{$username}</span>";
+				$user_info .= "<span class='username'>{$at}{$username}</span>";
 			} else {
 				$user_info .= "<span class='username'>{$current_user->user_login}</span>";
 			}

@@ -59,7 +59,18 @@ add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
-// Avatars
+// Removed Document and Media from WordPress media endpoints.
+add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
+add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
+add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
+
+// Widget display name.
+add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
+add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
+add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
+add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
+
+// Avatars.
 /**
  * Disable gravatars fallback for member avatars.
  *
@@ -68,10 +79,10 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 add_action( 'init', 'bp_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
-	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+	$avatar = bp_enable_profile_gravatar();
 
 	if ( false === $avatar ) {
-		// Avatars
+
 		/**
 		 * Disable gravatars fallback for member avatars.
 		 *
@@ -504,6 +515,7 @@ function bp_core_activation_signup_blog_notification( $domain, $path, $title, $u
 			'user.email'        => $user_email,
 		),
 	);
+
 	bp_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
@@ -566,6 +578,7 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			'user.id'      => $user_id,
 		),
 	);
+
 	bp_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 
 	// Return false to stop the original WPMU function from continuing.
@@ -702,6 +715,11 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
  * @return WP_Post The modified WP_Post object.
  */
 function bp_setup_nav_menu_item( $menu_item ) {
+
+	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
+		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+	}
+
 	if ( is_admin() ) {
 		return $menu_item;
 	}
@@ -775,6 +793,27 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			} else {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
+		} else {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
+				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$component = $tab;
+					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'video' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
+						$component = 'xprofile';
+					}
+					if ( bp_is_active( $component ) ) {
+						if ( strpos( $menu_item->url, $tab ) !== false ) {
+							$menu_item->classes   = is_array( $menu_item->classes ) ? $menu_item->classes : array();
+							$menu_item->classes[] = 'current_page_item';
+							$menu_item->classes[] = 'current-menu-item';
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -809,7 +848,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => __( 'Custom Link', 'buddyboss' ),
+			'type_label' => __( 'BuddyBoss', 'buddyboss' ),
 			'object'     => $object,
 			'object_id'  => -1,
 		);
@@ -832,12 +871,12 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),
@@ -873,7 +912,9 @@ function bp_filter_metaid_column_name( $q ) {
 	preg_match_all( $quoted_regex, $q, $quoted_matches );
 	$q = preg_replace( $quoted_regex, '__QUOTE__', $q );
 
-	$q = str_replace( 'meta_id', 'id', $q );
+	if ( strpos( $q, 'umeta_id' ) === false ) {
+		$q = str_replace( 'meta_id', 'id', $q );
+	}
 
 	// Put quoted content back into the string.
 	if ( ! empty( $quoted_matches[0] ) ) {
@@ -1081,6 +1122,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	// These options are escaped with esc_html on the way into the database in sanitize_option().
 	$tokens['site.description'] = wp_specialchars_decode( bp_get_option( 'blogdescription' ), ENT_QUOTES );
 	$tokens['site.name']        = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
+	$tokens['reset.url']        = esc_url( wp_lostpassword_url() );
 
 	// Default values for tokens set conditionally below.
 	$tokens['email.preheader']    = '';
@@ -1123,7 +1165,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$tokens['unsubscribe'] = wp_login_url();
 	}
 
-	// Email preheader.
+	// Email pre header.
 	$post = $email->get_post_object();
 	if ( $post ) {
 		$tokens['email.preheader'] = sanitize_text_field( get_post_meta( $post->ID, 'bp_email_preheader', true ) );
@@ -1274,8 +1316,8 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
  */
 function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
 
-	if ( ! empty( $group_id ) ) {
-		if ( 'group-avatars' == $avatar_dir ) {
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		if ( 'group-avatars' === $avatar_dir ) {
 			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );
@@ -1386,7 +1428,7 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
  */
 function bp_pages_terms_and_privacy_exclude( $pages ) {
 
-	if ( !empty( $pages ) ) {
+	if ( ! empty( $pages ) ) {
 
 		// Removed terms page as non component page.
 		if ( property_exists( $pages, 'terms' ) ) {
@@ -1402,3 +1444,649 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 	return $pages;
 }
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+
+/**
+ * Filter to change cover image dimensions to original for group and profile.
+ *
+ * @param $wh        array
+ * @param $settings  array
+ * @param $component string
+ *
+ * @return array
+ * @since BuddyBoss 1.5.1
+ */
+function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
+		return array(
+			'width'  => 1950,
+			'height' => 450,
+		);
+	}
+
+	return $wh;
+}
+
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_image_dimensions', 10, 3 );
+
+/**
+ * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.
+ */
+if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
+	function buddyboss_platform_plugin_update_notice() {
+		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+			$class   = 'notice notice-error';
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		}
+	}
+	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
+}
+
+/**
+ * Update attachment rest query argument to hide media/document from media endpoints.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param array $args WP_Query parsed arguments.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_query( $args ) {
+	$meta_query = ( array_key_exists( 'meta_query', $args ) ? $args['meta_query'] : array() );
+
+	// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+	$args['meta_query'] = array(
+		array(
+			'key'     => 'bp_media_upload',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'bp_document_upload',
+			'compare' => 'NOT EXISTS',
+		),
+	);
+
+	if ( ! empty( $meta_query ) ) {
+		$args['meta_query'][] = $meta_query;
+	}
+
+	if ( count( $args['meta_query'] ) > 1 ) {
+		$args['meta_query']['relation'] = 'AND';
+	}
+
+	return $args;
+}
+
+/**
+ * Empty response in single WordPress Media endpoint when fetch media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param WP_REST_Response $response The response object.
+ * @param WP_Post          $post     The original attachment post.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_response( $response, $post ) {
+	$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+	$data          = $response->get_data();
+	if (
+		array_key_exists( 'media_type', $data ) &&
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post->ID )
+		)
+	) {
+		$response = array();
+	}
+
+	return $response;
+}
+
+/**
+ * Restrict users to access media and documents from `/wp-json/oembed/1.0/embed`
+ *
+ * @param int $post_id Current post id.
+ *
+ * @return mixed
+ */
+function bp_rest_restrict_oembed_request_post_id( $post_id ) {
+	$media_meta    = get_post_meta( $post_id, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post_id, 'bp_document_upload', true );
+	if (
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post_id )
+		)
+	) {
+		$post_id = 0;
+	}
+
+	return $post_id;
+}
+
+/**
+ * Add schedule to cron schedules.
+ *
+ * @param array $schedules Array of schedules for cron.
+ *
+ * @return array $schedules Array of schedules from cron.
+ * @since Buddyboss 1.7.0
+ */
+function bp_core_cron_schedules( $schedules = array() ) {
+	$bb_schedules = array(
+		'bb_schedule_1min'  => array(
+			'interval' => MINUTE_IN_SECONDS,
+			'display'  => __( 'Every minute', 'buddyboss' ),
+		),
+		'bb_schedule_5min'  => array(
+			'interval' => 5 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_10min' => array(
+			'interval' => 10 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_30min' => array(
+			'interval' => 30 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
+		),
+		'bb_schedule_15days' => array(
+			'interval' => 15 * DAY_IN_SECONDS,
+			'display'  => __( 'Every 15 days', 'buddyboss' ),
+		),
+		'bb_schedule_30days' => array(
+			'interval' => 30 * DAY_IN_SECONDS,
+			'display'  => __( 'Every 30 days', 'buddyboss' ),
+		),
+	);
+
+	/**
+	 * Filters the cron schedules.
+	 *
+	 * @param array $bb_schedules Schedules.
+	 * @since BuddyBoss 1.7.0
+	 */
+	$bb_schedules = apply_filters( 'bp_core_cron_schedules', $bb_schedules );
+
+	foreach ( $bb_schedules as $k => $bb_schedule ) {
+		if ( ! isset( $schedules[ $k ] ) ) {
+			$schedules[ $k ] = array(
+				'interval' => $bb_schedule['interval'],
+				'display'  => $bb_schedule['display'],
+			);
+		}
+	}
+
+	return $schedules;
+}
+add_filter( 'cron_schedules', 'bp_core_cron_schedules' ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+
+/**
+ * Filter to update the Avatar URL for the rest api.
+ *
+ * @since BuddyBoss 1.8.2
+ *
+ * @param string $gravatar Avatar Url.
+ *
+ * @return array|mixed|string|string[]
+ */
+function bb_rest_decode_default_avatar_url( $gravatar ) {
+	if ( function_exists( 'bb_is_rest' ) && bb_is_rest() ) {
+		$gravatar = str_replace( '&#038;', '&', $gravatar );
+	}
+
+	return $gravatar;
+}
+
+add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
+
+/**
+ * The custom profile and group avatar script data.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param array  $script_data The avatar script data.
+ * @param string $object      The object the avatar belongs to (eg: user or group).
+ */
+function bb_admin_setting_profile_group_add_script_data( $script_data, $object = '' ) {
+
+	if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
+		$script_data['bp_params'] = array(
+			'object'     => 'user',
+			'item_id'    => 0,
+			'item_type'  => 'default',
+			'has_avatar' => bb_has_default_custom_upload_profile_avatar(),
+			'nonces'     => array(
+				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
+				'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
+			),
+		);
+
+		// Set feedback messages.
+		$script_data['feedback_messages'] = array(
+			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
+			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
+			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
+			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
+		);
+	}
+
+	if ( 'bp-groups' === bp_core_get_admin_active_tab() ) {
+		$script_data['bp_params'] = array(
+			'object'     => 'group',
+			'item_id'    => 0,
+			'item_type'  => 'default',
+			'has_avatar' => bb_has_default_custom_upload_group_avatar(),
+			'nonces'     => array(
+				'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
+				'remove' => wp_create_nonce( 'bp_group_avatar_delete' ),
+			),
+		);
+
+		// Set feedback messages.
+		$script_data['feedback_messages'] = array(
+			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
+			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
+			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
+			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
+		);
+	}
+
+	return $script_data;
+}
+
+/**
+ * Check ajax request is it for custom profile or group cover?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return bool True if request from admin and it's for profile cover otherwise false.
+ */
+function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
+	$bp_params           = array();
+	$profile_group_types = array( 'user', 'group' );
+	$request_actions     = array( 'bp_cover_image_upload' );
+
+	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && ! in_array( sanitize_text_field( $_POST['action'] ), $request_actions, true ) ) ) {
+		return false;
+	}
+
+	if ( ! isset( $_POST['bp_params'] ) || empty( $_POST['bp_params'] ) ) {
+		return false;
+	}
+
+	$bp_params = $_POST['bp_params'];
+
+	if ( ! is_admin() || ! isset( $bp_params['object'] ) || ! isset( $bp_params['item_id'] ) ) {
+		return false;
+	}
+
+	$item_id = $bp_params['item_id'];
+	$object  = $bp_params['object'];
+
+	if ( ! is_admin() || 0 < $item_id || ! in_array( $object, $profile_group_types, true ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Setup upload directory for default custom profile or group cover.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param array $upload_dir The original Uploads dir.
+ * @return array Array containing the path, URL, and other helpful settings.
+ */
+function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = array() ) {
+
+	// Validate ajax request for upload custom profile and group cover.
+	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+
+	if ( ! $is_validate ) {
+		return $upload_dir;
+	}
+
+	$object = sanitize_text_field( $_POST['bp_params']['object'] );
+
+	// Set the subdir.
+	$subdir = '/members/0/cover-image';
+	if ( 'group' === $object ) {
+		$subdir = '/groups/0/cover-image';
+	}
+
+	$upload_dir = bp_attachments_uploads_dir_get();
+
+	/**
+	 * Filters set upload directory for default custom profile or group cover.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param array $value Array containing the path, URL, and other helpful settings.
+	 */
+	return apply_filters(
+		"bb_default_custom_{$object}_cover_image_upload_dir",
+		array(
+			'path'    => $upload_dir['basedir'] . $subdir,
+			'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
+			'subdir'  => $subdir,
+			'basedir' => $upload_dir['basedir'],
+			'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
+			'error'   => false,
+		),
+		$upload_dir
+	);
+
+}
+
+/**
+ * The cover path for default custom cover upload.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string     $cover_dir  Path to the cover folder path.
+ * @param string     $object_dir The object dir (eg: members/groups). Defaults to members.
+ * @param int|string $item_id    The object id (eg: a user or a group id). Defaults to current user.
+ * @param string     $type       The type of the attachment which is also the subdir where files are saved.
+ *                               Defaults to 'cover-image'.
+ * @return string Actual custom uploaded cover relative path.
+ */
+function bb_attachments_get_profile_group_attachment_dir( $cover_dir, $object_dir, $item_id, $type ) {
+	// Validate ajax request for upload custom profile cover.
+	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+
+	if ( ! $is_validate ) {
+		return $cover_dir;
+	}
+
+	$object = sanitize_text_field( $_POST['bp_params']['object'] );
+
+	$upload_dir = bp_attachments_uploads_dir_get();
+
+	// Set the subdir.
+	$subdir = '/members/0/cover-image';
+	if ( 'group' === $object ) {
+		$subdir = '/groups/0/cover-image';
+	}
+
+	return $upload_dir['basedir'] . $subdir;
+}
+
+/**
+ * The cover sub path for default custom cover upload.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string     $cover_sub_dir Path to the cover folder path.
+ * @param string     $object_dir    The object dir (eg: members/groups). Defaults to members.
+ * @param int|string $item_id       The object id (eg: a user or a group id). Defaults to current user.
+ * @param string     $type          The type of the attachment which is also the subdir where files are saved.
+ *                                  Defaults to 'cover-image'.
+ * @return string Actual custom uploaded cover relative sub path.
+ */
+function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $object_dir, $item_id, $type ) {
+	// Validate ajax request for upload custom profile cover.
+	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+
+	if ( ! $is_validate ) {
+		return $cover_sub_dir;
+	}
+
+	return $object_dir . '/0/' . $type;
+}
+
+/**
+ * Save default profile and group avatar option on upload custom avatar.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $item_id     Inform about the user id the avatar was set for.
+ * @param string $type        Inform about the way the avatar was set ('camera').
+ * @param array  $avatar_data Array of parameters passed to the avatar handler.
+ */
+function bb_save_profile_group_options_on_upload_custom_avatar( $item_id, $type, $avatar_data = array() ) {
+	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+
+	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
+
+		$avatar = isset( $avatar_data['avatar'] ) ? $avatar_data['avatar'] : '';
+
+		if ( ! empty( $avatar ) ) {
+			if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
+				bp_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
+				bp_update_option( 'bp-default-profile-avatar-type', 'custom' );
+				bp_update_option( 'bp-default-custom-profile-avatar', $avatar );
+			} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
+				bp_update_option( 'bp-disable-group-avatar-uploads', '' );
+				bp_update_option( 'bp-default-group-avatar-type', 'custom' );
+				bp_update_option( 'bp-default-custom-group-avatar', $avatar );
+			}
+		}
+	}
+}
+add_action( 'xprofile_avatar_uploaded', 'bb_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
+add_action( 'groups_avatar_uploaded', 'bb_save_profile_group_options_on_upload_custom_avatar', 10, 3 );
+
+/**
+ * Save default profile and group avatar option on delete custom avatar.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param array $args {
+ *     Array of function parameters.
+ *
+ *     @type string|bool|int    $item_id    ID of the item whose avatar you're deleting.
+ *                                          Defaults to the current item of type $object.
+ *     @type string             $object     Object type of the item whose avatar you're
+ *                                          deleting. 'user', 'group', 'blog', or custom.
+ *                                          Default: 'user'.
+ *     @type bool|string        $avatar_dir Subdirectory where avatar is located.
+ *                                          Default: false, which falls back on the default location
+ *                                          corresponding to the $object.
+ * }
+ */
+function bb_delete_default_profile_group_avatar( $args ) {
+	$item_id   = ! empty( $args['item_id'] ) ? (int) $args['item_id'] : '';
+	$item_type = ! empty( $args['item_type'] ) ? sanitize_text_field( $args['item_type'] ) : null;
+
+	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
+
+		// check for user avatars getting deleted.
+		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
+			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+			bp_update_option( 'bp-default-custom-profile-avatar', '' );
+		}
+
+		// check for group avatars getting deleted.
+		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
+			bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+			bp_update_option( 'bp-default-custom-group-avatar', '' );
+		}
+	}
+}
+add_action( 'bp_core_delete_existing_avatar', 'bb_delete_default_profile_group_avatar', 10, 1 );
+
+/**
+ * Save default profile and group cover options on upload custom cover.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param int $item_id Inform about the item id the cover photo was deleted for.
+ */
+function bb_save_profile_group_cover_options_on_upload_custom_cover( $item_id, $name, $cover_url, $feedback_code ) {
+
+	$is_validate = bb_validate_custom_profile_group_avatar_ajax_reuqest();
+
+	if ( $is_validate && ! empty( $cover_url ) ) {
+
+		$object = sanitize_text_field( $_POST['bp_params']['object'] );
+
+		if ( 'user' === $object ) {
+			bp_update_option( 'bp-disable-cover-image-uploads', '' );
+			bp_update_option( 'bp-default-profile-cover-type', 'custom' );
+			bp_update_option( 'bp-default-custom-profile-cover', $cover_url );
+		} elseif ( 'group' === $object ) {
+			bp_update_option( 'bp-disable-group-cover-image-uploads', '' );
+			bp_update_option( 'bp-default-group-cover-type', 'custom' );
+			bp_update_option( 'bp-default-custom-group-cover', $cover_url );
+		}
+	}
+}
+add_action( 'xprofile_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
+add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
+
+/**
+ * Save default profile and group cover options on delete custom cover.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param int $item_id Inform about the item id the cover photo was deleted for.
+ */
+function bb_delete_profile_group_cover_images_url( $item_id ) {
+	$item_id   = ! empty( $_POST['item_id'] ) ? (int) $_POST['item_id'] : '';
+	$item_type = ! empty( $_POST['item_type'] ) ? sanitize_text_field( $_POST['item_type'] ) : null;
+
+	if ( is_admin() && empty( $item_id ) && 'default' === $item_type ) {
+
+		if ( 'user' === sanitize_text_field( $_POST['object'] ) ) {
+			bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
+			bp_update_option( 'bp-default-custom-profile-cover', '' );
+		} elseif ( 'group' === sanitize_text_field( $_POST['object'] ) ) {
+			bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+			bp_update_option( 'bp-default-custom-group-cover', '' );
+		}
+	}
+}
+add_action( 'xprofile_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
+add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
+
+/**
+ * Set gravatars when Gravatars is enabled from the Profile Images and Profile Avatars is BuddyBoss.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $avatar_default The avatar default.
+ * @param array  $params         The avatar's data.
+ * @return string Set default 'mm' if upload avatars is 'BuddyBoss'.
+ */
+function bb_profile_set_gravatar_default( $avatar_default, $params ) {
+
+	if ( 'BuddyBoss' === bb_get_profile_avatar_type() ) {
+		$avatar_default = 'mm';
+	}
+
+	return $avatar_default;
+}
+add_filter( 'bp_core_avatar_default', 'bb_profile_set_gravatar_default', 10, 2 );
+
+/**
+ * Add inline css for profile and group cover background color when selected 'none' or 'BuddyBoss'.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_add_default_cover_image_inline_css() {
+	$css_rules = '.list-wrap .bs-group-cover a:before{ background:unset; }';
+
+	// BuddyBoss theme is not activated.
+	if ( ! function_exists( 'buddyboss_theme' ) ) {
+		$css_rules .= '#buddypress #header-cover-image.has-default, #buddypress #header-cover-image.has-default .guillotine-window img, .bs-group-cover a img{ background-color: #e2e9ef; }';
+	}
+
+	// Buddyboss theme compatibility.
+	$current_theme    = wp_get_theme();
+	$bb_theme_version = $current_theme->get( 'Version' );
+
+	if ( $current_theme->parent() ) {
+		$bb_theme_version = $current_theme->parent()->get( 'Version' );
+	}
+
+	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.4', '<' ) ) {
+
+		$profile_cover_type = bb_get_default_profile_cover_type();
+		$group_cover_type   = bb_get_default_group_cover_type();
+		$background_color   = function_exists( 'buddyboss_theme_get_option' ) ? buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ) : '#e2e9ef';
+
+		if ( empty( $background_color ) ) {
+			// Set default color.
+			$background_color = '#e2e9ef';
+		}
+
+		if ( ! bp_disable_cover_image_uploads() && 'custom' !== $profile_cover_type ) {
+			$css_rules .= '.bp_members #buddypress #header-cover-image, .bp_members #buddypress #header-cover-image .guillotine-window img{ background-color: ' . $background_color . '; }';
+		}
+
+		if ( ! bp_disable_group_cover_image_uploads() && 'custom' !== $group_cover_type ) {
+			$css_rules .= '.bp_group #buddypress #header-cover-image, .bp_group #buddypress #header-cover-image .guillotine-window img, .list-wrap .bs-group-cover a{ background-color: ' . $background_color . '; }';
+		}
+	}
+
+	wp_add_inline_style( 'bp-nouveau', $css_rules );
+}
+add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
+
+/**
+ * Enable gravatars for members when Profile Avatars is WordPress.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param bool  $no_grav Whether or not to skip Gravatar.
+ * @param array $params Array of parameters for the avatar request.
+ * @return bool.
+ */
+function bb_member_enabled_gravatar( $no_grav, $params ) {
+
+	if ( ! isset( $params['object'] ) ) {
+		return $no_grav;
+	}
+
+	// By default, Gravatar is pinged for members when WordPress is enabled.
+	$show_avatars = bp_get_option( 'show_avatars' );
+
+	if ( 'user' === $params['object'] && $show_avatars && 'WordPress' === bb_get_profile_avatar_type() ) {
+		$no_grav = false;
+	}
+
+	return $no_grav;
+}
+add_filter( 'bp_core_fetch_avatar_no_grav', 'bb_member_enabled_gravatar', 99, 2 );
+
+/**
+ * Filter the admin emails by notification preference.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param WP_Query $query The WP_Query instance (passed by reference).
+ */
+function bb_filter_admin_emails( $query ) {
+	if (
+		is_admin() &&
+		$query->get( 'post_type' ) === bp_get_email_post_type() &&
+		! empty( $_GET['terms'] ) // phpcs:ignore
+	) {
+		$taxquery = array(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'field'    => 'slug',
+				'terms'    => explode( ',', $_GET['terms'] ), // phpcs:ignore
+			),
+		);
+
+		$query->set( 'tax_query', $taxquery );
+	}
+}
+add_action( 'pre_get_posts', 'bb_filter_admin_emails' );

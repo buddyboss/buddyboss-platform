@@ -137,23 +137,8 @@ function bp_nouveau_ajax_xprofile_get_field() {
 
 	if ( bp_has_profile( "profile_group_id=$signup_group_id&exclude_fields=$existing_fields_exclude&include_fields=$include_fields" ) ) :
 
-		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-		$current_value = bp_get_option( 'bp-display-name-format' );
-
 		while ( bp_profile_groups() ) : bp_the_profile_group();
 			while ( bp_profile_fields() ) : bp_the_profile_field();
-
-				// If First Name selected then do not add last name field.
-				if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() && false === bp_hide_last_name() ) {
-					continue;
-				// If Nick Name selected then do not add last name field.
-				} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() && false === bp_hide_nickname_last_name() ) {
-					continue;
-				// If Nick Name selected then do not add first name field.
-				} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_firstname_field_id() && false === bp_hide_nickname_first_name() ) {
-					continue;
-				}
-
 				?>
 				<div<?php bp_field_css_class( 'editfield ajax_added' ); bp_field_data_attribute(); ?>>
 					<fieldset>

@@ -263,16 +263,11 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
 function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bbp-repair',
-					'tab'  => 'bbp-repair',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bbp-repair',
+			'tab'  => 'bbp-repair',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Repair Forums', 'buddyboss' ),
 		'slug' => 'bbp-repair',
 	);
@@ -290,16 +285,11 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_tools_setting
 function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bbp-converter',
-					'tab'  => 'bbp-converter',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bbp-converter',
+			'tab'  => 'bbp-converter',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Import Forums', 'buddyboss' ),
 		'slug' => 'bbp-converter',
 	);

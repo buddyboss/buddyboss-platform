@@ -107,8 +107,10 @@ class BP_Messages_Box_Template {
 	 */
 	public function __construct( $args = array() ) {
 
+		$function_args = func_get_args();
+
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -121,7 +123,7 @@ class BP_Messages_Box_Template {
 				6 => 'page_arg',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$r = wp_parse_args(
@@ -136,6 +138,7 @@ class BP_Messages_Box_Template {
 				'max'          => false,
 				'search_terms' => '',
 				'include'      => false,
+				'is_hidden'    => false,
 				'meta_query'   => array(),
 			)
 		);
@@ -148,6 +151,7 @@ class BP_Messages_Box_Template {
 		$this->type         = $r['type'];
 		$this->search_terms = $r['search_terms'];
 		$this->include      = $r['include'];
+		$this->is_hidden    = $r['is_hidden'];
 
 		if ( 'notices' === $this->box ) {
 			$this->threads = BP_Messages_Notice::get_notices(
@@ -166,12 +170,13 @@ class BP_Messages_Box_Template {
 					'page'         => $this->pag_page,
 					'search_terms' => $this->search_terms,
 					'include'      => $this->include,
+					'is_hidden'    => $this->is_hidden,
 					'meta_query'   => $r['meta_query'],
 				)
 			);
 
-			$this->threads            = $threads['threads'];
-			$this->total_thread_count = $threads['total'];
+			$this->threads            = isset( $threads['threads'] ) ? $threads['threads'] : array();
+			$this->total_thread_count = isset( $threads['total'] ) ? $threads['total'] : 0;
 		}
 
 		if ( ! $this->threads ) {

@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Notifications Loop
+ * The template for members notifications loop
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/notifications/notifications-loop.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :

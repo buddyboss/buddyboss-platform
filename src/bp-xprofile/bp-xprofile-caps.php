@@ -36,12 +36,6 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 				$field_id = bp_get_the_profile_field_id();
 			}
 
-			// Visibility on the fullname field is not editable.
-			if ( 1 == $field_id ) {
-				$caps[] = 'do_not_allow';
-				break;
-			}
-
 			// Has the admin disabled visibility modification for this field?
 			if ( 'disabled' == bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' ) ) {
 				$caps[] = 'do_not_allow';
@@ -92,3 +86,46 @@ function bp_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_us
 	return $user_can;
 }
 add_filter( 'bp_user_can', 'bp_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users', 10, 3 );
+
+/**
+ * Remove the 'bp_xprofile_change_field_visibility' cap based on display name format.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param bool   $user_can
+ * @param int    $user_id
+ * @param string $capability
+ * @return bool
+ */
+function bp_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability ) {
+
+	if ( empty( $GLOBALS['profile_template'] ) || 'bp_xprofile_change_field_visibility' !== $capability ) {
+		return $user_can;
+	}
+
+	$field_id = bp_get_the_profile_field_id();
+
+	if ( $field_id ) {
+		$first_name_id        = bp_xprofile_firstname_field_id();
+		$last_name_id        = bp_xprofile_lastname_field_id();
+		$nick_name_id        = bp_xprofile_nickname_field_id();
+		$display_name_format = bp_core_display_name_format();
+
+		if ( $field_id === $nick_name_id ) {
+			$user_can = false;
+		}
+
+		if ( 'first_last_name' === $display_name_format ) {
+			if ( $field_id && in_array( $field_id, array( $first_name_id ) ) ) {
+				$user_can = false;
+			}
+		} elseif ( 'first_name' === $display_name_format ) {
+			if ( $field_id && in_array( $field_id, array( $first_name_id ) ) ) {
+				$user_can = false;
+			}
+		}
+	}
+
+	return $user_can;
+}
+add_filter( 'bp_user_can', 'bp_xprofile_remove_bp_xprofile_change_field_visibility', 10, 3 );

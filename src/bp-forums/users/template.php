@@ -1418,15 +1418,8 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 
 	// Pretty permalinks
 	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/' . bbp_get_topic_archive_slug();
-		$user = get_userdata( $user_id );
-		if ( ! empty( $user->user_nicename ) ) {
-			$user_nicename = $user->user_nicename;
-		} else {
-			$user_nicename = $user->user_login;
-		}
-		$url = str_replace( '%' . bbp_get_user_rewrite_id() . '%', $user_nicename, $url );
-		$url = home_url( user_trailingslashit( $url ) );
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
+		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
 	} else {
@@ -1483,15 +1476,8 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 
 	// Pretty permalinks
 	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/' . bbp_get_reply_archive_slug();
-		$user = get_userdata( $user_id );
-		if ( ! empty( $user->user_nicename ) ) {
-			$user_nicename = $user->user_nicename;
-		} else {
-			$user_nicename = $user->user_login;
-		}
-		$url = str_replace( '%' . bbp_get_user_rewrite_id() . '%', $user_nicename, $url );
-		$url = home_url( user_trailingslashit( $url ) );
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
+		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
 	} else {
@@ -1814,20 +1800,35 @@ function bbp_user_can_view_forum( $args = '' ) {
 	$forum_id = bbp_get_forum_id( $r['forum_id'] );
 	$retval   = false;
 
+	/**
+	 * For check Current topic's forum is part of group or not.
+	 */
+	$group_id  = 0;
+	$is_member = 0;
+	if ( bp_is_active( 'groups' ) ) {
+		$group_id   = bbp_forum_recursive_group_id( $forum_id );
+		$is_member  = groups_is_user_member( $user_id, $group_id );
+	}
+
+	$retval = ( $group_id && ! $is_member ) ? false : true;
+
 	// User is a keymaster
 	if ( ! empty( $user_id ) && bbp_is_user_keymaster( $user_id ) ) {
 		$retval = true;
 
-		// Forum is public, and user can read forums or is not logged in
+	// Forum is public, and user can read forums or is not logged in
 	} elseif ( bbp_is_forum_public( $forum_id, $r['check_ancestors'] ) ) {
 		$retval = true;
 
-		// Forum is private, and user can see it
-	} elseif ( bbp_is_forum_private( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_private_forums' ) ) {
+	// Forum is private, and user can see it
+	} elseif ( bbp_is_forum_private( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_private_forums' ) && empty( $group_id ) ) {
 		$retval = true;
 
-		// Forum is hidden, and user can see it
-	} elseif ( bbp_is_forum_hidden( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_hidden_forums' ) ) {
+	// Forum is hidden, and user can see it
+	} elseif ( bbp_is_forum_hidden( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_hidden_forums' ) && empty( $group_id ) ) {
+		$retval = true;
+
+	} elseif ( ! empty( $group_id ) && ! empty( $is_member ) ) {
 		$retval = true;
 	}
 
@@ -1982,10 +1983,13 @@ function bbp_get_forums_for_current_user( $args = array() ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'post_type'   => bbp_get_forum_post_type(),
-			'post_status' => bbp_get_public_status_id(),
-			'numberposts' => -1,
-			'exclude'     => $post__not_in,
+			'post_type'              => bbp_get_forum_post_type(),
+			'post_status'            => bbp_get_public_status_id(),
+			'numberposts'            => - 1,
+			'exclude'                => $post__not_in,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		),
 		'get_forums_for_current_user'
 	);
@@ -2101,6 +2105,10 @@ function bbp_current_user_can_access_create_reply_form() {
 		// User can edit this topic
 	} elseif ( bbp_is_reply_edit() ) {
 		$retval = current_user_can( 'edit_reply', bbp_get_reply_id() );
+
+	} elseif ( bbp_is_ajax() && isset( $_POST['action'] ) && 'reply' === $_POST['action'] ) {
+		$retval = true;
+		// Check for ajax reply.
 	}
 
 	// Allow access to be filtered

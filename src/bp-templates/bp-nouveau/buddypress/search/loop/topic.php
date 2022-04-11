@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the topic
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/topic.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $topic_id = get_the_ID();
 $total = bbp_get_topic_reply_count( $topic_id ) ?>
 <li class="bp-search-item bp-search-item_topic">
@@ -43,7 +53,7 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 						?>
 					</span>
 					<?php
-					$tags_count = count($discussion_tags);
+					$tags_count = ( is_array( $discussion_tags ) || is_object( $discussion_tags ) ) ? count( $discussion_tags ) : 0;
 					$loop_count = 1;
 					foreach ( $discussion_tags as $key => $discussion_tag ) {
 						?>

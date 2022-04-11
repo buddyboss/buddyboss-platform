@@ -138,8 +138,10 @@ class BP_Activity_Template {
 	public function __construct( $args ) {
 		$bp = buddypress();
 
+		$function_args = func_get_args();
+
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -158,7 +160,7 @@ class BP_Activity_Template {
 				12 => 'page_arg',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$defaults = array(
@@ -208,8 +210,10 @@ class BP_Activity_Template {
 					'per_page'          => $this->pag_num,
 					'sort'              => $sort,
 					'display_comments'  => $display_comments,
+					'privacy'           => $privacy,
 					'show_hidden'       => $show_hidden,
 					'spam'              => $spam,
+					'scope'             => $scope,
 					'update_meta_cache' => $update_meta_cache,
 				)
 			);

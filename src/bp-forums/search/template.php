@@ -76,7 +76,9 @@ function bbp_has_search_results( $args = '' ) {
 
 		// Lean on the 'perm' query var value of 'readable' to provide statuses
 	} else {
+
 		$default['perm'] = 'readable';
+		
 	}
 
 	/** Setup */
@@ -89,6 +91,9 @@ function bbp_has_search_results( $args = '' ) {
 
 	// Call the query
 	if ( ! empty( $r['s'] ) ) {
+		$bbp->search_query = new WP_Query( $r );
+	} else {
+		unset( $r['s'] );
 		$bbp->search_query = new WP_Query( $r );
 	}
 
@@ -361,12 +366,47 @@ function bbp_get_search_terms( $passed_terms = '' ) {
 
 		// Use query variable if not
 	} else {
-		$search_terms = get_query_var( bbp_get_search_rewrite_id() );
+
+		// Global
+		$search_terms = get_query_var( bbp_get_search_rewrite_id(), null );
+
+		// Searching globally
+		if ( ! is_null( $search_terms )  ) {
+			$search_terms = wp_unslash( $search_terms );
+
+			// Other searches
+		} else {
+
+			// Get known search type IDs
+			$types = bbp_get_search_type_ids();
+
+			// Filterable, so make sure types exist
+			if ( ! empty( $types ) ) {
+
+				// Loop through types
+				foreach ( $types as $type ) {
+
+					// Look for search terms
+					$terms = bbp_sanitize_search_request( $type );
+
+					// Skip if no terms
+					if ( empty( $terms ) ) {
+						continue;
+					}
+
+					// Set terms if not empty
+					$search_terms = $terms;
+				}
+			}
+		}
 	}
 
-	// Trim whitespace and decode, or set explicitly to false if empty
-	$search_terms = ! empty( $search_terms ) ? urldecode( trim( $search_terms ) ) : false;
+	// Trim whitespace & decode if non-empty string, or set to false
+	$search_terms = ! empty( $search_terms ) && is_string( $search_terms )
+		? urldecode( trim( $search_terms ) )
+		: false;
 
+	// Filter & return
 	return apply_filters( 'bbp_get_search_terms', $search_terms, $passed_terms );
 }
 

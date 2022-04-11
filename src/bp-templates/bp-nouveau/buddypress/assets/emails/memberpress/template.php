@@ -53,6 +53,34 @@ $settings = bp_email_get_appearance_settings();
             width: 100% !important;
         }
 
+        pre {
+			background: #F5F6F7;
+			border: 1px solid rgba(0, 0, 0, 0.03);
+			margin: 0 auto;
+			overflow: auto;
+			padding: 10px;
+			white-space: pre-wrap;
+			font-size: 14px !important;
+			border-radius: 4px;
+		}
+
+		blockquote {
+			background: #e3e6ea;
+			border-radius: 4px;
+			padding: 12px;
+			font-size: 20px;
+            font-style: italic;
+			font-weight: normal;
+			letter-spacing: -0.24px;
+			line-height: 30px;
+			position: relative;
+			margin: 0 0 15px 0;
+        }
+        
+        blockquote p {
+			margin: 0;
+		}
+
         /* What it does: Stops email clients resizing small text. */
         * {
             -ms-text-size-adjust: 100%;
@@ -132,6 +160,10 @@ $settings = bp_email_get_appearance_settings();
         .ExternalClass {
             width: 100%;
         }
+
+		.recipient_text_color table {
+			display: inline-table;
+		}
 
         /* MOBILE STYLES */
         @media screen and (max-width: 525px) {
@@ -240,9 +272,9 @@ $settings = bp_email_get_appearance_settings();
 								$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 								if ( !empty( $attachment_id ) ) {
-									$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
-									if ( !empty( $image_src ) ) {
-										echo "<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>";
+									$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
+									if ( !empty( $image_src ) ) { ?>
+										<img src="<?php echo esc_attr( $image_src[ 0 ] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" /><?php
 									} else {
 										echo $blogname;
 									}

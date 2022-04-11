@@ -14,9 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * If there is no raw DB version, we infer that this is the first installation.
  *
- * @since BuddyPress 1.7.0
- *
  * @return bool True if this is a fresh BP install, otherwise false.
+ * @since BuddyPress 1.7.0
  */
 function bp_is_install() {
 	return ! bp_get_db_version_raw();
@@ -29,9 +28,8 @@ function bp_is_install() {
  * number stored in the database. If the registered version is greater, it's
  * an update.
  *
- * @since BuddyPress 1.6.0
- *
  * @return bool True if update, otherwise false.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_update() {
 
@@ -49,10 +47,10 @@ function bp_is_update() {
 /**
  * Determine whether BuddyPress is in the process of being activated.
  *
- * @since BuddyPress 1.6.0
- *
  * @param string $basename BuddyPress basename.
+ *
  * @return bool True if activating BuddyPress, false if not.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_activation( $basename = '' ) {
 	$bp     = buddypress();
@@ -70,7 +68,7 @@ function bp_is_activation( $basename = '' ) {
 	}
 
 	// The plugin(s) being activated.
-	if ( $action == 'activate' ) {
+	if ( 'activate' === $action ) {
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
@@ -93,10 +91,10 @@ function bp_is_activation( $basename = '' ) {
 /**
  * Determine whether BuddyPress is in the process of being deactivated.
  *
- * @since BuddyPress 1.6.0
- *
  * @param string $basename BuddyPress basename.
+ *
  * @return bool True if deactivating BuddyPress, false if not.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_deactivation( $basename = '' ) {
 	$bp     = buddypress();
@@ -178,9 +176,9 @@ function bp_version_updater() {
 	/**
 	 * Filters the default components to activate for a new install.
 	 *
-	 * @since BuddyPress 1.7.0
-	 *
 	 * @param array $value Array of default components to activate.
+	 *
+	 * @since BuddyPress 1.7.0
 	 */
 	$default_components = apply_filters(
 		'bp_new_install_default_components',
@@ -213,11 +211,16 @@ function bp_version_updater() {
 	// Install BP schema and activate only Activity and XProfile.
 	if ( bp_is_install() ) {
 
+		do_action( 'bb_core_before_install', $default_components );
+
 		// Apply schema and set Activity and XProfile components as active.
 		bp_core_install( $default_components );
 		bp_update_option( 'bp-active-components', $default_components );
 		bp_core_add_page_mappings( $default_components, 'delete' );
 		bp_core_install_emails();
+		bp_core_install_invitations();
+
+		do_action( 'bb_core_after_install', $default_components );
 
 		// Upgrades.
 	} else {
@@ -276,14 +279,95 @@ function bp_version_updater() {
 			bp_update_to_2_7();
 		}
 
-		// Version 3.1.1
+		// Version 3.1.1.
 		if ( $raw_db_version < 13731 ) {
 			bp_update_to_3_1_1();
 		}
 
-		// Version 3.1.1
+		// Version 3.1.1.
 		if ( $raw_db_version < 14001 ) {
 			bb_update_to_1_2_3();
+		}
+
+		// Version 3.1.1.
+		if ( $raw_db_version < 14801 ) {
+			bp_update_to_1_2_4();
+		}
+
+		if ( $raw_db_version < 14901 ) {
+			bp_update_to_1_2_9();
+		}
+
+		if ( $raw_db_version < 15200 ) {
+			bp_update_to_1_3_0();
+		}
+
+		// Version 1.3.5.
+		if ( $raw_db_version < 15601 ) {
+			bb_update_to_1_3_5();
+		}
+
+		// Version 1.4.0.
+		if ( $raw_db_version < 15800 ) {
+			bp_update_to_1_4_0();
+		}
+
+		if ( $raw_db_version < 16000 ) {
+			bp_update_to_1_4_3();
+		}
+
+		if ( $raw_db_version < 16201 ) {
+			bp_update_to_1_5_1();
+		}
+
+		if ( $raw_db_version < 16301 ) {
+			bp_update_to_1_5_5();
+		}
+
+		if ( $raw_db_version < 16401 ) {
+			bb_update_to_1_5_6();
+		}
+
+		// Version 1.7.0.
+		if ( $raw_db_version < 16601 ) {
+			bp_update_to_1_7_0();
+		}
+
+		// Version 1.7.2.
+		if ( $raw_db_version < 16901 ) {
+			bb_update_to_1_7_2();
+		}
+
+		if ( $raw_db_version < 17401 ) {
+			bb_update_to_1_7_5();
+		}
+
+		if ( $raw_db_version < 17701 ) {
+			bb_update_to_1_7_7();
+		}
+
+		if ( $raw_db_version < 17901 ) {
+			bb_update_to_1_7_8();
+		}
+
+		if ( $raw_db_version < 17951 ) {
+			bb_update_to_1_8_1();
+		}
+
+		if ( $raw_db_version < 18401 ) {
+			bb_update_to_1_8_6();
+		}
+
+		if ( $raw_db_version < 18501 ) {
+			bb_update_to_1_9_0_1();
+		}
+
+		if ( $raw_db_version < 18651 ) {
+			bb_update_to_1_9_1();
+		}
+
+		if ( $raw_db_version < 18701 ) {
+			bb_update_to_1_9_3();
 		}
 	}
 
@@ -534,7 +618,7 @@ function bp_update_to_2_5() {
 function bp_update_to_2_7() {
 	bp_add_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
-	// Update post_titles
+	// Update post_titles.
 	bp_migrate_directory_page_titles();
 
 	/*
@@ -578,6 +662,160 @@ function bp_update_to_3_1_1() {
 	bp_core_install_media();
 }
 
+/**
+ * 1.2.3 update routine.
+ *
+ * - Add follow table.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_update_to_1_2_4() {
+	bp_core_install_media();
+}
+
+function bp_update_to_1_4_0() {
+	bp_core_install_document();
+}
+
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.4.3
+ */
+function bp_update_to_1_4_3() {
+	global $wpdb;
+	$bp      = buddypress();
+	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
+	$records = $wpdb->get_col( $squery );
+	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
+		$records = reset( $records );
+		if ( ! empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ')';
+			$wpdb->query( $update_query );
+		}
+	}
+}
+
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_update_to_1_5_1() {
+	if ( bp_is_active( 'xprofile' ) ) {
+		$nickname_field_id = bp_xprofile_nickname_field_id();
+		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
+	}
+}
+
+/**
+ * Update media table for the video components.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+function bp_update_to_1_7_0() {
+	bp_core_install_media();
+	bp_update_option( 'bp_media_symlink_support', 1 );
+}
+
+/**
+ * Flush rewrite rule after update.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_update_to_1_7_2() {
+	flush_rewrite_rules();
+	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
+}
+
+/**
+ * Function to update data
+ *
+ * @since BuddyBoss 1.7.5
+ */
+function bb_update_to_1_7_5() {
+	global $bp_background_updater;
+
+	$bp_background_updater->push_to_queue(
+		array(
+			'callback' => 'bb_moderation_bg_update_moderation_data',
+			'args'     => array(),
+		)
+	);
+	$bp_background_updater->save()->schedule_event();
+
+}
+
+/**
+ * Function to update data
+ * - Updated .htaccess file for bb files protection.
+ *
+ * @since BuddyBoss 1.7.7
+ */
+function bb_update_to_1_7_7() {
+	$upload_dir        = wp_get_upload_dir();
+	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
+	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
+	$video_htaccess    = $upload_dir['basedir'] . '/bb_videos/.htaccess';
+
+	if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$wp_files_system = new \WP_Filesystem_Direct( array() );
+
+	if ( file_exists( $media_htaccess ) ) {
+		$wp_files_system->delete( $media_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $document_htaccess ) ) {
+		$wp_files_system->delete( $document_htaccess, false, 'f' );
+	}
+
+	if ( file_exists( $video_htaccess ) ) {
+		$wp_files_system->delete( $video_htaccess, false, 'f' );
+	}
+}
+
+function bp_update_default_doc_extensions() {
+
+	$get_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+
+	// $changed_array = array(
+	// 'bb_doc_52'   => array(
+	// 'description' => '7z Archive XYZ',
+	// )
+	// );
+	//
+	//
+	// if ( !empty( $changed_array ) ) {
+	// foreach ( $changed_array as $k => $v ) {
+	// if ( array_key_exists( $k, $get_extensions ) ) {
+	// $extension = $get_extensions[$k];
+	// $get_extensions[$k] = array_replace( $extension, $v );
+	// } else {
+	// For newly add key.
+	// $get_extensions[$k] = $v;
+	// }
+	// }
+	// }
+	//
+	// $removed_array = array(
+	// 'bb_doc_51'
+	// );
+	//
+	// if ( !empty( $removed_array ) ) {
+	// foreach (  $removed_array as $key ) {
+	// unset( $get_extensions[$key] );
+	// }
+	//
+	// }
+
+	// bp_update_option( 'bp_document_extensions_support', $get_extensions );
+}
+
 
 /**
  * 1.2.3 update routine.
@@ -586,6 +824,9 @@ function bp_update_to_3_1_1() {
  */
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
+
+	// Fix current forums media privacy to 'forums'.
+	bp_core_fix_forums_media();
 }
 
 /**
@@ -718,8 +959,11 @@ function bp_add_activation_redirect() {
 		// Check if there is any topics their in DB.
 		$topics = get_posts(
 			array(
-				'post_type'   => 'topic',
-				'numberposts' => 1,
+				'post_type'              => 'topic',
+				'numberposts'            => 1,
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 
@@ -765,10 +1009,10 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug = get_post_field( 'post_name', $page_id );
+				$slug = get_page_uri( $page_id );
 
-				// Set BBPress root Slug
-				bp_update_option( '_bbp_root_slug', $slug );
+				// Set BBPress root Slug.
+				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 
 			}
 
@@ -799,7 +1043,7 @@ function bp_add_activation_redirect() {
  */
 function bp_platform_plugin_updater() {
 	if ( class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater( 'http://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
+		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
 	}
 }
 
@@ -946,3 +1190,690 @@ function bp_core_fix_media_activities() {
 		bp_activity_media_fix_data();
 	}
 }
+
+/**
+ * 1.2.8 update routine.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_update_to_1_2_9() {
+	bp_core_install_group_message_email();
+}
+
+/**
+ * Fix forums media
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_core_fix_forums_media() {
+	if ( bp_is_active( 'forums' ) && bp_is_active( 'media' ) ) {
+		bbp_fix_forums_media();
+	}
+}
+
+function bp_update_to_1_3_0() {
+	bp_core_install_private_messaging();
+}
+
+/**
+ * 1.3.5 update routine.
+ *
+ * - Create the invitations table.
+ * - Migrate requests and invitations to the new table.
+ */
+function bb_update_to_1_3_5() {
+	bp_core_install_invitations();
+
+	if ( bp_is_active( 'groups' ) ) {
+		bp_groups_migrate_invitations();
+	}
+}
+
+/**
+ * Fix message media showing in group photos tab.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_update_to_1_5_5() {
+
+	global $wpdb;
+	$bp = buddypress();
+
+	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
+	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
+}
+
+/**
+ * Create Moderation emails.
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bb_update_to_1_5_6() {
+	bp_core_install_moderation_emails();
+}
+
+/**
+ * Add new video support to document extensions.
+ *
+ * @since BuddyBoss 1.7.0
+ */
+add_filter(
+	'bp_media_allowed_document_type',
+	function ( $extensions ) {
+		$changed_array = array(
+			'bb_doc_77' => array(
+				'extension'   => '.mp4',
+				'mime_type'   => 'video/mp4',
+				'description' => __( 'MP4', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_78' => array(
+				'extension'   => '.webm',
+				'mime_type'   => 'video/webm',
+				'description' => __( 'WebM', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_79' => array(
+				'extension'   => '.ogg',
+				'mime_type'   => 'video/ogg',
+				'description' => __( 'Ogg', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+			'bb_doc_80' => array(
+				'extension'   => '.mov',
+				'mime_type'   => 'video/quicktime',
+				'description' => __( 'Quicktime', 'buddyboss' ),
+				'is_default'  => 1,
+				'is_active'   => 1,
+				'icon'        => '',
+			),
+		);
+
+		$extensions = array_merge( $extensions, $changed_array );
+
+		return $extensions;
+	}
+);
+
+/**
+ * Migration for activity setting feed comments.
+ * Enable all custom post type comments when the default post type comments are enable.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @uses bb_feed_post_types()                    Get all post types.
+ * @uses bb_post_type_feed_option_name()         Option key for individual post type.
+ * @uses bb_post_type_feed_comment_option_name() Option key for individual post type comment.
+ * @uses bp_is_post_type_feed_enable()           Checks if post type feed is enabled.
+ *
+ * @return void
+ */
+function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
+	$custom_post_types = bb_feed_post_types();
+
+	// Run over all custom post type.
+	foreach ( $custom_post_types as $post_type ) {
+		// Post type option name.
+		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
+
+		// Post type comment option name.
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+
+		if ( bp_is_post_type_feed_enable( $post_type ) ) {
+			bp_update_option( $ptc_opt_name, 1 );
+		}
+	}
+}
+
+/**
+ * 1.7.8 update routine.
+ * Update forum meta with its associated group id.
+ *
+ * @since BuddyBoss 1.7.8
+ *
+ * @return void
+ */
+function bb_update_to_1_7_8() {
+	// Return, when group or forum component deactive.
+	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Get all forum associated groups.
+	$group_data = groups_get_groups(
+		array(
+			'per_page'   => -1,
+			'fields'     => 'ids',
+			'status'     => array( 'public', 'private', 'hidden' ),
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'forum_id',
+					'value'   => 'a:0:{}',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'forum_id',
+					'value'   => '',
+					'compare' => '!=',
+				),
+			),
+		)
+	);
+
+	$groups = empty( $group_data['groups'] ) ? array() : $group_data['groups'];
+
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group_id ) {
+			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+
+			if ( empty( $forum_ids ) ) {
+				continue;
+			}
+
+			// Group never contains multiple forums.
+			$forum_id  = current( $forum_ids );
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = empty( $group_ids ) ? array() : $group_ids;
+
+			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
+				continue;
+			}
+
+			$group_ids[] = $group_id;
+
+			bbp_update_forum_group_ids( $forum_id, $group_ids );
+		}
+	}
+}
+
+/**
+ * update routine.
+ * Created new table for bp email queue.
+ *
+ * @since BuddyBoss 1.8.1
+ */
+function bb_update_to_1_8_1() {
+	if ( function_exists( 'bb_email_queue' ) ) {
+		// Install email queue table.
+		bb_email_queue()::create_db_table();
+	}
+}
+
+/**
+ * update routine.
+ * Migrate default cover images from theme option.
+ *
+ * @since BuddyBoss 1.8.6
+ */
+function bb_update_to_1_8_6() {
+	global $buddyboss_theme_options;
+
+	// Do not ignore deprecated code for existing installs.
+	bp_add_option( '_bp_ignore_deprecated_code', false );
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	// Delete custom css transient.
+	delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
+
+	/* Check if options are empty */
+	if ( empty( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
+	$reset_files = $_FILES;
+	$reset_post  = $_POST;
+
+	// Set Profile Avatar.
+	$show_profile_avatar = bp_get_option( 'show_avatars' );
+	$default_avatar      = bp_get_option( 'avatar_default', 'mystery' );
+
+	if ( $show_profile_avatar && 'mystery' === $default_avatar ) {
+		bp_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
+		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	} else {
+		bp_update_option( 'bp-profile-avatar-type', 'WordPress' );
+	}
+
+	// Set Group Avatar.
+	bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+
+	// Profile Cover.
+	bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
+
+	if ( ! bp_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
+
+		$temp_profile_cover = bb_to_1_8_6_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
+
+		if ( isset( $temp_profile_cover['filename'], $temp_profile_cover['path'], $temp_profile_cover['url'] ) && ! empty( $temp_profile_cover['filename'] ) && ! empty( $temp_profile_cover['path'] ) && ! empty( $temp_profile_cover['url'] ) ) {
+
+			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension', 10, 2 );
+			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir', 99 );
+
+			// Upload the file.
+			$cover_image_attachment                        = new BP_Attachment_Cover_Image();
+			$_POST['action']                               = $cover_image_attachment->action;
+			$_POST['profile_cover_upload']                 = true;
+			$_FILES[ $cover_image_attachment->file_input ] = array(
+				'tmp_name' => $temp_profile_cover['path'],
+				'name'     => basename( $temp_profile_cover['path'] ),
+				'type'     => wp_check_filetype( $temp_profile_cover['url'] )['type'],
+				'error'    => 0,
+				'size'     => filesize( $temp_profile_cover['path'] ),
+			);
+
+			// No error.
+			$profile_cover_image = $cover_image_attachment->upload( $_FILES );
+
+			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension' );
+			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir' );
+
+			if ( ! empty( $profile_cover_image ) && isset( $profile_cover_image['url'] ) ) {
+				bp_update_option( 'bp-default-profile-cover-type', 'custom' );
+				bp_update_option( 'bp-default-custom-profile-cover', $profile_cover_image['url'] );
+
+				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				}
+				$file_system_direct = new WP_Filesystem_Direct( false );
+				$file_system_direct->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+
+				// Delete option after migration.
+				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
+
+				if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
+					add_option( 'bb_platform_profile_cover_default_migration', $buddyboss_theme_options['buddyboss_profile_cover_default'] );
+					unset( $buddyboss_theme_options['buddyboss_profile_cover_default'] );
+				}
+			}
+
+			// Reset POST and FILES request.
+			$_FILES = $reset_files;
+			$_POST  = $reset_post;
+		} else {
+			bp_update_option( 'bp-default-profile-cover-type', 'none' );
+		}
+	}
+
+	// Group Cover.
+	bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+
+	if ( ! bp_disable_group_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
+
+		$temp_group_cover = bb_to_1_8_6_upload_temp_cover_file( 'buddyboss_group_cover_default' );
+
+		if ( isset( $temp_group_cover['filename'], $temp_group_cover['path'], $temp_group_cover['url'] ) && ! empty( $temp_group_cover['filename'] ) && ! empty( $temp_group_cover['path'] ) && ! empty( $temp_group_cover['url'] ) ) {
+
+			add_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension', 10, 2 );
+			add_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir', 99 );
+
+			// Upload the file.
+			$group_cover_image_attachment                        = new BP_Attachment_Cover_Image();
+			$_POST['action']                                     = $group_cover_image_attachment->action;
+			$_POST['group_cover_upload']                         = true;
+			$_FILES[ $group_cover_image_attachment->file_input ] = array(
+				'tmp_name' => $temp_group_cover['path'],
+				'name'     => basename( $temp_group_cover['path'] ),
+				'type'     => wp_check_filetype( $temp_group_cover['url'] )['type'],
+				'error'    => 0,
+				'size'     => filesize( $temp_group_cover['path'] ),
+			);
+
+			// No error.
+			$group_cover_image = $group_cover_image_attachment->upload( $_FILES );
+
+			remove_filter( 'bp_attachments_get_allowed_types', 'bb_to_1_8_6_allow_extension' );
+			remove_filter( 'bp_attachment_upload_overrides', 'bb_to_1_8_6_change_overrides' );
+			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir' );
+
+			if ( ! empty( $group_cover_image ) && isset( $group_cover_image['url'] ) ) {
+				bp_update_option( 'bp-default-group-cover-type', 'custom' );
+				bp_update_option( 'bp-default-custom-group-cover', $group_cover_image['url'] );
+
+				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+				}
+				$file_system_direct = new WP_Filesystem_Direct( false );
+				$file_system_direct->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
+
+				// Delete option after migration.
+				bp_delete_option( 'buddyboss_group_cover_default_migration' );
+
+				if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
+					add_option( 'bb_platform_cover_default_migration', $buddyboss_theme_options['buddyboss_group_cover_default'] );
+					unset( $buddyboss_theme_options['buddyboss_group_cover_default'] );
+				}
+			}
+
+			// Reset POST and FILES request.
+			$_FILES = $reset_files;
+			$_POST  = $reset_post;
+		} else {
+			bp_update_option( 'bp-default-group-cover-type', 'none' );
+		}
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		update_option( 'buddyboss_theme_options', $buddyboss_theme_options );
+	}
+}
+
+/**
+ * Upload default cover image to temp directory.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $cover_type The option name of cover. 'buddyboss_profile_cover_default' or 'buddyboss_group_cover_default'.
+ * @return array Array containing the path, URL, and file name.
+ */
+function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
+	$data = array(
+		'filename' => '',
+		'path'     => '',
+		'url'      => '',
+	);
+
+	$default_cover_url = buddyboss_theme_get_option( $cover_type, 'url' );
+
+	if ( empty( $default_cover_url ) ) {
+		$bb_default_cover_url = bp_get_option( $cover_type . '_migration', array() );
+
+		if ( ! empty( $bb_default_cover_url ) && isset( $bb_default_cover_url['url'] ) ) {
+			$default_cover_url = $bb_default_cover_url['url'];
+		}
+	}
+
+	if ( ! empty( $default_cover_url ) ) {
+
+		$default_cover_path = str_replace( trailingslashit( get_site_url() ), ABSPATH, $default_cover_url );
+		$upload_dir         = wp_upload_dir();
+		$upload_dir         = $upload_dir['basedir'];
+
+		// Create temp folder.
+		$upload_dir = $upload_dir . '/bb-cover';
+
+		// If folder not exists then create.
+		if ( ! is_dir( $upload_dir ) ) {
+
+			// Create temp folder.
+			wp_mkdir_p( $upload_dir );
+			chmod( $upload_dir, 0777 );
+		}
+
+		if ( is_dir( $upload_dir ) ) {
+			$data['filename'] = basename( $default_cover_path );
+			$data['path']     = trailingslashit( $upload_dir ) . $data['filename'];
+			$data['url']      = str_replace( ABSPATH, trailingslashit( get_site_url() ), $data['path'] );
+
+			if ( ! file_exists( $data['path'] ) ) {
+				if ( copy( $default_cover_path, $data['path'] ) ) {
+					// Return copied file information.
+					return $data;
+				}
+			}
+		}
+	}
+
+	return $data;
+}
+
+/**
+ * Allow 'webp' extension to migrate cover images.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param array  $exts List of allowed extensions.
+ * @param string $type The requested file type.
+ * @return array List of allowed extensions.
+ */
+function bb_to_1_8_6_allow_extension( $exts, $type ) {
+	$exts[] = 'webp';
+	return $exts;
+}
+
+/**
+ * Disallow to check 'action' param when migrate cover images.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param array $overrides The wp_handle_upload overrides.
+ * @return array The wp_handle_upload overrides.
+ */
+function bb_to_1_8_6_change_overrides( $overrides ) {
+	$overrides['test_form'] = false;
+	return $overrides;
+}
+
+/**
+ * Gets the upload dir array for cover photos.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return array See wp_upload_dir().
+ */
+function bb_to_1_8_6_image_upload_dir( $args ) {
+	// Set the subdir.
+	$subdir = '/members/0/cover-image';
+	if ( isset( $_POST['group_cover_upload'] ) ) {
+		$subdir = '/groups/0/cover-image';
+	}
+
+	$upload_dir = bp_attachments_uploads_dir_get();
+
+	return array(
+		'path'    => $upload_dir['basedir'] . $subdir,
+		'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
+		'subdir'  => $subdir,
+		'basedir' => $upload_dir['basedir'],
+		'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
+		'error'   => false,
+	);
+}
+
+/**
+ * Clear the scheduled cron job of symlink.
+ *
+ * @since BuddyBoss 1.9.0.1
+ *
+ * @return void
+ */
+function bb_update_to_1_9_0_1() {
+	wp_clear_scheduled_hook( 'bb_bb_video_deleter_older_symlink_hook' );
+	wp_clear_scheduled_hook( 'bb_bb_document_deleter_older_symlink_hook' );
+	wp_clear_scheduled_hook( 'bb_bb_media_deleter_older_symlink_hook' );
+}
+
+/**
+ * Update routine.
+ * Migrate the cover sizes from the theme option.
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_update_to_1_9_1() {
+	// Display plugin update notice.
+	update_option( '_bb_is_update', true );
+
+	// If enabled follow component then return follow as primary action.
+	$primary_action = '';
+	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+		$primary_action = 'follow';
+	}
+	bp_update_option( 'bb-member-profile-primary-action', $primary_action );
+
+	if ( ! function_exists( 'buddyboss_theme' ) ) {
+		return;
+	}
+
+	// Get BuddyBoss theme options.
+	global $buddyboss_theme_options;
+
+	// Get BuddyBoss theme version.
+	$bb_theme_version = wp_get_theme()->get( 'Version' );
+
+	// Check the theme already upto date or not.
+	if ( function_exists( 'buddyboss_theme' ) && version_compare( $bb_theme_version, '1.8.7', '>=' ) ) {
+		return;
+	}
+
+	// Check if options are empty.
+	if ( empty( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = bp_get_option( 'buddyboss_theme_options', array() );
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		bp_update_option( 'old_buddyboss_theme_options_1_8_7', $buddyboss_theme_options );
+	}
+
+	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bp_get_option( 'buddyboss_profile_cover_width' );
+	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? bp_get_option( 'buddyboss_profile_cover_height' );
+	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? bp_get_option( 'buddyboss_group_cover_width' );
+	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? bp_get_option( 'buddyboss_group_cover_height' );
+
+	if ( ! empty( $profile_cover_width ) ) {
+		bp_delete_option( 'bb-pro-cover-profile-width' );
+		bp_add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
+	}
+
+	if ( ! empty( $profile_cover_height ) ) {
+		bp_delete_option( 'bb-pro-cover-profile-height' );
+		bp_add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
+	}
+
+	if ( ! empty( $group_cover_width ) ) {
+		bp_delete_option( 'bb-pro-cover-group-width' );
+		bp_add_option( 'bb-pro-cover-group-width', $group_cover_width );
+	}
+
+	if ( ! empty( $group_cover_height ) ) {
+		bp_delete_option( 'bb-pro-cover-group-height' );
+		bp_add_option( 'bb-pro-cover-group-height', $group_cover_height );
+	}
+}
+
+/**
+ * Update routine.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_update_to_1_9_3() {
+
+	// Update the email situation labels.
+	bb_core_update_email_situation_labels();
+
+	// Update the users settings.
+	bb_core_update_user_settings();
+
+	// Installed missing emails.
+	bp_admin_install_emails();
+}
+
+/**
+ * Update the email situation labels.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_core_update_email_situation_labels() {
+
+	$email_situation_labels = array(
+		'activity-at-message'          => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'groups-at-message'            => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'zoom-scheduled-meeting-email' => esc_html__( 'A Zoom meeting is scheduled in a group', 'buddyboss' ),
+		'zoom-scheduled-webinar-email' => esc_html__( 'A Zoom webinar is scheduled in a group', 'buddyboss' ),
+	);
+
+	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
+		$situation_term = get_term_by( 'slug', $situation_slug, bp_get_email_tax_type() );
+
+		if ( ! empty( $situation_term ) && $situation_term->term_id ) {
+			wp_update_term(
+				(int) $situation_term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $situation_label,
+				)
+			);
+		}
+	}
+
+}
+
+/**
+ * Update the users settings.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_core_update_user_settings() {
+	global $bp_background_updater;
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'meta_query' => array(
+				array(
+					'key'     => 'last_activity',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 200 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'migrate_notification_preferences',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Migrate notification preferences.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param array $user_ids Array of user ids.
+ *
+ * @return void
+ */
+function migrate_notification_preferences( $user_ids ) {
+	$all_keys = bb_preferences_key_maps();
+
+	if ( empty( $user_ids ) || empty( $all_keys ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		foreach ( $all_keys as $old_key => $new_key ) {
+			$old_key = str_replace( array( '_0', '_1' ), '', $old_key );
+			if ( metadata_exists( 'user', $user_id, $old_key ) ) {
+				$old_val = get_user_meta( $user_id, $old_key, true );
+				update_user_meta( $user_id, $new_key, $old_val );
+			}
+		}
+	}
+}
+

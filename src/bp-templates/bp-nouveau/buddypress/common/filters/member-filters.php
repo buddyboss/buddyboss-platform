@@ -1,12 +1,12 @@
 <?php
 /**
- * BP Nouveau Component's members filters template.
+ * The template for BP Nouveau Component's members filters template
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/filters/member-filters.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
-?>
-
-<?php
 
 // Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
@@ -15,40 +15,41 @@ if ( false === $is_member_type_enabled ) {
 	return '';
 }
 
-$member_types = bp_get_active_member_types();
-$display_arr = array();
-foreach ( $member_types as $member_type_id ) {
+$args = array(
+	'meta_query' => array(
+		array(
+			'key'   => '_bp_member_type_enable_filter',
+			'value' => 1,
+		),
+	)
+);
 
-	if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
-		continue;
-	}
-
-	$type_name        = bp_get_member_type_key( $member_type_id );
-	$type_id          = bp_member_type_term_taxonomy_id( $type_name );
-	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
-
-	$display_arr[] = array(
-		'id' => $type_id,
-		'member_type_id' => $member_type_id,
-		'name' => $member_type_name,
+if ( bp_is_members_directory() ) {
+	$args['meta_query'][] = array(
+		'key'   => '_bp_member_type_enable_remove',
+		'value' => 0,
 	);
-
 }
 
-if ( isset( $display_arr ) && !empty( $display_arr )) {
+// Get active member types
+$member_types = bp_get_active_member_types( $args );
+
+if ( ! empty( $member_types ) ) {
 	?>
 	<div id="member-type-filters" class="component-filters clearfix">
 		<div id="member-type-select" class="last filter">
 			<label class="bp-screen-reader-text" for="member-type-order-by">
-				<span ><?php bp_nouveau_filter_label(); ?></span>
+				<span><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
 				<select id="member-type-order-by" data-bp-member-type-filter="members">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
-					foreach ( $display_arr as $member ) {
+					foreach ( $member_types as $member_type_id ) {
+						$type_name        = bp_get_member_type_key( $member_type_id );
+						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 						?>
-						<option value="<?php echo $member['member_type_id']; ?>">
-							<?php echo $member['name']; ?>
+						<option value="<?php echo esc_attr( $member_type_id ); ?>">
+							<?php echo esc_attr( $member_type_name ); ?>
 						</option>
 						<?php
 					}

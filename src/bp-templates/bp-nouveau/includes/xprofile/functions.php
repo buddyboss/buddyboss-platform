@@ -41,6 +41,5 @@ function bp_nouveau_xprofile_enqueue_scripts() {
 	if ( ! bp_is_user_profile_edit() && ! bp_is_register_page() ) {
 		return;
 	}
-
 	wp_enqueue_script( 'bp-nouveau-xprofile' );
 }

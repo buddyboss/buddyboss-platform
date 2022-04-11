@@ -33,20 +33,25 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 
 		foreach ( (array) $sections as $section_id => $section ) {
 
-			// Only add section and fields if section has fields
+			if ( ( 'bp_media_settings_emoji' === $section_id || 'bp_media_settings_gifs' === $section_id ) && ! bp_is_active( 'activity' ) && ! bp_is_active( 'groups' ) && ! bp_is_active( 'messages' ) && ! bp_is_active( 'forums' ) ) {
+				continue;
+			}
+
+			// Only add section and fields if section has fields.
 			$fields = bp_media_get_settings_fields_for_section( $section_id );
 
 			if ( empty( $fields ) ) {
 				continue;
 			}
 
-			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
-			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$section_title     = ! empty( $section['title'] ) ? $section['title'] : '';
+			$section_callback  = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
 
-			// Add the section
-			$this->add_section( $section_id, $section_title, $section_callback );
+			// Add the section.
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
 
-			// Loop through fields for this section
+			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
 
 				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();

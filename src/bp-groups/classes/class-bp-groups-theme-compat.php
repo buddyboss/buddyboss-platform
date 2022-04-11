@@ -113,9 +113,10 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
+		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => bp_get_directory_title( 'groups' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -182,9 +183,10 @@ class BP_Groups_Theme_Compat {
 
 		$title = __( 'Social Groups', 'buddyboss' );
 
+		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => $title,
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -233,7 +235,7 @@ class BP_Groups_Theme_Compat {
 		$new_templates = apply_filters(
 			'bp_template_hierarchy_groups_single_item',
 			array(
-				'groups/single/index-id-' . sanitize_file_name( bp_get_current_group_id() ) . '.php',
+				'groups/single/index-id-' . (int) bp_get_current_group_id() . '.php',
 				'groups/single/index-slug-' . sanitize_file_name( bp_get_current_group_slug() ) . '.php',
 				'groups/single/index-action-' . sanitize_file_name( bp_current_action() ) . '.php',
 				'groups/single/index-status-' . sanitize_file_name( $group->status ) . '.php',
@@ -254,9 +256,10 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
+		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => 0,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => bp_get_current_group_name(),
 				'post_author'    => 0,
 				'post_date'      => 0,

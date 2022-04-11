@@ -229,8 +229,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 			<tr>
 				<td>
-					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -520,7 +520,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -876,6 +876,10 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
+		if ( has_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' ) ) {
+			remove_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' );
+		}
+
 		return $message;
 	}
 
@@ -903,27 +907,47 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 *        }
 	 * @param array $user     The original user array.
 	 * @param array $userdata The updated user array.
+	 *
+	 * @return array $pass_change_email Password Change Email data.
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
-		$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+		if ( bb_enabled_legacy_email_preference() ) {
 
-		$pass_change_email = array(
-			'to'      => $user['user_email'],
-			/* translators: User password change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
-			'message' => $pass_change_text,
-			'headers' => '',
-		);
+			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+			$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
+			$pass_change_email = array(
+				'to'      => $user['user_email'],
+				/* translators: User password change notification email subject. 1: Site name */
+				'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
+				'message' => $pass_change_text,
+				'headers' => '',
+			);
 
-		$pass_change_email = bp_email_core_wp_get_template( $pass_change_email, $user );
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+
+		} else {
+			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+			$pass_change_text = '';
+
+			$pass_change_email = array(
+				'to'      => '',
+				'subject' => '',
+				'message' => '',
+				'headers' => '',
+			);
+
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+
+			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+		}
 
 		return $pass_change_email;
 	}
@@ -953,6 +977,8 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	 *        }
 	 * @param array $user The original user array.
 	 * @param array $userdata The updated user array.
+	 *
+	 * @return array $email_change_email Email change array
 	 */
 	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
 
@@ -973,7 +999,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_change_email = bp_email_core_wp_get_template( $email_change_email, $user );
+		$email_change_email['message'] = bp_email_core_wp_get_template( $email_change_email['message'], $user );
 
 		return $email_change_email;
 	}
@@ -1534,7 +1560,11 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 	 */
 	function bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
 		// Get the request data.
-		$request = wp_get_user_request_data( $request_id );
+		if ( function_exists( 'wp_get_user_request' ) ) {
+			$request = wp_get_user_request( $request_id );
+		} else {
+			$request = wp_get_user_request_data( $request_id );
+		}
 
 		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss' ) . '</p>';

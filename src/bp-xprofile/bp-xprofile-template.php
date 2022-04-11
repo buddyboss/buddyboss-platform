@@ -175,7 +175,7 @@ function bp_get_field_css_class( $class = false ) {
 	// Add the field visibility level.
 	$css_classes[] = 'visibility-' . esc_attr( bp_get_the_profile_field_visibility_level() );
 
-	if ( $profile_template->current_field % 2 == 1 ) {
+	if ( 1 === $profile_template->current_field % 2 ) {
 		$css_classes[] = 'alt';
 	}
 
@@ -464,24 +464,6 @@ function bp_get_the_profile_field_ids() {
 	// Remove member type field if there is no any member type in options.
 	if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
 		$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
-	}
-
-	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-	$current_value = bp_get_option( 'bp-display-name-format' );
-
-	// If First Name selected then do not add last name field.
-	if ( 'first_name' === $current_value ) {
-		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-			$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
-		}
-		// If Nick Name selected then do not add first & last name field.
-	} elseif ( 'nickname' === $current_value ) {
-		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-			$field_ids = array_diff( $field_ids, array( bp_xprofile_firstname_field_id() ) );
-		}
-		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-			$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
-		}
 	}
 
 	$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
@@ -1074,11 +1056,28 @@ function bp_get_profile_field_data( $args = '' ) {
  * @return array $groups
  */
 function bp_profile_get_field_groups() {
+	$cache_key = 'all';
 
-	$groups = wp_cache_get( 'all', 'bp_xprofile_groups' );
+	// Get user id.
+	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+
+	// Get all member types for user.
+	$member_types = bp_get_member_type( $user_id, false );
+	if ( ! empty( $member_types ) ) {
+
+		// Prepare cache key for multiple member types.
+		if ( is_array( $member_types ) ) {
+			$member_types = md5( implode( '', $member_types ) );
+		}
+
+		// Cache key for member types.
+		$cache_key = $member_types;
+	}
+
+	$groups = wp_cache_get( $cache_key, 'bp_xprofile_groups' );
 	if ( false === $groups ) {
 		$groups = bp_xprofile_get_groups( array( 'fetch_fields' => true ) );
-		wp_cache_set( 'all', $groups, 'bp_xprofile_groups' );
+		wp_cache_set( $cache_key, $groups, 'bp_xprofile_groups' );
 	}
 
 	/**
@@ -1513,10 +1512,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 				<?php echo $r['before_controls']; ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
-					<?php
-					 /* translators: accessibility text */
-					 _e( 'Select visibility', 'buddyboss' );
-					 ?>
+					<?php _e( 'Select visibility', 'buddyboss' ); /* translators: accessibility text */ ?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 
@@ -1665,4 +1661,24 @@ function bp_get_field_data_attribute( $attribute = false ) {
 	 * @param string $value data HTML attribute with imploded data attributes.
 	 */
 	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
+}
+
+/**
+ * Validate social networks field values.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param string $html The member social networks.
+ * @param string $original_option_values The field value.
+ * @param string $social_networks_id The social network id.
+ *
+ * @return string|null
+ */
+function bb_get_user_social_networks_urls_with_visibility( $html, $original_option_values, $social_networks_id ) {
+
+	if ( strpos( $html, 'social-networks-wrap' ) === false ) {
+		return '';
+	}
+
+	return $html;
 }

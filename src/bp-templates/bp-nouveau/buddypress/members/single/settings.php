@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Settings
+ * The template for users profile
  *
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings.php.
+ *
+ * @since   BuddyPress 1.0.0
+ * @version 1.0.0
  */
 
 ?>
@@ -35,6 +38,9 @@ switch ( bp_current_action() ) :
 		break;
 	case 'export':
 		bp_get_template_part( 'members/single/settings/export-data' );
+		break;
+	case 'blocked-members':
+		bp_get_template_part( 'members/single/settings/moderation' );
 		break;
 	default:
 		bp_get_template_part( 'members/single/plugins' );

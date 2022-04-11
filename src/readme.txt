@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.3.2
+Tested up to: 5.9.3
 Requires PHP: 5.6.20
-Stable tag: 1.2.8
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ BuddyBoss Platform helps site builders & developers add community features to th
 
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
 - [Code Reference](https://www.buddyboss.com/resources/reference/)
+- [Github](https://github.com/buddyboss/buddyboss-platform/wiki)
+- [Roadmap](https://www.buddyboss.com/roadmap/)
 
 == Requirements ==
 
@@ -26,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform.zip'
+3. Upload the file 'buddyboss-platform-plugin.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -54,6 +56,898 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.9.3 =
+* Notifications - Provided notification updates as a Lab feature
+* Notifications - Provided options for members to manage all Notification Preferences for all devices in one place
+* Notifications - Provided options in the admin to disable a specific notification type
+* Notifications - Provided options in the admin to manage default notification preferences for new members
+* Notifications - Provided options in the admin to hide Messages notifications from notification dropdown
+* Notifications - Refactored notifications types for Lab feature enabled
+* Notifications - Refactored emails for Lab feature enabled
+* Notifications - Improved code to allow to register new notification types easily
+* Profiles - Handled profile field type paragraph formatting issue to allow HTML target attribute
+* Profiles - Small improvement to show confirm popup before deleting profile field in the admin
+* Groups - Handled add user issue in admin edit group screen when username and nickname are different
+* Groups - Handled my group nav issue in the menu for logged-in member
+* Forums - Handled forum merge discussions and reply split issue
+* Activity - Handled attached GIF issue in Activity Form
+* Activity - Handled activity comment duplicate string issue on paste
+* Messages - Handled last message hidden issue when new member join/left group
+* Network Search - Handled sub-forums search compatibility issue with MariaDB
+* Emails - Provided option to install missing emails templates
+* Documentation - Handled tutorial articles images layout issue
+* REST API - Provided notification updates API support
+* REST API - Handled forum discussions merge and reply split issues in the APIs
+* Compatibility - Handled WP 5.9 compatibility issue causing false alerts on post types edit screen
+
+= 1.9.2 =
+* Profiles - Handled critical issue in Profile when forum component not enabled
+* Groups - Handled group invitation screen UI issue in profile
+* Groups - Handled memory issue for a non-logged-in member for group with a large number of invitations
+* Groups - Handled hidden group activity privacy issue
+* Activity - Handled activity form, privacy selection issue
+* Media - Handled photo and document update privacy issue in the popup
+* Performance - Improved @mention performance to query for right usernames on page and post
+* REST API - Small improvement in group details API endpoint
+* REST API - Handled message API caching issue
+* Compatibility - Handled WordPress 5.8 compatibility issue on save profile action
+
+= 1.9.1.1 =
+* Private Network - Handled private site ‘Public Website Content’ not working critical issue
+
+= 1.9.1 =
+* Profiles - Provided support to customize Profile header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Profiles - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to customize Group header and directory layouts on settings enabled with BuddyBoss Platform Pro
+* Groups - Provided support to change Profile cover image sizes on settings enabled with BuddyBoss Platform Pro
+* Groups - Handled Group type direct URL issue when Group type and its label name is same
+* Forums - Handled forum discussion js error for non-English language
+* Activity - Handled activity formatting issue for auto-generated discussion replies
+* Activity - Improved responsiveness of activity form
+* Coding Standards - Refactored since time output across all components
+* Updater - Provided 'Release Notes' modal to show information about the release
+* REST API - Handled API performance table column size issue for specific server
+* REST API - Handled Forum APIs wrong permissions issue
+* REST API - Update to send activity with embed in the API as a separate object
+
+= 1.9.0.1 =
+* Media - Fixed critical API caching purge issue on symlink delete cron
+
+= 1.9.0 =
+* Performance - Optimized core functions, loops, and SQL queries
+* Performance - Extended object caching support
+* Performance - Removed duplicate SQL queries significantly
+* Performance - Optimized a bunch of specific page and functionality performance
+* Forums - Provided edit option for forums and discussion in the WordPress toolbar
+* Activity - Show preview when link added with text
+* Activity - Improved embedded video width and UI
+* Activity - Improved activity form upload media UI
+* Profiles - Handled profile completion widget string translation issue
+* REST API - Handled caching issues in the API to improve performance
+* REST API - Provided order by and include options in the API
+* REST API - Provided moderation can report parameters in the API
+* Compatibility - Show title properly when RankMath plugin is active
+
+= 1.8.7 =
+* Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled
+* Groups - Fixed group title and description critical security issue
+* Activity - Fixed critical issue to restrict photos and videos privacy update when uploaded to a specific album
+* Activity - Fixed small UI issue showing text close to ellipsis icon
+* Activity - Fixed @mention issue with space when user created from the dashboard
+* Activity - Fixed activity form upload UX issue with preview
+* Activity - Fixed activity form preview URL issue not rendered on paste
+* Media - Fixed documents directory screen small UI issues
+* Media - Fixed videos directory screen small UI issues
+* Media - Fixed edit action not working issue in media popup
+* Media - small improvement for video upload progress logic
+* Moderation - Fixed moderation markup issue in email customizer
+* REST API - Fixed group message thread permission issue in the API
+* REST API - Fixed media edit issue in the API
+* REST API - Fixed default avatar issue in the API when group avatar is disabled
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+
+= 1.8.6 =
+* Profiles - Provided WordPress, BuddyBoss, and Custom option to change default profile avatar image
+* Profiles - Provided BuddyBoss and Custom option to change default profile cover image
+* Groups - Provided BuddyBoss and Custom option to change default group avatar and cover image
+* Activity - significantly enhanced activity form interface with modal layout
+* Private Network - Provided option to restrict REST APIs and RSS feed public access
+* Media - Fixed generating thumbnail infinite loading issue for uploaded video
+* Media - Fixed portrait video thumbnail wrong size issues
+* Network Search - Fixed search issue with ampersand character in group and activities
+* REST API - Provided default cover and avatar image API support for profile and group
+* REST API - Provided caching support in the APIs for restrict Rest API and RSS feed option
+* REST API - Fixed activity like and comment parameter issue in the API
+* REST API - Fixed forum reply permission issue in the API
+
+= 1.8.5 =
+* Profiles - Fixed profile type search settings to show when the Network Search component is active
+* Profiles - Fixed exported data to show profile type field value to name instead of id
+* Groups - Fixed changing group photo updates user avatar temporarily in the header
+* Forums - Fixed discussion reply notification issue showing wrong member name
+* Activity - Fixed public URL link preview issue for private network
+* Media - Fixed bunch of non-translatable strings related to the media component
+* Media - Fixed missing 'video-js-rtl.min.css' file error when a site using RTL language
+* Text Editor - Fixed HTML copy paste issue
+* LearnDash - Code refactoring to fix warnings and notices
+* REST API - Fixed sign up user exists endpoint error message status code in the API
+* REST API - Fixed activity uploaded media order in the API
+
+= 1.8.4 =
+* Groups - Fixed group private messages screen, members load more issue on scroll
+* Groups - Fixed sub-group issue where parent get unassigned on description update
+* Groups - Fixed hidden group email invite issue takes to 404
+* Groups - Fixed @mention issue not working when user mention name updated
+* Groups - Fixed @mention issue using wrong user mention name
+* Forums - Fixed discussion title tag issue to be consistent with or without group
+* Forums - Fixed discussion reply formatting issue in the email
+* Forums - Fixed activity 'Read more' link issue not taking to a specific reply
+* Forums - Fixed discussion notification issue on reply
+* Forums - Fixed discussion email notification invalid links issue
+* Activity - Fixed @mention double space issue
+* Activity - Fixed @mention duplicate queries performance issues
+* Activity - Fixed inconsistent video preview issue for a forum reply
+* Profiles - Fixed members count format issue on load
+* Media - Fixed undefined png image issue with emojis dropdown
+* Messages - Fixed critical issue on messages screen when connection component disabled
+* Notifications - Fixed invalid notification title issue on the discussion page
+* REST API - Added component pages details in the API
+* REST API - Fixed group type with special character issue in the API
+* REST API - Fixed custom profile tab link issue in the API
+
+= 1.8.3 =
+* Messages - Improved logic to send group messages by processing members and notifications in the background
+* Moderation - Improved moderation module core logic to hide content in the background batches on Report, Block, and Suspend
+* Media - Fixed video playing issue on upload in Safari browser
+* Media - Fixed Album feature option avail even when disabled in the settings
+* Coding Standards - Code refactoring to handle when PHP system function disabled
+* Coding Standards - Code refactoring to fix warnings and deprecated functions
+* Elementor - Fixed templates builder popup settings compatibility issue with Forums discussion and replies
+* REST API - Added Group messages improvements in the APIs
+* REST API - Fixed cache issue on password change to fix a critical issue
+
+= 1.8.2 =
+* Forums - Fixed Forums directory page search issue
+* Profiles - Fixed WordPress role sync issue on Members Profile type update
+* Media - Improved symlink auto-detection logic for server compatibility
+* REST API - Fixed member default avatar issue in the API
+* REST API - Fixed wrong content issue in the message thread API
+
+= 1.8.1 =
+* Groups - Added support to Send emails in Batches in the Background to Group members on details update
+* Forums - Added support to Send emails in Batches in the Background to Forum and Topics subscribers
+* Forums - Fixed Forum discussion apostrophe slash issue on validation error
+* Forums - Fixed PHBB import issues
+* Profiles - Cross-browser compatibility added for profile picture image quality
+* Profiles - Fixed Profile field apostrophe slash issue on save
+* Media - Fixed video popup unable to close the issue in profile
+* Messages - Added support to Send emails in Batches in the Background for Group and Private Messages thread
+* Moderation - Fixed background process infinite loop critical issue
+* Notifications - Fixed notification read/unread status issue when multiple group access request notifications were received and followed
+* Emails - Small compatibility fix to show avatar in Outlook
+* Elementor - Minor fix to load right size profile picture on the dashboard template
+* REST API - Added API support to Send emails in Batches in the Background
+* REST API - Fixed delete custom thumbnail API issue on selecting auto-generated video thumbnail
+* REST API - Fixed API performance issue when many profile fields data added
+
+= 1.8.0 =
+* Profiles - Fixed Cross-Site Scripting vulnerability issue on edit and view profile
+* Groups - Fixed group type roles label 'an' and 'a' prefix issue
+* Groups - Code improvements to stop direct URL access when group tab removed using hooks
+* Forums - Fixed error on forum replies listing screen in the admin when reply moved to draft
+* Forums - Fixed forum search issue with the empty string
+* Media - Fixed symlink error on plugin activation when symlink not supported on the server
+* Media - Fixed Document popup download and edit description not showing issue
+* Messages - Fixed messages members list to not show suspended members
+* LearnDash - Fixed Learndash sub-groups sync issue with Social sub-groups
+* REST API - Fixed Media Privacy and Move option permission issue in the API
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issue to show both local and offloaded media properly
+* Compatibility - Fixed media access notice in admin to not show when Media offloaded fully using 'WP Offload Media' plugin
+* Compatibility - Fixed 'GeoDirectory' plugin compatibility issue with Messages screen
+* Compatibility - Fixed 'TranslatePress' compatibility UI issue with News Feed
+* Translations - Updated German (formal) language files
+
+= 1.7.9 =
+* Profiles - Provided option to hide specific profile type members in search results
+* Profiles - Fixed profile type issue to not hide members in Group manage members screen
+* Groups - Fixed 'Visit Group' button UI issue in the Group invite email
+* Forums - Fixed group organizer permission issue to allow adding a discussion and reply tags
+* Forums - Fixed Forum discussion and reply editor formatting issue
+* Forums - Fixed Forum reply widget wrong date issue
+* Forums - Fixed text formatting issue for Email tokens
+* Activity - Fixed URL preview issue when creating Activity post
+* Activity - Fixed Activity feed comment issue when popup opened in a specific order
+* Activity - Fixed issue with browser performance when @mention used many times in activity post
+* Messages - Fixed Email notification preference settings for Group messages
+* Network Search - Fixed search issue when all Forums deleted
+* Coding Standards - Added Security patch for SQL injections vulnerability
+* Elementor - Provided WordPress Widgets support in Elementor pages
+* WooCommerce - Fixed critical registration conflict on Private network
+* REST API - Provided endpoint to send hidden group details
+* REST API - Fixed mention API endpoint to return a response for empty string
+* REST API - Profile type new option support added in the API
+* REST API - Video thumbnail endpoint improvements in the API
+* REST API - Fixed videos count issue in Group details endpoint
+* Compatibility - Fixed SEOPress media compatibility issue
+
+= 1.7.8 =
+* Forums - Fixed forums logic by not allowing multiple Forum to be associated with a single Group
+* Forums - Fixed Forums and it's sub-forums to have the same privacy as Group when associated
+* Forums - Fixed Forums and it's sub-forums to link to Group URL when associated
+* Forums - Fixed forum discussion tag conflict with same term slug
+* Forums - Fixed forum discussion documents not showing on edit
+* Forums - Fixed forum discussion js error with the Korean language
+* Forums - Fixed forum reply with gif media duplicate error on submit
+* Activity - Fixed issue to stop showing Activity comment Photos and Documents anywhere else on the network
+* Activity - Fixed issue to stop further activity on Photos and Documents added in activity comments
+* Activity - Fixed Activity Feed connection tab to not show logged-in member posts
+* Profiles - Fixed profile field line break not working for Paragraph field
+* Media - Fixed Media download security issue
+* Media - Fixed Video thumbnail UI issue
+* Messages - Fixed big multiple members thread load more UI issue
+* Messages - Fixed Block member listing popup to not show blocked members
+* Messages - Fixed single quote issue in display name not showing correctly
+* Messages - Fixed invalid messages count issue on hiding message thread action
+* Network Search - Fixed Forum replies issue not showing in the search results page
+* Network Search - Fixed search dropdown UI issue on the search results page
+* Network Search - Fixed Cross-Site Scripting issue with search query string
+* Coding Standards - Fixed bunch of non-translatable strings
+* Coding Standards - Fixed bunch of notices and warnings
+* Elementor - Fixed [bbp-topic-form] shortcode compatibility issue
+* REST API - Forums and Groups association logic API changes
+* REST API - Activity comment media logic API changes
+* REST API - Forum discussion logic updates API changes
+* REST API - Fixed signup endpoint issue to not return activation code in response
+* REST API - Fixed signup endpoint to activate member using activation key only
+* REST API - Fixed hidden/private group Activity post critical issue on update
+* Compatibility - Fixed 'WishList Member' plugin compatibility issue on exporting personal data
+* Compatibility - Fixed login 'Privacy Policy' popup compatibility issue with custom js script
+* Compatibility - Fixed network search issue with PHP 8.0
+
+= 1.7.7.1 =
+* Activity - Fixed @mention not working critical issue
+
+= 1.7.7 =
+* Profiles - Fixed wrong 'Nickname' after migrating from BuddyPress
+* Forums - Fixed discussion pagination issue on Forums directory
+* Forums - Fixed forum discussion invalid count to make it consistent
+* Activity - Fixed post form GIF highlight UI issue on close
+* Activity - Fixed URL preview empty markup issue
+* Activity - Fixed duplicate queries issue to improve performance
+* Media - Fixed .htaccess Apache 2.4 and OpenLiteSpeed compatibility issue
+* Moderation - Improved reporting based on the content in the Activity feed
+* Notifications - Fixed duplicate notifications issue on blog post reply on a comment
+* Text Editor - Fixed HTML copy-paste issue
+* Elementor - Fixed media preview compatibility issue with Elementor Pro
+* REST API - Provided endpoint to move Photos/Videos into Album
+* REST API - Fixed activity comment invalid data in response
+* REST API - Added API support for moderation improvements
+
+= 1.7.6 =
+* Profiles - Fixed change password critical issue
+* Forums - Fixed issue with discussion tags not getting saved on update
+* Activity - Fixed forum discussion activity > quick reply > upload media access control issue
+* Activity - Fixed activity permission issue when group privacy changes from Public to Private and vice versa
+* Activity - Fixed URL preview attachment deletion issue on deleting activity
+* Activity - Fixed activity comment more options dropdown UI issue
+* Media - Fixed video issue on specific servers by handling symbolic link file extension
+* Media - Fixed photos directory create album popup UI issue
+* Media - Fixed profile upload photos minor UI issue
+* Media - Fixed video thumbnail issue for iPhone device
+* Media - Small code enhancement to check if symlink function disabled on the server
+* Messages - Fixed message thread performance issue by not loading all members at once
+* Connections - Fixed members widget issue when connection component disabled
+* Member Access Controls - Fixed notification email issue getting sent to the suspended members
+* Network Search - Fixed members count in search results when profile type set to hidden
+* Registration - Fixed forgot password issue when Group component disabled
+* Widgets - Fixed 'Members I am Following' and 'Members Following Me' widget settings issue
+* Coding Standards - Improved SQL queries
+* Coding Standards - Small improvement to escape attribute in the network search template
+* Elementor - Fixed Elementor conflict with forums parent option in admin
+* REST API - Fixed long thread performance issue in messages endpoint
+* REST API - Fixed messages thread members performance issue in API
+* Compatibility - Fixed 'WP Offload Media' plugin PDF document preview not generated issue
+* Compatibility - Fixed 'WP Offload Media' plugin general compatibility issues
+* Compatibility - Fixed 'Events Manager' plugin conflict
+* Compatibility - Fixed 'ACF Frontend Pro' plugin critical issue
+
+= 1.7.5 =
+* Moderation - Added moderation support for the Video module
+* Moderation - Improvements to report media instead of reporting activity post internally
+* Moderation - Fixed issue showing hidden media on edit activity post
+* Profiles - Fixed edit profile repeater field issue not allowing to add new instance
+* Profiles - Fixed duplicate fields issue in the admin when adding too many at once from the edit profile screen
+* Groups - Fixed issue to not show My Group tab in Videos and Photos directory page when Group component disabled
+* Forums - Fixed discussion pagination issue when 'Discussions by Last Post' configured
+* Media - Fixed minor issue with .m4v video support
+* GamiPress - Fixed gamipress badges UI issue in the activity feed
+* Compatibility - Fixed moderation conflict with Avada Builder Plugin
+* REST API - Fixed Repeater field issue in the API endpoint
+* REST API - Fixed API issue when Push Notification component disabled
+* REST API - Provided embeddable report link for media, document, and video in the API endpoint
+* REST API - Fixed Group type issue in the Groups endpoints showing HTML markup
+* REST API - Fixed API compatibility issue also with Avada Builder Plugin
+
+= 1.7.4 =
+* Member Access Controls - Added support to restrict Video upload based on Access Control settings provided in BuddyBoss Platform Pro
+* Profiles - Fixed issue with Repeater date field value on changing the order
+* Groups - Fixed critical parse syntax error in the template
+* Activity - Small improvement to show activity blog post excerpt in a wrapper
+* Media - Fixed video popup JS error on edit
+* Media - Fixed unwanted mystery-man files getting created issue
+* Media - Fixed JS error for .flv format videos uploaded
+* Media - Fixed critical issue for photos not showing
+* Network Search - Fixed search result order for members listing
+* REST API - Added API Support for Video Access Control
+* REST API - Added Report text API related changes
+* REST API - Fixed Profile field description formatting issue in the API
+* REST API - Fixed videos API param issue
+* REST API - Small API improvements in Moderation
+* REST API - Fixed Profile Nickname update issue in the API
+
+= 1.7.3 =
+* Moderation - Improvement to show Report button less prominent in the dropdown for all content types
+* Groups - Fixed group description HTML formatting issue
+* Activity - Improvement to hide Forum activities when Forum component disabled
+* Media - Fixed minor issue with .mov video support
+* REST API - Fixed activity endpoint group related issue
+* REST API - Fixed Video thumbnail generate endpoint issue
+* LearnDash - Fixed avatar issue on Courses, Lessons, and Topics
+* Translations - Updated German (formal) language files
+
+= 1.7.2.2 =
+* Activity - Fixed critical error on plugin update
+
+= 1.7.2.1 =
+* Activity - Fixed critical error when Forums component disabled
+
+= 1.7.2 =
+* Activity - Provided option to disable comments in the activity feed for blog posts and custom post types
+* Activity - Improved forum discussion and replies activity workflow to handle redundant comments data
+* Activity - Improved blog posts and custom post types layout in the activity feed
+* Activity - Moved activities action button other than Like and Comment to ellipsis dropdown
+* Activity - Fixed comment JS issue when Edit Activity disabled
+* Media - Fixed media preview fallback logic by using WP URL instead of the PHP file
+* Media - Fixed documents mp3 file issue when symbolic link settings enabled
+* Media - Fixed video playing issue when symbolic link settings disabled
+* Media - Fixed video playing issue in Safari browser
+* Groups - Fixed group navigation tabs order issue in the customizer
+* Text Editor - Fixed text copy-paste issue
+* REST API - Added comments options support in the activity feed for blog posts and custom post types
+* REST API - Added activity feed forum discussion quick reply support
+* Compatibility - Fixed WP Offload Media plugin compatibility issue when 'Remove files from server' enabled
+* Compatibility - Fixed WordPress 8.0 compatibility issues
+* Translations - Updated German (formal) language files
+
+= 1.7.1 =
+* Videos - Fixed video tab issue not allowing to re-order in Groups
+* Videos - Fixed video player controls styling to handle white background videos
+* Groups - Fixed issue with Group type on Group settings update
+* Text Editor - Copy Paste image restricted for all frontend text editor
+
+= 1.7.0.1 =
+* Media - Added settings to enable/disable symbolic link for medias
+* Media - Fixed document PDF file preview issue
+* Media - Fixed photos size issue to improve quality in the activity feed
+* Videos - Fixed video not playing issue in Safari browser
+* Videos - Fixed video symbolic signed URL download issue
+* Moderation - Fixed issue to hide activity photos and documents on report
+* REST API - Fixed symbolic link issue in the APIs
+
+= 1.7.0 =
+* Videos - Added Videos support for Activity, Profiles, Groups, Messages, Forums
+* Videos - Added central Videos page for showing all site Videos
+* Videos - Added functionality to move and organized Videos into Albums
+* Videos - Added settings page for customizable Video File Extensions
+* Videos - Added support to auto-generate Video cover images
+* Videos - Added Video Player support
+* Videos - Added Video support for Documents
+* Notifications - Added On-Screen Notifications support
+* Notifications - Added On-Screen Notifications controls
+* Media - Major security & performance improvements for Photos, Documents, and Videos preview
+* Groups - Media permission improvements
+* REST API - Added Videos API support
+* REST API - Media permission and Media performance Code refactoring
+
+= 1.6.4 =
+* Profiles - Fixed profile photo not showing issue when 'Avatar display' not enabled in discussion WordPress settings
+* Profiles - Fixed profile photo cropping issue for RTL languages
+* Activity - Code refactoring and API improvements specific to activity avatar
+* Text Editor - Fixed numbered list formatting issue
+* REST API - API endpoints code refactoring to improve security and fix vulnerabilities
+* REST API - Small improvement for custom profile and group tabs endpoints
+
+= 1.6.3 =
+* Profiles - Fixed issue to handle special character in profile field type - dropdown
+* Profiles - Fixed irrelevant members name issue in private message search
+* Forums - Provided forum discussion first level replies pagination support
+* Forums - Fixed bug by escaping Html in forum discussion and reply
+* Forums - Fixed hidden reply issue on restore
+* Forums - Fixed Organizer and Moderator sync issue with social groups
+* Network Search - Fixed issue with sub-forum discussion not showing in search results
+* REST API - Provided API support for forum replies pagination
+* Compatibility - small improvement for profile and group custom tab screen
+
+= 1.6.2 =
+* Moderation - Improved module to optimize performance
+* Icons - Added new font icons for TikTok, Telegram, and ClubHouse
+
+= 1.6.1 =
+* Activity - Small improvement to stop saving zero width space html entity with post update
+* Activity - Fixed minor button text for edit activity popup
+* Media - Fixed media link embed issue in Activity, Comments, Private message, Forums, etc
+* Messages - Fixed issue to stop triggering multiple messages on frequent clicks
+* REST API - Code refactoring
+
+= 1.6.0 =
+* Profiles - Added validation to restrict duplicate Nicknames in the dashboard
+* Profiles - Fixed issue when trying to search members using courses
+* Media - Fixed media preview issue for specific server configuration
+* Notifications - Fixed notification issue with blog post comments and replies
+* Registration - Small improvement to show relevant validation message on the account activation
+* REST API - Provided customer profile/group tab details in relevant endpoints
+* REST API - Improved caching for menu and settings
+* REST API - Fixed issue with hiding subgroups option not working on groups endpoint
+* REST API - Fixed issue with forum screen in settings endpoint when forum slug updated
+* REST API - Fixed messages issue by providing media objects in the bulk URL details endpoint
+* REST API - Fixed empty profile type issue in the member endpoint
+* REST API - Fixed notification wrong 'from' field parameter issue
+* Translations - Updated German (formal) language files
+
+= 1.5.9 =
+* Profiles - Improvements to reflect uploaded profile and cover photo instantly
+* Profiles - Small bug fix to show only published profile type and group type in the dashboard options
+* Groups - Small improvement to show 404 screen when group type is invalid
+* Groups - Fixed issue with group members logic to improve performance
+* Groups - Fixed issue with a hidden group create a discussion to redirect to the discussion
+* Forums - Provided Email Preference option to stop receiving forum replies and discussion email
+* Forums - Fixed issue with duplicate reply notification generated
+* Activity - Fixed activity comment box scroll issue
+* Media - Fixed issue with Redis cache when photos moved into an album
+* Messages - Fixed iPhone bug when sending Private Messages
+* Messages - Fixed infinite loading issue on delete messages action
+* Network Search - Small code improvement
+* Moderation - Small bug fix to improve performance
+* REST API - Fixed issue with notification marked read/unread
+* REST API - Fixed notification endpoint invalid data issue
+* REST API - Email Preference forum options support added
+* REST API - Fixed registration label special character issue
+* REST API - Cache improvements to fix group issues
+* REST API - Fixed activity feed issue when activity tab disabled
+* REST API - Fixed activity endpoint edit issue
+* LearnDash - Fixed Courses slug compatibility issue
+* Translations - Updated German (formal) language files
+
+= 1.5.8.3 =
+* Registration - Provided Legal Agreement checkbox option
+* Login - Showing 'Terms of Service' and 'Privacy Policy' on WordPress Login page
+* REST API - Provided Legal Agreement option in settings endpoint
+
+= 1.5.8.2 =
+* REST API - Fixed course access and course count caching issue
+* REST API - Fixed emoji size issue in private message
+* REST API - Fixed Profile Social Network field update issue
+* REST API - Small Performance Improvements
+
+= 1.5.8.1 =
+* REST API - Provided 'placeholder' parameter in settings endpoint
+* REST API - Provided 'success' parameter on account settings update
+* REST API - Fixed favorite activity endpoint critical issue
+* REST API - Fixed add/edit discussion endpoint invalid response
+* REST API - Fixed deep linking issue by purging cache on component activate/deactivate
+* REST API - Fixed photo count issue in the media endpoint
+* REST API - Fixed group activity feed not showing anything
+* REST API - Fixed API issue in group activity screen
+* REST API - Fixed date field not getting saved on registration
+* REST API - Fixed messages issue to delete a conversation
+* REST API - Fixed settings parameter for Advance Search
+* REST API - Fixed Activity comment content issue
+* REST API - Fixed empty subgroups issue in the endpoint
+
+= 1.5.8 =
+* Profiles - Fixed issue with the hidden groups showing in other members profile
+* Profiles - Fixed issue with the delete account button
+* Profiles - Small improvements in profile photo and cover photo dropzone style
+* Profiles - Small improvements in privacy visibility settings to sync with repeater fields
+* Groups - Fixed send messages screen, members not loading on scroll for big resolution screen
+* Groups - Fixed issues with the group type pages
+* Activity - Fixed activity comments read more issue
+* Activity - Fixed a bunch of issues with @mention
+* Activity - Fixed Youtube video embed issue in activity comments on edit activity
+* Media - Small improvements in documents query
+* RTL - Fixed select2 library rtl issue
+* REST API - Cache improvements to fix BuddyBoss App deep linking and Web fallback bugs
+* REST API - Fixed many API issues related to member connection, message media upload, search recipients in a message, etc
+* REST API - Fixed API Vulnerability
+* REST API - Fixed mu-plugin download issue to provide caching support
+* LearnDash - Fixed compatibility issues with LearnDash 3.4
+* WooCommerce - Fixed 'WooCommerce Memberships' plugin restrictions rules not working with components pages
+* Elementor - Fixed maintenance mode settings compatibility issue
+* Compatibility - Fixed document privacy option for MySQL 8.0.22
+* Compatibility - Fixed 'Yoast SEO' plugin title and description meta tag not working with components pages
+* Compatibility - Fixed critical issue with 'WPMU DEV' plugin on deleting members from the dashboard
+
+= 1.5.7.3 =
+* Groups - Fixed redirection issue when member leave the hidden social group
+* REST API - Performance Improvements
+
+= 1.5.7.2 =
+* Messages - Provided 'select all' option in Group Send Private Message screen
+* Messages - Improved and Fixed UI issues related to Group Message and Private Message screen
+* REST API - Code refactoring
+* Translations - Updates to refactor Hungarian, French, German, and German (formal) language files
+
+= 1.5.7.1 =
+* Messages - Fixed critical issue with sending a message when Social Groups component is not active
+* REST API - Code refactoring
+
+= 1.5.7 =
+* Member Access Controls - Added support to restrict list of social interaction based on Access Control settings provided in BuddyBoss Platform Pro
+* Activity - Fixed blog post activity showing Gutenberg block code issue
+* Activity - Fixed issue with comments disappearing when blog post updated
+* Messages - Fixed message threads listing scroll issue in the private message screen
+* Media - Fixed 'select album' option shows even when it is disabled in the settings
+* Media - Fixed media dropdown and popup layout issues
+* Groups - Fixed send invite members listing scroll issue at the time of creating and managing group
+* Groups - Fixed cover image layout issue at the time of creating a group
+* Groups - Fixed group status not translatable issue in the email
+* Forums - Fixed issue with Forum and Discussion non-English slug
+* Profiles - Fixed issue with radio and checkbox fields in Profile Search
+* LearnDash - Fixed issue with group name not synced on update
+* Moderation - Fixed Reporting Category taxonomy showing in nav menu issue
+* Compatibility - Fixed group roles label not working with 'Instructor Role for LearnDash' plugin
+* Compatibility - Fixed issue registration issue with 'Google Captcha Pro' plugin
+* Compatibility - Fixes for WordPress 5.6 and PHP 8.0
+* REST API - Provided support and new endpoints added for the 'Access Control' feature
+* REST API - Added caching support for all REST APIs
+
+= 1.5.6 =
+* Moderation - New Moderation Component added
+* Moderation - Added option to allow members Block each other
+* Moderation - Added option to allow members Report other members content
+* Groups - Fixed activity access for hidden social groups
+* Groups - Fixed send message members listing scroll issue
+* Forums - Fixed forum reply copy-paste content formatting
+* Forums - Fixed Forum directory search option not working as expected
+* Forums - Fixed discussion and reply, photos documents attachment issue
+* Activity - Fixed member profile, friend activity scope
+* Media - Improved photos directory page
+* Media - Provided option to Create Album and Move Photos while uploading
+* Media - Provided option to Create Folder and Move Document while uploading
+* Media - Provided option to Move Photos into Album from Activity
+* Media - Provided option to limit the number of Photos/Documents uploaded per batch
+* Messages - Code refactoring
+* REST API - New endpoints added for 'Moderation' feature
+* REST API - New endpoints added for 'Relevant Activity' feature
+
+= 1.5.5.1 =
+* Messages - Fixed message threads critical security bug
+* Messages - code refactoring
+
+= 1.5.5 =
+* Groups - Fixed group message media shows in the photos tab
+* Groups - Fixed group message private bcc thread bug
+* Forums - Fixed GIPHY play button alignment issue in discussions
+* Activity - Added 'Relevant Activity' support
+* Activity - Improved Edit Activity popup layout
+* Activity - Improved 'read more' link logic for blog posts activity
+* Media - Fixed create album popup, title becomes empty on a validation error message
+* Media - Improved GIPHY media logic to render from GIPHY server
+* Media - Fixed download issue with signed media
+* Network Search - Fixed Media search results layout issues
+* Email Invites - Fixed recipients profile type not assigned issue
+* REST API - Fixed media API privacy issue
+* REST API - Fixed API issues in media and activity
+* WPML - Fixed private network enabled public content issue
+
+= 1.5.4 =
+* Profiles - Improved Profile completion module caching logic
+* Notifications - Fixed custom notification blank text issue
+* Notifications - Fixed forum reply notification incorrect timestamp
+* Notifications - Fixed notification issue when a user comments on a blog post
+* Groups - Private groups documents security issue fixed
+* Groups - Fixed forums permission issue for non-members
+* Forums - Fixed forum reply image repost issue
+* Activity - Fixed invalid avatar on the activity post form
+* Activity - Fixed blog post activity video embed issue
+* Messages - code refactoring
+* Network Search - Provided option to search for photos and albums
+* REST API - Fixed many API issues in activity, media, messages, members, and social groups
+* Compatibility - Fixed password reset email layout issue with 'Paid Memberships Pro' plugin
+
+= 1.5.3 =
+* Profiles - Improved profile and Groups cover photo upload
+* Profiles - Fixed fieldset caching issue based on profile types
+* Groups - Fixed issue to show hidden groups in the group directory page
+* Groups - Fixed group tooltip UI issue when cover photo settings disabled
+* Groups - Fixed group invite message do not show
+* Groups - Fixed groups parent setting issue in the dashboard
+* Forums - Fixed forums tab in profile when configured Forums directory as a child page
+* Forums - Fixed forums reply editor formatting issue
+* Activity - Fixed issue to show 'read more' link for blog posts activity
+* Media - Updated Dropzone 5.7.2 library
+* Media - Improved security
+* Photos - Fixed photo description editing issue in the popup
+* Messages - Fixed messages thread formatting
+* Network Search - Fixed minor network search issue
+* BuddyPanel - Fixed selected profile tab issue
+* Performance - Improved DB queries
+* Translations - Updated German (formal) language files
+
+= 1.5.2 =
+* Profiles - Provided option to re-order profile action buttons, visible when viewing other member's profiles
+* Profiles - Fixed profile completion widget issue when first or last name field disabled
+* Profiles - Fixed registration duplicate field issue when profile type enabled
+* Forums - Fixed forums 404 issue when configured as a child page
+* Activity - Fixed URL preview for Cloudflare sites not allowing default 'user-agent'
+* Activity - Fixed activity editor, formatting toolbar focus issue
+* Activity - Fixed activity update in other member's profile
+* Photos - Fixed add photos popup layout issues
+* Documents - Fixed document sub-folder download issue
+* Messages - Fixed invalid gravatar issue in private messages module
+* Messages - Allowing admin always to send private messages to all members on the site
+* Compatibility - Fixed profile cropping compatibility issue with Jetpack plugin
+* Translations - Updated German (formal) language files
+
+= 1.5.1.1 =
+* Photos - Fixed private messages photos and documents attachments security issue
+
+= 1.5.1 =
+* Profiles - Provided 'Cover Photo Repositioning' support in Profiles and Groups
+* Profiles - Fixed profile completion widget profile photo issue to consider gravatar
+* Profiles - Fixed profile completion widget social network field count issue
+* Profiles - Fixed display name format, field visibility, and field requirement logical issue
+* Groups - Provided options to Hide subgroups from Groups Directory & Group Type Shortcode
+* Groups - Fixed invites module to allow sending invites to group members in bulk
+* Forums - Fixed forums page not working when configured as a child page
+* Forums - Fixed reply editor HTML formatting issue
+* Activity - Fixed 'Edit Activity' module related critical bugs
+* Activity - Fixed activity form focus issue on click
+* Activity - Fixed activity form @mention delete issue
+* Activity - Fixed 404 Page issue when activity settings are updated
+* Media - Fixed issue to allow sending just emoji in messaging, activity, forums, etc
+* REST API - Small API fixes and code enhancement in media
+* REST API - New endpoints added for 'Edit Activity' feature
+
+= 1.5.0 =
+* Activity - Provided 'Edit Activity' support
+* Activity - Provided settings to allow members to edit their activity posts for a duration specified
+* Activity - Provided 'Edit Activity' compatibility with photos, documents, permissions, emoji, giphy, etc
+* Profiles - Provided option to setup Custom Profile dropdown
+* Profiles - Provided option to Hide Profile navigation
+* Profiles - Fixed profile completion issue with Repeater Field Set
+* Forums - Fixed discussion nested replies notification issue
+* Forums - Fixed discussion reply editor formatting issue
+* Media - Fixed album edit/save/cancel button layout issue
+* Documents - Fixed document download link privacy issue
+* Documents - Fixed document sub-folder download issue
+* Messages - Improved message thread delete logic
+* Messages - Fixed deleted message thread count issue
+* Templates - Profile navigation template enhancement for new profile navigation hide feature
+* REST API - Fixed API issues in profile, media, and social groups
+* LearnDash - Fixed Social groups and LearnDash groups sync conflict
+* Compatibility - Fixed frontend page conflict with Elementor plugin
+* Compatibility - Fixed activity date conflict with TranslatePress plugin
+* Compatibility - Fixed document layout issues with Wallstreet Theme
+
+= 1.4.9 =
+* Profiles - Fixed profile completion logic to reuse the same feature in Elementor
+* Media - Fixed logic to delete GIF attachments when entry deleted
+* Documents - Improved the logic to support BuddyBoss REST API
+* Compatibility - Fixes for WordPress 5.5 and PHP 7.*
+
+= 1.4.8 =
+* Media - New settings to set maximum file upload size for Photos and Documents
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
+* Media - Improved the logic to support BuddyBoss REST API
+
+= 1.4.7 =
+* Profiles - Fixed profile field type Gender default options unable to re-order
+* Profiles - Fixed profile completion widget does not update with object caching ON
+* Profiles - Fixed profile repeater fieldset, delete repeater field not working
+* Groups - Fixed documents and folders add/edit/delete/move permissions for group organizer/moderator/member
+* Groups - Fixed performance issue when group members increases
+* Groups - Fixed hidden groups not showing for group type shortcode
+* Forums - Fixed discussion reply text formatting validation
+* Activity - Fixed photo comment email notification on the activity feed
+* Activity - Fixed Privacy for activity attached photo
+* Activity - Fixed activity preview to allow German characters
+* Activity - Fixed activity post update formatting issues
+* Documents - Fixed document rename does not allow non-English characters
+* Messages - Improved the avatar display for multi-user message threads
+* Network Search - Fixed search members based on members profile field-specific privacy
+* Multisite - Fixed repair and import tools inaccessible/broken in multi-site
+* REST API - Fixed API issues in activity, private messages, connection, and site permissions
+* REST API - New endpoints added for Email invites profile types changes
+* Compatibility - Fixed register and activate page title when RankMath plugin is active
+* Compatibility - Fixed social groups and LearnDash group slug conflict
+* Compatibility - Fixed courses access based on membership expiry from MemberPress plugin
+* Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit
+* Translations - Fixed text for document file extension descriptions not available for translation
+* Translations - Fixed admin dashboard text not translatable
+* Translations - Added Hungarian language files
+* Translations - Updated German (formal) language files
+
+= 1.4.6 =
+* Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
+* Media - Fixed photo attachments in messages not always displaying for recipients
+* Messages - Fixed unable to delete a conversation if Notifications is disabled
+* Activity - Fixed very long URLs unable to be entered into activity feed posts
+* Private Network - Fixed homepage being visible when using 'Custom URL' for Registration
+* REST API - Fixed conflict on some servers, with creating and editing posts and pages
+* LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
+* LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
+* Translations - Fixed 'his, her, their' text not translatable for 'Gender' profile field
+* Translations - Fixed layout issues on profile page when language set to Hungarian
+
+= 1.4.5 =
+* Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
+* Activity - Fixed small images in activity feed getting scaled up and distorted
+* Media - Fixed certain document types not always uploading into Forum replies
+* Media - Improved the formatting of media popups in Forum replies
+* REST API - Fixed API issues in private messages, activity privacy, and site permissions
+* Compatibility - Fixed conflicts with Private Network settings on Memcached servers
+
+= 1.4.4 =
+* Profiles - Improved the user experience when adding a new Repeater field on frontend
+* Profiles - Fixed certain profile fields types preventing Repeater fields from saving
+* Forums - Fixed disabling 'Subscriptions' should remove Subscriptions from member profile
+* Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
+* Forums - Restrict @mentions dropdown to list only members who have access to the forum
+* Groups - Restrict @mentions dropdown to list only members who have joined the group
+* Groups - When viewing group invitations page, fixed invitations showing incorrect dates
+* Groups - Improved the experience for accepting an invite into a private group
+* Media - Added media popups for all Documents and Photos posted into Forums and Messages
+* Media - Added 'Download' link to media popups for all Document types and Photos
+* Media - Fixed private group Documents visibility, when uploading to profiles is disabled
+* Activity - Fixed comments not displaying in activity feed for blog posts and custom post types
+* Activity - Fixed media attachments not displaying when commenting on a group update
+* Compatibility - Fixed default Profile Type not being assigned when registering via MemberPress
+* Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
+* Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
+* Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
+* Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
+* Translations - Fixed text 'Invited by' for group invites not available for translation
+
+= 1.4.3 =
+* Activity - Fixed some activity posts hidden from logged out users, and new members
+* Activity - Fixed 'All Updates' tab not displaying updates from joined private groups
+* Documents - Fixed 404 error on profile breadcrumbs when Documents directory is custom page
+* Documents - Fixed download links not working when using various SEO plugins
+* Documents - Fixed issues with playing and downloading MP3 file uploads
+* Documents - Added media popups for documents uploaded into forums and messages
+* Documents - Improved the styling of media popups when Activity component is disabled
+* Documents - When clicking 'Edit Folder Privacy' we now auto-display the Edit Folder popup
+* Documents - When opening the Edit Folder popup, privacy dropdown now displays correct privacy
+* Documents - Improved the file upload previews in the WordPress Media Library
+* Photos - In Photos directory, fixed group photos displaying when performing any search query
+* Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
+* Compatibility - Fixed PHP 7.4 errors when using WP Engine hosting
+
+= 1.4.2 =
+* Documents - Added 'Download' link to Image and PDF file preview popups
+* Documents - Fixed search results for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed timeline of followers for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed content set to 'Only Me' being hidden from my sitewide activity feed
+* Documents - Newly added Image and PDF protected files display an icon in Media Library
+* Security - Added index.html into 'uploads/bb_documents' for enhanced file protection
+* WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
+* WC Vendors - Fixed products displayed in activity feed not showing featured image
+
+= 1.4.1 =
+* Forums - Fixed attached images getting removed after editing forum replies
+* Media - Set maximum amount of files uploaded per batch at 10 files
+* Security - Preventing executable file uploads from running in browser
+* Security - New file uploads go into 'uploads/bb_documents' with .htaccess protection
+
+= 1.4.0 =
+* Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
+* Documents - Added central Documents page for showing all site documents
+* Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
+* Documents - Added functionality to move and organized Documents into Folders
+* Documents - Added settings page for customizable Document File Extensions
+* Media - Added enhanced privacy controls for uploaded Photos and Documents
+* Media - Added functionality to enter 'Description' in Photo and Document popups
+* Media - Comments in single Photo and Document popups now sync with activity comments
+* Activity - Added enhanced privacy controls for user-created activity posts
+* REST API - New endpoints added for Activity privacy changes
+* Groups - Improved performance for groups with many thousands of members
+* Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
+* Forums - Fixed pagination when using shortcode [bbp-topic-index]
+* Forums - Fixed issues when using many levels of threaded replies
+* Forums - Fixed empty Forums page displaying with Private Network enabled
+* Forums - Fixed HTML elements displaying when pasting content as subscriber
+* Forums - Merged in security patches from bbPress 2.6.5
+* Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
+* Network Search - Fixed results title when using apostrophe or blank entry
+* Emails - Fixed email not sending for site admin changing a user's password
+* Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
+* Icons - Added new font icons to represent all common file types
+* LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
+* MemberPress - Fixed JavaScript conflicts with Stripe credit card field
+* WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
+
+= 1.3.5 =
+* REST API - Added official BuddyBoss REST API
+* Activity - Fixed website link previews not all using the same formatting
+* Activity - Fixed some websites not properly fetching link preview content
+* Text Editor - Fixed text formatting buttons overlapping with media uploader
+* Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
+* WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
+* Compatibility - Fixed deprecated code errors when using PHP 7.4
+* Translations - Updated German (formal) language files
+
+= 1.3.4 =
+* Activity - Fixed certain link previews displaying doubled in activity posts
+* Profiles - Fixed 'Profile Type' filter not working when any Profile Type is hidden
+* Widgets - Improved formatting structure of activities in '(BB) Latest Activities' widget
+* Tools - Added 'Repair Community' tool for running 'Update activity favorites data'
+* Performance - Optimized code when activating plugin on site with 60,000 or more users
+* Translations - Updated German (formal) language files
+
+= 1.3.3 =
+* Text Editor - Fixed content formatting reset issues when switching edit buttons
+* Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
+* Forums - Fixed URL conflict between 'Subscriptions' tab and plugin 'WooCommerce Subscriptions'
+* Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
+* Groups - Fixed organizer of sub-group unable to send invites if not organizer of parent group
+* Groups - Fixed subgroups not in 'Subgroups' tab if group type is hidden from Groups Directory
+* LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
+
+= 1.3.2 =
+* Text Editor - New text formatting interface in Messages, Activity, Forums
+* Text Editor - New text formatting option for adding a code block
+* Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
+* Activity - Allow for commenting on activity posts from custom post types
+* Activity - Improved formatting of images in activity posts from custom post types
+* Activity - Fixed @mentions moving the cursor position when no results are found
+* Activity - Fixed link embeds from Chinese websites displaying broken text characters
+* Activity - Fixed link embeds not always fetching the best image and description
+* Activity - Fixed group members without access posting into group from sitewide activity
+* Notifications - Fixed notification for rejected group join request not clearing
+* LearnDash - Fixed alignment of Certificate banner for group with single course
+* LearnDash - Code optimization and performance improvements for Grid View ajax
+* Multisite - Fixed duplicate BuddyBoss menus when enabling 'BP_ENABLE_MULTIBLOG'
+* Translations - Added French language files, credits to Jean-Pierre Michaud
+* Translations - Updated German (formal) language files
+
+= 1.3.1 =
+* Compatibility - Updated a file that was causing false alerts from Windows Defender
+
+= 1.3.0 =
+* Messages - New dropdown option to 'Mark unread' in inbox
+* Messages - New dropdown option to 'Hide Conversation' in inbox
+* Messages - New dropdown option to 'Delete Conversation' for admins only
+* Messages - Display number bubble for conversations with 2+ other people
+* Group Messages - Hiding bulk sent messages in inbox, until recipients reply back
+* Group Messages - Improved the sent message confirmation screen
+* Activity - Fixed photo popup not opening on single activity permalink
+* Profiles - Added 'VK' as option in 'Social Networks' profile field
+* Translations - Added German (formal) language files
+
+= 1.2.9.1 =
+* Groups - Fixed emoji in message content
+* Forums - Fixed forum/topic create/edit screen issue
+
+= 1.2.9 =
+* Groups - Added new option to send messages to group members from the group
+* Messages - Improved the logic for deleting your messages from a conversation
+* Messages - When a member is deleted, notifications about their messages are removed
+* Profiles - Added 'Twitch' as option in 'Social Networks' profile field
+* Profiles - Fixed issue when saving 'Date' field to the date January 1, 1970
+* Forums - Fixed minor issues when @mentioning other members in forums
+* Forums - Fixed settings for 'Disallow editing after' time limit not working
+* Activity - Fixed link preview image not always displaying in activity posts
+* Activity - Fixed video embeds not displaying after editing the post in admin
+* Connections - Display 'More' button on Connections widget when list is maxed out
+* Connections - Fixed inconsistent display of Connections based on profile type
+* Widgets - Fixed the member counts showing incorrect in 'Who's Online' widget
+* Email Invites - Added ability to invite between 1 to 20 members at once
+* Emails - Now sending emails through the WordPress core wp_mail function
+* Admin - Fixed 'Screen Options > Pagination' not saving in admin for Activity and Groups
+* Developers - Added code filter to extend DropzoneJS image resize options
+* Compatibility - Fixed minor code issues with PHP 7.4
 
 = 1.2.8 =
 * Registration - New option to use any Custom URL as your registration form
@@ -222,7 +1116,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed link previews when embedding links from an AMP url
 * Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
-* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios
 * Groups - When a group member changes their Name, now updates their name in previous group activity feeds
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
@@ -328,7 +1222,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed members without First Name displaying in messages as 'Deleted User'
 * Groups - Status button said "You're an Member" instead of "You're a Member"
 * Compatibility - Allow 'Events Manager' and other plugins to activate properly with Platform
-* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress 
+* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
@@ -336,7 +1230,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed word-wrapping when long sentences are posted in activity
 * Activity - Fixed crop ratio for wide/landscape media images
 * Activity - Fixed media disappearing when clicking 'Read more' in activity feed
-* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh'
 * Media - Improved the image rotation script for photos uploaded in mobile browsers
 * Media - Improved experience for media migrations, and ability to re-migrate
 * Profile Types - When creating new type, fixed issue when selecting 'None' as WordPress role

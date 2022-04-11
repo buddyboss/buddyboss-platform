@@ -9,6 +9,7 @@ form.ac-form {
 
 		img {
 			border: 1px solid #eee;
+			image-rendering: -webkit-optimize-contrast;
 		}
 	}
 
@@ -32,6 +33,7 @@ form.ac-form {
 				outline: none;
 				padding: 0.5em;
 				width: 100%;
+				border-radius: 3px;
 				border: 1px solid #ccc;
 
 				&:focus {
@@ -51,6 +53,11 @@ form.ac-form {
 				.post-elements-buttons-item {
 					margin-right: 10px;
 					position: relative;
+
+					> .emojionearea.ac-input {
+						border: 0;
+						padding: 0;
+					}
 				}
 			}
 

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 class Dependencies {
 
 	protected $dependencies       = array();
-	protected $loadedDependencies = array();
+	protected $is_leandash_active = false;
 
 	/**
 	 * Constructor
@@ -28,33 +28,10 @@ class Dependencies {
 	 */
 	public function __construct() {
 		 $this->dependencies = array(
-			 'bp_init'        => __( 'BuddyBoss Platform', 'buddyboss' ),
 			 'learndash_init' => __( 'Learndash LMS', 'buddyboss' ),
 		 );
 
-		 $this->registerHooks();
-	}
-
-	/**
-	 * Add hook to each dependencies' init hook
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function registerHooks() {
-		foreach ( $this->dependencies as $hook => $__ ) {
-			add_action( $hook, array( $this, 'dependencyLoaded' ) );
-		}
-
-		add_action( 'init', array( $this, 'appendDependencyChecker' ) );
-	}
-
-	/**
-	 * Set a flag when dependency is init
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function dependencyLoaded() {
-		$this->loadedDependencies[] = current_filter();
+		 $this->appendDependencyChecker();
 	}
 
 	/**
@@ -65,10 +42,10 @@ class Dependencies {
 	public function appendDependencyChecker() {
 		 global $wp_filter;
 
-		$callbackKeys         = array_keys( $wp_filter['init']->callbacks );
+		$callbackKeys         = array_keys( $wp_filter['bp_init']->callbacks );
 		$lastCallbackPriority = $callbackKeys[ count( $callbackKeys ) - 1 ];
 
-		add_action( 'init', array( $this, 'dependencyChecker' ), $lastCallbackPriority );
+		add_action( 'bp_init', array( $this, 'dependencyChecker' ), $lastCallbackPriority );
 	}
 
 	/**
@@ -77,8 +54,8 @@ class Dependencies {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function dependencyChecker() {
-		$success = count( $this->dependencies ) == count( $this->loadedDependencies );
-		do_action( $success ? 'bp_ld_sync/depencencies_loaded' : 'bp_ld_sync/depencencies_failed', $this );
+		$this->is_leandash_active = class_exists( 'SFWD_LMS' ) ? true : false;
+		do_action( $this->is_leandash_active ? 'bp_ld_sync/depencencies_loaded' : 'bp_ld_sync/depencencies_failed', $this );
 	}
 
 	/**
@@ -87,7 +64,11 @@ class Dependencies {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function getMissingDepencencies() {
-		return array_diff_key( $this->dependencies, array_flip( $this->loadedDependencies ) );
+		if ( false === $this->is_leandash_active ) {
+			return $this->dependencies;
+		}
+
+		return;
 	}
 
 	/**
@@ -96,6 +77,10 @@ class Dependencies {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function getLoadedDepencencies() {
-		return array_intersect_key( $this->dependencies, array_flip( $this->loadedDependencies ) );
+		if ( true === $this->is_leandash_active ) {
+			return $this->dependencies;
+		}
+
+		return;
 	}
 }

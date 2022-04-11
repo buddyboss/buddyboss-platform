@@ -71,7 +71,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				array(
 					'post_type'     => array( 'forum', 'topic', 'reply' ),
 					'post__in'      => $post_ids,
-					'post_status'   => array( 'publish', 'private', 'hidden' ),
+					'post_status'   => array( 'publish', 'private', 'hidden', 'closed' ),
 					'no_found_rows' => true,
 					'nopaging'      => true,
 				)
