@@ -1,4 +1,15 @@
-<?php $product = wc_get_product( get_the_ID() ); ?>
+<?php
+/**
+ * Template for displaying the search results of the product
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/product.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
+$product = wc_get_product( get_the_ID() ); ?>
 <li class="bp-search-item bp-search-item_product">
 	<div class="list-wrap">
 		<div class="item-avatar">

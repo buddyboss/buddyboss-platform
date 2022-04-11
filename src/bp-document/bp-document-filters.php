@@ -222,14 +222,48 @@ function bp_document_activity_comment_entry( $comment_id ) {
 
 	$document_ids = bp_activity_get_meta( $comment_id, 'bp_document_ids', true );
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	if ( empty( $document_ids ) ) {
+		return;
+	}
 
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
+
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'user_id'  => false,
+		'privacy'  => array(),
+	);
+
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_document_support_enabled() ) {
+			$args['privacy'][] = 'comment';
+			$args['privacy'][] = 'grouponly';
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-document';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-document';
+		}
+	} else {
+		$args['privacy'] = bp_document_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( ! bp_is_group_document_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_document_support_enabled() ) {
+			$args['album_id'] = 'existing-document';
+		}
+	}
+
+	$args['privacy'][] = 'comment';
+	if ( ! isset( $args['album_id'] ) ) {
+		$args['album_id'] = 'existing-document';
+	}
+
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
@@ -850,7 +884,7 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['document_type'] ) {
-			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document' ); // phpcs:ignore WordPress.Security.NonceVerification
+			$document_privacy = bb_media_user_can_access( $_GET['document_file'], 'document', $_GET['attachment']  ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
 			$folder_privacy   = bb_media_user_can_access( $_GET['document_file'], 'folder' ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -900,7 +934,11 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) ) {
+			if (
+				! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly', 'video' ), true ) &&
+				'comment' !== $document->privacy &&
+				! empty( $document->blog_id )
+			) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}
@@ -1468,7 +1506,7 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 /**
  * Add document repair list item.
  *
- * @param $repair_list
+ * @param array $repair_list Repair list.
  *
  * @since BuddyBoss 1.4.4
  * @return array Repair list items.
@@ -1476,11 +1514,12 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
-				'bp-repair-document',
-				__( 'Repair document on the site.', 'buddyboss' ),
-				'bp_document_admin_repair_document',
+			'bp-repair-document',
+			esc_html__( 'Repair documents', 'buddyboss' ),
+			'bp_document_admin_repair_document',
 		);
 	}
+
 	return $repair_list;
 }
 
@@ -1537,7 +1576,7 @@ function bp_document_admin_repair_document() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 				'status'  => 'running',
@@ -1547,7 +1586,7 @@ function bp_document_admin_repair_document() {
 	} else {
 		return array(
 				'status'  => 1,
-				'message' => __( 'document update complete!', 'buddyboss' ),
+				'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1745,7 +1784,7 @@ function bp_document_activity_after_email_content( $activity ) {
 		$document_ids = explode( ',', $document_ids );
 		$document_text = sprintf(
 		        _n( '%s document', '%s documents', count( $document_ids) , 'buddyboss' ),
-                number_format_i18n( count( $document_ids ) )
+			bp_core_number_format( count( $document_ids ) )
         );
 		$content   = sprintf(
 	    	/* translator: 1. Activity link, 2. Activity document count */
@@ -1757,11 +1796,10 @@ function bp_document_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity document data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with document if document saved otherwise no documents.
  *
@@ -1773,13 +1811,22 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 		// Fetch document ids of activity.
 		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity['id'], 'bp_document_id', true );
+
+		if ( ! empty( $document_id ) && ! empty( $document_ids ) ) {
+			$document_ids = $document_ids . ',' . $document_id;
+		} elseif ( ! empty( $document_id ) && empty( $document_ids ) ) {
+			$document_ids = $document_id;
+		}
 
 		if ( ! empty( $document_ids ) ) {
 			$activity['document'] = array();
 
 			$document_ids = explode( ',', $document_ids );
+			$document_ids = array_unique( $document_ids );
+			$folder_id    = 0;
 
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
 					continue;
 				}
@@ -1788,8 +1835,8 @@ function bp_document_get_edit_activity_data( $activity ) {
 				$size = 0;
 				$file = get_attached_file( $document->attachment_id );
 				if ( $file && file_exists( $file ) ) {
-				    $size = filesize( $file );
-                }
+					$size = filesize( $file );
+				}
 
 				$activity['document'][] = array(
 					'id'          => $document_id,
@@ -1804,6 +1851,12 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
 				);
+
+				if ( 0 === $folder_id && $document->folder_id > 0 ) {
+					$folder_id                    = $document->folder_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 

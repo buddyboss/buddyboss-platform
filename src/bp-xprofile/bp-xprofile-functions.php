@@ -1387,7 +1387,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
-		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( $displayed_user_id, $current_user_id ) ) {
+		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( (int) $displayed_user_id, (int) $current_user_id ) ) {
 			$hidden_levels = array( 'adminsonly' );
 
 			// Current user is logged in but not friends, so exclude friends-only.
@@ -1507,7 +1507,7 @@ function bp_activity_get_user_mentionname( $user_id ) {
 		if ( bp_is_username_compatibility_mode() ) {
 			$mentionname = str_replace( ' ', '-', $userdata->user_login );
 		} else {
-			$mentionname = $userdata->user_nicename;
+			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
 		}
 	}
 
@@ -1742,14 +1742,20 @@ function bp_check_member_type_field_have_options() {
 	$arr = array();
 
 	// Get posts of custom post type selected.
-	$posts = new \WP_Query(
-		array(
-			'posts_per_page' => - 1,
-			'post_type'      => bp_get_member_type_post_type(),
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		)
-	);
+	$cache_key = 'bp_get_all_member_types_posts';
+	$posts     = wp_cache_get( $cache_key, 'bp_member_member_type' );
+
+	if ( false === $posts ) {
+		$posts = new \WP_Query(
+			array(
+				'posts_per_page' => - 1,
+				'post_type'      => bp_get_member_type_post_type(),
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			)
+		);
+		wp_cache_set( $cache_key, $posts, 'bp_member_member_type' );
+	}
 	if ( $posts ) {
 		foreach ( $posts->posts as $post ) {
 			$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
@@ -1778,9 +1784,15 @@ function bp_check_member_type_field_have_options() {
  * @return string
  */
 function bp_xprofile_get_member_display_name( $user_id = null ) {
+	static $cache;
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
 		return false;
+	}
+
+	$cache_key = 'bp_xprofile_get_member_display_name_' . trim( $user_id );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
 	}
 
 	$user = get_userdata( $user_id );
@@ -1898,7 +1910,11 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			break;
 	}
 
-	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
+	$name = apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
+
+	$cache[ $cache_key ] = $name;
+
+	return $name;
 }
 
 /**
@@ -2346,3 +2362,48 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 		return false;
 	}
 }
+
+/**
+ * Enabled the social networks for members or not.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @return bool True if enabled the social networks otherwise false.
+ */
+function bb_enabled_member_social_networks() {
+	static $social_networks_id = '';
+
+	if ( '' === $social_networks_id ) {
+		global $wpdb, $bp;
+
+		$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+
+	return apply_filters( 'bb_enabled_member_social_networks', (bool) $social_networks_id );
+}
+
+/**
+ * Get social networks field values.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param int|null $user_id ID of the user or null. Default current displayed user profile ID.
+ *
+ * @return array
+ */
+function bb_get_user_social_networks_field_value( $user_id = null ) {
+	global $wpdb, $bp;
+
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+	$original_option_values = array();
+
+	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) {
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+	}
+
+	return $original_option_values;
+}
+
