@@ -41,6 +41,7 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
 				this.dropzoneDocumentView();
+				this.dropzoneVideoView();
 			}
 
 			this.setupNav();
@@ -51,6 +52,10 @@ window.bp = window.bp || {};
 					root: BP_Nouveau.messages.rootUrl
 				}
 			);
+
+			// Listen to events ("Add hooks!").
+			this.addListeners();
+
 		},
 
 		dropzoneView: function() {
@@ -60,17 +65,18 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url                 : BP_Nouveau.ajaxurl,
-				timeout             : 3 * 60 * 60 * 1000,
-				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles       : 'image/*',
-				autoProcessQueue    : true,
-				addRemoveLinks      : true,
-				uploadMultiple      : false,
-				maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+				url                 		 : BP_Nouveau.ajaxurl,
+				timeout             		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig      		 : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  		 : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       		 : 'image/*',
+				autoProcessQueue    		 : true,
+				addRemoveLinks      		 : true,
+				uploadMultiple      		 : false,
+				maxFiles            		 : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles 		 : 10,
+				maxFilesize         		 : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded		 : BP_Nouveau.media.media_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
 			};
 
 			// if defined, add custom dropzone options.
@@ -86,19 +92,45 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_document_options = {
-				url                  : BP_Nouveau.ajaxurl,
-				timeout              : 3 * 60 * 60 * 1000,
-				dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
-				acceptedFiles        : BP_Nouveau.media.document_type,
-				createImageThumbnails: false,
-				dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
-				autoProcessQueue     : true,
-				addRemoveLinks       : true,
-				uploadMultiple       : false,
-				maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
-				dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
+				url                  		 : BP_Nouveau.ajaxurl,
+				timeout              		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig       		 : BP_Nouveau.media.dictFileTooBig,
+				acceptedFiles        		 : BP_Nouveau.media.document_type,
+				createImageThumbnails		 : false,
+				dictDefaultMessage   		 : BP_Nouveau.media.dropzone_document_message,
+				autoProcessQueue     		 : true,
+				addRemoveLinks       		 : true,
+				uploadMultiple       		 : false,
+				maxFiles             		 : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+				maxFilesize          		 : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+				dictInvalidFileType  		 : BP_Nouveau.document.dictInvalidFileType,
+				dictMaxFilesExceeded 		 : BP_Nouveau.media.document_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+			};
+
+		},
+
+		dropzoneVideoView: function() {
+			this.dropzone = null;
+
+			// set up dropzones auto discover to false so it does not automatically set dropzones.
+			window.Dropzone.autoDiscover = false;
+
+			this.dropzone_video_options = {
+				url                  		 : BP_Nouveau.ajaxurl,
+				timeout              		 : 3 * 60 * 60 * 1000,
+				dictFileTooBig       		 : BP_Nouveau.video.dictFileTooBig,
+				acceptedFiles        		 : BP_Nouveau.video.video_type,
+				createImageThumbnails		 : false,
+				dictDefaultMessage   		 : BP_Nouveau.video.dropzone_video_message,
+				autoProcessQueue     		 : true,
+				addRemoveLinks       		 : true,
+				uploadMultiple       		 : false,
+				maxFiles             		 : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles 		 : 10,
+				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size 		 : 2,
+				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
+				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
+				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
 			};
 
 		},
@@ -135,6 +167,29 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		/**
+		 * [addListeners description]
+		 */
+		addListeners: function () {
+
+			$( document ).on( 'click', '.closeModalErrorPopup', this.closeModalPopup.bind( this ) );
+			/**
+			 * Pagination for message block list
+			 */
+			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
+			$( document ).on( 'click', '.view_more_members', this.messageBlockListPagination );
+			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member', this.messageModeratorMemberList );
+			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
+			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
+
+		},
+
+		closeModalPopup: function ( event ) {
+			event.preventDefault();
+
+			$( '.open-popup' ).remove();
 		},
 
 		removeTinyMCE: function() {
@@ -213,7 +268,6 @@ window.bp = window.bp || {};
 
 		composeView: function() {
 			// Remove all existing views.
-			// this.clearViews();
 
 			var threadView = false;
 			if ( ! _.isUndefined( this.views.models ) ) {
@@ -332,6 +386,180 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'single', view: single_thread } );
 
 			single_thread.inject( '.bp-messages-content' );
+		},
+
+		/**
+		 * Pagination for message block list
+		 * @returns {boolean}
+		 */
+		messageBlockListPagination: function ( e ) {
+			e.preventDefault();
+			if ( $( '#view_more_members' ).length ) {
+				$( '#view_more_members' ).removeClass( 'view_more_members' );
+			}
+			if ( $( '#load_more_rl' ).length ) {
+				$( '#load_more_rl' ).removeClass( 'load_more_rl' );
+			}
+			var $this       = $( this );
+			var bpAction    = $this.attr( 'data-action' );
+			var threadId    = parseInt( $this.attr( 'data-thread-id' ) );
+			var currentPage = parseInt( $this.attr( 'data-cp' ) );
+			var totalPages  = parseInt( $this.attr( 'data-tp' ) );
+			var postData    = {
+				'page_no': currentPage,
+				'thread_id': threadId,
+				'exclude_current_user': true,
+				'exclude_moderated_members': 'bp_load_more' === bpAction ? true : false,
+			};
+			$.ajax( {
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: {
+					action: 'messages_recipient_list_for_blocks',
+					post_data: postData,
+				},
+				beforeSend: function () {
+					$( '#load_more_rl' ).addClass( 'loading' );
+				},
+				success: function ( response ) {
+					if ( response.success && response.data && '' !== response.data.content ) {
+						var moderation_type = response.data.recipients.moderation_type;
+						var memberData      = response.data.recipients.members;
+						if ( memberData ) {
+							$.each( memberData, function ( index, item ) {
+								if ( '' !== item ) {
+									if ( 'bp_load_more' === bpAction ) {
+										var cloneUserItemWrap = $( '.user-item-wrp:last' ).clone();
+										cloneUserItemWrap.attr( 'id', 'user-' + item.id );
+										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'src', item.avatar );
+										cloneUserItemWrap.find( '.user-avatar img' ).attr( 'alt', item.user_name );
+										cloneUserItemWrap.find( '.user-name' ).html( item.user_name );
+										if ( true === item.is_blocked ) {
+											cloneUserItemWrap.find( '.user-actions .block-member' ).removeAttr( 'data-bp-content-id' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Blocked' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).removeClass( 'block-member' ).addClass( 'blocked-member disabled' );
+										} else if ( false !== item.can_be_blocked ) {
+											cloneUserItemWrap.find( '.user-actions a.button' ).removeClass( 'blocked-member disabled' ).addClass( 'block-member' );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'id', 'report-content-' + moderation_type + '-' + item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-id', item.id );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-content-type', moderation_type );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).attr( 'data-bp-nonce', BP_Nouveau.nonce.bp_moderation_content_nonce );
+											cloneUserItemWrap.find( '.user-actions .block-member' ).html( 'Block' );
+										}
+										$( '.user-item-wrp:last' ).after( cloneUserItemWrap );
+									}
+									if ( 'bp_view_more' === bpAction ) {
+										var oldSpanTagTextNode = document.createTextNode( ', ' );
+										var cloneParticipantsName = $( '.participants-name:last' ).clone();
+										cloneParticipantsName.find( 'a' ).attr( 'href', item.user_link );
+										cloneParticipantsName.find( 'a' ).html( item.user_name );
+										cloneParticipantsName.find( 'a' ).append( oldSpanTagTextNode );
+										if ( parseInt( index ) !== parseInt( Object.keys( memberData ).length ) || cloneParticipantsName ) {
+											$( '.participants-name:last' ).find( 'a' ).append( oldSpanTagTextNode );
+										}
+										$( '.participants-name:last' ).after( cloneParticipantsName );
+									}
+								}
+							} );
+						}
+						if ( totalPages === currentPage ) {
+							if ( 'bp_load_more' === bpAction ) {
+								$( '#load_more_rl' ).hide();
+							}
+							if ( 'bp_view_more' === bpAction ) {
+								$( '#view_more_members' ).hide();
+								$( '.participants-name:last a' ).get( 0 ).nextSibling.remove();
+							}
+						} else {
+							currentPage++;
+							$this.attr( 'data-cp', currentPage );
+						}
+					}
+				},
+				complete: function () {
+					$( '#load_more_rl' ).removeClass( 'loading' );
+					if ( $( '#load_more_rl' ).length ) {
+						$( '#load_more_rl' ).addClass( 'load_more_rl' );
+					}
+					if ( $( '#view_more_members' ).length ) {
+						$( '#view_more_members' ).addClass( 'view_more_members' );
+					}
+				},
+			} );
+			return false;
+		},
+		
+		messageBlockMember: function ( e ) {
+			e.preventDefault();
+			var contentId    = $( this ).data( 'bp-content-id' );
+			var contentType  = $( this ).data( 'bp-content-type' );
+			var nonce        = $( this ).data( 'bp-nonce' );
+			var currentHref  = $( this ).attr( 'href' );
+			if ( 'undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce ) {
+				$( document ).find( '.bp-report-form-err' ).empty();
+				var mf_content   = $( currentHref );
+				mf_content.find( '.bp-content-id' ).val( contentId );
+				mf_content.find( '.bp-content-type' ).val( contentType );
+				mf_content.find( '.bp-nonce' ).val( nonce );
+			}
+			if ( $( '#mass-user-block-list a.block-member' ).length > 0 ) {
+				$( '#mass-user-block-list a.block-member' ).magnificPopup(
+					{
+						items: {
+							src: currentHref,
+							type: 'inline'
+						},
+					}
+				).magnificPopup( 'open' );
+			}
+		},
+		
+		messageModeratorMemberList: function ( e ) {
+			e.preventDefault();
+			var postData = {
+				'page_no': $( this ).attr( 'data-cp' ),
+				'thread_id': $( this ).attr( 'data-thread-id' ),
+				'exclude_current_user': true,
+				'exclude_moderated_members': true,
+			};
+			var currentHref = $( this ).attr( 'href' );
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'messages_moderated_recipient_list',
+						post_data: postData,
+					},
+					beforeSend: function () {
+						if ( $( '.mass-block-member' ).length > 0 ) {
+							$( '.mass-block-member' ).magnificPopup(
+								{
+									items: {
+										src: currentHref,
+										type: 'inline'
+									},
+								}
+							).magnificPopup( 'open' );
+						}
+					},
+					success: function ( response ) {
+						if ( response.success && response.data && '' !== response.data.content ) {
+							if ( $( '#mass-user-block-list #moderated_user_list' ).length > 0 ) {
+								$( '#mass-user-block-list #moderated_user_list' ).html( response.data.content ).addClass( 'is_not_empty' );
+							}
+						}
+					},
+				}
+			);
+		},
+		
+		clearModeratedMessageList: function () {
+			if ( $( '#moderated_user_list' ).length > 0 ) {
+				$( '#moderated_user_list' ).html( '' ).removeClass( 'is_not_empty' );
+			}
 		}
 	};
 
@@ -621,6 +849,16 @@ window.bp = window.bp || {};
 
 				}
 
+				// Access Control Video Support.
+				if ( ! _.isUndefined( resp.user_can_upload_video ) && $( '#whats-new-messages-toolbar .post-media-video-support' ).length ) {
+					if ( resp.user_can_upload_video ) {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).show();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).hide();
+					}
+
+				}
+
 				// Access Control GiF Support.
 				if ( ! _.isUndefined( resp.user_can_upload_gif ) && $( '#whats-new-messages-toolbar .post-media-gif-support' ).length ) {
 					if ( resp.user_can_upload_gif ) {
@@ -671,7 +909,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Extend wp.Backbone.View with .prepare() and .inject()
+	// Extend wp.Backbone.View with .prepare() and .inject().
 	bp.Nouveau.Messages.View = bp.Backbone.View.extend(
 		{
 			inject: function( selector ) {
@@ -743,10 +981,11 @@ window.bp = window.bp || {};
 		{
 			template  : bp.template( 'bp-messages-editor' ),
 			events: {
-				'input #message_content': 'focusEditorOnChange'
+				'input #message_content': 'focusEditorOnChange',
+				'paste': 'handlePaste',
 			},
 
-			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text
+			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text.
 				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
 				setTimeout(
 					function(){
@@ -755,6 +994,18 @@ window.bp = window.bp || {};
 					},
 					0
 				);
+			},
+
+			handlePaste: function ( event ) {
+				// Get user's pasted data.
+				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+					data = clipboardData.getData( 'text/plain' );
+
+				// Insert the filtered content.
+				document.execCommand( 'insertHTML', false, data );
+
+				// Prevent the standard paste behavior.
+				event.preventDefault();
 			},
 
 			initialize: function() {
@@ -787,22 +1038,37 @@ window.bp = window.bp || {};
 								[new RegExp( /<\/h[1-6]/gi ), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: [ 'ul', 'ol', 'li' ]
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
+								unwrapTags: []
 							},
-							imageDragging: false
+							imageDragging: false,
+							anchor: {
+								linkValidation: true
+							}
 						}
 					);
 
-					if ( !_.isUndefined( BP_Nouveau.media ) &&
-						!_.isUndefined( BP_Nouveau.media.emoji ) &&
+					$( document ).on ( 'keyup', '.bp-messages-content .medium-editor-toolbar-input', function( event ) {
+
+						var URL = event.target.value;
+						
+						if ( bp.Nouveau.isURL( URL ) ) {
+							$( event.target ).removeClass('isNotValid').addClass('isValid');
+						} else {
+							$( event.target ).removeClass('isValid').addClass('isNotValid');
+						}
+		
+					});
+
+					if ( ! _.isUndefined( BP_Nouveau.media ) &&
+						! _.isUndefined( BP_Nouveau.media.emoji ) &&
 						(
 							(
-								!_.isUndefined( BP_Nouveau.media.emoji.messages ) &&
+								! _.isUndefined( BP_Nouveau.media.emoji.messages ) &&
 								BP_Nouveau.media.emoji.messages
 							) ||
 							(
-								!_.isUndefined( BP_Nouveau.media.emoji.groups ) &&
+								! _.isUndefined( BP_Nouveau.media.emoji.groups ) &&
 								BP_Nouveau.media.emoji.groups
 							)
 						)
@@ -888,6 +1154,9 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
+				var messageMediaTemplate                             = document.getElementsByClassName( 'message-post-media-template' ).length ? document.getElementsByClassName( 'message-post-media-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_options.previewTemplate = messageMediaTemplate;
+
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-media-uploader', bp.Nouveau.Messages.dropzone_options );
 
 				bp.Nouveau.Messages.dropzone.on(
@@ -900,12 +1169,29 @@ window.bp = window.bp || {};
 						if ( tool_box.find( '#messages-document-button' ) ) {
 							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
+						if ( tool_box.find( '#messages-video-button' ) ) {
+							tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
 						if ( tool_box.find( '#messages-gif-button' ) ) {
 							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#messages-media-button' ) ) {
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -964,6 +1250,9 @@ window.bp = window.bp || {};
 							var tool_box = self.$el.parents( '#bp-message-content' );
 							if ( tool_box.find( '#messages-document-button' ) ) {
 								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-video-button' ) ) {
+								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#messages-gif-button' ) ) {
 								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
@@ -1029,7 +1318,19 @@ window.bp = window.bp || {};
 				}
 				self.destroy();
 
+				var messageDocumentTemplate                                   = document.getElementsByClassName( 'message-post-document-template' ).length ? document.getElementsByClassName( 'message-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_document_options.previewTemplate = messageDocumentTemplate;
+
 				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-document-uploader', bp.Nouveau.Messages.dropzone_document_options );
+
+				bp.Nouveau.Messages.dropzone.on(
+					'addedfile',
+					function ( file ) {
+						var filename = file.upload.filename;
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+					}
+				);
 
 				bp.Nouveau.Messages.dropzone.on(
 					'sending',
@@ -1040,6 +1341,9 @@ window.bp = window.bp || {};
 						var tool_box = self.$el.parents( '#bp-message-content' );
 						if ( tool_box.find( '#messages-media-button' ) ) {
 							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-video-button' ) ) {
+							tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 						}
 						if ( tool_box.find( '#messages-gif-button' ) ) {
 							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -1074,6 +1378,20 @@ window.bp = window.bp || {};
 							}
 							return _results;
 						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						circle.style.strokeDashoffset = offset;
 					}
 				);
 
@@ -1124,6 +1442,9 @@ window.bp = window.bp || {};
 							if ( tool_box.find( '#messages-media-button' ) ) {
 								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
+							if ( tool_box.find( '#messages-video-button' ) ) {
+								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
 							if ( tool_box.find( '#messages-gif-button' ) ) {
 								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
@@ -1135,6 +1456,214 @@ window.bp = window.bp || {};
 				);
 
 				self.$el.find( '#messages-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
+				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+			}
+
+		}
+	);
+
+	// Message Video Selector.
+	bp.Views.MessagesVideo = bp.Nouveau.Messages.View.extend(
+		{
+			tagName: 'div',
+			className: 'messages-video-container',
+			template: bp.template( 'messages-video' ),
+			video : [],
+
+			initialize: function () {
+				this.model.set( 'video', this.video );
+				document.addEventListener( 'messages_video_toggle', this.toggle_video_uploader.bind( this ) );
+				document.addEventListener( 'messages_video_close', this.destroy.bind( this ) );
+			},
+
+			toggle_video_uploader: function() {
+				var self = this;
+				if ( self.$el.find( '#messages-post-video-uploader' ).hasClass( 'open' ) ) {
+					self.destroy();
+				} else {
+					self.open_video_uploader();
+				}
+			},
+
+			destroy: function() {
+				var self = this;
+				if ( ! _.isNull( bp.Nouveau.Messages.dropzone ) ) {
+					bp.Nouveau.Messages.dropzone.destroy();
+					self.$el.find( '#messages-post-video-uploader' ).html( '' );
+				}
+				self.video = [];
+				self.model.set( 'video', self.video );
+				self.$el.find( '#messages-post-video-uploader' ).removeClass( 'open' ).addClass( 'closed' );
+
+				document.removeEventListener( 'messages_video_toggle', this.toggle_video_uploader.bind( this ) );
+				document.removeEventListener( 'messages_video_close', this.destroy.bind( this ) );
+
+				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+			},
+
+			open_video_uploader: function() {
+				var self = this;
+
+				if ( self.$el.find( '#messages-post-video-uploader' ).hasClass( 'open' ) ) {
+					return false;
+				}
+				self.destroy();
+
+				var messageVideoTemplate                                   = document.getElementsByClassName( 'message-post-video-template' ).length ? document.getElementsByClassName( 'message-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+				bp.Nouveau.Messages.dropzone_video_options.previewTemplate = messageVideoTemplate;
+
+				bp.Nouveau.Messages.dropzone = new window.Dropzone( '#messages-post-video-uploader', bp.Nouveau.Messages.dropzone_video_options );
+
+				bp.Nouveau.Messages.dropzone.on(
+					'sending',
+					function(file, xhr, formData) {
+						formData.append( 'action', 'video_upload' );
+						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
+
+						var tool_box = self.$el.parents( '#bp-message-content' );
+						if ( tool_box.find( '#messages-document-button' ) ) {
+							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-gif-button' ) ) {
+							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-media-button' ) ) {
+							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-video-button' ) ) {
+							tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'addedfile',
+					function ( file ) {
+
+						if (file.dataURL) {
+							// Get Thumbnail image from response.
+						} else {
+
+							if ( bp.Nouveau.getVideoThumb ) {
+								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+							}
+
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'uploadprogress',
+					function( element ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+						if ( element.upload.progress <= 99 ) {
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+							circle.style.strokeDashoffset = offset;
+						} else if ( element.upload.progress === 100 ) {
+							circle.style.strokeDashoffset = circumference - 0.99 * circumference;
+							$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'success',
+					function(file, response) {
+
+						if ( file.upload.progress === 100 ) {
+							$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
+							$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+						}
+
+						if ( response.data.id ) {
+							file.id 				 = response.data.id;
+							response.data.uuid 		 = file.upload.uuid;
+							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+							response.data.saved 	 = false;
+							response.data.privacy 	 = 'message';
+							response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+							self.video.push( response.data );
+							self.model.set( 'video', self.video );
+						} else {
+							var node, _i, _len, _ref, _results;
+							var message = response.data.feedback;
+							file.previewElement.classList.add( 'dz-error' );
+							_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+							_results = [];
+							for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+								node = _ref[_i];
+								_results.push( node.textContent = message );
+							}
+							return _results;
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'accept',
+					function( file, done ) {
+						if (file.size == 0) {
+							done( BP_Nouveau.media.empty_video_type );
+						} else {
+							done();
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'error',
+					function(file,response) {
+						if ( file.accepted ) {
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+							}
+						} else {
+							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button closeModalErrorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							this.removeFile( file );
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'removedfile',
+					function(file) {
+						if ( self.video.length ) {
+							for ( var i in self.video ) {
+								if ( file.id === self.video[i].id ) {
+									if ( typeof self.video[i].saved !== 'undefined' && ! self.video[i].saved ) {
+										bp.Nouveau.Media.removeAttachment( file.id );
+									}
+									self.video.splice( i, 1 );
+									self.model.set( 'video', self.video );
+								}
+							}
+						}
+
+						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
+							var tool_box = self.$el.parents( '#bp-message-content' );
+							if ( tool_box.find( '#messages-document-button' ) ) {
+								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-gif-button' ) ) {
+								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-media-button' ) ) {
+								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-video-button' ) ) {
+								tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+							}
+						}
+					}
+				);
+
+				self.$el.find( '#messages-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
 			}
 
@@ -1187,6 +1716,9 @@ window.bp = window.bp || {};
 				}
 				if ( tool_box.find( '#messages-document-button' ) ) {
 					tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+				}
+				if ( tool_box.find( '#messages-video-button' ) ) {
+					tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 				}
 				if ( tool_box.find( '#messages-gif-button' ) ) {
 					tool_box.find( '#messages-gif-button' ).removeClass( 'open active' );
@@ -1284,6 +1816,9 @@ window.bp = window.bp || {};
 				}
 				if ( tool_box.find( '#messages-document-button' ) ) {
 					tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+				}
+				if ( tool_box.find( '#messages-video-button' ) ) {
+					tool_box.find( '#messages-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 			},
 
@@ -1401,6 +1936,7 @@ window.bp = window.bp || {};
 			events: {
 				'click #messages-media-button': 'toggleMediaSelector',
 				'click #messages-document-button': 'toggleDocumentSelector',
+				'click #messages-video-button': 'toggleVideoSelector',
 				'click #messages-gif-button': 'toggleGifSelector',
 				'click #show-toolbar-button': 'toggleToolbarSelector',
 				'click .medium-editor-toolbar-actions': 'focusEditor'
@@ -1422,6 +1958,7 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				this.closeGifSelector();
 				this.closeDocumentSelector();
+				this.closeVideoSelector();
 				var event = new Event( 'messages_media_toggle' );
 				document.dispatchEvent( event );
 				$( e.currentTarget ).toggleClass( 'active' );
@@ -1431,8 +1968,19 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				this.closeMediaSelector();
 				this.closeGifSelector();
+				this.closeVideoSelector();
 				var documentEvent = new Event( 'messages_document_toggle' );
 				document.dispatchEvent( documentEvent );
+				$( e.currentTarget ).toggleClass( 'active' );
+			},
+
+			toggleVideoSelector: function( e ) {
+				e.preventDefault();
+				this.closeGifSelector();
+				this.closeMediaSelector();
+				this.closeDocumentSelector();
+				var event = new Event( 'messages_video_toggle' );
+				document.dispatchEvent( event );
 				$( e.currentTarget ).toggleClass( 'active' );
 			},
 
@@ -1448,10 +1996,17 @@ window.bp = window.bp || {};
 				$( '#messages-document-button' ).removeClass( 'active' );
 			},
 
+			closeVideoSelector: function() {
+				var videoCloseEvent = new Event( 'messages_video_close' );
+				document.dispatchEvent( videoCloseEvent );
+				$( '#messages-video-button' ).removeClass( 'active' );
+			},
+
 			toggleGifSelector: function( e ) {
 				e.preventDefault();
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
+				this.closeVideoSelector();
 				if ( this.$gifPickerEl.is( ':empty' ) ) {
 					var gifMediaSearchDropdownView = new bp.Views.MessagesGifMediaSearchDropdown( {model: this.model} );
 					this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
@@ -1464,9 +2019,7 @@ window.bp = window.bp || {};
 					this.$self.addClass( 'open' );
 					$( e.currentTarget ).addClass( 'active' );
 				}
-				// this.$self.toggleClass( 'open' );
 				this.$gifPickerEl.toggleClass( 'open' );
-				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
 			toggleToolbarSelector: function( e ) {
@@ -1528,7 +2081,6 @@ window.bp = window.bp || {};
 					if ( gif_box.length > 0 && $.trim( gif_box.html() ) == '' ) {
 						this.$self.removeClass( 'open active' );
 					}
-					// this.$self.removeClass( 'open active' );
 					this.$gifPickerEl.removeClass( 'open' );
 				}
 			}
@@ -1542,6 +2094,7 @@ window.bp = window.bp || {};
 			id: 'whats-new-messages-attachments',
 			messagesMedia: null,
 			messagesDocument: null,
+			messagesVideo: null,
 			messagesAttachedGifPreview: null,
 			initialize: function() {
 				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media_active ) {
@@ -1554,6 +2107,11 @@ window.bp = window.bp || {};
 					this.views.add( this.messagesDocument );
 				}
 
+				if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.video ) && ( BP_Nouveau.video.messages_video_active ) ) {
+					this.messagesVideo = new bp.Views.MessagesVideo( {model: this.model} );
+					this.views.add( this.messagesVideo );
+				}
+
 				this.messagesAttachedGifPreview = new bp.Views.MessagesAttachedGifPreview( { model: this.model } );
 				this.views.add( this.messagesAttachedGifPreview );
 			},
@@ -1563,6 +2121,9 @@ window.bp = window.bp || {};
 				}
 				if ( ! _.isNull( this.messagesDocument ) ) {
 					this.messagesDocument.destroy();
+				}
+				if ( ! _.isNull( this.messagesVideo ) ) {
+					this.messagesVideo.destroy();
 				}
 				if ( ! _.isNull( this.messagesAttachedGifPreview ) ) {
 					this.messagesAttachedGifPreview.destroy();
@@ -1635,8 +2196,6 @@ window.bp = window.bp || {};
 
 				this.views.add( '#bp-message-content', new bp.Views.MessageFormSubmitWrapper( { model: this.model } ) );
 
-				// this.model.on( 'change', this.resetFields, this );
-
 				// Activate bp_mentions.
 				this.on( 'ready', this.addSelect2, this );
 			},
@@ -1691,13 +2250,18 @@ window.bp = window.bp || {};
 							},
 							cache: true,
 							processResults: function( data ) {
-
+								var cval = $( this.container.$container ).find( '.select2-search__field' ).val();
+								if ( cval.length < 1 ) {
+									return {
+										results: []
+									};
+								}
 								// Removed the element from results if already selected.
 								if ( false === jQuery.isEmptyObject( ArrayData ) ) {
 									$.each(
 										ArrayData,
 										function( index, value ) {
-											for (var i = 0;i < data.data.results.length;i++) {
+											for ( var i = 0; i < data.data.results.length; i++ ) {
 												if (data.data.results[i].id === value) {
 													data.data.results.splice( i,1 );
 												}
@@ -1711,7 +2275,7 @@ window.bp = window.bp || {};
 								};
 							}
 						}
-						}
+					}
 				);
 
 				// Add element into the Arrdata array.
@@ -1758,10 +2322,6 @@ window.bp = window.bp || {};
 						}
 					}
 				);
-
-				// if (this.messagesAttachments !== false){
-				// this.messagesAttachments.onClose();
-				// }
 
 				// Listen to this to eventually reset your custom inputs.
 				$( this.el ).trigger( 'message:reset', _.pick( model.previousAttributes(), 'meta' ) );
@@ -1857,7 +2417,7 @@ window.bp = window.bp || {};
 
 				// check message content empty.
 				this.model.set( 'message_content', this.model.get( 'message_content' ).replace( /&nbsp;/g, '' ).trim(), { silent: true } );
-				if ( this.model.get( 'message_content' ) === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
+				if ( this.model.get( 'message_content' ) === '' && ( typeof this.model.get( 'video' ) !== 'undefined' && ! this.model.get( 'video' ).length ) && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -1874,7 +2434,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					this.model.set( 'message_content', '&nbsp;', { silent: true } );
 				}
 
@@ -1888,8 +2448,6 @@ window.bp = window.bp || {};
 					function( response ) {
 						// Reset the model.
 						self.model.set( self.resetModel );
-
-						// bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 
 						// Remove tinyMCE.
 						bp.Nouveau.Messages.removeTinyMCE();
@@ -1911,6 +2469,14 @@ window.bp = window.bp || {};
 							self.model.set( 'document',document );
 						}
 
+						var video = self.model.get( 'video' );
+						if ( typeof video !== 'undefined' && video.length ) {
+							for ( var v = 0; v < video.length; v++ ) {
+								video[v].saved = true;
+							}
+							self.model.set( 'video',video );
+						}
+
 							// clear message attachments and toolbar.
 						if (self.messagesAttachments !== false) {
 							self.messagesAttachments.onClose();
@@ -1929,9 +2495,10 @@ window.bp = window.bp || {};
 				).fail(
 					function( response ) {
 						if ( response.feedback ) {
-							   bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 						}
-							$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
+
+						$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
 					}
 				);
 			},
@@ -2104,7 +2671,6 @@ window.bp = window.bp || {};
 				this.setActiveThread( target.data( 'thread-id' ) );
 				var selected = this.collection.findWhere( { active: true } );
 
-				// selected.updateReadState();
 				if ( selected.get( 'unread' ) ) {
 					selected.updateReadState().done(
 						function() {
@@ -2194,7 +2760,7 @@ window.bp = window.bp || {};
 
 				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-send-msg';
-				} else if( 0 === this.model.get( 'can_user_send_message_in_thread' ) || false === this.model.get( 'can_user_send_message_in_thread' ) ) {
+				} else if ( 0 === this.model.get( 'can_user_send_message_in_thread' ) || false === this.model.get( 'can_user_send_message_in_thread' ) ) {
 					this.el.className += ' can-not-send-msg';
 				}
 
@@ -2297,7 +2863,6 @@ window.bp = window.bp || {};
 
 			initialize: function() {
 				this.model.on( 'change', this.filterThreads, this );
-				// this.options.threads.on( 'sync', this.addPagination, this );
 			},
 
 			addPagination: function( collection ) {
@@ -2311,11 +2876,6 @@ window.bp = window.bp || {};
 				);
 
 				this.views.add( new bp.Views.Pagination( { model: new Backbone.Model( collection.options ) } ) );
-
-				// this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
-				// model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
-				// collection : collection
-				// } ) );
 			},
 
 			filterThreads: function() {
@@ -2392,8 +2952,6 @@ window.bp = window.bp || {};
 
 				$( this.$el ).find( 'button' ).addClass( 'loading' );
 				$( this.$el ).parent().addClass( 'loading' );
-
-				// bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
 				if ( _.isUndefined( this.options.thread.attributes ) ) {
 					data.id = this.options.thread.id;
@@ -2540,7 +3098,6 @@ window.bp = window.bp || {};
 							}
 						} else if ( response.messages ) {
 
-							// bp.Nouveau.Messages.messages.collection.reset();
 							self.model.set( _.first( response.messages ) );
 
 							// Display the feedback.
@@ -2704,9 +3261,9 @@ window.bp = window.bp || {};
 				if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
 					// hide reply form.
-					this.$( '#send-reply' ).hide().parent().addClass('is_restricted');
+					this.$( '#send-reply' ).hide().parent().addClass( 'is_restricted' );
 					if ( ! _.isUndefined( response.thread.is_group_thread ) && response.thread.is_group_thread === 1 ) {
-						this.$( '#send-reply' ).show().parent().removeClass('is_restricted');
+						this.$( '#send-reply' ).show().parent().removeClass( 'is_restricted' );
 						$( '#send-reply' ).find( '.message-box' ).show();
 					}
 				} else {
@@ -2824,7 +3381,7 @@ window.bp = window.bp || {};
 					jQuery( tinyMCE.activeEditor.formElement ).addClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
 					if ( bp.Nouveau.Messages.mediumEditor.getContent() ) {
-						//Before send make sure that medium editor is focus.
+						// Before send make sure that medium editor is focus.
 						$( bp.Nouveau.Messages.mediumEditor.elements[0] ).focus();
 
 						$( bp.Nouveau.Messages.mediumEditor.getSelectedParentElement() ).find( 'img.emoji' ).each(
@@ -2849,7 +3406,7 @@ window.bp = window.bp || {};
 				content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content = content.replace( /&nbsp;/g, ' ' );
 
-				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'video' ) !== 'undefined' && ! this.model.get( 'video' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -2866,7 +3423,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'video' ) !== 'undefined' && this.model.get( 'video' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					content = '&nbsp;';
 				}
 
@@ -2898,7 +3455,7 @@ window.bp = window.bp || {};
 					tinyMCE.activeEditor.setContent( '' );
 					jQuery( tinyMCE.activeEditor.formElement ).removeClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
-					// Reset Formatting
+					// Reset Formatting.
 					bp.Nouveau.Messages.mediumEditor.resetContent();
 					jQuery( '#message_content' ).removeClass( 'loading' );
 				}
@@ -2920,6 +3477,14 @@ window.bp = window.bp || {};
 						documents[d].saved = true;
 					}
 					this.model.set( 'document',documents );
+				}
+
+				var videos = this.model.get( 'video' );
+				if ( typeof videos !== 'undefined' && videos.length ) {
+					for ( var v = 0; v < videos.length; v++ ) {
+						videos[v].saved = true;
+					}
+					this.model.set( 'video',videos );
 				}
 
 				if (this.messageAttachments.onClose) {
@@ -2957,7 +3522,7 @@ window.bp = window.bp || {};
 			composeMessage: function() {
 				bp.Nouveau.Messages.composeView();
 
-				if ( !_.isUndefined( BP_Nouveau.media ) ) {
+				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 					if ( BP_Nouveau.media.messages_document === false ) {
 						$( '#whats-new-messages-toolbar .post-media-document-support' ).hide();
@@ -2969,6 +3534,12 @@ window.bp = window.bp || {};
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).hide();
 					} else {
 						$( '#whats-new-messages-toolbar .post-media-photo-support' ).show();
+					}
+
+					if ( BP_Nouveau.video.messages_video === false ) {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).hide();
+					} else {
+						$( '#whats-new-messages-toolbar .post-media-video-support' ).show();
 					}
 
 					// Membership GiF Support.

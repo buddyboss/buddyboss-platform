@@ -138,10 +138,10 @@ class BP_Embed extends WP_Embed {
 
 		// Set up a new WP oEmbed object to check URL with registered oEmbed providers.
 		if ( file_exists( ABSPATH . WPINC . '/class-wp-oembed.php' ) ) {
-			require_once( ABSPATH . WPINC . '/class-wp-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-wp-oembed.php';
 		} else {
 			// class-oembed.php is deprecated in WordPress 5.3.0.
-			require_once( ABSPATH . WPINC . '/class-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-oembed.php';
 		}
 
 		$oembed_obj = _wp_oembed_get_object();
@@ -265,7 +265,7 @@ class BP_Embed extends WP_Embed {
 
 		if ( $is_activity ) {
 
-			if ( !empty( $content ) && false !== strpos( '<iframe', $content ) ) {
+			if ( ! empty( $content ) && false !== strpos( '<iframe', $content ) ) {
 				return apply_filters( 'bp_embeds', $content );
 			}
 
@@ -273,7 +273,7 @@ class BP_Embed extends WP_Embed {
 			$link_embed = bp_activity_get_meta( $type->id, '_link_embed', true );
 			if ( '0' === $link_embed ) {
 				return $content;
-			} else if ( ! empty( $link_embed ) ) {
+			} elseif ( ! empty( $link_embed ) ) {
 				$embed_data = bp_core_parse_url( $link_embed );
 
 				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
@@ -289,14 +289,24 @@ class BP_Embed extends WP_Embed {
 							'error'       => '',
 							'wp_embed'    => true,
 						);
-						$cache_key = 'bp_activity_oembed_' . md5( serialize( $link_embed ) );
+						$cache_key       = 'bp_activity_oembed_' . md5( maybe_serialize( $link_embed ) );
 						// set the transient.
 						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 					}
 				}
 
 				if ( ! empty( $embed_code ) ) {
-					$content .= $embed_code;
+
+					if ( ! empty( $content ) ) {
+						preg_match( '/(https?:\/\/[^\s<>"]+)/i', $content, $content_url );
+						preg_match( '(<p(>|\s+[^>]*>).*?<\/p>)', $content, $content_tag );
+
+						if ( ! empty( $content_url ) && empty( $content_tag ) ) {
+							$content = sprintf( '<p>%s</p>', $content );
+						}
+					}
+
+					$content   .= $embed_code;
 					$link_embed = true;
 				}
 			} else {
@@ -312,14 +322,14 @@ class BP_Embed extends WP_Embed {
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 
-		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) ) {
+		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) && ! ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) ) {
 			// Find URLs on their own line.
 			if ( ! $is_activity ) {
 				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
 			}
 
 			// Find URLs in their own paragraph.
-			$content = preg_replace_callback( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', array( $this, 'autoembed_callback' ), $content );
+			$content = $this->bb_get_content_autoembed_callback( $content );
 		}
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
@@ -343,5 +353,50 @@ class BP_Embed extends WP_Embed {
 
 		// Put the line breaks back.
 		return apply_filters( 'bp_autoembed', $content );
+	}
+
+	/**
+	 * Add oembed to content.
+	 *
+	 * @since BuddyBoss 1.8.3
+	 *
+	 * @param string $content The content to be searched.
+	 *
+	 * @return string
+	 */
+	public function bb_get_content_autoembed_callback( $content ) {
+		if ( false !== strpos( $content, '<iframe' ) ) {
+			return $content;
+		}
+
+		$embed_urls = array();
+		$flag       = true;
+
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
+			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		}
+
+		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
+			$embed_urls = array_filter( $embed_urls[0] );
+			$embed_urls = array_unique( $embed_urls );
+
+			foreach ( $embed_urls as $url ) {
+				if ( false === $flag ) {
+					continue;
+				}
+
+				$embed = $this->shortcode( array(), $url );
+				if ( false !== strpos( $embed, '<iframe' ) ) {
+					$is_embed = strpos( $content, $url );
+
+					if ( false !== $is_embed ) {
+						$flag    = false;
+						$content = substr_replace( $content, $embed, $is_embed, strlen( $url ) );
+					}
+				}
+			}
+		}
+
+		return $content;
 	}
 }

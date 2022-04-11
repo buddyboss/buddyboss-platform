@@ -1604,7 +1604,9 @@ define({ "api": [
               "date_created",
               "date_modified",
               "group_id",
-              "privacy"
+              "privacy",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3045,7 +3047,8 @@ define({ "api": [
               "parent",
               "rand",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -3532,7 +3535,8 @@ define({ "api": [
               "menu_order",
               "relevance",
               "popular",
-              "activity"
+              "activity",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -4280,7 +4284,8 @@ define({ "api": [
               "newest",
               "alphabetical",
               "random",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -4552,6 +4557,30 @@ define({ "api": [
             "field": "invite_sent",
             "defaultValue": "sent",
             "description": "<p>Limit result set to invites that have been sent, not sent, or include all.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "include"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "id",
+            "description": "<p>Order invites by which attribute.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "sort_order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
           }
         ]
       }
@@ -4785,6 +4814,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
+              "edit-details",
               "group-settings",
               "forum",
               "courses"
@@ -5256,196 +5286,6 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bp-rest-learndash-courses-endpoint.php",
-    "groupTitle": "Learndash"
-  },
-  {
-    "type": "GET",
-    "url": "/wp-json/buddyboss/v1/learndash/courses",
-    "title": "LearnDash Courses",
-    "name": "GetBBLearndashCourses",
-    "group": "Learndash",
-    "description": "<p>Retrieve courses.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "page",
-            "defaultValue": "1",
-            "description": "<p>Current page of the collection.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "per_page",
-            "defaultValue": "10",
-            "description": "<p>Maximum number of items to be returned in result set.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "search",
-            "description": "<p>Limit results to those matching a string.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "author",
-            "description": "<p>Limit result set to posts assigned to specific authors.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "author_exclude",
-            "description": "<p>Ensure result set excludes posts assigned to specific authors.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "after",
-            "description": "<p>Limit response to resources published after a given ISO8601 compliant date.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "before",
-            "description": "<p>Limit response to resources published before a given ISO8601 compliant date.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "exclude",
-            "description": "<p>Ensure result set excludes specific IDs.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "include",
-            "description": "<p>Limit result set to specific IDs.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "offset",
-            "description": "<p>Offset the result set by a specific number of items.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "asc",
-              "desc"
-            ],
-            "optional": true,
-            "field": "order",
-            "defaultValue": "asc",
-            "description": "<p>Order sort attribute ascending or descending.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "author",
-              "date",
-              "id",
-              "include",
-              "modified",
-              "parent",
-              "relevance",
-              "slug",
-              "title",
-              "menu_order"
-            ],
-            "optional": true,
-            "field": "orderby",
-            "defaultValue": "date",
-            "description": "<p>Sort collection by object attribute.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "allowedValues": [
-              "publish",
-              "future",
-              "draft",
-              "pending",
-              "private",
-              "trash",
-              "auto-draft",
-              "inherit",
-              "request-pending",
-              "request-confirmed",
-              "request-failed",
-              "request-completed",
-              "closed",
-              "spam",
-              "orphan",
-              "hidden",
-              "graded",
-              "not_graded",
-              "any"
-            ],
-            "optional": true,
-            "field": "status",
-            "defaultValue": "date",
-            "description": "<p>Sort collection by object attribute.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_category",
-            "description": "<p>Limit result set to all items that have the specified term assigned in the ld_course_category taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_category_exclude",
-            "description": "<p>Limit result set to all items except those that have the specified term assigned in the ld_course_category taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_tag",
-            "description": "<p>Limit result set to all items that have the specified term assigned in the ld_course_tag taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_tag_exclude",
-            "description": "<p>Limit result set to all items except those that have the specified term assigned in the ld_course_tag taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "group_id",
-            "description": "<p>Limit response to specific buddypress group.</p>"
-          }
-        ]
-      }
-    },
     "filename": "src/bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php",
     "groupTitle": "Learndash"
   },
@@ -5647,10 +5487,10 @@ define({ "api": [
   {
     "type": "DELETE",
     "url": "/wp-json/buddyboss/v1/media/",
-    "title": "Delete Photos",
+    "title": "Delete Medias",
     "name": "DeleteBBPhotos",
     "group": "Media",
-    "description": "<p>Delete Multiple Photos.</p>",
+    "description": "<p>Delete Multiple Photos/Videos.</p>",
     "version": "1.0.0",
     "permission": [
       {
@@ -5665,7 +5505,7 @@ define({ "api": [
             "type": "Array",
             "optional": false,
             "field": "media_ids",
-            "description": "<p>A unique numeric IDs for the media photo.</p>"
+            "description": "<p>A unique numeric IDs for the media photo/video.</p>"
           }
         ]
       }
@@ -5694,6 +5534,22 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "id",
+            "description": "<p>A unique numeric ID for the Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "media_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of Album Medias.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "media_per_page",
+            "defaultValue": "10",
             "description": "<p>A unique numeric ID for the Album.</p>"
           }
         ]
@@ -5928,7 +5784,9 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "date_created",
-              "menu_order"
+              "menu_order",
+              "id",
+              "include"
             ],
             "optional": true,
             "field": "orderby",
@@ -6023,6 +5881,49 @@ define({ "api": [
       }
     },
     "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/media/move",
+    "title": "Move Medias",
+    "name": "MoveBBPhotos",
+    "group": "Media",
+    "description": "<p>Move Medias into the albums.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "media_ids",
+            "description": "<p>Media specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Media Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -6478,7 +6379,8 @@ define({ "api": [
               "alphabetical",
               "random",
               "online",
-              "popular"
+              "popular",
+              "include"
             ],
             "optional": true,
             "field": "type",
@@ -6810,6 +6712,28 @@ define({ "api": [
             "optional": false,
             "field": "user_id",
             "description": "<p>The user ID to remove from the thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -6839,6 +6763,28 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>ID of the Messages Thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -7073,6 +7019,28 @@ define({ "api": [
             "optional": false,
             "field": "message_id",
             "description": "<p>By default the latest message of the thread will be updated. Specify this message ID to edit another message of the thread.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "before",
+            "description": "<p>Messages to get before a specific date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "recipients_pagination",
+            "description": "<p>Load recipients in a paginated manner.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "recipients_page",
+            "defaultValue": "1",
+            "description": "<p>Current page of the recipients.</p>"
           }
         ]
       }
@@ -7529,7 +7497,8 @@ define({ "api": [
               "item_id",
               "secondary_item_id",
               "component_name",
-              "component_action"
+              "component_action",
+              "include"
             ],
             "optional": true,
             "field": "order_by",
@@ -8916,8 +8885,8 @@ define({ "api": [
   },
   {
     "type": "PATCH",
-    "url": "/wp-json/buddyboss/v1/signup/activate/:id",
-    "title": "Delete signup",
+    "url": "/wp-json/buddyboss/v1/signup/activate/:activation_key",
+    "title": "Activate a signup",
     "name": "ActivateBBSignups",
     "group": "Signups",
     "description": "<p>Activate a signup.</p>",
@@ -8929,8 +8898,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>Identifier for the signup. Can be a signup ID, an email address, or a user_login.</p>"
+            "field": "activation_key",
+            "description": "<p>Identifier for the signup.</p>"
           }
         ]
       }
@@ -9130,5 +9099,528 @@ define({ "api": [
     },
     "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
     "groupTitle": "Signups"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/video",
+    "title": "Create Videos",
+    "name": "CreateBBVideos",
+    "group": "Video",
+    "description": "<p>Create Video.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "upload_ids",
+            "description": "<p>Video specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "activity_id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Video Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Video Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "onlyme",
+              "friends",
+              "grouponly"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "defaultValue": "public",
+            "description": "<p>Privacy of the video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/video/:id",
+    "title": "Delete Video",
+    "name": "DeleteBBVideo",
+    "group": "Video",
+    "description": "<p>Delete a single Video.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/video/:id/poster",
+    "title": "Delete Poster",
+    "name": "DeleteBBVideoPoster",
+    "group": "Video",
+    "description": "<p>Delete Video Poster</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video video.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "attachment_id",
+            "description": "<p>A Unique numeric ID for the video poster.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/video/:id",
+    "title": "Get Video",
+    "name": "GetBBVideo",
+    "group": "Video",
+    "description": "<p>Retrieve a single video.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/video/details",
+    "title": "Video Details",
+    "name": "GetBBVideoDetails",
+    "group": "Video",
+    "description": "<p>Retrieve Video details(includes tabs and privacy options)</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "filename": "src/bp-video/classes/class-bp-rest-video-details-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/video/:id/poster",
+    "title": "Get Posters",
+    "name": "GetBBVideoPosters",
+    "group": "Video",
+    "description": "<p>Retrieve Video posters.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/video",
+    "title": "Get Videos",
+    "name": "GetBBVideos",
+    "group": "Video",
+    "description": "<p>Retrieve videos.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "search",
+            "description": "<p>Limit results to those matching a string.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "date_created",
+              "menu_order",
+              "id",
+              "include"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "date_created",
+            "description": "<p>Order by a specific parameter.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>Limit result set to items created by a specific user (ID).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "max",
+            "description": "<p>Maximum number of results to return.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "activity_id",
+            "description": "<p>A unique numeric ID for the Video's Activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "onlyme",
+              "friends",
+              "grouponly"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "defaultValue": "public",
+            "description": "<p>Privacy of the video.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "friends",
+              "groups",
+              "personal"
+            ],
+            "optional": true,
+            "field": "scope",
+            "description": "<p>Scope of the video.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "count_total",
+            "defaultValue": "true",
+            "description": "<p>Show total count or not.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/video/:id",
+    "title": "Update Video",
+    "name": "UpdateBBVideo",
+    "group": "Video",
+    "description": "<p>Update a single Video.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video video.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "album_id",
+            "description": "<p>A unique numeric ID for the Album.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Video Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "onlyme",
+              "friends",
+              "grouponly"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "description": "<p>Privacy of the video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "POST/PUT",
+    "url": "/wp-json/buddyboss/v1/video/:id/poster",
+    "title": "Add Video Poster",
+    "name": "UpdateBBVideoPoster",
+    "group": "Video",
+    "description": "<p>Add Video Poster</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video video.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "attachment_id",
+            "description": "<p>A Unique numeric ID for the video poster.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/video/upload",
+    "title": "Upload Video",
+    "name": "UploadBBVideo",
+    "group": "Video",
+    "description": "<p>Upload Video.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "file",
+            "description": "<p>File object which is going to upload.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/video/:id/upload_poster",
+    "title": "Upload Video Poster",
+    "name": "UploadBBVideoPoster",
+    "group": "Video",
+    "description": "<p>Upload Video Poster.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "file",
+            "description": "<p>File object which is going to upload.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-poster-endpoint.php",
+    "groupTitle": "Video"
   }
 ] });

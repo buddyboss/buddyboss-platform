@@ -57,13 +57,14 @@ add_action( 'bp_admin_init', 'bp_register_admin_integrations' );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
 
-// Hide the Gravatar metabox from the WordPress discussion page.
-if ( function_exists( 'bp_enable_profile_gravatar ' ) && false === bp_enable_profile_gravatar() ) {
-	add_action( 'admin_head', 'bp_remove_avatar_settings_from_options_discussion_page' );
-}
+// Show notice when Profile Avatars is BuddyBoss.
+add_action( 'bp_admin_head', 'bb_discussion_page_show_notice_in_avatar_section' );
 
 // Add a new separator.
 add_action( 'bp_admin_menu', 'bp_admin_separator' );
+
+// Check user nickname on backend user edit page.
+add_action( 'user_profile_update_errors', 'bb_check_user_nickname', 10, 3 );
 
 /**
  * When a new site is created in a multisite installation, run the activation
@@ -248,4 +249,38 @@ function bp_register_admin_integrations() {
 	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_register_admin_integrations' );
+}
+
+/**
+ * Check user nickname is already taken or not.
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @param object $errors error object.
+ * @param bool   $update updating user or adding user.
+ * @param object $user   user data.
+ */
+function bb_check_user_nickname( &$errors, $update, &$user ) {
+	global $wpdb;
+
+	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
+
+	$where = array(
+		'meta_key = "nickname"',
+		'meta_value = "' . $un_name . '"',
+	);
+
+	if ( ! empty( $user->ID ) ) {
+		$where[] = 'user_id != ' . $user->ID;
+	}
+
+	$sql = sprintf(
+		'SELECT count(*) FROM %s WHERE %s',
+		$wpdb->usermeta,
+		implode( ' AND ', $where )
+	);
+
+	if ( $wpdb->get_var( $sql ) > 0 ) {
+		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
+	}
 }

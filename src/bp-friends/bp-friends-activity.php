@@ -281,7 +281,8 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		}
 	}
 
-	if ( is_user_logged_in() && bp_loggedin_user_id() === $user_id ) {
+	//Determine activity tabs status and filter the activity.
+	if ( ( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )  && ( is_user_logged_in() && bp_loggedin_user_id() === $user_id ) ) {
 		$friends[]        = bp_loggedin_user_id();
 		$mutual_friends[] = bp_loggedin_user_id();
 	}
