@@ -76,25 +76,31 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 *
 	 * @param int    $member_id Member id.
 	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_member_topic_ids( $member_id, $action = '' ) {
+	public static function get_member_topic_ids( $member_id, $action = '', $page = - 1 ) {
 		$topic_ids = array();
 
-		$topic_query = new WP_Query(
-			array(
-				'fields'                 => 'ids',
-				'post_type'              => bbp_get_topic_post_type(),
-				'post_status'            => 'publish',
-				'author'                 => $member_id,
-				'posts_per_page'         => - 1,
-				// Need to get all topics id of hidden forums.
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				'suppress_filters'       => true,
-			)
+		$args = array(
+			'fields'                 => 'ids',
+			'post_type'              => bbp_get_topic_post_type(),
+			'post_status'            => 'publish',
+			'author'                 => $member_id,
+			'posts_per_page'         => - 1,
+			// Need to get all topics id of hidden forums.
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'suppress_filters'       => true,
 		);
+
+		if ( $page > 0 ) {
+			$args['posts_per_page'] = self::$item_per_page;
+			$args['paged']          = $page;
+		}
+
+		$topic_query = new WP_Query( $args );
 
 		if ( $topic_query->have_posts() ) {
 			$topic_ids = $topic_query->posts;
@@ -117,25 +123,31 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param int $forum_id forums id.
+	 * @param int $page     Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_forum_topics_ids( $forum_id ) {
+	public static function get_forum_topics_ids( $forum_id, $page = - 1 ) {
 		$topic_ids = array();
 
-		$topic_query = new WP_Query(
-			array(
-				'fields'                 => 'ids',
-				'post_type'              => bbp_get_topic_post_type(),
-				'post_status'            => 'publish',
-				'post_parent'            => $forum_id,
-				'posts_per_page'         => - 1,
-				// Need to get all topics id of hidden forums.
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				'suppress_filters'       => true,
-			)
+		$args = array(
+			'fields'                 => 'ids',
+			'post_type'              => bbp_get_topic_post_type(),
+			'post_status'            => 'publish',
+			'post_parent'            => $forum_id,
+			'posts_per_page'         => - 1,
+			// Need to get all topics id of hidden forums.
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'suppress_filters'       => true,
 		);
+
+		if ( $page > 0 ) {
+			$args['posts_per_page'] = self::$item_per_page;
+			$args['paged']          = $page;
+		}
+
+		$topic_query = new WP_Query( $args );
 
 		if ( $topic_query->have_posts() ) {
 			$topic_ids = $topic_query->posts;
@@ -259,7 +271,7 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
 			return null;
 		}
 
@@ -294,13 +306,15 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $topic_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $topic_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $topic_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -348,13 +362,15 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $topic_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $topic_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $topic_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -375,25 +391,26 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 		$related_contents = array();
 		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
 		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_topic_reply_replies( $topic_id );
+			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_topic_reply_replies( $topic_id, $page );
 		}
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bp_is_active( 'activity' ) && $page < 2 ) {
 			$activity_id                                    = get_post_meta( $topic_id, '_bbp_activity_id', true );
 			$related_contents[ BP_Suspend_Activity::$type ] = array( $activity_id );
 		}
 
-		if ( bp_is_active( 'document' ) ) {
+		if ( bp_is_active( 'document' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $topic_id, 'get_post_meta', $action );
 		}
 
-		if ( bp_is_active( 'media' ) ) {
+		if ( bp_is_active( 'media' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $topic_id, 'get_post_meta', $action );
 		}
 
-		if ( bp_is_active( 'video' ) ) {
+		if ( bp_is_active( 'video' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $topic_id, 'get_post_meta', $action );
 		}
 
