@@ -628,7 +628,7 @@ function messages_get_unread_count( $user_id = 0 ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $thread_id Thread ID of the message.
- * @param int $user_id Optional. ID of the user. Default: ID of the logged-in user.
+ * @param int $user_id   Optional. ID of the user. Default: ID of the logged-in user.
  *
  * @return int
  */
@@ -642,12 +642,12 @@ function bb_get_messages_thread_unread_count( $thread_id, $user_id = 0 ) {
 		return;
 	}
 
-	$cache_key = 'bb_message_thread_unread_count_' . $user_id . '_' . $thread_id;
+	$cache_key    = 'bb_message_thread_unread_count_' . $user_id . '_' . $thread_id;
 	$unread_count = wp_cache_get( $cache_key, 'bp_messages_unread_count' );
 
 	if ( false === $unread_count ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp           = buddypress();
 		$unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT unread_count FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d and is_deleted = 0 AND sender_only = 0", $user_id, $thread_id ) );
 		wp_cache_set( $cache_key, $unread_count, 'bp_messages_unread_count' );
 	}
