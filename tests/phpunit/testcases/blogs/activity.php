@@ -8,14 +8,14 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 	public function test_bp_blogs_loader_post_tracking_args_filter() {
 		$bp = buddypress();
 
-		$expected = array( 'new_blog_post', 'new_blog_comment' );
+		$expected = array( 'new_post' );
 
 		if ( is_multisite() ) {
-			$expected = array_merge( array( 'new_blog' ), $expected );
+			$expected = array_merge( array( 'new_post' ), $expected );
 		}
 
 		$actions = bp_activity_get_actions();
-		$actions = array_keys( (array) $actions->blogs );
+		$actions = array_keys( (array) $actions->activity );
 
 		$this->assertEquals( $expected, $actions );
 	}
@@ -284,7 +284,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 
 		$this->assertEquals( $this->comment_post_id, $p );
 	}
-	
+
 	/**
 	 * @group post_type_comment_activities
 	 */
@@ -371,6 +371,7 @@ class BP_Tests_Blogs_Activity extends BP_UnitTestCase {
 	 */
 	public function test_check_activity_actions_are_set_when_creating_activity_object() {
 		$bp = buddypress();
+		add_post_type_support( 'post', 'buddypress-activity' );
 
 		if ( isset( $bp->activity->actions ) ) {
 			unset( $bp->activity->actions );

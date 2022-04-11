@@ -12,7 +12,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 		parent::setUp();
 		$bp = buddypress();
 
-		$this->reset_actions = clone $bp->activity->actions;
+		$this->reset_actions   = clone $bp->activity->actions;
 		$bp->activity->actions = new stdClass();
 
 		$this->reset_actions_sorted = ! empty( $bp->activity->actions_sorted );
@@ -36,35 +36,44 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 	 * @group activity_action
 	 */
 	public function test_bp_activity_get_actions_should_sort_by_position() {
-		register_post_type( 'foo5', array(
-			'public'      => true,
-			'supports'    => array( 'buddypress-activity' ),
-			'bp_activity' => array(
-				'component_id' => 'foo',
-				'action_id' => 'foo_bar_5',
-				'position' => 5,
-			),
-		) );
+		register_post_type(
+			'foo5',
+			array(
+				'public'      => true,
+				'supports'    => array( 'buddypress-activity' ),
+				'bp_activity' => array(
+					'component_id' => 'foo',
+					'action_id'    => 'foo_bar_5',
+					'position'     => 5,
+				),
+			)
+		);
 
-		register_post_type( 'foo50', array(
-			'public'      => true,
-			'supports'    => array( 'buddypress-activity' ),
-			'bp_activity' => array(
-				'component_id' => 'foo',
-				'action_id' => 'foo_bar_50',
-				'position' => 50,
-			),
-		) );
+		register_post_type(
+			'foo50',
+			array(
+				'public'      => true,
+				'supports'    => array( 'buddypress-activity' ),
+				'bp_activity' => array(
+					'component_id' => 'foo',
+					'action_id'    => 'foo_bar_50',
+					'position'     => 50,
+				),
+			)
+		);
 
-		register_post_type( 'foo25', array(
-			'public'      => true,
-			'supports'    => array( 'buddypress-activity' ),
-			'bp_activity' => array(
-				'component_id' => 'foo',
-				'action_id' => 'foo_bar_25',
-				'position' => 25,
-			),
-		) );
+		register_post_type(
+			'foo25',
+			array(
+				'public'      => true,
+				'supports'    => array( 'buddypress-activity' ),
+				'bp_activity' => array(
+					'component_id' => 'foo',
+					'action_id'    => 'foo_bar_25',
+					'position'     => 25,
+				),
+			)
+		);
 
 		$actions = bp_activity_get_actions();
 
@@ -72,7 +81,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 		_unregister_post_type( 'foo25' );
 		_unregister_post_type( 'foo50' );
 
-		$expected = array(
+		$expected    = array(
 			'foo_bar_5',
 			'foo_bar_25',
 			'foo_bar_50',
@@ -119,28 +128,31 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 	 * @ticket BP6865
 	 */
 	public function test_sort_new_post_type_once() {
-		register_post_type( 'foo', array(
-			'label'   => 'foo',
-			'public'   => true,
-			'supports' => array( 'buddypress-activity' ),
-			'bp_activity' => array(
-				'component_id' => 'blogs',
-				'action_id'    => 'new_foo',
-				'position'     => 1,
-			),
-		) );
+		add_post_type_support( 'post', 'buddypress-activity' );
+		register_post_type(
+			'foo',
+			array(
+				'label'       => 'foo',
+				'public'      => true,
+				'supports'    => array( 'buddypress-activity' ),
+				'bp_activity' => array(
+					'component_id' => 'activity',
+					'action_id'    => 'new_foo',
+					'position'     => 1,
+				),
+			)
+		);
 
 		$actions = bp_activity_get_actions();
 
 		_unregister_post_type( 'foo' );
 
 		$expected = array(
-			'new_foo'          => 'new_foo',
-			'new_blog_post'    => 'new_blog_post',
-			'new_blog_comment' => 'new_blog_comment',
+			'new_post' => 'new_post',
+			'new_foo'  => 'new_foo',
 		);
 
-		$this->assertSame( $expected, wp_list_pluck( (array) $actions->blogs, 'key' ) );
+		$this->assertSame( $expected, wp_list_pluck( (array) $actions->activity, 'key' ) );
 	}
 
 	/**
@@ -148,24 +160,29 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 	 */
 	public function test_sort_new_post_type_twice() {
 		$reset_activity_track = buddypress()->activity->track;
+		add_post_type_support( 'post', 'buddypress-activity' );
 
 		$actions = bp_activity_get_actions();
-		$expected = array(
-			'new_blog_post'    => 'new_blog_post',
-			'new_blog_comment' => 'new_blog_comment',
-		);
-		$this->assertSame( $expected, wp_list_pluck( (array) $actions->blogs, 'key' ) );
 
-		register_post_type( 'foo', array(
-			'label'   => 'foo',
-			'public'   => true,
-			'supports' => array( 'buddypress-activity' ),
-			'bp_activity' => array(
-				'component_id' => 'blogs',
-				'action_id'    => 'new_foo',
-				'position'     => 1,
-			),
-		) );
+		$expected = array(
+			'new_post' => 'new_post',
+		);
+
+		$this->assertSame( $expected, wp_list_pluck( (array) $actions->activity, 'key' ) );
+
+		register_post_type(
+			'foo',
+			array(
+				'label'       => 'foo',
+				'public'      => true,
+				'supports'    => array( 'buddypress-activity' ),
+				'bp_activity' => array(
+					'component_id' => 'activity',
+					'action_id'    => 'new_foo',
+					'position'     => 1,
+				),
+			)
+		);
 
 		/*
 		 * Reset manually as bp_activity_get_actions() -- at the top of this test --
@@ -178,12 +195,11 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 		_unregister_post_type( 'foo' );
 
 		$expected = array(
-			'new_foo'          => 'new_foo',
-			'new_blog_post'    => 'new_blog_post',
-			'new_blog_comment' => 'new_blog_comment',
+			'new_post' => 'new_post',
+			'new_foo'  => 'new_foo',
 		);
 
-		$this->assertSame( $expected, wp_list_pluck( (array) $actions->blogs, 'key' ) );
+		$this->assertSame( $expected, wp_list_pluck( (array) $actions->activity, 'key' ) );
 
 		buddypress()->activity->track = $reset_activity_track;
 	}
