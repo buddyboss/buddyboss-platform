@@ -114,7 +114,7 @@ class BP_Latest_Activities extends WP_Widget {
 		 */
 		$bp_nouveau->activity->widget_args = array(
 			'max'          => $max,
-			'scope'        => 'all',
+			'scope'        => bp_activity_default_scope( 'all' ),
 			'user_id'      => 0,
 			'object'       => false,
 			'action'       => join( ',', $type ),
