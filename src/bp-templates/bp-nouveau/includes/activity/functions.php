@@ -575,6 +575,11 @@ function bp_nouveau_activity_widget_query() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_notification_filters() {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	$notifications = array(
 		array(
 			'id'       => 'new_at_mention',
