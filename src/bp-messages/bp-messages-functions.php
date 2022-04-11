@@ -632,7 +632,7 @@ function messages_get_unread_count( $user_id = 0 ) {
  *
  * @return int
  */
-function bb_get_messages_thread_unread_count( $thread_id, $user_id = 0 ) {
+function bb_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
 
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
@@ -642,7 +642,7 @@ function bb_get_messages_thread_unread_count( $thread_id, $user_id = 0 ) {
 		return;
 	}
 
-	$cache_key    = 'bb_message_thread_unread_count_' . $user_id . '_' . $thread_id;
+	$cache_key    = 'bb_thread_message_unread_count_' . $user_id . '_' . $thread_id;
 	$unread_count = wp_cache_get( $cache_key, 'bp_messages_unread_count' );
 
 	if ( false === $unread_count ) {
