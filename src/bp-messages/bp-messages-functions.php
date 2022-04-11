@@ -648,7 +648,7 @@ function bb_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
 	if ( false === $unread_count ) {
 		global $wpdb;
 		$bp           = buddypress();
-		$unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT unread_count FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d and is_deleted = 0 AND sender_only = 0", $user_id, $thread_id ) );
+		$unread_count = (int) $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count >= 0", $user_id, $thread_id ) );
 		wp_cache_set( $cache_key, $unread_count, 'bp_messages_unread_count' );
 	}
 	return $unread_count;
