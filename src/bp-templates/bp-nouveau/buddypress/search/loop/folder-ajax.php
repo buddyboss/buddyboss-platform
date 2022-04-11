@@ -1,4 +1,13 @@
 <?php
+/**
+ * Template for displaying the search results of the folder ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/folder-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
 
 $folder_link      = bp_get_folder_folder_link();
 ?>
