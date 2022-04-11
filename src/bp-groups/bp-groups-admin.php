@@ -1776,7 +1776,7 @@ function bp_groups_admin_autocomplete_handler() {
 			$matches[] = array(
 				// Translators: 1: user_login, 2: user_email.
 				'label' => sprintf( __( '%1$s (%2$s)', 'buddyboss' ), $user->name, $user->ID ),
-				'value' => $user->ID,
+				'value' => $user->user_nicename,
 			);
 		}
 	}

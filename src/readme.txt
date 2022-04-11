@@ -1,7 +1,7 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Requires PHP: 5.6.20
 Stable tag: 2.0.0
 License: GPLv2 or later
@@ -56,6 +56,30 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.9.3 =
+* Notifications - Provided notification updates as a Lab feature
+* Notifications - Provided options for members to manage all Notification Preferences for all devices in one place
+* Notifications - Provided options in the admin to disable a specific notification type
+* Notifications - Provided options in the admin to manage default notification preferences for new members
+* Notifications - Provided options in the admin to hide Messages notifications from notification dropdown
+* Notifications - Refactored notifications types for Lab feature enabled
+* Notifications - Refactored emails for Lab feature enabled
+* Notifications - Improved code to allow to register new notification types easily
+* Profiles - Handled profile field type paragraph formatting issue to allow HTML target attribute
+* Profiles - Small improvement to show confirm popup before deleting profile field in the admin
+* Groups - Handled add user issue in admin edit group screen when username and nickname are different
+* Groups - Handled my group nav issue in the menu for logged-in member
+* Forums - Handled forum merge discussions and reply split issue
+* Activity - Handled attached GIF issue in Activity Form
+* Activity - Handled activity comment duplicate string issue on paste
+* Messages - Handled last message hidden issue when new member join/left group
+* Network Search - Handled sub-forums search compatibility issue with MariaDB
+* Emails - Provided option to install missing emails templates
+* Documentation - Handled tutorial articles images layout issue
+* REST API - Provided notification updates API support
+* REST API - Handled forum discussions merge and reply split issues in the APIs
+* Compatibility - Handled WP 5.9 compatibility issue causing false alerts on post types edit screen
 
 = 1.9.2 =
 * Profiles - Handled critical issue in Profile when forum component not enabled

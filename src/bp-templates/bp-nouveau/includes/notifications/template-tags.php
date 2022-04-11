@@ -40,7 +40,7 @@ function bp_nouveau_notifications_filters() {
 			}
 
 			$output .= sprintf( '<option value="%1$s" %2$s>%3$s</option>',
-				esc_attr( sanitize_key( $filter['id'] ) ),
+				esc_attr( $filter['id'] ),
 				selected( $selected, $filter['id'], false ),
 				esc_html( $filter['label'] )
 			) . "\n";
