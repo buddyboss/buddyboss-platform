@@ -336,7 +336,27 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
+		if ( function_exists( 'bb_activity_add_notification_metas' ) ) {
+			add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+		}
+		if ( function_exists( 'bb_groups_add_notification_metas' ) ) {
+			add_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
+		}
+		if ( function_exists( 'bb_forums_add_notification_metas' ) ) {
+			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+		}
+
 		$notification_id = bp_notifications_add_notification( $this->prepare_item_for_database( $request ) );
+
+		if ( function_exists( 'bb_activity_add_notification_metas' ) ) {
+			remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+		}
+		if ( function_exists( 'bb_groups_add_notification_metas' ) ) {
+			remove_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
+		}
+		if ( function_exists( 'bb_forums_add_notification_metas' ) ) {
+			remove_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+		}
 
 		if ( ! is_numeric( $notification_id ) ) {
 			return new WP_Error(
@@ -1131,13 +1151,18 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		switch ( $component_action ) {
 			case 'friendship_accepted':
+			case 'bb_connections_request_accepted':
 			case 'membership_request_accepted':
+			case 'bb_groups_request_accepted':
 			case 'membership_request_rejected':
+			case 'bb_groups_request_rejected':
 			case 'member_promoted_to_admin':
 			case 'member_promoted_to_mod':
+			case 'bb_groups_promoted':
 				break;
 
 			case 'friendship_request':
+			case 'bb_connections_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
 					&& bp_is_active( 'friends' )
@@ -1165,6 +1190,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				break;
 
 			case 'new_membership_request':
+			case 'bb_groups_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
 					&& bp_is_active( 'groups' )
@@ -1204,6 +1230,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				break;
 
 			case 'group_invite':
+			case 'bb_groups_new_invite':
 				if ( bp_is_active( 'groups' ) && function_exists( 'groups_get_invites' ) ) {
 					$group     = groups_get_group( $notification->item_id );
 					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
@@ -1263,13 +1290,18 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		switch ( $component_action ) {
 			case 'friendship_accepted':
+			case 'bb_connections_request_accepted':
 			case 'membership_request_accepted':
+			case 'bb_groups_request_accepted':
 			case 'membership_request_rejected':
+			case 'bb_groups_request_rejected':
 			case 'member_promoted_to_admin':
 			case 'member_promoted_to_mod':
+			case 'bb_groups_promoted':
 				break;
 
 			case 'friendship_request':
+			case 'bb_connections_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
 					&& bp_is_active( 'friends' )
@@ -1287,6 +1319,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				break;
 
 			case 'new_membership_request':
+			case 'bb_groups_new_request':
 				if (
 					! empty( $notification->secondary_item_id )
 					&& bp_is_active( 'groups' )
@@ -1312,6 +1345,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				break;
 
 			case 'group_invite':
+			case 'bb_groups_new_invite':
 				if ( bp_is_active( 'groups' ) && function_exists( 'groups_get_invites' ) ) {
 					$group     = groups_get_group( $notification->item_id );
 					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
