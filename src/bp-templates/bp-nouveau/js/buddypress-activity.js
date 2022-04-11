@@ -461,12 +461,12 @@ window.bp = window.bp || {};
 									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
 
-								//stop hiding elements if the id from hash url for specific comment matches
-								if( window.location.hash && "#" + $( item ).attr('id') === window.location.hash ){
+								//stop hiding elements if the id from hash url for specific comment matches.
+								if ( window.location.hash && '#' + $( item ).attr( 'id' ) === window.location.hash ) {
 
-									//in case it's a reply from comment, show hidden parent elements for it to show
-									$( item ).parents( "li.comment-item" ).show();
-									
+									//in case it's a reply from comment, show hidden parent elements for it to show.
+									$( item ).parents( 'li.comment-item' ).show();
+
 									return false;
 								}
 
@@ -2230,19 +2230,19 @@ window.bp = window.bp || {};
 			}
 		},
 
-		navigateToSpecificComment: function( event ) {
+		navigateToSpecificComment: function () {
 
-			setTimeout( function(){
+			setTimeout( function () {
 
-				if(window.location.hash) {
+				if ( window.location.hash ) {
 
 					var id = window.location.hash;
-					if ( $(id).length > 0 )
-						$( 'html,body' ).animate({ scrollTop: parseInt($(id).offset().top) - 50 }, 0);
-						
+					if ( $( id ).length > 0 ) {
+						$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - 50 }, 0 );
+					}
 				}
 
-			}, 200);
+			}, 200 );
 		}
 
 	};
