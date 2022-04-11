@@ -3373,10 +3373,11 @@ table tbody td .bb-description {
 .bb-lab-notice.notification-information {
 
 	&:before {
-		content: "\e8c2";
+		content: "\eebc";
 		display: inline-block;
 		font-family: "bb-icons"; /* stylelint-disable-line */
 		font-size: 16px;
+		font-weight: 100;
 		margin-right: 10px;
 		line-height: 1;
 	}

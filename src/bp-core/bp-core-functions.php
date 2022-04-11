@@ -7567,6 +7567,12 @@ function bb_admin_icons( $id ) {
 		case 'bp_zoom_gutenberg_section';
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
+		case 'bp_labs_settings_notifications';
+			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
+			break;
+		case 'bp_notification_settings_automatic':
+			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
+			break;
 		default:
 			$meta_icon = '';
 	}
