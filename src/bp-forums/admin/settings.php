@@ -389,14 +389,6 @@ function bbp_admin_get_settings_fields() {
 					'sanitize_callback' => 'intval',
 					'args'              => array(),
 				),
-
-				// Group forums parent forum ID
-				'_bbp_group_forums_root_id' => array(
-					'title'             => __( 'Group Forums Parent', 'buddyboss' ),
-					'callback'          => 'bbp_admin_setting_callback_group_forums_root_id',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-				),
 			),
 
 			/** Akismet */
@@ -1252,6 +1244,7 @@ function bbp_converter_setting_callback_main_section() {
  */
 function bbp_converter_setting_callback_platform() {
 
+	$current          = bbp_get_form_option( '_bbp_converter_platform' );
 	$platform_options = '';
 	$curdir           = opendir( bbpress()->admin->admin_dir . 'converters/' );
 
@@ -1264,14 +1257,14 @@ function bbp_converter_setting_callback_platform() {
 	while ( $file = readdir( $curdir ) ) {
 		if ( ( stristr( $file, '.php' ) ) && ( stristr( $file, 'index' ) === false ) ) {
 			$file              = preg_replace( '/.php/', '', $file );
-			$platform_options .= '<option value="' . $file . '">' . esc_html( $file ) . '</option>';
+			$platform_options .= '<option value="' . $file . '"' . selected( $file, $current, false ) . '>' . esc_html( $file ) . '</option>';
 		}
 	}
 
 	closedir( $curdir );
 	?>
 
-	<select name="_bbp_converter_platform" id="_bbp_converter_platform" /><?php echo $platform_options; ?></select>
+	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo $platform_options; ?></select>
 	<label for="_bbp_converter_platform"><?php esc_html_e( 'is the previous forum software', 'buddyboss' ); ?></label>
 
 	<?php
@@ -1327,7 +1320,10 @@ function bbp_converter_setting_callback_dbuser() {
 function bbp_converter_setting_callback_dbpass() {
 	?>
 
-	<input name="_bbp_converter_db_pass" id="_bbp_converter_db_pass" type="password" value="<?php bbp_form_option( '_bbp_converter_db_pass' ); ?>" class="medium-text" />
+	<div class="_bbp_converter_db_pass_wrap">
+		<input name="_bbp_converter_db_pass" id="_bbp_converter_db_pass" type="password" value="<?php bbp_form_option( '_bbp_converter_db_pass' ); ?>" class="medium-text" />
+		<i class="bb-icon bb-icon-eye bbp-db-pass-toggle"></i>
+	</div>
 	<label for="_bbp_converter_db_pass"><?php esc_html_e( 'Password to access the database', 'buddyboss' ); ?></label>
 
 	<?php
@@ -1458,6 +1454,25 @@ function bbp_converter_setting_callback_convert_users() {
  * @uses do_settings_sections() To output the settings sections
  */
 function bbp_converter_settings() {
+
+	// Status.
+	$step = (int) get_option( '_bbp_converter_step', 0 );
+	$max  = (int) bbpress()->admin->converter->max_steps;
+
+	// Starting or continuing?
+	$status_text = ! empty( $step )
+		? sprintf( esc_html__( 'Up next: step %s', 'buddyboss' ), $step )
+		: esc_html__( 'Ready', 'buddyboss' );
+
+	// Starting or continuing?
+	$start_text = ! empty( $step )
+		? esc_html__( 'Resume', 'buddyboss' )
+		: esc_html__( 'Start', 'buddyboss' );
+
+	// Starting or continuing?
+	$progress_text = ! empty( $step )
+		? sprintf( esc_html__( 'Previously stopped at step %1$d of %2$d', 'buddyboss' ), $step, $max )
+		: esc_html__( 'Ready to go.', 'buddyboss' );
 	?>
 
 	<div class="wrap">
@@ -1478,12 +1493,20 @@ function bbp_converter_settings() {
 				<?php do_settings_sections( 'bbpress_converter' ); ?>
 
 				<p class="submit">
-					<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php esc_attr_e( 'Start', 'buddyboss' ); ?>" onclick="bbconverter_start();" />
-					<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Stop', 'buddyboss' ); ?>" onclick="bbconverter_stop();" />
-					<img id="bbp-converter-progress" src="">
+					<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php echo esc_attr( $start_text ); ?>" />
+					<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Pause', 'buddyboss' ); ?>" />
+					<span class="spinner" id="bbp-converter-spinner"></span>
 				</p>
 
-				<div class="bbp-converter-updated" id="bbp-converter-message"></div>
+				<div class="bbp-converter-states" id="bbp-converter-state-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
+					<span id="bbp-converter-label"><?php esc_attr_e( 'Import Monitor', 'buddyboss' ); ?></span>
+					<span id="bbp-converter-status"><?php echo esc_html( $status_text ); ?></span>
+					<span id="bbp-converter-step-percentage" class="bbp-progress-bar"></span>
+					<span id="bbp-converter-total-percentage" class="bbp-progress-bar"></span>
+				</div>
+				<div class="bbp-converter-updated" id="bbp-converter-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
+					<p><?php echo esc_html( $progress_text ); ?></p>
+				</div>
 			</form>
 
 		</div>

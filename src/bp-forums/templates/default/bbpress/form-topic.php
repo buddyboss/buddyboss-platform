@@ -90,9 +90,26 @@
 
 						<?php do_action( 'bbp_theme_before_topic_form_tags' ); ?>
 
+						<?php
+						$get_topic_id = bbp_get_topic_id();
+						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bbp_get_topic_tag_names( $get_topic_id ) : array();
+						?>
+
 						<p>
-							<input type="hidden" value="" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>"></select>
+							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
+								<?php
+								if ( ! empty( $get_the_tags ) ) {
+									$get_the_tags = explode( ',', $get_the_tags );
+									foreach ( $get_the_tags as $single_tag ) {
+										$single_tag = trim( $single_tag );
+										?>
+										<option selected="selected" value="<?php echo esc_attr( $single_tag ); ?>"><?php echo esc_html( $single_tag ); ?></option>
+										<?php
+									}
+								}
+								?>
+							</select>
 						</p>
 
 						<?php do_action( 'bbp_theme_after_topic_form_tags' ); ?>
@@ -137,23 +154,32 @@
 
 					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_topic_edit() || ( bbp_is_topic_edit() && ! bbp_is_topic_anonymous() ) ) ) : ?>
 
-						<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
+						<?php
+						if (
+							bb_enabled_legacy_email_preference() ||
+							( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) )
+						) {
+							?>
 
-						<p class="checkbox bp-checkbox-wrap">
-							<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
 
-							<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
+							<p class="checkbox bp-checkbox-wrap">
+								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+								<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
-							<?php else : ?>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify me of follow-up replies via email', 'buddyboss' ); ?></label>
+								<?php else : ?>
 
-							<?php endif; ?>
-						</p>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of follow-up replies via email', 'buddyboss' ); ?></label>
 
-						<?php do_action( 'bbp_theme_after_topic_form_subscriptions' ); ?>
+								<?php endif; ?>
+							</p>
+
+							<?php do_action( 'bbp_theme_after_topic_form_subscriptions' ); ?>
+
+						<?php } ?>
 
 					<?php endif; ?>
 
