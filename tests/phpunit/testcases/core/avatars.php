@@ -250,9 +250,9 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 
 		$file = array(
 			'file' => array(
-				'name' => 'mystery-man.jpg',
-				'type' => 'image/jpeg',
-				'tmp_name' => $plugin_dir . 'bp-core/images/mystery-man.jpg',
+				'name' => 'profile-avatar-buddyboss.png',
+				'type' => 'image/png',
+				'tmp_name' => $plugin_dir . 'bp-core/images/profile-avatar-buddyboss.png',
 			)
 		);
 
@@ -260,9 +260,9 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 
 		$file = array(
 			'file' => array(
-				'name' => 'mystery-man.jpg',
+				'name' => 'profile-avatar-buddyboss.png',
 				'type' => 'application/octet-stream',
-				'tmp_name' => $plugin_dir . 'bp-core/images/mystery-man.jpg',
+				'tmp_name' => $plugin_dir . 'bp-core/images/profile-avatar-buddyboss.png',
 			)
 		);
 
@@ -346,7 +346,7 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 			'html' => false,
 		) );
 
-		$this->assertContains( 'mystery-man-50.jpg', $found );
+		$this->assertContains( 'profile-avatar-buddyboss-50.png', $found );
 	}
 
 	/**
@@ -362,7 +362,7 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 			'html' => false,
 		) );
 
-		$this->assertContains( 'mystery-man-50.jpg', $found );
+		$this->assertContains( 'profile-avatar-buddyboss-50.png', $found );
 	}
 
 	/**
@@ -379,7 +379,7 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 		) );
 		remove_filter( 'bp_core_avatar_thumb_width', array( $this, 'filter_thumb_width' ) );
 
-		$this->assertContains( 'mystery-man.jpg', $found );
+		$this->assertContains( 'profile-avatar-buddyboss.png', $found );
 	}
 
 	public function filter_thumb_width() {

@@ -312,7 +312,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				// Set both variable which will use in email.
 				$_POST['custom_user_name']   = $name;
-				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
+				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) : buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' );
 
 				$accept_link = add_query_arg(
 					array(
