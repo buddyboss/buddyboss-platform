@@ -1229,7 +1229,7 @@ function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
 
 	// Validation.
 	$reply_id = bbp_get_reply_id( $reply_id );
-	$reply_to = bbp_validate_reply_to( $reply_to );
+	$reply_to = bbp_validate_reply_to( $reply_to, $reply_id );
 
 	// Update or delete the `reply_to` postmeta.
 	if ( ! empty( $reply_id ) ) {
@@ -2386,25 +2386,45 @@ function bbp_check_reply_edit() {
  * @return mixed
  */
 function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
+    global $wpdb;
 
-	// Bail if reply_id is empty
+	// Bail if reply_id is empty.
 	$reply_id = bbp_get_reply_id( $reply_id );
 	if ( empty( $reply_id ) ) {
 		return false;
 	}
 
-	// If no position was passed, get it from the db and update the menu_order
-	if ( empty( $reply_position ) ) {
-		$reply_position = bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
+	// Prepare the reply position.
+	$reply_position = is_numeric( $reply_position )
+		? (int) $reply_position
+		: bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
+
+	// Get the current reply position.
+	$current_position = get_post_field( 'menu_order', $reply_id );
+
+	// Bail if no change.
+	if ( $reply_position === $current_position ) {
+		return false;
 	}
 
-	// Update the replies' 'menp_order' with the reply position
-	wp_update_post(
-		array(
-			'ID'         => $reply_id,
-			'menu_order' => $reply_position,
-		)
-	);
+	// Filters not removed.
+	$removed = false;
+
+	// Toggle revisions off as we are not altering content.
+	if ( has_filter( 'clean_post_cache', 'bbp_clean_post_cache' ) ) {
+		$removed = true;
+		remove_filter( 'clean_post_cache', 'bbp_clean_post_cache', 10, 2 );
+	}
+
+	// Update the replies' 'menu_order' with the reply position.
+	$wpdb->update( $wpdb->posts, array( 'menu_order' => $reply_position ), array( 'ID' => $reply_id ) );
+	clean_post_cache( $reply_id );
+
+	// Toggle revisions back on.
+	if ( true === $removed ) {
+		$removed = false;
+		add_filter( 'clean_post_cache', 'bbp_clean_post_cache', 10, 2 );
+	}
 
 	return (int) $reply_position;
 }

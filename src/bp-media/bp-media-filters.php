@@ -1658,17 +1658,17 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			__( 'Repair media on the site.', 'buddyboss' ),
+			esc_html__( 'Repair media', 'buddyboss' ),
 			'bp_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			__( 'Repair forum media privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss' ),
 			'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			__( 'Repair messages media', 'buddyboss' ),
+			esc_html__( 'Repair messages media', 'buddyboss' ),
 			'bp_media_message_privacy_repair',
 		);
 	}
@@ -1701,7 +1701,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1711,7 +1711,7 @@ function bp_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Media update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1773,7 +1773,7 @@ function bp_media_admin_repair_media() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Media update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1801,7 +1801,7 @@ function bp_media_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1809,7 +1809,7 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
+		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
 
 		return array(
 			'status'  => 1,

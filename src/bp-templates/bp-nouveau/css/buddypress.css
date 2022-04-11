@@ -10059,7 +10059,262 @@ body .bp-messages-user-threads {
 }
 
 /*__ General __*/
-/*__ Email notifications __*/
+.notification_info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.notification_info .notification_learn_more {
+  display: none;
+}
+
+.notification_info .notification_type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 33.33%;
+}
+
+.notification_info .notification_type:not(:last-child) {
+  margin-right: 20px;
+}
+
+.bb-notification-column-2 .notification_info .notification_type {
+  width: calc(50% - 10px);
+}
+
+.notification_info .notification_type_icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-right: 20px;
+}
+
+.notification_info .notification_type_icon .bb-icon {
+  font-size: 40px;
+}
+
+.notification_info .notification_type .notification_type_info h3,
+.notification_info .notification_type .notification_type_info p {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 900px) {
+  .notification_info {
+    flex-direction: column;
+  }
+  .notification_info .notification_learn_more {
+    display: block;
+    margin-bottom: 0;
+  }
+  .notification_info .notification_learn_more.show {
+    margin-bottom: 15px;
+  }
+  .notification_info .notification_type {
+    display: none;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .bb-notification-column-2 .notification_info .notification_type {
+    width: 100%;
+    margin-right: 0;
+  }
+  .notification_info .notification_type.show {
+    display: flex;
+  }
+}
+
+.main-notification-settings {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.main-notification-settings:first-of-type {
+  margin-bottom: 15px;
+}
+
+.main-notification-settings thead {
+  background-color: #ededed;
+}
+
+.main-notification-settings thead .title {
+  padding-left: 20px;
+  border-left: 1px solid #ccc;
+  font-weight: 400;
+  width: 100%;
+}
+
+.main-notification-settings thead .app {
+  border-right: 1px solid #ccc;
+  padding-right: 20px;
+}
+
+.main-notification-settings .title {
+  vertical-align: middle;
+}
+
+.main-notification-settings th {
+  min-width: 95px;
+  padding: 10px;
+  vertical-align: middle;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.main-notification-settings .disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.main-notification-settings .disabled input[type="checkbox"] {
+  opacity: 0;
+}
+
+.main-notification-settings input[type="checkbox"]:disabled {
+  opacity: 0;
+}
+
+.main-notification-settings tbody .title {
+  font-size: 14px;
+  color: #a3a5a9;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.main-notification-settings tbody td {
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+.main-notification-settings tbody td:first-child {
+  padding-left: 0;
+  width: 100%;
+}
+
+.main-notification-settings tbody td.notification_no_option {
+  text-align: center;
+}
+
+.main-notification-settings tbody .notification_heading td {
+  border-bottom: 0;
+  padding: 15px 0 0 0;
+}
+
+.main-notification-settings .email,
+.main-notification-settings .web,
+.main-notification-settings .app {
+  min-width: 95px;
+}
+
+.main-notification-settings .email:last-child {
+  min-width: 48px;
+}
+
+.main-notification-settings .email:last-child label {
+  font-size: 0 !important;
+  line-height: 20px !important;
+}
+
+@media screen and (min-width: 901px) {
+  .main-notification-settings .bb-mobile-setting {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .main-notification-settings {
+    display: block;
+  }
+  .main-notification-settings .bb-mobile-setting {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    margin-left: 10px;
+  }
+  .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor {
+    float: right;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #d7dce5;
+    border-radius: 3px;
+    padding: 5px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor:after {
+    content: "\e826";
+    color: #d7dce5;
+    font-size: 22px;
+    font-family: "bb-icons";
+    /* stylelint-disable-line */
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .main-notification-settings .bb-mobile-setting ul {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    display: none;
+    margin: 0;
+    padding: 10px 4px 0;
+    width: 150px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #d3d4d6;
+    box-sizing: border-box;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05), 0 6px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  .main-notification-settings .bb-mobile-setting ul li {
+    width: 100%;
+    padding: 0 8px 10px;
+  }
+  .main-notification-settings .bb-mobile-setting.active ul {
+    display: block;
+    z-index: 1;
+  }
+  .main-notification-settings tbody,
+  .main-notification-settings thead,
+  .main-notification-settings tr {
+    display: block;
+  }
+  .main-notification-settings tbody td {
+    display: none;
+  }
+  .main-notification-settings tbody td:first-child {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .main-notification-settings thead th {
+    display: none;
+  }
+  .main-notification-settings thead th.title {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+}
+
+/*__ notifications __*/
 /*__ Profile visibility __*/
 /*__ Group Invites __*/
 /**
@@ -25399,4 +25654,62 @@ span.icons:before {
 #content-report .bb-model-header .mfp-close [class*=" bb-icon-"] {
   font-size: 24px;
   pointer-events: none;
+}
+
+/*
+*-----------------------------------------
+* @section 18.0 - Admin bar Notification dropdown
+*-----------------------------------------
+*/
+#wpadminbar #wp-admin-bar-bp-notifications-default {
+  width: 300px;
+  max-height: calc(90vh - 50px);
+  overflow: auto;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default > li {
+  display: inline-block;
+  width: 100%;
+  padding: 5px 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default > li#wp-admin-bar-notification-view-all {
+  text-align: center;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar {
+  float: left;
+  width: 40px;
+  margin-top: 4px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar .member-status {
+  display: none;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a {
+  height: auto;
+  padding: 0;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-avatar > a img {
+  max-width: 36px;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content {
+  float: right;
+  width: calc(100% - 60px);
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .bb-full-link > a {
+  opacity: 1;
+  padding: 0;
+  height: auto;
+  position: static;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+#wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
+  line-height: 1.4;
 }
