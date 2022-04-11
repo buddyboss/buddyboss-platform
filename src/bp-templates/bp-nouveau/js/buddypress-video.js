@@ -854,7 +854,7 @@ window.bp = window.bp || {};
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-dropzone-content',
 				function( e ) {
-					if ( $( e.target ).hasClass( 'bb-custom-check' ) || $( e.target ).hasClass( 'bb-icons-l' ) || $( e.target ).hasClass( 'dz-remove' ) || $( e.target ).hasClass( 'dz-clickable' ) || $( e.target ).hasClass( 'close-thumbnail-custom' ) ) {
+					if ( $( e.target ).hasClass( 'bb-custom-check' ) || $( e.target ).hasClass( 'bb-icon-l' ) || $( e.target ).hasClass( 'dz-remove' ) || $( e.target ).hasClass( 'dz-clickable' ) || $( e.target ).hasClass( 'close-thumbnail-custom' ) ) {
 						return;
 					}
 
