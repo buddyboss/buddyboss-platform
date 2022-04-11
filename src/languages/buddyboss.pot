@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-11 12:52:55+00:00\n"
+"POT-Creation-Date: 2022-04-11 17:33:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14935,7 +14935,7 @@ msgstr ""
 #: bp-forums/replies/functions.php:2545 bp-members/bp-members-functions.php:554
 #: bp-messages/bp-messages-template.php:1825
 #: bp-messages/bp-messages-template.php:2090
-#: bp-messages/classes/class-bp-messages-thread.php:1524
+#: bp-messages/classes/class-bp-messages-thread.php:1536
 msgid "Deleted User"
 msgstr ""
 
@@ -16352,7 +16352,7 @@ msgstr ""
 msgid "Connect"
 msgstr ""
 
-#: bp-friends/bp-friends-template.php:842
+#: bp-friends/bp-friends-template.php:841
 msgid "%s connection"
 msgid_plural "%s connections"
 msgstr[0] ""
@@ -23526,7 +23526,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1515
+#: bp-messages/classes/class-bp-messages-thread.php:1527
 msgid "%s Recipients"
 msgstr ""
 
