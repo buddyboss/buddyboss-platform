@@ -3,10 +3,10 @@
 /* @version 3.1.0 */
 window.bp = window.bp || {};
 
-(function (exports, $) {
+(function ( exports, $ ) {
 
 	// Bail if not set.
-	if (typeof BP_Nouveau === 'undefined') {
+	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
 
@@ -53,7 +53,7 @@ window.bp = window.bp || {};
 			this.current_page = 1;
 
 			// Init mentions count.
-			this.mentions_count = Number($(bp.Nouveau.objectNavParent + ' [data-bp-scope="mentions"]').find('a span').html()) || 0;
+			this.mentions_count = Number( $( bp.Nouveau.objectNavParent + ' [data-bp-scope="mentions"]' ).find( 'a span' ).html() ) || 0;
 
 			// HeartBeat Globals.
 			this.heartbeat_data = {
@@ -61,10 +61,10 @@ window.bp = window.bp || {};
 				highlights: {},
 				last_recorded: 0,
 				first_recorded: 0,
-				document_title: $(document).prop('title')
+				document_title: $( document ).prop( 'title' )
 			};
 
-			if (typeof window.Dropzone !== 'undefined' && typeof BP_Nouveau.media !== 'undefined') {
+			if ( typeof window.Dropzone !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' ) {
 
 				// set up dropzones auto discover to false so it does not automatically set dropzones.
 				window.Dropzone.autoDiscover = false;
@@ -83,8 +83,8 @@ window.bp = window.bp || {};
 				};
 
 				// if defined, add custom dropzone options.
-				if (typeof BP_Nouveau.media.dropzone_options !== 'undefined') {
-					Object.assign(this.dropzone_options, BP_Nouveau.media.dropzone_options);
+				if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+					Object.assign( this.dropzone_options, BP_Nouveau.media.dropzone_options );
 				}
 			}
 
@@ -105,39 +105,39 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function () {
 			// HeartBeat listeners.
-			if (!$('body').hasClass('activity-singular')) {
-				$('#buddypress').on('bp_heartbeat_send', this.heartbeatSend.bind(this));
+			if ( ! $( 'body' ).hasClass( 'activity-singular' ) ) {
+				$( '#buddypress' ).on( 'bp_heartbeat_send', this.heartbeatSend.bind( this ) );
 			}
-			$('#buddypress').on('bp_heartbeat_tick', this.heartbeatTick.bind(this));
+			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities.
-			$('#buddypress [data-bp-list="activity"]').on('click', 'li.load-newest, li.load-more', this.injectActivities.bind(this));
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
-			$('#buddypress').on('bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind(this));
+			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
 
 			// Activity comments effect.
-			$('#buddypress [data-bp-list="activity"]').on('bp_ajax_append', this.hideComments);
-			$('#buddypress [data-bp-list="activity"]').on('click', '.show-all', this.showComments);
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'bp_ajax_append', this.hideComments );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.show-all', this.showComments );
 
 			// Activity actions.
-			$('#buddypress [data-bp-list="activity"]').on('click', '.activity-item', bp.Nouveau, this.activityActions.bind(this));
-			$('#buddypress [data-bp-list="activity"]').on('click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind(this));
-			$('#buddypress [data-bp-list="activity"]').on('click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind(this));
-			$('#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list').on('click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind(this));
-			$('#bb-media-model-container .activity-list').on('click', '.activity-item', bp.Nouveau, this.activityActions.bind(this));
-			$(document).keydown(this.commentFormAction);
-			$(document).click(this.togglePopupDropdown);
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
+			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( document ).keydown( this.commentFormAction );
+			$( document ).click( this.togglePopupDropdown );
 
 			// forums.
-			$('#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list').on('click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind(this));
-			$('#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list').on('click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind(this));
-			$('#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list').on('click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind(this));
-			$('#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list').on('click', '.ac-reply-gif-button', this.openGifPicker.bind(this));
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Activity autoload.
-			if (!_.isUndefined(BP_Nouveau.activity.params.autoload)) {
-				$(window).scroll(this.loadMoreActivities);
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
+				$( window ).scroll( this.loadMoreActivities );
 			}
 		},
 
@@ -148,20 +148,20 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		heartbeatSend: function (event, data) {
-			this.heartbeat_data.first_recorded = $('#buddypress [data-bp-list] [data-bp-activity-id]').first().data('bp-timestamp') || 0;
+		heartbeatSend: function ( event, data ) {
+			this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]' ).first().data( 'bp-timestamp' ) || 0;
 
-			if (0 === this.heartbeat_data.last_recorded || this.heartbeat_data.first_recorded > this.heartbeat_data.last_recorded) {
+			if ( 0 === this.heartbeat_data.last_recorded || this.heartbeat_data.first_recorded > this.heartbeat_data.last_recorded ) {
 				this.heartbeat_data.last_recorded = this.heartbeat_data.first_recorded;
 			}
 
 			data.bp_activity_last_recorded = this.heartbeat_data.last_recorded;
 
-			if ($('#buddypress .dir-search input[type=search]').length) {
-				data.bp_activity_last_recorded_search_terms = $('#buddypress .dir-search input[type=search]').val();
+			if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+				data.bp_activity_last_recorded_search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 			}
 
-			$.extend(data, { bp_heartbeat: bp.Nouveau.getStorage('bp-activity') });
+			$.extend( data, { bp_heartbeat: bp.Nouveau.getStorage( 'bp-activity' ) } );
 		},
 
 		/**
@@ -171,49 +171,49 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data           [description]
 		 * @return {[type]}                [description]
 		 */
-		heartbeatTick: function (event, data) {
+		heartbeatTick: function ( event, data ) {
 			var newest_activities_count, newest_activities, objects = bp.Nouveau.objects,
-				scope = bp.Nouveau.getStorage('bp-activity', 'scope'), self = this;
+				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
 
 			// Only proceed if we have newest activities.
-			if (undefined === data || !data.bp_activity_newest_activities) {
+			if ( undefined === data || ! data.bp_activity_newest_activities ) {
 				return;
 			}
 
-			this.heartbeat_data.newest = $.trim(data.bp_activity_newest_activities.activities) + this.heartbeat_data.newest;
-			this.heartbeat_data.last_recorded = Number(data.bp_activity_newest_activities.last_recorded);
+			this.heartbeat_data.newest = $.trim( data.bp_activity_newest_activities.activities ) + this.heartbeat_data.newest;
+			this.heartbeat_data.last_recorded = Number( data.bp_activity_newest_activities.last_recorded );
 
 			// Parse activities.
-			newest_activities = $(this.heartbeat_data.newest).filter('.activity-item');
+			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
 
 			// Count them.
-			newest_activities_count = Number(newest_activities.length);
+			newest_activities_count = Number( newest_activities.length );
 
 			/**
 			 * It's not a regular object but we need it!
 			 * so let's add it temporarly..
 			 */
-			objects.push('mentions');
+			objects.push( 'mentions' );
 
 			/**
 			 * On the All Members tab, we need to know what these activities are about
 			 * in order to update all the other tabs dynamic span
 			 */
-			if ('all' === scope) {
+			if ( 'all' === scope ) {
 
 				$.each(
 					newest_activities,
-					function (a, activity) {
-						activity = $(activity);
+					function ( a, activity ) {
+						activity = $( activity );
 
 						$.each(
 							objects,
-							function (o, object) {
-								if (-1 !== $.inArray('bp-my-' + object, activity.get(0).classList)) {
-									if (undefined === self.heartbeat_data.highlights[object]) {
-										self.heartbeat_data.highlights[object] = [activity.data('bp-activity-id')];
-									} else if (-1 === $.inArray(activity.data('bp-activity-id'), self.heartbeat_data.highlights[object])) {
-										self.heartbeat_data.highlights[object].push(activity.data('bp-activity-id'));
+							function ( o, object ) {
+								if ( -1 !== $.inArray( 'bp-my-' + object, activity.get( 0 ).classList ) ) {
+									if ( undefined === self.heartbeat_data.highlights[ object ] ) {
+										self.heartbeat_data.highlights[ object ] = [ activity.data( 'bp-activity-id' ) ];
+									} else if ( -1 === $.inArray( activity.data( 'bp-activity-id' ), self.heartbeat_data.highlights[ object ] ) ) {
+										self.heartbeat_data.highlights[ object ].push( activity.data( 'bp-activity-id' ) );
 									}
 								}
 							}
@@ -222,39 +222,39 @@ window.bp = window.bp || {};
 				);
 
 				// Remove the specific classes to count highligthts.
-				var regexp = new RegExp('bp-my-(' + objects.join('|') + ')', 'g');
-				this.heartbeat_data.newest = this.heartbeat_data.newest.replace(regexp, '');
+				var regexp = new RegExp( 'bp-my-(' + objects.join( '|' ) + ')', 'g' );
+				this.heartbeat_data.newest = this.heartbeat_data.newest.replace( regexp, '' );
 
 				/**
 				 * Deal with the 'All Members' dynamic span from here as HeartBeat is working even when
 				 * the user is not logged in
 				 */
-				$(bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]').find('a span').html(newest_activities_count);
+				$( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( newest_activities_count );
 
 				// Set all activities to be highlighted for the current scope.
 			} else {
 				// Init the array of highlighted activities.
-				this.heartbeat_data.highlights[scope] = [];
+				this.heartbeat_data.highlights[ scope ] = [];
 
 				$.each(
 					newest_activities,
-					function (a, activity) {
-						self.heartbeat_data.highlights[scope].push($(activity).data('bp-activity-id'));
+					function ( a, activity ) {
+						self.heartbeat_data.highlights[ scope ].push( $( activity ).data( 'bp-activity-id' ) );
 					}
 				);
 			}
 
 			$.each(
 				objects,
-				function (o, object) {
-					if (undefined !== self.heartbeat_data.highlights[object] && self.heartbeat_data.highlights[object].length) {
+				function ( o, object ) {
+					if ( undefined !== self.heartbeat_data.highlights[ object ] && self.heartbeat_data.highlights[ object ].length ) {
 						var count = 0;
 
-						if ('mentions' === object) {
+						if ( 'mentions' === object ) {
 							count = self.mentions_count;
 						}
 
-						$(bp.Nouveau.objectNavParent + ' [data-bp-scope="' + object + '"]').find('a span').html(Number(self.heartbeat_data.highlights[object].length) + count);
+						$( bp.Nouveau.objectNavParent + ' [data-bp-scope="' + object + '"]' ).find( 'a span' ).html( Number( self.heartbeat_data.highlights[ object ].length ) + count );
 					}
 				}
 			);
@@ -265,26 +265,26 @@ window.bp = window.bp || {};
 			objects.pop();
 
 			// Add an information about the number of newest activities inside the document's title.
-			$(document).prop('title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title);
+			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );
 
 			// Update the Load Newest li if it already exists.
-			if ($('#buddypress [data-bp-list="activity"] li').first().hasClass('load-newest')) {
-				var newest_link = $('#buddypress [data-bp-list="activity"] .load-newest a').html();
-				$('#buddypress [data-bp-list="activity"] .load-newest a').html(newest_link.replace(/([0-9]+)/, newest_activities_count));
+			if ( $( '#buddypress [data-bp-list="activity"] li' ).first().hasClass( 'load-newest' ) ) {
+				var newest_link = $( '#buddypress [data-bp-list="activity"] .load-newest a' ).html();
+				$( '#buddypress [data-bp-list="activity"] .load-newest a' ).html( newest_link.replace( /([0-9]+)/, newest_activities_count ) );
 
 				// Otherwise add it.
 			} else {
-				$('#buddypress [data-bp-list="activity"] ul.activity-list').prepend('<li class="load-newest"><a href="#newest">' + BP_Nouveau.newest + ' (' + newest_activities_count + ')</a></li>');
+				$( '#buddypress [data-bp-list="activity"] ul.activity-list' ).prepend( '<li class="load-newest"><a href="#newest">' + BP_Nouveau.newest + ' (' + newest_activities_count + ')</a></li>' );
 			}
 
-			$('#buddypress [data-bp-list="activity"] li.load-newest').trigger('click');
+			$( '#buddypress [data-bp-list="activity"] li.load-newest' ).trigger( 'click' );
 
 			/**
 			 * Finally trigger a pending event containing the activity heartbeat data
 			 */
-			$('#buddypress [data-bp-list="activity"]').trigger('bp_heartbeat_pending', this.heartbeat_data);
+			$( '#buddypress [data-bp-list="activity"]' ).trigger( 'bp_heartbeat_pending', this.heartbeat_data );
 
-			if (typeof bp.Nouveau !== 'undefined') {
+			if ( typeof bp.Nouveau !== 'undefined' ) {
 				bp.Nouveau.reportPopUp();
 			}
 		},
@@ -295,97 +295,97 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		injectActivities: function (event) {
-			var store = bp.Nouveau.getStorage('bp-activity'),
+		injectActivities: function ( event ) {
+			var store = bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
 			// Load newest activities.
-			if ($(event.currentTarget).hasClass('load-newest')) {
+			if ( $( event.currentTarget ).hasClass( 'load-newest' ) ) {
 				// Stop event propagation.
 				event.preventDefault();
 
-				$(event.currentTarget).remove();
+				$( event.currentTarget ).remove();
 
 				/**
 				 * If a plugin is updating the recorded_date of an activity
 				 * it will be loaded as a new one. We need to look in the
 				 * stream and eventually remove similar ids to avoid "double".
 				 */
-				var activities = $.parseHTML(this.heartbeat_data.newest);
+				var activities = $.parseHTML( this.heartbeat_data.newest );
 
 				$.each(
 					activities,
-					function (a, activity) {
-						if ('LI' === activity.nodeName && $(activity).hasClass('just-posted')) {
-							if ($('#' + $(activity).prop('id')).length) {
-								$('#' + $(activity).prop('id')).remove();
+					function ( a, activity ) {
+						if ( 'LI' === activity.nodeName && $( activity ).hasClass( 'just-posted' ) ) {
+							if ( $( '#' + $( activity ).prop( 'id' ) ).length ) {
+								$( '#' + $( activity ).prop( 'id' ) ).remove();
 							}
 						}
 					}
 				);
 
 				// Now the stream is cleaned, prepend newest.
-				$(event.delegateTarget).find('.activity-list').prepend(this.heartbeat_data.newest).find('li.activity-item').each(bp.Nouveau.hideSingleUrl).trigger('bp_heartbeat_prepend', this.heartbeat_data);
+				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 
 				// Reset the newest activities now they're displayed.
 				this.heartbeat_data.newest = '';
 
 				// Reset the All members tab dynamic span id it's the current one.
-				if ('all' === scope) {
-					$(bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]').find('a span').html('');
+				if ( 'all' === scope ) {
+					$( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( '' );
 				}
 
 				// Specific to mentions.
-				if ('mentions' === scope) {
+				if ( 'mentions' === scope ) {
 					// Now mentions are displayed, remove the user_metas.
-					bp.Nouveau.ajax({ action: 'activity_clear_new_mentions' }, 'activity');
+					bp.Nouveau.ajax( { action: 'activity_clear_new_mentions' }, 'activity' );
 					this.mentions_count = 0;
 				}
 
 				// Activities are now displayed, clear the newest count for the scope.
-				$(bp.Nouveau.objectNavParent + ' [data-bp-scope="' + scope + '"]').find('a span').html('');
+				$( bp.Nouveau.objectNavParent + ' [data-bp-scope="' + scope + '"]' ).find( 'a span' ).html( '' );
 
 				// Activities are now displayed, clear the highlighted activities for the scope.
-				if (undefined !== this.heartbeat_data.highlights[scope]) {
-					this.heartbeat_data.highlights[scope] = [];
+				if ( undefined !== this.heartbeat_data.highlights[ scope ] ) {
+					this.heartbeat_data.highlights[ scope ] = [];
 				}
 
 				// Remove highlighted for the current scope.
 				setTimeout(
 					function () {
-						$(event.delegateTarget).find('[data-bp-activity-id]').removeClass('newest_' + scope + '_activity');
+						$( event.delegateTarget ).find( '[data-bp-activity-id]' ).removeClass( 'newest_' + scope + '_activity' );
 					},
 					3000
 				);
 
 				// Reset the document title.
-				$(document).prop('title', this.heartbeat_data.document_title);
+				$( document ).prop( 'title', this.heartbeat_data.document_title );
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-				jQuery(window).scroll();
+				jQuery( window ).scroll();
 
 				// Load more activities.
-			} else if ($(event.currentTarget).hasClass('load-more')) {
-				var next_page = (Number(this.current_page) * 1) + 1, self = this, search_terms = '';
+			} else if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
+				var next_page = (Number( this.current_page ) * 1) + 1, self = this, search_terms = '';
 
 				// Stop event propagation.
 				event.preventDefault();
 
-				var targetEl = $(event.currentTarget);
-				targetEl.find('a').first().addClass('loading');
+				var targetEl = $( event.currentTarget );
+				targetEl.find( 'a' ).first().addClass( 'loading' );
 
 				// reset the just posted.
 				this.just_posted = [];
 
 				// Now set it.
-				$(event.delegateTarget).children('.just-posted').each(
+				$( event.delegateTarget ).children( '.just-posted' ).each(
 					function () {
-						self.just_posted.push($(this).data('bp-activity-id'));
+						self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
 					}
 				);
 
-				if ($('#buddypress .dir-search input[type=search]').length) {
-					search_terms = $('#buddypress .dir-search input[type=search]').val();
+				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 				}
 
 				bp.Nouveau.objectRequest(
@@ -396,19 +396,19 @@ window.bp = window.bp || {};
 						search_terms: search_terms,
 						page: next_page,
 						method: 'append',
-						exclude_just_posted: this.just_posted.join(','),
+						exclude_just_posted: this.just_posted.join( ',' ),
 						target: '#buddypress [data-bp-list] ul.bp-list'
 					}
 				).done(
-					function (response) {
-						if (true === response.success) {
+					function ( response ) {
+						if ( true === response.success ) {
 							targetEl.remove();
 
 							// Update the current page.
 							self.current_page = next_page;
 
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							jQuery(window).scroll();
+							jQuery( window ).scroll();
 						}
 					}
 				);
@@ -421,46 +421,46 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		hideComments: function (event) {
-			var comments = $(event.target).find('.activity-comments'),
+		hideComments: function ( event ) {
+			var comments = $( event.target ).find( '.activity-comments' ),
 				activity_item, comment_items, comment_count, comment_parents;
 
-			if (!comments.length) {
+			if ( ! comments.length ) {
 				return;
 			}
 
 			comments.each(
-				function (c, comment) {
-					comment_parents = $(comment).children('ul').not('.conflict-activity-ul-li-comment');
-					comment_items = $(comment_parents).find('li').not($('.document-action-class, .media-action-class, .video-action-class'));
+				function ( c, comment ) {
+					comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
+					comment_items = $( comment_parents ).find( 'li' ).not( $( '.document-action-class, .media-action-class, .video-action-class' ) );
 
-					if (!comment_items.length) {
+					if ( ! comment_items.length ) {
 						return;
 					}
 
 					// Get the activity id.
-					activity_item = $(comment).closest('.activity-item');
+					activity_item = $( comment ).closest( '.activity-item' );
 
 					// Get the comment count.
-					comment_count = $('#acomment-comment-' + activity_item.data('bp-activity-id') + ' span.comment-count').html() || ' ';
+					comment_count = $( '#acomment-comment-' + activity_item.data( 'bp-activity-id' ) + ' span.comment-count' ).html() || ' ';
 
 					// Keep latest 5 comments.
 					comment_items.each(
-						function (i, item) {
-							if (i < comment_items.length - 4) {
-								$(item).addClass('bp-hidden').hide();
+						function ( i, item ) {
+							if ( i < comment_items.length - 4 ) {
+								$( item ).addClass( 'bp-hidden' ).hide();
 
 								// Prepend a link to display all.
-								if (!i) {
-									$(item).before('<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop('id') + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>');
+								if ( ! i ) {
+									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
 							}
 						}
 					);
 
 					// If all parents are hidden, reveal at least one. It seems very risky to manipulate the DOM to keep exactly 5 comments!
-					if ($(comment_parents).children('.bp-hidden').length === $(comment_parents).children('li').length - 1 && $(comment_parents).find('li.show-all').length) {
-						$(comment_parents).children('li:not(.show-all)').removeClass('bp-hidden').toggle();
+					if ( $( comment_parents ).children( '.bp-hidden' ).length === $( comment_parents ).children( 'li' ).length - 1 && $( comment_parents ).find( 'li.show-all' ).length ) {
+						$( comment_parents ).children( 'li:not(.show-all)' ).removeClass( 'bp-hidden' ).toggle();
 					}
 				}
 			);
@@ -472,18 +472,18 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		showComments: function (event) {
+		showComments: function ( event ) {
 			// Stop event propagation.
 			event.preventDefault();
 
-			$(event.target).addClass('loading');
+			$( event.target ).addClass( 'loading' );
 
 			setTimeout(
 				function () {
-					$(event.target).closest('ul').find('li').removeClass('bp-hidden').fadeIn(
+					$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
 						300,
 						function () {
-							$(event.target).parent('li').remove();
+							$( event.target ).parent( 'li' ).remove();
 						}
 					);
 				},
@@ -498,30 +498,30 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		scopeLoaded: function (event, data) {
+		scopeLoaded: function ( event, data ) {
 			// Make sure to only keep 5 root comments.
-			this.hideComments(event);
+			this.hideComments( event );
 
 			// Reset the pagination for the scope.
 			this.current_page = 1;
 
 			// Mentions are specific.
-			if ('mentions' === data.scope && undefined !== data.response.new_mentions) {
+			if ( 'mentions' === data.scope && undefined !== data.response.new_mentions ) {
 				$.each(
 					data.response.new_mentions,
-					function (i, id) {
-						$('#buddypress #activity-stream').find('[data-bp-activity-id="' + id + '"]').addClass('newest_mentions_activity');
+					function ( i, id ) {
+						$( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_mentions_activity' );
 					}
 				);
 
 				// Reset mentions count.
 				this.mentions_count = 0;
-			} else if (undefined !== this.heartbeat_data.highlights[data.scope] && this.heartbeat_data.highlights[data.scope].length) {
+			} else if ( undefined !== this.heartbeat_data.highlights[ data.scope ] && this.heartbeat_data.highlights[ data.scope ].length ) {
 				$.each(
-					this.heartbeat_data.highlights[data.scope],
-					function (i, id) {
-						if ($('#buddypress #activity-stream').find('[data-bp-activity-id="' + id + '"]').length) {
-							$('#buddypress #activity-stream').find('[data-bp-activity-id="' + id + '"]').addClass('newest_' + data.scope + '_activity');
+					this.heartbeat_data.highlights[ data.scope ],
+					function ( i, id ) {
+						if ( $( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).length ) {
+							$( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_' + data.scope + '_activity' );
 						}
 					}
 				);
@@ -530,33 +530,33 @@ window.bp = window.bp || {};
 			// Reset the newest activities now they're displayed.
 			this.heartbeat_data.newest = '';
 			$.each(
-				$(bp.Nouveau.objectNavParent + ' [data-bp-scope]').find('a span'),
-				function (s, count) {
-					if (0 === parseInt($(count).html(), 10)) {
-						$(count).html('');
+				$( bp.Nouveau.objectNavParent + ' [data-bp-scope]' ).find( 'a span' ),
+				function ( s, count ) {
+					if ( 0 === parseInt( $( count ).html(), 10 ) ) {
+						$( count ).html( '' );
 					}
 				}
 			);
 
 			// Activities are now loaded, clear the highlighted activities for the scope.
-			if (undefined !== this.heartbeat_data.highlights[data.scope]) {
-				this.heartbeat_data.highlights[data.scope] = [];
+			if ( undefined !== this.heartbeat_data.highlights[ data.scope ] ) {
+				this.heartbeat_data.highlights[ data.scope ] = [];
 			}
 
 			// Reset the document title.
-			$(document).prop('title', this.heartbeat_data.document_title);
+			$( document ).prop( 'title', this.heartbeat_data.document_title );
 
 			setTimeout(
 				function () {
-					$('#buddypress #activity-stream .activity-item').removeClass('newest_' + data.scope + '_activity');
+					$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
 				},
 				3000
 			);
 
-			if (typeof window.instgrm !== 'undefined') {
+			if ( typeof window.instgrm !== 'undefined' ) {
 				window.instgrm.Embeds.process();
 			}
-			if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
+			if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
 				window.FB.XFBML.parse();
 			}
 
@@ -569,64 +569,69 @@ window.bp = window.bp || {};
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout(
 				function () {
-					jQuery(window).scroll();
+					jQuery( window ).scroll();
 				},
 				200
 			);
 		},
 
 		openEditActivityPopup: function () {
-			if (!_.isUndefined(BP_Nouveau.activity.params.is_activity_edit) && 0 < BP_Nouveau.activity.params.is_activity_edit) {
-				var activity_item = $('#activity-' + BP_Nouveau.activity.params.is_activity_edit);
-				if (activity_item.length) {
-					var activity_data = activity_item.data('bp-activity');
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
+				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
+				if ( activity_item.length ) {
+					var activity_data = activity_item.data( 'bp-activity' );
 
-					if (!_.isUndefined(activity_data)) {
-						bp.Nouveau.Activity.postForm.displayEditActivityForm(activity_data);
+					if ( ! _.isUndefined( activity_data ) ) {
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
 					}
 				}
 			}
 		},
 
-		activityPrivacyChange: function (event) {
-			var parent = event.data, target = $(event.target), activity_item = $(event.currentTarget).closest('.activity-item'),
-				activity_id = activity_item.data('bp-activity-id');
+		activityPrivacyChange: function ( event ) {
+			var parent = event.data, target = $( event.target ),
+				activity_item = $( event.currentTarget ).closest( '.activity-item' ),
+				activity_id = activity_item.data( 'bp-activity-id' );
 
 			// Stop event propagation.
 			event.preventDefault();
 
-			if (typeof target.data('value') === 'undefined' || $.trim(target.data('value')) == '') {
+			if ( typeof target.data( 'value' ) === 'undefined' || $.trim( target.data( 'value' ) ) == '' ) {
 				return false;
 			}
 
-			activity_item.find('.privacy').addClass('loading');
+			activity_item.find( '.privacy' ).addClass( 'loading' );
 
-			parent.ajax({ action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data('value') }, 'activity').done(
-				function (response) {
-					activity_item.find('.privacy').removeClass('loading');
+			parent.ajax( {
+				action: 'activity_update_privacy',
+				'id': activity_id,
+				'privacy': target.data( 'value' )
+			}, 'activity' ).done(
+				function ( response ) {
+					activity_item.find( '.privacy' ).removeClass( 'loading' );
 
-					if (true === response.success) {
-						activity_item.find('.activity-privacy li').removeClass('selected');
-						activity_item.find('.privacy-wrap').attr('data-bp-tooltip', target.text());
-						target.addClass('selected');
-						activity_item.find('.privacy').removeClass('public').removeClass('loggedin').removeClass('onlyme').removeClass('friends');
-						activity_item.find('.privacy').addClass(target.data('value'));
+					if ( true === response.success ) {
+						activity_item.find( '.activity-privacy li' ).removeClass( 'selected' );
+						activity_item.find( '.privacy-wrap' ).attr( 'data-bp-tooltip', target.text() );
+						target.addClass( 'selected' );
+						activity_item.find( '.privacy' ).removeClass( 'public' ).removeClass( 'loggedin' ).removeClass( 'onlyme' ).removeClass( 'friends' );
+						activity_item.find( '.privacy' ).addClass( target.data( 'value' ) );
 
-						if (typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.video_symlink !== 'undefined') {
+						if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.video_symlink !== 'undefined' ) {
 
 							// Update the document video file src on privacy update in activity feed.
-							if ($('.document-description-wrap').length && $('.document-description-wrap .bb-open-document-theatre').length) {
-								$('.document-description-wrap .bb-open-document-theatre').attr('data-video-preview', response.data.video_symlink);
-								$('.document-description-wrap .bb-open-document-theatre').attr('data-extension', response.data.extension);
+							if ( $( '.document-description-wrap' ).length && $( '.document-description-wrap .bb-open-document-theatre' ).length ) {
+								$( '.document-description-wrap .bb-open-document-theatre' ).attr( 'data-video-preview', response.data.video_symlink );
+								$( '.document-description-wrap .bb-open-document-theatre' ).attr( 'data-extension', response.data.extension );
 							}
 
 							// Update the document video file src on privacy update in activity feed.
-							if ($('.document-description-wrap').length && $('.document-detail-wrap.document-detail-wrap-description-popup').length) {
-								$('.document-detail-wrap.document-detail-wrap-description-popup').attr('data-video-preview', response.data.video_symlink);
-								$('.document-detail-wrap.document-detail-wrap-description-popup').attr('data-extension', response.data.extension);
+							if ( $( '.document-description-wrap' ).length && $( '.document-detail-wrap.document-detail-wrap-description-popup' ).length ) {
+								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-video-preview', response.data.video_symlink );
+								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-extension', response.data.extension );
 							}
 
-							var myPlayer = videojs(response.data.video_js_id);
+							var myPlayer = videojs( response.data.video_js_id );
 							myPlayer.src(
 								{
 									type: response.data.video_extension,
@@ -639,31 +644,32 @@ window.bp = window.bp || {};
 			);
 		},
 
-		activityPrivacyRedirect: function (event) {
-			var target = $(event.target);
+		activityPrivacyRedirect: function ( event ) {
+			var target = $( event.target );
 
 			// Stop event propagation.
 			event.preventDefault();
-			if (typeof target.data('value') === 'undefined' || $.trim(target.data('value')) == '') {
+			if ( typeof target.data( 'value' ) === 'undefined' || $.trim( target.data( 'value' ) ) == '' ) {
 				return false;
 			} else {
-				window.location.href = target.data('value');
+				window.location.href = target.data( 'value' );
 			}
 		},
 
 		/* jshint ignore:start */
-		togglePrivacyDropdown: function (event) {
+		togglePrivacyDropdown: function ( event ) {
 
-			var parent = event.data, target = $(event.target), activity_item = $(event.currentTarget).closest('.activity-item'),
-				activity_id = activity_item.data('bp-activity-id');
+			var parent = event.data, target = $( event.target ),
+				activity_item = $( event.currentTarget ).closest( '.activity-item' ),
+				activity_id = activity_item.data( 'bp-activity-id' );
 
 			// Stop event propagation.
 			event.preventDefault();
 
 			// close other dropdowns.
-			$('ul.activity-privacy').not(activity_item.find('.activity-privacy')).removeClass('bb-open');
+			$( 'ul.activity-privacy' ).not( activity_item.find( '.activity-privacy' ) ).removeClass( 'bb-open' );
 
-			activity_item.find('.activity-privacy').toggleClass('bb-open');
+			activity_item.find( '.activity-privacy' ).toggleClass( 'bb-open' );
 
 		},
 		/* jshint ignore:end */
@@ -674,130 +680,130 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		activityActions: function (event) {
-			var parent = event.data, target = $(event.target), activity_item = $(event.currentTarget),
-				activity_id = activity_item.data('bp-activity-id'), stream = $(event.delegateTarget),
-				activity_state = activity_item.find('.activity-state'),
-				comments_text = activity_item.find('.comments-count'),
-				likes_text = activity_item.find('.like-text'),
+		activityActions: function ( event ) {
+			var parent = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
+				activity_id = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
+				activity_state = activity_item.find( '.activity-state' ),
+				comments_text = activity_item.find( '.comments-count' ),
+				likes_text = activity_item.find( '.like-text' ),
 				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
-			if ($(target).is('span')) {
-				target = $(target).closest('a');
+			if ( $( target ).is( 'span' ) ) {
+				target = $( target ).closest( 'a' );
 			}
 
 			// Favoriting.
-			if (target.hasClass('fav') || target.hasClass('unfav')) {
-				var type = target.hasClass('fav') ? 'fav' : 'unfav';
+			if ( target.hasClass( 'fav' ) || target.hasClass( 'unfav' ) ) {
+				var type = target.hasClass( 'fav' ) ? 'fav' : 'unfav';
 
 				// Stop event propagation.
 				event.preventDefault();
 
-				target.addClass('loading');
+				target.addClass( 'loading' );
 
-				parent.ajax({ action: 'activity_mark_' + type, 'id': activity_id }, 'activity').done(
-					function (response) {
-						target.removeClass('loading');
+				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
+					function ( response ) {
+						target.removeClass( 'loading' );
 
-						if (false === response.success) {
+						if ( false === response.success ) {
 							return;
 						} else {
 							target.fadeOut(
 								200,
 								function () {
-									if ($(this).find('span').first().length) {
-										$(this).find('span').first().html(response.data.content);
+									if ( $( this ).find( 'span' ).first().length ) {
+										$( this ).find( 'span' ).first().html( response.data.content );
 									} else {
-										$(this).html(response.data.content);
+										$( this ).html( response.data.content );
 									}
 									// $( this ).prop( 'title', response.data.content );
 
-									if ('false' === $(this).attr('aria-pressed')) {
-										$(this).attr('aria-pressed', 'true');
+									if ( 'false' === $( this ).attr( 'aria-pressed' ) ) {
+										$( this ).attr( 'aria-pressed', 'true' );
 									} else {
-										$(this).attr('aria-pressed', 'false');
+										$( this ).attr( 'aria-pressed', 'false' );
 									}
 
-									if (likes_text.length) {
+									if ( likes_text.length ) {
 										response.data.like_count ?
-											likes_text.text(response.data.like_count) && activity_state.addClass('has-likes') :
-											likes_text.empty() && activity_state.removeClass('has-likes');
+											likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
+											likes_text.empty() && activity_state.removeClass( 'has-likes' );
 
 										// Update like tooltip.
-										var decoded = $('<textarea/>').html(response.data.tooltip).text();
-										likes_text.attr('data-hint', decoded);
+										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
+										likes_text.attr( 'data-hint', decoded );
 									}
 
-									if ($(this).find('.like-count').length) {
-										$(this).find('.like-count').html(response.data.content);
+									if ( $( this ).find( '.like-count' ).length ) {
+										$( this ).find( '.like-count' ).html( response.data.content );
 									}
 
-									$(this).fadeIn(200);
+									$( this ).fadeIn( 200 );
 								}
 							);
 						}
 
-						if ('fav' === type) {
-							if (undefined !== response.data.directory_tab) {
-								if (!$(parent.objectNavParent + ' [data-bp-scope="favorites"]').length) {
-									$(parent.objectNavParent + ' [data-bp-scope="all"]').after(response.data.directory_tab);
+						if ( 'fav' === type ) {
+							if ( undefined !== response.data.directory_tab ) {
+								if ( ! $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).length ) {
+									$( parent.objectNavParent + ' [data-bp-scope="all"]' ).after( response.data.directory_tab );
 								}
 							}
 
-							target.removeClass('fav');
-							target.addClass('unfav');
+							target.removeClass( 'fav' );
+							target.addClass( 'unfav' );
 
-						} else if ('unfav' === type) {
-							var favoriteScope = $('[data-bp-user-scope="favorites"]').hasClass('selected') || $(parent.objectNavParent + ' [data-bp-scope="favorites"]').hasClass('selected');
+						} else if ( 'unfav' === type ) {
+							var favoriteScope = $( '[data-bp-user-scope="favorites"]' ).hasClass( 'selected' ) || $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).hasClass( 'selected' );
 
 							// If on user's profile or on the favorites directory tab, remove the entry.
-							if (favoriteScope) {
+							if ( favoriteScope ) {
 								activity_item.remove();
 							}
 
-							if (undefined !== response.data.no_favorite) {
+							if ( undefined !== response.data.no_favorite ) {
 								// Remove the tab when on activity directory but not on the favorites tabs.
-								if ($(parent.objectNavParent + ' [data-bp-scope="all"]').length && $(parent.objectNavParent + ' [data-bp-scope="all"]').hasClass('selected')) {
-									$(parent.objectNavParent + ' [data-bp-scope="favorites"]').remove();
+								if ( $( parent.objectNavParent + ' [data-bp-scope="all"]' ).length && $( parent.objectNavParent + ' [data-bp-scope="all"]' ).hasClass( 'selected' ) ) {
+									$( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).remove();
 
 									// In all the other cases, append a message to the empty stream.
-								} else if (favoriteScope) {
-									stream.append(response.data.no_favorite);
+								} else if ( favoriteScope ) {
+									stream.append( response.data.no_favorite );
 								}
 							}
 
-							target.removeClass('unfav');
-							target.addClass('fav');
+							target.removeClass( 'unfav' );
+							target.addClass( 'fav' );
 						}
 					}
 				);
 			}
 
 			// Deleting or spamming.
-			if (target.hasClass('delete-activity') || target.hasClass('acomment-delete') || target.hasClass('spam-activity') || target.hasClass('spam-activity-comment')) {
-				var activity_comment_li = target.closest('[data-bp-activity-comment-id]'),
-					activity_comment_id = activity_comment_li.data('bp-activity-comment-id'),
+			if ( target.hasClass( 'delete-activity' ) || target.hasClass( 'acomment-delete' ) || target.hasClass( 'spam-activity' ) || target.hasClass( 'spam-activity-comment' ) ) {
+				var activity_comment_li = target.closest( '[data-bp-activity-comment-id]' ),
+					activity_comment_id = activity_comment_li.data( 'bp-activity-comment-id' ),
 					li_parent, comment_count_span, comment_count, show_all_a, deleted_comments_count = 0;
 
 				// Stop event propagation.
 				event.preventDefault();
 
-				if (undefined !== BP_Nouveau.confirm && false === window.confirm(BP_Nouveau.confirm)) {
+				if ( undefined !== BP_Nouveau.confirm && false === window.confirm( BP_Nouveau.confirm ) ) {
 					return false;
 				}
 
-				target.addClass('loading');
+				target.addClass( 'loading' );
 
 				var ajaxData = {
 					action: 'delete_activity',
 					'id': activity_id,
-					'_wpnonce': parent.getLinkParams(target.prop('href'), '_wpnonce'),
-					'is_single': target.closest('[data-bp-single]').length
+					'_wpnonce': parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
+					'is_single': target.closest( '[data-bp-single]' ).length
 				};
 
 				// Only the action changes when spamming an activity or a comment.
-				if (target.hasClass('spam-activity') || target.hasClass('spam-activity-comment')) {
+				if ( target.hasClass( 'spam-activity' ) || target.hasClass( 'spam-activity-comment' ) ) {
 					ajaxData.action = 'bp_spam_activity';
 				}
 
@@ -805,7 +811,7 @@ window.bp = window.bp || {};
 				li_parent = activity_item;
 
 				// If it's a comment edit ajaxData.
-				if (activity_comment_id) {
+				if ( activity_comment_id ) {
 					delete ajaxData.is_single;
 
 					// Set comment data.
@@ -816,57 +822,57 @@ window.bp = window.bp || {};
 					li_parent = activity_comment_li;
 				}
 
-				parent.ajax(ajaxData, 'activity').done(
-					function (response) {
-						target.removeClass('loading');
+				parent.ajax( ajaxData, 'activity' ).done(
+					function ( response ) {
+						target.removeClass( 'loading' );
 
-						if (false === response.success) {
-							li_parent.prepend(response.data.feedback);
-							li_parent.find('.bp-feedback').hide().fadeIn(300);
+						if ( false === response.success ) {
+							li_parent.prepend( response.data.feedback );
+							li_parent.find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
 							// Specific case of the single activity screen.
-							if (response.data.redirect) {
+							if ( response.data.redirect ) {
 								return window.location.href = response.data.redirect;
 							}
 
-							if (response.data.parent_activity_id && response.data.activity) {
-								$('#buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id).replaceWith(response.data.activity);
+							if ( response.data.parent_activity_id && response.data.activity ) {
+								$( '#buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
 							}
 
-							if (activity_comment_id) {
+							if ( activity_comment_id ) {
 								deleted_comments_count = 1;
 
 								// Move the form if needed.
-								activity_item.append(activity_comment_li.find('form'));
+								activity_item.append( activity_comment_li.find( 'form' ) );
 
 								// Count child comments if there are some.
 								$.each(
-									activity_comment_li.find('li.comment-item'),
+									activity_comment_li.find( 'li.comment-item' ),
 									function () {
 										deleted_comments_count += 1;
 									}
 								);
 
 								// Update the button count.
-								comment_count_span = activity_state.find('span.comments-count');
-								comment_count = comment_count_span.text().length ? comment_count_span.text().match(/\d+/)[0] : 0;
-								comment_count = Number(comment_count - deleted_comments_count);
+								comment_count_span = activity_state.find( 'span.comments-count' );
+								comment_count = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[ 0 ] : 0;
+								comment_count = Number( comment_count - deleted_comments_count );
 
-								if (comments_text.length) {
+								if ( comments_text.length ) {
 									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-									comments_text.text(label.replace('%d', comment_count));
+									comments_text.text( label.replace( '%d', comment_count ) );
 								}
 
 								// Update the show all count.
-								show_all_a = activity_item.find('li.show-all a');
-								if (show_all_a.length) {
-									show_all_a.html(BP_Nouveau.show_x_comments.replace('%d', comment_count));
+								show_all_a = activity_item.find( 'li.show-all a' );
+								if ( show_all_a.length ) {
+									show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
 								}
 
 								// Clean up the parent activity classes.
-								if (0 === comment_count) {
-									activity_item.removeClass('has-comments');
-									activity_state.removeClass('has-comments');
+								if ( 0 === comment_count ) {
+									activity_item.removeClass( 'has-comments' );
+									activity_state.removeClass( 'has-comments' );
 									comments_text.empty();
 								}
 							}
@@ -880,39 +886,39 @@ window.bp = window.bp || {};
 							);
 
 							// reset vars to get newest activities when an activity is deleted.
-							if (!activity_comment_id && activity_item.data('bp-timestamp') === parent.Activity.heartbeat_data.last_recorded) {
+							if ( ! activity_comment_id && activity_item.data( 'bp-timestamp' ) === parent.Activity.heartbeat_data.last_recorded ) {
 								parent.Activity.heartbeat_data.newest = '';
 								parent.Activity.heartbeat_data.last_recorded = 0;
 							}
 
 							// Inform other scripts.
-							$(document).trigger('bp_activity_ajax_delete_request', $.extend(ajaxData, { response: response }));
-							$(document).trigger('bp_activity_ajax_delete_request_video', $.extend(ajaxData, { response: response }));
+							$( document ).trigger( 'bp_activity_ajax_delete_request', $.extend( ajaxData, { response: response } ) );
+							$( document ).trigger( 'bp_activity_ajax_delete_request_video', $.extend( ajaxData, { response: response } ) );
 						}
 					}
 				);
 			}
 
 			// Reading more.
-			if (target.closest('span').hasClass('activity-read-more')) {
-				var content = target.closest('div'), readMore = target.closest('span');
+			if ( target.closest( 'span' ).hasClass( 'activity-read-more' ) ) {
+				var content = target.closest( 'div' ), readMore = target.closest( 'span' );
 
 				item_id = null;
 
-				if ($(content).hasClass('activity-inner')) {
+				if ( $( content ).hasClass( 'activity-inner' ) ) {
 					item_id = activity_id;
-				} else if ($(content).hasClass('acomment-content')) {
-					item_id = target.closest('li').data('bp-activity-comment-id');
+				} else if ( $( content ).hasClass( 'acomment-content' ) ) {
+					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				if (!item_id) {
+				if ( ! item_id ) {
 					return event;
 				}
 
 				// Stop event propagation.
 				event.preventDefault();
 
-				$(readMore).addClass('loading');
+				$( readMore ).addClass( 'loading' );
 
 				parent.ajax(
 					{
@@ -921,34 +927,34 @@ window.bp = window.bp || {};
 					},
 					'activity'
 				).done(
-					function (response) {
+					function ( response ) {
 
 						// check for JSON output.
-						if (typeof response !== 'object' && target.closest('div').find('.bb-activity-media-wrap').length > 0) {
-							response = JSON.parse(response);
+						if ( typeof response !== 'object' && target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 ) {
+							response = JSON.parse( response );
 						}
 
-						$(readMore).removeClass('loading');
+						$( readMore ).removeClass( 'loading' );
 
-						if (content.parent().find('.bp-feedback').length) {
-							content.parent().find('.bp-feedback').remove();
+						if ( content.parent().find( '.bp-feedback' ).length ) {
+							content.parent().find( '.bp-feedback' ).remove();
 						}
 
-						if (false === response.success) {
-							content.after(response.data.feedback);
-							content.parent().find('.bp-feedback').hide().fadeIn(300);
+						if ( false === response.success ) {
+							content.after( response.data.feedback );
+							content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
-							$(content).html(response.data.contents).slideDown(300);
+							$( content ).html( response.data.contents ).slideDown( 300 );
 
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							jQuery(window).scroll();
+							jQuery( window ).scroll();
 
-							if (activity_item.hasClass('wp-link-embed')) {
-								if (typeof window.instgrm !== 'undefined') {
+							if ( activity_item.hasClass( 'wp-link-embed' ) ) {
+								if ( typeof window.instgrm !== 'undefined' ) {
 									window.instgrm.Embeds.process();
 								}
-								if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
-									window.FB.XFBML.parse(document.getElementById('activity-' + item_id));
+								if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+									window.FB.XFBML.parse( document.getElementById( 'activity-' + item_id ) );
 								}
 							}
 						}
@@ -957,62 +963,62 @@ window.bp = window.bp || {};
 			}
 
 			// Displaying the comment form.
-			if (target.hasClass('activity-state-comments') || target.hasClass('acomment-reply') || target.parent().hasClass('acomment-reply')) {
+			if ( target.hasClass( 'activity-state-comments' ) || target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
 				var comment_link = target;
 				item_id = activity_id;
-				form = $('#ac-form-' + activity_id);
-				var $activity_comments = $('[data-bp-activity-id="' + item_id + '"] .activity-comments');
+				form = $( '#ac-form-' + activity_id );
+				var $activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
 
-				if (target.closest('.bb-media-model-container').length) {
-					form = target.closest('.bb-media-model-container').find('#ac-form-' + activity_id);
-					$activity_comments = target.closest('.bb-media-model-container').find('[data-bp-activity-id="' + item_id + '"] .activity-comments');
+				if ( target.closest( '.bb-media-model-container' ).length ) {
+					form = target.closest( '.bb-media-model-container' ).find( '#ac-form-' + activity_id );
+					$activity_comments = target.closest( '.bb-media-model-container' ).find( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
 				}
 
 				// Stop event propagation.
 				event.preventDefault();
 
 				// If the comment count span inside the link is clicked.
-				if (target.parent().hasClass('acomment-reply')) {
+				if ( target.parent().hasClass( 'acomment-reply' ) ) {
 					comment_link = target.parent();
 				}
 
-				if (target.closest('li').data('bp-activity-comment-id')) {
-					item_id = target.closest('li').data('bp-activity-comment-id');
+				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
+					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				this.toggleMultiMediaOptions(form, target);
+				this.toggleMultiMediaOptions( form, target );
 
 				// ?? hide and display none..
 				// form.css( 'display', 'none' );
-				form.removeClass('root');
-				$('.ac-form').hide();
+				form.removeClass( 'root' );
+				$( '.ac-form' ).hide();
 
 				/* Remove any error messages */
 				$.each(
-					form.children('div'),
-					function (e, err) {
-						if ($(err).hasClass('error')) {
-							$(err).remove();
+					form.children( 'div' ),
+					function ( e, err ) {
+						if ( $( err ).hasClass( 'error' ) ) {
+							$( err ).remove();
 						}
 					}
 				);
 
 				// It's an activity we're commenting.
-				if (item_id === activity_id) {
-					$activity_comments.append(form);
-					form.addClass('root');
+				if ( item_id === activity_id ) {
+					$activity_comments.append( form );
+					form.addClass( 'root' );
 
 					// It's a comment we're replying to.
 				} else {
-					$('[data-bp-activity-comment-id="' + item_id + '"]').append(form);
+					$( '[data-bp-activity-comment-id="' + item_id + '"]' ).append( form );
 				}
 
-				form.slideDown(200);
+				form.slideDown( 200 );
 
 				// change the aria state from false to true.
-				target.attr('aria-expanded', 'true');
+				target.attr( 'aria-expanded', 'true' );
 
-				var peak_offset = ($(window).height() / 2 - 75);
+				var peak_offset = ($( window ).height() / 2 - 75);
 
 				$.scrollTo(
 					form,
@@ -1023,10 +1029,10 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$('#ac-form-' + activity_id + ' #ac-input-' + activity_id).focus();
+				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
-				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji) && 'undefined' == typeof $('#ac-input-' + activity_id).data('emojioneArea')) {
-					$('#ac-input-' + activity_id).emojioneArea(
+				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
+					$( '#ac-input-' + activity_id ).emojioneArea(
 						{
 							standalone: true,
 							hideSource: false,
@@ -1037,7 +1043,7 @@ window.bp = window.bp || {};
 							useInternalCDN: false,
 							events: {
 								emojibtn_click: function () {
-									$('#ac-input-' + activity_id)[0].emojioneArea.hidePicker();
+									$( '#ac-input-' + activity_id )[ 0 ].emojioneArea.hidePicker();
 								},
 							}
 						}
@@ -1046,149 +1052,149 @@ window.bp = window.bp || {};
 			}
 
 			// Removing the form.
-			if (target.hasClass('ac-reply-cancel')) {
+			if ( target.hasClass( 'ac-reply-cancel' ) ) {
 
-				$(target).closest('.ac-form').slideUp(200);
+				$( target ).closest( '.ac-form' ).slideUp( 200 );
 
 				// Change the aria state back to false on comment cancel.
-				$('.acomment-reply').attr('aria-expanded', 'false');
+				$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
 
-				self.destroyCommentMediaUploader(activity_id);
-				self.destroyCommentDocumentUploader(activity_id);
+				self.destroyCommentMediaUploader( activity_id );
+				self.destroyCommentDocumentUploader( activity_id );
 
 				// Stop event propagation.
 				event.preventDefault();
 			}
 
 			// Submitting comments and replies.
-			if ('ac_form_submit' === target.prop('name')) {
+			if ( 'ac_form_submit' === target.prop( 'name' ) ) {
 				var comment_content, comment_data;
 
-				form = target.closest('form');
+				form = target.closest( 'form' );
 				item_id = activity_id;
 
 				// Stop event propagation.
 				event.preventDefault();
 
-				$('.bp-feedback.bp-messages.error').remove();
+				$( '.bp-feedback.bp-messages.error' ).remove();
 
-				if (target.closest('li').data('bp-activity-comment-id')) {
-					item_id = target.closest('li').data('bp-activity-comment-id');
+				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
+					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				comment_content = $(form).find('.ac-input').first();
+				comment_content = $( form ).find( '.ac-input' ).first();
 
 				// replacing atwho query from the comment content to disable querying it in the requests.
-				var atwho_query = comment_content.find('span.atwho-query');
-				for (var i = 0; i < atwho_query.length; i++) {
-					$(atwho_query[i]).replaceWith(atwho_query[i].innerText);
+				var atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
 				}
 
 				// transform other emoji into emojionearea emoji.
-				comment_content.find('img.emoji').each(
-					function (index, Obj) {
-						$(Obj).addClass('emojioneemoji');
-						var emojis = $(Obj).attr('alt');
-						$(Obj).attr('data-emoji-char', emojis);
-						$(Obj).removeClass('emoji');
+				comment_content.find( 'img.emoji' ).each(
+					function ( index, Obj ) {
+						$( Obj ).addClass( 'emojioneemoji' );
+						var emojis = $( Obj ).attr( 'alt' );
+						$( Obj ).attr( 'data-emoji-char', emojis );
+						$( Obj ).removeClass( 'emoji' );
 					}
 				);
 
 				// Transform emoji image into emoji unicode.
-				comment_content.find('img.emojioneemoji').replaceWith(
+				comment_content.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
 					}
 				);
 
-				target.addClass('loading').prop('disabled', true);
-				comment_content.addClass('loading').prop('disabled', true);
-				var comment_value = comment_content[0].innerHTML.replace(/<div>/gi, '\n').replace(/<\/div>/gi, '');
+				target.addClass( 'loading' ).prop( 'disabled', true );
+				comment_content.addClass( 'loading' ).prop( 'disabled', true );
+				var comment_value = comment_content[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' );
 
 				comment_data = {
 					action: 'new_activity_comment',
-					_wpnonce_new_activity_comment: $('#_wpnonce_new_activity_comment').val(),
+					_wpnonce_new_activity_comment: $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id: item_id,
 					form_id: activity_id,
 					content: comment_value
 				};
 
 				// Add the Akismet nonce if it exists.
-				if ($('#_bp_as_nonce_' + activity_id).val()) {
-					comment_data['_bp_as_nonce_' + activity_id] = $('#_bp_as_nonce_' + activity_id).val();
+				if ( $( '#_bp_as_nonce_' + activity_id ).val() ) {
+					comment_data[ '_bp_as_nonce_' + activity_id ] = $( '#_bp_as_nonce_' + activity_id ).val();
 				}
 
 				// add media data if enabled or uploaded.
-				if (this.dropzone_media.length) {
+				if ( this.dropzone_media.length ) {
 					comment_data.media = this.dropzone_media;
 				}
 
 				// add document data if enabled or uploaded.
-				if (this.dropzone_document.length) {
+				if ( this.dropzone_document.length ) {
 					comment_data.document = this.dropzone_document;
 				}
 
 				// add video data if enabled or uploaded.
-				if (this.dropzone_video.length) {
+				if ( this.dropzone_video.length ) {
 					comment_data.video = this.dropzone_video;
 
-					if (_.isEmpty(comment_data.content)) {
+					if ( _.isEmpty( comment_data.content ) ) {
 						comment_data.content = '&#8203;';
 					}
 				}
 
 				// add gif data if enabled or uploaded.
-				if (!_.isUndefined(this.models[activity_id])) {
-					model = this.models[activity_id];
-					comment_data.gif_data = this.models[activity_id].get('gif_data');
+				if ( ! _.isUndefined( this.models[ activity_id ] ) ) {
+					model = this.models[ activity_id ];
+					comment_data.gif_data = this.models[ activity_id ].get( 'gif_data' );
 				}
 
-				parent.ajax(comment_data, 'activity').done(
-					function (response) {
-						target.removeClass('loading');
-						comment_content.removeClass('loading');
-						$('.acomment-reply').attr('aria-expanded', 'false');
+				parent.ajax( comment_data, 'activity' ).done(
+					function ( response ) {
+						target.removeClass( 'loading' );
+						comment_content.removeClass( 'loading' );
+						$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
 
-						if (false === response.success) {
-							form.append($(response.data.feedback).hide().fadeIn(200));
+						if ( false === response.success ) {
+							form.append( $( response.data.feedback ).hide().fadeIn( 200 ) );
 						} else {
 							var activity_comments = form.parent();
-							var the_comment = $.trim(response.data.contents);
+							var the_comment = $.trim( response.data.contents );
 
 							form.fadeOut(
 								200,
 								function () {
-									if (0 === activity_comments.children('ul').length) {
-										if (activity_comments.hasClass('activity-comments')) {
-											activity_comments.prepend('<ul></ul>');
+									if ( 0 === activity_comments.children( 'ul' ).length ) {
+										if ( activity_comments.hasClass( 'activity-comments' ) ) {
+											activity_comments.prepend( '<ul></ul>' );
 										} else {
-											activity_comments.append('<ul></ul>');
+											activity_comments.append( '<ul></ul>' );
 										}
 									}
 
-									activity_comments.children('ul').append($(the_comment).hide().fadeIn(200));
-									$(form).find('.ac-input').first().html('');
+									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									$( form ).find( '.ac-input' ).first().html( '' );
 
-									activity_comments.parent().addClass('has-comments');
-									activity_comments.parent().addClass('comments-loaded');
-									activity_state.addClass('has-comments');
+									activity_comments.parent().addClass( 'has-comments' );
+									activity_comments.parent().addClass( 'comments-loaded' );
+									activity_state.addClass( 'has-comments' );
 									// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 
-									var tool_box_comment = activity_comments.find('.ac-reply-content');
-									if (tool_box_comment.find('.ac-reply-toolbar .ac-reply-media-button')) {
-										tool_box_comment.find('.ac-reply-toolbar .ac-reply-media-button').parents('.post-elements-buttons-item').removeClass('disable no-click');
+									var tool_box_comment = activity_comments.find( '.ac-reply-content' );
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									if (tool_box_comment.find('.ac-reply-toolbar .ac-reply-document-button')) {
-										tool_box_comment.find('.ac-reply-toolbar .ac-reply-document-button').parents('.post-elements-buttons-item').removeClass('disable no-click');
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									if (tool_box_comment.find('.ac-reply-toolbar .ac-reply-video-button')) {
-										tool_box_comment.find('.ac-reply-toolbar .ac-reply-video-button').parents('.post-elements-buttons-item').removeClass('disable no-click');
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									if (tool_box_comment.find('.ac-reply-toolbar .ac-reply-gif-button')) {
-										tool_box_comment.find('.ac-reply-toolbar .ac-reply-gif-button').removeClass('active ');
-										tool_box_comment.find('.ac-reply-toolbar .ac-reply-gif-button').parents('.post-elements-buttons-item').removeClass('disable no-click');
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 									}
-									jQuery(window).scroll();
+									jQuery( window ).scroll();
 								}
 							);
 
@@ -1196,83 +1202,83 @@ window.bp = window.bp || {};
 							// jq( '#' + form.attr('id') + ' textarea').val('');
 
 							// Set the new count.
-							comment_count_span = activity_state.find('span.comments-count');
-							comment_count = comment_count_span.text().length ? comment_count_span.text().match(/\d+/)[0] : 0;
-							comment_count = Number(comment_count) + 1;
+							comment_count_span = activity_state.find( 'span.comments-count' );
+							comment_count = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[ 0 ] : 0;
+							comment_count = Number( comment_count ) + 1;
 
 							// Increase the "Reply (X)" button count.
 							// $( activity_item ).find( 'a span.comment-count' ).html( comment_count );
 
-							if (comments_text.length) {
+							if ( comments_text.length ) {
 								var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-								comments_text.text(label.replace('%d', comment_count || 1));
+								comments_text.text( label.replace( '%d', comment_count || 1 ) );
 							}
 
 							// Increment the 'Show all x comments' string, if present.
-							show_all_a = $(activity_item).find('.show-all a');
-							if (show_all_a) {
-								show_all_a.html(BP_Nouveau.show_x_comments.replace('%d', comment_count));
+							show_all_a = $( activity_item ).find( '.show-all a' );
+							if ( show_all_a ) {
+								show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
 							}
 
 							// keep the dropzone media saved so it wont remove its attachment when destroyed.
-							if (self.dropzone_media.length) {
-								for (var l = 0; l < self.dropzone_media.length; l++) {
-									self.dropzone_media[l].saved = true;
+							if ( self.dropzone_media.length ) {
+								for ( var l = 0; l < self.dropzone_media.length; l++ ) {
+									self.dropzone_media[ l ].saved = true;
 								}
 							}
 
 							// keep the dropzone document saved so it wont remove its attachment when destroyed.
-							if (self.dropzone_document.length) {
-								for (var d = 0; d < self.dropzone_document.length; d++) {
-									self.dropzone_document[d].saved = true;
+							if ( self.dropzone_document.length ) {
+								for ( var d = 0; d < self.dropzone_document.length; d++ ) {
+									self.dropzone_document[ d ].saved = true;
 								}
 							}
 
 							// keep the dropzone video saved so it wont remove its attachment when destroyed.
-							if (self.dropzone_video.length) {
-								for (var v = 0; v < self.dropzone_video.length; v++) {
-									self.dropzone_video[v].saved = true;
+							if ( self.dropzone_video.length ) {
+								for ( var v = 0; v < self.dropzone_video.length; v++ ) {
+									self.dropzone_video[ v ].saved = true;
 								}
 							}
 
 						}
 
-						if (!_.isUndefined(model)) {
-							model.set('gif_data', {});
-							$('#ac-reply-post-gif-' + activity_id).find('.activity-attached-gif-container').removeAttr('style');
+						if ( ! _.isUndefined( model ) ) {
+							model.set( 'gif_data', {} );
+							$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 						}
 
-						self.destroyCommentMediaUploader(activity_id);
-						self.destroyCommentDocumentUploader(activity_id);
-						self.destroyCommentVideoUploader(activity_id);
+						self.destroyCommentMediaUploader( activity_id );
+						self.destroyCommentDocumentUploader( activity_id );
+						self.destroyCommentVideoUploader( activity_id );
 
-						target.prop('disabled', false);
-						comment_content.prop('disabled', false);
+						target.prop( 'disabled', false );
+						comment_content.prop( 'disabled', false );
 					}
 				);
 			}
 
 			// Edit the activity.
-			if (target.hasClass('edit') && target.hasClass('edit-activity')) {
+			if ( target.hasClass( 'edit' ) && target.hasClass( 'edit-activity' ) ) {
 				// Stop event propagation.
 				event.preventDefault();
 
-				var activity_data = activity_item.data('bp-activity');
+				var activity_data = activity_item.data( 'bp-activity' );
 
-				if (typeof activity_data !== 'undefined') {
-					bp.Nouveau.Activity.postForm.displayEditActivityForm(activity_data);
+				if ( typeof activity_data !== 'undefined' ) {
+					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
 
 					// Check if it's a Group activity.
-					if (target.closest('li').hasClass('groups')) {
-						$('#bp-nouveau-activity-form').addClass('group-activity');
+					if ( target.closest( 'li' ).hasClass( 'groups' ) ) {
+						$( '#bp-nouveau-activity-form' ).addClass( 'group-activity' );
 					} else {
-						$('#bp-nouveau-activity-form').removeClass('group-activity');
+						$( '#bp-nouveau-activity-form' ).removeClass( 'group-activity' );
 					}
 
 					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
-					if (typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && (bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document)) {
-						$(document).find('.bb-close-media-theatre').trigger('click');
-						$(document).find('.bb-close-document-theatre').trigger('click');
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && (bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document) ) {
+						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
+						$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
 					}
 
 				}
@@ -1285,38 +1291,38 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		commentFormAction: function (event) {
+		commentFormAction: function ( event ) {
 			var element, keyCode;
 
 			event = event || window.event;
 
-			if (event.target) {
+			if ( event.target ) {
 				element = event.target;
-			} else if (event.srcElement) {
+			} else if ( event.srcElement ) {
 				element = event.srcElement;
 			}
 
-			if (element.nodeType === 3) {
+			if ( element.nodeType === 3 ) {
 				element = element.parentNode;
 			}
 
-			if (event.altKey === true || event.metaKey === true) {
+			if ( event.altKey === true || event.metaKey === true ) {
 				return event;
 			}
 
 			// Not in a comment textarea, return.
-			if (element.tagName !== 'TEXTAREA' || !$(element).hasClass('ac-input')) {
+			if ( element.tagName !== 'TEXTAREA' || ! $( element ).hasClass( 'ac-input' ) ) {
 				return event;
 			}
 
 			keyCode = (event.keyCode) ? event.keyCode : event.which;
 
-			if (27 === keyCode && false === event.ctrlKey) {
-				if (element.tagName === 'TEXTAREA') {
-					$(element).closest('form').slideUp(200);
+			if ( 27 === keyCode && false === event.ctrlKey ) {
+				if ( element.tagName === 'TEXTAREA' ) {
+					$( element ).closest( 'form' ).slideUp( 200 );
 				}
-			} else if (event.ctrlKey && 13 === keyCode && $(element).val()) {
-				$(element).closest('form').find('[type=submit]').first().trigger('click');
+			} else if ( event.ctrlKey && 13 === keyCode && $( element ).val() ) {
+				$( element ).closest( 'form' ).find( '[type=submit]' ).first().trigger( 'click' );
 			}
 		},
 
@@ -1326,122 +1332,122 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		togglePopupDropdown: function (event) {
+		togglePopupDropdown: function ( event ) {
 			var element;
 
 			event = event || window.event;
 
-			if (event.target) {
+			if ( event.target ) {
 				element = event.target;
-			} else if (event.srcElement) {
+			} else if ( event.srcElement ) {
 				element = event.srcElement;
 			}
 
-			if (element.nodeType === 3) {
+			if ( element.nodeType === 3 ) {
 				element = element.parentNode;
 			}
 
-			if (event.altKey === true || event.metaKey === true) {
+			if ( event.altKey === true || event.metaKey === true ) {
 				return event;
 			}
 
 			// if privacy dropdown items, return.
-			if ($(element).hasClass('privacy-wrap') || $(element).parent().hasClass('privacy-wrap')) {
+			if ( $( element ).hasClass( 'privacy-wrap' ) || $( element ).parent().hasClass( 'privacy-wrap' ) ) {
 				return event;
 			}
 
-			$('ul.activity-privacy').removeClass('bb-open');
+			$( 'ul.activity-privacy' ).removeClass( 'bb-open' );
 		},
 
 		// activity autoload.
 		loadMoreActivities: function () {
 
-			var $load_more_btn = $('.load-more:visible').last(),
-				$window = $(window);
+			var $load_more_btn = $( '.load-more:visible' ).last(),
+				$window = $( window );
 
-			if (!$load_more_btn.closest('.activity-list').length) {
+			if ( ! $load_more_btn.closest( '.activity-list' ).length ) {
 				return;
 			}
 
-			if (!$load_more_btn.get(0) || $load_more_btn.data('bp-autoloaded')) {
+			if ( ! $load_more_btn.get( 0 ) || $load_more_btn.data( 'bp-autoloaded' ) ) {
 				return;
 			}
 
 			var pos = $load_more_btn.offset();
 			var offset = pos.top - 50;
 
-			if ($window.scrollTop() + $window.height() > offset) {
-				$load_more_btn.data('bp-autoloaded', 1);
-				$load_more_btn.find('a').text(BP_Nouveau.activity.strings.loadingMore);
-				$load_more_btn.find('a').trigger('click');
+			if ( $window.scrollTop() + $window.height() > offset ) {
+				$load_more_btn.data( 'bp-autoloaded', 1 );
+				$load_more_btn.find( 'a' ).text( BP_Nouveau.activity.strings.loadingMore );
+				$load_more_btn.find( 'a' ).trigger( 'click' );
 			}
 		},
 
-		destroyCommentMediaUploader: function (comment_id) {
+		destroyCommentMediaUploader: function ( comment_id ) {
 			var self = this;
 
-			if (!_.isNull(self.dropzone_obj)) {
+			if ( ! _.isNull( self.dropzone_obj ) ) {
 				self.dropzone_obj.destroy();
-				$('#ac-reply-post-media-uploader-' + comment_id).html('');
-				$('#ac-reply-post-media-uploader-1-' + comment_id).html('');
+				$( '#ac-reply-post-media-uploader-' + comment_id ).html( '' );
+				$( '#ac-reply-post-media-uploader-1-' + comment_id ).html( '' );
 			}
 			self.dropzone_media = [];
-			$('#ac-reply-post-media-uploader-' + comment_id).removeClass('open').addClass('closed');
-			$('#ac-reply-media-button-' + comment_id).removeClass('active');
+			$( '#ac-reply-post-media-uploader-' + comment_id ).removeClass( 'open' ).addClass( 'closed' );
+			$( '#ac-reply-media-button-' + comment_id ).removeClass( 'active' );
 		},
 
-		destroyCommentDocumentUploader: function (comment_id) {
+		destroyCommentDocumentUploader: function ( comment_id ) {
 			var self = this;
 
-			if (!_.isNull(self.dropzone_document_obj)) {
+			if ( ! _.isNull( self.dropzone_document_obj ) ) {
 				self.dropzone_document_obj.destroy();
-				$('#ac-reply-post-document-uploader-' + comment_id).html('');
+				$( '#ac-reply-post-document-uploader-' + comment_id ).html( '' );
 			}
 			self.dropzone_document = [];
-			$('#ac-reply-post-document-uploader-' + comment_id).removeClass('open').addClass('closed');
-			$('#ac-reply-document-button-' + comment_id).removeClass('active');
+			$( '#ac-reply-post-document-uploader-' + comment_id ).removeClass( 'open' ).addClass( 'closed' );
+			$( '#ac-reply-document-button-' + comment_id ).removeClass( 'active' );
 		},
 
-		destroyCommentVideoUploader: function (comment_id) {
+		destroyCommentVideoUploader: function ( comment_id ) {
 			var self = this;
 
-			if (!_.isNull(self.dropzone_video_obj)) {
+			if ( ! _.isNull( self.dropzone_video_obj ) ) {
 				self.dropzone_video_obj.destroy();
-				$('#ac-reply-post-video-uploader-' + comment_id).html('');
+				$( '#ac-reply-post-video-uploader-' + comment_id ).html( '' );
 			}
 			self.dropzone_video = [];
-			$('#ac-reply-post-video-uploader-' + comment_id).removeClass('open').addClass('closed');
-			$('#ac-reply-video-button-' + comment_id).removeClass('active');
+			$( '#ac-reply-post-video-uploader-' + comment_id ).removeClass( 'open' ).addClass( 'closed' );
+			$( '#ac-reply-video-button-' + comment_id ).removeClass( 'active' );
 		},
 
-		resetGifPicker: function (comment_id) {
+		resetGifPicker: function ( comment_id ) {
 
-			$('#ac-reply-gif-button-' + comment_id).closest('.post-gif').find('.gif-media-search-dropdown').removeClass('open');
-			$('#ac-reply-gif-button-' + comment_id).removeClass('active');
+			$( '#ac-reply-gif-button-' + comment_id ).closest( '.post-gif' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			$( '#ac-reply-gif-button-' + comment_id ).removeClass( 'active' );
 
 			// add gif data if enabled or uploaded.
-			if (!_.isUndefined(this.models[comment_id])) {
-				var model = this.models[comment_id];
-				model.set('gif_data', {});
-				$('#ac-reply-post-gif-' + comment_id).find('.activity-attached-gif-container').removeAttr('style');
+			if ( ! _.isUndefined( this.models[ comment_id ] ) ) {
+				var model = this.models[ comment_id ];
+				model.set( 'gif_data', {} );
+				$( '#ac-reply-post-gif-' + comment_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 			}
 		},
 
-		openCommentsMediaUploader: function (event) {
+		openCommentsMediaUploader: function ( event ) {
 			var self = this,
-				target = $(event.currentTarget),
-				key = target.data('ac-id'),
-				dropzone_container = target.closest('.ac-reply-content').find('#ac-reply-post-media-uploader-' + key);
+				target = $( event.currentTarget ),
+				key = target.data( 'ac-id' ),
+				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			event.preventDefault();
 
-			$(event.currentTarget).toggleClass('active');
+			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentDefaultTemplate = document.getElementsByClassName('ac-reply-post-default-template').length ? document.getElementsByClassName('ac-reply-post-default-template')[0].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[ 0 ].innerHTML : ''; // Check to avoid error if Node is missing.
 
-			if (typeof window.Dropzone !== 'undefined' && dropzone_container.length) {
+			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
-				if (dropzone_container.hasClass('closed')) {
+				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
 						url: BP_Nouveau.ajaxurl,
@@ -1458,66 +1464,66 @@ window.bp = window.bp || {};
 					};
 
 					// init dropzone.
-					self.dropzone_obj = new Dropzone('#ac-reply-post-media-uploader-' + target.data('ac-id'), dropzone_options);
+					self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_obj.on(
 						'sending',
-						function (file, xhr, formData) {
-							formData.append('action', 'media_upload');
-							formData.append('_wpnonce', BP_Nouveau.nonces.media);
+						function ( file, xhr, formData ) {
+							formData.append( 'action', 'media_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-							var tool_box = target.parents('.ac-reply-toolbar');
-							if (tool_box.find('.ac-reply-document-button')) {
-								tool_box.find('.ac-reply-document-button').parents('.post-elements-buttons-item').addClass('disable');
+							var tool_box = target.parents( '.ac-reply-toolbar' );
+							if ( tool_box.find( '.ac-reply-document-button' ) ) {
+								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-video-button')) {
-								tool_box.find('.ac-reply-video-button').parents('.post-elements-buttons-item').addClass('disable');
+							if ( tool_box.find( '.ac-reply-video-button' ) ) {
+								tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-gif-button')) {
-								tool_box.find('.ac-reply-gif-button').parents('.post-elements-buttons-item').addClass('disable');
+							if ( tool_box.find( '.ac-reply-gif-button' ) ) {
+								tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-media-button')) {
-								tool_box.find('.ac-reply-media-button').parents('.post-elements-buttons-item').addClass('no-click');
+							if ( tool_box.find( '.ac-reply-media-button' ) ) {
+								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
 						}
 					);
 
 					self.dropzone_obj.on(
 						'uploadprogress',
-						function (element) {
+						function ( element ) {
 
-							var circle = $(element.previewElement).find('.dz-progress-ring circle')[0];
+							var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed(0) / 100 * circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 						}
 					);
 
 					self.dropzone_obj.on(
 						'success',
-						function (file, response) {
-							if (response.data.id) {
+						function ( file, response ) {
+							if ( response.data.id ) {
 								file.id = response.id;
 								response.data.uuid = file.upload.uuid;
-								response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
+								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
 								response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 								response.data.saved = false;
-								self.dropzone_media.push(response.data);
-								return file.previewElement.classList.add('dz-success');
+								self.dropzone_media.push( response.data );
+								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
-								file.previewElement.classList.add('dz-error');
-								_ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+								file.previewElement.classList.add( 'dz-error' );
+								_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 								_results = [];
-								for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-									node = _ref[_i];
-									_results.push(node.textContent = message);
+								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+									node = _ref[ _i ];
+									_results.push( node.textContent = message );
 								}
 								return _results;
 							}
@@ -1526,9 +1532,9 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'accept',
-						function (file, done) {
-							if (file.size == 0) {
-								done(BP_Nouveau.media.empty_document_type);
+						function ( file, done ) {
+							if ( file.size == 0 ) {
+								done( BP_Nouveau.media.empty_document_type );
 							} else {
 								done();
 							}
@@ -1537,91 +1543,91 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'error',
-						function (file, response) {
-							if (file.accepted) {
-								if (typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined') {
-									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						function ( file, response ) {
+							if ( file.accepted ) {
+								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								if (!jQuery('.comment-media-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if ( ! jQuery( '.comment-media-error-popup' ).length ) {
+									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
-								this.removeFile(file);
+								this.removeFile( file );
 							}
 						}
 					);
 
 					self.dropzone_obj.on(
 						'removedfile',
-						function (file) {
-							if (self.dropzone_media.length) {
-								for (var i in self.dropzone_media) {
-									if (file.upload.uuid == self.dropzone_media[i].uuid) {
+						function ( file ) {
+							if ( self.dropzone_media.length ) {
+								for ( var i in self.dropzone_media ) {
+									if ( file.upload.uuid == self.dropzone_media[ i ].uuid ) {
 
-										if (typeof self.dropzone_media[i].saved !== 'undefined' && !self.dropzone_media[i].saved) {
-											bp.Nouveau.Media.removeAttachment(self.dropzone_media[i].id);
+										if ( typeof self.dropzone_media[ i ].saved !== 'undefined' && ! self.dropzone_media[ i ].saved ) {
+											bp.Nouveau.Media.removeAttachment( self.dropzone_media[ i ].id );
 										}
 
-										self.dropzone_media.splice(i, 1);
+										self.dropzone_media.splice( i, 1 );
 										break;
 									}
 								}
 							}
 
-							if (!_.isNull(self.dropzone_obj) && !_.isNull(self.dropzone_obj.files) && self.dropzone_obj.files.length === 0) {
-								var tool_box = target.parents('.ac-reply-toolbar');
-								if (tool_box.find('.ac-reply-document-button')) {
-									tool_box.find('.ac-reply-document-button').parents('.post-elements-buttons-item').removeClass('disable');
+							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+								var tool_box = target.parents( '.ac-reply-toolbar' );
+								if ( tool_box.find( '.ac-reply-document-button' ) ) {
+									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-video-button')) {
-									tool_box.find('.ac-reply-video-button').parents('.post-elements-buttons-item').removeClass('disable');
+								if ( tool_box.find( '.ac-reply-video-button' ) ) {
+									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-gif-button')) {
-									tool_box.find('.ac-reply-gif-button').parents('.post-elements-buttons-item').removeClass('disable');
+								if ( tool_box.find( '.ac-reply-gif-button' ) ) {
+									tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-media-button')) {
-									tool_box.find('.ac-reply-media-button').parents('.post-elements-buttons-item').removeClass('no-click');
+								if ( tool_box.find( '.ac-reply-media-button' ) ) {
+									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
 							}
 						}
 					);
 
 					// container class to open close.
-					dropzone_container.removeClass('closed').addClass('open');
+					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
 
 				} else {
-					if (self.dropzone_obj && typeof self.dropzone_obj !== 'undefined') {
+					if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
 						self.dropzone_obj.destroy();
 					}
 					self.dropzone_media = [];
-					dropzone_container.html('');
-					dropzone_container.addClass('closed').removeClass('open');
+					dropzone_container.html( '' );
+					dropzone_container.addClass( 'closed' ).removeClass( 'open' );
 				}
 			}
 
-			var currentTarget = event.currentTarget, activityID = currentTarget.id.match(/\d+$/)[0];
-			this.destroyCommentDocumentUploader(activityID);
-			this.destroyCommentVideoUploader(activityID);
+			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[ 0 ];
+			this.destroyCommentDocumentUploader( activityID );
+			this.destroyCommentVideoUploader( activityID );
 
-			var c_id = $(event.currentTarget).data('ac-id');
-			this.resetGifPicker(c_id);
+			var c_id = $( event.currentTarget ).data( 'ac-id' );
+			this.resetGifPicker( c_id );
 		},
 
-		openCommentsDocumentUploader: function (event) {
+		openCommentsDocumentUploader: function ( event ) {
 			var self = this,
-				target = $(event.currentTarget),
-				key = target.data('ac-id'),
-				dropzone_container = target.closest('.ac-reply-content').find('#ac-reply-post-document-uploader-' + key);
+				target = $( event.currentTarget ),
+				key = target.data( 'ac-id' ),
+				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-document-uploader-' + key );
 
 			event.preventDefault();
 
-			$(event.currentTarget).toggleClass('active');
+			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentDocumentTemplate = document.getElementsByClassName('ac-reply-post-document-template').length ? document.getElementsByClassName('ac-reply-post-document-template')[0].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[ 0 ].innerHTML : ''; // Check to avoid error if Node is missing.
 
-			if (typeof window.Dropzone !== 'undefined' && dropzone_container.length) {
+			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
-				if (dropzone_container.hasClass('closed')) {
+				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
 						url: BP_Nouveau.ajaxurl,
@@ -1641,50 +1647,50 @@ window.bp = window.bp || {};
 					};
 
 					// init dropzone.
-					self.dropzone_document_obj = new Dropzone('#ac-reply-post-document-uploader-' + target.data('ac-id'), dropzone_options);
+					self.dropzone_document_obj = new Dropzone( '#ac-reply-post-document-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_document_obj.on(
 						'sending',
-						function (file, xhr, formData) {
-							formData.append('action', 'document_document_upload');
-							formData.append('_wpnonce', BP_Nouveau.nonces.media);
+						function ( file, xhr, formData ) {
+							formData.append( 'action', 'document_document_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
-							var tool_box = target.parents('.ac-reply-toolbar');
-							if (tool_box.find('.ac-reply-media-button')) {
-								tool_box.find('.ac-reply-media-button').parents('.post-elements-buttons-item').addClass('disable');
+							var tool_box = target.parents( '.ac-reply-toolbar' );
+							if ( tool_box.find( '.ac-reply-media-button' ) ) {
+								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-video-button')) {
-								tool_box.find('.ac-reply-video-button').parents('.post-elements-buttons-item').addClass('disable');
+							if ( tool_box.find( '.ac-reply-video-button' ) ) {
+								tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-gif-button')) {
-								tool_box.find('.ac-reply-gif-button').parents('.post-elements-buttons-item').addClass('disable');
+							if ( tool_box.find( '.ac-reply-gif-button' ) ) {
+								tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-document-button')) {
-								tool_box.find('.ac-reply-document-button').parents('.post-elements-buttons-item').addClass('no-click');
+							if ( tool_box.find( '.ac-reply-document-button' ) ) {
+								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
 						}
 					);
 
 					self.dropzone_document_obj.on(
 						'uploadprogress',
-						function (element) {
+						function ( element ) {
 
-							var circle = $(element.previewElement).find('.dz-progress-ring circle')[0];
+							var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed(0) / 100 * circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 						}
 					);
 
 					self.dropzone_document_obj.on(
 						'accept',
-						function (file, done) {
-							if (file.size == 0) {
-								done(BP_Nouveau.media.empty_document_type);
+						function ( file, done ) {
+							if ( file.size == 0 ) {
+								done( BP_Nouveau.media.empty_document_type );
 							} else {
 								done();
 							}
@@ -1693,25 +1699,25 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'success',
-						function (file, response) {
-							if (response.data.id) {
+						function ( file, response ) {
+							if ( response.data.id ) {
 								file.id = response.id;
 								response.data.uuid = file.upload.uuid;
-								response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
+								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
 								response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 								response.data.saved = false;
-								self.dropzone_document.push(response.data);
-								return file.previewElement.classList.add('dz-success');
+								self.dropzone_document.push( response.data );
+								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
-								file.previewElement.classList.add('dz-error');
-								_ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+								file.previewElement.classList.add( 'dz-error' );
+								_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 								_results = [];
-								for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-									node = _ref[_i];
-									_results.push(node.textContent = message);
+								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+									node = _ref[ _i ];
+									_results.push( node.textContent = message );
 								}
 								return _results;
 							}
@@ -1720,91 +1726,91 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'error',
-						function (file, response) {
-							if (file.accepted) {
-								if (typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined') {
-									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						function ( file, response ) {
+							if ( file.accepted ) {
+								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								if (!jQuery('.comment-document-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if ( ! jQuery( '.comment-document-error-popup' ).length ) {
+									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
-								this.removeFile(file);
+								this.removeFile( file );
 							}
 						}
 					);
 
 					self.dropzone_document_obj.on(
 						'removedfile',
-						function (file) {
-							if (self.dropzone_document.length) {
-								for (var i in self.dropzone_document) {
-									if (file.upload.uuid == self.dropzone_document[i].uuid) {
+						function ( file ) {
+							if ( self.dropzone_document.length ) {
+								for ( var i in self.dropzone_document ) {
+									if ( file.upload.uuid == self.dropzone_document[ i ].uuid ) {
 
-										if (typeof self.dropzone_document[i].saved !== 'undefined' && !self.dropzone_document[i].saved) {
-											bp.Nouveau.Media.removeAttachment(self.dropzone_document[i].id);
+										if ( typeof self.dropzone_document[ i ].saved !== 'undefined' && ! self.dropzone_document[ i ].saved ) {
+											bp.Nouveau.Media.removeAttachment( self.dropzone_document[ i ].id );
 										}
 
-										self.dropzone_document.splice(i, 1);
+										self.dropzone_document.splice( i, 1 );
 										break;
 									}
 								}
 							}
 
-							if (!_.isNull(self.dropzone_obj) && !_.isNull(self.dropzone_obj.files) && self.dropzone_obj.files.length === 0) {
-								var tool_box = target.parents('.ac-reply-toolbar');
-								if (tool_box.find('.ac-reply-media-button')) {
-									tool_box.find('.ac-reply-media-button').parents('.post-elements-buttons-item').removeClass('disable');
+							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+								var tool_box = target.parents( '.ac-reply-toolbar' );
+								if ( tool_box.find( '.ac-reply-media-button' ) ) {
+									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-video-button')) {
-									tool_box.find('.ac-reply-video-button').parents('.post-elements-buttons-item').removeClass('disable');
+								if ( tool_box.find( '.ac-reply-video-button' ) ) {
+									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-gif-button')) {
-									tool_box.find('.ac-reply-gif-button').parents('.post-elements-buttons-item').removeClass('disable');
+								if ( tool_box.find( '.ac-reply-gif-button' ) ) {
+									tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-document-button')) {
-									tool_box.find('.ac-reply-document-button').parents('.post-elements-buttons-item').removeClass('no-click');
+								if ( tool_box.find( '.ac-reply-document-button' ) ) {
+									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
 							}
 						}
 					);
 
 					// container class to open close.
-					dropzone_container.removeClass('closed').addClass('open');
+					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
 
 				} else {
-					if (self.dropzone_document_obj) {
+					if ( self.dropzone_document_obj ) {
 						self.dropzone_document_obj.destroy();
 					}
 					self.dropzone_document = [];
-					dropzone_container.html('');
-					dropzone_container.addClass('closed').removeClass('open');
+					dropzone_container.html( '' );
+					dropzone_container.addClass( 'closed' ).removeClass( 'open' );
 				}
 			}
 
-			var currentTarget = event.currentTarget, activityID = currentTarget.id.match(/\d+$/)[0];
-			this.destroyCommentMediaUploader(activityID);
-			this.destroyCommentVideoUploader(activityID);
+			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[ 0 ];
+			this.destroyCommentMediaUploader( activityID );
+			this.destroyCommentVideoUploader( activityID );
 
-			var c_id = $(event.currentTarget).data('ac-id');
-			this.resetGifPicker(c_id);
+			var c_id = $( event.currentTarget ).data( 'ac-id' );
+			this.resetGifPicker( c_id );
 		},
 
-		openCommentsVideoUploader: function (event) {
+		openCommentsVideoUploader: function ( event ) {
 			var self = this,
-				target = $(event.currentTarget),
-				key = target.data('ac-id'),
-				dropzone_container = target.closest('.ac-reply-content').find('#ac-reply-post-video-uploader-' + key);
+				target = $( event.currentTarget ),
+				key = target.data( 'ac-id' ),
+				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-video-uploader-' + key );
 
 			event.preventDefault();
 
-			$(event.currentTarget).toggleClass('active');
+			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentVideoTemplate = document.getElementsByClassName('ac-reply-post-video-template').length ? document.getElementsByClassName('ac-reply-post-video-template')[0].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[ 0 ].innerHTML : ''; // Check to avoid error if Node is missing.
 
-			if (typeof window.Dropzone !== 'undefined' && dropzone_container.length) {
+			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
-				if (dropzone_container.hasClass('closed')) {
+				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
 						url: BP_Nouveau.ajaxurl,
@@ -1824,35 +1830,35 @@ window.bp = window.bp || {};
 					};
 
 					// init dropzone.
-					self.dropzone_video_obj = new Dropzone('#ac-reply-post-video-uploader-' + target.data('ac-id'), dropzone_options);
+					self.dropzone_video_obj = new Dropzone( '#ac-reply-post-video-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_video_obj.on(
 						'sending',
-						function (file, xhr, formData) {
-							formData.append('action', 'video_upload');
-							formData.append('_wpnonce', BP_Nouveau.nonces.video);
+						function ( file, xhr, formData ) {
+							formData.append( 'action', 'video_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
-							var tool_box = target.parents('.ac-reply-toolbar');
-							if (tool_box.find('.ac-reply-media-button')) {
-								tool_box.find('.ac-reply-media-button').parents('.post-elements-buttons-item').addClass('disable');
+							var tool_box = target.parents( '.ac-reply-toolbar' );
+							if ( tool_box.find( '.ac-reply-media-button' ) ) {
+								tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-document-button')) {
-								tool_box.find('.ac-reply-document-button').parents('.post-elements-buttons-item').addClass('disable');
+							if ( tool_box.find( '.ac-reply-document-button' ) ) {
+								tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-gif-button')) {
-								tool_box.find('.ac-reply-gif-button').parents('.post-elements-buttons-item').addClass('disable');
+							if ( tool_box.find( '.ac-reply-gif-button' ) ) {
+								tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 							}
-							if (tool_box.find('.ac-reply-video-button')) {
-								tool_box.find('.ac-reply-video-button').parents('.post-elements-buttons-item').addClass('no-click');
+							if ( tool_box.find( '.ac-reply-video-button' ) ) {
+								tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 							}
 						}
 					);
 
 					self.dropzone_video_obj.on(
 						'accept',
-						function (file, done) {
-							if (file.size == 0) {
-								done(BP_Nouveau.video.empty_video_type);
+						function ( file, done ) {
+							if ( file.size == 0 ) {
+								done( BP_Nouveau.video.empty_video_type );
 							} else {
 								done();
 							}
@@ -1861,14 +1867,14 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'addedfile',
-						function (file) {
+						function ( file ) {
 
-							if (file.dataURL) {
+							if ( file.dataURL ) {
 								// Get Thumbnail image from response.
 							} else {
 
-								if (bp.Nouveau.getVideoThumb) {
-									bp.Nouveau.getVideoThumb(file, '.dz-video-thumbnail');
+								if ( bp.Nouveau.getVideoThumb ) {
+									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
 								}
 
 							}
@@ -1877,47 +1883,47 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'uploadprogress',
-						function (element, file) {
+						function ( element, file ) {
 
-							$(element.previewElement).find('.dz-progress-count').text(element.upload.progress.toFixed(0) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text);
+							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 
-							var circle = $(element.previewElement).find('.dz-progress-ring circle')[0];
+							var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ];
 							var radius = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
 							circle.style.strokeDasharray = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed(0) / 100 * circumference;
+							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 
-							if (element.upload.progress === 100) {
-								$(file.previewElement).closest('.dz-preview').addClass('dz-complete');
+							if ( element.upload.progress === 100 ) {
+								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 						}
 					);
 
 					self.dropzone_video_obj.on(
 						'success',
-						function (file, response) {
-							if (response.data.id) {
+						function ( file, response ) {
+							if ( response.data.id ) {
 								file.id = response.id;
 								response.data.uuid = file.upload.uuid;
-								response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
+								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
 								response.data.group_id = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
 								response.data.saved = false;
-								response.data.js_preview = $(file.previewElement).find('.dz-video-thumbnail img').attr('src');
-								self.dropzone_video.push(response.data);
-								return file.previewElement.classList.add('dz-success');
+								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+								self.dropzone_video.push( response.data );
+								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
-								file.previewElement.classList.add('dz-error');
-								_ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+								file.previewElement.classList.add( 'dz-error' );
+								_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 								_results = [];
-								for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-									node = _ref[_i];
-									_results.push(node.textContent = message);
+								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+									node = _ref[ _i ];
+									_results.push( node.textContent = message );
 								}
 								return _results;
 							}
@@ -1926,233 +1932,233 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'error',
-						function (file, response) {
-							if (file.accepted) {
-								if (typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined') {
-									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						function ( file, response ) {
+							if ( file.accepted ) {
+								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								if (!jQuery('.comment-video-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-video"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								if ( ! jQuery( '.comment-video-error-popup' ).length ) {
+									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-video"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
-								this.removeFile(file);
+								this.removeFile( file );
 							}
 						}
 					);
 
 					self.dropzone_video_obj.on(
 						'removedfile',
-						function (file) {
-							if (self.dropzone_video.length) {
-								for (var i in self.dropzone_video) {
-									if (file.upload.uuid == self.dropzone_video[i].uuid) {
+						function ( file ) {
+							if ( self.dropzone_video.length ) {
+								for ( var i in self.dropzone_video ) {
+									if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
 
-										if (typeof self.dropzone_video[i].saved !== 'undefined' && !self.dropzone_video[i].saved) {
-											bp.Nouveau.Media.removeAttachment(self.dropzone_video[i].id);
+										if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
+											bp.Nouveau.Media.removeAttachment( self.dropzone_video[ i ].id );
 										}
 
-										self.dropzone_video.splice(i, 1);
+										self.dropzone_video.splice( i, 1 );
 										break;
 									}
 								}
 							}
 
-							if (!_.isNull(self.dropzone_obj) && !_.isNull(self.dropzone_obj.files) && self.dropzone_obj.files.length === 0) {
-								var tool_box = target.parents('.ac-reply-toolbar');
-								if (tool_box.find('.ac-reply-media-button')) {
-									tool_box.find('.ac-reply-media-button').parents('.post-elements-buttons-item').removeClass('disable');
+							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
+								var tool_box = target.parents( '.ac-reply-toolbar' );
+								if ( tool_box.find( '.ac-reply-media-button' ) ) {
+									tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-document-button')) {
-									tool_box.find('.ac-reply-document-button').parents('.post-elements-buttons-item').removeClass('disable');
+								if ( tool_box.find( '.ac-reply-document-button' ) ) {
+									tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-gif-button')) {
-									tool_box.find('.ac-reply-gif-button').parents('.post-elements-buttons-item').removeClass('disable');
+								if ( tool_box.find( '.ac-reply-gif-button' ) ) {
+									tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
-								if (tool_box.find('.ac-reply-video-button')) {
-									tool_box.find('.ac-reply-video-button').parents('.post-elements-buttons-item').removeClass('no-click');
+								if ( tool_box.find( '.ac-reply-video-button' ) ) {
+									tool_box.find( '.ac-reply-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
 							}
 						}
 					);
 
 					// container class to open close.
-					dropzone_container.removeClass('closed').addClass('open');
+					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
 
 				} else {
-					if (self.dropzone_video_obj) {
+					if ( self.dropzone_video_obj ) {
 						self.dropzone_video_obj.destroy();
 					}
 					self.dropzone_video = [];
-					dropzone_container.html('');
-					dropzone_container.addClass('closed').removeClass('open');
+					dropzone_container.html( '' );
+					dropzone_container.addClass( 'closed' ).removeClass( 'open' );
 				}
 			}
 
-			var currentTarget = event.currentTarget, activityID = currentTarget.id.match(/\d+$/)[0];
-			this.destroyCommentMediaUploader(activityID);
-			this.destroyCommentDocumentUploader(activityID);
+			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[ 0 ];
+			this.destroyCommentMediaUploader( activityID );
+			this.destroyCommentDocumentUploader( activityID );
 
-			var c_id = $(event.currentTarget).data('ac-id');
-			this.resetGifPicker(c_id);
+			var c_id = $( event.currentTarget ).data( 'ac-id' );
+			this.resetGifPicker( c_id );
 		},
 
-		openGifPicker: function (event) {
+		openGifPicker: function ( event ) {
 			event.preventDefault();
 
 			var currentTarget = event.currentTarget,
-				$gifPickerEl = $(currentTarget).next(),
-				activityID = currentTarget.id.match(/\d+$/)[0],
-				$gifAttachmentEl = $('#ac-reply-post-gif-' + activityID);
+				$gifPickerEl = $( currentTarget ).next(),
+				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
+				$gifAttachmentEl = $( '#ac-reply-post-gif-' + activityID );
 
-			if ($gifPickerEl.is(':empty')) {
+			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model = new bp.Models.ACReply(),
-					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({ model: model }),
-					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview({ model: model });
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: model } ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: model } );
 
-				$gifPickerEl.html(gifMediaSearchDropdownView.render().el);
-				$gifAttachmentEl.html(activityAttachedGifPreview.render().el);
+				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
+				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
 
-				this.models[activityID] = model;
+				this.models[ activityID ] = model;
 			}
 
-			var gif_box = $(currentTarget).parents('.ac-textarea ').find('.ac-reply-attachments .activity-attached-gif-container');
-			if ($(currentTarget).hasClass('active') && gif_box.length && $.trim(gif_box.html()) == '') {
-				$(currentTarget).removeClass('active');
+			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
+			if ( $( currentTarget ).hasClass( 'active' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+				$( currentTarget ).removeClass( 'active' );
 			} else {
-				$(currentTarget).addClass('active');
+				$( currentTarget ).addClass( 'active' );
 			}
 
-			$gifPickerEl.toggleClass('open');
-			this.destroyCommentMediaUploader(activityID);
-			this.destroyCommentDocumentUploader(activityID);
-			this.destroyCommentVideoUploader(activityID);
+			$gifPickerEl.toggleClass( 'open' );
+			this.destroyCommentMediaUploader( activityID );
+			this.destroyCommentDocumentUploader( activityID );
+			this.destroyCommentVideoUploader( activityID );
 		},
 
-		toggleMultiMediaOptions: function (form, target) {
-			if (!_.isUndefined(BP_Nouveau.media)) {
+		toggleMultiMediaOptions: function ( form, target ) {
+			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
-				var parent_activity = target.closest('.activity-item');
-				var activity_data = target.closest('.activity-item').data('bp-activity');
+				var parent_activity = target.closest( '.activity-item' );
+				var activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
 
-				if (target.closest('li').hasClass('groups') || parent_activity.hasClass('groups')) {
+				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
 					// check media is enable in groups or not.
-					if (!_.isUndefined(activity_data.group_media)) {
-						if (activity_data.group_media === true) {
-							form.find('.ac-reply-toolbar .post-media.media-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+					if ( ! _.isUndefined( activity_data.group_media ) ) {
+						if ( activity_data.group_media === true ) {
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
-							form.find('.ac-reply-toolbar .post-media.media-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 						}
-					} else if (BP_Nouveau.media.group_media === false) {
-						form.find('.ac-reply-toolbar .post-media.media-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+					} else if ( BP_Nouveau.media.group_media === false ) {
+						form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-media.media-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+						form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check media is enable in groups or not.
-					if (!_.isUndefined(activity_data.group_document)) {
-						if (activity_data.group_document === true) {
-							form.find('.ac-reply-toolbar .post-media.document-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+					if ( ! _.isUndefined( activity_data.group_document ) ) {
+						if ( activity_data.group_document === true ) {
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
-							form.find('.ac-reply-toolbar .post-media.document-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 						}
-					} else if (BP_Nouveau.media.group_document === false) {
-						form.find('.ac-reply-toolbar .post-media.document-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+					} else if ( BP_Nouveau.media.group_document === false ) {
+						form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-media.document-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check video is enable in groups or not.
-					if (!_.isUndefined(activity_data.group_video)) {
-						if (activity_data.group_video === true) {
-							form.find('.ac-reply-toolbar .post-video.video-support').show().parent('.ac-reply-toolbar').removeClass('post-video-disabled');
+					if ( ! _.isUndefined( activity_data.group_video ) ) {
+						if ( activity_data.group_video === true ) {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
-							form.find('.ac-reply-toolbar .post-video.video-support').hide().parent('.ac-reply-toolbar').addClass('post-video-disabled');
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 						}
-					} else if (BP_Nouveau.media.group_video === false) {
-						form.find('.ac-reply-toolbar .post-video.video-support').hide().parent('.ac-reply-toolbar').addClass('post-video-disabled');
+					} else if ( BP_Nouveau.media.group_video === false ) {
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-video.video-support').show().parent('.ac-reply-toolbar').removeClass('post-video-disabled');
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 					}
 
 					// check gif is enable in groups or not.
-					if (BP_Nouveau.media.gif.groups === false) {
-						form.find('.ac-reply-toolbar .post-gif').hide().parent('.ac-reply-toolbar').addClass('post-gif-disabled');
+					if ( BP_Nouveau.media.gif.groups === false ) {
+						form.find( '.ac-reply-toolbar .post-gif' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-gif-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-gif').show().parent('.ac-reply-toolbar').removeClass('post-gif-disabled');
+						form.find( '.ac-reply-toolbar .post-gif' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-gif-disabled' );
 					}
 
 					// check emoji is enable in groups or not.
-					if (BP_Nouveau.media.emoji.groups === false) {
-						form.find('.ac-reply-toolbar .post-emoji').hide().parent('.ac-reply-toolbar').addClass('post-emoji-disabled');
+					if ( BP_Nouveau.media.emoji.groups === false ) {
+						form.find( '.ac-reply-toolbar .post-emoji' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-emoji-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-emoji').show().parent('.ac-reply-toolbar').removeClass('post-emoji-disabled');
+						form.find( '.ac-reply-toolbar .post-emoji' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-emoji-disabled' );
 					}
 				} else {
 
 					// check media is enable in groups or not.
-					if (!_.isNull(activity_data) && !_.isUndefined(activity_data.profile_media)) {
-						if (activity_data.profile_media === true) {
-							form.find('.ac-reply-toolbar .post-media.media-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_media ) ) {
+						if ( activity_data.profile_media === true ) {
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
-							form.find('.ac-reply-toolbar .post-media.media-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+							form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 						}
-					} else if (BP_Nouveau.media.profile_media === false) {
-						form.find('.ac-reply-toolbar .post-media.media-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+					} else if ( BP_Nouveau.media.profile_media === false ) {
+						form.find( '.ac-reply-toolbar .post-media.media-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-media.media-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+						form.find( '.ac-reply-toolbar .post-media.media-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check document is enable in groups or not.
-					if (!_.isNull(activity_data) && !_.isUndefined(activity_data.profile_document)) {
-						if (activity_data.profile_document === true) {
-							form.find('.ac-reply-toolbar .post-media.document-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_document ) ) {
+						if ( activity_data.profile_document === true ) {
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 						} else {
-							form.find('.ac-reply-toolbar .post-media.document-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+							form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 						}
-					} else if (BP_Nouveau.media.profile_document === false) {
-						form.find('.ac-reply-toolbar .post-media.document-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+					} else if ( BP_Nouveau.media.profile_document === false ) {
+						form.find( '.ac-reply-toolbar .post-media.document-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-media-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-media.document-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+						form.find( '.ac-reply-toolbar .post-media.document-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-media-disabled' );
 					}
 
 					// check video is enable in profile or not.
-					if (!_.isNull(activity_data) && !_.isUndefined(activity_data.profile_video)) {
-						if (activity_data.profile_video === true) {
-							form.find('.ac-reply-toolbar .post-video.video-support').show().parent('.ac-reply-toolbar').removeClass('post-video-disabled');
+					if ( ! _.isNull( activity_data ) && ! _.isUndefined( activity_data.profile_video ) ) {
+						if ( activity_data.profile_video === true ) {
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 						} else {
-							form.find('.ac-reply-toolbar .post-video.video-support').hide().parent('.ac-reply-toolbar').addClass('post-video-disabled');
+							form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 						}
-					} else if (BP_Nouveau.media.profile_video === false) {
-						form.find('.ac-reply-toolbar .post-video.video-support').hide().parent('.ac-reply-toolbar').addClass('post-video-disabled');
+					} else if ( BP_Nouveau.media.profile_video === false ) {
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-video-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-video.video-support').show().parent('.ac-reply-toolbar').removeClass('post-video-disabled');
+						form.find( '.ac-reply-toolbar .post-video.video-support' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-video-disabled' );
 					}
 
 					// check gif is enable sin groups or not.
-					if (BP_Nouveau.media.gif.profile === false) {
-						form.find('.ac-reply-toolbar .post-gif').hide().parent('.ac-reply-toolbar').addClass('post-gif-disabled');
+					if ( BP_Nouveau.media.gif.profile === false ) {
+						form.find( '.ac-reply-toolbar .post-gif' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-gif-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-gif').show().parent('.ac-reply-toolbar').removeClass('post-gif-disabled');
+						form.find( '.ac-reply-toolbar .post-gif' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-gif-disabled' );
 					}
 
 					// check emoji is enable in groups or not.
-					if (BP_Nouveau.media.emoji.profile === false) {
-						form.find('.ac-reply-toolbar .post-emoji').hide().parent('.ac-reply-toolbar').addClass('post-emoji-disabled');
+					if ( BP_Nouveau.media.emoji.profile === false ) {
+						form.find( '.ac-reply-toolbar .post-emoji' ).hide().parent( '.ac-reply-toolbar' ).addClass( 'post-emoji-disabled' );
 					} else {
-						form.find('.ac-reply-toolbar .post-emoji').show().parent('.ac-reply-toolbar').removeClass('post-emoji-disabled');
+						form.find( '.ac-reply-toolbar .post-emoji' ).show().parent( '.ac-reply-toolbar' ).removeClass( 'post-emoji-disabled' );
 					}
 				}
 			}
 		},
 
 		fixAtWhoActivity: function () {
-			$('.acomment-content, .activity-content').each(
+			$( '.acomment-content, .activity-content' ).each(
 				function () {
 					// replacing atwho query from the comment content to disable querying it in the requests.
-					var atwho_query = $(this).find('span.atwho-query');
-					for (var i = 0; i < atwho_query.length; i++) {
-						$(atwho_query[i]).replaceWith(atwho_query[i].innerText);
+					var atwho_query = $( this ).find( 'span.atwho-query' );
+					for ( var i = 0; i < atwho_query.length; i++ ) {
+						$( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
 					}
 				}
 			);
@@ -2162,4 +2168,4 @@ window.bp = window.bp || {};
 	// Launch BP Nouveau Activity.
 	bp.Nouveau.Activity.start();
 
-})(bp, jQuery);
+})( bp, jQuery );
