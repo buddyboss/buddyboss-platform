@@ -1710,13 +1710,40 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		$user_id = ( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id();
+
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
 		$field_id = $field->id;
+
+		$clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $field->group_id );
+		$exclude_fields_cs   = bp_get_repeater_template_field_ids( $field->group_id );
+
+		// include only the subset of clones the current user has data in.
+		$user_field_set_count     = bp_get_profile_field_set_count( $field->group_id, $user_id );
+		$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $field->group_id, $user_field_set_count );
+		$clones_to_exclude        = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
+
+		$exclude_fields_cs = array_merge( $exclude_fields_cs, $clones_to_exclude );
+		if ( ! empty( $exclude_fields_cs ) ) {
+			$exclude_fields_cs  = implode( ',', $exclude_fields_cs );
+			$exclude_fields_sql = "AND  m1.object_id NOT IN ({$exclude_fields_cs})";
+		} else {
+			$exclude_fields_sql = '';
+		}
+
 		// phpcs:ignore
-		$sql = "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d";
+		$sql = "select m1.object_id, CAST(m2.meta_value AS DECIMAL) AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+        JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
+        WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
+        AND m2.meta_key = '_clone_number' {$exclude_fields_sql} ORDER BY m2.object_id, m2.meta_value ASC";
+
 		// phpcs:ignore
 		$sql = $wpdb->prepare( $sql, $field_id );
 		// phpcs:ignore
-		$results = $wpdb->get_col( $sql );
+		$results = $wpdb->get_results( $sql );
 		$user_id = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
 		$data    = array();
 
@@ -1726,13 +1753,17 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 			$count = 1;
 
-			foreach ( $results as $k => $sub_field_id ) {
+			foreach ( $results as $k => $sub_field ) {
+
+				$sub_field_clone_number = $sub_field->clone_number;
+				$sub_field_id           = $sub_field->object_id;
 
 				if ( $count > $user_fields ) {
 					break;
 				}
 
-				$data[ $k ]['id'] = $sub_field_id;
+				$data[ $k ]['id']           = $sub_field_id;
+				$data[ $k ]['clone_number'] = $sub_field_clone_number;
 
 				$field_data = $this->get_xprofile_field_data_object( $sub_field_id, $user_id );
 
@@ -1743,13 +1774,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 						'rendered'     => $this->get_profile_field_rendered_value( $field_data->value, $sub_field_id ),
 					);
 				}
+
 				if ( ! empty( $request['fetch_visibility_level'] ) ) {
 					$data[ $k ]['visibility_level']        = xprofile_get_field_visibility_level( $sub_field_id, $user_id );
 					$data[ $k ]['allow_custom_visibility'] = bp_xprofile_get_meta( $sub_field_id, 'field', 'allow_custom_visibility' );
 				}
 
 				$count ++;
-
 			}
 		}
 
