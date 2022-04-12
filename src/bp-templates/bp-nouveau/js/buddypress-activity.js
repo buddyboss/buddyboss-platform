@@ -3,7 +3,7 @@
 /* @version 3.1.0 */
 window.bp = window.bp || {};
 
-(function ( exports, $ ) {
+( function( exports, $ ) {
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -11,7 +11,7 @@ window.bp = window.bp || {};
 	}
 
 	bp.Nouveau = bp.Nouveau || {};
-	bp.Models = bp.Models || {};
+	bp.Models  = bp.Models || {};
 
 	bp.Models.ACReply = Backbone.Model.extend(
 		{
@@ -33,7 +33,7 @@ window.bp = window.bp || {};
 		 *
 		 * @return {[type]} [description]
 		 */
-		start: function () {
+		start: function() {
 			this.setupGlobals();
 
 			// Listen to events ("Add hooks!").
@@ -45,7 +45,7 @@ window.bp = window.bp || {};
 		 *
 		 * @return {[type]} [description]
 		 */
-		setupGlobals: function () {
+		setupGlobals: function() {
 			// Init just posted activities.
 			this.just_posted = [];
 
@@ -57,11 +57,11 @@ window.bp = window.bp || {};
 
 			// HeartBeat Globals.
 			this.heartbeat_data = {
-				newest: '',
-				highlights: {},
-				last_recorded: 0,
-				first_recorded: 0,
-				document_title: $( document ).prop( 'title' )
+				newest         : '',
+				highlights     : {},
+				last_recorded  : 0,
+				first_recorded : 0,
+				document_title : $( document ).prop( 'title' )
 			};
 
 			if ( typeof window.Dropzone !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' ) {
@@ -70,16 +70,18 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url: BP_Nouveau.ajaxurl,
-					timeout: 3 * 60 * 60 * 1000,
-					dictDefaultMessage: BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles: 'image/*',
-					autoProcessQueue: true,
-					addRemoveLinks: true,
-					uploadMultiple: false,
-					maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
+					url                 		: BP_Nouveau.ajaxurl,
+					timeout             		: 3 * 60 * 60 * 1000,
+					dictFileTooBig      		: BP_Nouveau.media.dictFileTooBig,
+					dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       		: 'image/*',
+					autoProcessQueue    		: true,
+					addRemoveLinks      		: true,
+					uploadMultiple      		: false,
+					maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
+					dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 				};
 
 				// if defined, add custom dropzone options.
@@ -88,22 +90,24 @@ window.bp = window.bp || {};
 				}
 			}
 
-			this.dropzone_obj = null;
+			this.dropzone_obj   = null;
 			this.dropzone_media = [];
 
 			this.dropzone_document_obj = null;
-			this.dropzone_document = [];
+			this.dropzone_document     = [];
 
 			this.dropzone_video_obj = null;
-			this.dropzone_video = [];
+			this.dropzone_video     = [];
 
 			this.models = [];
+
+			this.InitiatedCommentForms = [];
 		},
 
 		/**
 		 * [addListeners description]
 		 */
-		addListeners: function () {
+		addListeners: function() {
 			// HeartBeat listeners.
 			if ( ! $( 'body' ).hasClass( 'activity-singular' ) ) {
 				$( '#buddypress' ).on( 'bp_heartbeat_send', this.heartbeatSend.bind( this ) );
@@ -135,6 +139,9 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
+			//Activity More Option Dropdown
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
+
 			// Activity autoload.
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
@@ -148,7 +155,7 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data  [description]
 		 * @return {[type]}       [description]
 		 */
-		heartbeatSend: function ( event, data ) {
+		heartbeatSend: function( event, data ) {
 			this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]' ).first().data( 'bp-timestamp' ) || 0;
 
 			if ( 0 === this.heartbeat_data.last_recorded || this.heartbeat_data.first_recorded > this.heartbeat_data.last_recorded ) {
@@ -171,7 +178,7 @@ window.bp = window.bp || {};
 		 * @param  {[type]} data           [description]
 		 * @return {[type]}                [description]
 		 */
-		heartbeatTick: function ( event, data ) {
+		heartbeatTick: function( event, data ) {
 			var newest_activities_count, newest_activities, objects = bp.Nouveau.objects,
 				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
 
@@ -180,7 +187,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			this.heartbeat_data.newest = $.trim( data.bp_activity_newest_activities.activities ) + this.heartbeat_data.newest;
+			this.heartbeat_data.newest        = $.trim( data.bp_activity_newest_activities.activities ) + this.heartbeat_data.newest;
 			this.heartbeat_data.last_recorded = Number( data.bp_activity_newest_activities.last_recorded );
 
 			// Parse activities.
@@ -203,12 +210,12 @@ window.bp = window.bp || {};
 
 				$.each(
 					newest_activities,
-					function ( a, activity ) {
+					function( a, activity ) {
 						activity = $( activity );
 
 						$.each(
 							objects,
-							function ( o, object ) {
+							function( o, object ) {
 								if ( -1 !== $.inArray( 'bp-my-' + object, activity.get( 0 ).classList ) ) {
 									if ( undefined === self.heartbeat_data.highlights[ object ] ) {
 										self.heartbeat_data.highlights[ object ] = [ activity.data( 'bp-activity-id' ) ];
@@ -222,7 +229,7 @@ window.bp = window.bp || {};
 				);
 
 				// Remove the specific classes to count highligthts.
-				var regexp = new RegExp( 'bp-my-(' + objects.join( '|' ) + ')', 'g' );
+				var regexp                 = new RegExp( 'bp-my-(' + objects.join( '|' ) + ')', 'g' );
 				this.heartbeat_data.newest = this.heartbeat_data.newest.replace( regexp, '' );
 
 				/**
@@ -238,7 +245,7 @@ window.bp = window.bp || {};
 
 				$.each(
 					newest_activities,
-					function ( a, activity ) {
+					function( a, activity ) {
 						self.heartbeat_data.highlights[ scope ].push( $( activity ).data( 'bp-activity-id' ) );
 					}
 				);
@@ -246,7 +253,7 @@ window.bp = window.bp || {};
 
 			$.each(
 				objects,
-				function ( o, object ) {
+				function( o, object ) {
 					if ( undefined !== self.heartbeat_data.highlights[ object ] && self.heartbeat_data.highlights[ object ].length ) {
 						var count = 0;
 
@@ -295,7 +302,7 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		injectActivities: function ( event ) {
+		injectActivities: function( event ) {
 			var store = bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
@@ -315,7 +322,7 @@ window.bp = window.bp || {};
 
 				$.each(
 					activities,
-					function ( a, activity ) {
+					function( a, activity ){
 						if ( 'LI' === activity.nodeName && $( activity ).hasClass( 'just-posted' ) ) {
 							if ( $( '#' + $( activity ).prop( 'id' ) ).length ) {
 								$( '#' + $( activity ).prop( 'id' ) ).remove();
@@ -366,7 +373,7 @@ window.bp = window.bp || {};
 
 				// Load more activities.
 			} else if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
-				var next_page = (Number( this.current_page ) * 1) + 1, self = this, search_terms = '';
+				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
 
 				// Stop event propagation.
 				event.preventDefault();
@@ -379,7 +386,7 @@ window.bp = window.bp || {};
 
 				// Now set it.
 				$( event.delegateTarget ).children( '.just-posted' ).each(
-					function () {
+					function() {
 						self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
 					}
 				);
@@ -390,17 +397,17 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.objectRequest(
 					{
-						object: 'activity',
-						scope: scope,
-						filter: filter,
-						search_terms: search_terms,
-						page: next_page,
-						method: 'append',
-						exclude_just_posted: this.just_posted.join( ',' ),
-						target: '#buddypress [data-bp-list] ul.bp-list'
+						object              : 'activity',
+						scope               : scope,
+						filter              : filter,
+						search_terms        : search_terms,
+						page                : next_page,
+						method              : 'append',
+						exclude_just_posted : this.just_posted.join( ',' ),
+						target              : '#buddypress [data-bp-list] ul.bp-list'
 					}
 				).done(
-					function ( response ) {
+					function( response ) {
 						if ( true === response.success ) {
 							targetEl.remove();
 
@@ -421,7 +428,7 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		hideComments: function ( event ) {
+		hideComments: function( event ) {
 			var comments = $( event.target ).find( '.activity-comments' ),
 				activity_item, comment_items, comment_count, comment_parents;
 
@@ -430,9 +437,9 @@ window.bp = window.bp || {};
 			}
 
 			comments.each(
-				function ( c, comment ) {
+				function( c, comment ) {
 					comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
-					comment_items = $( comment_parents ).find( 'li' ).not( $( '.document-action-class, .media-action-class, .video-action-class' ) );
+					comment_items   = $( comment_parents ).find( 'li' ).not( $( '.document-action-class, .media-action-class, .video-action-class' ) );
 
 					if ( ! comment_items.length ) {
 						return;
@@ -446,7 +453,7 @@ window.bp = window.bp || {};
 
 					// Keep latest 5 comments.
 					comment_items.each(
-						function ( i, item ) {
+						function( i, item ) {
 							if ( i < comment_items.length - 4 ) {
 								$( item ).addClass( 'bp-hidden' ).hide();
 
@@ -472,17 +479,17 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		showComments: function ( event ) {
+		showComments: function( event ) {
 			// Stop event propagation.
 			event.preventDefault();
 
 			$( event.target ).addClass( 'loading' );
 
 			setTimeout(
-				function () {
+				function() {
 					$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
 						300,
-						function () {
+						function() {
 							$( event.target ).parent( 'li' ).remove();
 						}
 					);
@@ -509,17 +516,17 @@ window.bp = window.bp || {};
 			if ( 'mentions' === data.scope && undefined !== data.response.new_mentions ) {
 				$.each(
 					data.response.new_mentions,
-					function ( i, id ) {
+					function( i, id ) {
 						$( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_mentions_activity' );
 					}
 				);
 
 				// Reset mentions count.
 				this.mentions_count = 0;
-			} else if ( undefined !== this.heartbeat_data.highlights[ data.scope ] && this.heartbeat_data.highlights[ data.scope ].length ) {
+			} else if ( undefined !== this.heartbeat_data.highlights[data.scope] && this.heartbeat_data.highlights[data.scope].length ) {
 				$.each(
-					this.heartbeat_data.highlights[ data.scope ],
-					function ( i, id ) {
+					this.heartbeat_data.highlights[data.scope],
+					function( i, id ) {
 						if ( $( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).length ) {
 							$( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_' + data.scope + '_activity' );
 						}
@@ -531,7 +538,7 @@ window.bp = window.bp || {};
 			this.heartbeat_data.newest = '';
 			$.each(
 				$( bp.Nouveau.objectNavParent + ' [data-bp-scope]' ).find( 'a span' ),
-				function ( s, count ) {
+				function( s, count ) {
 					if ( 0 === parseInt( $( count ).html(), 10 ) ) {
 						$( count ).html( '' );
 					}
@@ -553,10 +560,10 @@ window.bp = window.bp || {};
 				3000
 			);
 
-			if ( typeof window.instgrm !== 'undefined' ) {
+			if (typeof window.instgrm !== 'undefined') {
 				window.instgrm.Embeds.process();
 			}
-			if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+			if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
 				window.FB.XFBML.parse();
 			}
 
@@ -568,14 +575,14 @@ window.bp = window.bp || {};
 
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout(
-				function () {
+				function() {
 					jQuery( window ).scroll();
 				},
 				200
 			);
 		},
 
-		openEditActivityPopup: function () {
+		openEditActivityPopup: function() {
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
 				if ( activity_item.length ) {
@@ -588,9 +595,8 @@ window.bp = window.bp || {};
 			}
 		},
 
-		activityPrivacyChange: function ( event ) {
-			var parent = event.data, target = $( event.target ),
-				activity_item = $( event.currentTarget ).closest( '.activity-item' ),
+		activityPrivacyChange: function( event ) {
+			var parent      = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest( '.activity-item' ),
 				activity_id = activity_item.data( 'bp-activity-id' );
 
 			// Stop event propagation.
@@ -602,12 +608,8 @@ window.bp = window.bp || {};
 
 			activity_item.find( '.privacy' ).addClass( 'loading' );
 
-			parent.ajax( {
-				action: 'activity_update_privacy',
-				'id': activity_id,
-				'privacy': target.data( 'value' )
-			}, 'activity' ).done(
-				function ( response ) {
+			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data( 'value' ) }, 'activity' ).done(
+				function( response ) {
 					activity_item.find( '.privacy' ).removeClass( 'loading' );
 
 					if ( true === response.success ) {
@@ -644,7 +646,7 @@ window.bp = window.bp || {};
 			);
 		},
 
-		activityPrivacyRedirect: function ( event ) {
+		activityPrivacyRedirect: function( event ) {
 			var target = $( event.target );
 
 			// Stop event propagation.
@@ -657,10 +659,9 @@ window.bp = window.bp || {};
 		},
 
 		/* jshint ignore:start */
-		togglePrivacyDropdown: function ( event ) {
+		togglePrivacyDropdown: function( event ) {
 
-			var parent = event.data, target = $( event.target ),
-				activity_item = $( event.currentTarget ).closest( '.activity-item' ),
+			var parent      = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest( '.activity-item' ),
 				activity_id = activity_item.data( 'bp-activity-id' );
 
 			// Stop event propagation.
@@ -680,12 +681,12 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		activityActions: function ( event ) {
-			var parent = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
-				activity_id = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
-				activity_state = activity_item.find( '.activity-state' ),
-				comments_text = activity_item.find( '.comments-count' ),
-				likes_text = activity_item.find( '.like-text' ),
+		activityActions: function( event ) {
+			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
+				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
+				activity_state             = activity_item.find( '.activity-state' ),
+				comments_text              = activity_item.find( '.comments-count' ),
+				likes_text                 = activity_item.find( '.like-text' ),
 				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
@@ -703,7 +704,7 @@ window.bp = window.bp || {};
 				target.addClass( 'loading' );
 
 				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
-					function ( response ) {
+					function( response ) {
 						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
@@ -711,7 +712,7 @@ window.bp = window.bp || {};
 						} else {
 							target.fadeOut(
 								200,
-								function () {
+								function() {
 									if ( $( this ).find( 'span' ).first().length ) {
 										$( this ).find( 'span' ).first().html( response.data.content );
 									} else {
@@ -719,7 +720,7 @@ window.bp = window.bp || {};
 									}
 									// $( this ).prop( 'title', response.data.content );
 
-									if ( 'false' === $( this ).attr( 'aria-pressed' ) ) {
+									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
 										$( this ).attr( 'aria-pressed', 'true' );
 									} else {
 										$( this ).attr( 'aria-pressed', 'false' );
@@ -796,10 +797,10 @@ window.bp = window.bp || {};
 				target.addClass( 'loading' );
 
 				var ajaxData = {
-					action: 'delete_activity',
-					'id': activity_id,
-					'_wpnonce': parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
-					'is_single': target.closest( '[data-bp-single]' ).length
+					action      : 'delete_activity',
+					'id'        : activity_id,
+					'_wpnonce'  : parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
+					'is_single' : target.closest( '[data-bp-single]' ).length
 				};
 
 				// Only the action changes when spamming an activity or a comment.
@@ -815,7 +816,7 @@ window.bp = window.bp || {};
 					delete ajaxData.is_single;
 
 					// Set comment data.
-					ajaxData.id = activity_comment_id;
+					ajaxData.id         = activity_comment_id;
 					ajaxData.is_comment = true;
 
 					// Set parent li to activity comment container.
@@ -823,7 +824,7 @@ window.bp = window.bp || {};
 				}
 
 				parent.ajax( ajaxData, 'activity' ).done(
-					function ( response ) {
+					function( response ) {
 						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
@@ -848,15 +849,15 @@ window.bp = window.bp || {};
 								// Count child comments if there are some.
 								$.each(
 									activity_comment_li.find( 'li.comment-item' ),
-									function () {
+									function() {
 										deleted_comments_count += 1;
 									}
 								);
 
 								// Update the button count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
-								comment_count = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[ 0 ] : 0;
-								comment_count = Number( comment_count - deleted_comments_count );
+								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
+								comment_count      = Number( comment_count - deleted_comments_count );
 
 								if ( comments_text.length ) {
 									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
@@ -880,14 +881,14 @@ window.bp = window.bp || {};
 							// Remove the entry.
 							li_parent.slideUp(
 								300,
-								function () {
+								function() {
 									li_parent.remove();
 								}
 							);
 
 							// reset vars to get newest activities when an activity is deleted.
 							if ( ! activity_comment_id && activity_item.data( 'bp-timestamp' ) === parent.Activity.heartbeat_data.last_recorded ) {
-								parent.Activity.heartbeat_data.newest = '';
+								parent.Activity.heartbeat_data.newest        = '';
 								parent.Activity.heartbeat_data.last_recorded = 0;
 							}
 
@@ -922,12 +923,12 @@ window.bp = window.bp || {};
 
 				parent.ajax(
 					{
-						action: 'get_single_activity_content',
-						id: item_id
+						action : 'get_single_activity_content',
+						id     : item_id
 					},
 					'activity'
 				).done(
-					function ( response ) {
+					function( response ) {
 
 						// check for JSON output.
 						if ( typeof response !== 'object' && target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 ) {
@@ -950,10 +951,10 @@ window.bp = window.bp || {};
 							jQuery( window ).scroll();
 
 							if ( activity_item.hasClass( 'wp-link-embed' ) ) {
-								if ( typeof window.instgrm !== 'undefined' ) {
+								if (typeof window.instgrm !== 'undefined') {
 									window.instgrm.Embeds.process();
 								}
-								if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+								if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
 									window.FB.XFBML.parse( document.getElementById( 'activity-' + item_id ) );
 								}
 							}
@@ -964,13 +965,13 @@ window.bp = window.bp || {};
 
 			// Displaying the comment form.
 			if ( target.hasClass( 'activity-state-comments' ) || target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
-				var comment_link = target;
-				item_id = activity_id;
-				form = $( '#ac-form-' + activity_id );
+				var comment_link       = target;
+				item_id                = activity_id;
+				form                   = $( '#ac-form-' + activity_id );
 				var $activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
 
 				if ( target.closest( '.bb-media-model-container' ).length ) {
-					form = target.closest( '.bb-media-model-container' ).find( '#ac-form-' + activity_id );
+					form               = target.closest( '.bb-media-model-container' ).find( '#ac-form-' + activity_id );
 					$activity_comments = target.closest( '.bb-media-model-container' ).find( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
 				}
 
@@ -986,7 +987,7 @@ window.bp = window.bp || {};
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				this.toggleMultiMediaOptions( form, target );
+				this.toggleMultiMediaOptions( form,target );
 
 				// ?? hide and display none..
 				// form.css( 'display', 'none' );
@@ -996,7 +997,7 @@ window.bp = window.bp || {};
 				/* Remove any error messages */
 				$.each(
 					form.children( 'div' ),
-					function ( e, err ) {
+					function( e, err ) {
 						if ( $( err ).hasClass( 'error' ) ) {
 							$( err ).remove();
 						}
@@ -1015,10 +1016,25 @@ window.bp = window.bp || {};
 
 				form.slideDown( 200 );
 
+				/* Stop past image from clipboard */
+				var ce = form.find( '.ac-input[contenteditable]' );
+				if ( ce.length > 0 ) {
+					var div_editor = ce.get( 0 );
+
+					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {//Check if Comment form has already paste event initiated
+						div_editor.addEventListener( 'paste', function ( e ) {
+							e.preventDefault();
+							var text = e.clipboardData.getData( 'text/plain' );
+							document.execCommand( 'insertText', false, text );
+						} );
+						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
+					}
+				}
+
 				// change the aria state from false to true.
 				target.attr( 'aria-expanded', 'true' );
 
-				var peak_offset = ($( window ).height() / 2 - 75);
+				var peak_offset = ( $( window ).height() / 2 - 75 );
 
 				$.scrollTo(
 					form,
@@ -1043,12 +1059,17 @@ window.bp = window.bp || {};
 							useInternalCDN: false,
 							events: {
 								emojibtn_click: function () {
-									$( '#ac-input-' + activity_id )[ 0 ].emojioneArea.hidePicker();
+									$( '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
 								},
 							}
 						}
 					);
 				}
+			}
+
+			if ( target.hasClass( 'activity-state-no-comments' ) ) {
+				// Stop event propagation.
+				event.preventDefault();
 			}
 
 			// Removing the form.
@@ -1070,7 +1091,7 @@ window.bp = window.bp || {};
 			if ( 'ac_form_submit' === target.prop( 'name' ) ) {
 				var comment_content, comment_data;
 
-				form = target.closest( 'form' );
+				form    = target.closest( 'form' );
 				item_id = activity_id;
 
 				// Stop event propagation.
@@ -1087,12 +1108,12 @@ window.bp = window.bp || {};
 				// replacing atwho query from the comment content to disable querying it in the requests.
 				var atwho_query = comment_content.find( 'span.atwho-query' );
 				for ( var i = 0; i < atwho_query.length; i++ ) {
-					$( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
 				}
 
 				// transform other emoji into emojionearea emoji.
 				comment_content.find( 'img.emoji' ).each(
-					function ( index, Obj ) {
+					function( index, Obj) {
 						$( Obj ).addClass( 'emojioneemoji' );
 						var emojis = $( Obj ).attr( 'alt' );
 						$( Obj ).attr( 'data-emoji-char', emojis );
@@ -1109,19 +1130,19 @@ window.bp = window.bp || {};
 
 				target.addClass( 'loading' ).prop( 'disabled', true );
 				comment_content.addClass( 'loading' ).prop( 'disabled', true );
-				var comment_value = comment_content[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' );
+				var comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
 
 				comment_data = {
-					action: 'new_activity_comment',
-					_wpnonce_new_activity_comment: $( '#_wpnonce_new_activity_comment' ).val(),
-					comment_id: item_id,
-					form_id: activity_id,
-					content: comment_value
+					action                        : 'new_activity_comment',
+					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
+					comment_id                    : item_id,
+					form_id                       : activity_id,
+					content                       : comment_value
 				};
 
 				// Add the Akismet nonce if it exists.
 				if ( $( '#_bp_as_nonce_' + activity_id ).val() ) {
-					comment_data[ '_bp_as_nonce_' + activity_id ] = $( '#_bp_as_nonce_' + activity_id ).val();
+					comment_data['_bp_as_nonce_' + activity_id] = $( '#_bp_as_nonce_' + activity_id ).val();
 				}
 
 				// add media data if enabled or uploaded.
@@ -1144,13 +1165,13 @@ window.bp = window.bp || {};
 				}
 
 				// add gif data if enabled or uploaded.
-				if ( ! _.isUndefined( this.models[ activity_id ] ) ) {
-					model = this.models[ activity_id ];
-					comment_data.gif_data = this.models[ activity_id ].get( 'gif_data' );
+				if ( ! _.isUndefined( this.models[activity_id] ) ) {
+					model                 = this.models[activity_id];
+					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
 				}
 
 				parent.ajax( comment_data, 'activity' ).done(
-					function ( response ) {
+					function( response ) {
 						target.removeClass( 'loading' );
 						comment_content.removeClass( 'loading' );
 						$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
@@ -1159,11 +1180,11 @@ window.bp = window.bp || {};
 							form.append( $( response.data.feedback ).hide().fadeIn( 200 ) );
 						} else {
 							var activity_comments = form.parent();
-							var the_comment = $.trim( response.data.contents );
+							var the_comment       = $.trim( response.data.contents );
 
 							form.fadeOut(
 								200,
-								function () {
+								function() {
 									if ( 0 === activity_comments.children( 'ul' ).length ) {
 										if ( activity_comments.hasClass( 'activity-comments' ) ) {
 											activity_comments.prepend( '<ul></ul>' );
@@ -1203,8 +1224,8 @@ window.bp = window.bp || {};
 
 							// Set the new count.
 							comment_count_span = activity_state.find( 'span.comments-count' );
-							comment_count = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[ 0 ] : 0;
-							comment_count = Number( comment_count ) + 1;
+							comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
+							comment_count      = Number( comment_count ) + 1;
 
 							// Increase the "Reply (X)" button count.
 							// $( activity_item ).find( 'a span.comment-count' ).html( comment_count );
@@ -1223,21 +1244,21 @@ window.bp = window.bp || {};
 							// keep the dropzone media saved so it wont remove its attachment when destroyed.
 							if ( self.dropzone_media.length ) {
 								for ( var l = 0; l < self.dropzone_media.length; l++ ) {
-									self.dropzone_media[ l ].saved = true;
+									self.dropzone_media[l].saved = true;
 								}
 							}
 
 							// keep the dropzone document saved so it wont remove its attachment when destroyed.
 							if ( self.dropzone_document.length ) {
 								for ( var d = 0; d < self.dropzone_document.length; d++ ) {
-									self.dropzone_document[ d ].saved = true;
+									self.dropzone_document[d].saved = true;
 								}
 							}
 
 							// keep the dropzone video saved so it wont remove its attachment when destroyed.
 							if ( self.dropzone_video.length ) {
 								for ( var v = 0; v < self.dropzone_video.length; v++ ) {
-									self.dropzone_video[ v ].saved = true;
+									self.dropzone_video[v].saved = true;
 								}
 							}
 
@@ -1276,7 +1297,7 @@ window.bp = window.bp || {};
 					}
 
 					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
-					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && (bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document) ) {
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
 						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
 						$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
 					}
@@ -1291,14 +1312,14 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		commentFormAction: function ( event ) {
+		commentFormAction: function( event ) {
 			var element, keyCode;
 
 			event = event || window.event;
 
 			if ( event.target ) {
 				element = event.target;
-			} else if ( event.srcElement ) {
+			} else if ( event.srcElement) {
 				element = event.srcElement;
 			}
 
@@ -1315,9 +1336,9 @@ window.bp = window.bp || {};
 				return event;
 			}
 
-			keyCode = (event.keyCode) ? event.keyCode : event.which;
+			keyCode = ( event.keyCode) ? event.keyCode : event.which;
 
-			if ( 27 === keyCode && false === event.ctrlKey ) {
+			if ( 27 === keyCode && false === event.ctrlKey  ) {
 				if ( element.tagName === 'TEXTAREA' ) {
 					$( element ).closest( 'form' ).slideUp( 200 );
 				}
@@ -1332,14 +1353,14 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		togglePopupDropdown: function ( event ) {
+		togglePopupDropdown: function( event ) {
 			var element;
 
 			event = event || window.event;
 
 			if ( event.target ) {
 				element = event.target;
-			} else if ( event.srcElement ) {
+			} else if ( event.srcElement) {
 				element = event.srcElement;
 			}
 
@@ -1363,7 +1384,7 @@ window.bp = window.bp || {};
 		loadMoreActivities: function () {
 
 			var $load_more_btn = $( '.load-more:visible' ).last(),
-				$window = $( window );
+				$window        = $( window );
 
 			if ( ! $load_more_btn.closest( '.activity-list' ).length ) {
 				return;
@@ -1373,7 +1394,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			var pos = $load_more_btn.offset();
+			var pos    = $load_more_btn.offset();
 			var offset = pos.top - 50;
 
 			if ( $window.scrollTop() + $window.height() > offset ) {
@@ -1383,7 +1404,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		destroyCommentMediaUploader: function ( comment_id ) {
+		destroyCommentMediaUploader: function(comment_id) {
 			var self = this;
 
 			if ( ! _.isNull( self.dropzone_obj ) ) {
@@ -1396,7 +1417,7 @@ window.bp = window.bp || {};
 			$( '#ac-reply-media-button-' + comment_id ).removeClass( 'active' );
 		},
 
-		destroyCommentDocumentUploader: function ( comment_id ) {
+		destroyCommentDocumentUploader: function(comment_id) {
 			var self = this;
 
 			if ( ! _.isNull( self.dropzone_document_obj ) ) {
@@ -1408,7 +1429,7 @@ window.bp = window.bp || {};
 			$( '#ac-reply-document-button-' + comment_id ).removeClass( 'active' );
 		},
 
-		destroyCommentVideoUploader: function ( comment_id ) {
+		destroyCommentVideoUploader: function(comment_id) {
 			var self = this;
 
 			if ( ! _.isNull( self.dropzone_video_obj ) ) {
@@ -1420,47 +1441,48 @@ window.bp = window.bp || {};
 			$( '#ac-reply-video-button-' + comment_id ).removeClass( 'active' );
 		},
 
-		resetGifPicker: function ( comment_id ) {
+		resetGifPicker: function(comment_id) {
 
 			$( '#ac-reply-gif-button-' + comment_id ).closest( '.post-gif' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 			$( '#ac-reply-gif-button-' + comment_id ).removeClass( 'active' );
 
 			// add gif data if enabled or uploaded.
-			if ( ! _.isUndefined( this.models[ comment_id ] ) ) {
-				var model = this.models[ comment_id ];
+			if ( ! _.isUndefined( this.models[comment_id] ) ) {
+				var model = this.models[comment_id];
 				model.set( 'gif_data', {} );
 				$( '#ac-reply-post-gif-' + comment_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 			}
 		},
 
-		openCommentsMediaUploader: function ( event ) {
-			var self = this,
-				target = $( event.currentTarget ),
-				key = target.data( 'ac-id' ),
+		openCommentsMediaUploader: function(event) {
+			var self               = this,
+				target             = $( event.currentTarget ),
+				key                = target.data( 'ac-id' ),
 				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			event.preventDefault();
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[ 0 ].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url: BP_Nouveau.ajaxurl,
-						timeout: 3 * 60 * 60 * 1000,
-						dictDefaultMessage: BP_Nouveau.media.dropzone_media_message,
-						acceptedFiles: 'image/*',
-						autoProcessQueue: true,
-						addRemoveLinks: true,
-						uploadMultiple: false,
-						maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-						maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-						dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
-						previewTemplate: acCommentDefaultTemplate,
+						url                 		: BP_Nouveau.ajaxurl,
+						timeout             		: 3 * 60 * 60 * 1000,
+						dictDefaultMessage  		: BP_Nouveau.media.dropzone_media_message,
+						acceptedFiles       		: 'image/*',
+						autoProcessQueue    		: true,
+						addRemoveLinks      		: true,
+						uploadMultiple      		: false,
+						maxFiles            		: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+						maxFilesize         		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						dictMaxFilesExceeded		: BP_Nouveau.media.media_dict_file_exceeded,
+						previewTemplate		 		: acCommentDefaultTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
@@ -1468,7 +1490,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'sending',
-						function ( file, xhr, formData ) {
+						function(file, xhr, formData) {
 							formData.append( 'action', 'media_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
@@ -1490,39 +1512,39 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'uploadprogress',
-						function ( element ) {
+						function( element ) {
 
-							var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ];
-							var radius = circle.r.baseVal.value;
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 						}
 					);
 
 					self.dropzone_obj.on(
 						'success',
-						function ( file, response ) {
+						function(file, response) {
 							if ( response.data.id ) {
-								file.id = response.id;
-								response.data.uuid = file.upload.uuid;
+								file.id                  = response.id;
+								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
-								response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-								response.data.saved = false;
+								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+								response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+								response.data.saved      = false;
 								self.dropzone_media.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
 								file.previewElement.classList.add( 'dz-error' );
-								_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 								_results = [];
 								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node = _ref[ _i ];
+									node = _ref[_i];
 									_results.push( node.textContent = message );
 								}
 								return _results;
@@ -1532,8 +1554,8 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'accept',
-						function ( file, done ) {
-							if ( file.size == 0 ) {
+						function( file, done ) {
+							if (file.size == 0) {
 								done( BP_Nouveau.media.empty_document_type );
 							} else {
 								done();
@@ -1543,13 +1565,13 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'error',
-						function ( file, response ) {
+						function(file,response) {
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								if ( ! jQuery( '.comment-media-error-popup' ).length ) {
+								if ( ! jQuery( '.comment-media-error-popup' ).length) {
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
@@ -1559,13 +1581,13 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'removedfile',
-						function ( file ) {
+						function(file) {
 							if ( self.dropzone_media.length ) {
 								for ( var i in self.dropzone_media ) {
-									if ( file.upload.uuid == self.dropzone_media[ i ].uuid ) {
+									if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
 
-										if ( typeof self.dropzone_media[ i ].saved !== 'undefined' && ! self.dropzone_media[ i ].saved ) {
-											bp.Nouveau.Media.removeAttachment( self.dropzone_media[ i ].id );
+										if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+											bp.Nouveau.Media.removeAttachment( self.dropzone_media[i].id );
 										}
 
 										self.dropzone_media.splice( i, 1 );
@@ -1596,7 +1618,7 @@ window.bp = window.bp || {};
 					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
 
 				} else {
-					if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
+					if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined') {
 						self.dropzone_obj.destroy();
 					}
 					self.dropzone_media = [];
@@ -1605,7 +1627,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[ 0 ];
+			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
 			this.destroyCommentDocumentUploader( activityID );
 			this.destroyCommentVideoUploader( activityID );
 
@@ -1613,45 +1635,55 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 		},
 
-		openCommentsDocumentUploader: function ( event ) {
-			var self = this,
-				target = $( event.currentTarget ),
-				key = target.data( 'ac-id' ),
+		openCommentsDocumentUploader: function(event) {
+			var self               = this,
+				target             = $( event.currentTarget ),
+				key                = target.data( 'ac-id' ),
 				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-document-uploader-' + key );
 
 			event.preventDefault();
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[ 0 ].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url: BP_Nouveau.ajaxurl,
-						timeout: 3 * 60 * 60 * 1000,
-						dictFileTooBig: BP_Nouveau.media.dictFileTooBig,
-						acceptedFiles: BP_Nouveau.media.document_type,
-						createImageThumbnails: false,
-						dictDefaultMessage: BP_Nouveau.media.dropzone_document_message,
-						autoProcessQueue: true,
-						addRemoveLinks: true,
-						uploadMultiple: false,
-						maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-						maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-						dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
-						dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
-						previewTemplate: acCommentDocumentTemplate,
+						url                  		: BP_Nouveau.ajaxurl,
+						timeout              		: 3 * 60 * 60 * 1000,
+						dictFileTooBig       		: BP_Nouveau.media.dictFileTooBig,
+						acceptedFiles        		: BP_Nouveau.media.document_type,
+						createImageThumbnails		: false,
+						dictDefaultMessage   		: BP_Nouveau.media.dropzone_document_message,
+						autoProcessQueue     		: true,
+						addRemoveLinks       		: true,
+						uploadMultiple       		: false,
+						maxFiles             		: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+						maxFilesize          		: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+						dictInvalidFileType  		: BP_Nouveau.document.dictInvalidFileType,
+						dictMaxFilesExceeded 		: BP_Nouveau.media.document_dict_file_exceeded,
+						previewTemplate		 		: acCommentDocumentTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
 					self.dropzone_document_obj = new Dropzone( '#ac-reply-post-document-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_document_obj.on(
+						'addedfile',
+						function ( file ) {
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
+					);
+
+					self.dropzone_document_obj.on(
 						'sending',
-						function ( file, xhr, formData ) {
+						function(file, xhr, formData) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
@@ -1673,23 +1705,23 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'uploadprogress',
-						function ( element ) {
+						function( element ) {
 
-							var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ];
-							var radius = circle.r.baseVal.value;
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 							circle.style.strokeDashoffset = offset;
 						}
 					);
 
 					self.dropzone_document_obj.on(
 						'accept',
-						function ( file, done ) {
-							if ( file.size == 0 ) {
+						function( file, done ) {
+							if (file.size == 0) {
 								done( BP_Nouveau.media.empty_document_type );
 							} else {
 								done();
@@ -1699,24 +1731,24 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'success',
-						function ( file, response ) {
+						function(file, response) {
 							if ( response.data.id ) {
-								file.id = response.id;
-								response.data.uuid = file.upload.uuid;
+								file.id                  = response.id;
+								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
-								response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-								response.data.saved = false;
+								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+								response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+								response.data.saved      = false;
 								self.dropzone_document.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
 								file.previewElement.classList.add( 'dz-error' );
-								_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 								_results = [];
 								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node = _ref[ _i ];
+									node = _ref[_i];
 									_results.push( node.textContent = message );
 								}
 								return _results;
@@ -1726,13 +1758,13 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'error',
-						function ( file, response ) {
+						function(file,response) {
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								if ( ! jQuery( '.comment-document-error-popup' ).length ) {
+								if ( ! jQuery( '.comment-document-error-popup' ).length) {
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-document"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
@@ -1742,13 +1774,13 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'removedfile',
-						function ( file ) {
+						function(file) {
 							if ( self.dropzone_document.length ) {
 								for ( var i in self.dropzone_document ) {
-									if ( file.upload.uuid == self.dropzone_document[ i ].uuid ) {
+									if ( file.upload.uuid == self.dropzone_document[i].uuid ) {
 
-										if ( typeof self.dropzone_document[ i ].saved !== 'undefined' && ! self.dropzone_document[ i ].saved ) {
-											bp.Nouveau.Media.removeAttachment( self.dropzone_document[ i ].id );
+										if ( typeof self.dropzone_document[i].saved !== 'undefined' && ! self.dropzone_document[i].saved ) {
+											bp.Nouveau.Media.removeAttachment( self.dropzone_document[i].id );
 										}
 
 										self.dropzone_document.splice( i, 1 );
@@ -1788,7 +1820,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[ 0 ];
+			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
 			this.destroyCommentMediaUploader( activityID );
 			this.destroyCommentVideoUploader( activityID );
 
@@ -1796,37 +1828,38 @@ window.bp = window.bp || {};
 			this.resetGifPicker( c_id );
 		},
 
-		openCommentsVideoUploader: function ( event ) {
-			var self = this,
-				target = $( event.currentTarget ),
-				key = target.data( 'ac-id' ),
+		openCommentsVideoUploader: function(event) {
+			var self               = this,
+				target             = $( event.currentTarget ),
+				key                = target.data( 'ac-id' ),
 				dropzone_container = target.closest( '.ac-reply-content' ).find( '#ac-reply-post-video-uploader-' + key );
 
 			event.preventDefault();
 
 			$( event.currentTarget ).toggleClass( 'active' );
 
-			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[ 0 ].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url: BP_Nouveau.ajaxurl,
-						timeout: 3 * 60 * 60 * 1000,
-						dictFileTooBig: BP_Nouveau.video.dictFileTooBig,
-						acceptedFiles: BP_Nouveau.video.video_type,
-						createImageThumbnails: false,
-						dictDefaultMessage: BP_Nouveau.video.dropzone_video_message,
-						autoProcessQueue: true,
-						addRemoveLinks: true,
-						uploadMultiple: false,
-						maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-						maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-						dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
-						dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
-						previewTemplate: acCommentVideoTemplate,
+						url                  		: BP_Nouveau.ajaxurl,
+						timeout              		: 3 * 60 * 60 * 1000,
+						dictFileTooBig       		: BP_Nouveau.video.dictFileTooBig,
+						acceptedFiles        		: BP_Nouveau.video.video_type,
+						createImageThumbnails		: false,
+						dictDefaultMessage   		: BP_Nouveau.video.dropzone_video_message,
+						autoProcessQueue     		: true,
+						addRemoveLinks       		: true,
+						uploadMultiple       		: false,
+						maxFiles             		: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+						maxFilesize          		: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+						dictInvalidFileType  		: BP_Nouveau.video.dictInvalidFileType,
+						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
+						previewTemplate		 		: acCommentVideoTemplate,
+						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
 					};
 
 					// init dropzone.
@@ -1834,7 +1867,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'sending',
-						function ( file, xhr, formData ) {
+						function(file, xhr, formData) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
@@ -1856,8 +1889,8 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'accept',
-						function ( file, done ) {
-							if ( file.size == 0 ) {
+						function( file, done ) {
+							if (file.size == 0) {
 								done( BP_Nouveau.video.empty_video_type );
 							} else {
 								done();
@@ -1869,7 +1902,7 @@ window.bp = window.bp || {};
 						'addedfile',
 						function ( file ) {
 
-							if ( file.dataURL ) {
+							if (file.dataURL) {
 								// Get Thumbnail image from response.
 							} else {
 
@@ -1883,35 +1916,41 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'uploadprogress',
-						function ( element, file ) {
-
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-
-							var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ];
-							var radius = circle.r.baseVal.value;
+						function( element ) {
+							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
-							circle.style.strokeDasharray = circumference + ' ' + circumference;
-							circle.style.strokeDashoffset = circumference;
-							var offset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-							circle.style.strokeDashoffset = offset;
+							circle.style.strokeDasharray  = circumference + ' ' + circumference;
+							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 
-							if ( element.upload.progress === 100 ) {
-								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+							if ( element.upload.progress <= 99 ) {
+								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+								circle.style.strokeDashoffset = offset;
+							} else if ( element.upload.progress === 100 ) {
+								circle.style.strokeDashoffset = circumference - 0.99 * circumference;
+								$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 							}
 						}
 					);
 
 					self.dropzone_video_obj.on(
 						'success',
-						function ( file, response ) {
+						function(file, response) {
+
+							if ( file.upload.progress === 100 ) {
+								$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
+								$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+							}
+
 							if ( response.data.id ) {
-								file.id = response.id;
-								response.data.uuid = file.upload.uuid;
+								file.id                  = response.id;
+								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
-								response.data.group_id = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
-								response.data.saved = false;
+								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
+								response.data.group_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
+								response.data.saved      = false;
 								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
@@ -1919,10 +1958,10 @@ window.bp = window.bp || {};
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
 								file.previewElement.classList.add( 'dz-error' );
-								_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 								_results = [];
 								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node = _ref[ _i ];
+									node = _ref[_i];
 									_results.push( node.textContent = message );
 								}
 								return _results;
@@ -1932,13 +1971,13 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'error',
-						function ( file, response ) {
+						function(file,response) {
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								}
 							} else {
-								if ( ! jQuery( '.comment-video-error-popup' ).length ) {
+								if ( ! jQuery( '.comment-video-error-popup' ).length) {
 									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup comment-video"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.video.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 								this.removeFile( file );
@@ -1948,13 +1987,13 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'removedfile',
-						function ( file ) {
+						function(file) {
 							if ( self.dropzone_video.length ) {
 								for ( var i in self.dropzone_video ) {
-									if ( file.upload.uuid == self.dropzone_video[ i ].uuid ) {
+									if ( file.upload.uuid == self.dropzone_video[i].uuid ) {
 
-										if ( typeof self.dropzone_video[ i ].saved !== 'undefined' && ! self.dropzone_video[ i ].saved ) {
-											bp.Nouveau.Media.removeAttachment( self.dropzone_video[ i ].id );
+										if ( typeof self.dropzone_video[i].saved !== 'undefined' && ! self.dropzone_video[i].saved ) {
+											bp.Nouveau.Media.removeAttachment( self.dropzone_video[i].id );
 										}
 
 										self.dropzone_video.splice( i, 1 );
@@ -1994,7 +2033,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[ 0 ];
+			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
 			this.destroyCommentMediaUploader( activityID );
 			this.destroyCommentDocumentUploader( activityID );
 
@@ -2005,20 +2044,20 @@ window.bp = window.bp || {};
 		openGifPicker: function ( event ) {
 			event.preventDefault();
 
-			var currentTarget = event.currentTarget,
-				$gifPickerEl = $( currentTarget ).next(),
-				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
+			var currentTarget    = event.currentTarget,
+				$gifPickerEl     = $( currentTarget ).next(),
+				activityID       = currentTarget.id.match( /\d+$/ )[0],
 				$gifAttachmentEl = $( '#ac-reply-post-gif-' + activityID );
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
-				var model = new bp.Models.ACReply(),
-					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: model } ),
-					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: model } );
+				var model                      = new bp.Models.ACReply(),
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: model} ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
 
 				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
 
-				this.models[ activityID ] = model;
+				this.models[activityID] = model;
 			}
 
 			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
@@ -2034,11 +2073,11 @@ window.bp = window.bp || {};
 			this.destroyCommentVideoUploader( activityID );
 		},
 
-		toggleMultiMediaOptions: function ( form, target ) {
+		toggleMultiMediaOptions: function(form,target) {
 			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
 				var parent_activity = target.closest( '.activity-item' );
-				var activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+				var activity_data   = target.closest( '.activity-item' ).data( 'bp-activity' );
 
 				if ( target.closest( 'li' ).hasClass( 'groups' ) || parent_activity.hasClass( 'groups' ) ) {
 
@@ -2152,20 +2191,37 @@ window.bp = window.bp || {};
 			}
 		},
 
-		fixAtWhoActivity: function () {
+		fixAtWhoActivity: function() {
 			$( '.acomment-content, .activity-content' ).each(
-				function () {
+				function(){
 					// replacing atwho query from the comment content to disable querying it in the requests.
 					var atwho_query = $( this ).find( 'span.atwho-query' );
 					for ( var i = 0; i < atwho_query.length; i++ ) {
-						$( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
+						$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
 					}
 				}
 			);
 		},
+
+		toggleActivityOption: function( event ) {
+
+			if( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible' );
+			}
+		},
+
 	};
 
 	// Launch BP Nouveau Activity.
 	bp.Nouveau.Activity.start();
 
-})( bp, jQuery );
+} )( bp, jQuery );
