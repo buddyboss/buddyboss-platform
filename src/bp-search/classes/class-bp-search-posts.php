@@ -99,12 +99,12 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				}
 			}
 
-			$select .= ' SELECT ';
+			$select .= ' SELECT';
 
 			if ( $only_totalrow_count ) {
 				$select .= ' COUNT( DISTINCT id ) ';
 			} else {
-				$select .= $wpdb->prepare( ' DISTINCT id , %s as type, post_title LIKE %s AS relevance, post_date as entry_date ', $this->search_type, $placeholder );
+				$select .= $wpdb->prepare( ' DISTINCT id, %s as type, post_title LIKE %s AS relevance, post_date as entry_date ', $this->search_type, $placeholder );
 			}
 
 			$select .= " FROM {$wpdb->posts} p ";
