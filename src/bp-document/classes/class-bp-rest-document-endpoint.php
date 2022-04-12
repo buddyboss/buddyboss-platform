@@ -198,16 +198,16 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	public function upload_item_permissions_check( $request ) {
 
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to upload document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to upload document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+		if ( is_user_logged_in() ) {
+			$retval = true;
 		}
 
 		/**
@@ -239,7 +239,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
 	 * @apiParam {String=asc,desc} [order=asc] Order sort attribute ascending or descending.
-	 * @apiParam {String=title,date_created,date_modified,group_id,privacy} [orderby=title] Order by a specific parameter.
+	 * @apiParam {String=title,date_created,date_modified,group_id,privacy,id,include} [orderby=title] Order by a specific parameter.
 	 * @apiParam {Number} [user_id] Limit result set to items created by a specific user (ID).
 	 * @apiParam {Number} [max] Maximum number of results to return.
 	 * @apiParam {Number} [folder_id] A unique numeric ID for the Folder.
@@ -299,7 +299,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['include'] ) ) {
-			$args['include'] = $request['include'];
+			$args['document_ids'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		if ( ! empty( $request['type'] ) ) {
@@ -366,9 +372,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! empty( $request['group_id'] ) && bp_is_active( 'groups' ) ) {
-			$group       = groups_get_group( $request['group_id'] );
-			$user_id     = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
+		$group_id = $request->get_param( 'group_id' );
+		$user_id  = $request->get_param( 'user_id' );
+
+		if ( true === $retval && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+			$group       = groups_get_group( $group_id );
+			$user_id     = ( ! empty( $user_id ) ? $user_id : bp_loggedin_user_id() );
 			$user_groups = groups_get_user_groups( $user_id );
 
 			if ( empty( $group->id ) ) {
@@ -475,7 +484,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$document = new BP_Document( $request['id'] );
+		$document = new BP_Document( $request->get_param( 'id' ) );
 
 		if ( true === $retval && empty( $document->id ) ) {
 			$retval = new WP_Error(
@@ -490,6 +499,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if (
 			true === $retval
 			&& 'public' !== $document->privacy
+			&& ! bp_current_user_can( 'bp_moderate' )
 			&& true === $this->bp_rest_check_privacy_restriction( $document )
 		) {
 			$retval = new WP_Error(
@@ -622,32 +632,25 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create a document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if (
-			! is_user_logged_in() ||
-			(
+		$retval = $error;
+
+		if ( is_user_logged_in() ) {
+			$retval = true;
+
+			if (
 				function_exists( 'bb_document_user_can_upload' ) &&
 				! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $request->get_param( 'group_id' ) )
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			) {
+				$retval = $error;
+			}
 		}
 
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -794,6 +797,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'activity_id'   => $document->activity_id,
 			'folder_id'     => $document->folder_id,
 			'title'         => $document->title,
+			'user_id'       => $document->user_id,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
@@ -803,8 +807,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['folder_id'] ) && ( (int) $args['folder_id'] !== (int) $request['folder_id'] ) ) {
 			$parent_folder     = new BP_Document_Folder( $request['folder_id'] );
-			$args['privacy'] = ( ! empty( $parent_folder ) ? $parent_folder->privacy : $document->privacy );
-			$args['group_id'] = ( ! empty( $parent_folder ) ? $parent_folder->group_id : $document->group_id );
+			$args['privacy']   = ( ! empty( $parent_folder ) ? $parent_folder->privacy : $document->privacy );
+			$args['group_id']  = ( ! empty( $parent_folder ) ? $parent_folder->group_id : $document->group_id );
 			$moved_document_id = bp_document_move_document_to_folder( $args['id'], $request['folder_id'], $args['group_id'] );
 			if ( empty( (int) $moved_document_id ) || is_wp_error( $moved_document_id ) ) {
 				return new WP_Error(
@@ -915,73 +919,62 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to update this document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to update this document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$document = new BP_Document( $request['id'] );
+		if ( is_user_logged_in() ) {
+			$retval = true;
 
-		if ( true === $retval && empty( $document->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
+			$document = new BP_Document( $request->get_param( 'id' ) );
 
-		if (
-			true === $retval &&
-			(
+			if ( empty( $document->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_document_invalid_id',
+					__( 'Invalid document ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
 				! bp_document_user_can_edit( $document ) ||
 				(
 					function_exists( 'bb_document_user_can_upload' ) &&
 					! bb_document_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $document->group_id ) )
 				)
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this document.', 'buddyboss' ),
-				array(
-					'status' => 500,
-				)
-			);
-		}
-
-		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			if (
-				! bp_is_active( 'groups' )
-				|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+				$retval = $error;
+			} elseif ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
+				if (
+					! bp_is_active( 'groups' )
+					|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
+				) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
-		}
 
-		if ( true === $retval && isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
-			if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
-					__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			if ( true === $retval && isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
+				if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_permission',
+						__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -1078,38 +1071,20 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$document = new BP_Document( $request->get_param( 'id' ) );
 
-		$document = new BP_Document( $request['id'] );
-
-		if ( true === $retval && empty( $document->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_document_user_can_delete( $document ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this document.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( ! empty( $document->id ) && bp_document_user_can_delete( $document ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -1322,7 +1297,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_document_prepare_links', $links, $document );
 	}
 
-
 	/**
 	 * Prepare object response for the document/folder.
 	 *
@@ -1343,6 +1317,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'folder_id'             => $document->parent,
 			'group_id'              => $document->group_id,
 			'activity_id'           => ( isset( $document->activity_id ) ? $document->activity_id : 0 ),
+			'hide_activity_actions' => false,
 			'privacy'               => $document->privacy,
 			'menu_order'            => ( isset( $document->menu_order ) ? $document->menu_order : 0 ),
 			'date_created'          => $document->date_created,
@@ -1359,11 +1334,28 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'size'                  => '',
 			'msg_preview'           => '',
 			'attachment_data'       => ( isset( $document->attachment_data ) ? $document->attachment_data : array() ),
-			'user_nicename'         => $document->user_nicename,
-			'user_login'            => $document->user_login,
-			'display_name'          => $document->display_name,
+			'user_nicename'         => get_the_author_meta( 'user_nicename', $document->user_id ),
+			'user_login'            => get_the_author_meta( 'user_login', $document->user_id ),
+			'display_name'          => bp_core_get_user_displayname( $document->user_id ),
 			'user_permissions'      => $this->get_document_current_user_permissions( $document, $request ),
 		);
+
+		// Below condition will check if document has comments then like/comment button will not visible for that particular media.
+		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( $data['activity_id'] );
+			if ( isset( $activity->secondary_item_id ) ) {
+				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+				if (
+					! empty( $get_activity->id ) &&
+					(
+						( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
+						|| 'public' === $activity->privacy && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+					)
+				) {
+					$data['hide_activity_actions'] = true;
+				}
+			}
+		}
 
 		if ( ! empty( $document->attachment_id ) ) {
 			$data['description']  = get_post_field( 'post_content', $document->attachment_id );
@@ -1386,7 +1378,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			ob_start();
 
 			if ( in_array( $data['extension'], bp_get_document_preview_music_extensions(), true ) ) {
-				$audio_url = bp_document_get_preview_audio_url( $document->id, $data['extension'], $document->attachment_id );
+				$audio_url = bp_document_get_preview_audio_url( $document->id, $document->attachment_id, $data['extension'] );
 
 				echo '<div class="document-audio-wrap">' .
 					'<audio controls controlsList="nodownload">' .
@@ -1396,7 +1388,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'</div>';
 
 			}
-			$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+
+			if ( function_exists( 'bp_document_get_preview_url' ) ) {
+				$attachment_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
+			} else {
+				$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+			}
+
 			if ( $attachment_url ) {
 				echo '<div class="document-preview-wrap">' .
 					'<img src="' . esc_url_raw( $attachment_url ) . '" alt="" />' .
@@ -1488,7 +1486,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'description'     => array(
+				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Document description.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1517,6 +1515,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
+				),
+				'hide_activity_actions' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Based on this hide like/comment button for document activity comments.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'boolean',
 				),
 				'privacy'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -1563,7 +1567,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'count'            => array(
+				'count'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Count of the child documents and folders of the folder.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1694,7 +1698,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order documents by which attribute.', 'buddyboss' ),
 			'default'           => 'title',
 			'type'              => 'string',
-			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy' ),
+			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1810,6 +1814,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'copy_download_link' => 0,
 			'edit_privacy'       => 0,
 			'edit_post_privacy'  => 0,
+			'edit_description'   => 0,
 			'rename'             => 0,
 			'move'               => 0,
 			'delete'             => 0,
@@ -1818,9 +1823,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$document_privacy = array();
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$document_privacy = bp_document_user_can_manage_document( $document->id, bp_loggedin_user_id() );
+			$document_privacy = bb_media_user_can_access( $document->id, 'document' );
 		} else {
-			$document_privacy = bp_document_user_can_manage_folder( $document->id, bp_loggedin_user_id() );
+			$document_privacy = bb_media_user_can_access( $document->id, 'folder' );
 		}
 
 		if ( ! empty( $document_privacy ) ) {
@@ -1829,9 +1834,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				$retval['copy_download_link'] = 1;
 			}
 
-			if ( isset( $document_privacy['can_manage'] ) && true === (bool) $document_privacy['can_manage'] ) {
-				$retval['rename'] = 1;
-				$retval['delete'] = 1;
+			if ( isset( $document_privacy['can_edit'] ) && true === (bool) $document_privacy['can_edit'] ) {
+				$retval['rename']           = 1;
+				$retval['edit_description'] = 1;
 
 				if ( 0 === (int) $document->group_id && 0 === (int) $document->parent ) {
 					if ( ! empty( $document->attachment_id ) && bp_is_active( 'activity' ) ) {
@@ -1841,13 +1846,22 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						} else {
 							$retval['edit_post_privacy'] = $document->activity_id;
 						}
+
+						$activity = new BP_Activity_Activity( (int) $retval['edit_post_privacy'] );
+						if ( ! empty( $activity->id ) && ! empty( $activity->type ) && 'activity_comment' === $activity->type ) {
+							$retval['edit_post_privacy'] = 0;
+						}
 					} else {
 						$retval['edit_privacy'] = 1;
 					}
 				}
 			}
 
-			if ( isset( $document_privacy['can_add'] ) && true === (bool) $document_privacy['can_add'] ) {
+			if ( isset( $document_privacy['can_delete'] ) && true === (bool) $document_privacy['can_delete'] ) {
+				$retval['delete'] = 1;
+			}
+
+			if ( isset( $document_privacy['can_move'] ) && true === (bool) $document_privacy['can_move'] ) {
 				$retval['move'] = 1;
 			}
 		}
@@ -1927,6 +1941,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 			$document_activity_id = $activity_id;
 
+			$parent_activity = get_post_meta( $wp_attachment_id, 'bp_document_parent_activity_id', true );
+			if ( ! empty( $parent_activity ) && bp_is_active( 'activity' ) ) {
+				$activity_id   = $parent_activity;
+				$all_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+				$all_documents = explode( ',', $all_documents );
+				$key           = array_search( $id, $all_documents, true );
+				if ( false !== $key ) {
+					unset( $all_documents[ $key ] );
+				}
+			}
+
 			// extract the nice title name.
 			$title = get_the_title( $wp_attachment_id );
 
@@ -1963,6 +1988,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 				$created_document_ids[] = $document_id;
 
+			}
+
+			if ( ! empty( $all_documents ) ) {
+				foreach ( $all_documents as $d_id ) {
+					$document = new BP_Document( $d_id );
+					if ( ! empty( $document->id ) ) {
+						$created_document_ids[] = $document->id;
+						$document->privacy      = $document_privacy;
+						$document->save();
+					}
+				}
 			}
 		}
 
@@ -2011,15 +2047,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		// Link all uploaded document to main activity.
-		if ( ! empty( $activity_id ) && empty( $id ) ) {
-			$created_document_ids_joined = implode( ',', $created_document_ids );
-			bp_activity_update_meta( $activity_id, 'bp_document_ids', $created_document_ids_joined );
-
+		// Link all uploaded video to main activity.
+		if ( ! empty( $activity_id ) ) {
 			$main_activity = new BP_Activity_Activity( $activity_id );
-			if ( ! empty( $main_activity ) && empty( $group_id ) ) {
-				$main_activity->privacy = $document_privacy;
-				$main_activity->save();
+			if ( ! empty( $main_activity->id ) && 'document' !== $main_activity->privacy ) {
+				$created_document_ids_joined = implode( ',', $created_document_ids );
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', $created_document_ids_joined );
+
+				if ( empty( $group_id ) ) {
+					$main_activity->privacy = $document_privacy;
+					$main_activity->save();
+				}
 			}
 		}
 
@@ -2286,7 +2324,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2294,7 +2332,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->document_get_prepare_response( $document, array( 'support' => 'activity' ) );
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $document, array( 'support' => 'activity', 'context' => 'view' ) )
+			);
 		}
 
 		return $retval;
@@ -2313,7 +2353,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bp_documents_update_rest_field_callback( $object, $value, $attribute ) {
 
-		global $bp_activity_edit, $bp_activity_post_update_id, $bp_activity_post_update;
+		global $bp_activity_edit, $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
 
 		$group_id = 0;
 		if ( 'groups' === $value->component ) {
@@ -2347,6 +2387,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( false === $bp_activity_edit && empty( $object ) ) {
 			return $value;
 		}
+
+		$bp_new_activity_comment = ( 'activity_comment' === $value->type ? $value->id : 0 );
 
 		$activity_id = $value->id;
 		$privacy     = $value->privacy;
@@ -2419,6 +2461,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 			}
 		}
+
+		$bp_document_upload_count = count( $new_documents );
 
 		remove_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 		remove_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -2556,7 +2600,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2564,7 +2608,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->document_get_prepare_response( $document, array( 'support' => 'message' ) );
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
+			);
 		}
 
 		return $retval;
@@ -2713,7 +2759,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids ) );
+		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2721,7 +2767,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
-			$retval[] = $this->document_get_prepare_response( $document, array( 'support' => 'forums' ) );
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
+			);
 		}
 
 		return $retval;
@@ -2960,7 +3008,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function bp_document_get_folder_children_ids( $folder_id ) {
 		global $wpdb, $bp;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name_folder} WHERE parent = %d", $folder_id ) ) );
 	}
 }

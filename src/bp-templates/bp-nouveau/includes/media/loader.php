@@ -76,14 +76,14 @@ class BP_Nouveau_Media {
 	 */
 	protected function setup_filters() {
 
-		// Register messages scripts
+		// Register messages scripts.
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_media_register_scripts', 10, 1 );
 
-		// Localize Scripts
+		// Localize Scripts.
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_media_localize_scripts', 10, 1 );
 
 		// Redirect edit button media popup activity to parent activity edit.
-		add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_media_activity_edit_button', 10, 2 );
+		add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bp_nouveau_media_activity_edit_button', 10, 2 );
 	}
 }
 

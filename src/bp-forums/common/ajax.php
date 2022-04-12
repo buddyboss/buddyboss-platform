@@ -92,23 +92,28 @@ function bbp_do_ajax() {
  */
 function bbp_ajax_response( $success = false, $content = '', $status = -1, $extras = array() ) {
 
-	// Set status to 200 if setting response as successful
+	// Set status to 200 if setting response as successful.
+	global $redirect_url;
 	if ( ( true === $success ) && ( -1 === $status ) ) {
 		$status = 200;
 	}
 
-	// Setup the response array
+	// Setup the response array.
 	$response = array(
 		'success' => $success,
 		'status'  => $status,
 		'content' => $content,
 	);
 
-	// Merge extra response parameters in
+	// Merge extra response parameters in.
 	if ( ! empty( $extras ) && is_array( $extras ) ) {
 		$response = array_merge( $response, $extras );
 	}
 
-	// Send back the JSON
+	if ( ! empty( $redirect_url ) ) {
+		$response['redirect_url'] = $redirect_url;
+	}
+
+	// Send back the JSON.
 	wp_send_json( $response, $status );
 }

@@ -41,6 +41,10 @@ class OptionClearCache {
 	 */
 	public function initialize() {
 		add_action( 'updated_option', array( $this, 'purge_component_cache' ), 10, 3 );
+
+		add_action( 'bb_media_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
+		add_action( 'bb_document_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
+		add_action( 'bb_video_delete_older_symlinks', array( $this, 'purge_symlink_cache' ) );
 	}
 
 	/**
@@ -52,7 +56,7 @@ class OptionClearCache {
 	 */
 	public function purge_component_cache( $option, $old_value, $value ) {
 
-		if ( function_exists( 'bbapp_is_active' ) && ! bbapp_is_active( 'performance' ) ) {
+		if ( ! function_exists( 'bbapp_is_active' ) || ! bbapp_is_active( 'performance' ) ) {
 			return;
 		}
 
@@ -93,6 +97,31 @@ class OptionClearCache {
 				}
 			}
 		}
+
+		if ( ! empty( $purge_components ) ) {
+			$purge_components = array_unique( $purge_components );
+			foreach ( $purge_components as $purge_component ) {
+				Cache::instance()->purge_by_component( $purge_component );
+			}
+			Cache::instance()->purge_by_component( 'bbapp-deeplinking' );
+		}
+	}
+
+	/**
+	 * Purge cache while symlink expiered.
+	 */
+	public function purge_symlink_cache() {
+		$purge_components = array(
+			'bp-activity',
+			'bbp-forums',
+			'bbp-topics',
+			'bbp-replies',
+			'bp-media-photos',
+			'bp-media-albums',
+			'bp-document',
+			'bp-messages',
+			'bp-video',
+		);
 
 		if ( ! empty( $purge_components ) ) {
 			$purge_components = array_unique( $purge_components );

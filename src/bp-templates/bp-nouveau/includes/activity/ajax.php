@@ -272,6 +272,26 @@ function bp_nouveau_ajax_delete_activity() {
 		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	}
 
+	$activity_html      = '';
+	$parent_activity_id = 0;
+	if ( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
+		$parent_activity_id = $activity->secondary_item_id;
+		ob_start();
+		if ( bp_has_activities(
+			array(
+				'include' => $parent_activity_id,
+			)
+		) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				bp_get_template_part( 'activity/entry' );
+			}
+		}
+		$activity_html = ob_get_contents();
+		ob_end_clean();
+		$response['activity']           = $activity_html;
+		$response['parent_activity_id'] = $parent_activity_id;
+	}
 	wp_send_json_success( $response );
 }
 
@@ -328,6 +348,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
+		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
 		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
 	}
 
@@ -474,16 +495,16 @@ function bp_nouveau_ajax_get_activity_objects() {
 
 	if ( 'group' === $_POST['type'] ) {
 		$exclude_groups = array();
+		$exclude_groups_args                = array();
+		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
+		$exclude_groups_args['show_hidden'] = true;
+		$exclude_groups_args['fields']      = 'ids';
+		if ( isset( $_POST['search'] ) ) {
+			$exclude_groups_args['search_terms'] = $_POST['search'];
+			$exclude_groups_args['per_page']     = - 1;
+		}
 
-		$exclude_groups_query = groups_get_groups(
-			array(
-				'user_id'      => bp_loggedin_user_id(),
-				'search_terms' => $_POST['search'],
-				'show_hidden'  => true,
-				'per_page'     => - 1,
-				'fields'       => 'ids',
-			)
-		);
+		$exclude_groups_query = groups_get_groups( $exclude_groups_args );
 
 		if ( ! empty( $exclude_groups_query['groups'] ) ) {
 			foreach ( $exclude_groups_query['groups'] as $exclude_group ) {
@@ -492,16 +513,21 @@ function bp_nouveau_ajax_get_activity_objects() {
 				}
 			}
 		}
+		$args                = array();
+		$args['user_id']     = bp_loggedin_user_id();
+		$args['show_hidden'] = true;
+		$args['per_page']    = bb_activity_post_form_groups_per_page();
+		$args['orderby']     = 'name';
+		$args['order']       = 'ASC';
+		if ( isset( $_POST['page'] ) ) {
+			$args['page'] = $_POST['page'];
+		}
+		if ( isset( $_POST['search'] ) ) {
+			$args['search_terms'] = $_POST['search'];
+			$args['exclude']      = $exclude_groups;
+		}
 
-		$groups = groups_get_groups(
-			array(
-				'user_id'      => bp_loggedin_user_id(),
-				'search_terms' => $_POST['search'],
-				'show_hidden'  => true,
-				'per_page'     => 2,
-				'exclude'      => $exclude_groups,
-			)
-		);
+		$groups = groups_get_groups( $args );
 
 		wp_send_json_success( array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] ) );
 	} else {
@@ -550,6 +576,8 @@ function bp_nouveau_ajax_post_update() {
 			$toolbar_option = true;
 		} elseif ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
 			$toolbar_option = true;
+		} elseif ( bp_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
+			$toolbar_option = true;
 		}
 
 		if ( ! $toolbar_option ) {
@@ -590,7 +618,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$media_ids      = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
-		$posted_media   = wp_list_pluck( $_POST['media'], 'media_id' ); //phpcs:ignore
+		$posted_media   = array_column( $_POST['media'], 'media_id' ) ? wp_list_pluck( $_POST['media'], 'media_id' ) : array(); //phpcs:ignore
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
 		if ( ! bb_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
@@ -612,9 +640,8 @@ function bp_nouveau_ajax_post_update() {
 
 		$document_ids      = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
-		$posted_document   = wp_list_pluck( $_POST['document'], 'document_id' ); //phpcs:ignore
+		$posted_document   = array_column( $_POST['document'], 'document_id' ) ? wp_list_pluck( $_POST['document'], 'document_id' ) : array(); //phpcs:ignore
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
-
 
 		if ( ! bb_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
 			$message = sprintf(
@@ -629,8 +656,8 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$privacy = 'public';
-	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ) ) ) {
-		$privacy = $_POST['privacy'];
+	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ), true ) ) {
+		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
@@ -821,6 +848,10 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_error();
 	}
 
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error();
+	}
+
 	if ( ! in_array( $_POST['privacy'], array( 'public', 'loggedin', 'onlyme', 'friends' ) ) ) {
 		wp_send_json_error();
 	}
@@ -833,7 +864,9 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		$activity->save();
 		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
-		wp_send_json_success( array() );
+		$response = apply_filters( 'bb_ajax_activity_update_privacy', array(), $_POST );
+
+		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error();
 	}
