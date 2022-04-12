@@ -1906,103 +1906,75 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
  * to hardcode this logic into each query. It also protects forum content for
  * plugins that might be doing their own queries.
  *
- * @since bbPress (r3291)
+ * @since 2.0.0 bbPress (r3291)
  *
  * @param WP_Query $posts_query
  *
- * @uses apply_filters()
- * @uses bbp_exclude_forum_ids()
- * @uses bbp_get_topic_post_type()
- * @uses bbp_get_reply_post_type()
  * @return WP_Query
  */
 function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 
-	// Bail if all forums are explicitly allowed
+	// Bail if all forums are explicitly allowed.
 	if ( true === apply_filters( 'bbp_include_all_forums', false, $posts_query ) ) {
 		return;
 	}
 
-	// Bail if $posts_query is not an object or of incorrect class
+	// Bail if $posts_query is not an object or of incorrect class.
 	if ( ! is_object( $posts_query ) || ! is_a( $posts_query, 'WP_Query' ) ) {
 		return;
 	}
 
-	// Get query post types array .
+	// Get query post types array.
 	$post_types = (array) $posts_query->get( 'post_type' );
 
-	// Forums
+	// Forums.
 	if ( bbp_get_forum_post_type() === implode( '', $post_types ) ) {
 
-		// Prevent accidental wp-admin post_row override
+		// Prevent accidental wp-admin post_row override.
 		if ( is_admin() && isset( $_REQUEST['post_status'] ) ) {
 			return;
 		}
 
 		/** Default */
 
-		// Get any existing post status
-		$post_stati = $posts_query->get( 'post_status' );
+		// Add all supported forum visibilities.
+		$posts_query->set( 'post_status', array_keys( bbp_get_forum_visibilities() ) );
 
-		// Default to public status
-		if ( empty( $post_stati ) ) {
-			$post_stati = array( bbp_get_public_status_id() );
+		// Get forums to exclude.
+		$hidden_ids = bbp_exclude_forum_ids( 'array' );
 
-			// Split the status string
-		} elseif ( is_string( $post_stati ) ) {
-			$post_stati = explode( ',', $post_stati );
-		}
-
-		/** Private */
-
-		// Remove bbp_get_private_status_id() if user is not capable
-		if ( ! current_user_can( 'read_private_forums' ) ) {
-			$key = array_search( bbp_get_private_status_id(), $post_stati );
-			if ( ! empty( $key ) ) {
-				unset( $post_stati[ $key ] );
-			}
-
-			// ...or add it if they are
-		} else {
-			$post_stati[] = bbp_get_private_status_id();
-		}
-
-		/** Hidden */
-
-		// Remove bbp_get_hidden_status_id() if user is not capable
-		if ( ! current_user_can( 'read_hidden_forums' ) ) {
-			$key = array_search( bbp_get_hidden_status_id(), $post_stati );
-			if ( ! empty( $key ) ) {
-				unset( $post_stati[ $key ] );
-			}
-
-			// ...or add it if they are
-		} else {
-			$post_stati[] = bbp_get_hidden_status_id();
-		}
-
-		// Add the statuses
-		$posts_query->set( 'post_status', array_unique( array_filter( $post_stati ) ) );
-	}
-
-	// Topics Or Replies
-	if ( array_intersect( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ), $post_types ) ) {
-
-		// Get forums to exclude
-		$forum_ids = bbp_exclude_forum_ids( 'meta_query' );
-
-		// Bail if no forums to exclude
-		if ( ! array_filter( $forum_ids ) ) {
+		// Bail if no forums to exclude.
+		if ( empty( $hidden_ids ) ) {
 			return;
 		}
 
-		// Get any existing meta queries
+		// Get any existing meta queries.
+		$not_in = $posts_query->get( 'post__not_in', array() );
+
+		// Add our meta query to existing.
+		$not_in = array_unique( array_merge( $not_in, $hidden_ids ) );
+
+		// Set the meta_query var.
+		$posts_query->set( 'post__not_in', $not_in );
+
+		// Some other post type besides Forums, Topics, or Replies.
+	} elseif ( ! array_diff( $post_types, bbp_get_post_types() ) ) {
+
+		// Get forums to exclude.
+		$forum_ids = bbp_exclude_forum_ids( 'meta_query' );
+
+		// Bail if no forums to exclude.
+		if ( empty( $forum_ids ) ) {
+			return;
+		}
+
+		// Get any existing meta queries.
 		$meta_query = (array) $posts_query->get( 'meta_query', array() );
 
-		// Add our meta query to existing
+		// Add our meta query to existing.
 		$meta_query[] = $forum_ids;
 
-		// Set the meta_query var
+		// Set the meta_query var.
 		$posts_query->set( 'meta_query', $meta_query );
 	}
 }

@@ -2256,3 +2256,23 @@ function bb_render_email_notify_subscribers( $user_ids, $email_type, $sender_id,
 		bp_send_email( $email_type, (int) $user_id, $args );
 	}
 }
+
+/**
+ * Return array of bbPress registered post types
+ *
+ * @since 2.6.0 bbPress (r6813)
+ *
+ * @param array $args Array of arguments to pass into `get_post_types()`
+ *
+ * @return array
+ */
+function bbp_get_post_types( $args = array() ) {
+
+	// Parse args
+	$r = bbp_parse_args( $args, array(
+		'source' => 'bbpress'
+	), 'get_post_types' );
+
+	// Return post types
+	return get_post_types( $r );
+}
