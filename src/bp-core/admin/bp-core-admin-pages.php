@@ -157,6 +157,8 @@ function bp_core_admin_register_page_fields() {
 			$description = esc_html__( 'This directory shows all photos uploaded by members.', 'buddyboss' );
 		} elseif ( 'document' === $name ) {
 			$description = esc_html__( 'This directory shows all documents uploaded by members.', 'buddyboss' );
+		} elseif ( 'video' === $name ) {
+			$description = esc_html__( 'This directory shows all video uploaded by members.', 'buddyboss' );
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact( 'existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, array() );

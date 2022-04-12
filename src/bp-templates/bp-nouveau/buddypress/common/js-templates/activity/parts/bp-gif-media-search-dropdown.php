@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template for displaying gif media search dropdown
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
+?>
 <script type="text/html" id="tmpl-gif-media-search-dropdown">
 	<div class="gif-search-content">
 		<div class="gif-search-query">

@@ -243,6 +243,15 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+
+	if (
+		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_media() ) ) ||
+		( bp_is_active( 'groups' ) && ! empty( $group_id ) && ! groups_can_user_manage_media( bp_loggedin_user_id(), $group_id ) )
+	) {
+		wp_send_json_error( $response );
+	}
+
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( empty( $medias ) ) {
@@ -280,11 +289,11 @@ function bp_nouveau_ajax_media_save() {
 		bp_has_media( bp_ajax_querystring( 'media' ) );
 		$media_personal_count = $GLOBALS['media_template']->total_media_count;
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
-    }
+	}
 
-    if ( bp_is_group_media() ) {
-	    $media_group_count = bp_media_get_total_group_media_count();
-    }
+	if ( bp_is_group_media() ) {
+		$media_group_count = bp_media_get_total_group_media_count();
+	}
 
 	wp_send_json_success(
 		array(
@@ -363,9 +372,9 @@ function bp_nouveau_ajax_media_delete() {
 	$response = array();
 	if ( $activity_id ) {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
-    }
+	}
 
-	$delete_box = false;
+	$delete_box       = false;
 	$activity_content = '';
 	if ( 'activity' === $from_where ) {
 		// Get activity object.
@@ -377,7 +386,7 @@ function bp_nouveau_ajax_media_delete() {
 			ob_start();
 			if ( bp_has_activities(
 				array(
-					'include'     => $activity_id,
+					'include' => $activity_id,
 				)
 			) ) {
 				while ( bp_activities() ) {
@@ -388,17 +397,17 @@ function bp_nouveau_ajax_media_delete() {
 			$activity_content = ob_get_contents();
 			ob_end_clean();
 		}
-    }
+	}
 
 	$media_personal_count = 0;
 	$media_group_count    = 0;
-	if( bp_is_user_media() ) {
+	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 		bp_has_media( bp_ajax_querystring( 'media' ) );
 		$media_personal_count = $GLOBALS['media_template']->total_media_count;
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	}
-	if( bp_is_group_media() ) {
+	if ( bp_is_group_media() ) {
 
 	    // Update the count of photos in groups in navigation menu.
 	    wp_cache_flush();
@@ -584,6 +593,14 @@ function bp_nouveau_ajax_media_album_save() {
 		$user_id = $album->user_id;
 	}
 
+	if (
+		empty( $user_id ) ||
+		( ! empty( $group_id ) && ! groups_can_user_manage_albums( $user_id, $group_id ) ) ||
+		! empty( $user_id ) && bp_is_my_profile() && ! bb_user_can_create_media()
+	) {
+		wp_send_json_error( $response );
+	}
+
 	if ( ! array_key_exists( $privacy, bp_media_get_visibility_levels() ) && ! empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -613,12 +630,12 @@ function bp_nouveau_ajax_media_album_save() {
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( ! empty( $medias ) ) {
-		// set album id for media
+		// set album id for media.
 		foreach ( $medias as $key => $media ) {
 			$medias[ $key ]['album_id'] = $album_id;
 		}
 
-		// save all media uploaded
+		// save all media uploaded.
 		bp_media_add_handler( $medias, $privacy );
 	}
 
@@ -694,7 +711,7 @@ function bp_nouveau_ajax_media_album_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// delete album
+	// delete album.
 	$album_id = bp_album_delete( array( 'id' => $album_id ) );
 
 	if ( ! $album_id ) {
@@ -832,7 +849,7 @@ function bp_nouveau_ajax_media_delete_attachment() {
 		wp_send_json_error( $response );
 	}
 
-	// delete attachment with its meta
+	// delete attachment with its meta.
 	$deleted = wp_delete_attachment( $id, true );
 
 	if ( ! $deleted ) {
@@ -1060,83 +1077,138 @@ function bp_nouveau_ajax_media_get_media_description() {
 		wp_send_json_error( $response );
 	}
 
-	$content = get_post_field( 'post_content', $attachment_id );
+	$media = new BP_Media( $media_id );
+	if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
 
-	$media_privacy    = bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
-	$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
-	$can_manage_btn   = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
-	$can_view         = ( true === (bool) $media_privacy['can_view'] ) ? true : false;
+		remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+		add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
 
-	$media        = new BP_Media( $media_id );
-	$user_domain  = bp_core_get_user_domain( $media->user_id );
-	$display_name = bp_core_get_user_displayname( $media->user_id );
-	$time_since   = bp_core_time_since( $media->date_created );
-	$avatar       = bp_core_fetch_avatar(
-		array(
-			'item_id' => $media->user_id,
-			'object'  => 'user',
-			'type'    => 'full',
-		)
-	);
+		$remove_comment_btn = false;
 
-	ob_start();
+		$activity = new BP_Activity_Activity( $media->activity_id );
+		if ( ! empty( $activity->id ) ) {
+			$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+			if (
+				! empty( $get_activity->id ) &&
+				(
+					( in_array( $activity->type, array( 'activity_update', 'activity_comment' ), true ) && ! empty( $get_activity->secondary_item_id ) && ! empty( $get_activity->item_id ) )
+					|| in_array( $activity->privacy, array( 'public' ), true ) && empty( $get_activity->secondary_item_id ) && empty( $get_activity->item_id )
+				)
+			) {
+				$remove_comment_btn = true;
+			}
+		}
 
-	if ( $can_view ) {
-		?>
-		<li class="activity activity_update activity-item mini ">
-			<div class="bp-activity-head">
-				<div class="activity-avatar item-avatar">
-					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
-				</div>
+		if ( true === $remove_comment_btn ) {
+			add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			add_filter( 'bp_nouveau_get_activity_comment_buttons_activity_state', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+		}
 
-				<div class="activity-header">
-					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
-					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
-				</div>
-			</div>
-			<div class="activity-media-description">
-				<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
-				<?php
-				if ( $can_manage_btn ) {
-					?>
-					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-						<span class="bb-icon-edit-thin"></span>
-						<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-						<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-					</a>
+		$args = array(
+			'include'     => $media->activity_id,
+			'privacy'     => false,
+			'scope'       => false,
+			'show_hidden' => true,
+		);
 
-					<div class="bp-edit-media-activity-description" style="display: none;">
-						<div class="innerWrap">
-							<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
-						</div>
-						<div class="in-profile description-new-submit">
-							<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
-						</div>
+		ob_start();
+		if ( bp_has_activities( $args ) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				bp_get_template_part( 'activity/entry' );
+			}
+		}
+		$media_description = ob_get_contents();
+		ob_end_clean();
+
+		if ( true === $remove_comment_btn ) {
+			remove_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			remove_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+			remove_filter( 'bp_nouveau_get_activity_comment_buttons_activity_state', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
+		}
+
+		remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
+		remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+		add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+	}
+
+	if ( empty( trim( $media_description ) ) ) {
+		$content          = get_post_field( 'post_content', $attachment_id );
+		$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
+		$can_download_btn = true === (bool) $media_privacy['can_download'];
+		$can_edit_btn     = true === (bool) $media_privacy['can_edit'];
+		$can_view         = true === (bool) $media_privacy['can_view'];
+		$user_domain      = bp_core_get_user_domain( $media->user_id );
+		$display_name     = bp_core_get_user_displayname( $media->user_id );
+		$time_since       = bp_core_time_since( $media->date_created );
+		$avatar           = bp_core_fetch_avatar(
+			array(
+				'item_id' => $media->user_id,
+				'object'  => 'user',
+				'type'    => 'full',
+			)
+		);
+
+		ob_start();
+		if ( $can_view ) {
+			?>
+			<li class="activity activity_update activity-item mini ">
+				<div class="bp-activity-head">
+					<div class="activity-avatar item-avatar">
+						<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
 					</div>
+
+					<div class="activity-header">
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
+					</div>
+				</div>
+				<div class="activity-media-description">
+					<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
 					<?php
-				}
-				?>
-			</div>
-			<?php
-			if ( ! empty( $media_id ) ) {
-				if ( $can_download_btn ) {
+					if ( $can_edit_btn ) {
+						?>
+						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
+							<span class="bb-icon-edit-thin"></span>
+							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+						</a>
+
+						<div class="bp-edit-media-activity-description" style="display: none;">
+							<div class="innerWrap">
+								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $content ); ?></textarea>
+							</div>
+							<div class="in-profile description-new-submit">
+								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
+								<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+								<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+							</div>
+						</div>
+						<?php
+					}
+					?>
+				</div>
+				<?php
+				if ( ! empty( $media_id ) && $can_download_btn ) {
 					$download_url = bp_media_download_link( $attachment_id, $media_id );
 					if ( $download_url ) {
 						?>
 						<a class="download-media" href="<?php echo esc_url( $download_url ); ?>">
-							<?php _e( 'Download', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
 					}
 				}
-			}
-			?>
-		</li>
-		<?php
-		$media_description = ob_get_contents();
-		ob_end_clean();
+				?>
+			</li>
+			<?php
+			$media_description = ob_get_contents();
+			ob_end_clean();
+		}
 	}
 
 	wp_send_json_success(
@@ -1162,13 +1234,17 @@ function bp_nouveau_ajax_media_get_album_view() {
 		$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
-	$first_text = '';
+	$first_text   = '';
+	$create_album = false;
 	if ( 'profile' === $type ) {
-		$first_text = esc_html__( ' Medias', 'buddyboss' );
+		$first_text   = esc_html__( ' Medias', 'buddyboss' );
+		$create_album = is_user_logged_in() && bp_is_profile_media_support_enabled() && bb_user_can_create_media();
+
 	} else {
 		if ( bp_is_active( 'groups' ) ) {
-			$group      = groups_get_group( (int) $id );
-			$first_text = bp_get_group_name( $group );
+			$group        = groups_get_group( (int) $id );
+			$first_text   = bp_get_group_name( $group );
+			$create_album = groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $id );
 		}
 	}
 
@@ -1177,6 +1253,7 @@ function bp_nouveau_ajax_media_get_album_view() {
 			'message'         => 'success',
 			'html'            => $ul,
 			'first_span_text' => stripslashes( $first_text ),
+			'create_album'    => $create_album,
 		)
 	);
 }

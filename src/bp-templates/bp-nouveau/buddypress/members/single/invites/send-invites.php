@@ -1,4 +1,13 @@
 <?php
+/**
+ * The template for send invites
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/invites/send-invites.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
