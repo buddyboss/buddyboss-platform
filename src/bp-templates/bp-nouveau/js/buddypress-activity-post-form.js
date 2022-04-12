@@ -2519,6 +2519,14 @@ window.bp = window.bp || {};
 					responseUrl = div.innerHTML;
 				}
 
+				// remove unwanted double quote & strings
+				if ( responseUrl.indexOf( '"' ) >= 0 ) {
+					var splitUrl = responseUrl.split( '"' );
+					if ( splitUrl[ 0 ] != '' ) {
+						responseUrl = splitUrl[ 0 ];
+					}
+				}
+
 				return responseUrl;
 			},
 

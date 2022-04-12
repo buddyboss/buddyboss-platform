@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-11 17:37:13+00:00\n"
+"POT-Creation-Date: 2022-04-12 05:34:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25428,7 +25428,8 @@ msgstr ""
 msgid "Username/Login"
 msgstr ""
 
-#: bp-search/classes/class-bp-search-posts.php:186
+#: bp-search/classes/class-bp-search-posts.php:213
+#. translators: %s: The post type
 msgid "%s Meta"
 msgstr ""
 
@@ -31103,6 +31104,18 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-component.php:177
 msgctxt "taxonomy singular name"
 msgid "Reporting Category"
+msgstr ""
+
+#: bp-search/bp-search-functions.php:837
+#. translators: This is a comma-separated list of very common words that should
+#. be excluded from a search, like a, an, and the. These are usually called
+#. "stopwords". You should not simply translate these individual words into
+#. your language. Instead, look for and provide commonly accepted stopwords in
+#. your language.
+msgctxt "Comma-separated list of search stopwords in your language"
+msgid ""
+"about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,"
+"to,was,what,when,where,who,will,with,www"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:138
