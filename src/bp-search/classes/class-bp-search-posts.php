@@ -102,16 +102,16 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$select .= ' SELECT';
 
 			if ( $only_totalrow_count ) {
-				$select .= ' COUNT( DISTINCT id ) ';
+				$select .= ' COUNT( DISTINCT id )';
 			} else {
-				$select .= $wpdb->prepare( ' DISTINCT id, %s as type, post_title LIKE %s AS relevance, post_date as entry_date ', $this->search_type, $placeholder );
+				$select .= $wpdb->prepare( ' DISTINCT id, %s as type, post_title LIKE %s AS relevance, post_date as entry_date', $this->search_type, $placeholder );
 			}
 
-			$select .= " FROM {$wpdb->posts} p ";
+			$select .= " FROM {$wpdb->posts} p";
 
 			// Tax query left join.
 			if ( ! empty( $tax ) ) {
-				$select .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
+				$select .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id";
 			}
 
 			// WHERE.
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			}
 
 			// Post should be published.
-			$where .= ") AND p.post_type = '{$this->pt_name}' AND p.post_status = 'publish' ";
+			$where .= " ) AND p.post_type = '{$this->pt_name}' AND p.post_status = 'publish'";
 
 			$sql_query = "{$select}{$where}";
 
