@@ -109,7 +109,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of forums IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of forums to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of forums.
-	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity} [orderby] Sort retrieved forums by parameter..
+	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity,include} [orderby] Sort retrieved forums by parameter..
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to forums assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve child pages for. Use 0 to only retrieve top-level forums.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed forums by user.
@@ -164,6 +164,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$args['orderby'] = 'post__in';
 		}
 
 		/**
@@ -950,6 +958,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					'relevance',
 					'popular',
 					'activity',
+					'include',
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -1065,8 +1074,9 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if (
 			function_exists( 'bbp_is_forum_group_forum' )
-			&& bbp_is_forum_group_forum( $post->ID )
+			&& function_exists( 'bb_get_child_forum_group_ids' )
 			&& function_exists( 'groups_get_group' )
+			&& ! empty( bb_get_child_forum_group_ids( $post->ID ) )
 		) {
 			$group          = $this->bp_rest_get_group( $post->ID );
 			$links['group'] = array(
@@ -1207,6 +1217,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				&& ! bbp_is_forum_category()
 				&& ( bbp_current_user_can_publish_topics() || bbp_current_user_can_access_anonymous_user_form() )
 				&& $this->can_access_content( $forum_id, true )
+				&& ( ! bbp_is_user_keymaster() ? bbp_is_forum_open( (int) $forum_id ) : true )
 			),
 		);
 	}
@@ -1325,8 +1336,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			return '';
 		}
 
-		if ( bbp_get_forum_group_ids( $forum_id ) ) {
-			$group              = groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) );
+		if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+			$group_ids = bb_get_child_forum_group_ids( $forum_id );
+		} else {
+			$group_ids = bbp_get_forum_group_ids( $forum_id );
+		}
+
+		if ( ! empty( $group_ids ) ) {
+			$group              = groups_get_group( current( $group_ids ) );
 			$group->avatar_urls = array();
 			if ( ! bp_disable_group_avatar_uploads() ) {
 				$group->avatar_urls = array(
