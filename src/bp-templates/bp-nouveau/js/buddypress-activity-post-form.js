@@ -2883,7 +2883,9 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', 'general' );
 
-				bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
+					bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+				}
 
 				var whats_new_form = $( '#whats-new-form' );
 				whats_new_form.removeClass( 'focus-in--privacy focus-in--group' );
@@ -2902,8 +2904,9 @@ window.bp = window.bp || {};
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass( 'group-privacy-point-icon' ).addClass( 'privacy-point-icon' );
 					}
-
-					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
+					if ( ! _.isUndefined( BP_Nouveau.media ) ) {
+						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
+					}
 				}
 			},
 
@@ -3971,9 +3974,8 @@ window.bp = window.bp || {};
 				// Wrap Toolbar and submit Wrapper into footer.
 				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) ) {
 					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
-					$('#whats-new-toolbar').appendTo('.whats-new-form-footer');
-					$('#activity-form-submit-wrapper').appendTo('.whats-new-form-footer');
-					$('#whats-new-form > #whats-new-toolbar').remove();
+					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
+					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
 				}
 				
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
