@@ -2219,8 +2219,8 @@ window.bp = window.bp || {};
 				// remove unwanted double quote & strings
 				if ( responseUrl.indexOf( '"' ) >= 0 ) {
 					var splitUrl = responseUrl.split( '"' );
-					if ( splitUrl[0] != '' ){
-						responseUrl = splitUrl[0];
+					if ( splitUrl[ 0 ] != '' ) {
+						responseUrl = splitUrl[ 0 ];
 					}
 				}
 
