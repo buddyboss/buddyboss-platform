@@ -484,6 +484,7 @@ tr.bp-search-parent-field label {
 
 /*
 .bp-admin-card.section-bp_media_settings_symlinks h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/server.svg);
 }
 */
@@ -492,6 +493,7 @@ tr.bp-search-parent-field label {
 
 /*
 .bp-admin-card.section-bp_friends h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
 	background-size: 21px 21px;
 }
@@ -501,6 +503,7 @@ tr.bp-search-parent-field label {
 
 /*
 .bp-admin-card.section-bp_invites h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
 }
 */
@@ -509,11 +512,13 @@ tr.bp-search-parent-field label {
 
 /*
 .bp-admin-card.section-bp_moderation_settings_blocking h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/ban.svg);
 	background-size: 20px 20px;
 }
 
 .bp-admin-card.section-bp_moderation_settings_reporting h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/flag.svg);
 }
 */
@@ -523,10 +528,12 @@ tr.bp-search-parent-field label {
 /*
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
 }
 */
@@ -535,6 +542,7 @@ tr.bp-search-parent-field label {
 
 /*
 .bp-admin-card.section-bp_notification_settings_automatic h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
 }
 */
@@ -543,6 +551,7 @@ tr.bp-search-parent-field label {
 
 /*
 .bp-admin-card.section-bp_labs_settings_notifications h2:before {
+
 	background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
 }
 */
@@ -3364,10 +3373,11 @@ table tbody td .bb-description {
 .bb-lab-notice.notification-information {
 
 	&:before {
-		content: "\e8c2";
+		content: "\eebc";
 		display: inline-block;
 		font-family: "bb-icons"; /* stylelint-disable-line */
 		font-size: 16px;
+		font-weight: 100;
 		margin-right: 10px;
 		line-height: 1;
 	}

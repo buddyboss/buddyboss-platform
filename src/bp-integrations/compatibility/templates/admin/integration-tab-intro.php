@@ -5,9 +5,7 @@
 			<?php
 			$meta_icon = bb_admin_icons( 'bp_compatibility-integration' );
 			if ( ! empty( $meta_icon ) ) {
-				?>
-				<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-				<?php
+				echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 			}
 			echo sprintf(
 			/* translators: 1. Text. 2. Text. */

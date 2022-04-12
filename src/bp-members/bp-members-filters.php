@@ -730,7 +730,7 @@ function bb_load_members_account_settings_notifications() {
 /**
  * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_load_member_type_label_custom_css() {
 	if ( true === bp_member_type_enable_disable() ) {
@@ -747,7 +747,7 @@ function bb_load_member_type_label_custom_css() {
 				) {
 					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
 					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
-					$class_name             = 'body .bp-member-type.bb-current-member-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-member-' . $type : '.bp-member-type.bb-current-member-' . $type;
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
 					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}
@@ -758,3 +758,4 @@ function bb_load_member_type_label_custom_css() {
 	}
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+

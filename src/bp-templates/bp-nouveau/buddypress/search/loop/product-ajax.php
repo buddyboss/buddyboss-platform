@@ -20,7 +20,7 @@ $product = wc_get_product( get_the_ID() ); ?>
 				<?php
 			} else {
 				?>
-				<i class="bb-icons-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+				<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 				<?php
 			}
 			?>
@@ -28,8 +28,8 @@ $product = wc_get_product( get_the_ID() ); ?>
 
 		<div class="item">
 			<div class="item-title"><?php the_title(); ?></div>
-            <?php wc_get_template( 'single-product/short-description.php' ); ?>
-            <div class="entry-meta">
+			<?php wc_get_template( 'single-product/short-description.php' ); ?>
+			<div class="entry-meta">
 				<?php
 				$category = wc_get_product_category_list( get_the_ID() );
 				if ( $category ) {

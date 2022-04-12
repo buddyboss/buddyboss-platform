@@ -7418,7 +7418,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 /**
  * Function will return icon based on section..
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param $id Id of the section.
  *
@@ -7566,6 +7566,12 @@ function bb_admin_icons( $id ) {
 		case 'bp_zoom_settings_section':
 		case 'bp_zoom_gutenberg_section';
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
+			break;
+		case 'bp_labs_settings_notifications';
+			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
+			break;
+		case 'bp_notification_settings_automatic':
+			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
 		default:
 			$meta_icon = '';

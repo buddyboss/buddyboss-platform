@@ -1611,7 +1611,7 @@ function bp_nouveau_single_item_nav_classes() {
 	 * @return string CSS classes
 	 */
 function bp_nouveau_get_single_item_nav_classes() {
-	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs' );
+	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs', 'bb-single-main-nav' );
 	$component  = bp_current_component();
 	$bp_nouveau = bp_nouveau();
 
@@ -1632,8 +1632,10 @@ function bp_nouveau_get_single_item_nav_classes() {
 
 	if ( 1 === $layout_prefs ) {
 		$classes[] = 'vertical';
+		$classes[] = 'bb-single-main-nav--vertical';
 	} else {
 		$classes[] = 'horizontal';
+		$classes[] = 'bb-single-main-nav--horizontal';
 	}
 
 	$classes[] = $menu_type;

@@ -5221,11 +5221,10 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 }
 add_action( 'user_register', 'bb_core_sync_user_notification_settings' );
 
-
 /**
  * Function will return label background and text color's for specific member type.
  *
- * @since BuddyBoss 2.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param $type Type of the member
  *

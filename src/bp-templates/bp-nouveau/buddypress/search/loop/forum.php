@@ -43,9 +43,9 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 				<span class="topic-count">
 					<?php
 					printf(
-							/* translators: total topics */
+						/* translators: total topics */
 						_n( '%d topic', '%d topics', $total_topic, 'buddyboss' ),
-						$total_topic
+						absint( $total_topic )
 					);
 					?>
 				</span>
@@ -53,27 +53,27 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 				<span class="reply-count">
 					<?php
 					printf(
-					/* translators: total replies */
+						/* translators: total replies */
 						_n( '%d reply', '%d replies', $total_reply, 'buddyboss' ),
-						$total_reply
+						absint( $total_reply )
 					);
 					?>
 				</span>
 
-					<?php
-                    $last_active = bbp_get_forum_last_active_time( $forum_id );
-					if ( $last_active ) {
-						?>
-						<span class="middot">&middot;</span>
-						<span class="freshness">
-								<?php
-								esc_html_e( 'Last active ', 'buddyboss' );
-								echo wp_kses_post( $last_active );
-								?>
-						</span>
-						<?php
-					}
+				<?php
+				$last_active = bbp_get_forum_last_active_time( $forum_id );
+				if ( $last_active ) {
 					?>
+					<span class="middot">&middot;</span>
+					<span class="freshness">
+						<?php
+							esc_html_e( 'Last active ', 'buddyboss' );
+							echo wp_kses_post( $last_active );
+						?>
+					</span>
+					<?php
+				}
+				?>
 			</div>
 		</div>
 	</div>

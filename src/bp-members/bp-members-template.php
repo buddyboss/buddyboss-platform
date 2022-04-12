@@ -3015,6 +3015,13 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 	}
 }
 
+/**
+ * Get the member last activity time.
+ *
+ * @param array $args Array of arguments.
+ *
+ * @return mixed|string|void
+ */
 function bp_get_member_last_activity_time( $args = array() ) {
 	global $members_template;
 

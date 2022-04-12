@@ -25,7 +25,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 				<?php
 			} else {
 				?>
-				<i class="bb-icons-f <?php echo esc_attr( $result['post_thumbnail'] ); ?>"></i>
+				<i class="bb-icon-f <?php echo esc_attr( $result['post_thumbnail'] ); ?>"></i>
 				<?php
 			}
 			?>

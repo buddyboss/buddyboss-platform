@@ -75,37 +75,32 @@ class Core {
 	 * Add Menu in Profile section.
 	 *
 	 * @since BuddyBoss 1.2.0
-	 *
-	 * @param $menus
 	 */
-	function setup_user_profile_bar() {
+	public function setup_user_profile_bar() {
 		?>
-        <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->course_slug ); ?>" class="menupop">
-            <a class="ab-item" aria-haspopup="true"
-               href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>">
-			   	<i class="bb-icons-l bb-icon-course"></i>
-                <span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo esc_attr( $this->course_name ); ?>
-            </a>
+		<li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->course_slug ); ?>" class="menupop">
+			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>">
+				<i class="bb-icon-l bb-icon-course"></i>
+				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo esc_attr( $this->course_name ); ?>
+			</a>
 
-            <div class="ab-sub-wrapper">
-                <ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
-                    <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->my_courses_slug ); ?>">
-                        <a class="ab-item"
-                           href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_courses_name ); ?></a>
-                    </li>
+			<div class="ab-sub-wrapper">
+				<ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
+					<li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->my_courses_slug ); ?>">
+						<a class="ab-item" href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_courses_name ); ?></a>
+					</li>
 					<?php
 					if ( $this->certificates_enables ) {
 						?>
-                        <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->certificates_tab_slug ); ?>">
-                            <a class="ab-item"
-                               href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_certificates_tab_name ); ?></a>
-                        </li>
+						<li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->certificates_tab_slug ); ?>">
+							<a class="ab-item" href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_certificates_tab_name ); ?></a>
+						</li>
 						<?php
 					}
 					?>
-                </ul>
-            </div>
-        </li>
+				</ul>
+			</div>
+		</li>
 		<?php
 	}
 
@@ -142,7 +137,7 @@ class Core {
 
 			$nav_name = sprintf(
 			/* translators: %s: Group count for the current user */
-				__( '%s %s', 'buddyboss' ),
+				__( '%1$s %2$s', 'buddyboss' ),
 				$this->course_name,
 				sprintf(
 					'<span class="%s">%s</span>',
@@ -154,14 +149,16 @@ class Core {
 			$nav_name = $this->course_name;
 		}
 
-		bp_core_new_nav_item( array(
-			'name'                    => $nav_name,
-			'slug'                    => $this->course_slug,
-			'screen_function'         => array( $this, 'course_page' ),
-			'position'                => 75,
-			'default_subnav_slug'     => $this->my_courses_slug,
-			'show_for_displayed_user' => $this->course_access,
-		) );
+		bp_core_new_nav_item(
+			array(
+				'name'                    => $nav_name,
+				'slug'                    => $this->course_slug,
+				'screen_function'         => array( $this, 'course_page' ),
+				'position'                => 75,
+				'default_subnav_slug'     => $this->my_courses_slug,
+				'show_for_displayed_user' => $this->course_access,
+			)
+		);
 
 		$all_subnav_items = array(
 			array(
@@ -228,13 +225,15 @@ class Core {
 
 		global $wp_admin_bar;
 		foreach ( $all_post_types as $single ) {
-			$wp_admin_bar->add_menu( array(
-				'parent'   => 'my-account-' . $single['parent'],
-				'id'       => 'my-account-' . $single['slug'],
-				'title'    => $single['name'],
-				'href'     => $single['nav_link'],
-				'position' => $single['position'],
-			) );
+			$wp_admin_bar->add_menu(
+				array(
+					'parent'   => 'my-account-' . $single['parent'],
+					'id'       => 'my-account-' . $single['slug'],
+					'title'    => $single['name'],
+					'href'     => $single['nav_link'],
+					'position' => $single['position'],
+				)
+			);
 		}
 	}
 
@@ -243,8 +242,8 @@ class Core {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param $slug
-	 * @param string $parent_slug
+	 * @param string $slug        Slug of the nav link.
+	 * @param string $parent_slug Parent item slug.
 	 *
 	 * @return string
 	 */
@@ -265,8 +264,8 @@ class Core {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param $slug
-	 * @param string $parent_slug
+	 * @param string $slug        Slug of the nav link.
+	 * @param string $parent_slug Parent item slug.
 	 *
 	 * @return string
 	 */
@@ -296,7 +295,7 @@ class Core {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function certificates_page_content() {
+	public function certificates_page_content() {
 		do_action( 'template_notices' );
 		do_action( 'bp_learndash_before_certificates_page_content' );
 		bp_get_template_part( 'members/single/courses/certificates' );
@@ -317,7 +316,7 @@ class Core {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function courses_page_content() {
+	public function courses_page_content() {
 
 		do_action( 'template_notices' );
 
@@ -401,12 +400,12 @@ class Core {
 		spl_autoload_register(
 			function ( $class ) {
 				$psr4 = array(
-					'Buddyboss\LearndashIntegration\Core'                  => 'core',
-					'Buddyboss\LearndashIntegration\Library'               => 'library',
-					'Buddyboss\LearndashIntegration\Buddypress'            => 'buddypress',
+					'Buddyboss\LearndashIntegration\Core' => 'core',
+					'Buddyboss\LearndashIntegration\Library' => 'library',
+					'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
 					'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
 					'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
-					'Buddyboss\LearndashIntegration\Learndash'             => 'learndash',
+					'Buddyboss\LearndashIntegration\Learndash' => 'learndash',
 				);
 
 				$segments  = explode( '\\', $class );
@@ -460,7 +459,7 @@ class Core {
 			if ( ! empty( $course_progress ) ) {
 
 				foreach ( $course_progress as $course_id => $coursep ) {
-					// We take default progress value as 1 % rather than 0%
+					// We take default progress value as 1 % rather than 0%.
 					$course_completion_percentage[ $course_id ] = 1;
 					if ( $coursep['total'] == 0 ) {
 						continue;
@@ -484,7 +483,7 @@ class Core {
 						}
 					}
 
-					// cannot divide by 0
+					// cannot divide by 0.
 					if ( $coursep['total'] == 0 ) {
 						$course_completion_percentage[ $course_id ] = 0;
 					} else {
@@ -493,7 +492,7 @@ class Core {
 				}
 			}
 
-			// Avoid running the queries multiple times if user's course progress is empty
+			// Avoid running the queries multiple times if user's course progress is empty.
 			$course_completion_percentage = ! empty( $course_completion_percentage ) ? $course_completion_percentage : 'empty';
 
 			wp_cache_set( $user_id, $course_completion_percentage, 'ld_courses_progress' );
@@ -571,6 +570,13 @@ class Core {
 
 	}
 
+	/**
+	 * Return resume URL of the course.
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return array|false|string|void|\WP_Error
+	 */
 	public function bp_course_resume( $course_id ) {
 
 		if ( is_user_logged_in() ) {
@@ -586,7 +592,7 @@ class Core {
 					// $last_know_step = get_user_meta( $user->ID, 'learndash_last_known_course_' . $step_course_id, true );
 					$last_know_step = '';
 
-					// User has not hit a LD module yet
+					// User has not hit a LD module yet.
 					if ( empty( $last_know_step ) ) {
 
 						if ( isset( $url ) && '' !== $url ) {
@@ -613,7 +619,7 @@ class Core {
 					// Make sure the post exists and that the user hit a page that was a post
 					// if $last_know_page_id returns '' then get post will return current pages post object
 					// so we need to make sure first that the $last_know_page_id is returning something and
-					// that the something is a valid post
+					// that the something is a valid post.
 					if ( null !== $last_know_post_object ) {
 
 						$post_type        = $last_know_post_object->post_type; // getting post_type of last page.
@@ -648,9 +654,9 @@ class Core {
 	/**
 	 * Get all the URLs of current course ( lesson, topic, quiz )
 	 *
-	 * @param $course_id
-	 * @param $lession_list
-	 * @param string $course_quizzes_list
+	 * @param int    $course_id           Course id.
+	 * @param array  $lession_list        Lesson lists.
+	 * @param string $course_quizzes_list Course quizzes list.
 	 *
 	 * @return array | string
 	 */
