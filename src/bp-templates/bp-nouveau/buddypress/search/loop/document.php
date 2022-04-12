@@ -1,4 +1,14 @@
 <?php
+/**
+ * Template for displaying the search results of the document
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/document.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 $listing_class       = '';
 $attachment_id       = bp_get_document_attachment_id();
 $extension           = '';
@@ -8,9 +18,9 @@ $document_id         = bp_get_document_id();
 $filename            = basename( get_attached_file( $attachment_id ) );
 $svg_icon            = '';
 $document_type       = '';
-$download_link		 = '';
-$document_title		 = '';
-$mirror_text		 = '';
+$download_link       = '';
+$document_title      = '';
+$mirror_text         = '';
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
@@ -19,8 +29,8 @@ if ( $attachment_id ) {
 	$listing_class       = 'ac-document-list';
 	$document_type       = 'document';
 	$document_title      = bp_get_document_title();
-	$attachment_url      = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
-	$mirror_text		 = bp_document_mirror_text( $attachment_id );
+	$attachment_url      = bp_document_get_preview_url( bp_get_document_id(), bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
+	$mirror_text         = bp_document_mirror_text( $attachment_id );
 
 }
 $document_id = bp_get_document_id();
@@ -42,7 +52,7 @@ $link = bp_get_document_link( bp_get_document_id() );
 					<a href="<?php echo esc_url( $link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
 				</div>
 				<div class="media-folder_details">
-					<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-id="<?php bp_document_id(); ?>" data-attachment-full="" data-privacy="<?php bp_db_document_privacy(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>" data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-document-title="<?php echo esc_html( $filename ); ?>" data-mirror-text="<?php echo esc_html( $mirror_text ); ?>" data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
+					<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-id="<?php bp_document_id(); ?>" data-attachment-full="" data-privacy="<?php bp_db_document_privacy(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-full-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>" data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-document-title="<?php echo esc_html( $filename ); ?>" data-mirror-text="<?php echo esc_html( $mirror_text ); ?>" data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 						<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 						<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" style="display: none;"></i>
 						<i class="media-document-attachment-id" data-item-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" style="display: none;"></i>
@@ -55,7 +65,7 @@ $link = bp_get_document_link( bp_get_document_id() );
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-							<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ); ?>"><?php bp_document_author(); ?></a></span>
+							<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
 							<?php
 						}
 						?>
@@ -70,7 +80,7 @@ $link = bp_get_document_link( bp_get_document_id() );
 							$group_id = bp_get_document_group_id();
 							if ( $group_id > 0 ) {
 								// Get the group from the database.
-								$group = groups_get_group( $group_id );
+								$group        = groups_get_group( $group_id );
 								$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
 								$group_link   = sprintf( '<a href="%s" class="bp-group-home-link %s-home-link">%s</a>', esc_url( trailingslashit( bp_get_group_permalink( $group ) . bp_get_document_slug() ) ), esc_attr( bp_get_group_slug( $group ) ), esc_html( bp_get_group_name( $group ) ) );
 								$group_status = bp_get_group_status( $group );

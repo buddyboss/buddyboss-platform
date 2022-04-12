@@ -287,21 +287,21 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 									if ( isset( $hashlink ) && $hashlink != '' ) {
 										$base_link .= "#$hashlink";
 									}
-									$link_html = "<a href='$base_link' title='$e[0]' class='page-numbers' data-pagenumber='$e[1]'>$e[0]</a>";
+									$link_html = "<a href='" . esc_url( $base_link ) . "' title='" . esc_attr( $e[0] ) . "' class='page-numbers' data-pagenumber='" . esc_attr( $e[1] ) . "'>" . esc_html( $e[0] ) . "</a>";
 									break;
 								case 'current':
 									$class = 'active';
 									if ( $use_bootstrap ) {
-										$link_html = "<span>$e[0] <span class='sr-only'>(current)</span></span>";
+										$link_html = "<span>" . esc_html( $e[0] ) . " <span class='sr-only'>(current)</span></span>";
 									} else {
-										$link_html = "<span class='page-numbers current'>$e[0]</span>";
+										$link_html = "<span class='page-numbers current'>" . esc_html( $e[0] ) . "</span>";
 									}
 									break;
 								default:
 									if ( $use_bootstrap ) {
-										$link_html = "<span>$e[0]</span>";
+										$link_html = "<span>" . esc_html( $e[0] ) . "</span>";
 									} else {
-										$link_html = "<span class='page-numbers'>$e[0]</span>";
+										$link_html = "<span class='page-numbers'>" . esc_html( $e[0] ) . "</span>";
 									}
 									break;
 							}

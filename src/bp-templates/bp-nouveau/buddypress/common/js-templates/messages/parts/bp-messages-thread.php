@@ -1,3 +1,14 @@
+<?php
+/**
+ * BP Nouveau messages thread template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/messages/parts/bp-messages-thread.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+?>
+
 <script type="text/html" id="tmpl-bp-messages-thread">
 	<#
 	var other_recipients = _.reject(data.recipients, function(item) {
@@ -54,12 +65,7 @@
 				    <span class="user-name">{{data.group_name}}</span>
                 <# } else { #>
                 <# for ( i in first_three ) { #>
-                    <span class="user-name">
-                        {{other_recipients[i].user_name}}
-                        <# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #>
-                        <?php _e( ',', 'buddyboss' ); ?>
-                        <# } #>
-                    </span>
+                    <span class="user-name">{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #><?php _e( ',', 'buddyboss' ); ?><# } #></span>
                 <# } #>
                 <# if ( data.toOthers ) { #>
 				<span class="num-name">{{data.toOthers}}</span>

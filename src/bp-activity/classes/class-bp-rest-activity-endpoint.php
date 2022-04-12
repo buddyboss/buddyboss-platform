@@ -154,13 +154,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 */
 	public function get_items( $request ) {
+		global $bp;
+
 		$args = array(
 			'exclude'           => $request['exclude'],
 			'in'                => $request['include'],
 			'page'              => $request['page'],
 			'per_page'          => $request['per_page'],
 			'search_terms'      => $request['search'],
-			'sort'              => $request['order'],
+			'sort'              => strtoupper( $request['order'] ),
+			'order_by'          => $request['orderby'],
 			'spam'              => $request['status'],
 			'display_comments'  => $request['display_comments'],
 			'site_id'           => $request['site_id'],
@@ -192,6 +195,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['user_id'] ) ) {
 			$args['filter']['user_id'] = $request['user_id'];
+			if ( ! empty( $request['user_id'] ) ) {
+				$bp->displayed_user->id = (int) $request['user_id'];
+			}
 		}
 
 		$item_id = 0;
@@ -199,8 +205,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$request['component']         = 'groups';
 			$args['filter']['object']     = 'groups';
 			$args['filter']['primary_id'] = $args['group_id'];
+			$args['privacy']              = array( 'public' );
 
 			$item_id = $args['group_id'];
+		} elseif ( ! empty( $request['component'] ) && 'groups' === $request['component'] && ! empty( $request['primary_id'] ) ) {
+			$args['privacy'] = array( 'public' );
 		}
 
 		if ( ! empty( $args['site_id'] ) ) {
@@ -233,6 +242,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['filter']['secondary_id'] = $request['secondary_id'];
 		}
 
+		if ( ! empty( $args['order_by'] ) && 'include' === $args['order_by'] ) {
+			$args['order_by'] = 'in';
+		}
+
 		if ( $args['in'] ) {
 			$args['count_total'] = false;
 		}
@@ -241,7 +254,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['show_hidden'] = true;
 		}
 
-		$args['scope'] = $this->bp_rest_activity_default_scope( $args['scope'], ( $request['user_id'] ? $request['user_id'] : 0 ), $args['group_id'] );
+		$args['scope'] = $this->bp_rest_activity_default_scope(
+			$args['scope'],
+			( $request['user_id'] ? $request['user_id'] : 0 ),
+			$args['group_id'],
+			isset( $request['component'] ) ? $request['component'] : '',
+			$request['primary_id']
+		);
 
 		if ( empty( $args['scope'] ) ) {
 			$args['privacy'] = 'public';
@@ -295,7 +314,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -377,7 +396,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -438,20 +457,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
-			return new WP_Error(
-				'bp_rest_create_activity_empty_content',
-				__( 'Please, enter some content.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
-		}
-
-		if ( empty( $request['content'] ) ) {
-			$request['content'] = '&#8203;';
-		}
-
 		/**
 		 * Map data into POST to work with link preview.
 		 */
@@ -471,7 +476,73 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$prepared_activity = $this->prepare_item_for_database( $request );
+		$prepared_activity  = $this->prepare_item_for_database( $request );
+		$request['content'] = isset( $prepared_activity->content ) ? $prepared_activity->content : $request['content'];
+		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
+			return new WP_Error(
+				'bp_rest_create_activity_empty_content',
+				__( 'Please, enter some content.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		} else {
+			$group_id = 0;
+			if ( bp_is_active( 'groups' ) && isset( $prepared_activity->component ) && buddypress()->groups->id === $prepared_activity->component ) {
+				$group_id = isset( $prepared_activity->group_id ) ? $prepared_activity->group_id : $request->get_param( 'primary_item_id' );
+			}
+			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
+				$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+				if ( ! $can_send_media ) {
+					return new WP_Error(
+						'bp_rest_bp_activity_media',
+						__( 'You don\'t have access to send the media.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
+			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
+				$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+				if ( ! $can_send_document ) {
+					return new WP_Error(
+						'bp_rest_bp_activity_document',
+						__( 'You don\'t have access to send the document.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
+			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+				$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+				if ( ! $can_send_video ) {
+					return new WP_Error(
+						'bp_rest_bp_activity_video',
+						__( 'You don\'t have access to send the video.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+
+			if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
+				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+				if ( ! $can_send_gif ) {
+					return new WP_Error(
+						'bp_rest_bp_activity_gif',
+						__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				}
+			}
+		}
 
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
 			$request['hidden'] = $prepared_activity->hide_sitewide;
@@ -570,30 +641,31 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$retval = true;
+		$error = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = $error;
 
-		$item_id   = $request['primary_item_id'];
-		$component = $request['component'];
+		if ( is_user_logged_in() ) {
+			$user_id = $request->get_param( 'user_id' );
 
-		if ( true === $retval && bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! is_null( $item_id ) ) {
-			if ( ! $this->show_hidden( $component, $item_id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			if ( empty( $user_id ) || (int) bp_loggedin_user_id() === (int) $user_id ) {
+				$item_id   = $request->get_param( 'primary_item_id' );
+				$component = $request->get_param( 'component' );
+
+				// The current user can create an activity.
+				$retval = true;
+
+				if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! is_null( $item_id ) ) {
+					if ( ! $this->show_hidden( $component, $item_id ) ) {
+						$retval = $error;
+					}
+				}
 			}
 		}
 
@@ -657,10 +729,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( empty( $activity_object->content ) ) {
-			$activity_object->content = '&#8203;';
-		}
-
 		/**
 		 * Map data into POST to work with link preview.
 		 */
@@ -680,7 +748,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object->id );
+		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object );
 		$activity   = new BP_Activity_Activity( $activity_object->id );
 
 		if (
@@ -721,14 +789,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+		if ( function_exists( 'bp_document_activity_update_document_privacy' ) ) {
 			// Update privacy for the documents which are uploaded in root of the documents.
-			bp_document_update_activity_privacy( $activity->id, $activity->privacy );
+			bp_document_activity_update_document_privacy( $activity );
 		}
 
-		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+		if ( function_exists( 'bp_media_activity_update_media_privacy' ) ) {
 			// Update privacy for the media which are uploaded in the activity.
-			bp_media_update_activity_privacy( $activity->id, $activity->privacy );
+			bp_media_activity_update_media_privacy( $activity );
+		}
+
+		if ( function_exists( 'bp_video_activity_update_video_privacy' ) ) {
+			// Update privacy for the videos which are uploaded in root of the documents.
+			bp_video_activity_update_video_privacy( $activity );
 		}
 
 		bp_activity_update_meta( $activity_id, '_is_edited', bp_core_current_time() );
@@ -762,54 +835,41 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$activity = $this->get_activity_object( $request );
 
-		$activity = $this->get_activity_object( $request );
-
-		if ( true === $retval && empty( $activity->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && (
+			if ( empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif (
 				function_exists( 'bp_is_activity_edit_enabled' )
 				&& ! bp_is_activity_edit_enabled()
 				&& function_exists( 'bp_activity_user_can_edit' )
 				&& ! bp_activity_user_can_edit( $activity )
-			)
-		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_activity_user_can_delete( $activity ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( bp_activity_user_can_delete( $activity ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -899,38 +959,28 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$activity = $this->get_activity_object( $request );
 
-		$activity = $this->get_activity_object( $request );
-
-		if ( true === $retval && empty( $activity->id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_activity_user_can_delete( $activity ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $activity->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_id',
+					__( 'Invalid activity ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( bp_activity_user_can_delete( $activity ) ) {
+				$retval = true;
+			}
 		}
 
 		/**
@@ -1054,19 +1104,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_favorite_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update favorites.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		if (
-			! ( is_user_logged_in() && bp_activity_can_favorite() )
-			|| function_exists( 'bp_is_activity_like_active' ) && true !== bp_is_activity_like_active()
+			is_user_logged_in() && bp_activity_can_favorite()
+			&& ( ! function_exists( 'bp_is_activity_like_active' ) || true === bp_is_activity_like_active() )
 		) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update favorites.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			$retval = true;
 		}
 
 		/**
@@ -1089,11 +1139,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function render_item( $activity ) {
+		global $bp;
 		$rendered = '';
-
-		if ( empty( $activity->content ) ) {
-			return $rendered;
-		}
 
 		// Do not truncate activities.
 		add_filter( 'bp_activity_maybe_truncate_entry', '__return_false' );
@@ -1121,6 +1168,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			// Removed lazyload from link preview.
 			add_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
+			// Removed Iframe embedded from content.
+			if (
+				function_exists( 'bp_use_embed_in_activity' ) &&
+				bp_use_embed_in_activity() &&
+				method_exists( $bp->embed, 'autoembed' ) &&
+				method_exists( $bp->embed, 'run_shortcode' )
+			) {
+				remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
+				remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
+			}
 
 			$rendered = apply_filters_ref_array(
 				'bp_get_activity_content_body',
@@ -1158,10 +1215,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $activity, $request ) {
 		$top_level_parent_id = 'activity_comment' === $activity->type ? $activity->item_id : 0;
-		global $activities_template;
+		global $activities_template, $bp;
 		$activities_template                            = new \stdClass();
 		$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 		$activities_template->activity                  = $activity;
+		$activities_template->in_the_loop               = true;
+
+		// Remove feature image from content from the activity feed which added last in the content.
+		$blog_id = '';
+		if ( 'blogs' === $activity->component && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+			$blog_post = get_post( $activity->secondary_item_id );
+			if ( ! empty( $blog_post->ID ) ) {
+				$blog_id = $blog_post->ID;
+				remove_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_feature_image_blog_post_as_activity_content_callback' );
+			}
+		}
 
 		$data = array(
 			'user_id'           => $activity->user_id,
@@ -1191,6 +1259,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&& bp_is_activity_edit_enabled()
 					&& function_exists( 'bp_activity_user_can_edit' )
 					&& bp_activity_user_can_edit( $activity )
+				) && (
+					isset( $activity->privacy ) &&
+					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
 				)
 				? true
 				: false
@@ -1198,8 +1269,35 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ) ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
-			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity->id ),
+			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity ),
+			'feature_media'     => '',
+			'preview_data'      => '',
 		);
+
+		// Add feature image as separate object which added last in the content.
+		if ( ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
+			$data['feature_media'] = wp_get_attachment_image_url( get_post_thumbnail_id( $blog_id ), 'full' );
+		}
+
+		// Add iframe embedded data in separate object.
+		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
+		if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
+			$data['preview_data'] = $bp->embed->autoembed( $link_embed, '' );
+		}
+
+		// remove comment options from media/document/video activity.
+		if ( ! empty( $activity->secondary_item_id ) && ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) && 'activity_comment' !== $activity->type ) {
+			$secondary_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+			if ( ! empty( $secondary_activity->type ) && in_array( $secondary_activity->type, array( 'activity_comment' ), true ) ) {
+				$data['can_comment']  = false;
+				$data['can_edit']     = false;
+				$data['can_favorite'] = false;
+			}
+		} elseif ( ! empty( $data['privacy'] ) && in_array( $data['privacy'], array( 'media', 'document', 'video' ), true ) ) {
+			$data['can_comment']  = false;
+			$data['can_edit']     = false;
+			$data['can_favorite'] = false;
+		}
 
 		// Get item schema.
 		$schema = $this->get_item_schema();
@@ -1225,7 +1323,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'type'    => 'full',
 					)
 				),
-
 				'thumb' => bp_core_fetch_avatar(
 					array(
 						'item_id' => $activity->user_id,
@@ -1321,7 +1418,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $schema['properties']['component'] ) && isset( $request['component'] ) ) {
 			$prepared_activity->component = $request['component'];
 		} else {
-			$prepared_activity->component = buddypress()->activity->id;
+			$prepared_activity->component = ( isset( $activity->component ) ? $activity->component : buddypress()->activity->id );
 		}
 
 		// Activity Item ID.
@@ -1434,10 +1531,22 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( bp_is_active( 'groups' ) && 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$group = groups_get_group( $activity->item_id );
-
 			$links['group'] = array(
-				'href'       => bp_get_group_permalink( $group ),
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, buddypress()->groups->id, $activity->item_id ) ),
+				'embeddable' => true,
+			);
+		}
+
+		if ( 'bbp_topic_create' === $activity->type && function_exists( 'bb_activity_topic_id' ) && bb_activity_topic_id( $activity ) ) {
+			$links['topic'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'topics', bb_activity_topic_id( $activity ) ) ),
+				'embeddable' => true,
+			);
+		}
+
+		if ( 'bbp_reply_create' === $activity->type && function_exists( 'bb_activity_reply_topic_id' ) && bb_activity_reply_topic_id( $activity ) ) {
+			$links['topic'] = array(
+				'href'       => rest_url( sprintf( '%s/%s/%d', $this->namespace, 'topics', bb_activity_reply_topic_id( $activity ) ) ),
 				'embeddable' => true,
 			);
 		}
@@ -1749,6 +1858,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'description' => __( 'Activity data for allow edit or not.', 'buddyboss' ),
 					'type'        => 'object',
 				),
+				'feature_media'     => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Feature media image which added last in the content for blog post as well as custom post type.', 'buddyboss' ),
+					'type'        => 'string',
+					'format'      => 'uri',
+				),
+				'preview_data'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'WordPress Embed data with activity.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
 			),
 		);
 
@@ -1759,7 +1880,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['full'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
@@ -1767,7 +1888,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['thumb'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
@@ -1824,6 +1945,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'enum'              => array( 'asc', 'desc' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['orderby'] = array(
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'default'           => '',
+			'type'              => 'string',
+			'enum'              => array( 'id', 'include' ),
+			'sanitize_callback' => 'sanitize_key',
 		);
 
 		$params['after'] = array(
@@ -1987,13 +2116,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * Get default scope for the activity
 	 * - from: bp_activity_default_scope();
 	 *
-	 * @param string $scope    Default scope.
-	 * @param int    $user_id  User ID.
-	 * @param int    $group_id Group ID.
+	 * @param string $scope      Default scope.
+	 * @param int    $user_id    User ID.
+	 * @param int    $group_id   Group ID.
+	 * @param string $component  Component name.
+	 * @param int    $primary_id Primary ID.
 	 *
 	 * @return string
 	 */
-	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0 ) {
+	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0, $component = '', $primary_id = 0 ) {
 		$new_scope = array();
 
 		if (
@@ -2004,7 +2135,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				|| 'just-me' === $scope
 			)
 		) {
-			if ( bp_is_active( 'groups' ) && ! empty( $group_id ) ) {
+			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {
 				$new_scope[] = 'activity';
 			} else {
 				$new_scope[] = 'just-me';
@@ -2016,7 +2147,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
 					)
 				) {
-					$new_scope[] = 'public';
+					if ( empty( $user_id ) ) {
+						$new_scope[] = 'public';
+					}
 
 					if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
 						$new_scope[] = 'mentions';
@@ -2077,12 +2210,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	/**
 	 * Collect the activity information.
 	 *
-	 * @param int $activity_id Activity ID.
+	 * @param BP_Activity_Activity $activity Activity object.
 	 *
 	 * @return array
 	 */
-	public function bp_rest_activitiy_edit_data( $activity_id = 0 ) {
-		if ( empty( $activity_id ) ) {
+	public function bp_rest_activitiy_edit_data( $activity ) {
+		global $activities_template;
+		$activity_temp = $activities_template->activity;
+
+		if ( empty( $activity->id ) ) {
 			return array();
 		}
 
@@ -2090,17 +2226,42 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return array();
 		}
 
-		$edit_activity_data = bp_activity_get_edit_data( $activity_id );
+		$parent_activity = empty( $activity->item_id ) ? false : new BP_Activity_Activity( $activity->item_id );
+
+		// For getting group comment activity_data.
+		if ( 'activity_comment' === $activity->type && ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
+			$activities_template->activity = $parent_activity;
+			$edit_activity_data            = bp_activity_get_edit_data( $activity->item_id );
+		} else {
+			$edit_activity_data = bp_activity_get_edit_data( $activity->id );
+		}
+
+		$edit_activity_data = bp_activity_get_edit_data( $activity->id );
+		$edit_activity_data = empty( $edit_activity_data ) ? array() : $edit_activity_data;
 
 		if ( ! empty( $edit_activity_data ) ) {
 			// Removed unwanted data.
-			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document' );
+			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document', 'video' );
 			foreach ( $unset_keys as $key ) {
 				if ( array_key_exists( $key, $edit_activity_data ) ) {
 					unset( $edit_activity_data[ $key ] );
 				}
 			}
 		}
+
+		if ( isset( $edit_activity_data['group_media'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) && ! empty( $parent_activity ) ) {
+			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
+				$edit_activity_data['group_media'] = bp_is_group_media_support_enabled() && ( ! function_exists( 'bb_media_user_can_upload' ) || bb_media_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
+			}
+		}
+
+		if ( isset( $edit_activity_data['group_document'] ) && 'activity_comment' === $activity->type && ! empty( $activity->item_id ) && ! empty( $parent_activity ) ) {
+			if ( ! empty( $parent_activity->id ) && 'groups' === $parent_activity->component && ! empty( $parent_activity->item_id ) ) {
+				$edit_activity_data['group_document'] = bp_is_group_document_support_enabled() && ( ! function_exists( 'bb_document_user_can_upload' ) || bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) ? $parent_activity->item_id : 0 ) ) );
+			}
+		}
+
+		$activities_template->activity = $activity_temp;
 
 		return (array) $edit_activity_data;
 	}

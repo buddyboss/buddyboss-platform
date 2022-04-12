@@ -1,7 +1,7 @@
 {
-  "name": "BuddyBoss REST API",
+  "name": "BuddyBoss Platform REST API",
   "version": "1.0.0",
-  "description": "The BuddyBoss REST API is a developer-oriented feature. It provides an interface for applications to interact with your BuddyBoss Platform community by sending and receiving JSON-encoded objects. When you request content from or send content to the API, the response will be returned in JSON. Using the BuddyBoss REST API you can build an interactive front-end experience, or sync your BuddyBoss content into completely separate applications.",
+  "description": "The BuddyBoss Platform REST API is a developer-oriented feature. It provides an interface for applications to interact with your BuddyBoss Platform community by sending and receiving JSON-encoded objects. When you request content from or send content to the API, the response will be returned in JSON. Using the BuddyBoss Platform API you can build an interactive front-end experience, or sync your BuddyBoss content into completely separate applications.",
   "title": "BuddyBoss Platform REST API",
   "url": "{{root_url}}",
   "template": {
@@ -13,8 +13,8 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2020-12-24T14:12:55.294Z",
+    "time": "2022-04-07T17:43:52.808Z",
     "url": "http://apidocjs.com",
-    "version": "0.22.0"
+    "version": "0.22.1"
   }
 }

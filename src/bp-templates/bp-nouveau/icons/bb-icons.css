@@ -1,12 +1,12 @@
  /* stylelint-disable */
 @font-face {
   font-family: 'bb-icons';
-  src: url('../icons/bb-icons.eot?80309866');
-  src: url('../icons/bb-icons.eot?80309866#iefix') format('embedded-opentype'),
-       url('../icons/bb-icons.woff2?80309866') format('woff2'),
-       url('../icons/bb-icons.woff?80309866') format('woff'),
-       url('../icons/bb-icons.ttf?80309866') format('truetype'),
-       url('../icons/bb-icons.svg?80309866#bb-icons') format('svg');
+  src: url('../icons/bb-icons.eot?80309869');
+  src: url('../icons/bb-icons.eot?80309869#iefix') format('embedded-opentype'),
+       url('../icons/bb-icons.woff2?80309869') format('woff2'),
+       url('../icons/bb-icons.woff?80309869') format('woff'),
+       url('../icons/bb-icons.ttf?80309869') format('truetype'),
+       url('../icons/bb-icons.svg?80309869#bb-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -434,6 +434,16 @@
 .bb-icon-link-tilt:before { content: '\e9a2'; }
 .bb-icon-paragraph-bullet:before { content: '\e9c9'; }
 .bb-icon-paragraph-numbers:before { content: '\e9ca'; }
+.bb-icon-video-album:before { content: '\e9cb'; }
+.bb-icon-video-albums:before { content: '\e9cc'; }
+.bb-icon-video-alt:before { content: '\e9cd'; }
+.bb-icon-video-next:before { content: '\e9ce'; }
+.bb-icon-rounded-clubhouse:before { content: '\e9cf'; }
+.bb-icon-rounded-telegram:before { content: '\e9d0'; }
+.bb-icon-rounded-tiktok:before { content: '\e9d1'; }
+.bb-icon-attach-fill:before { content: '\e9d2'; }
+.bb-icon-camera-fill:before { content: '\e9d3'; }
+.bb-icon-video-fill:before { content: '\e9d4'; }
 .bb-icon-quotes:before { content: '\e961'; }
 .bb-icon-file-7z:before { content: '\e9a6'; }
 .bb-icon-file-hlsm:before { content: '\e9a7'; }
@@ -484,4 +494,8 @@
 .bb-icon-attach:before { content: '\e980'; }
 .bb-icon-media:before { content: '\e963'; }
 .bb-icon-sync:before { content: '\e964'; }
+.bb-icon-bullhorn:before { content: '\ebba'; }
+.bb-icon-bullhorn-filled:before { content: '\ebbb'; }
+.bb-icon-connection-waiting-filled:before { content: '\ebbc'; }
+.bb-icon-connected-filled:before { content: '\ebbd'; }
 /* stylelint-enable */

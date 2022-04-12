@@ -1,6 +1,6 @@
 <?php
 /**
- * Content report form
+ * Content report form.
  *
  * @since   BuddyBoss 1.5.6
  * @package BuddyBoss
@@ -13,8 +13,10 @@
 		<div class="modal-wrapper">
 			<div class="modal-container">
 				<header class="bb-model-header">
-					<h4><?php esc_html_e( 'Report Content', 'buddyboss' ); ?></h4>
-					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
+					<h4><?php esc_html_e( 'Report', 'buddyboss' ); ?> <span class="bp-reported-type"></span></h4>
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
+						<span class="bb-icon bb-icon-close"></span>
+					</button>
 				</header>
 				<?php
 				$reports_terms = get_terms(

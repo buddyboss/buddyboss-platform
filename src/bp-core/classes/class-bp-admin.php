@@ -177,6 +177,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Hello BuddyBoss/App.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
 			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
+			add_action( 'admin_footer', array( $this, 'video_extension_mime_type_check_screen' ) );
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
 
 			/* Filters ***********************************************************/
@@ -206,6 +207,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
+
+			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
 		}
 
 		/**
@@ -692,12 +695,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$bp = buddypress();
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
+			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-friends.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-notifications.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-search.php';
@@ -706,6 +711,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
+			// @todo: used for bp-performance will enable in feature.
+			// require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
 
 		/**
@@ -743,8 +752,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings' => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
-					'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
+					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss' ) . '</a>',
 				)
 			);
 		}
@@ -775,27 +785,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
-			// Hello BuddyBoss
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			// Hello BuddyBoss App
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
-				wp_enqueue_style( 'bp-hello-css' );
-				wp_enqueue_script( 'bp-hello-js' );
-			}
-
-			if ( 0 === strpos( get_current_screen()->id, 'users' ) || 'buddyboss_page_bp-components' === $hook ) {
-				wp_enqueue_style( 'bp-hello-css' );
-			}
-
 			wp_enqueue_script( 'bp-fitvids-js' );
 
 			wp_enqueue_script( 'bp-wp-api-js' );
@@ -814,12 +803,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp-help-js',
 				'BP_HELP',
 				array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'bb_help_url'        => $bp_help_base_url,
-					'bb_help_title'      => __( 'Docs', 'buddyboss' ),
-					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					'ajax_url'              => admin_url( 'admin-ajax.php' ),
+					'bb_help_url'           => $bp_help_base_url,
+					'bb_help_title'         => esc_html__( 'Docs', 'buddyboss' ),
+					'bb_help_no_network'    => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
 				)
 			);
+
+			// Hello BuddyBoss.
+			wp_enqueue_style( 'bp-hello-css' );
+			wp_enqueue_script( 'bp-hello-js' );
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -831,19 +825,35 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0 Now outputs Hello BuddyBoss template.
 		 */
 		public function about_buddyboss_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss' ) {
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || 'buddyboss' !== $_GET['hello'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
 			include $this->admin_dir . 'templates/about-buddyboss.php';
 		}
 
+		/**
+		 * Output the document mime type checker screen.
+		 */
 		public function document_extension_mime_type_check_screen() {
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
 			include $this->admin_dir . 'templates/check-document-mime-type.php';
+		}
+
+		/**
+		 * Output the video mime type checker screen.
+		 *
+		 * @since BuddyBoss 1.7.0
+		 */
+		public function video_extension_mime_type_check_screen() {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				return;
+			}
+
+			include $this->admin_dir . 'templates/check-video-mime-type.php';
 		}
 
 		/**
@@ -852,7 +862,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0 Output the Hello BuddyBoss App template.
 		 */
 		public function about_buddyboss_app_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss-app' ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || 'buddyboss-app' !== $_GET['hello'] ) {
 				return;
 			}
 
@@ -1091,6 +1102,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			foreach ( $scripts as $id => $script ) {
 				wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
 			}
+		}
+
+		/**
+		 * Display plugin information after plugin successfully updated.
+		 *
+		 * @since BuddyBoss 1.9.1
+		 */
+		public function bb_display_update_plugin_information() {
+			// Check the transient to see if we've just updated the plugin.
+			global $bp;
+			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
+			delete_option( '_bb_is_update' );
 		}
 	}
 endif; // End class_exists check.

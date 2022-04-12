@@ -98,11 +98,16 @@
 	}
 
 	.item-meta {
-		color: $light-text;
+		color: inherit;
 
 		@include font-size(14);
 		margin: $marg-med 0 $marg-xsml;
 		padding-bottom: $pad-sml;
+
+		&.last-activity {
+			margin-bottom: 0;
+		}
+
 	}
 
 	ul {
@@ -169,6 +174,10 @@ body.no-js  .single-item-header .js-self-profile-button {
 
 #create-group-form #header-cover-image {
 	margin-bottom: $marg-med;
+}
+
+.group-create #create-group-form #header-cover-image {
+	display: none;
 }
 
 @media screen and (min-width: 783px) {

@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Single Folder
+ * The template for document single folder
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/single-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 global $document_folder_template;
@@ -13,9 +16,10 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 	$folder_id = (int) bp_action_variable( 0 );
 }
 
-$folder_privacy     = bp_document_user_can_manage_folder( $folder_id, bp_loggedin_user_id() );
-$can_manage_btn     = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
-$can_add_btn     	= ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
+$folder_privacy = bb_media_user_can_access( $folder_id, 'folder' );
+$can_edit_btn   = true === (bool) $folder_privacy['can_edit'];
+$can_add_btn    = true === (bool) $folder_privacy['can_add'];
+$can_delete_btn = true === (bool) $folder_privacy['can_delete'];
 
 $bradcrumbs = bp_document_folder_bradcrumb( $folder_id );
 if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
@@ -47,16 +51,19 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_add_btn ) {
-										?>
-										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
-										</a>
-										<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
-											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
-										</a>
-										<?php
-									} elseif ( ! bp_is_group() && $can_add_btn ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+										$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
+										if ( $manage ) {
+											?>
+											<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
+												<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
+											</a>
+											<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
+												<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+											</a>
+											<?php
+										}
+									} elseif ( ! bp_is_group() && $can_edit_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -67,7 +74,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										<?php
 									}
 								}
-								if ( bp_is_active( 'groups' ) && bp_is_group() && $can_manage_btn ) {
+								if ( $can_edit_btn || $can_delete_btn ) {
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
@@ -76,36 +83,26 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											</a>
 											<div class="media-folder_action__list">
 												<ul>
-													<li>
-														<a id="bp-edit-folder-open" href="#"><i
-																class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
-														</a>
-													</li>
-													<li><a href="#" id="bb-delete-folder"><i
-																class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
-														</a></li>
-												</ul>
-											</div>
-										</div>
-									</div> <!-- .media-folder_items -->
-									<?php
-								} elseif ( ! bp_is_group() && $can_manage_btn ) {
-									?>
-									<div class="media-folder_items">
-										<div class="media-folder_actions">
-											<a href="#" class="media-folder_action__anchor">
-												<i class="bb-icon-menu-dots-v"></i>
-											</a>
-											<div class="media-folder_action__list">
-												<ul>
-													<li>
-														<a id="bp-edit-folder-open" href="#"><i
-																class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
-														</a>
-													</li>
-													<li><a href="#" id="bb-delete-folder"><i
-																class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
-														</a></li>
+													<?php
+													if ( $can_edit_btn ) {
+														?>
+														<li>
+															<a id="bp-edit-folder-open" href="#">
+																<i class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
+															</a>
+														</li>
+														<?php
+													}
+													if ( $can_delete_btn ) {
+														?>
+														<li>
+															<a href="#" id="bb-delete-folder">
+																<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?>
+															</a>
+														</li>
+														<?php
+													}
+													?>
 												</ul>
 											</div>
 										</div>

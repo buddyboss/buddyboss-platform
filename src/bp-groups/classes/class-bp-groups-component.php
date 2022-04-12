@@ -173,7 +173,17 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			// Screens - Directory.
-			if ( bp_is_groups_directory() ) {
+			if (
+				bp_is_groups_directory() &&
+				(
+					! bp_is_current_action( 'type' ) ||
+					(
+						bp_is_current_action( 'type' ) &&
+						! empty( bp_action_variable( 0 ) ) &&
+						bp_group_get_group_type_id( bp_action_variable( 0 ) )
+					)
+				)
+			) {
 				require $this->path . 'bp-groups/screens/directory.php';
 			}
 
@@ -192,7 +202,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'messages', 'documents', 'folders' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders', 'videos' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -202,6 +212,10 @@ class BP_Groups_Component extends BP_Component {
 
 				if ( bp_is_group_invites() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/invite.php';
+				}
+
+				if ( bp_is_group_messages() && is_user_logged_in() ) {
+					require $this->path . 'bp-groups/screens/single/messages.php';
 				}
 
 				// Admin nav items.
@@ -477,7 +491,7 @@ class BP_Groups_Component extends BP_Component {
 			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
 		}
 
-		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab ) {
+		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab || 'videos' === $default_tab ) {
 			$default_tab = bp_is_active( 'media' ) ? $default_tab : 'members';
 		} else {
 			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
@@ -491,7 +505,7 @@ class BP_Groups_Component extends BP_Component {
 		 * @param string $value BP_GROUPS_DEFAULT_EXTENSION constant if defined,
 		 *                      else 'members'.
 		 */
-		$default_tab = ( '' === $default_tab ) ? 'members' : $default_tab;
+		$default_tab             = ( '' === $default_tab ) ? 'members' : $default_tab;
 		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : $default_tab );
 
 		$bp = buddypress();
@@ -551,8 +565,8 @@ class BP_Groups_Component extends BP_Component {
 
 		// Only grab count if we're on a user page.
 		if ( bp_is_user() ) {
-			$class = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
-			$nav_name = __( 'Groups', 'buddyboss' );
+			$class     = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
+			$nav_name  = __( 'Groups', 'buddyboss' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
@@ -668,7 +682,7 @@ class BP_Groups_Component extends BP_Component {
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_activity',
-					'position'        => 11,
+					'position'        => 20,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'activity',
 					'no_access_url'   => $group_link,
@@ -684,7 +698,7 @@ class BP_Groups_Component extends BP_Component {
 						'parent_url'      => $group_link,
 						'parent_slug'     => $this->current_group->slug,
 						'screen_function' => 'groups_screen_group_subgroups',
-						'position'        => 20,
+						'position'        => 30,
 						'user_has_access' => $this->current_group->user_has_access,
 						'item_css_id'     => 'subgroups',
 						'no_access_url'   => $group_link,
@@ -721,7 +735,6 @@ class BP_Groups_Component extends BP_Component {
 						'position'        => 30,
 					);
 				}
-
 			}
 
 			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
@@ -732,7 +745,7 @@ class BP_Groups_Component extends BP_Component {
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_invite',
 					'item_css_id'     => 'invite',
-					'position'        => 70,
+					'position'        => 30,
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
 				);
@@ -751,7 +764,7 @@ class BP_Groups_Component extends BP_Component {
 					array(
 						'name'     => __( 'Send Invites', 'buddyboss' ),
 						'slug'     => 'send-invites',
-						'position' => 0,
+						'position' => 30,
 					),
 					$default_params_invite
 				);
@@ -773,7 +786,7 @@ class BP_Groups_Component extends BP_Component {
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_media',
-					'position'        => 80,
+					'position'        => 21,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'photos',
 					'no_access_url'   => $group_link,
@@ -786,7 +799,7 @@ class BP_Groups_Component extends BP_Component {
 						'parent_url'      => $group_link,
 						'parent_slug'     => $this->current_group->slug,
 						'screen_function' => 'groups_screen_group_albums',
-						'position'        => 85,
+						'position'        => 23,
 						'user_has_access' => $this->current_group->user_has_access,
 						'item_css_id'     => 'albums',
 						'no_access_url'   => $group_link,
@@ -801,9 +814,29 @@ class BP_Groups_Component extends BP_Component {
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_document',
-					'position'        => 85,
+					'position'        => 24,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'documents',
+					'no_access_url'   => $group_link,
+				);
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+				// Checked if order already set before, New menu(video) will be added at last
+				$video_menu_position = 22;
+				$orders              = get_option( 'bp_nouveau_appearance' );
+				if ( isset( $orders['group_nav_order'] ) && ! empty( $orders['group_nav_order'] ) && ! in_array( 'vide', $orders['group_nav_order'] ) ) {
+					$video_menu_position = 1001;
+				}
+				$sub_nav[] = array(
+					'name'            => __( 'Videos', 'buddyboss' ),
+					'slug'            => 'videos',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_video',
+					'position'        => $video_menu_position,
+					'user_has_access' => $this->current_group->user_has_access,
+					'item_css_id'     => 'videos',
 					'no_access_url'   => $group_link,
 				);
 			}
@@ -837,9 +870,37 @@ class BP_Groups_Component extends BP_Component {
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_messages',
 					'item_css_id'     => 'group-messages',
-					'position'        => 70,
+					'position'        => 25,
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
+				);
+
+				$admin_link_message = trailingslashit( $group_link . 'messages' );
+				// Common params to all nav items.
+				$default_params_message = array(
+					'parent_url'        => $admin_link_message,
+					'parent_slug'       => $this->current_group->slug . '_messages',
+					'screen_function'   => 'groups_screen_group_messages',
+					'user_has_access'   => $this->current_group->user_has_access,
+					'show_in_admin_bar' => true,
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Send Group Message', 'buddyboss' ),
+						'slug'     => 'public-message',
+						'position' => 0,
+					),
+					$default_params_message
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Send Private Message', 'buddyboss' ),
+						'slug'     => 'private-message',
+						'position' => 1,
+					),
+					$default_params_message
 				);
 			}
 
@@ -1076,7 +1137,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 
 				if ( empty( $bp->bp_options_avatar ) ) {
-					$bp->bp_options_avatar = '<img src="' . esc_url( bp_core_avatar_default_thumb() ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
+					$bp->bp_options_avatar = '<img src="' . esc_url( bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group', 'type' => 'thumb' ) ) ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
 				}
 			}
 		}
@@ -1100,6 +1161,9 @@ class BP_Groups_Component extends BP_Component {
 				'group_meta',
 				'bp_groups_memberships',
 				'bp_groups_memberships_for_user',
+				'bp_group_mods',
+				'bp_groups_invitations_as_memberships',
+				'bp_groups_group_type',
 			)
 		);
 

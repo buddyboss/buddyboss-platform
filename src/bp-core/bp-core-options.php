@@ -42,7 +42,7 @@ function bp_get_default_options() {
 		// Default fullname field name.
 		'bp-xprofile-nickname-field-name'            => __( 'Nickname', 'buddyboss' ),
 
-		// Default fullname field name. (for backward compat)
+		// Default fullname field name. (for backward compat).
 		'bp-xprofile-fullname-field-name'            => __( 'Name', 'buddyboss' ),
 
 		'bp-display-name-format'                     => 'first_name',
@@ -69,11 +69,26 @@ function bp_get_default_options() {
 		// Avatar uploads.
 		'bp-disable-avatar-uploads'                  => false,
 
+		// Avatar type.
+		'bp-profile-avatar-type'                     => 'BuddyBoss',
+
+		// Default Avatar type.
+		'bp-default-profile-avatar-type'             => 'buddyboss',
+
+		// Cover type.
+		'bp-default-profile-cover-type'              => 'buddyboss',
+
 		// cover photo uploads.
 		'bp-disable-cover-image-uploads'             => false,
 
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'            => false,
+
+		// Group Photos Type.
+		'bp-default-group-avatar-type'               => 'buddyboss',
+
+		// Group Cover Type.
+		'bp-default-group-cover-type'                => 'buddyboss',
 
 		// Group cover photo uploads.
 		'bp-disable-group-cover-image-uploads'       => false,
@@ -102,7 +117,7 @@ function bp_get_default_options() {
 		// Email unsubscribe salt.
 		'bp-emails-unsubscribe-salt'                 => '',
 
-		// Profile Enable Gravatar
+		// Profile Enable Gravatar.
 		'bp-enable-profile-gravatar'                 => false,
 
 		/* Groups ************************************************************/
@@ -828,6 +843,34 @@ function bp_enable_private_network( $default = false ) {
  *              items, otherwise false.
  */
 function bp_disable_blogforum_comments( $default = false ) {
+	global $activities_template;
+
+	// When here is not activity.
+	if ( empty( $activities_template->activity ) ) {
+		return $default;
+	}
+
+	if ( empty( $activities_template->activity->component ) ) {
+		return $default;
+	}
+
+	if ( 'blogs' !== $activities_template->activity->component ) {
+		return $default;
+	}
+
+	$post = get_post( $activities_template->activity->secondary_item_id );
+
+	if ( ! isset( $post->post_type ) ) {
+		return $default;
+	}
+
+	// Does not allow comment for WooCommerce product.
+	if ( 'product' === $post->post_type ) {
+		return true;
+	}
+
+	// Filters whether or not blog and forum and custom post type activity feed comments are enable.
+	$disable = (bool) bb_is_post_type_feed_comment_enable( $post->post_type, $default ) ? false : true;
 
 	/**
 	 * Filters whether or not blog and forum activity feed comments are disabled.
@@ -836,7 +879,31 @@ function bp_disable_blogforum_comments( $default = false ) {
 	 *
 	 * @param bool $value Whether or not blog and forum activity feed comments are disabled.
 	 */
-	return (bool) apply_filters( 'bp_disable_blogforum_comments', (bool) bp_get_option( 'bp-disable-blogforum-comments', $default ) );
+	return (bool) apply_filters( 'bp_disable_blogforum_comments', $disable );
+}
+
+/**
+ * Describe the activity comment is enable or not for custom post type.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ * @param bool $default   Optional. Fallback value if not found in the database.
+ *                        Default: false.
+ * @return bool True if activity comments are enable for blog and forum
+ *              items, otherwise false.
+ */
+function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
+	$option_name = bb_post_type_feed_comment_option_name( $post_type );
+
+	/**
+	 * Filters whether or not custom post type feed comments are enable.
+	 *
+	 * @since BuddyBoss 1.7.2
+	 *
+	 * @param bool $value Whether or not custom post type activity feed comments are enable.
+	 */
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
 }
 
 /**
@@ -955,8 +1022,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
  *                      Default: false.
  * @return bool True if Edit is enabled, otherwise false.
  */
-
-function bp_is_relevant_feed_enabled( $default = false ){
+function bp_is_relevant_feed_enabled( $default = false ) {
 
 	/**
 	 * Filters whether or not relevant feed is enabled.
@@ -970,24 +1036,38 @@ function bp_is_relevant_feed_enabled( $default = false ){
 }
 
 /**
- * single time slot by time key.
+ * Single time slot by time key.
  *
  * @param null $time Return single time slot by time key.
  *
  * @return mixed|void
  * @since BuddyBoss 1.5.0
- *
  */
 function bp_activity_edit_times( $time = null ) {
 
 	$times = apply_filters(
 		'bp_activity_edit_times',
 		array(
-			'thirty_days' => array( 'value' => ( 60 * 60 * 24 * 30 ), 'label' => __( '30 Days', 'buddyboss' ) ),
-			'seven_days'  => array( 'value' => ( 60 * 60 * 24 * 7 ), 'label' => __( '7 Days', 'buddyboss' ) ),
-			'one_day'     => array( 'value' => ( 60 * 60 * 24 ), 'label' => __( '1 Day', 'buddyboss' ) ),
-			'one_hour'    => array( 'value' => ( 60 * 60 ), 'label' => __( '1 Hour', 'buddyboss' ) ),
-			'ten_minutes' => array( 'value' => ( 60 * 10 ), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+			'thirty_days' => array(
+				'value' => ( 60 * 60 * 24 * 30 ),
+				'label' => __( '30 Days', 'buddyboss' ),
+			),
+			'seven_days'  => array(
+				'value' => ( 60 * 60 * 24 * 7 ),
+				'label' => __( '7 Days', 'buddyboss' ),
+			),
+			'one_day'     => array(
+				'value' => ( 60 * 60 * 24 ),
+				'label' => __( '1 Day', 'buddyboss' ),
+			),
+			'one_hour'    => array(
+				'value' => ( 60 * 60 ),
+				'label' => __( '1 Hour', 'buddyboss' ),
+			),
+			'ten_minutes' => array(
+				'value' => ( 60 * 10 ),
+				'label' => __( '10 Minutes', 'buddyboss' ),
+			),
 		)
 	);
 
@@ -1001,7 +1081,7 @@ function bp_activity_edit_times( $time = null ) {
 /**
  * Get BuddyBoss Activity Time option.
  *
- * @param bool $default when option not found, function will return $default value
+ * @param bool $default when option not found, function will return $default value.
  *
  * @return mixed|void
  *
@@ -1274,9 +1354,9 @@ function bp_disable_invite_member_type( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $post_type Post Type
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
+ * @param string $post_type Post Type.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
@@ -1289,7 +1369,7 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether post type feed enabled or not.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
 }
 
 /**
@@ -1319,9 +1399,9 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $activity_type Activity Type
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
+ * @param string $activity_type Activity Type.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
@@ -1386,9 +1466,9 @@ function bp_member_type_default_on_registration( $default = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param string $member_type Member type
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
+ * @param string $member_type Member type.
+ * @param bool   $default Optional. Fallback value if not found in the database.
+ *                        Default: true.
  *
  * @return bool Is member type send invites enabled or not
  */
@@ -1487,7 +1567,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) ) );
 }
 
 /**
@@ -1571,6 +1651,27 @@ function bp_register_confirm_email( $default = false ) {
 	 * @param bool $value whether or not display email confirmation field in registrations.
 	 */
 	return (bool) apply_filters( 'bp_register_confirm_email', (bool) bp_get_option( 'register-confirm-email', $default ) );
+}
+
+/**
+ * Display legal agreement field in registrations.
+ *
+ * @since BuddyBoss 1.5.8.3
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not display legal agreement field in registrations.
+ */
+function bb_register_legal_agreement( $default = false ) {
+
+	/**
+	 * Filters whether or not display legal agreement field in registrations.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 *
+	 * @param bool $value whether or not display legal agreement field in registrations.
+	 */
+	return (bool) apply_filters( 'bb_register_legal_agreement', (bool) bp_get_option( 'register-legal-agreement', $default ) );
 }
 
 /**
@@ -1722,3 +1823,443 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 	 */
 	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
 }
+
+/**
+ * Enable private REST APIs.
+ * - Wrapper function to check settings with BuddyBoss APP and Platform both.
+ *
+ * @since BuddyBoss 1.5.7
+ *
+ * @return bool True if  private REST APIs is enabled, otherwise false.
+ */
+function bp_rest_enable_private_network() {
+
+	$retval = false;
+	if (
+		true === (bool) bp_enable_private_rest_apis() &&
+		(
+			(
+				function_exists( 'bbapp_is_private_app_enabled' ) // buddyboss-app is active.
+				&& true === (bool) bbapp_is_private_app_enabled() // private app is disable.
+			)
+			|| ! function_exists( 'bbapp_is_private_app_enabled' )
+		)
+	) {
+		$retval = true;
+	}
+
+	if ( true === $retval ) {
+		$current_rest_url = $GLOBALS['wp']->query_vars['rest_route'];
+		if ( ! empty( $current_rest_url ) && bb_is_allowed_endpoint( $current_rest_url ) ) {
+			$retval = false;
+		}
+	}
+
+	/**
+	 * Filters whether private private REST APIs is enabled.
+	 *
+	 * @since BuddyBoss 1.5.7
+	 *
+	 * @param bool $value Whether private REST APIs is enabled.
+	 */
+	return apply_filters( 'bp_rest_enable_private_network', $retval );
+}
+
+/**
+ * Is the symlink is enabled in Media, Document & Video?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the symlink is enabled in Media, Document & Video enable,
+ *              otherwise false.
+ */
+function bb_enable_symlinks( $default = false ) {
+
+	/**
+	 * Filters whether or not the symlink is enabled in Media, Document & Video.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 *
+	 * @param bool $value Whether or not the symlink is enabled in Media, Document & Video enable.
+	 */
+	return (bool) apply_filters( 'bb_enable_symlinks', (bool) bp_get_option( 'bp_media_symlink_support', $default ) );
+}
+
+/**
+ * Option name for custom post type.
+ * From the activity settings whether any custom post enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bb_post_type_feed_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type;
+}
+
+/**
+ * Option name for custom post type comments.
+ * From the activity settings whether any custom post comments are enable or disable for timeline feed.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @param bool $post_type custom post type.
+ *
+ * @return string.
+ */
+function bb_post_type_feed_comment_option_name( $post_type ) {
+	return 'bp-feed-custom-post-type-' . $post_type . '-comments';
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return array.
+ */
+function bb_feed_post_types() {
+	// Get all active custom post type.
+	$post_types = get_post_types( array( 'public' => true ) );
+
+	// Exclude BP CPT.
+	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+
+	$bp_excluded_cpt = array();
+
+	foreach ( $post_types as $post_type ) {
+		// Exclude all the custom post type which is already in BuddyPress Activity support.
+		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
+			continue;
+		}
+
+		$bp_excluded_cpt[] = $post_type;
+	}
+
+	return $bp_excluded_cpt;
+}
+
+/**
+ * Custom post types for activity settings.
+ *
+ * @since BuddyBoss 1.7.2
+ *
+ * @return array.
+ */
+function bb_feed_not_allowed_comment_post_types() {
+	// Exclude BP CPT.
+	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+}
+
+/**
+ * Enable private REST apis.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if private network for site is enabled, otherwise
+ *              false.
+ */
+function bp_enable_private_rest_apis( $default = false ) {
+	global $bp;
+
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rest-apis'] ) ) {
+		$val = (bool) $bp->site_options['bb-enable-private-rest-apis'];
+	} else {
+		$val = (bool) bp_get_option( 'bb-enable-private-rest-apis', $default );
+	}
+
+	/**
+	 * Filters whether private REST apis for site is enabled.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param bool $value Whether private network for site is enabled.
+	 */
+	return apply_filters( 'bp_enable_private_rest_apis', $val );
+}
+
+/**
+ * Add APIs endpoint which will ignore even if private REST APIs is enabled.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Private REST APIs public content.
+ */
+function bb_enable_private_rest_apis_public_content( $default = '' ) {
+
+	/**
+	 * Filters Private REST APIs public content.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param bool $value Private REST APIs public content.
+	 */
+	return apply_filters( 'bb_enable_private_rest_apis_public_content', bp_get_option( 'bb-enable-private-rest-apis-public-content', '' ) );
+}
+
+/**
+ * Enable private RSS feeds.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True if private network for site is enabled, otherwise
+ *              false.
+ */
+function bp_enable_private_rss_feeds( $default = false ) {
+	global $bp;
+
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bb-enable-private-rss-feeds'] ) ) {
+		$val = (bool) $bp->site_options['bb-enable-private-rss-feeds'];
+	} else {
+		$val = (bool) bp_get_option( 'bb-enable-private-rss-feeds', $default );
+	}
+
+	/**
+	 * Filters whether private REST apis for site is enabled.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param bool $value Whether private network for site is enabled.
+	 */
+	return apply_filters( 'bp_enable_private_rss_feeds', $val );
+}
+
+/**
+ * Add RSS feeds endpoint which will ignore even if private RSS feeds is enabled.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Private RSS Feeds public content.
+ */
+function bb_enable_private_rss_feeds_public_content( $default = '' ) {
+
+	/**
+	 * Filters Private REST APIs public content.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param bool $value Private REST APIs public content.
+	 */
+	return apply_filters( 'bb_enable_private_rss_feeds_public_content', bp_get_option( 'bb-enable-private-rss-feeds-public-content', '' ) );
+}
+
+
+/** Profile Avatar ************************************************************/
+/**
+ * Which type of profile avatar configured?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'BuddyBoss'.
+ * @return string Return the default profile avatar type.
+ */
+function bb_get_profile_avatar_type( $default = 'BuddyBoss' ) {
+
+	/**
+	 * Filters profile avatar type.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Profile avatar type.
+	 */
+	return apply_filters( 'bb_get_profile_avatar_type', bp_get_option( 'bp-profile-avatar-type', $default ) );
+}
+
+/**
+ * Which type of default profile avatar selected?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile avatar type.
+ */
+function bb_get_default_profile_avatar_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default profile avatar type.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default profile avatar type.
+	 */
+	return apply_filters( 'bb_get_default_profile_avatar_type', bp_get_option( 'bp-default-profile-avatar-type', $default ) );
+}
+
+/**
+ * Get default custom upload avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @param string $size    This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default custom upload avatar URL.
+ */
+function bb_get_default_custom_upload_profile_avatar( $default = '', $size = 'full' ) {
+	$custom_avatar_url = bp_get_option( 'bp-default-custom-profile-avatar', $default );
+
+	if ( ! empty( $custom_avatar_url ) && 'full' !== $size ) {
+		$custom_avatar_url = bb_get_default_custom_avatar();
+	}
+
+	/**
+	 * Filters to change default custom upload avatar image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $custom_upload_profile_avatar Default custom upload avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_profile_avatar', $custom_avatar_url, $size );
+}
+
+/** Profile Cover ************************************************************/
+/**
+ * Which type of profile cover selected?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default profile cover type.
+ */
+function bb_get_default_profile_cover_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default profile cover type.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default profile cover type.
+	 */
+	return apply_filters( 'bb_get_default_profile_cover_type', bp_get_option( 'bp-default-profile-cover-type', $default ) );
+}
+
+/**
+ * Get default custom upload profile cover URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @return string Return default custom upload profile cover URL.
+ */
+function bb_get_default_custom_upload_profile_cover() {
+	/**
+	 * Filters to change default custom upload cover image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default custom upload profile cover URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_profile_cover', bp_get_option( 'bp-default-custom-profile-cover' ) );
+}
+
+/** Group Avatar ************************************************************/
+/**
+ * Which type of group avatar selected?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default group avatar type.
+ */
+function bb_get_default_group_avatar_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default group avatar type.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default group avatar type.
+	 */
+	return apply_filters( 'bb_get_default_group_avatar_type', bp_get_option( 'bp-default-group-avatar-type', $default ) );
+}
+
+/**
+ * Get default custom upload avatar URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @param string $size    This parameter specifies whether you'd like the 'full' or 'thumb' avatar. Default: 'full'.
+ * @return string Return default custom upload avatar URL.
+ */
+function bb_get_default_custom_upload_group_avatar( $default = '', $size = 'full' ) {
+	$custom_group_avatar_url = bp_get_option( 'bp-default-custom-group-avatar', $default );
+
+	if ( ! empty( $custom_group_avatar_url ) && 'full' !== $size ) {
+		$custom_group_avatar_url = bb_get_default_custom_avatar( 'group' );
+	}
+
+	/**
+	 * Filters to change default custom upload avatar image.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $custom_upload_group_avatar Default custom upload avatar URL.
+	 * @param string $size  This parameter specifies whether you'd like the 'full' or 'thumb' avatar.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_group_avatar', $custom_group_avatar_url, $size );
+}
+
+/** Group Cover ************************************************************/
+/**
+ * Which type of group cover selected?
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                          Default: 'buddyboss'.
+ * @return string Return the default group cover type.
+ */
+function bb_get_default_group_cover_type( $default = 'buddyboss' ) {
+
+	/**
+	 * Filters default group cover type.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default group cover type.
+	 */
+	return apply_filters( 'bb_get_default_group_cover_type', bp_get_option( 'bp-default-group-cover-type', $default ) );
+}
+
+/**
+ * Get default custom upload group cover URL.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param string|null $default Optional. Fallback value if not found in the database.
+ *                             Default: null.
+ * @return string Return default custom upload group cover URL.
+ */
+function bb_get_default_custom_upload_group_cover() {
+	/**
+	 * Filters default custom upload cover image URL.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param string $value Default custom upload group cover URL.
+	 */
+	return apply_filters( 'bb_get_default_custom_upload_group_cover', bp_get_option( 'bp-default-custom-group-cover' ) );
+}
+
