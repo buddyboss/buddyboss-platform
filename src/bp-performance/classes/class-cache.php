@@ -182,7 +182,7 @@ class Cache {
 	 *
 	 * @return bool|mixed
 	 */
-	public function get( $cache_name, $user_id, $blog_id, $cache_group = 'buddyboss-api' ) {
+	public function get( $cache_name, $user_id, $blog_id, $cache_group = 'buddyboss-api', $current_endpoint = '' ) {
 
 		$value = false;
 
@@ -218,6 +218,15 @@ class Cache {
 			}
 		}
 
+		/**
+		 * After Prepare rest cache data.
+		 *
+		 * @param mixed  $value            Value of cache data.
+		 * @param int    $user_id          Current user ID.
+		 * @param string $current_endpoint Current Endpoint URL.
+		 */
+		$value = apply_filters( 'rest_get_cache', $value, $user_id, $current_endpoint );
+
 		return $value;
 	}
 
@@ -227,15 +236,41 @@ class Cache {
 	 * @param string $group_name Cache group name.
 	 */
 	public function purge_by_group( $group_name ) {
+		static $bp_purge_by_group_cache = array();
 		global $wpdb;
+		$cache_key = 'purge_by_group_' . sanitize_title( $group_name );
+		if ( ! isset( $bp_purge_by_group_cache[ $cache_key ] ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$caches                                = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
+			$bp_purge_by_group_cache[ $cache_key ] = $caches;
+		} else {
+			$caches = $bp_purge_by_group_cache[ $cache_key ];
+		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$caches = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
 		if ( ! empty( $caches ) ) {
 			foreach ( $caches as $key => $cache ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_name=%s AND cache_group=%s", $cache->cache_name, $group_name ) );
 			}
+		}
+	}
+
+	/**
+	 * Purge cache by user id
+	 *
+	 * @param integer $user_id Cache user id.
+	 * @param string  $group_name Cache group name.
+	 */
+	public function purge_by_user_id( $user_id, $group_name = '' ) {
+		global $wpdb;
+
+		if ( ! empty( $group_name ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s AND cache_group  LIKE %s", $user_id, '%' . $group_name . '%' ) );
+
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s", $user_id ) );
 		}
 	}
 

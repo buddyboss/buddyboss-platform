@@ -1,23 +1,26 @@
 <?php
 /**
- * BuddyBoss - Document Uploader
+ * The template for document uploader
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/uploader.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
-
 ?>
+
 <div id="bp-media-uploader" style="display: none;">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 			<div class="modal-wrapper bb-large">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<?php
 						if ( bp_is_single_album() ) :
 							?>
-							<a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss' ); ?></a>
+							<a href="#" class="bp-media-upload-tab bp-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss' ); ?></a>
 							<?php
 						endif;
 						?>
@@ -26,7 +29,7 @@
 							<span class="dashicons dashicons-no-alt"></span>
 						</a>
 					</header>
-					<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
+					<div class="bb-dropzone-wrap bp-media-upload-tab-content bp-upload-tab-content" id="bp-dropzone-content">
 						<?php
 						if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) :
 							?>
@@ -43,7 +46,7 @@
 					<?php
 					if ( bp_is_single_album() ) :
 						?>
-						<div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
+						<div class="bp-existing-media-wrap bp-media-upload-tab-content bp-upload-tab-content" id="bp-existing-media-content" style="display: none;">
 							<?php
 							if ( bp_has_document( array( 'folder_id' => 'existing-media' ) ) ) :
 								?>

@@ -204,6 +204,11 @@ function bp_core_screen_signup() {
 		 */
 		do_action( 'bp_signup_validate' );
 
+		// Adding error message for the legal agreement checkbox.
+		if ( true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
+		}
+
 		// Add any errors to the action for the field in the template for display.
 		if ( ! empty( $bp->signup->errors ) ) {
 			foreach ( (array) $bp->signup->errors as $fieldname => $error_message ) {
@@ -294,6 +299,9 @@ function bp_core_screen_signup() {
 					$bp->signup->step = 'request-details';
 					bp_core_add_message( $wp_user_id->get_error_message(), 'error' );
 				} else {
+					if ( ! empty( $wp_user_id ) && ! is_wp_error( $wp_user_id ) && ! empty( $_POST['legal_agreement'] ) ) {
+						update_user_meta( $wp_user_id, 'bb_legal_agreement', true );
+					}
 					$bp->signup->step = 'completed-confirmation';
 				}
 			}

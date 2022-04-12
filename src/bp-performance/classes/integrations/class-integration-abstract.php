@@ -198,7 +198,7 @@ abstract class Integration_Abstract {
 								$cache_group = $this->integration_name . '_' . $param_value;
 							}
 
-							$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $cache_group );
+							$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $cache_group, $this->get_current_endpoint() );
 						}
 
 						if ( false !== $get_cache ) {
@@ -317,7 +317,7 @@ abstract class Integration_Abstract {
 		$user_id = ( ! empty( $args ) && ! empty( $args['user_cache'] ) ) ? $this->get_loggedin_user_id() : 0;
 		$results = false;
 
-		$cache_val = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name );
+		$cache_val = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name, $this->get_current_endpoint() );
 
 		$include_param = isset( $args['include_param'] ) ? $args['include_param'] : 'include';
 		$unique_id     = isset( $args['unique_id'] ) ? $args['unique_id'] : 'id';
@@ -327,7 +327,7 @@ abstract class Integration_Abstract {
 			$results           = array();
 			$results['header'] = ( isset( $cache_val['header'] ) ) ? $cache_val['header'] : array();
 			foreach ( $cache_val['data'] as $item_id ) {
-				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id );
+				$get_cache = Cache::instance()->get( $this->get_current_endpoint_cache_key(), $user_id, get_current_blog_id(), $this->integration_name . '_' . $item_id, $this->get_current_endpoint() );
 				if ( false !== $get_cache ) {
 					$results['data'][] = $get_cache;
 				} else {
@@ -418,6 +418,7 @@ abstract class Integration_Abstract {
 	 */
 	public function endpoint_cache_render() {
 		if ( $this->api_cache_data ) {
+			$current_endpoint = $this->get_current_endpoint();
 
 			// Security Check.
 			// When the cache generated to user is not matched with it's being delivered to output error.
@@ -446,7 +447,7 @@ abstract class Integration_Abstract {
 				}
 			}
 
-			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'] );
+			$this->api_cache_data = apply_filters( 'rest_post_dispatch_cache', $this->api_cache_data['data'], $current_endpoint );
 			echo wp_json_encode( $this->api_cache_data );
 			exit;
 		}
@@ -514,10 +515,10 @@ abstract class Integration_Abstract {
 
 									if ( ! empty( $unique_key ) && is_array( $unique_key ) ) {
 										$item_id     = $this->prepare_key( $result_data, $unique_key );
-										$cache_group = $cache_group . '_' . $item_id;
+										$cache_group = ! empty( $item_id ) ? $cache_group . '_' . $item_id : $cache_group;
 									} else {
 										$item_id     = ( empty( $param_value ) && isset( $result_data[ $unique_key ] ) ) ? $result_data[ $unique_key ] : $param_value;
-										$cache_group = $cache_group . '_' . $item_id;
+										$cache_group = ! empty( $item_id ) ? $cache_group . '_' . $item_id : $cache_group;
 									}
 
 									Cache::instance()->set( $this->get_current_endpoint_cache_key(), $cache_val, $args['expire'], $cache_group, $user_id );
@@ -610,15 +611,23 @@ abstract class Integration_Abstract {
 		);
 		// To add filter for this you need to execute code form mu level.
 		$disallow_headers = apply_filters( 'rest_post_disprepare_header_cache', $disallow_headers );
-		foreach ( headers_list() as $header ) {
-			$header = explode( ':', $header );
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$header_list = headers_list();
+		if ( ! empty( $header_list ) ) {
+			foreach ( $header_list as $header ) {
+				$header = explode( ':', $header );
+				if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
+					$headers[ $header[0] ] = $header[1];
+				}
 			}
 		}
-		foreach ( $results->get_headers() as $header ) {
-			if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-				$headers[ $header[0] ] = $header[1];
+
+		$results_header = $results->get_headers();
+		if ( ! empty( $results_header ) ) {
+			foreach ( $results_header as $header_key => $header_val ) {
+				if ( ! in_array( $header_key, $disallow_headers, true ) ) {
+					$headers[ $header_key ] = $header_val;
+				}
 			}
 		}
 
