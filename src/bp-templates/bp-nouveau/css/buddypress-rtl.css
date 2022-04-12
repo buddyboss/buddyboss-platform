@@ -8801,6 +8801,18 @@ body.register .buddypress-wrap .page ul {
   opacity: 1;
 }
 
+.users-header #social-networks-popup {
+  display: none;
+}
+
+.users-header #social-networks-popup .bb-action-popup-content {
+  padding: 26px 30px 35px;
+}
+
+.users-header #social-networks-popup .bb-action-popup-content .social {
+  margin-top: 5px;
+}
+
 .users-header #item-header-avatar a.link-change-profile-image {
   top: 71px;
   right: 50%;
