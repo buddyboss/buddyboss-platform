@@ -1697,12 +1697,19 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
 		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
+			$i = 0;
+			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
 
+					if( $is_more_link && 2 === $i ) {
+						$html .= '<span class="social more-popup"><a target="_blank" data-balloon-pos="up" data-balloon="more-popup" href="#social-networks-popup"><i class="bb-icon-rf bb-icon-brand-more"></i></a></span>';
+						$html .= '</div><div id="social-networks-popup" class="social-networks-popup">';
+					}
 					$html .= '<span class="social ' . $providers[ $key ]->value . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . $providers[ $key ]->name . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . strtolower( $providers[ $key ]->value ) . '"></i></a></span>';
 				}
+				$i++;
 			}
 		}
 	}
