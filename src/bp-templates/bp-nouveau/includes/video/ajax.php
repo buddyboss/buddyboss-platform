@@ -843,9 +843,10 @@ function bp_nouveau_ajax_video_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$video_id = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
+	$post_id       = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id      = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$video_id      = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
+	$reset_comment = filter_input( INPUT_POST, 'reset_comment', FILTER_SANITIZE_STRING );
 
 	// check activity is video or not.
 	$video_activity = bp_activity_get_meta( $post_id, 'bp_video_activity', true );
@@ -910,12 +911,22 @@ function bp_nouveau_ajax_video_get_activity() {
 	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_video_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_video_activity_entry' );
 
+	// This will call only when we close video popup.
+	if ( 'true' === $reset_comment ) {
+		ob_start();
+		bp_activity_comments();
+		bp_nouveau_activity_comment_form();
+		$activity = ob_get_contents();
+		ob_end_clean();
+	}
+
 	wp_send_json_success(
 		array(
 			'activity'   => $activity,
 			'video_data' => $video_data,
 		)
 	);
+
 }
 
 /**
@@ -1522,7 +1533,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 
 		$thumbnail_images = array(
 			'default_images' => $auto_generated_thumbnails,
-			'custom_image'   => $pre_selected_id
+			'custom_image'   => $pre_selected_id,
 		);
 
 		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
@@ -1542,7 +1553,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		array(
 			'thumbnail'           => $thumbnail_url,
 			'video_attachment_id' => $video_attachment_id,
-			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) )
+			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) ),
 		)
 	);
 }
@@ -1574,8 +1585,8 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$thumbnail_id        = 0;
-	$thumbnail_url       = '';
+	$thumbnail_id  = 0;
+	$thumbnail_url = '';
 
 	$video_id            = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$attachment_id       = filter_input( INPUT_POST, 'attachment_id', FILTER_SANITIZE_NUMBER_INT );
@@ -1584,8 +1595,8 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	if ( ! empty( $attachment_id ) && ! empty( $video_attachment_id ) ) {
 		$auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
 		$old_preview_thumbnail_id  = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-		$default_images            = isset($auto_generated_thumbnails['default_images']) && !empty($auto_generated_thumbnails['default_images']) ? $auto_generated_thumbnails['default_images'] : array();
-		$thumbnail_images = array(
+		$default_images            = isset( $auto_generated_thumbnails['default_images'] ) && ! empty( $auto_generated_thumbnails['default_images'] ) ? $auto_generated_thumbnails['default_images'] : array();
+		$thumbnail_images          = array(
 			'default_images' => $default_images,
 		);
 		update_post_meta( $attachment_id, 'video_preview_thumbnails', $thumbnail_images );
@@ -1610,9 +1621,9 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 
 	wp_send_json_success(
 		array(
-			'thumbnail'           => $thumbnail_url,
-			'thumbnail_id'        => $thumbnail_id,
-			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) )
+			'thumbnail'         => $thumbnail_url,
+			'thumbnail_id'      => $thumbnail_id,
+			'video_attachments' => json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) ),
 		)
 	);
 }
