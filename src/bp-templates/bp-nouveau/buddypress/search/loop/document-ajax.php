@@ -35,7 +35,7 @@ if ( $attachment_id ) {
 $link  = bp_get_document_link( bp_get_document_id() );
 $class = '';
 if ( $attachment_id && bp_get_document_activity_id() ) {
-	$class = '';
+	$class = 'bb-open-document-theatre';
 }
 
 ?>
