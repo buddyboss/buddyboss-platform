@@ -3490,12 +3490,10 @@ div.dropzone .dz-preview {
 			}
 
 			.media-album_author {
-				display: block;
-				font-size: 13px;
-				color: #939597;
+				display: inline-block;
 
 				a {
-					color: #939597;
+					display: inline-block;
 				}
 			}
 		}
@@ -3520,6 +3518,11 @@ div.dropzone .dz-preview {
 		display: block;
 		font-size: 13px;
 		color: #939597;
+	}
+
+	.middot {
+		font-size: 20px;
+		margin: 0 5px;
 	}
 
 	@media screen and (max-width: 540px) {

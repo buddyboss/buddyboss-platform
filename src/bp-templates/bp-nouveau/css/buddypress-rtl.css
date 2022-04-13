@@ -19311,14 +19311,12 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-video-list .media-album_modified .media-album_details__bottom .media-album_author,
 .search-media-list .media-album_modified .media-album_details__bottom .media-album_author {
-  display: block;
-  font-size: 13px;
-  color: #939597;
+  display: inline-block;
 }
 
 .search-video-list .media-album_modified .media-album_details__bottom .media-album_author a,
 .search-media-list .media-album_modified .media-album_details__bottom .media-album_author a {
-  color: #939597;
+  display: inline-block;
 }
 
 .search-video-list .media-album_group,
@@ -19344,6 +19342,12 @@ div.dropzone .dz-preview .dz-filename {
   display: block;
   font-size: 13px;
   color: #939597;
+}
+
+.search-video-list .middot,
+.search-media-list .middot {
+  font-size: 20px;
+  margin: 0 5px;
 }
 
 @media screen and (max-width: 540px) {
