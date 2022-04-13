@@ -161,7 +161,7 @@ window.bp = window.bp || {};
 					}
 					
 					self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
-                    self.postForm.$el.find( '#link_image_index' ).val( activity_data.link_image_index );
+					self.postForm.$el.find( '#link_image_index' ).val( activity_data.link_image_index );
 
 					var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
@@ -3022,7 +3022,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
-                this.$el.append( '<input type="hidden" name="_link_image_index" id="link_image_index" value="0"/>' );
+				this.$el.append( '<input type="hidden" name="_link_image_index" id="link_image_index" value="0"/>' );
 				this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 			},
 
