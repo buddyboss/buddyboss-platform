@@ -534,6 +534,11 @@ div#bp-group-message-content {
 	align-items: center;
 	border-radius: 0;
 	width: 100%;
+
+	.item-avatar img {
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+	}
+
 }
 
 #group-messages-container .bb-groups-messages-left .list-title {
@@ -682,10 +687,8 @@ span.icons:before {
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 
@@ -698,7 +701,7 @@ span.icons:before {
 		}
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
-			width: 220px;
+			width: calc(100% - 80px);
 		}
 
 	}
@@ -1360,16 +1363,4 @@ span.icons:before {
 
 	}
 
-}
-
-@media screen and (max-width: 560px) {
-
-	#group-messages-container #whats-new-toolbar .medium-editor-toolbar {
-
-		.medium-editor-toolbar-form .medium-editor-toolbar-input {
-			max-width: calc(100% - 90px);
-			width: auto;
-		}
-
-	}
 }
