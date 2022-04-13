@@ -1710,7 +1710,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 								<div class="modal-wrapper">
 									<div class="modal-container">
 										<header class="bb-model-header">
-											<h4><span class="target_name">Social Links</span></h4>
+											<h4><span class="target_name">' . esc_html__( 'Social Links', 'buddyboss' ) . '</span></h4>
 											<a class="bb-close-action-popup bb-model-close-button" href="#">
 												<span class="bb-icon-l bb-icon-times"></span>
 											</a>
