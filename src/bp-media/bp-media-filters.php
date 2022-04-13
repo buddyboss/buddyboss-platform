@@ -2651,7 +2651,7 @@ function bb_setup_template_for_media_preview( $template ) {
 function bp_media_activity_append_gif( $content, $activity ) {
 
 	// check if profile and groups activity gif support enabled.
-	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) ) {
+	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
 		return $content;
 	}
 
