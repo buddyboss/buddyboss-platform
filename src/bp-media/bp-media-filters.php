@@ -588,9 +588,14 @@ function bp_media_update_media_privacy( $album ) {
 
 				$attachment_id    = $media_obj->attachment_id;
 				$main_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 				if ( ! empty( $main_activity_id ) ) {
 					$activity_ids[] = $main_activity_id;
+				}
+
+				if ( ! empty( $video_main_activity_id ) ) {
+					$activity_ids[] = $video_main_activity_id;
 				}
 			}
 		}
@@ -1645,17 +1650,17 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			__( 'Repair media on the site.', 'buddyboss' ),
+			esc_html__( 'Repair media', 'buddyboss' ),
 			'bp_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			__( 'Repair forum media privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss' ),
 			'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			__( 'Repair messages media', 'buddyboss' ),
+			esc_html__( 'Repair messages media', 'buddyboss' ),
 			'bp_media_message_privacy_repair',
 		);
 	}
@@ -1688,7 +1693,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1698,7 +1703,7 @@ function bp_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Media update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1760,7 +1765,7 @@ function bp_media_admin_repair_media() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Media update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1788,7 +1793,7 @@ function bp_media_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1796,7 +1801,7 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
+		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
 
 		return array(
 			'status'  => 1,
@@ -2320,11 +2325,10 @@ function bp_media_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity media data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with media if media saved otherwise no media.
  *
@@ -2336,11 +2340,20 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 		// Fetch media ids of activity.
 		$media_ids = bp_activity_get_meta( $activity['id'], 'bp_media_ids', true );
+		$media_id  = bp_activity_get_meta( $activity['id'], 'bp_media_id', true );
+
+		if ( ! empty( $media_id ) && ! empty( $media_ids ) ) {
+			$media_ids = $media_ids . ',' . $media_id;
+		} elseif ( ! empty( $media_id ) && empty( $media_ids ) ) {
+			$media_ids = $media_id;
+		}
 
 		if ( ! empty( $media_ids ) ) {
 			$activity['media'] = array();
 
 			$media_ids = explode( ',', $media_ids );
+			$media_ids = array_unique( $media_ids );
+			$album_id  = 0;
 
 			foreach ( $media_ids as $media_id ) {
 
@@ -2362,6 +2375,11 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
 				);
+
+				if ( 0 === $album_id && $media->album_id > 0 ) {
+					$album_id                     = $media->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
 			}
 		}
 
@@ -2381,6 +2399,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 	return $activity;
 }
+
 /**
  * Added activity entry class for media.
  *
