@@ -1684,8 +1684,8 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	global $bp;
 
 	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
-	$social_networks_id = $social_networks_field->id;
-	$social_networks_text = $social_networks_field->name;
+	$social_networks_id    = $social_networks_field->id;
+	$social_networks_text  = $social_networks_field->name;
 
 	$html = '';
 
