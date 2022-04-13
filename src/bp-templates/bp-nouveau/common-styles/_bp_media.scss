@@ -3521,13 +3521,20 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 		}
 	}
 
+	.media-photo_count {
+		display: inline-block;
+		font-size: 13px;
+		line-height: 1.3;
+		color: #4d5c6d;
+	}
+
 	.media-album_modified {
 		display: inline-block;
 		width: auto;
 
 		.media-album_details__bottom {
 			display: block;
-			font-size: 14px;
+			font-size: 13px;
 			line-height: 1.3;
 			color: #4d5c6d;
 

@@ -37,7 +37,6 @@ $albums_link = bp_get_album_link();
 
 			<div class="media-album_modified">
 				<div class="media-album_details__bottom">
-					<span class="middot">·</span>
 					<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
 					<span class="middot">·</span>
 					<span class="media-album_author">
@@ -47,36 +46,32 @@ $albums_link = bp_get_album_link();
 				</div>
 			</div>
 
-			<div class="media-album_modified">
-				<div class="media-album_details__bottom">
-					<span class="middot">·</span>
-					<span class="media-photo_count">
-						<?php
-						printf(
-							// translators: Photos count.
-							esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
-							esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
-						);
-						?>
-					</span> <!-- Get the count of photos in that album -->
+			<span class="middot">·</span>
+			<span class="media-photo_count">
+				<?php
+				printf(
+					// translators: Photos count.
+					esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
+					esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
+				);
+				?>
+			</span> <!-- Get the count of photos in that album -->
+			<?php
+			if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
+				?>
+				<span class="middot">·</span>
+				<span class="media-photo_count">
 					<?php
-					if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
-						?>
-						<span class="middot">·</span>
-						<span class="media-photo_count">
-							<?php
-							printf(
-							// translators: Photos count.
-								esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
-								esc_attr( bp_core_number_format( $media_album_template->album->media['total_video'] ) )
-							);
-							?>
-						</span> <!-- Get the count of photos on that album -->
-						<?php
-					}
+					printf(
+					// translators: Photos count.
+						esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
+						esc_attr( bp_core_number_format( $media_album_template->album->media['total_video'] ) )
+					);
 					?>
-				</div>
-			</div>
+				</span> <!-- Get the count of photos on that album -->
+				<?php
+			}
+			?>
 
 			<?php
 				if ( bp_is_active( 'groups' ) ) {

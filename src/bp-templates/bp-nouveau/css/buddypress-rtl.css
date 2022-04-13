@@ -19334,6 +19334,14 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   margin-top: 4px;
 }
 
+.search-video-list .media-photo_count,
+.search-media-list .media-photo_count {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #4d5c6d;
+}
+
 .search-video-list .media-album_modified,
 .search-media-list .media-album_modified {
   display: inline-block;
@@ -19343,7 +19351,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 .search-video-list .media-album_modified .media-album_details__bottom,
 .search-media-list .media-album_modified .media-album_details__bottom {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.3;
   color: #4d5c6d;
 }
