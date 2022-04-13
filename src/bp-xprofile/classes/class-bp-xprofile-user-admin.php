@@ -167,7 +167,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				);
 			}
 
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 				// Avatar Metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_avatar',

@@ -448,6 +448,11 @@ function bp_nouveau_group_manage_screen() {
 		$is_group_create ? esc_attr( bp_get_new_group_id() ) : esc_attr( bp_get_group_id() )
 	);
 
+	printf(
+		'<input type="hidden" name="parent-id" id="parent-id" value="%s" />',
+		$is_group_create ? esc_attr( bp_get_parent_group_id( bp_get_new_group_id() ) ) : esc_attr( bp_get_parent_group_id( bp_get_group_id() ) )
+	);
+
 	// The submit actions
 	echo $output;
 
@@ -1554,9 +1559,29 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
  * @since BuddyPress 4.0.0
  */
 function bp_nouveau_add_notify_group_members_checkbox() {
-	printf( '<p class="bp-controls-wrap">
-		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
-		<label for="group-notify-members" class="bp-label-text">%s</label>
-	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+
+		$is_enabled_admin = bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' );
+
+		if ( $is_enabled_admin ) {
+			printf(
+				'<p class="bp-controls-wrap">
+                    <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" checked />
+                    <label for="group-notify-members" class="bp-label-text">%s</label>
+                </p>',
+				esc_html__( 'Notify group members of these changes', 'buddyboss' )
+			);
+		}
+	} else {
+		printf(
+			'<p class="bp-controls-wrap">
+                <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+                <label for="group-notify-members" class="bp-label-text">%s</label>
+            </p>',
+			esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+		);
+	}
+
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );
