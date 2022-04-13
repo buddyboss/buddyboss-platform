@@ -1700,7 +1700,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
 			$i            = 0;
-			$is_more_link = count( array_filter( $original_option_values ) ) > 2;
+			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
