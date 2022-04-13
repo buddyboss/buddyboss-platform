@@ -1683,7 +1683,9 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	global $wpdb;
 	global $bp;
 
-	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_id = $social_networks_field->id;
+	$social_networks_text = $social_networks_field->name;
 
 	$html = '';
 
@@ -1710,7 +1712,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 								<div class="modal-wrapper">
 									<div class="modal-container">
 										<header class="bb-model-header">
-											<h4><span class="target_name">' . esc_html__( 'Social Links', 'buddyboss' ) . '</span></h4>
+											<h4><span class="target_name">' . esc_attr( $social_networks_text ) . '</span></h4>
 											<a class="bb-close-action-popup bb-model-close-button" href="#">
 												<span class="bb-icon-l bb-icon-times"></span>
 											</a>
