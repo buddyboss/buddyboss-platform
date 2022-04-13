@@ -231,7 +231,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 
 					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
 
-					if ( 'datebox' === $type ) {
+					if ( 'datebox' === $type && ! empty ( $new_data ) ) {
 						$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 					}
 
