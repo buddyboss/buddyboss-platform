@@ -46,6 +46,14 @@ function xprofile_screen_edit_profile() {
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
 				xprofile_delete_field_data( $deleted_field_id, bp_displayed_user_id() );
 			}
+
+			if ( isset( $_POST['repeater_set_sequence'] ) && ! empty( $_POST['repeater_set_sequence'] ) ) {
+
+				$field_set_sequence = wp_parse_id_list( wp_unslash( $_POST['repeater_set_sequence'] ) );
+				$field_group_id     = (int) bp_action_variable( 1 );
+
+				bp_set_profile_field_set_count( $field_group_id, bp_displayed_user_id(), count( $field_set_sequence ) );
+			}
 		}
 
 		// Check we have field ID's.
