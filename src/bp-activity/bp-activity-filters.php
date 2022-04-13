@@ -247,7 +247,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
-	//bail if the request is for privacy update
+	// bail if the request is for privacy update.
 	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
 		return;
 	}
