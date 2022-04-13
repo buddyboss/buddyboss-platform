@@ -1704,7 +1704,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 					$key = bp_social_network_search_key( $key, $providers );
 
 					if ( $is_more_link && 2 === $i ) {
-						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="See all" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
+						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_html__( 'See all', 'buddyboss' ) . '" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
 						$html .= '<div style="display: none" class="bb-action-popup" id="social-networks-popup">
 							<div class="modal-mask bb-white bbm-model-wrap">
 								<div class="modal-wrapper">
