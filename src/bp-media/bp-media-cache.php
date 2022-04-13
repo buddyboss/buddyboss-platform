@@ -105,8 +105,8 @@ add_action( 'bp_media_add', 'bp_media_clear_media_user_object_cache', 10 );
  * @param array $medias DB results of media items.
  */
 function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
-	if ( ! empty( $medias[0] ) ) {
-		foreach ( (array) $medias[0] as $deleted_media ) {
+	if ( ! empty( $medias ) ) {
+		foreach ( (array) $medias as $deleted_media ) {
 			$user_id       = ! empty( $deleted_media->user_id ) ? $deleted_media->user_id : false;
 			$attachment_id = ! empty( $deleted_media->attachment_id ) ? $deleted_media->attachment_id : false;
 			$group_id      = ! empty( $deleted_media->group_id ) ? $deleted_media->group_id : false;

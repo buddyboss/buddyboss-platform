@@ -100,6 +100,8 @@ window.bp = window.bp || {};
 			this.dropzone_video     = [];
 
 			this.models = [];
+
+			this.InitiatedCommentForms = [];
 		},
 
 		/**
@@ -1018,11 +1020,15 @@ window.bp = window.bp || {};
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
 					var div_editor = ce.get( 0 );
-					div_editor.addEventListener( 'paste', function ( e ) {
-						e.preventDefault();
-						var text = e.clipboardData.getData( 'text/plain' );
-						document.execCommand( 'insertText', false, text );
-					} );
+
+					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {//Check if Comment form has already paste event initiated
+						div_editor.addEventListener( 'paste', function ( e ) {
+							e.preventDefault();
+							var text = e.clipboardData.getData( 'text/plain' );
+							document.execCommand( 'insertText', false, text );
+						} );
+						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
+					}
 				}
 
 				// change the aria state from false to true.
