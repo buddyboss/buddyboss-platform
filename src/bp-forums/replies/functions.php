@@ -250,9 +250,14 @@ function bbp_new_reply_handler( $action = '' ) {
 
 				// Forum is hidden and user cannot access.
 			} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
+
+				add_filter( 'bbp_map_meta_caps', 'bb_map_group_forum_reply_meta_caps', 10, 4 );
+
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
 					bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
+
+				remove_filter( 'bbp_map_meta_caps', 'bb_map_group_forum_reply_meta_caps', 10, 4 );
 			}
 		}
 	}
@@ -684,10 +689,10 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
-	     && empty( $_POST['bbp_media'] )
-	     && empty( $_POST['bbp_video'] )
-	     && empty( $_POST['bbp_media_gif'] )
-	     && empty( $_POST['bbp_document'] )
+		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_video'] )
+		 && empty( $_POST['bbp_media_gif'] )
+		 && empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -1953,9 +1958,9 @@ function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
 
 	$update_reply = array(
 		'ID'          => $reply_id,
-		'post_status' => $previous_status
+		'post_status' => $previous_status,
 	);
-	wp_update_post($update_reply);
+	wp_update_post( $update_reply );
 
 	do_action( 'bbp_untrashed_reply', $reply_id );
 }
@@ -2059,7 +2064,7 @@ function bb_validate_reply_embed( $content ) {
  * @return string
  */
 function bbp_reply_content_autoembed_paragraph( $content ) {
-    global $wp_embed;
+	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
 		remove_filter( 'bbp_get_reply_content', array( $wp_embed, 'autoembed' ), 2 );
@@ -2564,4 +2569,80 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		esc_html( $display_role ),
 		$args['after']
 	);
+}
+
+/**
+ * Allow group members to have advanced priviledges in group forum topics.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $caps      Primitive capabilities required of the user.
+ * @param string $cap       Capability being checked.
+ * @param int    $user_id   The user ID.
+ * @param array  $args      Adds context to the capability check, typically
+ *                          starting with an object ID.
+ *
+ * @return array
+ */
+function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+
+	if ( ! function_exists( 'bp_is_activity_directory' ) || ! isset( $_POST['bbp_topic_id'] ) || ! isset( $_POST['bbp_reply_form_action'] ) || 'bbp-new-reply' !== $_POST['bbp_reply_form_action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return $caps;
+	}
+
+	if ( bp_is_activity_directory() ) {
+		$topic_id = filter_input( INPUT_POST, 'bbp_topic_id', FILTER_VALIDATE_INT );
+
+		if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$forum_id = bbp_get_topic_forum_id( $topic_id );
+		} else {
+			// Get the forum id.
+			$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
+		}
+
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = reset( $group_ids );
+
+		if ( $group_id ) {
+			$is_member = groups_is_user_member( get_current_user_id(), $group_id );
+			$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
+			$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
+
+			switch ( $cap ) {
+
+				// If user is a group member, allow them to create content.
+				case 'read_forum':
+				case 'publish_replies':
+				case 'publish_topics':
+				case 'read_hidden_forums':
+				case 'read_private_forums':
+					if ( $is_member || $is_mod || $is_admin ) {
+						$caps = array( 'participate' );
+					}
+					break;
+
+				// If user is a group mod ar admin, map to participate cap.
+				case 'moderate':
+				case 'edit_topic':
+				case 'edit_reply':
+				case 'view_trash':
+				case 'edit_others_replies':
+				case 'edit_others_topics':
+					if ( $is_mod || $is_admin ) {
+						$caps = array( 'participate' );
+					}
+					break;
+
+				// If user is a group admin, allow them to delete topics and replies.
+				case 'delete_topic':
+				case 'delete_reply':
+					if ( $is_admin ) {
+						$caps = array( 'participate' );
+					}
+					break;
+			}
+		}
+	}
+
+	return apply_filters( 'bb_map_group_forum_reply_meta_caps', $caps, $cap, $user_id, $args );
 }
