@@ -1,8 +1,11 @@
 <?php
 /**
- * BuddyBoss - Profile Progression
+ * The template for profile progression
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/profile/widget.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 $bp_nouveau = bp_nouveau();

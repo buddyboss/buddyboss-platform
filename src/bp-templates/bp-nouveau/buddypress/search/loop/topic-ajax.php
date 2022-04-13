@@ -1,4 +1,15 @@
-<?php $total = bbp_get_topic_reply_count( get_the_ID() ) ?>
+<?php
+/**
+ * Template for displaying the search results of the topic ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/topic-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
+$total = bbp_get_topic_reply_count( get_the_ID() ) ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_topic">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink(get_the_ID()) )); ?>">
 		<div class="item-avatar">
