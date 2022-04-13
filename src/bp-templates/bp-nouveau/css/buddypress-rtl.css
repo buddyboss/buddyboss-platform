@@ -7053,7 +7053,6 @@ body.no-js .single-item-header .js-self-profile-button {
 #item-header-cover-image {
   margin-bottom: 1em;
   position: relative;
-  z-index: 2;
 }
 
 .users-header #item-header-cover-image.bb-disable-cover-img #item-header-content {
@@ -7068,6 +7067,7 @@ body.no-js .single-item-header .js-self-profile-button {
   margin-top: -70px;
   padding: 0 1em;
   position: relative;
+  z-index: 2;
 }
 
 #item-header-cover-image #item-header-avatar img.avatar {
@@ -8811,7 +8811,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 .users-header #social-networks-popup .bb-action-popup-content .social {
-  margin-top: 5px;
+  margin-top: 7px;
 }
 
 .users-header #item-header-avatar a.link-change-profile-image {

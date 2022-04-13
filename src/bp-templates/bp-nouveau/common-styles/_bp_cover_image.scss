@@ -127,7 +127,6 @@
 #item-header-cover-image {
 	margin-bottom: 1em;
 	position: relative;
-	z-index: 2;
 
 	&.bb-disable-cover-img #item-header-content {
 
@@ -145,6 +144,7 @@
 		margin-top: -70px;
 		padding: 0 1em;
 		position: relative;
+		z-index: 2;
 
 		img.avatar {
 			max-width: 150px;
