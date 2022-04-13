@@ -264,7 +264,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'max_members' ); ?>" name="<?php echo $this->get_field_name( 'max_members' ); ?>" type="text" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo  esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
 

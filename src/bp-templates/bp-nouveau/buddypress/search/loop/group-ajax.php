@@ -1,3 +1,14 @@
+<?php
+/**
+ * Template for displaying the search results of the group ajax
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/group-ajax.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+?>
 <div class="bp-search-ajax-item bboss_ajax_search_group">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bp_get_group_permalink() )); ?>">
 		<div class="item-avatar">

@@ -1,4 +1,16 @@
-<?php global $current_comment; ?>
+<?php
+/**
+ * Comment search Template
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/search/loop/comment.php.
+ *
+ * @package BuddyBoss\Core
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
+global $current_comment;
+?>
 <li class="bp-search-item bp-search-item_posts_comments">
 	<div class="list-wrap">
 		<div class="item-avatar">
