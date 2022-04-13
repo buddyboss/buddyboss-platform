@@ -2709,11 +2709,11 @@ function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_
  * @return bool
  */
 function bb_check_is_activity_content_empty( $data ) {
-	if ( empty( $data['content'] ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
+	if ( empty( trim( wp_strip_all_tags( $data['content'] ) ) ) && ( isset( $data['gif_data'] ) || isset( $data['media'] ) || isset( $data['document'] ) ) ) {
 		return true;
-	} elseif ( empty( $data['content'] ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
+	} elseif ( empty( trim( wp_strip_all_tags( $data['content'] ) ) ) && ( isset( $data['media_gif'] ) || isset( $data['bp_media_ids'] ) || isset( $data['bp_documents'] ) ) ) {
 		return true;
-	} elseif ( ! empty( $data['content'] ) ) {
+	} elseif ( ! empty( trim( wp_strip_all_tags( $data['content'] ) ) ) ) {
 		return true;
 	} else {
 		return false;
