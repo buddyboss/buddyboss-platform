@@ -203,9 +203,7 @@ class BP_Messages_Thread {
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 
 		// Get the unread count for the logged in user.
-		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
-			$this->unread_count = $this->recipients[ $r['user_id'] ]->unread_count;
-		}
+		$this->unread_count = bb_get_thread_messages_unread_count( $this->thread_id, $r['user_id'] );
 
 		// Grab all message meta.
 		if ( true === (bool) $r['update_meta_cache'] ) {
@@ -1259,6 +1257,7 @@ class BP_Messages_Thread {
 			// phpcs:ignore
 			$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
+			wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 			wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 			wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 
@@ -1295,6 +1294,7 @@ class BP_Messages_Thread {
 		$bp     = buddypress();
 		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
+		wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 
