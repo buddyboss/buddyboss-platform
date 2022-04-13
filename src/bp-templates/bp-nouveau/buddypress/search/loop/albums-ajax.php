@@ -32,18 +32,37 @@ $albums_link = bp_get_album_link();
 				<a class="media-album_name " href="<?php echo esc_url( $albums_link ); ?>">
 					<span><?php echo wp_kses_post( bp_get_album_title() ); ?></span>
 				</a>
+			</div>
+						
+
+			<div class="media-album_modified">
+				<div class="media-album_details__bottom">
+					<span class="middot">·</span>
+					<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
+					<span class="middot">·</span>
+					<span class="media-album_author">
+						<?php esc_html_e( 'By ', 'buddyboss' ); ?>
+						<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a>
+					</span>
+				</div>
+			</div>
+
+			<div class="media-album_modified">
+				<div class="media-album_details__bottom">
+					<span class="middot">·</span>
 					<span class="media-photo_count">
-					<?php
-					printf(
-						// translators: Photos count.
-						esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
-						esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
-					);
-					?>
+						<?php
+						printf(
+							// translators: Photos count.
+							esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
+							esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
+						);
+						?>
 					</span> <!-- Get the count of photos in that album -->
 					<?php
 					if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
 						?>
+						<span class="middot">·</span>
 						<span class="media-photo_count">
 							<?php
 							printf(
@@ -56,24 +75,17 @@ $albums_link = bp_get_album_link();
 						<?php
 					}
 					?>
-			</div>
-
-			<div class="media-album_modified">
-				<div class="media-album_details__bottom">
-					<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
-					<span class="media-album_author">
-						<?php esc_html_e( 'by ', 'buddyboss' ); ?>
-						<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a>
-					</span>
 				</div>
 			</div>
 
-			<div class="media-album_group">
-				<div class="media-album_details__bottom">
-					<?php
-					if ( bp_is_active( 'groups' ) ) {
-						$group_id = bp_get_album_group_id();
-						if ( $group_id > 0 ) {
+			<?php
+				if ( bp_is_active( 'groups' ) ) {
+					$group_id = bp_get_album_group_id();
+					if ( $group_id > 0 ) {
+					?>
+					<div class="media-album_group">
+						<div class="media-album_details__bottom">
+							<?php
 							// Get the group from the database.
 							$group        = groups_get_group( $group_id );
 							$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
@@ -82,16 +94,12 @@ $albums_link = bp_get_album_link();
 							?>
 							<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
 							<span class="media-album_status"><?php echo esc_html( ucfirst( $group_status ) ); ?></span>
-							<?php
-						} else {
-							?>
-							<span class="media-album_group_name"> </span>
-							<?php
-						}
+						</div>
+					</div>
+					<?php
 					}
-					?>
-				</div>
-			</div>
+				}
+			?>
 
 			<div class="media-album_visibility">
 				<div class="media-album_details__bottom">
@@ -100,12 +108,14 @@ $albums_link = bp_get_album_link();
 						$group_id = bp_get_album_group_id();
 						if ( $group_id > 0 ) {
 							?>
+							<span class="middot">·</span>
 							<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 								<?php bp_album_visibility(); ?>
 							</span>
 							<?php
 						} else {
 							?>
+							<span class="middot">·</span>
 							<span id="privacy-<?php echo esc_attr( bp_get_album_id() ); ?>">
 								<?php bp_album_visibility(); ?>
 							</span>
@@ -113,6 +123,7 @@ $albums_link = bp_get_album_link();
 						}
 					} else {
 						?>
+						<span class="middot">·</span>
 						<span>
 							<?php bp_album_visibility(); ?>
 						</span>

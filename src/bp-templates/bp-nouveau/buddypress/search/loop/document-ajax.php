@@ -62,7 +62,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 						if ( ! bp_is_user() ) {
 							?>
 							<span class="middot">·</span>
-							<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
+							<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?><a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
 							<?php
 						}
 						?>

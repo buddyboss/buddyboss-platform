@@ -52,7 +52,7 @@ $media_created = bp_get_media_date_created();
 						if ( ! bp_is_user() ) {
 							?>
 								<span class="middot">·</span>
-								<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+								<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
 								<a href="<?php echo esc_url( $media_link ); ?>"><?php bp_media_author(); ?></a></span>
 								<?php
 						}
