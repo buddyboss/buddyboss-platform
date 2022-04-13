@@ -3865,7 +3865,11 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		$class[] = 'groups';
 		$class[] = 'buddypress';
 		$class[] = 'buddyboss';
-		$class[] = 'bb-buddypanel';
+		/**
+		 *This class commented because this class will add when buddypanel enable
+		 *and this condition already in the theme
+		 */
+		//$class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
