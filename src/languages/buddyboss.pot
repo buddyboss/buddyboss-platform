@@ -27290,23 +27290,31 @@ msgstr[1] ""
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:720
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:718
+msgid "There was a problem posting your update. Please set the group details properly."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:726
+msgid "There was a problem posting your update. Group component is disabled, it should be enabled."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:738
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:743
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:761
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:743
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:761
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:774
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:775
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:823
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:824
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
