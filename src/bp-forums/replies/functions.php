@@ -2589,7 +2589,7 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
 
 			switch ( $cap ) {
 
-				// If user is a group mmember, allow them to create content.
+				// If user is a group member, allow them to create content.
 				case 'read_forum':
 				case 'publish_replies':
 				case 'publish_topics':
