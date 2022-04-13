@@ -2555,10 +2555,10 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string[] $caps    Primitive capabilities required of the user.
- * @param string   $cap     Capability being checked.
- * @param int      $user_id The user ID.
- * @param array    $args    Adds context to the capability check, typically
+ * @param array  $caps      Primitive capabilities required of the user.
+ * @param string $cap       Capability being checked.
+ * @param int    $user_id   The user ID.
+ * @param array  $args      Adds context to the capability check, typically
  *                          starting with an object ID.
  *
  * @return array
