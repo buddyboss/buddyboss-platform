@@ -2946,7 +2946,7 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), class_exists('LearnDash_Custom_Label') ? LearnDash_Custom_Label::get_label( 'courses' ) : 'Courses' );
+					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), class_exists( 'LearnDash_Custom_Label' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : 'Courses' );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
