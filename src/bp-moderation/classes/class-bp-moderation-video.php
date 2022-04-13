@@ -53,6 +53,9 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 			return;
 		}
 
+		// Update report button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
+
 		// Validate item before proceed.
 		add_filter( "bp_moderation_{$this->item_type}_validate", array( $this, 'validate_single_item' ), 10, 2 );
 
@@ -62,6 +65,16 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 
 		// Report popup content type.
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
+
+		// Prepare report button for video when activity moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
+
+		// Prepare report button for video when activity comment moderation is disabled.
+		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity_Comment::$moderation_type ) ) {
+			add_filter( 'bp_activity_comment_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -130,6 +143,27 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Function to modify the button args
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $args, $item_id ) {
+		$video = new BP_Video( $item_id );
+
+		// Remove report button if forum is group forums.
+		if ( ! empty( $video->id ) && ! empty( $video->privacy ) && in_array( $video->privacy, array( 'comment', 'forums' ), true ) ) {
+			return array();
+		}
+
+		return $args;
+	}
+
+	/**
 	 * Filter to check the video is valid or not.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -179,5 +213,55 @@ class BP_Moderation_Video extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 		return esc_html__( 'Video', 'buddyboss' );
+	}
+
+	/**
+	 * Function to update activity report button arguments.
+	 *
+	 * @since BuddyBoss 1.7.7
+	 *
+	 * @param array $report_button Activity report button
+	 * @param array $args          Arguments
+	 *
+	 * @return array|string
+	 */
+	public function update_report_button_args( $report_button, $args ) {
+
+		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+
+		if ( empty( $activity->id ) ) {
+			return $report_button;
+		}
+
+		$video_id  = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_id', true );
+		$video_ids = bp_activity_get_meta( $args['button_attr']['data-bp-content-id'], 'bp_video_ids', true );
+
+		if (
+			(
+				! empty( $video_id ) ||
+				! empty( $video_ids )
+			) &&
+			! in_array(
+				$activity->type,
+				array(
+					'bbp_forum_create',
+					'bbp_topic_create',
+					'bbp_reply_create',
+				)
+			)
+		) {
+			$explode_videos = explode( ',', $video_ids );
+			if ( ! empty( $video_id ) ) {
+				$args['button_attr']['data-bp-content-id']   = $video_id;
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			if ( 1 === count( $explode_videos ) && ! empty( current( $explode_videos ) ) ) {
+				$args['button_attr']['data-bp-content-id']   = current( $explode_videos );
+				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
+			}
+			$report_button = bp_moderation_get_report_button( $args, false );
+		}
+
+		return $report_button;
 	}
 }
