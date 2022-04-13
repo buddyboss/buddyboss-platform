@@ -340,6 +340,11 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
+	// bail if the request is for privacy update.
+	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
+		return;
+	}
+	
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
