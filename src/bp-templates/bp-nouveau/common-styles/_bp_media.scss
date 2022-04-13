@@ -3067,13 +3067,19 @@ div.dropzone .dz-preview {
 	}
 
 	.media-folder_icon {
-		width: 52px;
-		padding-left: 10px;
+		margin-right: 15px;
 
 		> a i {
-			font-size: 30px;
-			color: #9ca8b4;
-			margin-top: 5px;
+			align-items: center;
+			background-color: #f2f4f5;
+			border-radius: 50%;
+			color: #9b9c9f;
+			display: flex;
+			font-size: 24px;
+			font-weight: 300;
+			justify-content: center;
+			height: 48px;
+			width: 48px;
 		}
 	}
 
@@ -3094,6 +3100,9 @@ div.dropzone .dz-preview {
 
 		.media-folder_name {
 			color: #122b46;
+			font-size: 14px;
+			font-weight: 500;
+			letter-spacing: -0.24px;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -3159,7 +3168,13 @@ div.dropzone .dz-preview {
 		}
 
 		.media-folder_date {
+			color: #9b9c9f;
+			background-color: transparent;
 			display: inline-block;
+			font-size: 0.8125rem;
+			font-weight: 400;
+			letter-spacing: -0.15px;
+			line-height: 1.1875;
 			vertical-align: middle;
 		}
 
@@ -3416,6 +3431,44 @@ div.dropzone .dz-preview {
 	}
 }
 
+.search-document-list .media-folder_items {
+	display: block;
+
+	.media-folder_icon {
+		float: left;
+	}
+
+	.media-folder_visibility,
+	.media-folder_modified {
+		display: inline-block;
+		width: auto;
+	}
+
+	.middot {
+		font-size: 20px;
+		margin: 0 5px;
+	}
+
+	.media-folder_details__bottom {
+		color: #9b9c9f;
+
+		.media-folder_author {
+			display: inline-block;
+
+			a {
+				display: inline-block;
+				margin-left: 5px;
+			}
+		}
+
+	}
+
+}
+
+li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
+	background-color: #fff;
+}
+
 //Album Search result ajax and page
 .search-video-list,
 .search-media-list {
@@ -3575,14 +3628,17 @@ div.dropzone .dz-preview {
 		padding: 0;
 
 		.media-folder_details {
-			width: calc(40% - 100px);
+			display: inline-block;
+			float: right;
+			width: calc(100% - 64px);
 		}
 
 		.media-folder_group {
-			width: 20%;
+			display: inline-block;
+			width: auto;
 
 			a {
-				color: #4d5c6d;
+				color: #9b9c9f;
 
 				&:hover {
 					color: $text-link-hover;

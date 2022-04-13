@@ -60,12 +60,13 @@ $media_created = bp_get_media_date_created();
 					</div>
 				</div>
 
-				<div class="media-album_group">
-					<div class="media-album_details__bottom">
-						<?php
-						if ( bp_is_active( 'groups' ) ) {
-							$group_id = bp_get_media_group_id();
-							if ( $group_id > 0 ) {
+				<?php if ( bp_is_active( 'groups' ) ) {
+					$group_id = bp_get_media_group_id();
+					if ( $group_id > 0 ) {
+					?>
+					<div class="media-album_group">
+						<div class="media-album_details__bottom">
+							<?php
 								// Get the group from the database.
 								$group        = groups_get_group( $group_id );
 								$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
@@ -74,12 +75,11 @@ $media_created = bp_get_media_date_created();
 								?>
 								<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
 								<span class="media-album_status"><?php echo esc_html( ucfirst( $group_status ) ); ?></span>
-								<?php
-							}
-						}
-						?>
+						</div>
 					</div>
-				</div>
+					<?php
+					}
+				} ?>
 
 				<div class="media-album_visibility">
 					<div class="media-album_details__bottom">

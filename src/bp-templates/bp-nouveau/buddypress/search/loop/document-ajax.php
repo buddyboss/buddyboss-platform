@@ -61,6 +61,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
+							<span class="middot">·</span>
 							<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
 							<?php
 						}
@@ -69,12 +70,12 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 				</div>
 				<?php
 				if ( bp_is_active( 'groups' ) ) {
+					$group_id = bp_get_document_group_id();
+					if ( $group_id > 0 ) {
 					?>
 					<div class="media-folder_group">
 						<div class="media-folder_details__bottom">
 							<?php
-							$group_id = bp_get_document_group_id();
-							if ( $group_id > 0 ) {
 								// Get the group from the database.
 								$group        = groups_get_group( $group_id );
 								$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
@@ -83,16 +84,10 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 								?>
 								<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
 								<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
-								<?php
-							} else {
-								?>
-								<span class="media-folder_group"> </span>
-								<?php
-							}
-							?>
 						</div>
 					</div>
 					<?php
+					}
 				}
 				?>
 				<div class="media-folder_visibility">
@@ -102,12 +97,14 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 							$group_id = bp_get_document_group_id();
 							if ( $group_id > 0 ) {
 								?>
+								<span class="middot">·</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_document_privacy(); ?>
 								</span>
 								<?php
 							} else {
 								?>
+								<span class="middot">·</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_document_id() ); ?>">
 									<?php bp_document_privacy(); ?>
 								</span>
@@ -115,6 +112,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 							}
 						} else {
 							?>
+							<span class="middot">·</span>
 							<span>
 								<?php bp_document_privacy(); ?>
 							</span>
