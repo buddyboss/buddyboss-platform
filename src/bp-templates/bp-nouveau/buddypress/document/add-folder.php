@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Create Folder
+ * The template for create folder
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/add-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 $active_extensions = bp_document_get_allowed_extension();

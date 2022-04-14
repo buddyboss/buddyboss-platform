@@ -305,9 +305,9 @@ function bp_nouveau_ajax_save_cover_position() {
 	$position = floatval( $_POST['position'] );
 	$updated  = false;
 
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) ) {
 		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
-	} else if ( bp_is_user() ) {
+	} else if ( bp_is_user() && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
 		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
 	}
 
