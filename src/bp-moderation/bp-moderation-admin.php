@@ -452,7 +452,7 @@ function bp_moderation_admin_index() {
 	$bp_moderation_list_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h1>
+		<h1 class="wp-heading-inline">
 			<?php
 			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
@@ -461,6 +461,7 @@ function bp_moderation_admin_index() {
 			}
 			?>
 		</h1>
+		<hr class="wp-header-end">
 		<?php if ( ! empty( $messages ) ) : ?>
 			<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>"> <?php //phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 				<p><?php echo wp_kses_post( implode( "<br/>\n", $messages ) ); ?></p>
@@ -576,3 +577,4 @@ function bp_moderation_admin_category_listing_add_tab() {
 }
 
 add_action( 'admin_notices', 'bp_moderation_admin_category_listing_add_tab' );
+

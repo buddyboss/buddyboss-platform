@@ -19,6 +19,8 @@ add_filter( 'sfwd_cpt_options', 'bb_ld_group_archive_slug_change', 999, 2 );
 add_filter( 'learndash_settings_fields', 'bb_ld_group_archive_backend_slug_print', 9999, 2 );
 
 /* Actions *******************************************************************/
+add_action( 'bp_core_set_uri_globals', 'bb_support_learndash_course_permalink', 10, 2 );
+
 add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
 add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
@@ -162,7 +164,7 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
 function bp_activity_add_meta_boxes() {
 	global $post;
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bp_is_active( 'activity' ) || empty( $post ) ) {
 		return;
 	}
 
@@ -352,4 +354,20 @@ function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settin
 
 	return $setting_option_fields;
 
+}
+
+/**
+ * Update the current component and action while nested URL setup from the learndash permalink.
+ * For member courses.
+ *
+ * @since BuddyBoss 1.5.9
+ *
+ * @param object $bp     BuddyPress object.
+ * @param array  $bp_uri Array of URI.
+ */
+function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
+	if ( ! empty( $bp_uri ) && implode( '/', $bp_uri ) === bb_learndash_profile_courses_slug() ) {
+		$bp->current_component = bb_learndash_profile_courses_slug();
+		$bp->current_action    = '';
+	}
 }

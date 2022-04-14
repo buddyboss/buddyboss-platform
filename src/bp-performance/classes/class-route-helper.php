@@ -52,7 +52,7 @@ class Route_Helper {
 
 		// STEP-1) Capture group for ":parameter".
 		$param_chars         = '[a-zA-Z\_\-]+';
-		$allowed_value_chars = '[0-9\_\-]+';
+		$allowed_value_chars = '[a-zA-Z0-9-]+';
 		$pattern             = preg_replace(
 			'/<(' . $param_chars . ')>/', // Replace "<parameter>".
 			'(?<$1>' . $allowed_value_chars . ')', // with "(?<parameter>[a-zA-Z0-9\_\-]+)".

@@ -157,6 +157,8 @@ function bp_core_admin_register_page_fields() {
 			$description = esc_html__( 'This directory shows all photos uploaded by members.', 'buddyboss' );
 		} elseif ( 'document' === $name ) {
 			$description = esc_html__( 'This directory shows all documents uploaded by members.', 'buddyboss' );
+		} elseif ( 'video' === $name ) {
+			$description = esc_html__( 'This directory shows all video uploaded by members.', 'buddyboss' );
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact( 'existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, array() );
@@ -179,26 +181,37 @@ function bp_core_admin_register_registration_page_fields() {
 		return;
 	}
 
+	$section_title = __( 'Registration Pages', 'buddyboss' );
 	if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) ) {
-		return;
+		$section_title = __( 'Login Pages', 'buddyboss' );
 	}
 
-	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
+	add_settings_section( 'bp_registration_pages', $section_title, 'bp_core_admin_registration_pages_description', 'bp-pages' );
 	$wp_settings_sections[ 'bp-pages' ][ 'bp_registration_pages' ][ 'tutorial_callback' ] = 'bb_registration_page_tutorial';
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages   = bp_core_admin_get_static_pages();
-
-	$description            = '';
+	$description    = '';
 
 	foreach ( $static_pages as $name => $label ) {
 		$title = $label;
+		if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) && in_array( $name, array( 'register', 'activate' ), true ) ) {
+			continue;
+		}
 		if ( 'register' === $name ) {
 			$description = esc_html__( 'New users fill out this form to register their accounts.', 'buddyboss' );
 		} elseif ( 'terms' === $name ) {
-			$description = esc_html__( 'If a page is added, its contents will display in a popup on the register form.', 'buddyboss' );
+			if ( bp_enable_site_registration() || bp_is_active( 'invites' ) ) {
+				$description = esc_html__( 'If a page is added, its contents will display in a popup on the register and login forms.', 'buddyboss' );
+			} else {
+				$description = esc_html__( 'If a page is added, its contents will display in a popup on the login form.', 'buddyboss' );
+			}
 		} elseif ( 'privacy' === $name ) {
-			$description = esc_html__( 'If a page is added, its contents will display in a popup on the register form.', 'buddyboss' );
+			if ( bp_enable_site_registration() || bp_is_active( 'invites' ) ) {
+				$description = esc_html__( 'If a page is added, its contents will display in a popup on the register and login forms.', 'buddyboss' );
+			} else {
+				$description = esc_html__( 'If a page is added, its contents will display in a popup on the login form.', 'buddyboss' );
+			}
 		} elseif ( 'activate' === $name ) {
 			$description = esc_html__( 'After registering, users are sent to this page to activate their accounts.', 'buddyboss' );
 		}
@@ -253,7 +266,7 @@ function bb_registration_page_tutorial() {
  */
 function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
-		echo wpautop( __( 'Associate a WordPress page with the following Registration sections.', 'buddyboss' ) );
+		echo wpautop( __( 'Associate a WordPress page with the following Registration and Login sections.', 'buddyboss' ) );
 	else :
 
 		$invite_text = '';
