@@ -6062,6 +6062,9 @@ window.bp = window.bp || {};
 				//Close upload thumbnail popup
 				$( '.bp-video-thumbnail-uploader .bp-video-thumbnail-uploader-close:visible').trigger( 'click' );
 
+				// Close Action popup
+				$( '.bb-action-popup .bb-close-action-popup:visible').trigger( 'click' );
+
 			}
 		},
 

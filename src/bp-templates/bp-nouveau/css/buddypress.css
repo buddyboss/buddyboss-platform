@@ -6217,8 +6217,15 @@ form.ac-form .ac-reply-content input {
   padding-bottom: 0;
 }
 
+.bb-action-popup .action-popup-overlay {
+  position: fixed;
+  inset: 0;
+}
+
 .bb-action-popup .modal-container {
   padding-bottom: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .bb-action-popup .bb-model-header {
