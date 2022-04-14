@@ -883,12 +883,12 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-video',
-			__( 'Repair video on the site.', 'buddyboss' ),
+			esc_html__( 'Repair videos', 'buddyboss' ),
 			'bp_video_admin_repair_video',
 		);
 		$repair_list[] = array(
 			'bp-video-forum-privacy-repair',
-			__( 'Repair forum video privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum video privacy', 'buddyboss' ),
 			'bp_video_forum_privacy_repair',
 		);
 	}
@@ -942,7 +942,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s videos updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -952,7 +952,7 @@ function bp_video_admin_repair_video() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Video update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing videos &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -981,7 +981,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -989,7 +989,7 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums video privacy updated %s', 'buddyboss' ); // phpcs:ignore
+		$statement = __( 'Repairing forum video privacy &hellip; %s', 'buddyboss' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
