@@ -4814,6 +4814,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
+              "edit-details",
               "group-settings",
               "forum",
               "courses"
