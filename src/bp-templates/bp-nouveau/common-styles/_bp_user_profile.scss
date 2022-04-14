@@ -388,6 +388,11 @@ body.register .buddypress-wrap .page ul {
 		display: inline-block;
 		width: 20px;
 		margin-right: 10px;
+
+		&:last-of-type {
+			margin-right: 0;
+		}
+
 	}
 
 	a i {

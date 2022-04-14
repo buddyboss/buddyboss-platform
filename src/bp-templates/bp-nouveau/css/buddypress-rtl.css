@@ -8844,6 +8844,10 @@ body.register .buddypress-wrap .page ul {
   margin-left: 10px;
 }
 
+.social-networks-wrap span.social:last-of-type {
+  margin-left: 0;
+}
+
 .social-networks-wrap a i {
   font-size: 24px;
 }
