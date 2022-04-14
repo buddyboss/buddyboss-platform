@@ -1292,12 +1292,9 @@ function bp_nouveau_ajax_messages_thread_read() {
 
 	// Mark latest message as read.
 	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_mark_notifications_by_item_id(
-			bp_loggedin_user_id(),
-			(int) $message_id,
-			buddypress()->messages->id,
-			'new_message'
-		);
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
 	}
 
 	wp_send_json_success();
@@ -2654,6 +2651,15 @@ function bp_nouveau_ajax_hide_thread() {
 
 	foreach ( $thread_ids as $thread_id ) {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d, unread_count = %d WHERE thread_id = %d AND user_id = %d", 1, 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+		/**
+		 * Fires when messages thread was marked as read.
+		 *
+		 * @since BuddyBoss 1.9.3
+		 *
+		 * @param int $thread_id The message thread ID.
+		 */
+		do_action( 'messages_thread_mark_as_read', $thread_id );
 	}
 
 	// Mark each notification for each PM message as read when hide the thread.
@@ -2664,7 +2670,7 @@ function bp_nouveau_ajax_hide_thread() {
 			array(
 				'user_id'          => bp_loggedin_user_id(),
 				'component_name'   => buddypress()->messages->id,
-				'component_action' => 'new_message',
+				'component_action' => array( 'new_message', 'bb_groups_new_message', 'bb_messages_new' ),
 				'is_new'           => 1,
 			)
 		);
@@ -2676,6 +2682,8 @@ function bp_nouveau_ajax_hide_thread() {
 			// Mark each notification for each PM message as read.
 			foreach ( $unread_message_ids as $message_id ) {
 				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
+				bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
 			}
 		}
 	}

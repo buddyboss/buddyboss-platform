@@ -164,6 +164,9 @@ class BP_Notifications_Notification {
 
 			if ( empty( $this->id ) ) {
 				$this->id = $wpdb->insert_id;
+
+				// Set the notification type.
+				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
 			}
 			$retval = $this->id;
 		}
@@ -278,7 +281,19 @@ class BP_Notifications_Notification {
 	 */
 	protected static function _delete( $where = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->delete( buddypress()->notifications->table_name, $where, $where_format );
+
+		$bp        = buddypress();
+		$where_sql = self::get_where_sql( $where );
+
+		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( ! empty( $notifications ) ) {
+			foreach ( $notifications as $notification ) {
+				bp_notifications_delete_meta( $notification->id );
+			}
+		}
+
+		return $wpdb->delete( $bp->notifications->table_name, $where, $where_format );
 	}
 
 	/**
@@ -359,6 +374,23 @@ class BP_Notifications_Notification {
 
 			$ca_in                                = implode( ',', $ca_clean );
 			$where_conditions['component_action'] = "component_action IN ({$ca_in})";
+		}
+
+		// Excluded component_action.
+		if ( ! empty( $args['excluded_action'] ) ) {
+			if ( ! is_array( $args['excluded_action'] ) ) {
+				$excluded_action = explode( ',', $args['excluded_action'] );
+			} else {
+				$excluded_action = $args['excluded_action'];
+			}
+
+			$ca_clean = array();
+			foreach ( $excluded_action as $ca ) {
+				$ca_clean[] = $wpdb->prepare( '%s', $ca );
+			}
+
+			$ca_not_in                           = implode( ',', $ca_clean );
+			$where_conditions['excluded_action'] = "component_action NOT IN ({$ca_not_in})";
 		}
 
 		// If is_new.
@@ -626,6 +658,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
+				'excluded_action'   => false,
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -710,6 +743,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
@@ -799,6 +833,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => $r['secondary_item_id'],
 				'component_name'    => $r['component_name'],
 				'component_action'  => $r['component_action'],
+				'excluded_action'   => $r['excluded_action'],
 				'is_new'            => $r['is_new'],
 				'search_terms'      => $r['search_terms'],
 				'date_query'        => $r['date_query'],
