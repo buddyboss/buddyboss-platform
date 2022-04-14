@@ -62,6 +62,15 @@ function bp_helper_plugins_loaded_callback() {
 	}
 
 	/**
+	 * Make translatePress compatible with Multisite installation of platform.
+	 *
+	 * Support TranslatePress on Multisite.
+	 */
+	if ( in_array( 'translatepress-multilingual/index.php', $bp_plugins ) && ! is_admin() && is_multisite() ) {
+		require trailingslashit( buddypress()->compatibility_dir ) . 'bb-translatepress-helpers.php';
+	}
+
+	/**
 	 * Include plugin when plugin is activated
 	 *
 	 * Support MemberPress + BuddyPress Integration
