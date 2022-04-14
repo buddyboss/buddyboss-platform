@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyPress Single Members item Sub Navigation
+ * The template for single members item sub navigation
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/item-subnav.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 ?>
 
@@ -27,7 +29,7 @@
 		?>
 
 			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
-				<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
+				<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>" class="<?php bp_nouveau_nav_link_class(); ?>">
 					<?php bp_nouveau_nav_link_text(); ?>
 
 					<?php if ( bp_nouveau_nav_has_count() ) : ?>
