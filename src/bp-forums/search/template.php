@@ -84,7 +84,9 @@ function bbp_has_search_results( $args = '' ) {
 
 		// Lean on the 'perm' query var value of 'readable' to provide statuses
 	} else {
+
 		$default['perm'] = 'readable';
+		
 	}
 
 	/** Setup */
