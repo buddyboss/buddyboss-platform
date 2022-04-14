@@ -70,7 +70,7 @@
 											'buddyboss' ); ?></a>
 							</li>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-								<# if ( other_recipients.length > 1 ) { #>
+								<# if ( data.recipients.count > 1 ) { #>
 	                                <li class="report_thread">
 	                                    <a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 	                                </li>
@@ -112,7 +112,7 @@
 											'buddyboss' ); ?></a>
 							</li>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-								<# if ( other_recipients.length > 1 ) { #>
+								<# if ( data.recipients.count > 1 ) { #>
 								<li class="report_thread">
 									<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
 								</li>
