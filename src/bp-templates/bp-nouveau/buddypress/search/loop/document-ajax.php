@@ -56,16 +56,14 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 					</a>
 				</div>
 				<div class="media-folder_modified">
-					<div class="media-folder_details__bottom">
-						<?php
-						if ( ! bp_is_user() ) {
-							?>
-							<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?><a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>"><?php bp_document_author(); ?></a></span>
-							<?php
-						}
-						?>
+					<div class="media-folder_details__bottom 1">
+						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>">
+								<?php esc_html( bp_document_author() ); ?>
+							</a>
+						</span>
 						<span class="middot">·</span>
-						<span class="media-folder_date"><?php bp_document_date(); ?></span>
+						<span class="media-folder_date"><?php esc_html( bp_document_date() ); ?></span>
 					</div>
 				</div>
 				<?php
