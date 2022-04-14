@@ -1,8 +1,19 @@
 <?php
+/**
+ * Added support for third party plugin Elementor.
+ *
+ * @package BuddyBoss
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+if ( class_exists( 'BB_Elementor_Plugin_Compatibility' ) ) {
+	return;
 }
 
 /**
@@ -14,172 +25,177 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class BB_Elementor_Plugin_Compatibility {
 
-    /**
-     * The single instance of the class.
-     *
-     * @var self
-     *
-     * @since BuddyBoss [BBVERSION]
-     */
-    private static $instance = null;
+	/**
+	 * The single instance of the class.
+	 *
+	 * @var self
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private static $instance = null;
 
-    /**
-     * BB_Elementor_Plugin_Compatibility constructor.
-     * 
-     * @since BuddyBoss [BBVERSION]
-     */
-    public function __construct() {
+	/**
+	 * BB_Elementor_Plugin_Compatibility constructor.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function __construct() {
 
-        $this->compatibility_init();
-    }
+		$this->compatibility_init();
+	}
 
-    /**
-     * Get the instance of this class.
-     *
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @return Controller|null
-     */
-    public static function instance() {
+	/**
+	 * Get the instance of this class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return Controller|null
+	 */
+	public static function instance() {
 
-        if ( null === self::$instance ) {
-            $class_name     = __CLASS__;
-            self::$instance = new $class_name();
-        }
+		if ( null === self::$instance ) {
+			$class_name     = __CLASS__;
+			self::$instance = new $class_name();
+		}
 
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
-    /**
-     * Register the compatibility hook for the plugin
-     * 
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @return void
-     */
-    public function compatibility_init() {
+	/**
+	 * Register the compatibility hook for the plugin
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function compatibility_init() {
 
-        add_action( 'bp_core_set_uri_globals', array( $this, 'elementor_library_preview_permalink' ), 10, 2 );
-        add_action( 'bp_loaded', array( $this, 'maintenance_mode_template' ) );
-        add_filter( 'bp_core_set_uri_show_on_front', array( $this, 'set_uri_elementor_show_on_front' ), 10, 3 );
-        add_action( 'admin_menu' , array( $this, 'remove_page_attributes_metabox_for_forum' ) );
+		add_action( 'bp_core_set_uri_globals', array( $this, 'elementor_library_preview_permalink' ), 10, 2 );
+		add_action( 'bp_loaded', array( $this, 'maintenance_mode_template' ) );
+		add_action( 'admin_menu', array( $this, 'remove_page_attributes_metabox_for_forum' ) );
 
-    }
+		add_filter( 'bp_core_set_uri_show_on_front', array( $this, 'set_uri_elementor_show_on_front' ), 10, 3 );
 
-    /**
-     * Fix Elementor conflict for forum parent field.
-     * Remove the Page Attributes meta box from forum edit page
-     * since Element's page attributes parent field is conflicting with forum attributes patent field
-     * 
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @return void
-     */
-    public function remove_page_attributes_metabox_for_forum() {
-        // Check if elementor is exists.
-        if ( class_exists( '\Elementor\Plugin' ) ) {
-            // Remove the page attribute meta box for forum screen.
-            remove_meta_box( 'pageparentdiv' , 'forum' , 'side' );
-        }
-    }
+	}
 
-    /**
-     * Fix elementor editor issue while bp page set as front.
-     *
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @param boolean $bool Boolean to return.
-     *
-     * @return boolean
-     */
-    public function set_uri_elementor_show_on_front( $bool ) {
-        if (
-            isset( $_REQUEST['elementor-preview'] )
-            || (
-                is_admin() &&
-                isset( $_REQUEST['action'] )
-                && (
-                    'elementor' === $_REQUEST['action']
-                    || 'elementor_ajax' === $_REQUEST['action']
-                )
-            )
-        ) {
-            return false;
-        }
+	/**
+	 * Update the current component and action for elementor saved library preview link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $bp     BuddyPress object.
+	 * @param array  $bp_uri Array of URI.
+	 *
+	 * @return void
+	 */
+	public function elementor_library_preview_permalink( $bp, $bp_uri ) {
 
-        return $bool;
-    }
+		if ( isset( $_GET['elementor_library'] ) ) {
+			$bp->current_component = '';
+			$bp->current_action    = '';
+		}
 
-    /**
-     * Prevent BB template redering and Redirect to the Elementor "Maintenance Mode" template.
-     *
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @return void
-     */
-    public function maintenance_mode_template() {
-        if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-            return;
-        }
+	}
 
-        if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
-            return;
-        }
+	/**
+	 * Prevent BB template redering and Redirect to the Elementor "Maintenance Mode" template.
+	 *
+	 * @since BuddyBoss 1.5.8
+	 *
+	 * @return void
+	 */
+	public function maintenance_mode_template() {
+		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+			return;
+		}
 
-        $is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
+		static $user = null;
 
-        if ( $is_login_page ) {
-            return;
-        }
+		if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+			return;
+		}
 
-        $user         = wp_get_current_user();
-        $exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
+		$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
 
-        if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
-            return;
-        }
+		if ( $is_login_page ) {
+			return;
+		}
 
-        if ( 'custom' === $exclude_mode ) {
-            $exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
-            $user_roles    = $user->roles;
+		if ( null === $user ) {
+			$user = wp_get_current_user();
+		}
 
-            if ( is_multisite() && is_super_admin() ) {
-                $user_roles[] = 'super_admin';
-            }
+		$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
 
-            $compare_roles = array_intersect( $user_roles, $exclude_roles );
+		if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
+			return;
+		}
 
-            if ( ! empty( $compare_roles ) ) {
-                return;
-            }
-        }
+		if ( 'custom' === $exclude_mode ) {
+			$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
+			$user_roles    = $user->roles;
 
-        $mode = get_option( 'elementor_maintenance_mode_mode' );
+			if ( is_multisite() && is_super_admin() ) {
+				$user_roles[] = 'super_admin';
+			}
 
-        if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
-            remove_action( 'template_redirect', 'bp_template_redirect', 10 );
-        }
-    }
+			$compare_roles = array_intersect( $user_roles, $exclude_roles );
 
-    /**
-     * Update the current component and action for elementor saved library preview link.
-     * 
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @param object $bp     BuddyPress object.
-     * @param array  $bp_uri Array of URI.
-     * 
-     * @return void
-     */
-    public function elementor_library_preview_permalink( $bp, $bp_uri ) {
+			if ( ! empty( $compare_roles ) ) {
+				return;
+			}
+		}
 
-        if ( isset( $_GET['elementor_library'] ) ) {
-            $bp->current_component = '';
-            $bp->current_action    = '';
-        }
+		$mode = get_option( 'elementor_maintenance_mode_mode' );
 
-    }
+		if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
+			remove_action( 'template_redirect', 'bp_template_redirect', 10 );
+		}
+	}
 
+	/**
+	 * Fix Elementor conflict for forum parent field.
+	 * Remove the Page Attributes meta box from forum edit page
+	 * since Element's page attributes parent field is conflicting with forum attributes patent field
+	 *
+	 * @since BuddyBoss 1.7.6
+	 *
+	 * @return void
+	 */
+	public function remove_page_attributes_metabox_for_forum() {
+		// Check if elementor is exists.
+		if ( class_exists( '\Elementor\Plugin' ) ) {
+			// Remove the page attribute meta box for forum screen.
+			remove_meta_box( 'pageparentdiv', 'forum', 'side' );
+		}
+	}
+
+	/**
+	 * Fix elementor editor issue while bp page set as front.
+	 *
+	 * @since BuddyBoss 1.5.0
+	 *
+	 * @param boolean $bool Boolean to return.
+	 *
+	 * @return boolean
+	 */
+	public function set_uri_elementor_show_on_front( $bool ) {
+		if (
+			isset( $_REQUEST['elementor-preview'] )
+			|| (
+				is_admin() &&
+				isset( $_REQUEST['action'] )
+				&& (
+					'elementor' === $_REQUEST['action']
+					|| 'elementor_ajax' === $_REQUEST['action']
+				)
+			)
+		) {
+			return false;
+		}
+
+		return $bool;
+	}
 }
 
 BB_Elementor_Plugin_Compatibility::instance();
