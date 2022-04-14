@@ -1,6 +1,6 @@
 <?php
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -84,63 +84,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support WPML Multilingual CMS
 	 */
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
-
-		/**
-		 * Add fix for WPML redirect issue
-		 *
-		 * @since BuddyBoss 1.4.0
-		 *
-		 * @param array $q
-		 *
-		 * @return array
-		 */
-		function bp_core_fix_wpml_redirection( $q ) {
-			if (
-				! defined( 'DOING_AJAX' )
-				&& ! bp_is_blog_page()
-				&& (bool) $q->get( 'page_id' ) === false
-				&& (bool) $q->get( 'pagename' ) === true
-			) {
-				$bp_current_component = bp_current_component();
-				$bp_pages             = bp_core_get_directory_pages();
-
-				if ( 'photos' === $bp_current_component && isset( $bp_pages->media->id ) ) {
-					$q->set( 'page_id', $bp_pages->media->id );
-				} elseif ( 'forums' === $bp_current_component && isset( $bp_pages->members->id ) ) {
-					$q->set( 'page_id', $bp_pages->members->id );
-				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
-					$q->set( 'page_id', $bp_pages->groups->id );
-				} elseif ( 'documents' === $bp_current_component && isset( $bp_pages->document->id ) ) {
-					$q->set( 'page_id', $bp_pages->document->id );
-				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
-					$q->set( 'page_id', $bp_pages->video->id );
-				} else {
-					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
-					if ( $page_id ) {
-						$q->set( 'page_id', $page_id );
-					}
-				}
-			}
-
-			return $q;
-		}
-
-		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
-
-		/**
-		 * Fix for url with wpml
-		 *
-		 * @since BuddyBoss 1.2.6
-		 *
-		 * @param $url
-		 * @return string
-		 */
-		function bp_core_wpml_fix_get_root_domain( $url ) {
-			return untrailingslashit( $url );
-		}
-
-		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
-
+		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
 	/**
