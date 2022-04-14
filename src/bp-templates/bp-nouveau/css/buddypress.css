@@ -10190,12 +10190,12 @@ body .bp-messages-user-threads {
   border-bottom: 1px solid #ccc;
 }
 
-.main-notification-settings .disabled {
+.main-notification-settings .disabled * {
   opacity: 0.6;
   pointer-events: none;
 }
 
-.main-notification-settings .disabled input[type="checkbox"] {
+.main-notification-settings .disabled * input[type="checkbox"] {
   opacity: 0;
 }
 
