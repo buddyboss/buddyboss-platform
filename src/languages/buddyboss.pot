@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-14 08:24:58+00:00\n"
+"POT-Creation-Date: 2022-04-14 15:39:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5881,7 +5881,7 @@ msgstr ""
 #: bp-core/bp-core-avatars.php:355
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:835
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:17
-#: bp-xprofile/bp-xprofile-functions.php:2135
+#: bp-xprofile/bp-xprofile-functions.php:2126
 #: bp-xprofile/classes/class-bp-xprofile-component.php:286
 #: bp-xprofile/classes/class-bp-xprofile-component.php:401
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:138
@@ -9243,7 +9243,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:440
 #: bp-groups/classes/class-bp-groups-component.php:964
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:844
-#: bp-xprofile/bp-xprofile-functions.php:2156
+#: bp-xprofile/bp-xprofile-functions.php:2147
 #: bp-xprofile/classes/class-bp-xprofile-component.php:299
 #: bp-xprofile/classes/class-bp-xprofile-component.php:411
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:141
@@ -20689,7 +20689,7 @@ msgstr ""
 
 #: bp-media/bp-media-filters.php:2323
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:41
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:54
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:39
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:39
 #. translators: Photos count.
 msgid "%s photo"
@@ -26254,20 +26254,25 @@ msgid "Following special characters are not supported:<br/> \\ / ? % * : | \" < 
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:160
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:65
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:65
+#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:64
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:68
+#: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:34
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:35
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:55
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:56
+#: bp-templates/bp-nouveau/buddypress/search/loop/videos-ajax.php:54
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos.php:56
 msgid "by "
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:203
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:107
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:103
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:103
-#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:101
+#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:105
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:109
-#: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:78
+#: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:80
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:80
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:92
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:96
@@ -26747,7 +26752,7 @@ msgid "edit"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:42
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:67
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:51
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:51
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:24
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:47
@@ -27092,16 +27097,6 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:43
-#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:65
-#: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:35
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:55
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:40
-#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:44
-#: bp-templates/bp-nouveau/buddypress/search/loop/videos-ajax.php:55
-msgid "By "
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum-ajax.php:43
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:47
 #: bp-templates/bp-nouveau/buddypress/search/loop/sfwd-lessons-ajax.php:45
@@ -27176,6 +27171,11 @@ msgid "%d quiz"
 msgid_plural "%d quizzes"
 msgstr[0] ""
 msgstr[1] ""
+
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:40
+#: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:44
+msgid "By "
+msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:48
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic.php:51

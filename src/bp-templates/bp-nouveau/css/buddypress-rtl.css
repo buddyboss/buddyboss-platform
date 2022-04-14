@@ -20122,6 +20122,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
+  font-weight: 400;
   line-height: 1;
   margin-right: 10px;
   text-align: center;
