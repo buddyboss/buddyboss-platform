@@ -2236,7 +2236,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2307,7 +2308,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -2947,22 +2949,31 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 /**
  * Return all the documents ids of the folder.
  *
- * @param $folder_id
+ * @param int $folder_id Folder ID.
  *
  * @return array
  * @since BuddyBoss 1.4.0
  */
 function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
+	static $cache = array();
 
-	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
+	if ( ! isset( $cache[ $folder_id ] ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result              = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
+		$cache[ $folder_id ] = $result;
+	} else {
+		$result = $cache[ $folder_id ];
+	}
+
+	return $result;
 }
 
 /**
  * Return download link of the document.
  *
- * @param $attachment_id
- * @param $document_id
+ * @param int $attachment_id Attachment ID.
+ * @param int $document_id   Document ID.
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
@@ -3021,19 +3032,27 @@ function bp_document_get_allowed_extension() {
 /**
  * Return all the document ids inside folder.
  *
- * @param $folder_id
+ * @param int $folder_id Folder ID.
  *
  * @return array|object|null
  * @since BuddyBoss 1.4.0
  */
 function bp_document_get_folder_attachment_ids( $folder_id ) {
-
 	global $bp, $wpdb;
+	static $cache = array();
 
 	$table = $bp->document->table_name;
 
-	$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE folder_id = %d", $folder_id );
-	$data                       = $wpdb->get_results( $documents_attachment_query ); // db call ok; no-cache ok;
+	if ( ! isset( $cache[ $folder_id ] ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE folder_id = %d", $folder_id );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data                = $wpdb->get_results( $documents_attachment_query );
+		$cache[ $folder_id ] = $data;
+	} else {
+		$data = $cache[ $folder_id ];
+	}
 
 	return $data;
 
@@ -3042,23 +3061,35 @@ function bp_document_get_folder_attachment_ids( $folder_id ) {
 /**
  * Return all the children folder of the given folder.
  *
- * @param $folder_id
+ * @param int $folder_id Folder ID.
  *
  * @return array
  * @since BuddyBoss 1.4.0
  */
 function bp_document_get_folder_children( $folder_id ) {
 	global $bp, $wpdb;
+	static $cache = array();
+
 	$table = $bp->document->table_name_folder;
 
-	$query = $wpdb->prepare( "SELECT id FROM `{$table}` WHERE FIND_IN_SET(`id`, ( SELECT GROUP_CONCAT(Level SEPARATOR ',') FROM ( SELECT @Ids := ( SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM `{$table}` WHERE FIND_IN_SET(`parent`, @Ids) ) Level FROM `{$table}` JOIN (SELECT @Ids := %d) temp1 ) temp2 ))", $folder_id );
-	return array_map( 'intval', $wpdb->get_col( $query ) );
+	if ( ! isset( $cache[ $folder_id ] ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query = $wpdb->prepare( "SELECT id FROM `{$table}` WHERE FIND_IN_SET(`id`, ( SELECT GROUP_CONCAT(Level SEPARATOR ',') FROM ( SELECT @Ids := ( SELECT GROUP_CONCAT(`id` SEPARATOR ',') FROM `{$table}` WHERE FIND_IN_SET(`parent`, @Ids) ) Level FROM `{$table}` JOIN (SELECT @Ids := %d) temp1 ) temp2 ))", $folder_id );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$data                = array_map( 'intval', $wpdb->get_col( $query ) );
+		$cache[ $folder_id ] = $data;
+	} else {
+		$data = $cache[ $folder_id ];
+	}
+
+	return $data;
 }
 
 /**
  * Return root folder of the given user.
  *
- * @param $user_id
+ * @param int $user_id User ID.
  *
  * @return array
  * @since BuddyBoss 1.4.0
@@ -4780,7 +4811,7 @@ function bb_document_delete_older_symlinks() {
 
 	// Get documents previews symlink directory path.
 	$dir     = bp_document_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = apply_filters( 'bb_document_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -4810,11 +4841,13 @@ function bb_document_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	do_action( 'bb_document_delete_older_symlinks' );
+	if ( ! empty ( $list ) ) {
+		do_action( 'bb_document_delete_older_symlinks' );
+	}
 
 	return $list;
 }
-bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );
+bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks', 'bb_schedule_15days' );
 
 
 /**
