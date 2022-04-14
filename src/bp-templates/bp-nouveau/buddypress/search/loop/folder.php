@@ -31,8 +31,9 @@ $folder_link = bp_get_folder_folder_link();
 
 				<div class="media-folder_modified">
 					<div class="media-folder_details__bottom">
+						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?><a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ); ?>"><?php bp_folder_author(); ?></a></span>
+						<span class="middot">·</span>
 						<span class="media-folder_date"><?php bp_document_folder_date(); ?></span>
-						<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ); ?>"><?php bp_folder_author(); ?></a></span>
 					</div>
 				</div>
 
@@ -56,12 +57,10 @@ $folder_link = bp_get_folder_folder_link();
 								);
 								$group_status = bp_get_group_status( $group );
 								?>
+								<span class="middot">·</span>
 								<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
+								<span class="middot">·</span>
 								<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
-								<?php
-							} else {
-								?>
-								<span class="media-folder_group"> </span>
 								<?php
 							}
 							?>
@@ -77,12 +76,14 @@ $folder_link = bp_get_folder_folder_link();
 							$group_id = bp_get_folder_group_id();
 							if ( $group_id > 0 ) {
 								?>
+								<span class="middot">·</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_document_folder_privacy(); ?>
 								</span>
 								<?php
 							} else {
 								?>
+								<span class="middot">·</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_folder_folder_id() ); ?>">
 									<?php bp_document_folder_privacy(); ?>
 								</span>
@@ -90,6 +91,7 @@ $folder_link = bp_get_folder_folder_link();
 							}
 						} else {
 							?>
+							<span class="middot">·</span>
 							<span>
 								<?php bp_document_folder_privacy(); ?>
 							</span>

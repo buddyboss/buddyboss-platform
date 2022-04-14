@@ -47,16 +47,16 @@ $video_created = bp_get_video_date_created();
 
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
-						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $video_created ) ); ?></span>
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-							<span class="middot">·</span>
 							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
 							<a href="<?php echo esc_url( $video_link ); ?>"><?php bp_video_author(); ?></a></span>
 							<?php
 						}
 						?>
+						<span class="middot">·</span>
+						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $video_created ) ); ?></span>
 					</div>
 				</div>
 

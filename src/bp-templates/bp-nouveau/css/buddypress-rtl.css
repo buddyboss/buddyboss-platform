@@ -19283,7 +19283,6 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_details__bottom .media-folder_author a {
   display: inline-block;
-  margin-right: 5px;
 }
 
 li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
@@ -19416,8 +19415,10 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 
 .search-video-list .middot,
 .search-media-list .middot {
-  font-size: 20px;
-  margin: 0 5px;
+  display: inline-block;
+  margin: 0 6px;
+  font-size: 17px;
+  line-height: 0;
 }
 
 @media screen and (max-width: 540px) {
@@ -19491,6 +19492,49 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   display: block;
   font-size: 13px;
   color: #939597;
+}
+
+body.search-results .search_results .search-video-list .media-album_thumb img,
+body.search-results .search_results .search-media-list .media-album_thumb img {
+  border-radius: 3px !important;
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+}
+
+body.search-results .search_results .search-video-list .media-album_details,
+body.search-results .search_results .search-media-list .media-album_details {
+  margin-top: 22px;
+  width: calc(100% - 106px);
+}
+
+body.search-results .search_results .search-document-list .media-folder_items .media-folder_icon > a i {
+  font-size: 28px;
+  border-radius: 3px;
+  height: 90px;
+  width: 90px;
+}
+
+body.search-results .search_results .search-document-list .media-folder_items .media-folder_details {
+  margin-top: 12px;
+  width: calc(100% - 106px);
+}
+
+body.search-results .search_results .search-video-list .media-album_thumb .middot,
+body.search-results .search_results .search-media-list .media-album_thumb .middot,
+body.search-results .search_results .search-document-list .media-folder_items .middot {
+  display: inline-block;
+  margin: 0 6px;
+  font-size: 17px;
+  line-height: 0;
+}
+
+body.search-results.bb-template-v2 .search_results .media-album_thumb img {
+  border-radius: 15px !important;
+}
+
+body.search-results.bb-template-v2 .search_results .search-document-list .media-folder_items .media-folder_icon > a i {
+  border-radius: 15px;
 }
 
 .document-type-navs.main-navs {

@@ -37,12 +37,12 @@ $albums_link = bp_get_album_link();
 
 			<div class="media-album_modified">
 				<div class="media-album_details__bottom">
-					<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
-					<span class="middot">·</span>
 					<span class="media-album_author">
 						<?php esc_html_e( 'By ', 'buddyboss' ); ?>
 						<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a>
 					</span>
+					<span class="middot">·</span>
+					<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
 				</div>
 			</div>
 

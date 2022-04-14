@@ -47,16 +47,16 @@ $media_created = bp_get_media_date_created();
 
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
-						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_created ) ); ?></span>
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-								<span class="middot">·</span>
 								<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
 								<a href="<?php echo esc_url( $media_link ); ?>"><?php bp_media_author(); ?></a></span>
 								<?php
 						}
 						?>
+						<span class="middot">·</span>
+						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_created ) ); ?></span>
 					</div>
 				</div>
 
@@ -73,7 +73,9 @@ $media_created = bp_get_media_date_created();
 								$group_link   = sprintf( '<a href="%s" class="bp-group-home-link %s-home-link">%s</a>', esc_url( $media_link ), esc_attr( bp_get_group_slug( $group ) ), esc_html( bp_get_group_name( $group ) ) );
 								$group_status = bp_get_group_status( $group );
 								?>
+								<span class="middot">·</span>
 								<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
+								<span class="middot">·</span>
 								<span class="media-album_status"><?php echo esc_html( ucfirst( $group_status ) ); ?></span>
 						</div>
 					</div>

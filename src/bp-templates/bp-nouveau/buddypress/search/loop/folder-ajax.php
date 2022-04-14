@@ -30,9 +30,9 @@ $folder_link = bp_get_folder_folder_link();
 
 			<div class="media-folder_modified">
 				<div class="media-folder_details__bottom">
-					<span class="media-folder_date"><?php bp_document_folder_date(); ?></span>
-					<span class="middot">·</span>
 					<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?><a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ); ?>"><?php bp_folder_author(); ?></a></span>
+					<span class="middot">·</span>
+					<span class="media-folder_date"><?php bp_document_folder_date(); ?></span>
 				</div>
 			</div>
 
