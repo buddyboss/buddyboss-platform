@@ -4889,6 +4889,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			font-weight: 500;
 		}
 
+		.mfp-close {
+
+			@include box-shadow-none;
+			right: 20px;
+		}
+
 	}
 
 	.bb-model-footer {
