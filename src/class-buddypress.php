@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 17401;
+		$this->db_version = 18701;
 
 		/** Loading */
 
@@ -557,6 +557,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
+		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -585,6 +586,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.6.4.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.7.0.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.8.6.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -633,6 +635,8 @@ class BuddyPress {
 		$irregular_map = array(
 			'BP_Akismet'                                   => 'activity',
 			'BP_Admin'                                     => 'core',
+			'BP_Background_Updater'                        => 'core',
+			'BP_Email_Background_Updater'                  => 'core',
 			'BP_Attachment_Avatar'                         => 'core',
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',
@@ -645,6 +649,7 @@ class BuddyPress {
 			'BP_Email_Delivery'                            => 'core',
 			'BP_Email_Recipient'                           => 'core',
 			'BP_Email'                                     => 'core',
+			'BP_Email_Queue'                               => 'core',
 			'BP_Embed'                                     => 'core',
 			'BP_Media_Extractor'                           => 'core',
 			'BP_Members_Suggestions'                       => 'core',

@@ -2,9 +2,12 @@
 /**
  * BuddyBoss - Video Single Album
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/single-album.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_album_template;
@@ -42,7 +45,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) :
 							printf(
 								/* translators: videos */
 								_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss' ), // phpcs:ignore
-								number_format_i18n( $video_album_template->album->video['total'] ) // phpcs:ignore
+								bp_core_number_format( $video_album_template->album->video['total'] ) // phpcs:ignore
 							);
 						?>
 						</span>

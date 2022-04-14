@@ -1009,7 +1009,6 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
  * @return bool|BP_Email|WP_Error
  */
 function bp_moderation_member_suspend_email( $email, $tokens ) {
-
 	return bp_send_email(
 		'user-moderation-email',
 		$email,
@@ -1040,11 +1039,11 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 		$email,
 		array(
 			'tokens' => array(
-				'content.type'    => $tokens['content_type'],
-				'content.owner'   => $tokens['content_owner'],
-				'timesreported'   => $tokens['content_timesreported'],
-				'content.link'    => $tokens['content_link'],
-				'reportlink'      => $tokens['content_reportlink'],
+				'content.type'  => $tokens['content_type'],
+				'content.owner' => $tokens['content_owner'],
+				'timesreported' => $tokens['content_timesreported'],
+				'content.link'  => $tokens['content_link'],
+				'reportlink'    => $tokens['content_reportlink'],
 			),
 		)
 	);
