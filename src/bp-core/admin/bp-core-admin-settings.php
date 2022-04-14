@@ -73,23 +73,23 @@ function bp_admin_setting_callback_admin_admin_bar() {
  */
 function bp_admin_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62792,
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62792,
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -138,23 +138,23 @@ function bp_admin_setting_callback_private_network_public_content() {
  */
 function bp_privacy_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62793,
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62793,
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -195,23 +195,23 @@ function bp_admin_setting_callback_blogforum_comments() {
  */
 function bp_posts_in_activity_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62823,
-				),
-				'admin.php'
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62823,
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -221,7 +221,7 @@ function bp_posts_in_activity_tutorial() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_setting_callback_heartbeat() {
-	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not
+	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not.
 	wp_remote_get( bp_core_get_user_domain( bp_loggedin_user_id() ) );
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 	?>
@@ -360,23 +360,23 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
  */
 function bp_activity_settings_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62822,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62822,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -699,10 +699,10 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 				<?php endif; ?>
 			</div>
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
-				<div class="preview-item-avatar">
+				<div class="preview-item-avatar <?php echo esc_attr( bb_get_profile_header_layout_style() . '-image' ); ?>">
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="user-custom-avatar" data-wordpress-avatar="<?php echo esc_url( $wordpress_avatar_url ); ?>" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
@@ -724,29 +724,106 @@ function bp_admin_setting_callback_preview_profile_avatar_cover() {
 }
 
 /**
+ * Default profile cover sizes settings.
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_admin_setting_callback_default_profile_cover_size() {
+
+	?>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bb-cover-profile-width',
+					'label'       => esc_html__( 'Width', 'buddyboss' ),
+					'description' => esc_html__( 'Select the width of profile cover images in profile headers.', 'buddyboss' ),
+					'disabled'    => true,
+					'value'       => bb_get_profile_cover_image_width(),
+					'options'     => array(
+						'default' => esc_html__( 'Default', 'buddyboss' ),
+						'full'    => esc_html__( 'Full Width', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bb-cover-profile-height',
+					'label'       => esc_html__( 'Height', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of profile cover images in profile headers.', 'buddyboss' ),
+					'disabled'    => true,
+					'value'       => bb_get_profile_cover_image_height(),
+					'options'     => array(
+						'small' => esc_html__( 'Small', 'buddyboss' ),
+						'large' => esc_html__( 'Large', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Changing your size of your cover images will reposition cover images already uploaded by your members', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
  * Link to Profile Photos tutorial
  *
  * @since BuddyBoss 1.1.1
  */
 function bp_profile_photos_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 125202,
-				),
-				'admin.php'
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 125202,
+						),
+						'admin.php'
+					)
+				)
+			);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/** Group Headers ************************************************************/
+
+/**
+ * Link to Group Headers Settings tutorial
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_group_headers_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => '125305',
+					),
+					'admin.php'
+				)
 			)
 		);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -762,15 +839,17 @@ function bp_group_avatar_tutorial() {
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62811,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62811,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
@@ -985,10 +1064,10 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 			</div>
 
 			<div class="web-preview-wrap preview-block active" id="web-preview">
-				<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
+				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
 				</div>
-				<div class="preview-item-avatar">
+				<div class="preview-item-avatar <?php echo esc_attr( bb_platform_group_header_style() . '-image' ); ?>">
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
@@ -1008,6 +1087,265 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 	</div>
 	<p class="description"><?php echo wp_kses_post( $live_preview_settings['info'] ); ?></p>
+	<?php
+}
+
+/**
+ * Default group cover sizes settings.
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_admin_setting_callback_default_group_cover_size() {
+
+	?>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bb-cover-group-width',
+					'label'       => esc_html__( 'Width', 'buddyboss' ),
+					'description' => esc_html__( 'Select the width of group cover images in group headers.', 'buddyboss' ),
+					'value'       => bb_get_group_cover_image_width(),
+					'disabled'    => true,
+					'options'     => array(
+						'default' => esc_html__( 'Default', 'buddyboss' ),
+						'full'    => esc_html__( 'Full Width', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<div class="image-width-height">
+		<?php
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'        => 'select',
+					'id'          => 'bb-cover-group-height',
+					'label'       => esc_html__( 'Height', 'buddyboss' ),
+					'description' => esc_html__( 'Select the height of group cover images in group headers and directories.', 'buddyboss' ),
+					'value'       => bb_get_group_cover_image_height(),
+					'disabled'    => true,
+					'options'     => array(
+						'small' => esc_html__( 'Small', 'buddyboss' ),
+						'large' => esc_html__( 'Large', 'buddyboss' ),
+					),
+				)
+			);
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Changing your size of your cover images will reposition cover images already uploaded by your members', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Link to Profile Headers tutorial
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_profile_headers_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+			<?php
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 125303,
+						),
+						'admin.php'
+					)
+				)
+			);
+			?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Profile headers style options.
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_admin_setting_profile_headers_style() {
+	?>
+	<div class="bb-grid-style-outer">
+		<?php
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-profile-headers-layout-style',
+				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => bb_get_profile_header_layout_style(),
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? 'Right' : 'Left',
+						'class' => 'option opt-left',
+					),
+					'centered' => array(
+						'label' => esc_html__( 'Centered', 'buddyboss' ),
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select the style of your profile headers. Profile cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow Platform default profile header element setting field
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param array $args Field options.
+ */
+function bb_admin_setting_profile_header_elements( $args ) {
+	?>
+	<div class='bb-profile-header-elements'>
+		<?php
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			foreach ( $args['elements'] as $element ) {
+				?>
+				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+					<?php
+					new BB_Admin_Setting_Fields(
+						array(
+							'type'     => 'checkbox',
+							'id'       => 'bb-profile-headers-layout-elements-' . $element['element_name'],
+							'label'    => $element['element_label'],
+							'disabled' => true,
+							'selected' => bb_enabled_profile_header_layout_element( $element['element_name'] ) ? $element['element_name'] : '',
+							'value'    => $element['element_name'],
+						)
+					);
+					?>
+				</div>
+				<?php
+			}
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which elements to show in your member directories.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Member directory elements options.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param array $args The array contains extra information of field.
+ */
+function bb_admin_setting_member_directory_elements( $args ) {
+	?>
+	<div class='bb-member-directory-elements'>
+		<?php
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			foreach ( $args['elements'] as $element ) {
+				?>
+				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+					<?php
+					new BB_Admin_Setting_Fields(
+						array(
+							'type'     => 'checkbox',
+							'id'       => 'bb-member-directory-element-' . $element['element_name'],
+							'label'    => $element['element_label'],
+							'disabled' => true,
+							'selected' => function_exists( 'bb_enabled_member_directory_element' ) ? bb_enabled_member_directory_element( $element['element_name'] ) ? $element['element_name'] : '' : $element['element_name'],
+							'value'    => $element['element_name'],
+						)
+					);
+					?>
+				</div>
+				<?php
+			}
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which elements to show in your member directories.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Member directory profile actions options.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param array $args The array contains extra information of field.
+ */
+function bb_admin_setting_member_profile_actions( $args ) {
+	?>
+	<div class='bb-member-directory-profile-actions'>
+		<?php
+		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+			foreach ( $args['elements'] as $profile_action ) {
+				?>
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+					<?php
+					new BB_Admin_Setting_Fields(
+						array(
+							'type'     => 'checkbox',
+							'id'       => 'bb-member-profile-action-' . $profile_action['element_name'],
+							'label'    => $profile_action['element_label'],
+							'disabled' => true,
+							'selected' => function_exists( 'bb_enabled_member_directory_profile_action' ) ? bb_enabled_member_directory_profile_action( $profile_action['element_name'] ) ? $profile_action['element_name'] : '' : $profile_action['element_name'],
+							'value'    => $profile_action['element_name'],
+						)
+					);
+					?>
+				</div>
+				<?php
+			}
+		}
+		?>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which profile actions to enable in your member directories.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Member directory profile primary action options.
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param array $args The array contains extra information of field.
+ */
+function bb_admin_setting_member_profile_primary_action( $args ) {
+	?>
+	<div class='bb-member-directory-profile-primary-action'>
+		<div class="bb-member-directory-primary-action">
+			<?php
+			$options = array( '' => esc_html__( 'None', 'buddyboss' ) );
+
+			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
+				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
+						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
+					}
+				}
+			}
+
+			new BB_Admin_Setting_Fields(
+				array(
+					'type'     => 'select',
+					'id'       => 'bb-member-profile-primary-action',
+					'value'    => bb_get_member_directory_primary_action(),
+					'disabled' => true,
+					'options'  => $options,
+				)
+			);
+			?>
+		</div>
+	</div>
+	<p class="description"><?php esc_html_e( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -1061,23 +1399,23 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
  */
 function bp_group_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62811,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62811,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1152,23 +1490,23 @@ function bp_admin_setting_callback_group_auto_join() {
  */
 function bp_group_types_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62816,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62816,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1218,23 +1556,23 @@ function bp_admin_setting_callback_group_restrict_invites() {
  */
 function bp_group_hierarchies_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62817,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62817,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1301,7 +1639,7 @@ function bp_core_admin_buddyboss_app() {
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
 			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 		</div>
-		<?php
+	<?php
 }
 
 /**
@@ -1317,16 +1655,16 @@ function bp_form_option( $option, $default = '', $slug = false ) {
 	echo bp_get_form_option( $option, $default, $slug );
 }
 
-	/**
-	 * Return settings API option
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param string $option  Form option to return.
-	 * @param string $default Form option default.
-	 * @param bool   $slug    Form option slug.
-	 * @return string
-	 */
+/**
+ * Return settings API option
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param string $option  Form option to return.
+ * @param string $default Form option default.
+ * @param bool   $slug    Form option slug.
+ * @return string
+ */
 function bp_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Get the option and sanitize it.
@@ -1439,7 +1777,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 		value="1"
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
-	<label for="<?php echo $option_name; ?>">
+	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
@@ -1518,7 +1856,7 @@ function bp_feed_settings_callback_platform( $args ) {
 	?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
-    <?php
+	<?php
 
 }
 
@@ -1541,12 +1879,14 @@ function bp_admin_setting_callback_register() {
 					'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
 					'buddyboss'
 				),
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-invites',
-					),
-					admin_url( 'admin.php' )
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-invites',
+						),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
@@ -1598,23 +1938,23 @@ function bp_admin_setting_callback_enable_profile_gravatar() {
  */
 function bp_email_invites_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 62838,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62838,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1718,23 +2058,23 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
  */
 function bp_profile_names_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 72340,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 72340,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1786,7 +2126,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
  * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
- *
  */
 function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
@@ -1801,7 +2140,6 @@ function bp_admin_setting_callback_register_show_confirm_email() {
  * Admin settings for showing the legal agreement confirmation field.
  *
  * @since BuddyBoss 1.5.8.3
- *
  */
 function bb_admin_setting_callback_register_show_legal_agreement() {
 	?>
@@ -1878,11 +2216,156 @@ function bp_admin_setting_group_layout_default_option() {
 			'<option value="%s" %s>%s</option>',
 			$key,
 			$key == $selected ? 'selected' : '',
-			$value
+			esc_attr( $value )
 		);
 	}
 	printf( '</select>' );
 
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Headers > Header style
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_admin_setting_group_header_style() {
+	?>
+	<div class="bb-header-style-outer">
+		<?php
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-group-header-style-',
+				'label'       => esc_html__( 'Header Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? esc_html__( 'Right', 'buddyboss' ) : esc_html__( 'Left', 'buddyboss' ),
+						'class' => 'option opt-left',
+					),
+					'centered' => array(
+						'label' => esc_html__( 'Centered', 'buddyboss' ),
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
+		?>
+	</div>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow Platform default group header elements setting field
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param array $args Field options.
+ */
+function bb_admin_setting_group_headers_elements( $args ) {
+
+	echo "<div class='bb-group-headers-elements'>";
+	if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+		foreach ( $args['elements'] as $element ) {
+			$element_name = $element['element_name'];
+			?>
+			<div class="bb-group-headers-element bb-group-headers-element-<?php echo esc_attr( $element_name ); ?>">
+				<?php
+				new BB_Admin_Setting_Fields(
+					array(
+						'type'     => 'checkbox',
+						'id'       => 'bb-group-headers-element-' . $element_name,
+						'label'    => $element['element_label'],
+						'disabled' => true,
+						'value'    => $element_name,
+						'selected' => $element_name,
+					)
+				);
+				?>
+			</div>
+			<?php
+		}
+	}
+	echo '</div>' .
+	'<p class="description">' .
+		esc_html__( 'Select which elements to show in your group headers.', 'buddyboss' ) .
+	'</p>';
+
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Directories > Grid style
+ *
+ * @since BuddyBoss 1.9.1
+ */
+function bb_admin_setting_group_grid_style() {
+	?>
+	<div class="bb-grid-style-outer">
+		<?php
+		new BB_Admin_Setting_Fields(
+			array(
+				'type'        => 'radio',
+				'id'          => 'bb-group-directory-layout-grid-style-',
+				'label'       => esc_html__( 'Grid Style', 'buddyboss' ),
+				'disabled'    => true,
+				'opt_wrapper' => true,
+				'value'       => 'left',
+				'options'     => array(
+					'left'     => array(
+						'label' => is_rtl() ? esc_html__( 'Right', 'buddyboss' ) : esc_html__( 'Left', 'buddyboss' ),
+						'class' => 'option opt-left',
+					),
+					'centered' => array(
+						'label' => esc_html__( 'Centered', 'buddyboss' ),
+						'class' => 'option opt-centered',
+					),
+				),
+			)
+		);
+		?>
+	</div>
+	<p class="description"><?php echo esc_html__( 'Select the style of the of grid layouts. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Allow Platform default group element setting field
+ *
+ * @since BuddyBoss 1.9.1
+ *
+ * @param array $args Field options.
+ */
+function bb_admin_setting_group_elements( $args ) {
+
+	echo "<div class='bb-group-elements'>";
+	if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
+		foreach ( $args['elements'] as $element ) {
+			$element_name = $element['element_name'];
+			?>
+			<div class="bb-group-element bb-group-element-<?php echo esc_attr( $element_name ); ?>">
+				<?php
+				new BB_Admin_Setting_Fields(
+					array(
+						'type'     => 'checkbox',
+						'id'       => 'bb-group-directory-layout-element-' . $element_name,
+						'label'    => $element['element_label'],
+						'disabled' => true,
+						'value'    => $element_name,
+						'selected' => $element_name,
+					)
+				);
+				?>
+			</div>
+			<?php
+		}
+	}
+	echo '</div>' .
+	'<p class="description">' .
+		esc_html__( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ) .
+	'</p>';
 }
 
 /**
@@ -1892,23 +2375,23 @@ function bp_admin_setting_group_layout_default_option() {
  */
 function bp_group_directories_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => '83107',
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => '125311',
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -1916,7 +2399,6 @@ function bp_group_directories_tutorial() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_allow_custom_registration() {
 
@@ -1936,11 +2418,13 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 					'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
 					'buddyboss'
 				),
-				add_query_arg(
-					array(
-						'page' => 'bp-pages',
-					),
-					admin_url( 'admin.php' )
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-pages',
+						),
+						admin_url( 'admin.php' )
+					)
 				)
 			)
 		);
@@ -1951,7 +2435,6 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
  * Admin settings for showing the allow custom registration checkbox.
  *
  * @since BuddyBoss 1.2.8
- *
  */
 function bp_admin_setting_callback_register_page_url() {
 	?>
@@ -1959,7 +2442,7 @@ function bp_admin_setting_callback_register_page_url() {
 	<?php
 	printf(
 		'<p class="description">%s</p>',
-		sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+		esc_html__( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' )
 	);
 }
 
@@ -1970,23 +2453,23 @@ function bp_admin_setting_callback_register_page_url() {
  */
 function bp_admin_registration_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 86158,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 86158,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2009,23 +2492,23 @@ function bp_admin_setting_callback_group_messages() {
  */
 function bp_admin_moderation_block_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 121711,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 121711,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2036,23 +2519,23 @@ function bp_admin_moderation_block_setting_tutorial() {
  */
 function bp_admin_moderation_report_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 121712,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 121712,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2176,23 +2659,23 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
  */
 function bp_admin_on_screen_notification_setting_tutorial() {
 	?>
-
 	<p>
 		<a class="button" href="
 		<?php
-		echo bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page'    => 'bp-help',
-					'article' => 124801,
-				),
-				'admin.php'
-			)
-		);
+			echo esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 124801,
+						),
+						'admin.php'
+					)
+				)
+			);
 		?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
-
 	<?php
 }
 
@@ -2251,7 +2734,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	?>
 
 	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1"<?php checked( $checked_checkbox ); ?><?php disabled( $disable_field ); ?>/>
-	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST APIs access to only logged-in members', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST API access to only logged-in members', 'buddyboss' ); ?></label>
 	<p class="description">
 		<?php
 		printf(
@@ -2312,7 +2795,7 @@ function bb_admin_setting_callback_private_rest_apis_public_content() {
 	}
 	?>
 
-	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST API endpoints URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rest-apis-public-content" style="display:block;"><?php esc_html_e( 'Enter REST API endpoint URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-enable-private-rest-apis-public-content" name="bb-enable-private-rest-apis-public-content" style="margin-top: 10px;" <?php disabled( $disable_field ); ?>><?php echo esc_textarea( bb_enable_private_rest_apis_public_content() ); ?></textarea>
 	<?php
 }
@@ -2326,7 +2809,7 @@ function bb_admin_setting_callback_private_rss_feeds() {
 	?>
 
 	<input id="bb-enable-private-rss-feeds" name="bb-enable-private-rss-feeds" type="checkbox" value="1" <?php checked( bp_enable_private_rss_feeds() ); ?>/>
-	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS Feeds access to only logged-in members', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rss-feeds"><?php esc_html_e( 'Restrict RSS feed access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -2338,7 +2821,202 @@ function bb_admin_setting_callback_private_rss_feeds() {
 function bb_admin_setting_callback_private_rss_feeds_public_content() {
 	?>
 
-	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php esc_html_e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one endpoint URL or URI per line. ', 'buddyboss' ); ?></label>
+	<label for="bb-enable-private-rss-feeds-public-content" style="display:block;"><?php esc_html_e( 'Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one URL or URI per line.', 'buddyboss' ); ?></label>
 	<textarea rows="10" cols="100" id="bb-enable-private-rss-feeds-public-content" name="bb-enable-private-rss-feeds-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bb_enable_private_rss_feeds_public_content() ); ?></textarea>
+	<?php
+}
+
+/**
+ * Register the labs settings section.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return array
+ */
+function bb_labs_get_settings_sections() {
+
+	$settings = array(
+		'bp_labs_settings_notifications' => array(
+			'page'     => 'labs',
+			'title'    => esc_html__( 'BuddyBoss Labs', 'buddyboss' ),
+			'callback' => 'bb_labs_notification_preferences_info_section_callback',
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
+
+}
+
+/**
+ * Get settings fields by section.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param string $section_id Section id.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ */
+function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_labs_get_settings_fields();
+	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all the settings fields.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return array
+ */
+function bb_labs_get_settings_fields() {
+
+	$fields = array();
+
+	$fields['bp_labs_settings_notifications'] = array(
+
+		'bp_labs_notification_preferences_enabled' => array(
+			'title'             => __( 'Notification Preferences', 'buddyboss' ),
+			'callback'          => 'bb_labs_settings_callback_notification_preferences_enabled',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		),
+	);
+
+	return (array) apply_filters( 'bb_labs_get_settings_fields', $fields );
+}
+
+/**
+ * Setting > Media > Profile support.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_labs_settings_callback_notification_preferences_enabled() {
+
+	?>
+	<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
+		<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
+	/>
+	<label for="bp_labs_notification_preferences_enabled">
+		<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
+	</label>
+
+	<?php
+	if ( ! bp_is_active( 'notifications' ) ) {
+		printf(
+			'<p class="bp-new-notice-panel-notice">%s</p>',
+			sprintf(
+				/* translators: Components page link. */
+				wp_kses_post( __( 'To make full use of this feature, enable the %s component.', 'buddyboss' ) ),
+				'<strong><a href="' . esc_url(
+					add_query_arg(
+						array( 'page' => 'bp-components' ),
+						admin_url( 'admin.php' )
+					)
+				) . '">' . esc_html__( 'Notifications', 'buddyboss' ) . '</a></strong>'
+			)
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__(
+				'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the Notifications settings.',
+				'buddyboss'
+			)
+		);
+	} else {
+
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				wp_kses_post(
+					/* translators: Notification settings link. */
+					__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' )
+				),
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => 'bp-settings',
+							'tab'  => 'bp-notifications',
+						),
+						admin_url( 'admin.php' )
+					)
+				)
+			)
+		);
+	}
+
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			'<a href="%1$s" class="button">%2$s</a>',
+			esc_url(
+				bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 125369,
+						),
+						'admin.php'
+					)
+				)
+			),
+			esc_html__( 'View Tutorial', 'buddyboss' )
+		)
+	);
+	?>
+
+	<p class="display-notice bb-lab-notice">
+		<strong><?php esc_html_e( 'Note to Developers', 'buddyboss' ); ?></strong>
+		<br/>
+		<?php
+		printf(
+			/* translators: Tutorial link. */
+			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
+			sprintf(
+				'<a href="%s" target="_blank" >' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
+				'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
+			)
+		)
+		?>
+	</p>
+
+	<?php
+
+}
+
+/**
+ * BuddyBoss Labs settings section callback.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_labs_notification_preferences_info_section_callback() {
+	?>
+
+	<p>
+		<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				wp_kses_post(
+				/* translators: Support portal. */
+					__(
+						'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s" target="_blank" >support portal</a>.',
+						'buddyboss'
+					)
+				),
+				"https://support.buddyboss.com"
+			)
+		);
+		?>
+	</p>
+
 	<?php
 }
