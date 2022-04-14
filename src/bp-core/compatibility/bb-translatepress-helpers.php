@@ -1,8 +1,19 @@
 <?php
+/**
+ * Added compatibility support for third party plugins TranslatePress.
+ *
+ * @package BuddyBoss
+ *
+ * @since BuddyBoss [BBBVERSION]
+ */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+if ( class_exists( 'BB_TranslatePress_Plugin_Compatibility' ) ) {
+	return;
 }
 
 /**
@@ -59,17 +70,19 @@ class BB_TranslatePress_Plugin_Compatibility {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $path
+	 * @param string $path URI Path.
+	 *
 	 * @return string $path
 	 */
 	public function remove_langcode_from_url( $path ) {
 
 		$tp_settings = get_option( 'trp_settings' );
-		if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && !empty( $tp_settings['url-slugs'] ) ) {
+		if ( $tp_settings && isset( $tp_settings['url-slugs'] ) && ! empty( $tp_settings['url-slugs'] ) ) {
 			foreach ( $tp_settings['url-slugs'] as $lang_key => $lang_slug ) {
 				$path = str_replace( $lang_slug . '/', '', $path );
 			}
 		}
+
 		return $path;
 
 	}
