@@ -1773,6 +1773,11 @@ a.layout-grid-view {
   min-height: 95px;
 }
 
+.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #whats-new font[color],
+.activity-update-form .activity-form.focus-in #whats-new font[color] {
+  color: inherit;
+}
+
 .bp-nouveau-activity-form-placeholder- .activity-form.focus-in #activity-form-submit-wrapper,
 .activity-update-form .activity-form.focus-in #activity-form-submit-wrapper {
   padding: 0 15px 0 25px;
