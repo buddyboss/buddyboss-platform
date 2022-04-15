@@ -107,7 +107,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
-	 * @apiParam {String=active,newest,alphabetical,random,popular} [type=active] Shorthand for certain orderby/order combinations.
+	 * @apiParam {String=active,newest,alphabetical,random,popular,include} [type=active] Shorthand for certain orderby/order combinations.
 	 * @apiParam {String=asc,desc} [order=desc] Order sort attribute ascending or descending.
 	 * @apiParam {String=date_created,last_activity,total_member_count,name,random} [orderby=date_created] Order Groups by which attribute.
 	 * @apiParam {Array=public,private,hidden   } [status] Group statuses to limit results to.
@@ -168,6 +168,23 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			&& empty( $request['parent_id'] )
 		) {
 			$args['exclude'] = array_unique( bp_groups_get_excluded_group_ids_by_type() );
+		}
+
+		if (
+			(
+				! empty( $request['include'] )
+				&& ! empty( $args['orderby'] )
+				&& 'include' === $args['orderby']
+			) ||
+			(
+				! empty( $args['orderby'] )
+				&& 'id' === $args['orderby']
+			)
+		) {
+			if ( 'include' === $args['orderby'] ) {
+				$args['orderby'] = 'in';
+			}
+			$args['type'] = '';
 		}
 
 		/**
@@ -768,7 +785,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		// Avatars.
 		if ( ! empty( $schema['properties']['avatar_urls'] ) ) {
 			$data['avatar_urls'] = array(
-				'thumb' => bp_core_fetch_avatar(
+				'thumb'      => bp_core_fetch_avatar(
 					array(
 						'html'    => false,
 						'object'  => 'group',
@@ -776,7 +793,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'type'    => 'thumb',
 					)
 				),
-				'full'  => bp_core_fetch_avatar(
+				'full'       => bp_core_fetch_avatar(
 					array(
 						'html'    => false,
 						'object'  => 'group',
@@ -784,12 +801,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'type'    => 'full',
 					)
 				),
+				'is_default' => ! bp_get_group_has_avatar( $item->id ),
 			);
 		}
 
 		// Cover Image.
 		if ( ! empty( $schema['properties']['cover_url'] ) && function_exists( 'bp_get_group_cover_url' ) ) {
-			$data['cover_url'] = bp_get_group_cover_url( $item );
+			$data['cover_url']        = bp_get_group_cover_url( $item );
+			$data['cover_is_default'] = ! bp_attachments_get_group_has_cover_image( $item->id );
 		}
 
 		if ( $this->bp_rest_group_is_forum_enabled( $item ) && function_exists( 'bbpress' ) ) {
@@ -1040,7 +1059,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		}
 
 		// Check for moderators or if user is a member of the group.
-		return ( bp_current_user_can( 'bp_moderate' ) || groups_is_user_member( bp_loggedin_user_id(), $group->id ) );
+		return ( bp_current_user_can( 'bp_moderate' ) || groups_is_user_member( bp_loggedin_user_id(), $group->id ) || groups_is_user_invited( bp_loggedin_user_id(), $group->id ) );
 	}
 
 	/**
@@ -1389,13 +1408,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'readonly'    => true,
 				),
 				'can_join'           => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Check current user can join or request access.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_post'           => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Check current user can post activity or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
@@ -1433,7 +1452,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 			$avatar_properties['full'] = array(
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -1441,9 +1460,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
+				'context'     => array( 'embed', 'view', 'edit' ),
+			);
+
+			$avatar_properties['is_default'] = array(
+				'description' => __( 'Whether to check group has default avatar or not.', 'buddyboss' ),
+				'readonly'    => true,
+				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 			);
 
@@ -1461,6 +1487,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'description' => __( 'Cover Image URLs for the group.', 'buddyboss' ),
 				'type'        => 'string',
 				'format'      => 'uri',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
+			$schema['properties']['cover_is_default'] = array(
+				'description' => __( 'Whether to check the default cover image or not.', 'buddyboss' ),
+				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
 			);
@@ -1488,7 +1521,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
 			'default'           => 'active',
 			'type'              => 'string',
-			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'popular' ),
+			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'popular', 'include' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1506,7 +1539,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order Groups by which attribute.', 'buddyboss' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
-			'enum'              => array( 'date_created', 'last_activity', 'total_member_count', 'name', 'random' ),
+			'enum'              => array( 'date_created', 'last_activity', 'total_member_count', 'name', 'random', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
