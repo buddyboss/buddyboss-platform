@@ -73,7 +73,6 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			'user_id'         => 0,
 			'type'            => 'active',
 			'per_page'        => $settings['max_members'],
-			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
 			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
@@ -100,8 +99,12 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 					<?php endwhile; ?>
 
 				</div>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
-
+				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : esc_attr( 'bp-hide' ); ?>">
+					<a href="<?php esc_url( bp_members_directory_permalink() ); ?>" class="count-more">
+						<?php esc_html_e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
+					</a>
+				</div>
+	
 			<?php else : ?>
 
 				<div class="widget-error">
@@ -160,7 +163,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
-				<input class="widefat" id="<?php echo  esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo  esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
 
