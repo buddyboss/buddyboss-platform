@@ -253,7 +253,7 @@ function bp_xprofile_create_field_type( $type ) {
  */
 function xprofile_insert_field( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'field_id'          => null,

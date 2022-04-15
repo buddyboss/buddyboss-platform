@@ -161,7 +161,7 @@ class BP_Messages_Thread {
 				bp_displayed_user_id() :
 				bp_loggedin_user_id();
 		// Merge $args with our defaults.
-		$r                      = wp_parse_args(
+		$r                      = bp_parse_args(
 			$args,
 			array(
 				'user_id'           => $user_id,

@@ -310,7 +310,7 @@ function bp_core_new_nav_default( $args = '' ) {
 		'subnav_slug'     => false,  // The slug of the subnav item to select when clicked.
 	);
 
-	$r = wp_parse_args( $args, $defaults );
+	$r = bp_parse_args( $args, $defaults );
 
 	// This is specific to Members - it's not available in Groups.
 	$parent_nav = $bp->members->nav->get_primary( array( 'slug' => $r['parent_slug'] ), false );
@@ -490,7 +490,7 @@ function bp_core_new_subnav_item( $args, $component = null ) {
 function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'name'              => false, // Display name for the nav item.
@@ -592,7 +592,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 function bp_core_register_subnav_screen_function( $args = '', $component = 'members' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'slug'            => false, // URL slug for the screen.

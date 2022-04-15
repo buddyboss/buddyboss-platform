@@ -683,7 +683,7 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
 		$counts = bp_total_follow_counts();
@@ -4733,7 +4733,7 @@ function bp_member_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'id'                => 'member_report',
@@ -5200,7 +5200,7 @@ function bb_core_sync_user_notification_settings( $user_id ) {
 	}
 
 	$all_notifications_keys = array_column( $all_notifications, 'default', 'key' );
-	$notifications          = wp_parse_args( $main, $all_notifications_keys );
+	$notifications          = bp_parse_args( $main, $all_notifications_keys );
 
 	foreach ( $notifications as $k => $v ) {
 		if ( ( ! isset( $default_by_admin[ $k ] ) || ( array_key_exists( $k, $default_by_admin ) && 'no' !== $default_by_admin[ $k ] ) ) && 'no' !== $v ) {

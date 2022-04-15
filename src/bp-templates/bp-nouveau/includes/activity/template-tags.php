@@ -1662,7 +1662,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			}
 		}
 
-		$delete_args = wp_parse_args(
+		$delete_args = bp_parse_args(
 			$delete_args,
 			array(
 				'link_text'   => '',
