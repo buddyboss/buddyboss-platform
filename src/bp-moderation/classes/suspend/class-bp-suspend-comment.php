@@ -64,20 +64,35 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param int $member_id Member id.
+	 * @param int    $member_id Member id.
+	 * @param string $action    Action name to perform.
+	 * @param int    $page      Number of page.
 	 *
 	 * @return array
 	 */
-	public static function get_member_comment_ids( $member_id ) {
+	public static function get_member_comment_ids( $member_id, $action = '', $page = - 1 ) {
 
-		$comment_ids = get_comments(
-			array(
-				'user_id'                   => $member_id,
-				'fields'                    => 'ids',
-				'update_comment_meta_cache' => false,
-				'update_comment_post_cache' => false,
-			)
+		$args = array(
+			'user_id'                   => $member_id,
+			'fields'                    => 'ids',
+			'update_comment_meta_cache' => false,
+			'update_comment_post_cache' => false,
 		);
+
+		if ( $page > 0 ) {
+			$args['number'] = self::$item_per_page;
+			$args['paged']  = $page;
+		}
+
+		$comment_ids = get_comments( $args );
+
+		if ( 'hide' === $action && ! empty( $comment_ids ) ) {
+			foreach ( $comment_ids as $k => $comment_id ) {
+				if ( BP_Core_Suspend::check_suspended_content( $comment_id, self::$type, true ) ) {
+					unset( $comment_ids[ $k ] );
+				}
+			}
+		}
 
 		return $comment_ids;
 	}
@@ -110,13 +125,15 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->hide_related_content( $comment_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'hide_related_content' ),
-					'args'     => array( $comment_id, $hide_sitewide, $args ),
+					array(
+						'callback' => array( $this, 'hide_related_content' ),
+						'args'     => array( $comment_id, $hide_sitewide, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -164,13 +181,15 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
 
-		if ( $this->backgroup_diabled || ! empty( $args ) ) {
+		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $comment_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->push_to_queue(
+			$bp_background_updater->data(
 				array(
-					'callback' => array( $this, 'unhide_related_content' ),
-					'args'     => array( $comment_id, $hide_sitewide, $force_all, $args ),
+					array(
+						'callback' => array( $this, 'unhide_related_content' ),
+						'args'     => array( $comment_id, $hide_sitewide, $force_all, $args ),
+					),
 				)
 			);
 			$bp_background_updater->save()->schedule_event();
@@ -213,7 +232,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		if ( $this->check_is_hidden( $comment_id) ) {
+		if ( $this->check_is_hidden( $comment_id ) ) {
 			$return = esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
@@ -368,6 +387,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	protected function get_related_contents( $comment_id, $args = array() ) {
 
 		$related_contents = array();
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
+
+		if ( $page > 1 ) {
+			return $related_contents;
+		}
 
 		if ( bp_is_active( 'activity' ) ) {
 			$a_comment_id = get_comment_meta( $comment_id, 'bp_activity_comment_id', true );
@@ -432,7 +456,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	/**
 	 * Check comment author is suspended or not
 	 *
-	 * @param int $comment_id comment id
+	 * @param int $comment_id comment id.
 	 *
 	 * @return bool
 	 */

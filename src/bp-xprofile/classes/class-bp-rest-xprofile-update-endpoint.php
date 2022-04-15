@@ -101,9 +101,12 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 		$user_id = bp_loggedin_user_id();
 
-		$fields = $request->get_param( 'fields' );
+		$fields    = $request->get_param( 'fields' );
+		$field_ids = array();
 
-		$errors = array();
+		$errors     = array();
+		$old_values = array();
+		$new_values = array();
 
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $k => $field_post ) {
@@ -117,7 +120,14 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					continue;
 				}
 
+				$field_ids[] = $field_id;
+
 				$field = xprofile_get_field( $field_id );
+
+				$old_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, $user_id ),
+					'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
+				);
 
 				if ( isset( $field_post['value'] ) ) {
 					if ( 'checkbox' === $field->type || 'multiselectbox' === $field->type ) {
@@ -154,7 +164,26 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				if ( ! empty( $visibility_level ) ) {
 					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 				}
+
+				$new_values[ $field_id ] = array(
+					'value'      => xprofile_get_field_data( $field_id, $user_id ),
+					'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
+				);
 			}
+
+			/**
+			 * Fires after all XProfile fields have been saved for the current profile.
+			 *
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.6.0 Added $old_values and $new_values parameters.
+			 *
+			 * @param int   $user_id    ID for the user whose profile is being saved.
+			 * @param array $field_ids  Array of field IDs that were edited.
+			 * @param bool  $errors     Whether or not any errors occurred.
+			 * @param array $old_values Array of original values before update.
+			 * @param array $new_values Array of newly saved values after update.
+			 */
+			do_action( 'xprofile_updated_profile', $user_id, $field_ids, $errors, $old_values, $new_values );
 		}
 
 		$args = array(
@@ -229,28 +258,27 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function update_items_permissions_check( $request ) {
-		$retval = true;
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		if ( is_user_logged_in() ) {
+			$retval  = true;
+			$user_id = bp_loggedin_user_id();
 
-		$user_id = bp_loggedin_user_id();
-
-		if ( empty( $user_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_login_required',
-				__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
+			if ( empty( $user_id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_login_required',
+					__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**

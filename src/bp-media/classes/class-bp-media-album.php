@@ -316,7 +316,7 @@ class BP_Media_Album {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -472,7 +472,7 @@ class BP_Media_Album {
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		// Media Privacy array
+		// Media Privacy array.
 		$media_privacy = bp_media_get_visibility_levels();
 
 		$albums       = array();
@@ -503,13 +503,16 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get( array(
+			$album->media = bp_media_get(
+				array(
 					'album_id'    => $album->id,
 					'count_total' => true,
-				) );
+					'video'       => true,
+				)
+			);
 
 			$group_name = '';
-			if ( bp_is_active( 'groups') && $album->group_id > 0 ) {
+			if ( bp_is_active( 'groups' ) && $album->group_id > 0 ) {
 				$group      = groups_get_group( $album->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
@@ -519,33 +522,12 @@ class BP_Media_Album {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility       = $media_privacy[ $album->privacy ];
+				$visibility = $media_privacy[ $album->privacy ];
 			}
 			$album->group_name = $group_name;
 			$album->visibility = $visibility;
 
 			$albums[] = $album;
-		}
-
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $albums, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with albums.
-		foreach ( $albums as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$albums[ $a_index ]->user_email    = $a_user->user_email;
-				$albums[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$albums[ $a_index ]->user_login    = $a_user->user_login;
-				$albums[ $a_index ]->display_name  = $a_user->display_name;
-			}
 		}
 
 		return $albums;
@@ -566,7 +548,7 @@ class BP_Media_Album {
 		}
 
 		$args = array(
-			'in'   => $id,
+			'in' => $id,
 		);
 
 		$albums = self::get( $args );
@@ -637,14 +619,20 @@ class BP_Media_Album {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param int $group_id
+	 * @param int $group_id Group ID.
 	 *
 	 * @return array|bool|int
 	 */
 	public static function total_group_album_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+		$cache_key = 'bp_total_group_album_count_' . $group_id;
+		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
+
+		if ( false === $total_count ) {
+			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+			wp_cache_set( $cache_key, $total_count, 'bp_media_album' );
+		}
 
 		return $total_count;
 	}
@@ -746,10 +734,17 @@ class BP_Media_Album {
 		// Pluck the media albums IDs out of the $albums array.
 		$album_ids = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
 
-		// delete the media associated with album
+		// delete the media associated with album.
 		if ( ! empty( $album_ids ) ) {
-			foreach( $album_ids as $album_id ) {
+			foreach ( $album_ids as $album_id ) {
 				bp_media_delete( array( 'album_id' => $album_id ) );
+			}
+		}
+
+		// delete the video associated with album.
+		if ( ! empty( $album_ids ) && function_exists( 'bp_video_delete' ) ) {
+			foreach ( $album_ids as $album_id ) {
+				bp_video_delete( array( 'album_id' => $album_id ) );
 			}
 		}
 

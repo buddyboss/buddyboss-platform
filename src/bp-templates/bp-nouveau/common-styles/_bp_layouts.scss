@@ -179,6 +179,7 @@
 					display: inline-block;
 					height: auto;
 					width: 50%;
+					image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 				}
 			}
 
@@ -213,6 +214,7 @@
 
 				.last-activity {
 					margin-top: 5px;
+					font-weight: 400;
 				}
 
 				.group-desc {
