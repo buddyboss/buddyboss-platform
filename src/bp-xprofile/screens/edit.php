@@ -77,6 +77,7 @@ function xprofile_screen_edit_profile() {
 			bp_xprofile_maybe_format_datebox_post_data( $field_id );
 
 			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
+
 			if ( $is_required[ $field_id ] && empty( $_POST[ 'field_' . $field_id ] ) ) {
 				$errors                     = true;
 				$field                      = new BP_XProfile_Field( $field_id );
@@ -93,7 +94,7 @@ function xprofile_screen_edit_profile() {
 				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
 				if ( bp_current_user_can( 'administrator' ) ) {
-					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+					if ( 'none' === $selected_member_type_wp_roles[0] || empty( $selected_member_type_wp_roles[0] ) ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 					} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
@@ -102,7 +103,7 @@ function xprofile_screen_edit_profile() {
 						$validations[]           = $bp_error_message_string;
 					}
 				} elseif ( bp_current_user_can( 'editor' ) ) {
-					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+					if ( 'none' === $selected_member_type_wp_roles[0] || empty( $selected_member_type_wp_roles[0] ) ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 					} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) ) ) {
