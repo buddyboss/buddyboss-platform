@@ -215,6 +215,7 @@
 			img.avatar {
 				max-width: 60px;
 				width: 100%;
+				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 			}
 		}
 
@@ -579,6 +580,7 @@
 	img.avatar {
 		float: left;
 		margin: 0 $marg-sml 0 0;
+		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
 	}
 
 	.actions {
@@ -719,7 +721,7 @@ input#send-to-input {
 			border-radius: 0;
 			z-index: 112;
 			visibility: visible;
-			bottom: -3px;
+			bottom: -7px;
 			height: 40px;
 		}
 
@@ -738,10 +740,8 @@ input#send-to-input {
 				min-width: 30px;
 				border: 0;
 				background-color: transparent !important;
-				color: rgba(18, 43, 70, 0.4) !important;
 
 				&.medium-editor-button-active {
-					color: #122b46 !important;
 					background: none transparent !important;
 				}
 
@@ -754,7 +754,7 @@ input#send-to-input {
 		}
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
-			width: 220px;
+			width: calc(100% - 80px);
 		}
 
 	}
@@ -986,7 +986,7 @@ input#send-to-input {
 	#messages-post-media-uploader.open {
 		position: absolute;
 		top: 0;
-		z-index: 112;
+		z-index: 11;
 		background: rgba(255, 255, 255, 0.99);
 		height: calc(100% - 245px);
 		width: 100%;
@@ -1125,11 +1125,6 @@ body .bp-messages-user-threads {
 			.medium-editor-toolbar-actions button {
 				padding: 10px 0;
 				min-width: 30px;
-			}
-
-			.medium-editor-toolbar-form .medium-editor-toolbar-input {
-				max-width: calc(100% - 90px);
-				width: auto;
 			}
 
 		}
