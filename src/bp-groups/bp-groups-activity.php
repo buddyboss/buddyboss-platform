@@ -675,6 +675,10 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 		)
 	);
 
+	if ( empty( $old_group->description ) && ! empty( $group->description ) ) {
+		return false;
+	}
+
 	/*
 	 * Store the changed data, which will be used to generate the activity
 	 * action. Since we haven't yet created the activity item, we store the
