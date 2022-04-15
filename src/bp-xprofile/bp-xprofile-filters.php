@@ -1316,3 +1316,12 @@ function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $updat
 		}
 	}
 }
+
+/**
+ * Function trigger when fieldset is added or deleted or field deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bp_core_xprofile_clear_group_cache() {
+	BP_XProfile_Group::$bp_xprofile_group_ids = array();
+}
