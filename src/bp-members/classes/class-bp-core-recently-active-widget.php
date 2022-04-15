@@ -84,20 +84,20 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		?>
 		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
 			<?php if ( bp_has_members( $members_args ) ) : ?>
-	
+
 				<div class="avatar-block">
-	
+
 					<?php
 					while ( bp_members() ) :
 						bp_the_member();
 						?>
-	
+
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?></a>
 						</div>
-	
+
 					<?php endwhile; ?>
-	
+
 				</div>
 				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : esc_attr( 'bp-hide' ); ?>">
 					<a href="<?php esc_url( bp_members_directory_permalink() ); ?>" class="count-more">
@@ -106,11 +106,11 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 				</div>
 	
 			<?php else : ?>
-	
+
 				<div class="widget-error">
 					<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
 				</div>
-	
+
 			<?php endif; ?>
 		</div>
 		<?php
@@ -231,7 +231,7 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 				?>
 
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" title="<?php bp_member_name(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+					<a href="<?php bp_member_permalink(); ?>" title="<?php echo esc_attr( bp_get_member_name() ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"><?php bp_member_avatar(); ?></a>
 				</div>
 
 			<?php endwhile; ?>

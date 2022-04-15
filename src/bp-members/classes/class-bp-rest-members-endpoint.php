@@ -149,7 +149,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
-	 * @apiParam {String=active,newest,alphabetical,random,online,popular} [type=newest] Shorthand for certain orderby/order combinations.
+	 * @apiParam {String=active,newest,alphabetical,random,online,popular,include} [type=newest] Shorthand for certain orderby/order combinations.
 	 * @apiParam {Number} [user_id] Limit results to friends of a user.
 	 * @apiParam {Arrays} [user_ids] Pass IDs of users to limit result set.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
@@ -241,6 +241,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$users           = apply_filters( 'bp_ps_search_results', $users );
 				$args['include'] = implode( ',', $users );
 			}
+		} else if ( ! empty( $args['include'] ) ) {
+			$args['type'] = 'in';
 		}
 
 		if (
@@ -707,10 +709,15 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'registered_date'    => bp_rest_prepare_date_response( get_userdata( $user->ID )->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
-			'xprofile'           => $this->xprofile_data( $user->ID ),
+			'xprofile'           => array(),
 			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
 			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
 		);
+
+		// Load xprofile data when required.
+		if ( 'embed' !== $context ) {
+			$data['xprofile'] = $this->xprofile_data( $user->ID );
+		}
 
 		$data['friendship_status'] = (
 			(
@@ -780,7 +787,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		// Cover Image.
-		$data['cover_url'] = (
+		$data['cover_url']        = (
 			empty( bp_disable_cover_image_uploads() )
 			? bp_attachments_get_attachment(
 				'url',
@@ -791,6 +798,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			)
 			: false
 		);
+		$data['cover_is_default'] = ! bp_attachments_get_user_has_cover_image( $user->ID );
 
 		// Fallback.
 		if ( false === $data['member_types'] ) {
@@ -1219,6 +1227,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'readonly'    => true,
 		);
 
+		$schema['properties']['cover_is_default'] = array(
+			'description' => __( 'Whether to check member has default cover image or not.', 'buddyboss' ),
+			'type'        => 'boolean',
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'readonly'    => true,
+		);
+
 		/**
 		 * Filters the members schema.
 		 *
@@ -1248,7 +1263,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
 			'default'           => 'newest',
 			'type'              => 'string',
-			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular' ),
+			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1352,7 +1367,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
 				continue;
 			}
-			
+
 			if ( ! isset( $f->filter ) ) {
 				continue;
 			}
