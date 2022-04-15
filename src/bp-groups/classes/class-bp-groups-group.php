@@ -416,19 +416,27 @@ class BP_Groups_Group {
 
 		$bp = buddypress();
 
-		// Finally remove the group entry from the DB.
+		// Finally, remove the group entry from the DB.
 		if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) ) {
 			return false;
 		}
 
-		// delete group avatars
+		// Delete group avatars.
 		$upload_path = bp_core_avatar_upload_path();
-		system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $upload_path . '/group-avatars/' . $this->id );
+		}
 
-		// delete group avatars
+		// Delete group avatars.
 		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
-		system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
+		if ( function_exists( 'system' ) ) {
+			system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
+		} else {
+			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
+		}
 
 		return true;
 	}
@@ -801,18 +809,20 @@ class BP_Groups_Group {
 	public static function get_invites( $user_id, $group_id, $sent = null ) {
 		if ( 0 === $sent ) {
 			$sent_arg = 'draft';
-		} else if ( 1 === $sent ) {
+		} elseif ( 1 === $sent ) {
 			$sent_arg = 'sent';
 		} else {
 			$sent_arg = 'all';
 		}
 
-		return groups_get_invites( array(
-			'item_id'     => $group_id,
-			'inviter_id'  => $user_id,
-			'invite_sent' => $sent_arg,
-			'fields'      => 'user_ids',
-		) );
+		return groups_get_invites(
+			array(
+				'item_id'     => $group_id,
+				'inviter_id'  => $user_id,
+				'invite_sent' => $sent_arg,
+				'fields'      => 'user_ids'
+			)
+		);
 	}
 
 	/**
@@ -936,9 +946,16 @@ class BP_Groups_Group {
 	public static function get_slug( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_slug_by_id_' . $group_id;
+		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM {$bp->groups->table_name} WHERE id = %d", $group_id ) );
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM {$bp->groups->table_name} WHERE id = %d", $group_id ) );
+			wp_cache_set( $cache_key, $result, 'bp_groups' );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -952,9 +969,14 @@ class BP_Groups_Group {
 	public static function has_members( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_has_members_' . $group_id;
+		$members   = wp_cache_get( $cache_key, 'bp_groups' );
 
-		$members = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d", $group_id ) );
+		if ( false === $members ) {
+			$members = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d", $group_id ) );
+			wp_cache_set( $cache_key, $members, 'bp_groups' );
+		}
 
 		if ( empty( $members ) ) {
 			return false;
@@ -975,9 +997,16 @@ class BP_Groups_Group {
 	public static function has_membership_requests( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_has_membership_requests_' . $group_id;
+		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 0", $group_id ) );
+		if ( false === $result ) {
+			$result = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 0", $group_id ) );
+			wp_cache_set( $cache_key, $result, 'bp_groups' );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -1012,7 +1041,7 @@ class BP_Groups_Group {
 
 		return array(
 			'requests' => $requests,
-			'total' => $total
+			'total'    => $total
 		);
 	}
 
@@ -1035,7 +1064,7 @@ class BP_Groups_Group {
 	 *                                            When present, will override orderby and order params.
 	 *                                            Default: null.
 	 *     @type string       $orderby            Optional. Property to sort by. 'date_created', 'last_activity',
-	 *                                            'total_member_count', 'name', 'random', 'meta_id'.
+	 *                                            'total_member_count', 'name', 'random', 'meta_id', 'id', 'include'.
 	 *                                            Default: 'date_created'.
 	 *     @type string       $order              Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 	 *     @type int          $per_page           Optional. Number of items to return per page of results.
@@ -1194,7 +1223,7 @@ class BP_Groups_Group {
 
 		$search = '';
 		if ( isset( $r['search_terms'] ) ) {
-			$search = trim( $r['search_terms'] );
+			$search = htmlspecialchars( trim( $r['search_terms'] ), ENT_NOQUOTES );
 		}
 
 		if ( $search ) {
@@ -1262,7 +1291,7 @@ class BP_Groups_Group {
 		}
 
 		if ( ! empty( $r['creator_id'] ) ) {
-			$where_conditions['creator'] = $wpdb->prepare( "g.creator_id = %d", $r['creator_id'] );
+			$where_conditions['creator'] = $wpdb->prepare( 'g.creator_id = %d', $r['creator_id'] );
 		}
 
 		if ( ! empty( $r['include'] ) ) {
@@ -1294,7 +1323,6 @@ class BP_Groups_Group {
 		// If a 'type' parameter was passed, parse it and overwrite
 		// 'order' and 'orderby' params passed to the function.
 		if ( ! empty( $r['type'] ) ) {
-
 			/**
 			 * Filters the 'type' parameter used to overwrite 'order' and 'orderby' values.
 			 *
@@ -1345,12 +1373,13 @@ class BP_Groups_Group {
 		 * @param string $value   Parsed 'type' value for the get method.
 		 */
 		$orderby = apply_filters( 'bp_groups_get_orderby_converted_by_term', self::convert_orderby_to_order_by_term( $orderby ), $orderby, $r['type'] );
-
+		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 		// Random order is a special case.
 		if ( 'rand()' === $orderby ) {
 			$sql['orderby'] = 'ORDER BY rand()';
-		} else {
-			$sql['orderby'] = "ORDER BY {$orderby} {$order}";
+		} elseif ( ! empty( $r['include'] ) && 'in' === $orderby ) { // Support order by fields for generally.
+			$field_data     = implode( ',', array_map( 'absint', $r['include'] ) );
+			$sql['orderby'] = "ORDER BY FIELD(g.id, {$field_data})";
 		}
 
 		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $r['per_page'] != -1 ) {
@@ -1360,7 +1389,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
@@ -1376,7 +1405,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the From SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param array $r    Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
@@ -1384,7 +1413,6 @@ class BP_Groups_Group {
 		$sql['from'] = apply_filters( 'bp_groups_get_join_sql', $sql['from'], $r );
 
 		$paged_groups_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
-
 		/**
 		 * Filters the pagination SQL statement.
 		 *
@@ -1599,6 +1627,14 @@ class BP_Groups_Group {
 			case 'meta_id':
 				$order_by_term = buddypress()->groups->table_name_groupmeta . '.id';
 				break;
+
+			case 'id':
+				$order_by_term = 'g.id';
+				break;
+
+			case 'in':
+				$order_by_term = 'in';
+				break;
 		}
 
 		return $order_by_term;
@@ -1737,9 +1773,11 @@ class BP_Groups_Group {
 
 		$invites_class = new BP_Groups_Invitation_Manager();
 
-		return $invites_class->delete( array(
-			'item_id' => $group_id,
-		) );
+		return $invites_class->delete(
+			array(
+				'item_id' => $group_id
+			)
+		);
 	}
 
 	/**
@@ -1756,13 +1794,22 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		$hidden_sql = '';
+		$cache_key  = 'bp_get_moderator_total_group_count';
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = "WHERE status != 'hidden'";
+			$cache_key  = 'bp_get_total_group_count';
 		}
 
 		$bp = buddypress();
 
-		return $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
+		$record = wp_cache_get( $cache_key, 'bp_groups' );
+
+		if ( false === $record ) {
+			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
+			wp_cache_set( $cache_key, $record, 'bp_groups' );
+		}
+
+		return $record;
 	}
 
 	/**
@@ -1776,9 +1823,16 @@ class BP_Groups_Group {
 	public static function get_total_member_count( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
+		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+		$record    = wp_cache_get( $cache_key, 'bp_groups' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) );
+		if ( false === $record ) {
+			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) );
+			wp_cache_set( $cache_key, $record, 'bp_groups' );
+		}
+
+		return $record;
 	}
 
 	/**
