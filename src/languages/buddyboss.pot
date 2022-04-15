@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-14 10:31:35+00:00\n"
+"POT-Creation-Date: 2022-04-15 05:25:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -655,7 +655,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-settings-export.php:72
 #: bp-core/profile-search/templates/members/bps-form-default.php:33
 #: bp-forums/core/actions.php:351 bp-friends/bp-friends-filters.php:389
-#: bp-groups/bp-groups-notifications.php:1327
+#: bp-groups/bp-groups-notifications.php:1328
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:284
 #: bp-messages/bp-messages-filters.php:815
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:610
@@ -688,7 +688,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-settings-export.php:77
 #: bp-core/profile-search/templates/members/bps-form-default.php:34
 #: bp-forums/core/actions.php:352 bp-friends/bp-friends-filters.php:390
-#: bp-groups/bp-groups-notifications.php:1328
+#: bp-groups/bp-groups-notifications.php:1329
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:291
 #: bp-messages/bp-messages-filters.php:816
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:611
@@ -725,12 +725,12 @@ msgstr ""
 #: bp-activity/bp-activity-filters.php:3228 bp-forums/core/actions.php:362
 #: bp-forums/core/actions.php:378 bp-friends/bp-friends-filters.php:401
 #: bp-friends/bp-friends-filters.php:417
-#: bp-groups/bp-groups-notifications.php:1339
-#: bp-groups/bp-groups-notifications.php:1355
-#: bp-groups/bp-groups-notifications.php:1371
-#: bp-groups/bp-groups-notifications.php:1387
-#: bp-groups/bp-groups-notifications.php:1403
-#: bp-groups/bp-groups-notifications.php:1423
+#: bp-groups/bp-groups-notifications.php:1340
+#: bp-groups/bp-groups-notifications.php:1356
+#: bp-groups/bp-groups-notifications.php:1372
+#: bp-groups/bp-groups-notifications.php:1388
+#: bp-groups/bp-groups-notifications.php:1404
+#: bp-groups/bp-groups-notifications.php:1424
 #: bp-messages/bp-messages-filters.php:827
 msgid "Yes, send email"
 msgstr ""
@@ -739,12 +739,12 @@ msgstr ""
 #: bp-activity/bp-activity-filters.php:3235 bp-forums/core/actions.php:368
 #: bp-forums/core/actions.php:384 bp-friends/bp-friends-filters.php:407
 #: bp-friends/bp-friends-filters.php:423
-#: bp-groups/bp-groups-notifications.php:1345
-#: bp-groups/bp-groups-notifications.php:1361
-#: bp-groups/bp-groups-notifications.php:1377
-#: bp-groups/bp-groups-notifications.php:1393
-#: bp-groups/bp-groups-notifications.php:1409
-#: bp-groups/bp-groups-notifications.php:1429
+#: bp-groups/bp-groups-notifications.php:1346
+#: bp-groups/bp-groups-notifications.php:1362
+#: bp-groups/bp-groups-notifications.php:1378
+#: bp-groups/bp-groups-notifications.php:1394
+#: bp-groups/bp-groups-notifications.php:1410
+#: bp-groups/bp-groups-notifications.php:1430
 #: bp-messages/bp-messages-filters.php:833
 msgid "No, do not send email"
 msgstr ""
@@ -6347,7 +6347,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2540
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
 #: bp-groups/bp-groups-functions.php:3591
-#: bp-groups/bp-groups-notifications.php:1326
+#: bp-groups/bp-groups-notifications.php:1327
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-notification.php:63
 #: bp-groups/classes/class-bp-groups-notification.php:64
@@ -6365,7 +6365,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2554
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:476
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:485
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -8506,19 +8506,19 @@ msgstr ""
 msgid "There was a problem cropping your %s photo."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:439
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:448
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:477
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:486
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:480
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:489
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:481
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:490
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
@@ -9160,31 +9160,31 @@ msgid "A member accepts your connection request"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:167
-#: bp-groups/bp-groups-notifications.php:1335
+#: bp-groups/bp-groups-notifications.php:1336
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:840
 msgid "A member invites you to join a group"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:168
-#: bp-groups/bp-groups-notifications.php:1351
+#: bp-groups/bp-groups-notifications.php:1352
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:852
 msgid "Group information is updated"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:169
-#: bp-groups/bp-groups-notifications.php:1367
+#: bp-groups/bp-groups-notifications.php:1368
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:864
 msgid "You are promoted to a group organizer or moderator"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:170
-#: bp-groups/bp-groups-notifications.php:1383
+#: bp-groups/bp-groups-notifications.php:1384
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:876
 msgid "A member requests to join a private group you organize"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:171
-#: bp-groups/bp-groups-notifications.php:1399
+#: bp-groups/bp-groups-notifications.php:1400
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:888
 msgid "Your request to join a group has been approved or denied"
 msgstr ""
@@ -13147,9 +13147,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1390
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1425
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1458
-#: bp-forums/templates/default/bbpress-functions.php:773
-#: bp-forums/templates/default/bbpress-functions.php:841
-#: bp-forums/templates/default/bbpress-functions.php:909
+#: bp-forums/templates/default/bbpress-functions.php:775
+#: bp-forums/templates/default/bbpress-functions.php:843
+#: bp-forums/templates/default/bbpress-functions.php:911
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -13714,8 +13714,8 @@ msgid "Favorites are no longer active."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1343
-#: bp-forums/templates/default/bbpress-functions.php:759
-#: bp-forums/templates/default/bbpress-functions.php:895
+#: bp-forums/templates/default/bbpress-functions.php:761
+#: bp-forums/templates/default/bbpress-functions.php:897
 msgid "Subscriptions are no longer active."
 msgstr ""
 
@@ -15742,57 +15742,57 @@ msgstr ""
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:268
+#: bp-forums/templates/default/bbpress-functions.php:270
 msgid "Explain what the forum is about"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:269
+#: bp-forums/templates/default/bbpress-functions.php:271
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:270
+#: bp-forums/templates/default/bbpress-functions.php:272
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:717
-#: bp-forums/templates/default/bbpress-functions.php:730
+#: bp-forums/templates/default/bbpress-functions.php:719
+#: bp-forums/templates/default/bbpress-functions.php:732
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:764
+#: bp-forums/templates/default/bbpress-functions.php:766
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:781
+#: bp-forums/templates/default/bbpress-functions.php:783
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:786
-#: bp-forums/templates/default/bbpress-functions.php:854
-#: bp-forums/templates/default/bbpress-functions.php:922
+#: bp-forums/templates/default/bbpress-functions.php:788
+#: bp-forums/templates/default/bbpress-functions.php:856
+#: bp-forums/templates/default/bbpress-functions.php:924
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:794
-#: bp-forums/templates/default/bbpress-functions.php:862
-#: bp-forums/templates/default/bbpress-functions.php:930
+#: bp-forums/templates/default/bbpress-functions.php:796
+#: bp-forums/templates/default/bbpress-functions.php:864
+#: bp-forums/templates/default/bbpress-functions.php:932
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:827
+#: bp-forums/templates/default/bbpress-functions.php:829
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:832
+#: bp-forums/templates/default/bbpress-functions.php:834
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:849
-#: bp-forums/templates/default/bbpress-functions.php:917
+#: bp-forums/templates/default/bbpress-functions.php:851
+#: bp-forums/templates/default/bbpress-functions.php:919
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:900
+#: bp-forums/templates/default/bbpress-functions.php:902
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -17339,65 +17339,65 @@ msgstr ""
 msgid "* Permalink changed from \"%1$s\" to \"%2$s\"."
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:480
+#: bp-groups/bp-groups-notifications.php:481
 #: bp-groups/classes/class-bp-groups-notification.php:543
 #. translators: 1. total times. 2. group name
 msgid "%1$d new membership requests for the group \"%2$s\""
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:534
+#: bp-groups/bp-groups-notifications.php:535
 msgid "%1$s requests membership for the group: %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:597
+#: bp-groups/bp-groups-notifications.php:598
 #: bp-groups/classes/class-bp-groups-notification.php:583
 #. translators: total groups count.
 msgid "%d accepted group membership requests"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:643
+#: bp-groups/bp-groups-notifications.php:644
 msgid "Membership for group \"%s\" accepted"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:700
+#: bp-groups/bp-groups-notifications.php:701
 #: bp-groups/classes/class-bp-groups-notification.php:623
 #. translators: total times
 msgid "%d rejected group membership requests"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:746
+#: bp-groups/bp-groups-notifications.php:747
 msgid "Membership for group \"%s\" rejected"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:802
+#: bp-groups/bp-groups-notifications.php:803
 msgid "You were promoted to the role of %1$s in %2$d groups"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:843
+#: bp-groups/bp-groups-notifications.php:844
 msgid "You were promoted to the role of %1$s in the group \"%2$s\""
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:897
+#: bp-groups/bp-groups-notifications.php:898
 #: bp-groups/classes/class-bp-groups-notification.php:459
 #. translators: 1. User Role name. 2. total times.
 msgid "You were promoted to a %1$s in %2$d groups"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:938
+#: bp-groups/bp-groups-notifications.php:939
 msgid "You were promoted to a %1$s in the group \"%2$s\""
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:993
+#: bp-groups/bp-groups-notifications.php:994
 #: bp-groups/classes/class-bp-groups-notification.php:506
 #. translators: total times.
 msgid "You have %d new group invitations"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:1033
+#: bp-groups/bp-groups-notifications.php:1034
 msgid "You have an invitation to the group: %s"
 msgstr ""
 
-#: bp-groups/bp-groups-notifications.php:1419
+#: bp-groups/bp-groups-notifications.php:1420
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:901
 msgid "A group sends you a new message"
 msgstr ""
@@ -24089,9 +24089,9 @@ msgstr[1] ""
 
 #: bp-moderation/bp-moderation-filters.php:119
 #: bp-moderation/bp-moderation-filters.php:223
-#: bp-moderation/bp-moderation-filters.php:322
-#: bp-moderation/bp-moderation-filters.php:381
-#: bp-moderation/bp-moderation-filters.php:447
+#: bp-moderation/bp-moderation-filters.php:325
+#: bp-moderation/bp-moderation-filters.php:384
+#: bp-moderation/bp-moderation-filters.php:450
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:371
 msgid "Required field missing."
 msgstr ""
@@ -24101,8 +24101,8 @@ msgid "Please specify reason to report this content."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:148
-#: bp-moderation/bp-moderation-filters.php:388
-#: bp-moderation/bp-moderation-filters.php:454
+#: bp-moderation/bp-moderation-filters.php:391
+#: bp-moderation/bp-moderation-filters.php:457
 msgid "Sorry, you are not allowed to report this content."
 msgstr ""
 
@@ -24112,10 +24112,10 @@ msgid "Content already reported."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:196
-#: bp-moderation/bp-moderation-filters.php:295
-#: bp-moderation/bp-moderation-filters.php:353
-#: bp-moderation/bp-moderation-filters.php:419
-#: bp-moderation/bp-moderation-filters.php:472
+#: bp-moderation/bp-moderation-filters.php:298
+#: bp-moderation/bp-moderation-filters.php:356
+#: bp-moderation/bp-moderation-filters.php:422
+#: bp-moderation/bp-moderation-filters.php:475
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -24132,49 +24132,49 @@ msgstr ""
 msgid "Member block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:327
+#: bp-moderation/bp-moderation-filters.php:330
 msgid "Reported content was not found."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:334
+#: bp-moderation/bp-moderation-filters.php:337
 msgid "Sorry, you cannot unblock suspended member."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:348
+#: bp-moderation/bp-moderation-filters.php:351
 msgid "User unblocked successfully"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:402
+#: bp-moderation/bp-moderation-filters.php:405
 msgid "Content has been successfully hidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:413
+#: bp-moderation/bp-moderation-filters.php:416
 msgid "Content has been successfully unhidden."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:463
+#: bp-moderation/bp-moderation-filters.php:466
 msgid "Member has been successfully suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:467
+#: bp-moderation/bp-moderation-filters.php:470
 msgid "Member has been successfully unsuspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:515
+#: bp-moderation/bp-moderation-filters.php:518
 #: bp-moderation/bp-moderation-functions.php:239
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2847
 msgid "Block"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:655
+#: bp-moderation/bp-moderation-filters.php:658
 msgid "Repair moderation data"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:681
+#: bp-moderation/bp-moderation-filters.php:684
 msgid "%s moderation item updated successfully."
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:691
+#: bp-moderation/bp-moderation-filters.php:694
 msgid "Repairing moderation data &hellip; Complete!"
 msgstr ""
 
@@ -24677,7 +24677,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:2785
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:236
 #: bp-moderation/classes/suspend/class-bp-suspend-comment.php:255
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:662
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:660
 msgid "Suspended Member"
 msgstr ""
 
@@ -24880,8 +24880,8 @@ msgstr ""
 msgid "Report updated date."
 msgstr ""
 
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:389
-#: bp-moderation/classes/suspend/class-bp-suspend-member.php:469
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:387
+#: bp-moderation/classes/suspend/class-bp-suspend-member.php:467
 msgid ""
 "<strong>ERROR</strong>: Your account has been suspended. Please contact a "
 "site admin for more information."
@@ -30898,22 +30898,22 @@ msgctxt "widget name"
 msgid "BuddyBoss - Network Posts"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:283
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:292
 msgctxt "ui"
 msgid "Membership"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:301
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:310
 msgctxt "ui"
 msgid "Info"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:311
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:320
 msgctxt "ui"
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:321
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:330
 msgctxt "ui"
 msgid "Payments"
 msgstr ""
@@ -31012,7 +31012,7 @@ msgctxt "Group type URL base slug"
 msgid "type"
 msgstr ""
 
-#: bp-integrations/learndash/bp-learndash-filters.php:350
+#: bp-integrations/learndash/bp-learndash-filters.php:359
 #. translators: placeholder: URL for CPT Archive.
 msgctxt "placeholder: URL for CPT Archive"
 msgid "Archive URL: %s"
