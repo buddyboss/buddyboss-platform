@@ -385,7 +385,7 @@ class Notification extends BuddypressCommand {
 
 		// Friendship.
 		if ( $bp->friends->id === $component ) {
-			$actions = array( 'friendship_request', 'friendship_accepted' );
+			$actions = array( 'friendship_request', 'friendship_accepted', 'bb_connections_request_accepted', 'bb_connections_new_request' );
 		}
 
 		// Groups.
