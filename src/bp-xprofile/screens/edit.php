@@ -71,16 +71,10 @@ function xprofile_screen_edit_profile() {
 			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
 
 			if ( $is_required[ $field_id ] && empty( $_POST[ 'field_' . $field_id ] ) ) {
+				$errors                     = true;
 				$field                      = new BP_XProfile_Field( $field_id );
-				if ( 'membertypes' === $field->type ) {
-					if( ! bp_current_user_can( 'administrator' ) && ! bp_current_user_can( 'editor' ) ) {
-						$errors                     = true;
-						$field_name                 = $field->name;
-						$is_required_fields_error[] = $field_name;
-					} else {
-						unset( $is_required[ $field_id ] );
-					}
-				}
+				$field_name                 = $field->name;
+				$is_required_fields_error[] = $field_name;
 			}
 
 			$field = new BP_XProfile_Field( $field_id );
