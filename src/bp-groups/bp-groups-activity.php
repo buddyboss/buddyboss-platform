@@ -219,14 +219,14 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 		// Name only.
-	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
+	} elseif ( isset( $changed['name']['old'] ) && isset( $changed['name']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['name']['old'] ), wp_strip_all_tags( $changed['name']['new'] ) );
 
 		// Description only.
-	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
+	} elseif ( isset( $changed['description']['old'] ) && isset( $changed['description']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['description']['old'] ), wp_strip_all_tags( $changed['description']['new'] ) );
 
-	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
+	} elseif ( isset( $changed['slug']['old'] ) && isset( $changed['slug']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
 
 	}
@@ -674,10 +674,6 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 			'group_id' => $group_id,
 		)
 	);
-
-	if ( empty( $old_group->description ) && ! empty( $group->description ) ) {
-		return false;
-	}
 
 	/*
 	 * Store the changed data, which will be used to generate the activity
