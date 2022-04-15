@@ -44,7 +44,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	if ( ! empty( $_POST ) ) {
 
-		$post_query = wp_parse_args( $_POST, $post_query );
+		$post_query = bp_parse_args( $_POST, $post_query );
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
 		if ( ! empty( $post_query['data']['bp_heartbeat'] ) ) {
@@ -52,7 +52,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 			// Remove heartbeat specific vars
 			$post_query = array_diff_key(
-				wp_parse_args( $bp_heartbeat, $post_query ),
+				bp_parse_args( $bp_heartbeat, $post_query ),
 				array(
 					'data'      => false,
 					'interval'  => false,
@@ -259,7 +259,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	$current_component_class = bp_current_component() . '-meta';
 	$generic_class           = 'bp-generic-meta';
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'container'         => 'div',

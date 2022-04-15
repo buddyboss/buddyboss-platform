@@ -534,7 +534,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 		'fields' => 'ID',
 	);
 
-	$query_args = wp_parse_args( $query_args, $defaults );
+	$query_args = bp_parse_args( $query_args, $defaults );
 
 	if ( $exclude_admin == true ) {
 		$query_args['role__not_in'] = array( 'administrator' );

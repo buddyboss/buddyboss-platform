@@ -430,7 +430,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'number'        => 3,
 			);
 
-			$args = wp_parse_args( $args, $defaults );
+			$args = bp_parse_args( $args, $defaults );
 
 			if ( true === $args['forum_search'] ) {
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
@@ -788,7 +788,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @return array
 		 */
 		public function sanitize_args( $args = '' ) {
-			$args = wp_parse_args( $args, array() );
+			$args = bp_parse_args( $args, array() );
 
 			if ( isset( $args['search_term'] ) ) {
 				$args['search_term'] = sanitize_text_field( $args['search_term'] );

@@ -341,7 +341,7 @@ function bp_activity_save_link_data( $activity ) {
 	if ( isset( $_POST['action'] ) && $_POST['action'] === 'activity_update_privacy' ) {
 		return;
 	}
-	
+
 	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
 	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
 
@@ -688,7 +688,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -1441,7 +1441,7 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 	}
 
 	// members directory
-	$qs_args = wp_parse_args( $qs );
+	$qs_args = bp_parse_args( $qs );
 
 	// check if members scope is following before manipulating.
 	if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
