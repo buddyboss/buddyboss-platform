@@ -5,7 +5,7 @@
  * This file contains update information about BuddyBoss.
  *
  * @package BuddyBoss
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 1.9.1
  */
 
 // Exit if accessed directly.

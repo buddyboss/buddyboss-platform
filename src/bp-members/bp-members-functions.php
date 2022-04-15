@@ -4868,7 +4868,7 @@ function bb_is_online_user( $user_id ) {
 /**
  * Get profile cover image width.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'default'.
@@ -4882,7 +4882,7 @@ function bb_get_profile_cover_image_width( $default = 'default' ) {
 /**
  * Get profile cover image height.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'small'.
@@ -4896,7 +4896,7 @@ function bb_get_profile_cover_image_height( $default = 'small' ) {
 /**
  * Get profile header layout style.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'left'.
@@ -4910,7 +4910,7 @@ function bb_get_profile_header_layout_style( $default = 'left' ) {
 /**
  * Get profile header layout style.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $element Profile header element.
  *                        Default: online-status.
@@ -4924,7 +4924,7 @@ function bb_enabled_profile_header_layout_element( $element = 'online-status' ) 
 /**
  * Check the member directory element is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $element Member directory element.
  *                        Default: online-status.
@@ -4938,7 +4938,7 @@ function bb_enabled_member_directory_element( $element = 'online-status' ) {
 /**
  * Get enabled the profile actions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return array Return selected profile actions.
  */
@@ -4949,7 +4949,7 @@ function bb_get_enabled_member_directory_profile_actions() {
 /**
  * Check the member profile action is enabled or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $action Member directory profile action.
  *                            Default: null.
@@ -4968,7 +4968,7 @@ function bb_enabled_member_directory_profile_action( $action = '' ) {
 /**
  * Get the primary action for member directories.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string Return the primary action for member directories.
  */
@@ -4980,7 +4980,7 @@ function bb_get_member_directory_primary_action() {
  * Function which will return the member id if $id > 0 then it will return the original displayed id
  * else it will return the member loop member id.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int $id Member ID.
  *
@@ -5013,7 +5013,7 @@ function bb_member_loop_set_member_id( $id ) {
 /**
  * Function which will return the false in even if user is in h/her own profile page in connections members listing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param bool $my_profile The current page is profile page or not.
  *
@@ -5037,7 +5037,7 @@ function bb_member_loop_set_my_profile( $my_profile ) {
 /**
  * Get member directories and header page button arguments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string $page    The current page is member directories or header page. Default: 'directory'.
  * @param string $clicked The button clicked from primary or secondary button. Default: 'primary'.
@@ -5084,3 +5084,139 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
 
 	return $button_args;
 }
+
+/**
+ * Mark Member notification read.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @return void
+ */
+function bb_members_notifications_mark_read() {
+	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() || ! bp_current_action() ) {
+		return;
+	}
+
+	if ( 'general' === bp_current_action() ) {
+		$n_id = 0;
+		// For replies to a parent update.
+		if ( ! empty( $_GET['rid'] ) ) {
+			$n_id = (int) $_GET['rid'];
+		}
+
+		// Mark individual notification as read.
+		if ( ! empty( $n_id ) ) {
+			BP_Notifications_Notification::update(
+				array(
+					'is_new' => false,
+				),
+				array(
+					'user_id' => bp_loggedin_user_id(),
+					'id'      => $n_id,
+				)
+			);
+		}
+	}
+}
+add_action( 'template_redirect', 'bb_members_notifications_mark_read' );
+
+/**
+ * Determine a user's "mentionname", the name used for that user in @-mentions.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param int|string $user_id ID of the user to get @-mention name for.
+ *
+ * @return string $mentionname User name appropriate for @-mentions.
+ */
+function bb_members_get_user_mentionname( $user_id ) {
+	$mentionname = '';
+
+	$userdata = bp_core_get_core_userdata( $user_id );
+
+	if ( $userdata ) {
+		if ( bp_is_username_compatibility_mode() ) {
+			$mentionname = str_replace( ' ', '-', $userdata->user_login );
+		} else {
+			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
+		}
+	}
+
+	return $mentionname;
+}
+
+/**
+ * Sync the user's notification settings based on the admin default settings.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param int $user_id ID of the user.
+ */
+function bb_core_sync_user_notification_settings( $user_id ) {
+
+	if (
+		function_exists( 'bb_enabled_legacy_email_preference' ) &&
+		bb_enabled_legacy_email_preference()
+	) {
+		return false;
+	}
+
+	if ( ! $user_id ) {
+		return false;
+	}
+
+	// All preferences registered.
+	$preferences = bb_register_notification_preferences();
+
+	// Saved notification from backend default settings.
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$all_notifications    = array();
+	$default_by_admin     = array();
+
+	if ( ! empty( $preferences ) ) {
+		$preferences = array_column( $preferences, 'fields', null );
+		foreach ( $preferences as $key => $val ) {
+			$all_notifications = array_merge( $all_notifications, $val );
+		}
+	}
+
+	$main = array();
+
+	if ( ! empty( $enabled_notification ) ) {
+		foreach ( $enabled_notification as $key => $types ) {
+			if ( isset( $types['main'] ) ) {
+				$main[ $key ] = $types['main'];
+			}
+			if ( isset( $types['email'] ) ) {
+				$default_by_admin[ $key ] = $types['email'];
+			}
+			foreach ( array( 'web', 'app' ) as $device ) {
+				if ( isset( $types[ $device ] ) ) {
+					$key_type                      = $key . '_' . $device;
+					$default_by_admin[ $key_type ] = $types[ $device ];
+				}
+			}
+		}
+	}
+
+	$all_notifications_keys = array_column( $all_notifications, 'default', 'key' );
+	$notifications          = wp_parse_args( $main, $all_notifications_keys );
+
+	foreach ( $notifications as $k => $v ) {
+		if ( ( ! isset( $default_by_admin[ $k ] ) || ( array_key_exists( $k, $default_by_admin ) && 'no' !== $default_by_admin[ $k ] ) ) && 'no' !== $v ) {
+			update_user_meta( $user_id, $k, 'yes' );
+		} else {
+			update_user_meta( $user_id, $k, 'no' );
+		}
+		foreach ( array( 'web', 'app' ) as $device ) {
+			$key_type = $k . '_' . $device;
+			if ( ( ! isset( $default_by_admin[ $key_type ] ) || ( array_key_exists( $key_type, $default_by_admin ) && 'no' !== $default_by_admin[ $key_type ] ) ) && 'no' !== $v ) {
+				update_user_meta( $user_id, $key_type, 'yes' );
+			} else {
+				update_user_meta( $user_id, $key_type, 'no' );
+			}
+		}
+	}
+
+}
+add_action( 'user_register', 'bb_core_sync_user_notification_settings' );

@@ -142,6 +142,16 @@ add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 add_action(
 	'bp_init',
 	function() {
+		if ( false === bb_enabled_legacy_email_preference() ) {
+			// Render notifications on frontend.
+			add_action( 'bp_notification_settings', 'bb_render_notification_settings', 1 );
+		}
+	}
+);
+
+add_action(
+	'bp_init',
+	function() {
 		$component = bp_get_option( 'bp-active-components' );
 
 		// Set the "Document" component active/inactive based on the media components.
@@ -475,7 +485,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
  * @param $upgrader_object WP_Upgrader instance.
  * @param $options         Array of bulk item update data
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 	$show_display_popup = false;
@@ -490,3 +500,22 @@ function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
 	}
 }
 add_action( 'upgrader_process_complete', 'bb_plugin_upgrade_function_callback', 10, 2);
+
+/**
+ * Render registered notifications into frontend.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_render_notification_settings() {
+	$registered_notification = bb_register_notification_preferences();
+
+	bb_render_enable_notification_options();
+
+	bb_render_manual_notification();
+
+	if ( ! empty( $registered_notification ) ) {
+		foreach ( $registered_notification as $group => $data ) {
+			bb_render_notification( $group );
+		}
+	}
+}

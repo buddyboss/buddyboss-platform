@@ -211,12 +211,16 @@ function bp_version_updater() {
 	// Install BP schema and activate only Activity and XProfile.
 	if ( bp_is_install() ) {
 
+		do_action( 'bb_core_before_install', $default_components );
+
 		// Apply schema and set Activity and XProfile components as active.
 		bp_core_install( $default_components );
 		bp_update_option( 'bp-active-components', $default_components );
 		bp_core_add_page_mappings( $default_components, 'delete' );
 		bp_core_install_emails();
 		bp_core_install_invitations();
+
+		do_action( 'bb_core_after_install', $default_components );
 
 		// Upgrades.
 	} else {
@@ -360,6 +364,10 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 18651 ) {
 			bb_update_to_1_9_1();
+		}
+
+		if ( $raw_db_version < 18701 ) {
+			bb_update_to_1_9_3();
 		}
 	}
 
@@ -1694,7 +1702,7 @@ function bb_update_to_1_9_0_1() {
  * Update routine.
  * Migrate the cover sizes from the theme option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  */
 function bb_update_to_1_9_1() {
 	// Display plugin update notice.
@@ -1756,3 +1764,116 @@ function bb_update_to_1_9_1() {
 		bp_add_option( 'bb-pro-cover-group-height', $group_cover_height );
 	}
 }
+
+/**
+ * Update routine.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_update_to_1_9_3() {
+
+	// Update the email situation labels.
+	bb_core_update_email_situation_labels();
+
+	// Update the users settings.
+	bb_core_update_user_settings();
+
+	// Installed missing emails.
+	bp_admin_install_emails();
+}
+
+/**
+ * Update the email situation labels.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_core_update_email_situation_labels() {
+
+	$email_situation_labels = array(
+		'activity-at-message'          => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'groups-at-message'            => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'zoom-scheduled-meeting-email' => esc_html__( 'A Zoom meeting is scheduled in a group', 'buddyboss' ),
+		'zoom-scheduled-webinar-email' => esc_html__( 'A Zoom webinar is scheduled in a group', 'buddyboss' ),
+	);
+
+	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
+		$situation_term = get_term_by( 'slug', $situation_slug, bp_get_email_tax_type() );
+
+		if ( ! empty( $situation_term ) && $situation_term->term_id ) {
+			wp_update_term(
+				(int) $situation_term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $situation_label,
+				)
+			);
+		}
+	}
+
+}
+
+/**
+ * Update the users settings.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_core_update_user_settings() {
+	global $bp_background_updater;
+
+	$user_ids = get_users(
+		array(
+			'fields'     => 'ids',
+			'meta_query' => array(
+				array(
+					'key'     => 'last_activity',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $user_ids, 200 ) as $chunk ) {
+		$bp_background_updater->data(
+			array(
+				array(
+					'callback' => 'migrate_notification_preferences',
+					'args'     => array( $chunk ),
+				),
+			)
+		);
+
+		$bp_background_updater->save()->schedule_event();
+	}
+}
+
+/**
+ * Migrate notification preferences.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param array $user_ids Array of user ids.
+ *
+ * @return void
+ */
+function migrate_notification_preferences( $user_ids ) {
+	$all_keys = bb_preferences_key_maps();
+
+	if ( empty( $user_ids ) || empty( $all_keys ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		foreach ( $all_keys as $old_key => $new_key ) {
+			$old_key = str_replace( array( '_0', '_1' ), '', $old_key );
+			if ( metadata_exists( 'user', $user_id, $old_key ) ) {
+				$old_val = get_user_meta( $user_id, $old_key, true );
+				update_user_meta( $user_id, $new_key, $old_val );
+			}
+		}
+	}
+}
+
