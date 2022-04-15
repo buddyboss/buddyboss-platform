@@ -760,7 +760,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param array  $value Array of search results.
+			 * @param array  $search_results Array of search results.
+			 * @param object $this           Object of BP_Search class.
 			 */
 			$this->search_results = apply_filters( 'bp_search_query_final_results', $this->search_results, $this );
 		}
