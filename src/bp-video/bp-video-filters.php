@@ -65,8 +65,11 @@ add_action( 'bp_video_after_save', 'bb_video_create_symlinks' );
 
 add_filter( 'bb_ajax_activity_update_privacy', 'bb_video_update_video_symlink', 99, 2 );
 
-
 add_filter( 'bb_check_ios_device', 'bb_video_safari_popup_video_play', 1 );
+
+add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
+add_filter( 'query_vars', 'bb_setup_query_video_preview' );
+add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
 
 /**
  * Add video theatre template for activity pages.
@@ -339,10 +342,24 @@ function bp_video_activity_comment_entry( $comment_id ) {
 function bp_video_update_activity_video_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
-	$post_video   = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$post_edit    = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
-	$post_action  = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
-	$post_privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$post_video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$post_edit        = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
+	$post_action      = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$post_privacy     = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$moderated_videos = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
+
+	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_videos ) ) {
+		$moderated_videos = explode( ',', $moderated_videos );
+		foreach ( $moderated_videos as $video_id ) {
+			if ( bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+				$bp_video                   = new BP_Video( $video_id );
+				$post_video[]['video_id']   = $video_id;
+				$post_video[]['album_id']   = $bp_video->album_id;
+				$post_video[]['group_id']   = $bp_video->group_id;
+				$post_video[]['menu_order'] = $bp_video->menu_order;
+			}
+		}
+	}
 
 	if ( ! isset( $post_video ) || empty( $post_video ) ) {
 
@@ -399,15 +416,17 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 
 			if ( ! empty( $old_video_ids ) ) {
 
-				// This is hack to update/delete parent activity if new video added in edit.
-				bp_activity_update_meta( $activity_id, 'bp_video_ids', implode( ',', array_unique( array_merge( $video_ids, $old_video_ids ) ) ) );
-
 				foreach ( $old_video_ids as $video_id ) {
-
-					if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
+				    if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) && ! in_array( $video_id, $video_ids ) ) {
+					    $video_ids[] = $video_id;
+					}
+				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
 						bp_video_delete( array( 'id' => $video_id ) );
 					}
 				}
+
+				// This is hack to update/delete parent activity if new video added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_video_ids', implode( ',', array_unique( array_merge( $video_ids, $old_video_ids ) ) ) );
 			}
 		}
 
@@ -864,12 +883,12 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-video',
-			__( 'Repair video on the site.', 'buddyboss' ),
+			esc_html__( 'Repair videos', 'buddyboss' ),
 			'bp_video_admin_repair_video',
 		);
 		$repair_list[] = array(
 			'bp-video-forum-privacy-repair',
-			__( 'Repair forum video privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum video privacy', 'buddyboss' ),
 			'bp_video_forum_privacy_repair',
 		);
 	}
@@ -923,7 +942,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s video updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s videos updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -933,7 +952,7 @@ function bp_video_admin_repair_video() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Video update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing videos &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -962,7 +981,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s Forums video privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -970,7 +989,7 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Forums video privacy updated %s', 'buddyboss' ); // phpcs:ignore
+		$statement = __( 'Repairing forum video privacy &hellip; %s', 'buddyboss' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
@@ -1468,7 +1487,7 @@ function bp_video_activity_after_email_content( $activity ) {
 		$video_ids  = explode( ',', $video_ids );
 		$video_text = sprintf(
 			_n( '%s video', '%s videos', count( $video_ids ), 'buddyboss' ), // phpcs:ignore
-			number_format_i18n( count( $video_ids ) )
+			bp_core_number_format( count( $video_ids ) )
 		);
 		$content    = sprintf(
 			/* translator: 1. Activity link, 2. Activity video count */
@@ -1498,23 +1517,35 @@ function bp_video_get_edit_activity_data( $activity ) {
 
 		// Fetch video ids of activity.
 		$video_ids = bp_activity_get_meta( $activity['id'], 'bp_video_ids', true );
+		$video_id  = bp_activity_get_meta( $activity['id'], 'bp_video_id', true );
+
+		if ( ! empty( $video_ids ) && ! empty( $video_id ) ) {
+			$video_ids = $video_ids . ',' . $video_id;
+		} elseif ( ! empty( $video_id ) && empty( $video_ids ) ) {
+			$video_ids = $video_id;
+		}
 
 		if ( ! empty( $video_ids ) ) {
 			$activity['video'] = array();
 
 			$video_ids = explode( ',', $video_ids );
+			$video_ids = array_unique( $video_ids );
+			$album_id  = 0;
 
 			foreach ( $video_ids as $video_id ) {
-				$video = new BP_Video( $video_id );
 
-				$get_existing = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
-				$thumb        = '';
+				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $video_id, BP_Moderation_Video::$moderation_type ) ) {
+					continue;
+				}
 
+				$video               = new BP_Video( $video_id );
+				$get_existing        = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+				$thumb               = '';
 				$attachment_thumb_id = bb_get_video_thumb_id( $video->attachment_id );
 
 				if ( $get_existing && $attachment_thumb_id ) {
 					$thumb = bb_video_get_thumb_url( $video->id, $attachment_thumb_id, 'bb-video-poster-popup-image' );
-                }
+				}
 
 				if ( $get_existing && '' === $thumb ) {
 					$file = get_attached_file( $get_existing );
@@ -1523,7 +1554,7 @@ function bp_video_get_edit_activity_data( $activity ) {
 						$data  = file_get_contents( $file ); // phpcs:ignore
 						$thumb = 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 					}
-                }
+				}
 
 				$activity['video'][] = array(
 					'id'          => $video_id,
@@ -1540,6 +1571,12 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'menu_order'  => $video->menu_order,
 					'video_count' => count( $video_ids ),
 				);
+
+				if ( 0 === $album_id && (int) $video->album_id > 0 ) {
+					$album_id                     = $video->album_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 	}
@@ -1588,8 +1625,20 @@ function bp_video_check_download_album_protection() {
 		array(
 			'base'    => $upload_dir['basedir'] . '/bb_videos',
 			'file'    => '.htaccess',
-			'content' => 'deny from all
+			'content' => '# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
 # BEGIN BuddyBoss code execution protection
+<IfModule mod_rewrite.c>
+RewriteRule ^.*$ - [F,L,NC]
+</IfModule>
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
@@ -1682,12 +1731,13 @@ function bb_video_update_video_symlink( $response, $post_data ) {
  *
  * @return bool|mixed
  *
- * @since BuddyBoss 1.7.0.1
+ * @since BuddyBoss 1.7.6
  */
 function bb_video_safari_popup_video_play( $is_ios ) {
 
-	if ( false === $is_ios && isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		$is_safari = stripos( $_SERVER['HTTP_USER_AGENT'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$browser = bb_core_get_browser();
+	if ( false === $is_ios && isset( $browser ) ) {
+		$is_safari = stripos( $browser['name'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$action    = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 
 		if ( $is_safari && 'video_get_activity' === $action ) {
@@ -1696,4 +1746,70 @@ function bb_video_safari_popup_video_play( $is_ios ) {
 	}
 
 	return $is_ios;
+}
+
+/**
+ * Add rewrite rule to setup video preview.
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_video_preview() {
+	add_rewrite_rule( 'bb-video-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]', 'top' );
+	add_rewrite_rule( 'bb-video-thumb-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?bb-video-thumb-preview=$matches[1]&id1=$matches[2]&size=$matches[3]', 'top' );
+}
+
+/**
+ * Setup query variable for video preview.
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_query_video_preview( $query_vars ) {
+	$query_vars[] = 'bb-video-preview';
+	$query_vars[] = 'bb-video-thumb-preview';
+	$query_vars[] = 'id1';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the video thumbnail preview and video play.
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ *
+ * @since BuddyBoss 1.7.2
+ */
+function bb_setup_template_for_video_preview( $template ) {
+
+	if ( ! empty( get_query_var( 'bb-video-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_video_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/player.php';
+	}
+
+	if ( ! empty( get_query_var( 'bb-video-thumb-preview' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss 1.7.2
+		 */
+		do_action( 'bb_setup_template_for_video_thumb_preview' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/video/preview.php';
+	}
+
+	return $template;
 }

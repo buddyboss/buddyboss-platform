@@ -4030,14 +4030,23 @@ MediumEditor.extensions = {};
             event.stopPropagation();
         },
 
-        handleSaveClick: function (event) {
+        handleSaveClick: function ( event ) {
             // Clicking Save -> create the anchor
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            if ( toolbarInput.classList.contains( 'isNotValid' ) ) {
+                toolbarInput.classList.add( 'validate' );
+                return false;
+            } else {
+                toolbarInput.classList.remove( 'validate' );
+            }
             event.preventDefault();
             this.doFormSave();
         },
 
-        handleCloseClick: function (event) {
+        handleCloseClick: function ( event ) {
             // Click Close -> close the form
+            var toolbarInput = event.target.closest( '.medium-editor-toolbar-form' ).querySelector( '.medium-editor-toolbar-input' );
+            toolbarInput.classList.remove( 'validate' );
             event.preventDefault();
             this.doFormCancel();
         }
@@ -5256,7 +5265,7 @@ MediumEditor.extensions = {};
         return event &&
             event.clipboardData &&
             event.clipboardData.items &&
-            $.inArray( 'Files', event.clipboardData.types )>-1;
+            event.clipboardData.types.includes( 'Files' );
     }
 
     var PasteHandler = MediumEditor.Extension.extend({
@@ -6806,7 +6815,7 @@ MediumEditor.extensions = {};
                     var newLI = node.parentNode.parentNode.parentNode.insertBefore(li, node.parentNode.parentNode.nextSibling);
                     node.remove();
                     MediumEditor.selection.moveCursor(this.options.ownerDocument, newLI);
-                    
+
                 } else {
                    var  p = this.options.ownerDocument.createElement('p');
                     p.innerHTML = '<br>';

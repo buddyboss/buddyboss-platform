@@ -258,16 +258,23 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-display-name-format'                   => bp_core_display_name_format(),
 			'bp-hide-nickname-first-name'              => bp_hide_nickname_first_name(),
 			'bp-hide-nickname-last-name'               => bp_hide_nickname_last_name(),
+			'bp-profile-avatar-type'                   => function_exists( 'bb_get_profile_avatar_type' ) ? bb_get_profile_avatar_type() : '',
 			'bp-disable-avatar-uploads'                => bp_disable_avatar_uploads(),
+			'bp-default-profile-avatar-type'           => function_exists( 'bb_get_default_profile_avatar_type' ) ? bb_get_default_profile_avatar_type() : '',
+			'bp-default-custom-profile-avatar'         => function_exists( 'bb_get_default_custom_upload_profile_avatar' ) ? bb_get_default_custom_upload_profile_avatar() : '',
 			'bp-enable-profile-gravatar'               => bp_enable_profile_gravatar(),
 			'bp-disable-cover-image-uploads'           => bp_disable_cover_image_uploads(),
+			'bp-default-profile-cover-type'            => function_exists( 'bb_get_default_profile_cover_type' ) ? bb_get_default_profile_cover_type() : '',
+			'bp-default-custom-profile-cover'          => function_exists( 'bb_get_default_custom_upload_profile_cover' ) ? bb_get_default_custom_upload_profile_cover() : '',
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
 			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
 			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
-
+			'bb-web-notification-enabled'              => function_exists( 'bb_web_notification_enabled' ) && bb_web_notification_enabled(),
+			'bb-app-notification-enabled'              => function_exists( 'bb_app_notification_enabled' ) && bb_app_notification_enabled(),
+			'bb_enabled_legacy_email_preference'       => function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference(),
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
@@ -318,7 +325,11 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Settings.
 			$results['bp_restrict_group_creation']           = ! bp_user_can_create_groups();
 			$results['bp-disable-group-avatar-uploads']      = bp_disable_group_avatar_uploads();
+			$results['bp-default-group-avatar-type']         = function_exists( 'bb_get_default_group_avatar_type' ) ? bb_get_default_group_avatar_type() : '';
+			$results['bp-default-custom-group-avatar']       = function_exists( 'bb_get_default_custom_upload_group_avatar' ) ? bb_get_default_custom_upload_group_avatar() : '';
 			$results['bp-disable-group-cover-image-uploads'] = bp_disable_group_cover_image_uploads();
+			$results['bp-default-group-cover-type']          = function_exists( 'bb_get_default_group_cover_type' ) ? bb_get_default_group_cover_type() : '';
+			$results['bp-default-custom-group-cover']        = function_exists( 'bb_get_default_custom_upload_group_cover' ) ? bb_get_default_custom_upload_group_cover() : '';
 
 			// Group Types.
 			$results['bp-disable-group-type-creation'] = bp_disable_group_type_creation();
@@ -396,14 +407,21 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp-feed-platform-group_details_updated'] = bp_platform_is_feed_enable( 'bp-feed-platform-group_details_updated' );
 			$results['bp-feed-platform-bbp_topic_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_topic_create' );
 			$results['bp-feed-platform-bbp_reply_create']      = bp_platform_is_feed_enable( 'bp-feed-platform-bbp_reply_create' );
-			$results['bp-disable-blogforum-comments']          = bp_disable_blogforum_comments();
 
-			$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
-			if ( ! empty( $custom_post_types ) ) {
-				foreach ( $custom_post_types as $single_post ) {
+			if ( function_exists( 'bb_feed_post_types' ) ) {
+				foreach ( bb_feed_post_types() as $single_post ) {
 					// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
-					$enabled                                               = bp_is_post_type_feed_enable( $single_post );
-					$results[ 'bp-feed-custom-post-type-' . $single_post ] = $enabled;
+					$results[ 'bp-feed-custom-post-type-' . $single_post ]               = (bool) bp_is_post_type_feed_enable( $single_post );
+					$results[ 'bp-feed-custom-post-type-' . $single_post . '-comments' ] = (bool) bb_is_post_type_feed_comment_enable( $single_post );
+				}
+			} else {
+				$results['bp-disable-blogforum-comments'] = bp_disable_blogforum_comments();
+				$custom_post_types                        = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
+				if ( ! empty( $custom_post_types ) ) {
+					foreach ( $custom_post_types as $single_post ) {
+						// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
+						$results[ 'bp-feed-custom-post-type-' . $single_post ] = (bool) bp_is_post_type_feed_enable( $single_post );
+					}
 				}
 			}
 		}
@@ -470,7 +488,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$member_types = bp_get_active_member_types();
 			if ( isset( $member_types ) && ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type_id ) {
-					$option_name                                                    = bp_get_member_type_key( $member_type_id );
+					$option_name = bp_get_member_type_key( $member_type_id );
 					$results[ 'bp-enable-send-invite-member-type-' . $option_name ] = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false );
 				}
 			}
@@ -495,6 +513,45 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results['bp_page_privacy']               = $privacy;
 		$results['bp_page_terms']                 = $terms;
 		$results['wp_page_privacy']               = (int) get_option( 'wp_page_for_privacy_policy' );
+
+		$results['bp-pages'] = array();
+
+		$component_pages = array(
+			'members'  => 'xprofile',
+			'video'    => 'video',
+			'media'    => 'media',
+			'document' => 'document',
+			'groups'   => 'groups',
+			'activity' => 'activity',
+			'register' => 'xprofile',
+			'terms'    => 'xprofile',
+			'privacy'  => 'xprofile',
+			'activate' => 'xprofile',
+		);
+
+		foreach ( $component_pages as $key => $component ) {
+			if ( bp_is_active( $component ) ) {
+				$id = (int) ( isset( $bp_pages[ $key ] ) ? $bp_pages[ $key ] : 0 );
+
+				$results['bp-pages'][ $key ] = array(
+					'id'    => $id,
+					'slug'  => ( 0 !== $id ? get_post_field( 'post_name', $id ) : '' ),
+					'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
+				);
+			}
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+
+			$results['bp-pages']['forums'] = array(
+				'id'    => $id,
+				'slug'  => ( 0 !== $id ? get_post_field( 'post_name', $id ) : '' ),
+				'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
+			);
+		}
+
+		$results['bp-active-components'] = array_keys( apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) ) );
 
 		return $results;
 	}

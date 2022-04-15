@@ -2,7 +2,7 @@
 name: "\U0001F41E Report a Bug"
 about: Submit a new bug found in the BuddyBoss platform.
 title: ''
-labels: bug, needs validating
+labels: 'bug, bug: needs validating'
 assignees: ''
 
 ---

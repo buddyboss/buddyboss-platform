@@ -2,9 +2,12 @@
 /**
  * BuddyBoss - Video Entry
  *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/entry.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_template;
@@ -45,7 +48,7 @@ $attachment_urls = bb_video_get_attachments_symlinks( bp_get_video_attachment_id
 				<div class="video-action_list item-action_list">
 					<ul>
 						<?php
-						if ( $can_edit ) {
+						if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
 							?>
 							<li class="edit_thumbnail_video">
 								<a href="#" data-action="video" data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>" data-video-attachment-id="<?php bp_video_attachment_id(); ?>" data-video-id="<?php bp_video_id(); ?>" class="ac-video-thumbnail-edit"><?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?></a>
