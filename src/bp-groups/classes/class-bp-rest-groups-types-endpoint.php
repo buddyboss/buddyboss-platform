@@ -103,7 +103,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -146,8 +146,8 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $type, $request ) {
 		$data = array(
 			'labels'                => array(
-				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? $type->labels['name'] : '',
-				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? $type->labels['singular_name'] : '',
+				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? wp_specialchars_decode( $type->labels['name'] ) : '',
+				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? wp_specialchars_decode( $type->labels['singular_name'] ) : '',
 			),
 			'name'                  => ( isset( $type->name ) ? $type->name : '' ),
 			'description'           => ( isset( $type->description ) ? $type->description : '' ),
@@ -369,7 +369,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			);
 
 			$schema['properties']['member_type_join'] = array(
-				'description' => __( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ),
+				'description' => __( 'Members of the selected Profile Types below can join Private groups of the Group Type without approval.', 'buddyboss' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,

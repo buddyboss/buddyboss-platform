@@ -198,6 +198,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_document'] )
+		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
 	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
@@ -268,6 +269,34 @@ function bbp_new_topic_handler( $action = '' ) {
 					bbp_add_error( 'bbp_new_topic_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss' ) );
 				}
 			}
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media'] ) ) {
+		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_media ) {
+			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_document ) {
+			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $forum_id, 0 );
+		if ( ! $can_send_video ) {
+			bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
+		}
+	}
+
+	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_gif ) {
+			bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss' ) );
 		}
 	}
 
@@ -349,7 +378,6 @@ function bbp_new_topic_handler( $action = '' ) {
 			'post_status'    => $topic_status,
 			'post_parent'    => $forum_id,
 			'post_type'      => bbp_get_topic_post_type(),
-			'tax_input'      => $terms,
 			'comment_status' => 'closed',
 		)
 	);
@@ -360,6 +388,9 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags.
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id() );
 
 		/** Trash Check */
 
@@ -628,8 +659,12 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	// No topic content.
-	if ( empty( $topic_content ) ) {
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	     && empty( $_POST['bbp_media'] )
+	     && empty( $_POST['bbp_document'] )
+	     && empty( $_POST['bbp_video'] )
+	     && empty( $_POST['bbp_media_gif'] )
+	) {
 		bbp_add_error( 'bbp_edit_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
@@ -711,7 +746,6 @@ function bbp_edit_topic_handler( $action = '' ) {
 			'post_parent'  => $forum_id,
 			'post_author'  => $topic_author,
 			'post_type'    => bbp_get_topic_post_type(),
-			'tax_input'    => $terms,
 		)
 	);
 
@@ -733,6 +767,9 @@ function bbp_edit_topic_handler( $action = '' ) {
 	/** No Errors */
 
 	if ( ! empty( $topic_id ) && ! is_wp_error( $topic_id ) ) {
+
+		// update tags.
+		bb_add_topic_tags( (array) $terms[ bbp_get_topic_tag_tax_id() ], $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 		// Update counts, etc..
 		do_action( 'bbp_edit_topic', $topic_id, $forum_id, $anonymous_data, $topic_author, true /* Is edit */ );
@@ -1343,6 +1380,21 @@ function bbp_merge_topic_handler( $action = '' ) {
 	// Sticky.
 	bbp_unstick_topic( $source_topic->ID );
 
+	// Delete source topic's last & count meta data.
+	delete_post_meta( $source_topic->ID, '_bbp_last_reply_id' );
+	delete_post_meta( $source_topic->ID, '_bbp_last_active_id' );
+	delete_post_meta( $source_topic->ID, '_bbp_last_active_time' );
+	delete_post_meta( $source_topic->ID, '_bbp_voice_count' );
+	delete_post_meta( $source_topic->ID, '_bbp_reply_count' );
+	delete_post_meta( $source_topic->ID, '_bbp_reply_count_hidden' );
+	delete_post_meta( $source_topic->ID, '_bbp_parent_reply_count' );
+
+	// Delete source topics user relationships.
+	delete_post_meta( $source_topic->ID, '_bbp_favorite' );
+	delete_post_meta( $source_topic->ID, '_bbp_subscription' );
+
+	$parent_replies = 0;
+
 	// Get the replies of the source topic.
 	$replies = (array) get_posts(
 		array(
@@ -1381,14 +1433,15 @@ function bbp_merge_topic_handler( $action = '' ) {
 			bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
 			bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
 
-			// Adjust reply to values.
-			$reply_to = bbp_get_reply_to( $reply->ID );
-			if ( empty( $reply_to ) ) {
-				bbp_update_reply_to( $reply->ID, $source_topic->ID );
-			}
+			// Update the reply position.
+			bbp_update_reply_position( $reply->ID );
 
 			// Do additional actions per merged reply.
 			do_action( 'bbp_merged_topic_reply', $reply->ID, $destination_topic->ID );
+
+			if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+				$parent_replies++;
+			}
 		}
 	}
 
@@ -1398,6 +1451,12 @@ function bbp_merge_topic_handler( $action = '' ) {
 	bbp_update_topic_last_reply_id( $destination_topic->ID );
 	bbp_update_topic_last_active_id( $destination_topic->ID );
 	bbp_update_topic_last_active_time( $destination_topic->ID );
+
+	// Update parent reply count with destination topic_id.
+	if ( ! empty( $destination_topic->ID ) && 0 !== $parent_replies ) {
+		$parent_reply_count = get_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', true );
+		update_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count + $parent_replies );
+	}
 
 	// Send the post parent of the source topic as it has been shifted.
 	// (possibly to a new forum) so we need to update the counts of the.
@@ -1547,7 +1606,7 @@ function bbp_split_topic_handler( $action = '' ) {
 
 	// How to Split.
 	if ( ! empty( $_POST['bbp_topic_split_option'] ) ) {
-		$split_option = (string) trim( $_POST['bbp_topic_split_option'] );
+		$split_option = sanitize_key( $_POST['bbp_topic_split_option'] );
 	}
 
 	// Invalid split option.
@@ -1711,22 +1770,11 @@ function bbp_split_topic_handler( $action = '' ) {
 	// comparision without a filter.
 	$replies = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->posts} WHERE {$wpdb->posts}.post_date >= %s AND {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_type = %s ORDER BY {$wpdb->posts}.post_date ASC", $from_reply->post_date, $source_topic->ID, bbp_get_reply_post_type() ) );
 
+	$source_parent_replies      = 0;
+	$destination_parent_replies = 0;
+
 	// Make sure there are replies to loop through.
 	if ( ! empty( $replies ) && ! is_wp_error( $replies ) ) {
-
-		// Calculate starting point for reply positions.
-		switch ( $split_option ) {
-
-			// Get topic reply count for existing topic.
-			case 'existing':
-				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID );
-				break;
-
-			// Account for new lead topic.
-			case 'reply':
-				$reply_position = 1;
-				break;
-		}
 
 		// Save reply ids.
 		$reply_ids = array();
@@ -1734,8 +1782,9 @@ function bbp_split_topic_handler( $action = '' ) {
 		// Change the post_parent of each reply to the destination topic id.
 		foreach ( $replies as $reply ) {
 
-			// Bump the reply position each iteration through the loop.
-			$reply_position++;
+			if ( ! empty( $source_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+				$source_parent_replies++;
+			}
 
 			// Update the reply.
 			wp_update_post(
@@ -1744,23 +1793,25 @@ function bbp_split_topic_handler( $action = '' ) {
 					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
 					'post_name'   => false, // will be automatically generated.
 					'post_parent' => $destination_topic->ID,
-					'menu_order'  => $reply_position,
 					'guid'        => '',
 				)
 			);
 
 			// Gather reply ids.
-			$reply_ids[] = $reply->ID;
+			$reply_ids[] = (int) $reply->ID;
 
 			// Adjust reply meta values.
 			bbp_update_reply_topic_id( $reply->ID, $destination_topic->ID );
 			bbp_update_reply_forum_id( $reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
 
+			// Adjust reply position.
+			bbp_update_reply_position( $reply->ID );
+
 			// Adjust reply to values.
 			$reply_to = bbp_get_reply_to( $reply->ID );
 
 			// Not a reply to a reply that moved over.
-			if ( ! in_array( $reply_to, $reply_ids ) ) {
+			if ( ! in_array( $reply_to, $reply_ids, true ) ) {
 				bbp_update_reply_to( $reply->ID, 0 );
 			}
 
@@ -1771,6 +1822,22 @@ function bbp_split_topic_handler( $action = '' ) {
 
 			// Do additional actions per split reply.
 			do_action( 'bbp_split_topic_reply', $reply->ID, $destination_topic->ID );
+
+			if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
+				$destination_parent_replies++;
+			}
+		}
+
+		// Update parent reply count with source topic_id.
+		if ( ! empty( $source_topic->ID ) && 0 !== $source_parent_replies ) {
+			$parent_reply_count = get_post_meta( $source_topic->ID, '_bbp_parent_reply_count', true );
+			update_post_meta( $source_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count - $source_parent_replies );
+		}
+
+		// Update parent reply count with destination topic_id.
+		if ( ! empty( $destination_topic->ID ) && 0 !== $destination_parent_replies ) {
+			$parent_reply_count = get_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', true );
+			update_post_meta( $destination_topic->ID, '_bbp_parent_reply_count', (int) $parent_reply_count + $destination_parent_replies );
 		}
 
 		// Remove reply to from new topic.
@@ -2063,20 +2130,25 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 /**
  * Return an associative array of available topic statuses
  *
- * @since bbPress (r5059)
+ * @since 2.4.0 bbPress (r5059)
+ *
+ * @param int $topic_id   Optional. Topic id.
  *
  * @return array
  */
-function bbp_get_topic_statuses() {
-	return apply_filters(
+function bbp_get_topic_statuses( $topic_id = 0 ) {
+
+	// Filter & return.
+	return (array) apply_filters(
 		'bbp_get_topic_statuses',
 		array(
-			bbp_get_public_status_id()  => __( 'Open', 'buddyboss' ),
-			bbp_get_closed_status_id()  => __( 'Closed', 'buddyboss' ),
-			bbp_get_spam_status_id()    => __( 'Spam', 'buddyboss' ),
-			bbp_get_trash_status_id()   => __( 'Trash', 'buddyboss' ),
-			bbp_get_pending_status_id() => __( 'Pending', 'buddyboss' ),
-		)
+			bbp_get_public_status_id()  => _x( 'Open', 'Open the topic', 'buddyboss' ),
+			bbp_get_closed_status_id()  => _x( 'Closed', 'Close the topic', 'buddyboss' ),
+			bbp_get_spam_status_id()    => _x( 'Spam', 'Spam the topic', 'buddyboss' ),
+			bbp_get_trash_status_id()   => _x( 'Trash', 'Trash the topic', 'buddyboss' ),
+			bbp_get_pending_status_id() => _x( 'Pending', 'Unapprove the topic', 'buddyboss' ),
+		),
+		$topic_id
 	);
 }
 
@@ -2263,6 +2335,9 @@ function bbp_toggle_topic_handler( $action = '' ) {
 					check_ajax_referer( 'untrash-' . bbp_get_topic_post_type() . '_' . $topic_id );
 
 					$success = wp_untrash_post( $topic_id );
+					if ( $success ) {
+						$success = wp_publish_post( $topic_id );
+					}
 					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the discussion.', 'buddyboss' );
 
 					break;
@@ -3530,10 +3605,33 @@ function bbp_topic_content_autoembed() {
 	global $wp_embed;
 
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
-		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
+		add_filter( 'bbp_get_topic_content', 'bb_validate_topic_embed', 1 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
-		add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
+		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}
+}
+
+/**
+ * Validate is the embed url or not.
+ *
+ * @param string $content Content.
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return mixed
+ */
+function bb_validate_topic_embed( $content ) {
+	global $wp_embed;
+
+	if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
+		return $content;
+	}
+
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
+		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
+	}
+
+	return $content;
 }
 
 /**
@@ -3544,12 +3642,20 @@ function bbp_topic_content_autoembed() {
  * @return string
  */
 function bbp_topic_content_autoembed_paragraph( $content ) {
+	global $wp_embed;
+
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
+		remove_filter( 'bbp_get_reply_content', array( $wp_embed, 'autoembed' ), 2 );
+	}
 
 	if ( strpos( $content, '<iframe' ) !== false ) {
 		return $content;
 	}
 
-	global $wp_embed;
+	if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
+		return $content;
+	}
+
 	$embed_urls = $embeds_array = array();
 	$flag       = true;
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * The template for profile search
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/common/search/profile-search.php.
+ *
+ * @since   1.0.0
+ * @version 1.0.0
+ */
+
 $options = array(
 	'theme' => 'base',
 );
@@ -273,10 +282,10 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 					case 'radio': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-radio-wrap">
-							<input class="bs-styled-radio" id="bb-search-<?php echo str_replace(' ', '', $key); ?>" type="radio" <?php if ( $key == $value ) {
+							<input class="bs-styled-radio" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="radio" <?php if ( $key == $value ) {
 									echo 'checked="checked"';
 							} ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
-							<label for="bb-search-<?php echo str_replace(' ', '', $key); ?>"><?php echo $label; ?></label>
+							<label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
 						</div><?php
 					}
 
@@ -284,10 +293,10 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 					case 'checkbox': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-checkbox-wrap">
-							<input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace(' ', '', $key); ?>" type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
+							<input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
 								echo 'checked="checked"';
 							} ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>" />
-							<label for="bb-search-<?php echo str_replace(' ', '', $key); ?>"><?php echo $label; ?></label>
+							<label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
 						</div><?php
 					}
 					break;

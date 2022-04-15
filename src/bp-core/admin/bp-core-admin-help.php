@@ -16,32 +16,28 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_core_admin_help_main_page() {
 
-	if ( empty( bp_core_admin_help_get_article_value() ) ) {
-		?>
-		<div class="bp-help-main-menu-wrap" id="bp-help-main-menu-wrap"></div>
-		<?php
-	} else {
-		?>
-		<div class="bp-help-content-wrap">
-			<div class="bp-help-sidebar">
+	?>
+	<div class="bp-help-main-menu-wrap" id="bp-help-main-menu-wrap" style="display:none" ></div>
+	
+	<div class="bp-help-content-wrap" style="display:none">
+		<div class="bp-help-sidebar">
 
-			</div>
-			<div class="bp-help-content">
-				<!-- print breadcrumbs -->
-				<ul class="bp-help-menu">
+		</div>
+		<div class="bp-help-content">
+			<!-- print breadcrumbs -->
+			<ul class="bp-help-menu">
 
-				</ul>
-				<!-- print content -->
-				<div id="bp-help-content-area"></div>
+			</ul>
+			<!-- print content -->
+			<div id="bp-help-content-area"></div>
 
-				<!-- print submenu -->
-				<div class="article-child well">
-					<h3 id="article-child-title" style="display: none;"><?php _e( 'Articles', 'buddyboss' ); ?></h3>
-				</div>
+			<!-- print submenu -->
+			<div class="article-child well">
+				<h3 id="article-child-title" style="display: none;"><?php _e( 'Articles', 'buddyboss' ); ?></h3>
 			</div>
 		</div>
-		<?php
-	}
+	</div>
+	<?php
 }
 
 /**

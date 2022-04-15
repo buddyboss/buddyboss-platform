@@ -103,7 +103,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -146,8 +146,8 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	public function prepare_item_for_response( $type, $request ) {
 		$data = array(
 			'labels'         => array(
-				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? $type->labels['name'] : '',
-				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? $type->labels['singular_name'] : '',
+				'name'          => ( isset( $type->labels['name'] ) && ! empty( $type->labels['name'] ) ) ? wp_specialchars_decode( $type->labels['name'] ) : '',
+				'singular_name' => ( isset( $type->labels['singular_name'] ) && ! empty( $type->labels['singular_name'] ) ) ? wp_specialchars_decode( $type->labels['singular_name'] ) : '',
 			),
 			'has_directory'  => ( isset( $type->has_directory ) ? $type->has_directory : false ),
 			'name'           => ( isset( $type->name ) ? $type->name : '' ),
@@ -187,6 +187,19 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				);
 			} else {
 				$data['enable_remove'] = false;
+			}
+		}
+
+		// Define default network search visibility property.
+		if ( isset( $schema['network_search_enable_remove'] ) ) {
+			if ( ! empty( $post_id ) ) {
+				$data['network_search_enable_remove'] = (bool) (
+				! empty( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) )
+					? get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true )
+					: 0
+				);
+			} else {
+				$data['network_search_enable_remove'] = false;
 			}
 		}
 
@@ -373,6 +386,13 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				'readonly'    => true,
 			);
 
+			$schema['properties']['network_search_enable_remove'] = array(
+				'description' => __( 'Hide all members of this type from Network Search results.', 'buddyboss' ),
+				'type'        => 'boolean',
+				'context'     => array( 'embed', 'view', 'edit' ),
+				'readonly'    => true,
+			);
+
 			$schema['properties']['enable_profile_field'] = array(
 				'description' => __( 'Allow users to self-select as this profile type from the "Profile Type" profile field dropdown.', 'buddyboss' ),
 				'type'        => 'boolean',
@@ -401,7 +421,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				&& true === bp_enable_group_auto_join()
 			) {
 				$schema['properties']['bp-group-type-auto-join'] = array(
-					'description' => __( 'Group types will automatically approve all membership requests from users of this profile type.', 'buddyboss' ),
+					'description' => __( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
