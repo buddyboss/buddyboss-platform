@@ -1,10 +1,12 @@
 <?php
-
 /**
- * BuddyBoss - Document Create Folder
+ * The template for document create folder
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-create-folder.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>
