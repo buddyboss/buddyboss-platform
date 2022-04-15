@@ -1039,6 +1039,7 @@ class BP_Friends_Friendship {
 		// notification from this user.
 		if ( bp_is_active( 'notifications' ) ) {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND ( component_action = 'friendship_request' OR component_action = 'friendship_accepted' ) AND item_id = %d", $user_id ) );
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND ( component_action = 'bb_connections_new_request' OR component_action = 'bb_connections_request_accepted' ) AND item_id = %d", $user_id ) );
 		}
 
 		// Clean up the friendships cache.

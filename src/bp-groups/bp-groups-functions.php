@@ -319,6 +319,10 @@ function groups_edit_base_group_details( $args = array() ) {
 		groups_notification_group_updated( $group->id, $old_group );
 	}
 
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		bb_groups_notification_groups_updated( $group->id );
+	}
+
 	/**
 	 * Fired after a group's details are updated.
 	 *
@@ -1089,6 +1093,11 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 	);
 
 	$user_id = intval( $user_id );
+
+	// Do not process if no user_id.
+	if ( 0 === $user_id ) {
+		return array();
+	}
 
 	$membership_ids = wp_cache_get( $user_id, 'bp_groups_memberships_for_user' );
 	if ( false === $membership_ids ) {
