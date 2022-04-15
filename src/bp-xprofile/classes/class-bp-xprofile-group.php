@@ -436,7 +436,7 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
-			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;			
+			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
