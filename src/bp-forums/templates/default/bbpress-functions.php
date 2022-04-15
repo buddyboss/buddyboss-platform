@@ -254,6 +254,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 				if ( bp_is_forums_media_support_enabled() || $gif || $emoji ) {
 					wp_enqueue_script( 'bp-media-dropzone' );
+					wp_enqueue_script( 'bp-nouveau-codemirror' );
+					wp_enqueue_script( 'bp-nouveau-codemirror-css' );
 					wp_enqueue_script( 'bp-nouveau-media' );
 					wp_enqueue_script( 'isInViewport' );
 					wp_enqueue_script( 'bp-exif' );
