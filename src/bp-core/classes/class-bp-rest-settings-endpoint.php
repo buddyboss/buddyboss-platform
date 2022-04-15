@@ -272,7 +272,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
-
+			'bb-web-notification-enabled'              => function_exists( 'bb_web_notification_enabled' ) && bb_web_notification_enabled(),
+			'bb-app-notification-enabled'              => function_exists( 'bb_app_notification_enabled' ) && bb_app_notification_enabled(),
+			'bb_enabled_legacy_email_preference'       => function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference(),
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
@@ -548,6 +550,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
 			);
 		}
+
+		$results['bp-active-components'] = array_keys( apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) ) );
 
 		return $results;
 	}
