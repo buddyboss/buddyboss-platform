@@ -65,6 +65,15 @@ class BP_XProfile_Group {
 	public $fields;
 
 	/**
+	 * Static cache key for the groups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array Fields of cache.
+	 */
+	public static $bp_xprofile_group_ids = array();
+
+	/**
 	 * Initialize and/or populate profile field group.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -76,8 +85,6 @@ class BP_XProfile_Group {
 			$this->populate( $id );
 		}
 	}
-
-	public static $bp_xprofile_group_ids = array();
 
 	/**
 	 * Populate a profile field group.
@@ -297,8 +304,8 @@ class BP_XProfile_Group {
 
 		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
 
-		if ( isset( static::$bp_xprofile_group_ids[ $cache_key ] ) ) {
-			return static::$bp_xprofile_group_ids[ $cache_key ];
+		if ( isset( self::$bp_xprofile_group_ids[ $cache_key ] ) ) {
+			return self::$bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Keep track of object IDs for cache-priming.
@@ -332,7 +339,7 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
-			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
+			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -344,7 +351,7 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
-			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
+			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -436,7 +443,7 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
-			static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
+			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -573,7 +580,7 @@ class BP_XProfile_Group {
 			$groups = array_values( $groups );
 		}
 
-		static::$bp_xprofile_group_ids[ $cache_key ] = $groups;
+		self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 		return $groups;
 	}
 
