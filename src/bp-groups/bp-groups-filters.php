@@ -34,6 +34,8 @@ add_filter( 'bp_get_group_description_excerpt', 'make_clickable', 9 );
 add_filter( 'bp_get_group_name', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_permalink', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_group_description', 'bp_groups_filter_kses', 1 );
+add_filter( 'bp_get_new_group_description', 'bp_groups_filter_kses', 1 );
+
 add_filter( 'bp_get_group_description_excerpt', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_name_before_save', 'wp_filter_kses', 1 );
 add_filter( 'groups_group_description_before_save', 'bp_groups_filter_kses', 1 );
@@ -80,6 +82,13 @@ add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10
 add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_video_scope', 10, 2 );
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
+
+add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
+add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
+add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
+
+// Load Group Notifications.
+add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -956,3 +965,46 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 	return apply_filters( 'bb_group_member_query_group_message_member_ids', $group_member_ids, $group_member_query_object );
 }
 add_filter( 'bp_group_member_query_group_member_ids', 'bb_group_member_query_group_message_member_ids', 9999, 2 );
+
+/**
+ * Filters the my-groups menu url for the logged in group member.
+ *
+ * When there is My gorups menu available on the website,
+ * use this filter to fix the current user's gorups link.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param array $sorted_menu_objects Array of menu objects.
+ * @param array $args                Array of arguments.
+ */
+function bb_my_group_menu_url( $sorted_menu_objects, $args ) {
+
+	if ( 'header-menu' !== $args->theme_location ) {
+		return $sorted_menu_objects;
+	}
+
+	foreach ( $sorted_menu_objects as $key => $menu_object ) {
+
+		// Replace the URL when bp_loggedin_user_domain && bp_displayed_user_domain are not same.
+		if ( class_exists( 'BuddyPress' ) ) {
+			if ( bp_loggedin_user_domain() !== bp_displayed_user_domain() ) {
+				$menu_object->url = str_replace( bp_displayed_user_domain(), bp_loggedin_user_domain(), $menu_object->url );
+			}
+		}
+	}
+
+	return $sorted_menu_objects;
+}
+add_filter( 'wp_nav_menu_objects', 'bb_my_group_menu_url', 10, 2 );
+
+
+/**
+ * Register the group notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_groups_notifications() {
+	if ( class_exists( 'BP_Groups_Notification' ) ) {
+		BP_Groups_Notification::instance();
+	}
+}
