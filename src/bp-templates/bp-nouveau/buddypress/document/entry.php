@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Document Entry
+ * The template for document entry
  *
- * @since BuddyBoss 1.4.0
+ * This template can be overridden by copying it to yourtheme/buddypress/document/entry.php.
+ *
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>
@@ -15,7 +18,7 @@
 		<?php if ( bp_is_my_profile() || ( bp_is_group() && ( ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) ) : ?>
 			<div class="bb-media-check-wrap">
 				<input id="bb-media-<?php bp_document_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_document_id(); ?>" name="bb-media-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_document_id(); ?>"><span class="dashicons dashicons-yes"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_document_id(); ?>"><span class="dashicons dashicons-yes"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>

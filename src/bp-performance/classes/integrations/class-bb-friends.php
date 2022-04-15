@@ -30,8 +30,6 @@ class BB_Friends extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-friends' );
 
-		$event_groups = array( 'buddypress', 'buddypress-friends' );
-
 		$purge_events = array(
 			'deleted_user', // New user deleted on site.
 			'make_spam_user', // When user mark as spam user.
@@ -48,10 +46,6 @@ class BB_Friends extends Integration_Abstract {
 			'bp_suspend_user_unsuspended',     // Any User Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge friend endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_friend', $purge_events );
 		$this->purge_event( 'bp-friends', $purge_events );
 
 		/**
@@ -75,11 +69,7 @@ class BB_Friends extends Integration_Abstract {
 			'bp_suspend_user_unsuspended'    => 1, // Any User Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge single friend endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_friends', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-friends_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_member_connections', 'buddyboss-app' );
@@ -90,11 +80,8 @@ class BB_Friends extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/friends',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
 					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
 				),
 				true
 			);
@@ -102,8 +89,6 @@ class BB_Friends extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/friends/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);

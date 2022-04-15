@@ -832,6 +832,10 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 			 * reply from blog or custom post types.
 			 */
 			remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
+
+			// Added the filter to bypass the content check on blog or custom post types comments.
+			add_filter('bp_has_activity_comment_content', '__return_false');
+
 			$activity_id = bp_activity_new_comment( $activity_args );
 
 			// Removed the filter get back activity content.

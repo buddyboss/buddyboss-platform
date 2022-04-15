@@ -23,16 +23,19 @@ function bp_search_get_settings_sections() {
 				'page'     => 'search',
 				'title'    => __( 'Network Search', 'buddyboss' ),
 				'callback' => 'bp_search_settings_callback_community_section',
+				'tutorial_callback' => '',
 			),
 			'bp_search_settings_post_types' => array(
 				'page'     => 'search',
 				'title'    => __( 'Pages and Posts Search', 'buddyboss' ),
 				'callback' => 'bp_search_settings_callback_post_type_section',
+				'tutorial_callback' => '',
 			),
 			'bp_search_settings_general'    => array(
 				'page'     => 'search',
 				'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
 				'callback' => '',
+				'tutorial_callback' => 'bp_search_settings_tutorial',
 			),
 		)
 	);
@@ -65,10 +68,6 @@ function bp_search_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bp_search_tutorial'          => array(
-			'title'    => __( '&#65279', 'buddyboss' ),
-			'callback' => 'bp_search_settings_tutorial',
-		),
 	);
 
 	$fields['bp_search_settings_community'] = array(
@@ -217,6 +216,15 @@ function bp_search_get_settings_fields() {
 				'class' => 'bp-search-child-field',
 			),
 		);
+		$fields['bp_search_settings_community']['bp_search_videos'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_videos',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
+
 	}
 
 	if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
@@ -783,6 +791,28 @@ function bp_search_settings_callback_albums() {
 /**
  * Allow Post Type search setting field
  *
+ * @since BuddyBoss 1.7.0
+ *
+ * @uses checked() To display the checked attribute.
+ */
+function bp_search_settings_callback_videos() {
+	?>
+	<input
+			name="bp_search_videos"
+			id="bp_search_videos"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_videos_enable( false ) ); ?>
+	/>
+	<label for="bp_search_videos">
+		<?php esc_html_e( 'Videos', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
  * @since BuddyBoss 1.4.0
  *
  * @uses checked() To display the checked attribute
@@ -861,6 +891,19 @@ function bp_is_search_photos_enable( $default = 0 ) {
  */
 function bp_is_search_albums_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_albums_enable', (bool) get_option( 'bp_search_albums', $default ) );
+}
+
+/**
+ * Checks if video search is enabled.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @param int $default whether video search enabled or not.
+ *
+ * @return bool Is video media search enabled or not.
+ */
+function bp_is_search_videos_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_videos_enable', (bool) get_option( 'bp_search_videos', $default ) );
 }
 
 /**
@@ -995,8 +1038,8 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string post type name
- * @param $taxonomy string taxonomy name
+ * @param $post_type string post type name.
+ * @param $taxonomy  string taxonomy name.
  *
  * @return bool Is post type Taxonomy search enabled or not
  */

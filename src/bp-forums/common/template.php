@@ -804,6 +804,30 @@ function bbp_is_single_user_replies() {
 }
 
 /**
+ * Check if current page is a user engagements page
+ *
+ * @since 2.6.0 bbPress (r6320)
+ *
+ * @return bool True if it's a user's replies page, false if not
+ */
+function bbp_is_single_user_engagements() {
+
+	// Assume false.
+	$retval = false;
+
+	// Get the main query global.
+	$wp_query = bbp_get_wp_query();
+
+	// Check query.
+	if ( ! empty( $wp_query->bbp_is_single_user_engagements ) && ( true === $wp_query->bbp_is_single_user_engagements ) ) {
+		$retval = true;
+	}
+
+	// Filter & return.
+	return (bool) apply_filters( 'bbp_is_single_user_engagements', $retval );
+}
+
+/**
  * Check if current page is a view page
  *
  * @since bbPress (r2789)
@@ -1467,7 +1491,7 @@ function bbp_dropdown( $args = '' ) {
 	 * @return string The dropdown
 	 */
 function bbp_get_dropdown( $args = '' ) {
-
+	static $bbp_get_dropdown_cache = array();
 	/** Arguments */
 
 	// Parse arguments against default values
@@ -1492,6 +1516,7 @@ function bbp_get_dropdown( $args = '' ) {
 			'show_none_default_val' => '',
 			'disable_categories'    => true,
 			'disabled'              => '',
+			'disabled_walker'       => true,
 		),
 		'get_dropdown'
 	);
@@ -1512,24 +1537,30 @@ function bbp_get_dropdown( $args = '' ) {
 	}
 
 	/** Setup variables */
-
-	$retval = '';
-	$posts  = get_posts(
-		array(
-			'post_type'              => $r['post_type'],
-			'post_status'            => $r['post_status'],
-			'exclude'                => $r['exclude'],
-			'post_parent'            => $r['post_parent'],
-			'numberposts'            => $r['numberposts'],
-			'orderby'                => $r['orderby'],
-			'order'                  => $r['order'],
-			'walker'                 => $r['walker'],
-			'disable_categories'     => $r['disable_categories'],
-			'suppress_filters'       => false,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		)
+	$retval    = '';
+	$post_args = array(
+		'post_type'              => $r['post_type'],
+		'post_status'            => $r['post_status'],
+		'exclude'                => $r['exclude'],
+		'post_parent'            => $r['post_parent'],
+		'numberposts'            => $r['numberposts'],
+		'orderby'                => $r['orderby'],
+		'order'                  => $r['order'],
+		'walker'                 => $r['walker'],
+		'disable_categories'     => $r['disable_categories'],
+		'suppress_filters'       => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 	);
+
+	$cache_key = 'bbp_get_dropdown_' . md5( maybe_serialize( $post_args ) );
+	if ( ! isset( $bbp_get_dropdown_cache[ $cache_key ] ) ) {
+		$posts = get_posts( $post_args );
+
+		$bbp_get_dropdown_cache[ $cache_key ] = $posts;
+	} else {
+		$posts = $bbp_get_dropdown_cache[ $cache_key ];
+	}
 
 	/** Drop Down */
 
@@ -1537,7 +1568,7 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ) ? bbpress()->options[ $r['disabled'] ] : $r['disabled'], true, false );
 
 		// Setup the tab index attribute
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';
@@ -1593,7 +1624,11 @@ function bbp_get_dropdown( $args = '' ) {
 	// Items found so walk the tree
 	if ( ! empty( $posts ) ) {
 		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
-		unset( $r['walker'] );
+
+		if ( ! empty( $r['disabled_walker'] ) && true === $r['disabled_walker'] ) {
+			unset( $r['walker'] );
+		}
+
 		$retval .= walk_page_dropdown_tree( $posts, 0, $r );
 		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
 	}
@@ -1745,11 +1780,13 @@ function bbp_topic_form_fields() {
 function bbp_reply_form_fields() {
 
 	if ( bbp_is_reply_edit() ) :
+		$forum_redirect_to = isset( $_REQUEST['forum_redirect_to'] ) ? (int) $_REQUEST['forum_redirect_to'] : 1
 		?>
 
 		<input type="hidden" name="bbp_reply_id"    id="bbp_reply_id"    value="<?php bbp_reply_id(); ?>" />
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
+		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
 
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {

@@ -1,17 +1,24 @@
 <?php
 /**
- * BP Nouveau Component's groups filters template.
+ * The template for BP Nouveau Component's groups filters template
  *
- * @since BuddyBoss 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/common/filters/group-filters.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
  */
-?>
-
-<?php
 
 // Check group type enable?
 if ( false === bp_disable_group_type_creation() ) {
 	return '';
 }
+
+// No need to show the group type select dropdown.
+$group_type = bp_get_current_group_directory_type();
+if ( ! empty( $group_type ) ) {
+	return '';
+}
+
 
 $args = array(
 	'meta_query' => array(
@@ -22,7 +29,7 @@ $args = array(
 	)
 );
 
-// Get active group types
+// Get active group types.
 if ( bp_is_groups_directory() ) {
 	$args['meta_query'][] = array(
 		'key'   => '_bp_group_type_enable_remove',

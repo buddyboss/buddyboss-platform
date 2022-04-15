@@ -7,8 +7,8 @@
 
 namespace BuddyBoss\Performance\Integration;
 
-use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Cache;
+use BuddyBoss\Performance\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -30,66 +30,81 @@ class BB_Groups extends Integration_Abstract {
 	public function set_up() {
 		$this->register( 'bp-groups' );
 
-		$event_groups = array( 'buddypress', 'buddypress-groups' );
-
 		$purge_events = array(
 			'bp_group_admin_edit_after',         // When Group change form admin.
 			'groups_create_group_step_complete', // When Group created from Manage.
+			'groups_delete_group',               // When Group was deleted.
+			'groups_join_group',                 // When user join the group.
+			'groups_leave_group',                // When user leave the group.
+			'bp_invitations_accepted_invite',    // When Group invitation has been accepted.
 
 			// Added moderation support.
 			'bp_suspend_groups_suspended',       // Any Group Suspended.
 			'bp_suspend_groups_unsuspended',     // Any Group Unsuspended.
 		);
 
-		/**
-		 * Add Custom events to purge group endpoint cache
-		 */
-		$purge_events = apply_filters( 'bbplatform_cache_bp_groups', $purge_events );
 		$this->purge_event( 'bp-groups', $purge_events );
+		$this->purge_event( 'bbapp-deeplinking', $purge_events );
 
 		/**
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'bp_group_admin_edit_after'             => 1,  // When Group change form admin.
-			'groups_create_group_step_complete'     => 0,  // When Group created from Manage.
-			'groups_group_details_edited'           => 1,  // When Group Details updated form Manage.
-			'groups_group_settings_edited'          => 1,  // When Group setting updated form Manage.
-			'groups_avatar_uploaded'                => 1,  // When Group avatar updated form Manage.
-			'bp_core_delete_existing_avatar'        => 1,  // When Group avatar deleted.
-			'groups_cover_image_uploaded'           => 1,  // When Group cover photo uploaded form Manage.
-			'groups_cover_image_deleted'            => 1,  // When Group cover photo deleted form Manage.
-			'bp_group_admin_after_edit_screen_save' => 1,  // When Group forums setting Manage.
-			'groups_join_group'                     => 1,  // When user join in group.
-			'groups_member_after_save'              => 1,  // When Group member ban, unban, promoted, demoted.
-			'groups_member_after_remove'            => 1,  // When Group member removed.
-			'groups_membership_requested'           => 3,  // When Group membership request.
-			'groups_membership_accepted'            => 2,  // When Group invitation accepted.
-			'groups_membership_rejected'            => 2,  // When Group invitation rejected.
-			'groups_invite_user'                    => 1,  // When user invite in group.
-			'bp_invitations_accepted_request'       => 1,  // When Group request accepted.
-			'bp_invitations_accepted_invite'        => 1,  // When Group invitation accepted.
-			'bp_invitation_after_delete'            => 1,  // When Group invitation deleted.
-			'added_group_meta'                      => 2,  // When Group added update. This needed for sorting by group last activity, member course.
-			'updated_group_meta'                    => 2,  // When Group meta update. This needed for sorting by group last activity, member course.
-			'delete_group_meta'                     => 2,  // When Group meta deleted. This needed for sorting by group last activity, member course.
+			'bp_group_admin_edit_after'                          => 1,  // When Group change form admin.
+			'groups_create_group_step_complete'                  => 0,  // When Group created from Manage.
+			'groups_delete_group'                                => 1,  // When Group was deleted.
+			'groups_group_details_edited'                        => 1,  // When Group Details updated form Manage.
+			'groups_group_settings_edited'                       => 1,  // When Group setting updated form Manage.
+			'groups_avatar_uploaded'                             => 1,  // When Group avatar updated form Manage.
+			'bp_core_delete_existing_avatar'                     => 1,  // When Group avatar deleted.
+			'groups_cover_image_uploaded'                        => 1,  // When Group cover photo uploaded form Manage.
+			'groups_cover_image_deleted'                         => 1,  // When Group cover photo deleted form Manage.
+			'bp_group_admin_after_edit_screen_save'              => 1,  // When Group forums setting Manage.
+			'groups_join_group'                                  => 1,  // When user join in group.
+			'groups_leave_group'                                 => 2,  // When user leave the group.
+			'groups_member_after_save'                           => 1,  // When Group member ban, unban, promoted, demoted.
+			'groups_member_after_remove'                         => 1,  // When Group member removed.
+			'groups_membership_requested'                        => 3,  // When Group membership request.
+			'groups_membership_accepted'                         => 2,  // When Group invitation accepted.
+			'groups_membership_rejected'                         => 2,  // When Group invitation rejected.
+			'groups_invite_user'                                 => 1,  // When user invite in group.
+			'bp_invitations_accepted_request'                    => 1,  // When Group request accepted.
+			'bp_invitations_accepted_invite'                     => 1,  // When Group invitation accepted.
+			'bp_invitation_after_delete'                         => 1,  // When Group invitation deleted.
+			'added_group_meta'                                   => 2,  // When Group added update. This needed for sorting by group last activity, member course.
+			'updated_group_meta'                                 => 2,  // When Group meta update. This needed for sorting by group last activity, member course.
+			'delete_group_meta'                                  => 2,  // When Group meta deleted. This needed for sorting by group last activity, member course.
 
 			// Added moderation support.
-			'bp_suspend_groups_suspended'           => 1, // Any Group Suspended.
-			'bp_suspend_groups_unsuspended'         => 1, // Any Group Unsuspended.
+			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
+			'bp_suspend_groups_unsuspended'                      => 1, // Any Group Unsuspended.
 
 			// Add Author Embed Support.
-			'profile_update'                        => 1, // User updated on site.
-			'deleted_user'                          => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'              => 1, // User avatar photo updated.
-			// 'bp_core_delete_existing_avatar'     => 1, //User avatar photo deleted. Manage with group as both use same action.
+			'profile_update'                                     => 1, // User updated on site.
+			'deleted_user'                                       => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'                           => 1, // User avatar photo updated.
+			// 'bp_core_delete_existing_avatar'                  => 1, //User avatar photo deleted. Manage with group as both use same action.
+
+			// When change/update the group avatar and cover options.
+			'update_option_bp-disable-group-avatar-uploads'      => 3,
+			'update_option_bp-default-group-avatar-type'         => 3,
+			'update_option_bp-default-custom-group-avatar'       => 3,
+			'update_option_bp-disable-group-cover-image-uploads' => 3,
+			'update_option_bp-default-group-cover-type'          => 3,
+			'update_option_bp-default-custom-group-cover'        => 3,
+
+			// For Group Media/Album Support.
+			'update_option_bp_media_group_media_support'    => 3,
+			'update_option_bp_media_group_albums_support'   => 3,
+
+			// For Group Document Support.
+			'update_option_bp_media_group_document_support' => 3,
+
+			// For Group Video Support.
+			'update_option_bp_video_group_video_support'    => 3,
 		);
 
-		/**
-		 * Add Custom events to purge single group endpoint cache
-		 */
-		$purge_single_events = apply_filters( 'bbplatform_cache_bp_groups', $purge_single_events );
-		$this->purge_single_events( 'bbplatform_cache_purge_bp-groups_single', $purge_single_events );
+		$this->purge_single_events( $purge_single_events );
 
 		$is_component_active = Helper::instance()->get_app_settings( 'cache_component', 'buddyboss-app' );
 		$settings            = Helper::instance()->get_app_settings( 'cache_bb_social_groups', 'buddyboss-app' );
@@ -100,11 +115,8 @@ class BB_Groups extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/groups',
 				Cache::instance()->month_in_seconds * 60,
-				$purge_events,
-				$event_groups,
 				array(
-					'unique_id'         => 'id',
-					'purge_deep_events' => array_keys( $purge_single_events ),
+					'unique_id' => 'id',
 				),
 				true
 			);
@@ -112,8 +124,6 @@ class BB_Groups extends Integration_Abstract {
 			$this->cache_endpoint(
 				'buddyboss/v1/groups/<id>',
 				Cache::instance()->month_in_seconds * 60,
-				array_keys( $purge_single_events ),
-				$event_groups,
 				array(),
 				false
 			);
@@ -127,7 +137,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_bp_group_admin_edit_after( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -137,7 +147,18 @@ class BB_Groups extends Integration_Abstract {
 		$bp       = buddypress();
 		$group_id = $bp->groups->new_group_id;
 		if ( ! empty( $group_id ) ) {
-			Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+			$this->purge_item_cache_by_item_id( $group_id );
+		}
+	}
+
+	/**
+	 * When Group was Deleted.
+	 *
+	 * @param int $group_id Group id.
+	 */
+	public function event_groups_delete_group( $group_id ) {
+		if ( ! empty( $group_id ) ) {
+			$this->purge_item_cache_by_item_id( $group_id );
 		}
 	}
 
@@ -147,7 +168,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -156,7 +177,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_group_settings_edited( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -165,7 +186,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_avatar_uploaded( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -174,7 +195,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_cover_image_uploaded( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -183,7 +204,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_cover_image_deleted( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -192,7 +213,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_bp_group_admin_after_edit_screen_save( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -201,7 +222,17 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_join_group( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
+	}
+
+	/**
+	 * When user join in group
+	 *
+	 * @param int $group_id Group id.
+	 * @param int $user_id  User id.
+	 */
+	public function event_groups_leave_group( $group_id, $user_id ) {
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -210,8 +241,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param object $member Member object.
 	 */
 	public function event_groups_member_after_save( $member ) {
-		$group_id = $member->group_id;
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $member->group_id );
 	}
 
 	/**
@@ -220,8 +250,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param object $member Member object.
 	 */
 	public function event_groups_member_after_remove( $member ) {
-		$group_id = $member->group_id;
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $member->group_id );
 	}
 
 	/**
@@ -232,7 +261,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int   $group_id Group id.
 	 */
 	public function event_groups_membership_requested( $user_id, $admins, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -242,7 +271,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_membership_accepted( $user_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -252,7 +281,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_groups_membership_rejected( $user_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -261,8 +290,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_groups_invite_user( $r ) {
-		$group_id = $r['group_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['group_id'] );
 	}
 
 	/**
@@ -271,8 +299,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_bp_invitations_accepted_request( $r ) {
-		$group_id = $r['item_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['item_id'] );
 	}
 
 	/**
@@ -281,8 +308,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_bp_invitations_accepted_invite( $r ) {
-		$group_id = $r['item_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['item_id'] );
 	}
 
 	/**
@@ -291,8 +317,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param array $r Arguments array.
 	 */
 	public function event_bp_invitation_after_delete( $r ) {
-		$group_id = $r['item_id'];
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $r['item_id'] );
 	}
 
 	/**
@@ -302,7 +327,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_added_group_meta( $meta_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -312,7 +337,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_updated_group_meta( $meta_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -322,7 +347,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group id.
 	 */
 	public function event_delete_group_meta( $meta_id, $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/******************************* Moderation Support ******************************/
@@ -332,7 +357,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group ID.
 	 */
 	public function event_bp_suspend_groups_suspended( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/**
@@ -341,7 +366,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $group_id Group ID.
 	 */
 	public function event_bp_suspend_groups_unsuspended( $group_id ) {
-		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
 	/****************************** Author Embed Support *****************************/
@@ -354,7 +379,7 @@ class BB_Groups extends Integration_Abstract {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $group_id );
 			}
 		}
 	}
@@ -368,7 +393,7 @@ class BB_Groups extends Integration_Abstract {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $group_id );
 			}
 		}
 	}
@@ -382,7 +407,7 @@ class BB_Groups extends Integration_Abstract {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $group_id );
 			}
 		}
 	}
@@ -400,12 +425,11 @@ class BB_Groups extends Integration_Abstract {
 				$group_ids = $this->get_group_ids_by_userid( $user_id );
 				if ( ! empty( $group_ids ) ) {
 					foreach ( $group_ids as $group_id ) {
-						Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+						$this->purge_item_cache_by_item_id( $group_id );
 					}
 				}
 			} elseif ( isset( $args['object'] ) && 'group' === $args['object'] ) {
-				$group_id = $item_id;
-				Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+				$this->purge_item_cache_by_item_id( $item_id );
 			}
 		}
 	}
@@ -426,5 +450,136 @@ class BB_Groups extends Integration_Abstract {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Purge item cache by item id.
+	 *
+	 * @param $group_id
+	 */
+	private function purge_item_cache_by_item_id( $group_id ) {
+		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
+		$group = new \BP_Groups_Group( $group_id );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) ) );
+	}
+
+	/**
+	 * When Group Avatars option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_disable_group_avatar_uploads( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Default Group Avatar option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_group_avatar_type( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Upload Custom Avatar option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_custom_group_avatar( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Group Cover Images option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_disable_group_cover_image_uploads( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Default Group Cover Image option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_group_cover_type( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Upload Custom Cover Image option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_default_custom_group_cover( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * Purge caches when change the settings related to group avatar and cover from the backend.
+	 */
+	public function purge_cache_on_change_default_group_images_settings() {
+		Cache::instance()->purge_by_component( 'bp-groups' );
+		Cache::instance()->purge_by_component( 'app_page' );
+		Cache::instance()->purge_by_component( 'sfwd-' );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+	}
+
+	/**
+	 * When Upload media option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_media_group_media_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Upload album option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_media_group_albums_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When Upload document option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_media_group_document_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When group video option changed.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_video_group_video_support( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
 	}
 }

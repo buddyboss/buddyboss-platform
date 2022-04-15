@@ -17,32 +17,61 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
+	/**
+	 * Initialize class.
+	 */
 	public function initialize() {
 		$this->tab_label = __( 'Profiles', 'buddyboss' );
 		$this->tab_name  = 'bp-xprofile';
 		$this->tab_order = 10;
+
+		$this->active_tab = bp_core_get_admin_active_tab();
+
+		// Profile Avatar.
+		add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
+
+		// Profile Cover.
+		add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
+		add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+		add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 	}
 
+	/**
+	 * Save options.
+	 */
 	public function settings_save() {
-		$if_disabled_before_saving = bp_disable_advanced_profile_search();
+		$if_disabled_before_saving                 = bp_disable_advanced_profile_search();
+		$profile_avatar_type_before_saving         = bb_get_profile_avatar_type();
+		$bp_disable_avatar_uploads_before_saving   = bp_disable_avatar_uploads();
+		$default_profile_avatar_type_before_saving = bb_get_default_profile_avatar_type();
+		$bp_enable_profile_gravatar_before_saving  = bp_enable_profile_gravatar();
+		$profile_cover_type_before_saving          = bb_get_default_profile_cover_type();
 
 		parent::settings_save();
 
-		$if_disabled_after_saving = bp_disable_advanced_profile_search();
+		$if_disabled_after_saving                 = bp_disable_advanced_profile_search();
+		$profile_avatar_type_after_saving         = bb_get_profile_avatar_type();
+		$bp_disable_avatar_uploads_after_saving   = bp_disable_avatar_uploads();
+		$default_profile_avatar_type_after_saving = bb_get_default_profile_avatar_type();
+		$bp_enable_profile_gravatar_after_saving  = bp_enable_profile_gravatar();
+		$profile_cover_type_after_saving          = bb_get_default_profile_cover_type();
 
 		/**
-		 * sync bp-enable-member-dashboard with cutomizer settings.
+		 * Sync bp-enable-member-dashboard with customizer settings.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
 		$bp_nouveau_appearance                             = bp_get_option( 'bp_nouveau_appearance', array() );
-		$bp_nouveau_appearance['user_front_page']          = isset( $_POST['bp-enable-member-dashboard'] ) ? $_POST['bp-enable-member-dashboard'] : 0;
-		$bp_nouveau_appearance['user_front_page_redirect'] = isset( $_POST['bp-enable-member-dashboard-redirect'] ) ? $_POST['bp-enable-member-dashboard-redirect'] : 0;
+		$bp_nouveau_appearance['user_front_page']          = filter_input( INPUT_POST, 'bp-enable-member-dashboard', FILTER_VALIDATE_INT );
+		$bp_nouveau_appearance['user_front_page_redirect'] = filter_input( INPUT_POST, 'bp-enable-member-dashboard-redirect', FILTER_VALIDATE_INT );
+
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
-		// Set requirement for last name based on display format
-		if ( isset( $_POST['bp-display-name-format'] ) ) {
-			if ( $_POST['bp-display-name-format'] == 'first_last_name' ){
+		$bb_display_name_format = filter_input( INPUT_POST, 'bp-display-name-format', FILTER_SANITIZE_STRING );
+
+		// Set requirement for last name based on display format.
+		if ( isset( $bb_display_name_format ) ) {
+			if ( 'first_last_name' === $bb_display_name_format ) {
 				$lastname_field_id = bp_xprofile_lastname_field_id();
 				bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
 
@@ -54,7 +83,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$field              = xprofile_get_field( $firstname_field_id );
 				$field->is_required = true;
 				$field->save();
-			} elseif ( $_POST['bp-display-name-format'] == 'first_name' ){
+			} elseif ( 'first_name' === $bb_display_name_format ) {
 				$firstname_field_id = bp_xprofile_firstname_field_id();
 				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
@@ -63,11 +92,57 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				$field              = xprofile_get_field( $firstname_field_id );
 				$field->is_required = true;
 				$field->save();
-			} elseif ( $_POST['bp-display-name-format'] == 'nickname' ){
+			} elseif ( 'nickname' === $bb_display_name_format ) {
 				$nickname_field_id = bp_xprofile_nickname_field_id();
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
+		}
+
+		$bb_profile_avatar_type           = filter_input( INPUT_POST, 'bp-profile-avatar-type', FILTER_SANITIZE_STRING );
+		$bb_default_custom_profile_avatar = filter_input( INPUT_POST, 'bp-default-custom-profile-avatar', FILTER_SANITIZE_STRING );
+		$bb_default_custom_profile_cover  = filter_input( INPUT_POST, 'bp-default-custom-profile-cover', FILTER_SANITIZE_STRING );
+
+		/**
+		 * Enable Gravatar's set disable if Profile Avatars is WordPress.
+		 *
+		 * @since BuddyBoss 1.8.6
+		 */
+		if ( isset( $bb_profile_avatar_type ) && 'WordPress' === sanitize_text_field( $bb_profile_avatar_type ) ) {
+			bp_update_option( 'bp-enable-profile-gravatar', '' );
+		}
+
+		/**
+		 * Validate custom option for profile avatar and cover.
+		 *
+		 * @since BuddyBoss 1.8.6
+		 */
+		if ( ! isset( $bb_default_custom_profile_avatar ) || ( empty( $bb_default_custom_profile_avatar ) && 'custom' === $default_profile_avatar_type_after_saving ) ) {
+
+			$bp_disable_avatar_uploads_before_saving  = $bp_disable_avatar_uploads_after_saving;
+			$bp_enable_profile_gravatar_before_saving = $bp_enable_profile_gravatar_after_saving;
+
+			if ( 'WordPress' === $profile_avatar_type_before_saving ) {
+				$bp_disable_avatar_uploads_before_saving   = '1';
+				$default_profile_avatar_type_before_saving = 'buddyboss';
+				$bp_enable_profile_gravatar_before_saving  = '';
+			} elseif ( 'custom' === $default_profile_avatar_type_before_saving ) {
+				$default_profile_avatar_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-profile-avatar-type', $profile_avatar_type_before_saving );
+			bp_update_option( 'bp-disable-avatar-uploads', $bp_disable_avatar_uploads_before_saving );
+			bp_update_option( 'bp-default-profile-avatar-type', $default_profile_avatar_type_before_saving );
+			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
+		}
+
+		if ( ! isset( $bb_default_custom_profile_cover ) || ( isset( $bb_default_custom_profile_cover ) && empty( $bb_default_custom_profile_cover ) && 'custom' === $profile_cover_type_after_saving ) ) {
+
+			if ( 'custom' === $profile_cover_type_before_saving ) {
+				$profile_cover_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-default-profile-cover-type', $profile_cover_type_before_saving );
 		}
 
 		if ( $if_disabled_before_saving && ! $if_disabled_after_saving ) {
@@ -84,10 +159,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 	}
 
+	/**
+	 * Register setting fields.
+	 */
 	public function register_fields() {
 
-		// Section for Profile Names
-		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
+		$pro_class = bb_get_pro_fields_class();
+
+		// Section for Profile Names.
+		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ), '', 'bp_profile_names_tutorial' );
 
 		// Display name format.
 		$this->add_field(
@@ -101,7 +181,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'first-name-options display-options';
 		$this->add_field( 'bp-hide-last-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_name', 'intval', $args );
 
-		// Hide Nothing
+		// Hide Nothing.
 		$args          = array();
 		$args['class'] = 'first-last-name-options display-options';
 		$this->add_field( 'bp-hide-nothing', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_last_name', 'intval', $args );
@@ -114,29 +194,76 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Hide Last Name.
 		$args          = array();
 		$args['class'] = 'nick-name-options display-options';
-		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
+		$this->add_field( 'bp-hide-nickname-last-name', '', 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
-		// Profile Names Tutorial
-		$this->add_field( 'bp-profile-names-tutorial', '', 'bp_profile_names_tutorial' );
+		// Profile Avatar.
+		$avatar_type         = bb_get_profile_avatar_type();
+		$default_avatar_type = bb_get_default_profile_avatar_type();
 
-		// Section for Profile Photos
-		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
+		// Profile Cover.
+		$is_disabled_cover  = bp_disable_cover_image_uploads();
+		$default_cover_type = bb_get_default_profile_cover_type();
+
+		// Section for Profile Photos.
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Images', 'buddyboss' ), '', 'bp_profile_photos_tutorial' );
+
+		// Profile Avatar type.
+		$args          = array();
+		$args['class'] = 'profile-avatars-field';
+		$this->add_field( 'bp-profile-avatar-type', esc_html__( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_profile_avatar_type', 'string', $args );
 
 		// Avatars.
-		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
+		$args          = array();
+		$args['class'] = 'upload-avatars-field';
+		$this->add_field( 'bp-disable-avatar-uploads', esc_html__( 'Upload Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval', $args );
 
-		if ( bp_get_option( 'show_avatars' ) ) {
-			// Gravatars.
-			$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
-		}
+		$args          = array();
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-type' . ( 'WordPress' === $avatar_type ? ' bp-hide' : '' );
+		$this->add_field( 'bp-default-profile-avatar-type', esc_html__( 'Default Profile Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_avatar_type', 'string', $args );
+
+		$args          = array();
+		$args['class'] = 'profile-avatar-options avatar-options default-profile-avatar-custom' . ( 'BuddyBoss' === $avatar_type && 'custom' === $default_avatar_type ? '' : ' bp-hide' );
+		$this->add_field( 'bp-default-custom-profile-avatar', esc_html__( 'Upload Custom Avatar', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_avatar', 'string', $args );
+
+		// Gravatars.
+		$args          = array();
+		$args['class'] = 'enable-profile-gravatar-field' . ( 'WordPress' === $avatar_type ? ' bp-hide' : '' );
+		$this->add_field( 'bp-enable-profile-gravatar', esc_html__( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval', $args );
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
+			$this->add_field( 'bp-disable-cover-image-uploads', esc_html__( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'string' );
+
+			$args          = array();
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-type' . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bp-default-profile-cover-type', esc_html__( 'Default Profile Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_cover_type', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'profile-cover-options avatar-options default-profile-cover-custom' . ( ( ! $is_disabled_cover && 'custom' === $default_cover_type ) ? '' : ' bp-hide' );
+			$this->add_field( 'bp-default-custom-profile-cover', esc_html__( 'Upload Custom Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_default_profile_custom_cover', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'profile-cover-options avatar-options ' . esc_attr( $pro_class ) . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bb-default-profile-cover-size', esc_html__( 'Cover Image Sizes', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_callback_default_profile_cover_size', 'string', $args );
+
+			$args          = array();
+			$args['class'] = 'profile-cover-options preview-avatar-cover-image' . ( $is_disabled_cover ? ' bp-hide' : '' );
+			$this->add_field( 'bp-preview-profile-avatar-cover', esc_html__( 'Preview Cover Image', 'buddyboss' ), 'bp_admin_setting_callback_preview_profile_avatar_cover', 'string', $args );
 		}
 
-		// Profile Settings Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial', '', 'bp_profile_photos_tutorial' );
+		// Section for Profile Headers.
+		$this->add_section( 'bp_profile_headers_settings', esc_html__( 'Profile Headers', 'buddyboss' ), '', 'bb_profile_headers_tutorial' );
+
+		// Profile headers style.
+		$args          = array();
+		$args['class'] = 'profile-header-style profile-header-layout-options ' . esc_attr( $pro_class );
+		$this->add_field( 'bb-profile-headers-layout-style', esc_html__( 'Header Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_headers_style', 'radio', $args );
+
+		// Profile elements.
+		$args             = array();
+		$args['class']    = 'profile-header-elements ' . esc_attr( $pro_class );
+		$args['elements'] = function_exists( 'bb_get_profile_header_elements' ) ? bb_get_profile_header_elements() : array();
+		$this->add_field( 'bb-profile-headers-layout-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_profile_header_elements', 'checkbox', $args );
 
 		// @todo will use this later on
 		// Section for profile dashboard.
@@ -149,8 +276,52 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// @todo will use this later on
 		// $this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
 
+		// Section for profile list.
+		$this->add_section( 'bp_profile_list_settings', esc_html__( 'Member Directories', 'buddyboss' ), '', array( $this, 'bp_profile_directories_tutorial' ) );
+
+		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views.
+		$this->add_field(
+			'bp-profile-layout-format',
+			esc_html__( 'Enabled View(s)', 'buddyboss' ),
+			array( $this, 'bp_admin_setting_profile_layout_type_format' )
+		);
+
+		// Admin Settings for Settings > Profiles > Profile Directories > Default View.
+		$args          = array();
+		$args['class'] = 'profile-default-layout profile-layout-options';
+		$this->add_field( 'bp-profile-layout-default-format', esc_html__( 'Default View', 'buddyboss' ), array( $this, 'bp_admin_setting_profile_layout_default_option' ), 'radio', $args );
+
+		// Member directory elements.
+		$args             = array();
+		$args['class']    = 'member-directory-elements ' . esc_attr( $pro_class );
+		$args['elements'] = function_exists( 'bb_get_member_directory_elements' ) ? bb_get_member_directory_elements() : array();
+		$this->add_field( 'bb-member-directory-elements', esc_html__( 'Elements', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_directory_elements', 'string', $args );
+
+		// Member profile actions.
+		$profile_actions          = function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array();
+		$selected_profile_actions = function_exists( 'bb_get_enabled_member_directory_profile_actions' ) ? bb_get_enabled_member_directory_profile_actions() : array();
+
+		if ( ! empty( $profile_actions ) ) {
+			$args             = array();
+			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class );
+			$args['elements'] = $profile_actions;
+			$this->add_field( 'bb-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
+
+			$profile_primary_action_class = '';
+			if ( empty( $selected_profile_actions ) ) {
+				$profile_primary_action_class = ' bp-hide';
+			}
+
+			// Member profile primary action.
+			$args                      = array();
+			$args['class']             = 'member-directory-profile-primary-action ' . esc_attr( $pro_class ) . $profile_primary_action_class;
+			$args['elements']          = $profile_actions;
+			$args['selected_elements'] = $selected_profile_actions;
+			$this->add_field( 'bb-member-profile-primary-action', esc_html__( 'Primary Action', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_primary_action', 'string', $args );
+		}
+
 		// Section for profile types.
-		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
+		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ), '', array( $this, 'bp_profile_types_tutorial' ) );
 
 		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_enable_disable' ), 'intval' );
@@ -166,35 +337,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-member-type-default-on-registration', __( 'Default Profile Type', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_member_type_default_on_registration' ) );
 		}
 
-		// Profile Types Tutorial
-		$this->add_field( 'bp-profile-types-tutorial', '', array( $this, 'bp_profile_types_tutorial' ) );
-
 		// Section for profile search.
-		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ), '', array( $this, 'bp_profile_search_tutorial' ) );
 
 		// Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), array( $this, 'bp_admin_setting_callback_profile_search' ), 'intval' );
-
-		// Profile Search Tutorial
-		$this->add_field( 'bp-profile-search-tutorial', '', array( $this, 'bp_profile_search_tutorial' ) );
-
-		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ) );
-
-		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views
-		$this->add_field(
-			'bp-profile-layout-format',
-			__( 'Enabled View(s)', 'buddyboss' ),
-			[ $this, 'bp_admin_setting_profile_layout_type_format']
-		);
-
-		// Admin Settings for Settings > Profiles > Profile Directories > Default View
-		$args = array();
-		$args['class'] = 'profile-default-layout profile-layout-options';
-		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
-
-		// Profile Directories Tutorial
-		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 		/**
 		 * Fires to register xProfile tab settings fields and section.
@@ -214,7 +361,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_dashboard() {
 		?>
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
-			<label for="bp-enable-member-dashboard"><?php _e( 'Use a WordPress page as each user\'s personal Profile Dashboard', 'buddyboss' ); ?></label>
+			<label for="bp-enable-member-dashboard"><?php esc_html_e( 'Use a WordPress page as each user\'s personal Profile Dashboard', 'buddyboss' ); ?></label>
 		<?php
 			printf(
 				'<p class="description">%s</p>',
@@ -238,10 +385,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_dashboard_redirect() {
 		?>
 		<input id="bp-enable-member-dashboard-redirect" name="bp-enable-member-dashboard-redirect" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page_redirect' ) ); ?> />
-		<label for="bp-enable-member-dashboard-redirect"><?php _e( 'Redirect users to their Profile Dashboard on login', 'buddyboss' ); ?></label>
+		<label for="bp-enable-member-dashboard-redirect"><?php esc_html_e( 'Redirect users to their Profile Dashboard on login', 'buddyboss' ); ?></label>
 		<?php
 	}
 
+	/**
+	 * Display name format.
+	 */
 	public function callback_display_name_format() {
 		$options = array(
 			'first_name'      => __( 'First Name', 'buddyboss' ),
@@ -302,7 +452,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			);
 		} else {
 			?>
-				<label for="bp-member-type-enable-disable"><?php _e( 'Enable profile types to give members unique profile fields and permissions', 'buddyboss' ); ?></label>
+				<label for="bp-member-type-enable-disable"><?php esc_html_e( 'Enable profile types to give members unique profile fields and permissions', 'buddyboss' ); ?></label>
 				<?php
 		}
 	}
@@ -315,7 +465,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_type_display_on_profile() {
 		?>
 		<input id="bp-member-type-display-on-profile" name="bp-member-type-display-on-profile" type="checkbox" value="1" <?php checked( bp_member_type_display_on_profile() ); ?> />
-		<label for="bp-member-type-display-on-profile"><?php _e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
+		<label for="bp-member-type-display-on-profile"><?php esc_html_e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
 		<?php
 	}
 
@@ -366,7 +516,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 							 value="<?php echo $type_name; ?>">
 								<?php printf( esc_html__( '%s', 'buddyboss' ), $member_type_name ); ?>
 							</option>
-					<?php
+						<?php
 					}
 					?>
 			</select>
@@ -400,7 +550,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_get_admin_url(
+			<a class="button" href="
+			<?php
+			echo bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -408,7 +560,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 					),
 					'admin.php'
 				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			);
+			?>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -438,7 +592,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				);
 			} else {
 				?>
-				<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
+				<label for="bp-enable-profile-search"><?php esc_html_e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
 				<?php
 			}
 	}
@@ -452,7 +606,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_get_admin_url(
+			<a class="button" href="
+			<?php
+			echo bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -460,7 +616,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 					),
 					'admin.php'
 				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			);
+			?>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -472,11 +630,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 1.2.0
 	 */
 	public function bp_admin_setting_profile_layout_type_format() {
-		$options = [
+		$options = array(
 			'list_grid' => __( 'Grid and List', 'buddyboss' ),
 			'grid'      => __( 'Grid', 'buddyboss' ),
 			'list'      => __( 'List', 'buddyboss' ),
-		];
+		);
 
 		$current_value = bp_get_option( 'bp-profile-layout-format' );
 
@@ -485,14 +643,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			printf(
 				'<option value="%s" %s>%s</option>',
 				$key,
-				$key == $current_value? 'selected' : '',
+				$key == $current_value ? 'selected' : '',
 				$value
 			);
 		}
 		printf( '</select>' );
 
 		?>
-		<p class="description"><?php _e( 'Display profile/member directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Display member directories in grid view, list view, or allow toggling between both views.', 'buddyboss' ); ?></p>
 		<?php
 	}
 
@@ -504,10 +662,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_profile_layout_default_option() {
 		$selected = bp_profile_layout_default_format( 'grid' );
 
-		$options = [
-			'grid'      => __( 'Grid', 'buddyboss' ),
-			'list'      => __( 'List', 'buddyboss' ),
-		];
+		$options = array(
+			'grid' => __( 'Grid', 'buddyboss' ),
+			'list' => __( 'List', 'buddyboss' ),
+		);
 
 		printf( '<select name="%1$s" for="%1$s">', 'bp-profile-layout-default-format' );
 		foreach ( $options as $key => $value ) {
@@ -530,18 +688,77 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_get_admin_url(
+			<a class="button" href="
+			<?php
+			echo bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => '83106',
+						'article' => '125308',
 					),
 					'admin.php'
 				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			);
+			?>
+			"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
+	}
+
+	/**
+	 * Setup default custom avatar upload directory.
+	 *
+	 * @since BuddyBoss 1.8.6
+	 *
+	 * @param array $upload_dir The original Uploads dir.
+	 * @return array Array containing the path, URL, and other helpful settings.
+	 */
+	public function bb_xprofile_default_custom_profile_avatar_upload_dir( $upload_dir = array() ) {
+		$bp_params = array();
+
+		if ( isset( $_POST['bp_params'] ) && ! empty( $_POST['bp_params'] ) ) {
+			$bp_params = array_map( 'sanitize_text_field', $_POST['bp_params'] );
+		}
+
+		if ( ! is_admin() || empty( $bp_params ) || ! isset( $bp_params['object'] ) || ! isset( $bp_params['item_id'] ) ) {
+			return $upload_dir;
+		}
+
+		$item_id = $bp_params['item_id'];
+		$object  = $bp_params['object'];
+
+		if ( ! is_admin() || ( 0 < $item_id && 'user' === $object ) || ( 'user' !== $object ) ) {
+			return $upload_dir;
+		}
+
+		$directory = 'avatars';
+
+		$path      = bp_core_avatar_upload_path() . '/' . $directory . '/custom';
+		$newbdir   = $path;
+		$newurl    = bp_core_avatar_url() . '/' . $directory . '/custom';
+		$newburl   = $newurl;
+		$newsubdir = '/' . $directory . '/custom';
+
+		/**
+		 * Filters default custom avatar upload directory.
+		 *
+		 * @since BuddyBoss 1.8.6
+		 *
+		 * @param array $value Array containing the path, URL, and other helpful settings.
+		 */
+		return apply_filters(
+			'bb_xprofile_default_custom_profile_avatar_upload_dir',
+			array(
+				'path'    => $path,
+				'url'     => $newurl,
+				'subdir'  => $newsubdir,
+				'basedir' => $newbdir,
+				'baseurl' => $newburl,
+				'error'   => false,
+			),
+			$upload_dir
+		);
 	}
 }
 

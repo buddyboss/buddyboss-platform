@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyBoss - Activity Post Form
+ * The template for BuddyBoss - Activity Post Form
  *
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/post-form.php.
+ *
+ * @since   BuddyPress 3.1.0
+ * @version 1.0.0
  */
 
-?>
-
-<?php
 /*
  * Template tag to prepare the activity post form checks capability and enqueue needed scripts.
  */

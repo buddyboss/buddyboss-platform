@@ -9,38 +9,49 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-new BP_Core_Suspend();
-new BP_Moderation_Members();
-new BP_Moderation_Comment();
+/**
+ * Load Moderation component after plugin loaded.
+ */
+function bb_moderation_load() {
+	new BP_Core_Suspend();
+	new BP_Moderation_Members();
+	new BP_Moderation_Comment();
 
-if ( bp_is_active( 'activity' ) ) {
-	new BP_Moderation_Activity();
-	new BP_Moderation_Activity_Comment();
+	if ( bp_is_active( 'activity' ) ) {
+		new BP_Moderation_Activity();
+		new BP_Moderation_Activity_Comment();
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		new BP_Moderation_Groups();
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		new BP_Moderation_Forums();
+		new BP_Moderation_Forum_Topics();
+		new BP_Moderation_Forum_Replies();
+	}
+
+	if ( bp_is_active( 'document' ) ) {
+		new BP_Moderation_Folder();
+		new BP_Moderation_Document();
+	}
+
+	if ( bp_is_active( 'media' ) ) {
+		new BP_Moderation_Album();
+		new BP_Moderation_Media();
+	}
+
+	if ( bp_is_active( 'video' ) ) {
+		new BP_Moderation_Video();
+	}
+
+	if ( bp_is_active( 'messages' ) ) {
+		new BP_Moderation_Message();
+	}
 }
 
-if ( bp_is_active( 'groups' ) ) {
-	new BP_Moderation_Groups();
-}
-
-if ( bp_is_active( 'forums' ) ) {
-	new BP_Moderation_Forums();
-	new BP_Moderation_Forum_Topics();
-	new BP_Moderation_Forum_Replies();
-}
-
-if ( bp_is_active( 'document' ) ) {
-	new BP_Moderation_Folder();
-	new BP_Moderation_Document();
-}
-
-if ( bp_is_active( 'media' ) ) {
-	new BP_Moderation_Album();
-	new BP_Moderation_Media();
-}
-
-if ( bp_is_active( 'messages' ) ) {
-	new BP_Moderation_Message();
-}
+add_action( 'bp_init', 'bb_moderation_load', 1 );
 
 /**
  * Update modebypass Param
@@ -110,7 +121,7 @@ function bp_moderation_content_report() {
 		wp_send_json_error( $response );
 	}
 
-	$reports_terms   = get_terms(
+	$reports_terms = get_terms(
 		'bpm_category',
 		array(
 			'hide_empty' => false,
@@ -372,7 +383,7 @@ function bp_moderation_content_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type, 'hide' == $sub_action );
+	$user_can = bp_moderation_can_report( $item_id, $item_type, ( 'hide' === $sub_action ) ) || current_user_can( 'administrator' );
 	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
@@ -438,8 +449,8 @@ function bp_moderation_user_actions_request() {
 	}
 
 	// Check the current has access to report the item ot not.
-	$user_can = bp_moderation_can_report( $item_id, $item_type, 'suspend' == $sub_action );
-	if (  ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
+	$user_can = bp_moderation_can_report( $item_id, $item_type );
+	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -476,11 +487,14 @@ add_action( 'wp_ajax_nopriv_bp_moderation_user_actions_request', 'bp_moderation_
  */
 function bb_moderation_content_report_popup() {
 
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/content-report-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/content-report-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/content-report-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
-	if ( file_exists( buddypress()->core->path . "bp-moderation/screens/block-member-form.php" ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/block-member-form.php';
+	}
+	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php' ) ) {
+		include buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php';
 	}
 }
 
@@ -523,3 +537,175 @@ function bb_moderation_suspend_after_delete( $recode ) {
 
 }
 add_action( 'suspend_after_delete', 'bb_moderation_suspend_after_delete' );
+
+/**
+ * Function to clear the cache data on item suspend.
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @param array $moderation_data moderation item data.
+ */
+function bb_moderation_clear_suspend_cache( $moderation_data ) {
+	if ( empty( $moderation_data['item_type'] ) || empty( $moderation_data['item_id'] ) ) {
+		return;
+	}
+
+	// Needs to flush all cache with other component as well.
+	wp_cache_flush();
+
+	// wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . md5( serialize( $moderation_data['item_id'] ) ), 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+}
+
+add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
+add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
+
+add_action( 'bb_suspend_before_add_suspend', 'bp_core_clear_cache' );
+add_action( 'bb_suspend_before_remove_suspend', 'bp_core_clear_cache' );
+
+/**
+ * Function to clear cache on suspend item delete.
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @param object $suspend_record suspend item record.
+ */
+function bb_moderation_clear_delete_cache( $suspend_record ) {
+
+	if ( ! empty( $suspend_record->id ) ) {
+		wp_cache_delete( 'bb_suspend_' . $suspend_record->id, 'bp_moderation' );
+	}
+
+	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
+		return;
+	}
+
+	// Needs to flush all cache with other component as well.
+	wp_cache_flush();
+
+	// wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . md5( serialize( $suspend_record->user_id ) ), 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_recode_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+}
+
+add_action( 'bp_moderation_after_save', 'bb_moderation_clear_delete_cache' );
+add_action( 'suspend_after_delete', 'bb_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_hide', 'bb_moderation_clear_delete_cache' );
+add_action( 'bp_moderation_after_unhide', 'bb_moderation_clear_delete_cache' );
+
+add_action( 'bp_moderation_after_save', 'bp_core_clear_cache' );
+add_action( 'suspend_after_delete', 'bp_core_clear_cache' );
+add_action( 'bp_moderation_after_hide', 'bp_core_clear_cache' );
+add_action( 'bp_moderation_after_unhide', 'bp_core_clear_cache' );
+
+/**
+ * Function to clear cache when item hide/unhide
+ *
+ * @since BuddyBoss 1.6.2
+ *
+ * @param string $content_type content type.
+ * @param int    $content_id   content id.
+ * @param array  $args         item arguments.
+ */
+function bb_moderation_clear_status_change_cache( $content_type, $content_id, $args ) {
+	if ( empty( $content_type ) || empty( $content_id ) ) {
+		return;
+	}
+
+	// Needs to flush all cache with other component as well.
+	wp_cache_flush();
+
+	// wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_recode_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . md5( serialize( $content_id ) ), 'bp_moderation' );
+	// wp_cache_delete( 'bb_is_content_reported_hidden_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	//
+	// $blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+	// if ( ! empty( $blocked_user ) ) {
+	// wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// }
+}
+
+add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
+
+add_action( 'bb_suspend_hide_before', 'bp_core_clear_cache' );
+add_action( 'bb_suspend_unhide_before', 'bp_core_clear_cache' );
+
+/**
+ * Add moderation repair list.
+ *
+ * @param array $repair_list Repair list.
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return array Repair list items.
+ */
+function bb_moderation_migrate_old_data( $repair_list ) {
+	$repair_list[] = array(
+		'bp-repair-moderation-data',
+		esc_html__( 'Repair moderation data', 'buddyboss' ),
+		'bb_moderation_admin_repair_old_moderation_data',
+	);
+
+	return $repair_list;
+}
+
+add_filter( 'bp_repair_list', 'bb_moderation_migrate_old_data' );
+
+/**
+ * Function to admin repair tool for fix moderation data.
+ *
+ * @since BuddyBoss 1.7.5
+ *
+ * @return array
+ */
+function bb_moderation_admin_repair_old_moderation_data() {
+	global $wpdb;
+	$suspend_table            = "{$wpdb->prefix}bp_suspend";
+	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$sql_offset               = $offset - 1;
+	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
+	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+
+	if ( ! empty( $moderated_activities ) ) {
+		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
+		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Repairing moderation data &hellip; Complete!', 'buddyboss' ),
+		);
+	}
+}
+
+/**
+ * Added magnific popup as dependencies.
+ *
+ * @param array $js_handles Array of handles.
+ *
+ * @return array|mixed
+ */
+function bp_moderation_get_js_dependencies( $js_handles = array() ) {
+	if ( bp_is_active( 'forums' ) && bbp_is_single_topic() ) { // Topic detail page.
+		$js_handles[] = 'bp-nouveau-magnific-popup';
+	}
+
+	return $js_handles;
+}
+
+add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 10, 1 );
