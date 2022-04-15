@@ -400,6 +400,3 @@ function forums_notification_settings() {
 	<?php
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
-
-// Memtions results for standalone forum
-add_action( 'bbp_forums_mentions_prime_results', 'bbp_forums_mentions_prime_results' );
