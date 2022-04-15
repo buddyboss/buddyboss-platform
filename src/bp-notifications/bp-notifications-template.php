@@ -509,7 +509,20 @@ function bp_get_the_notification_description() {
 
 	// Callback function exists.
 	if ( isset( $bp->{ $notification->component_name }->notification_callback ) && is_callable( $bp->{ $notification->component_name }->notification_callback ) ) {
-		$description = call_user_func( $bp->{ $notification->component_name }->notification_callback, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->id );
+		$description = call_user_func( $bp->{ $notification->component_name }->notification_callback, $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->id, 'web' );
+
+		$description = apply_filters(
+			'bb_notifications_get_component_notification',
+			$description,
+			$notification->item_id,
+			$notification->secondary_item_id,
+			1,
+			'string',
+			$notification->component_action,
+			$notification->component_name,
+			$notification->id,
+			'web'
+		);
 
 		// @deprecated format_notification_function - 1.5
 	} elseif ( isset( $bp->{ $notification->component_name }->format_notification_function ) && function_exists( $bp->{ $notification->component_name }->format_notification_function ) ) {
@@ -519,7 +532,7 @@ function bp_get_the_notification_description() {
 	} else {
 
 		/** This filter is documented in bp-notifications/bp-notifications-functions.php */
-		$description = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', array( $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->component_action, $notification->component_name, $notification->id ) );
+		$description = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', array( $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->component_action, $notification->component_name, $notification->id, 'web' ) );
 	}
 
 	/**
@@ -1049,13 +1062,16 @@ function bp_notifications_bulk_management_dropdown() {
  * @return void
  */
 function bb_on_screen_notification_template() {
-	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 1 );
+	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	if ( empty( $is_on_screen_notification_enable ) ) {
 		return;
 	}
 
-	$user_unread_notification     = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+	$user_unread_notification = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
+
 	$user_unread_notification_ids = wp_list_pluck( $user_unread_notification, 'id' );
 	$position                     = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
 	$has_mobile_support           = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );

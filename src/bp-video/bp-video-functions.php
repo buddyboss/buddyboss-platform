@@ -1013,7 +1013,7 @@ function bp_video_background_create_thumbnail( $video ) {
 					$file_name    = $image_name . '.jpg';
 					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 					$video_thumb  = $thumb_ffmpeg->ffmpeg->open( get_attached_file( $video_attachment_id ) );
-					$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) )->addFilter( new FFMpeg\Filters\Frame\CustomFrameFilter( 'scale=1500x900' ) );
+					$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
 
 					$error = '';
 					try {
@@ -2616,17 +2616,23 @@ function bp_video_user_video_album_tree_view_li_html( $user_id = 0, $group_id = 
 
 	$video_album_table = $bp->video->table_name_albums;
 
-	if ( 0 === $group_id ) {
-		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
-	}
+	$cache_key = 'bp_video_user_video_album_' . $user_id . '_' . $group_id;
+	$data      = wp_cache_get( $cache_key, 'bp_video_album' );
 
-	if ( $group_id > 0 ) {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
-	} else {
-		$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
-	}
+	if ( false === $data ) {
+		if ( 0 === $group_id ) {
+			$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
+		}
 
-	$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
+		if ( $group_id > 0 ) {
+			$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id ); // phpcs:ignore
+		} else {
+			$video_album_query = $wpdb->prepare( "SELECT * FROM {$video_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id ); // phpcs:ignore
+		}
+
+		$data = $wpdb->get_results( $video_album_query, ARRAY_A ); // phpcs:ignore
+		wp_cache_set( $cache_key, $data, 'bp_video_album' );
+	}
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -2771,7 +2777,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity video own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 :$activity->hide_sitewide;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2844,7 +2851,8 @@ function bp_video_move_video_to_album( $video_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity video own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3871,7 +3879,7 @@ function bb_video_delete_older_symlinks() {
 
 	// Get videos previews symlink directory path.
 	$dir     = bb_video_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = apply_filters( 'bb_video_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -3901,17 +3909,19 @@ function bb_video_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	/**
-	 * Hook after delete older symlinks.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	do_action( 'bb_video_delete_older_symlinks' );
+	if ( ! empty( $list ) ) {
+		/**
+		 * Hook after delete older symlinks.
+		 *
+		 * @since BuddyBoss 1.7.0
+		 */
+		do_action( 'bb_video_delete_older_symlinks' );
+	}
 
 	return $list;
 
 }
-bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks' );
+bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks', 'bb_schedule_15days' );
 
 /**
  * Function to get video attachments symlinks.

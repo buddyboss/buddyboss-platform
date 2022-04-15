@@ -2231,7 +2231,13 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
 		return false;
 	}
 
-	$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+	$cache_key           = 'bp_attachment_media_id_' . $attachment_id;
+	$attachment_media_id = wp_cache_get( $cache_key, 'bp_media' );
+
+	if ( false === $attachment_media_id ) {
+		$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+		wp_cache_set( $cache_key, $attachment_media_id, 'bp_media' );
+	}
 
 	return $attachment_media_id;
 }
@@ -2762,7 +2768,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity media own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2835,7 +2842,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity media own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -3860,6 +3868,14 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 		$can_move     = false;
 	}
 
+	if ( ! bp_is_profile_albums_support_enabled() && ( 'photo' === $type || 'video' === $type ) && 'grouponly' !== $media_privacy ) {
+		$can_move = false;
+	}
+
+	if ( ! bp_is_group_albums_support_enabled() && ( 'photo' === $type || 'video' === $type ) && 'grouponly' === $media_privacy ) {
+		$can_move = false;
+	}
+
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
 	$data['can_add']      = $can_add;
@@ -3892,9 +3908,9 @@ function bb_media_delete_older_symlinks() {
 		return;
 	}
 
-	// Get documents previews symlink directory path.
+	// Get media previews symlink directory path.
 	$dir     = bp_media_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -3924,10 +3940,12 @@ function bb_media_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	do_action( 'bb_media_delete_older_symlinks' );
+	if ( ! empty( $list ) ) {
+		do_action( 'bb_media_delete_older_symlinks' );
+	}
 
 	return $list;
 
 }
-bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks' );
+bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 
