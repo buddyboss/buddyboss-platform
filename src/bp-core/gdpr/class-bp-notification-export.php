@@ -192,7 +192,8 @@ final class BP_Notification_Export extends BP_Export {
 				$notification->secondary_item_id,
 				1,
 				'string',
-				$notification->id
+				$notification->id,
+				'web'
 			);
 
 			// @deprecated format_notification_function - 1.5
@@ -209,7 +210,7 @@ final class BP_Notification_Export extends BP_Export {
 		} else {
 
 			/** This filter is documented in bp-notifications/bp-notifications-functions.php */
-			$description = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', array( $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->component_action, $notification->component_name, $notification->id ) );
+			$description = apply_filters_ref_array( 'bp_notifications_get_notifications_for_user', array( $notification->component_action, $notification->item_id, $notification->secondary_item_id, 1, 'string', $notification->component_action, $notification->component_name, $notification->id, 'web' ) );
 		}
 
 		/**
