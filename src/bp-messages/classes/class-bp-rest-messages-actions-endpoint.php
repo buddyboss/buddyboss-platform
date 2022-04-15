@@ -154,28 +154,18 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function action_items_permissions_check( $request ) {
-		$retval = true;
-
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to perform action on messages.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
+		$retval = new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'Sorry, you are not allowed to perform action on messages.', 'buddyboss' ),
+			array(
+				'status' => rest_authorization_required_code(),
+			)
+		);
 
 		$thread = $this->message_endppoint->get_thread_object( $request['id'] );
 
-		if ( true === $retval && empty( $thread->thread_id ) ) {
-			$retval = new WP_Error(
-				'bp_rest_invalid_id',
-				__( 'Sorry, this thread does not exist.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+		if ( is_user_logged_in() && ! empty( $thread->thread_id ) ) {
+			$retval = true;
 		}
 
 		if ( true === $retval && bp_current_user_can( 'bp_moderate' ) ) {
@@ -240,10 +230,24 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		if ( empty( $value ) ) {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, (int) $thread_id, bp_loggedin_user_id() ) );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @param int $thread_id The message thread ID.
+			 */
+			do_action( 'messages_thread_mark_as_read', $thread_id );
 			return true;
 		} elseif ( ! empty( $value ) ) {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
+
+			/**
+			 * Fires when messages thread was marked as read.
+			 *
+			 * @param int $thread_id The message thread ID.
+			 */
+			do_action( 'messages_thread_mark_as_read', $thread_id );
 			return true;
 		}
 

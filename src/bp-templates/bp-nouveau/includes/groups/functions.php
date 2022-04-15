@@ -467,6 +467,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'is_public'      => ( 'public' === $item->status ),
 		'group_media'    => ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && bb_media_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
+		'group_video'    => ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
 }
 
@@ -878,6 +879,10 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 		$options['documents'] = __( 'Documents', 'buddyboss' );
 	}
 
+	if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+		$options['videos'] = __( 'Videos', 'buddyboss' );
+	}
+
 	return array_merge( $controls,
 		array(
 			'group_nav_display' => array(
@@ -1212,6 +1217,11 @@ function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_notification_filters() {
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
 	$notifications = array(
 		array(
 			'id'       => 'new_membership_request',

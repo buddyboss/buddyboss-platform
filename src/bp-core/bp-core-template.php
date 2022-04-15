@@ -2305,6 +2305,17 @@ function bp_is_moderation_component() {
 }
 
 /**
+ * Check whether the current page is part of the Video component.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return bool True if the current page is part of the Video component.
+ */
+function bp_is_video_component() {
+	return (bool) bp_is_current_component( 'video' ) || (bool) bp_is_current_component( 'media' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2786,6 +2797,19 @@ function bp_is_user_media() {
 }
 
 /**
+ * Is this a user's video page?
+ *
+ * Eg http://example.com/members/joe/videos/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return bool True if the current page is a user's video page.
+ */
+function bp_is_user_video() {
+	return (bool) ( bp_is_user() && bp_is_video_component() );
+}
+
+/**
  * Is this a user's document page?
  *
  * Eg http://example.com/members/joe/documents/ (or a subpage thereof).
@@ -2828,6 +2852,21 @@ function bp_is_media_directory() {
 }
 
 /**
+ * Is the current page the video directory?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return bool True if the current page is the video directory.
+ */
+function bp_is_video_directory() {
+	if ( ! bp_displayed_user_id() && bp_is_video_component() && ! bp_current_action() ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Is the current page the media directory?
  *
  * @since BuddyBoss 1.0.0
@@ -2856,6 +2895,22 @@ function bp_is_single_album() {
 	}
 
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+/**
+ * Is the current page a single video album item permalink?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return bool True if the current page is a single album item permalink.
+ */
+function bp_is_single_video_album() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_video_albums() && is_numeric( bp_action_variable( 0 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_video_component() && 'albums' === bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 /**
@@ -3011,7 +3066,7 @@ function bp_is_group_subgroups() {
  * @return bool True if the current page is part of a group forum topic.
  */
 function bp_is_group_forum_topic() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( urlencode( get_option( '_bbp_topic_slug', 'discussions' ) ), 0 ) );
 }
 
 /**
@@ -3183,6 +3238,23 @@ function bp_is_group_media() {
  * @return bool True if the current page is a group's activity page.
  */
 function bp_is_group_albums() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's video albums page?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return bool True if the current page is a group's video album page.
+ */
+function bp_is_group_video_albums() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
@@ -4444,3 +4516,80 @@ function bb_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 	return false;
 
 }
+
+/**
+ * Is the current page a group's video page?
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return bool True if the current page is a group's video page.
+ */
+function bp_is_group_video() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'videos' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Checks if user can create a video or not.
+ *
+ * @return bool Is user can create video or not.
+ * @since BuddyBoss 1.7.0
+ */
+function bb_user_can_create_video() {
+	return (bool) apply_filters( 'bb_user_can_create_video', true );
+}
+
+/**
+ * Whether user has access to upload video or not.
+ *
+ * @param int    $group_id  group id to be check if passed.
+ * @param int    $user_id   user id to be check if passed.
+ * @param int    $forum_id  forum id to be check if passed.
+ * @param int    $thread_id thread id.
+ * @param string $type      from where permission to follow.
+ *
+ * @since BuddyBoss 1.7.0
+ *
+ * @return mixed|void
+ */
+function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id = 0, $thread_id = 0, $type = 'profile' ) {
+
+	if ( empty( $user_id ) || ! bp_is_active( 'media' ) ) {
+		return false;
+	}
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		return groups_can_user_manage_video( $user_id, $group_id );
+	} elseif ( ! empty( $forum_id ) && function_exists( 'bbp_get_forum_group_ids' ) ) {
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		if ( ! empty( $group_ids ) && bp_is_active( 'groups' ) ) {
+			return groups_can_user_manage_video( $user_id, current( $group_ids ) );
+		} else {
+			return ( function_exists( 'bp_is_forums_video_support_enabled' ) && bp_is_forums_video_support_enabled() ) && bb_user_can_create_video();
+		}
+	} elseif ( ! empty( $thread_id ) && bp_is_active( 'messages' ) ) {
+		$is_group_message_thread = bb_messages_is_group_thread( (int) $thread_id );
+		$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		if ( $is_group_message_thread && ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+			return groups_can_user_manage_video( $user_id, $group_id );
+		} else {
+			return ( function_exists( 'bp_is_messages_video_support_enabled' ) && bp_is_messages_video_support_enabled() ) && bb_user_can_create_video();
+		}
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'message' === $type && bp_is_active( 'messages' ) ) {
+		return ( function_exists( 'bp_is_messages_video_support_enabled' ) && bp_is_messages_video_support_enabled() ) && bb_user_can_create_video();
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'profile' === $type ) {
+		return ( function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled() && bb_user_can_create_video() );
+	} elseif ( empty( $group_id ) && empty( $forum_id ) && empty( $thread_id ) && 'forum' === $type ) {
+		return ( function_exists( 'bp_is_forums_video_support_enabled' ) && bp_is_forums_video_support_enabled() ) && bb_user_can_create_video();
+	}
+
+	return false;
+
+}
+

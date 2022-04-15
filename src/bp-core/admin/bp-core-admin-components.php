@@ -69,8 +69,9 @@ function bp_core_admin_components_options() {
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
-	// We are not displaying document component in listing it's automatically active if media component is active.
+	// We are not displaying document & video component in listing it's automatically active if media component is active.
 	unset( $all_components['document'] );
+	unset( $all_components['video'] );
 
 	// If this is an upgrade from before BuddyPress 1.5, we'll have to convert
 	// deactivated components into activated ones.
@@ -114,12 +115,16 @@ function bp_core_admin_components_options() {
 			break;
 		case 'active':
 			foreach ( array_keys( $active_components ) as $component ) {
-				$current_components[ $component ] = $all_components[ $component ];
+				if ( isset( $all_components[ $component ] ) ) {
+					$current_components[ $component ] = $all_components[ $component ];
+				}
 			}
 			break;
 		case 'inactive':
 			foreach ( $inactive_components as $component ) {
-				$current_components[ $component ] = $all_components[ $component ];
+				if ( isset( $all_components[ $component ] ) ) {
+					$current_components[ $component ] = $all_components[ $component ];
+				}
 			}
 			break;
 		case 'mustuse':
@@ -152,7 +157,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'all' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( __( 'All <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( $all_count ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'All <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( $all_count ) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
@@ -169,7 +174,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'active' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( __( 'Active <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( count( $active_components ) ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'Active <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( count( $active_components ) ) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
@@ -186,7 +191,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'inactive' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( __( 'Inactive <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( count( $inactive_components ) ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'Inactive <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( count( $inactive_components ) ) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
@@ -203,7 +208,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'mustuse' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( __( 'Required <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( count( $required_components ) ) ); ?></a></li>
+		class="current"<?php endif; ?>><?php printf( __( 'Required <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( count( $required_components ) ) ); ?></a></li>
 	</ul>
 
 	<h3 class="screen-reader-text">
