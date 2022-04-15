@@ -78,8 +78,8 @@ add_action( 'bp_video_add', 'bp_video_clear_video_user_object_cache', 10 );
  * @param array $videos DB results of video items.
  */
 function bp_video_clear_video_user_object_cache_on_delete( $videos ) {
-	if ( ! empty( $videos[0] ) ) {
-		foreach ( (array) $videos[0] as $deleted_video ) {
+	if ( ! empty( $videos ) ) {
+		foreach ( (array) $videos as $deleted_video ) {
 			$user_id = ! empty( $deleted_video->user_id ) ? $deleted_video->user_id : false;
 
 			wp_cache_delete( 'bb_video_activity_' . $deleted_video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
