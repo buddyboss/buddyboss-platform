@@ -153,7 +153,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_button_args( $args, $item_id ) {
-		$media = new BP_Media($item_id);
+		$media = new BP_Media( $item_id );
 
 		// Remove report button if forum is group forums.
 		if ( ! empty( $media->id ) && ! empty( $media->privacy ) && in_array( $media->privacy, array( 'comment', 'forums' ), true ) ) {
@@ -236,11 +236,20 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
 		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
-		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && ! in_array( $activity->type, array(
-				'bbp_forum_create',
-				'bbp_topic_create',
-				'bbp_reply_create'
-			) ) ) {
+		if (
+			(
+				! empty( $media_id ) ||
+				! empty( $media_ids )
+			) &&
+			! in_array(
+				$activity->type,
+				array(
+					'bbp_forum_create',
+					'bbp_topic_create',
+					'bbp_reply_create',
+				)
+			)
+		) {
 			$explode_medias = explode( ',', $media_ids );
 			if ( ! empty( $media_id ) ) {
 				$args['button_attr']['data-bp-content-id']   = $media_id;
