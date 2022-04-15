@@ -420,7 +420,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 * @return bool
 	 */
 	public function is_valid( $values = '' ) {
-
+		static $get_parent_id_of_gender_field = null;
+		static $count_cache = array();
 		global $wpdb;
 
 		if ( empty( $values ) ) {
@@ -430,9 +431,21 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		$split_value = explode( '_', $values, 2 );
 		if ( 2 === count( $split_value ) ) {
 			if ( '' !== $split_value[1] && '' !== $split_value[0] ) {
-				$table_name                    = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-				$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table_name} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
-				$count                         = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table_name} WHERE type = %s AND name = %s AND parent_id = %d ", 'option', $split_value[1], $get_parent_id_of_gender_field ) );
+				$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+
+				if ( null === $get_parent_id_of_gender_field ) {
+					$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table_name} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+				}
+
+				$count_cache_key = 'bb_count_cache_' . $split_value[1] . $get_parent_id_of_gender_field;
+				if ( ! isset( $count_cache[ $count_cache_key ] ) ) {
+					$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table_name} WHERE type = %s AND name = %s AND parent_id = %d ", 'option', $split_value[1], $get_parent_id_of_gender_field ) );
+
+					$count_cache[ $count_cache_key ] = $count;
+				} else {
+					$count = $count_cache[ $count_cache_key ];
+				}
+
 				if ( '1' === $count ) {
 					return true;
 				} else {
