@@ -864,6 +864,33 @@ ul.medium-editor-toolbar-actions {
 	}
 }
 
+.activity-video-preview {
+
+	.activity-link-preview-container {
+		border: 0;
+
+		.activity-link-preview-title {
+			margin: 0;
+		}
+	}
+
+	.activity-link-preview-excerpt {
+		width: 100%;
+
+		> p {
+			margin-bottom: 0;
+		}
+
+		.bb-video-wrapper {
+			margin-bottom: 0;
+		}
+
+		iframe {
+			width: 100%;
+		}
+	}
+}
+
 .activity-link-preview-image {
 	margin-bottom: 10px;
 }
