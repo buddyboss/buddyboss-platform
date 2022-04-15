@@ -878,7 +878,7 @@ function bp_get_total_media_count() {
  * @since BuddyBoss 1.1.9
  */
 function bp_media_object_results_media_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope'] = 'all';
 
@@ -897,7 +897,7 @@ function bp_media_object_results_media_all_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_object_template_results_media_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'personal';
 	$querystring['page']        = 1;
@@ -914,7 +914,7 @@ function bp_media_object_template_results_media_personal_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_object_template_results_media_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;

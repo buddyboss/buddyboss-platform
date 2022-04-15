@@ -2256,7 +2256,7 @@ function bp_activity_add( $args = '' ) {
 function bp_activity_post_update( $args = '' ) {
 	global $bp_activity_edit;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'id'            => false,
@@ -2967,7 +2967,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
 function bp_activity_new_comment( $args = '' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'id'                => false,
@@ -4752,7 +4752,7 @@ add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comme
  */
 function bp_start_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'leader_id'   => bp_displayed_user_id(),
@@ -4790,7 +4790,7 @@ function bp_start_following( $args = '' ) {
  */
 function bp_stop_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'leader_id'   => bp_displayed_user_id(),
@@ -4828,7 +4828,7 @@ function bp_stop_following( $args = '' ) {
  */
 function bp_is_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'leader_id'   => bp_displayed_user_id(),
@@ -4854,7 +4854,7 @@ function bp_is_following( $args = '' ) {
  */
 function bp_get_followers( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
@@ -4877,7 +4877,7 @@ function bp_get_followers( $args = '' ) {
  */
 function bp_get_following( $args = '' ) {
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_displayed_user_id(),
@@ -4901,7 +4901,7 @@ function bp_get_following( $args = '' ) {
 function bp_total_follow_counts( $args = '' ) {
 	global $bp;
 
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id' => bp_loggedin_user_id(),
@@ -5540,7 +5540,7 @@ function bp_activity_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'id'                => 'activity_report',
@@ -5577,7 +5577,7 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'id'                => 'activity_comment_report',

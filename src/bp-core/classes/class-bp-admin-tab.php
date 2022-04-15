@@ -536,7 +536,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_input_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_input_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_type'        => 'text',
@@ -559,7 +559,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_checkbox_field( $name, $label, $callback_args = array(), $field_args = 'intval', $id = null ) {
 			$callback = array( $this, 'render_checkbox_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -583,7 +583,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_select_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_select_field_html' );
 
-			$callback_args = wp_parse_args(
+			$callback_args = bp_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),

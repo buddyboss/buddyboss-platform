@@ -219,7 +219,7 @@ function bp_core_number_format( $number = 0, $decimals = false ) {
  *           'arg3' => array(),
  *           'arg4' => false,
  *       );
- *       $r = wp_parse_args( $args, $defaults ); // ...
+ *       $r = bp_parse_args( $args, $defaults ); // ...
  *
  * The first argument, $old_args_keys, is an array that matches the parameter positions (keys) to
  * the new $args keys (values):
@@ -6641,7 +6641,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = wp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 

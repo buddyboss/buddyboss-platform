@@ -649,7 +649,7 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -1090,7 +1090,7 @@ class BP_Notifications_Notification {
 	 * }
 	 */
 	public static function get_current_notifications_for_user( $args = array() ) {
-		$r = wp_parse_args(
+		$r = bp_parse_args(
 			$args,
 			array(
 				'user_id'      => bp_loggedin_user_id(),
