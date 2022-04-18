@@ -7416,3 +7416,39 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 
 	return '';
 }
+
+/**
+ * Convert Media to base64 from attachment id.
+ *
+ * @since buddyboss [BBVERSION]
+ *
+ * @param int    $attachment_id Attachment id.
+ * @param string $size          Image size.
+ *
+ * @return string
+ */
+function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
+	if ( empty( $attachment_id ) ) {
+		return '';
+	}
+
+	$file = '';
+
+	if ( 'full' !== $size ) {
+		$metadata = image_get_intermediate_size( $attachment_id, $size );
+		if ( isset( $metadata['path'] ) ) {
+			$wp_uploads     = wp_upload_dir();
+			$wp_uploads_dir = $wp_uploads['basedir'];
+			$file           = $wp_uploads_dir . '/' . $metadata['path'];
+		}
+	}
+
+	if ( empty( $file ) ) {
+		$file = get_attached_file( $attachment_id );
+	}
+
+	$type = pathinfo( $file, PATHINFO_EXTENSION );
+	$data = file_get_contents( $file ); // phpcs:ignore
+
+	return 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
+}
