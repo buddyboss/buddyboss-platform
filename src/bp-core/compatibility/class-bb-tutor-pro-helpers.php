@@ -47,41 +47,41 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 
 	/**
 	 * Register the compatibility hooks for the plugin.
-     * 
-     * @since BuddyBoss [BBVERSION]
-     * 
-     * @return void
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
 	 */
 	public function compatibility_init() {
-        add_action( 'bp_init', array( $this, 'check_current_action' ) );
+		add_action( 'bp_init', array( $this, 'check_current_action' ) );
 	}
 
-    /**
-     * Check if it is group's zoom tab.
-     * 
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @return void
-     */
-    public function check_current_action() {
-        if ( 'groups' === bp_current_component() && 'zoom' === bp_current_action() ) {
-            add_action( 'wp_enqueue_scripts', array( $this, 'deregister_timepicker' ) );
-        }
-    }
+	/**
+	 * Check if it is group's zoom tab.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function check_current_action() {
+		if ( 'groups' === bp_current_component() && 'zoom' === bp_current_action() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'deregister_timepicker' ) );
+		}
+	}
 
-    /**
-     * Deregister timepicker script and style for group's zoom tab
-     * 
-     * @since BuddyBoss [BBVERSION]
-     *
-     * @return void
-     */
-    public function deregister_timepicker() {
-        wp_deregister_script( 'tutor_zoom_timepicker_js' );
+	/**
+	 * Deregister timepicker script and style for group's zoom tab
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function deregister_timepicker() {
+		wp_deregister_script( 'tutor_zoom_timepicker_js' );
 		wp_dequeue_script( 'tutor_zoom_timepicker_js' );
-        wp_deregister_style( 'tutor_zoom_timepicker_css' );
-        wp_dequeue_style( 'tutor_zoom_timepicker_css' );
-    }
+		wp_deregister_style( 'tutor_zoom_timepicker_css' );
+		wp_dequeue_style( 'tutor_zoom_timepicker_css' );
+	}
 
 }
 
