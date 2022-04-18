@@ -24,7 +24,7 @@ $albums_link = bp_get_album_link();
 				</div>
 			<?php else : ?>
 				<a href="<?php echo esc_url( $albums_link ); ?>" class="item-avatar">
-					<i class="bb-icon-f bb-icon-images"></i>
+					<i class="bb-icon-f bb-icon-image-video"></i>
 				</a>
 			<?php endif; ?>
 

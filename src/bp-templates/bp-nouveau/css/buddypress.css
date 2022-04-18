@@ -19315,6 +19315,11 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   object-fit: cover;
 }
 
+.search-video-list .media-album_thumb .item-avatar,
+.search-media-list .media-album_thumb .item-avatar {
+  margin-right: 0;
+}
+
 .search-video-list .media-album_details,
 .search-media-list .media-album_details {
   width: calc(100% - 63px);
