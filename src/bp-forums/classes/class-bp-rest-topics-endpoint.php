@@ -117,7 +117,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of topic IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of topics to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of topics.
-	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity} [orderby] Sort retrieved topics by parameter.
+	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand,popular,activity,include} [orderby] Sort retrieved topics by parameter.
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to topic assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve all the topics.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed topics by user.
@@ -189,6 +189,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( is_array( $args['orderby'] ) ) {
 			$args['orderby'] = implode( ' ', $args['orderby'] );
+		}
+
+		if (
+			! empty( $request['include'] )
+			&& ! empty( $args['orderby'] )
+			&& 'include' === $args['orderby']
+		) {
+			$bbp_t['orderby'] = 'post__in';
 		}
 
 		/**
@@ -2487,6 +2495,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'rand',
 					'popular',
 					'activity',
+					'include'
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -2666,7 +2675,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				)
 			),
 			'moderate'     => ! empty( $topic ) && current_user_can( 'moderate', $topic_id ),
-			'reply'        => ! empty( $topic ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $form_id, true ),
+			'reply'        => $this->can_reply( $topic->ID, $form_id ),
 			'trash'        => ! empty( $topic ) && current_user_can( 'delete_topic', $topic->ID ),
 		);
 	}
@@ -2848,5 +2857,30 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		// Filter & return.
 		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
+	}
+
+	/**
+	 * Verify if user is able to add topic reply or not.
+	 *
+	 * @param int $topic_id Topic ID.
+	 * @param int $forum_id Forum ID.
+	 *
+	 * @return bool
+	 */
+	public function can_reply( $topic_id, $forum_id ) {
+
+		if ( empty( $topic_id ) || empty( $forum_id ) ) {
+			return false;
+		}
+
+		if ( bbp_is_user_keymaster() ) {
+			return true;
+		}
+
+		if ( ! bbp_is_topic_closed( $topic_id ) && ! bbp_is_forum_closed( $forum_id ) && bbp_current_user_can_publish_replies() && $this->forum_endpoint->can_access_content( $forum_id, true ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }
