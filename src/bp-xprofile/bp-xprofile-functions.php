@@ -808,9 +808,17 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		return $sql;
 	}
 
+	static $cache = array();
+
 	$bp = buddypress();
 
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
+
+	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean );
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
 
 	if ( $query->query_vars['search_wildcard'] === 'left' ) {
 		$search_terms_nospace = '%' . $search_terms_clean;
@@ -823,7 +831,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		$search_terms_space   = '%' . $search_terms_clean . '%';
 	}
 
-	// Combine the core search (against wp_users) into a single OR clause
+	// Combine the core search (against wp_users) into a single OR clause.
 	// with the xprofile_data search.
 	$matched_user_ids = $wpdb->get_col(
 		$wpdb->prepare(
@@ -833,7 +841,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		)
 	);
 
-	// Checked profile fields based on privacy settings of particular user while searching
+	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
 		$matched_user_data = $wpdb->get_results(
 			$wpdb->prepare(
@@ -863,6 +871,8 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
 	}
+
+	$cache[ $cache_key ] = $sql;
 
 	return $sql;
 }
