@@ -16,17 +16,17 @@ $albums_link = bp_get_album_link();
 	<div class="item">
 
 		<div class="media-album_items ac-album-list">
-			<div class="media-album_thumb">
-				<?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
+			<?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
+				<div class="media-album_thumb">
 					<a href="<?php echo esc_url( $albums_link ); ?>">
 						<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->thumb ); ?>" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
 					</a>
-				<?php else : ?>
-					<a href="<?php echo esc_url( $albums_link ); ?>">
-						<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
-					</a>
-				<?php endif; ?>
-			</div>
+				</div>
+			<?php else : ?>
+				<a href="<?php echo esc_url( $albums_link ); ?>" class="item-avatar">
+					<i class="bb-icon-f bb-icon-images"></i>
+				</a>
+			<?php endif; ?>
 
 			<div class="media-album_details">
 				<a class="media-album_name " href="<?php echo esc_url( $albums_link ); ?>">
@@ -45,33 +45,6 @@ $albums_link = bp_get_album_link();
 					<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
 				</div>
 			</div>
-
-			<span class="middot">·</span>
-			<span class="media-photo_count">
-				<?php
-				printf(
-					// translators: Photos count.
-					esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
-					esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
-				);
-				?>
-			</span> <!-- Get the count of photos in that album -->
-			<?php
-			if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
-				?>
-				<span class="middot">·</span>
-				<span class="media-photo_count">
-					<?php
-					printf(
-					// translators: Photos count.
-						esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
-						esc_attr( bp_core_number_format( $media_album_template->album->media['total_video'] ) )
-					);
-					?>
-				</span> <!-- Get the count of photos on that album -->
-				<?php
-			}
-			?>
 
 			<?php
 				if ( bp_is_active( 'groups' ) ) {
