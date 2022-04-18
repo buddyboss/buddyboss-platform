@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-18 13:40:47+00:00\n"
+"POT-Creation-Date: 2022-04-18 14:17:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20689,8 +20689,7 @@ msgstr ""
 
 #: bp-media/bp-media-filters.php:2323
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:41
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:54
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:53
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:55
 #. translators: Photos count.
 msgid "%s photo"
 msgid_plural "%s photos"
@@ -26258,12 +26257,10 @@ msgid "by "
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:203
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:107
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:108
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:80
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:110
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:99
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:107
-#: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:78
-#: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:80
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:89
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:97
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos-ajax.php:91
@@ -26742,8 +26739,7 @@ msgid "edit"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:42
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:67
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:66
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:68
 #: bp-templates/bp-nouveau/buddypress/video/album-entry.php:24
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:47
 #: bp-video/bp-video-filters.php:1489
@@ -27088,7 +27084,7 @@ msgid "ago"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:41
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:40
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:42
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:60
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:67
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:33

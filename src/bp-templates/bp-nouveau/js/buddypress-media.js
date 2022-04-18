@@ -3674,8 +3674,6 @@ window.bp = window.bp || {};
 					}
 				);
 			}
-
-			console.log('qqqqqqq');
 		},
 
 		openDocumentUploader: function ( event ) {
