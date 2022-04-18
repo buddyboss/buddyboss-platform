@@ -250,6 +250,20 @@ if ( class_exists( 'Walker' ) ) :
 				$output .= ' value="' . (int) $object->ID . '"' . selected( $args['selected'], $object->ID, false );
 			}
 
+			/**
+			 * Add extra attributes for dropdown options.
+			 * Default value empty.
+			 *
+			 * @since BuddyBoss 1.7.8
+			 *
+			 * @param string $attribute Option attribute.
+			 * @param object $object    Post data.
+			 * @param array  $args      Dropdown arguments.
+			 * @param int    $depth     Depth of post in reference to parent posts.
+			 * @param string $output    Used to append additional content.
+			 */
+			$output .= apply_filters( 'bb_walker_dropdown_option_attr', '', $object, $args, $depth, $output );
+
 			$output .= '>';
 			$title   = apply_filters( 'bbp_walker_dropdown_post_title', $object->post_title, $output, $object, $depth, $args );
 			$output .= $pad . esc_html( $title );

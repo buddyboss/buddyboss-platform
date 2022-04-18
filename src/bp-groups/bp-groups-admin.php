@@ -1092,7 +1092,7 @@ function bp_groups_admin_index() {
 		$deleted = ! empty( $_REQUEST['deleted'] ) ? (int) $_REQUEST['deleted'] : 0;
 
 		if ( $deleted > 0 ) {
-			$messages[] = sprintf( _n( '%s group has been permanently deleted.', '%s groups have been permanently deleted.', $deleted, 'buddyboss' ), number_format_i18n( $deleted ) );
+			$messages[] = sprintf( _n( '%s group has been permanently deleted.', '%s groups have been permanently deleted.', $deleted, 'buddyboss' ), bp_core_number_format( $deleted ) );
 		}
 	}
 
@@ -1748,7 +1748,7 @@ function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
 function bp_groups_admin_autocomplete_handler() {
 
 	// Bail if user user shouldn't be here, or is a large network.
-	if ( ! bp_current_user_can( 'bp_moderate' ) || bp_is_large_install() ) {
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_die( -1 );
 	}
 
@@ -1776,7 +1776,7 @@ function bp_groups_admin_autocomplete_handler() {
 			$matches[] = array(
 				// Translators: 1: user_login, 2: user_email.
 				'label' => sprintf( __( '%1$s (%2$s)', 'buddyboss' ), $user->name, $user->ID ),
-				'value' => $user->ID,
+				'value' => $user->user_nicename,
 			);
 		}
 	}

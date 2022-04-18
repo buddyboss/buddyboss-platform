@@ -312,6 +312,13 @@ function bbp_new_reply_handler( $action = '' ) {
 		}
 	}
 
+	if ( ! empty( $_POST['bbp_video'] ) ) {
+		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		if ( ! $can_send_video ) {
+			bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
+		}
+	}
+
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
 		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_gif ) {
@@ -426,7 +433,12 @@ function bbp_new_reply_handler( $action = '' ) {
 		$terms = apply_filters( 'bbp_new_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
 		// Insert terms.
-		$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+		if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+			$terms = explode( ',', $terms );
+		} else {
+			$terms = (array) $terms;
+		}
+		$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id() );
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
@@ -774,8 +786,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Just in time manipulation of reply terms before being edited
 	$terms = apply_filters( 'bbp_edit_reply_pre_set_terms', $terms, $topic_id, $reply_id );
 
-	// Insert terms
-	$terms = wp_set_post_terms( $topic_id, $terms, bbp_get_topic_tag_tax_id(), true );
+	// update terms
+	if ( ! is_array( $terms ) && strstr( $terms, ',' ) ) {
+		$terms = explode( ',', $terms );
+	} else {
+		$terms = (array) $terms;
+	}
+	$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
 
 	// Term error
 	if ( is_wp_error( $terms ) ) {
@@ -1192,8 +1209,9 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
  *
  * @since bbPress (r4944)
  *
- * @param int $reply_id Reply id to update
- * @param int $reply_to Optional. Reply to id
+ * @param int $reply_id Reply id to update.
+ * @param int $reply_to Optional. Reply to id.
+ *
  * @uses bbp_get_reply_id() To get the reply id
  * @uses update_post_meta() To update the reply to meta
  * @uses apply_filters() Calls 'bbp_update_reply_to' with the reply id and
@@ -1202,18 +1220,18 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
  */
 function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
 
-	// Validation
+	// Validation.
 	$reply_id = bbp_get_reply_id( $reply_id );
-	$reply_to = bbp_validate_reply_to( $reply_to );
+	$reply_to = bbp_validate_reply_to( $reply_to, $reply_id );
 
-	// Update or delete the `reply_to` postmeta
+	// Update or delete the `reply_to` postmeta.
 	if ( ! empty( $reply_id ) ) {
 
-		// Update the reply to
+		// Update the reply to.
 		if ( ! empty( $reply_to ) ) {
 			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 
-			// Delete the reply to
+			// Delete the reply to.
 		} else {
 			delete_post_meta( $reply_id, '_bbp_reply_to' );
 		}
@@ -2343,25 +2361,45 @@ function bbp_check_reply_edit() {
  * @return mixed
  */
 function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
+    global $wpdb;
 
-	// Bail if reply_id is empty
+	// Bail if reply_id is empty.
 	$reply_id = bbp_get_reply_id( $reply_id );
 	if ( empty( $reply_id ) ) {
 		return false;
 	}
 
-	// If no position was passed, get it from the db and update the menu_order
-	if ( empty( $reply_position ) ) {
-		$reply_position = bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
+	// Prepare the reply position.
+	$reply_position = is_numeric( $reply_position )
+		? (int) $reply_position
+		: bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
+
+	// Get the current reply position.
+	$current_position = get_post_field( 'menu_order', $reply_id );
+
+	// Bail if no change.
+	if ( $reply_position === $current_position ) {
+		return false;
 	}
 
-	// Update the replies' 'menp_order' with the reply position
-	wp_update_post(
-		array(
-			'ID'         => $reply_id,
-			'menu_order' => $reply_position,
-		)
-	);
+	// Filters not removed.
+	$removed = false;
+
+	// Toggle revisions off as we are not altering content.
+	if ( has_filter( 'clean_post_cache', 'bbp_clean_post_cache' ) ) {
+		$removed = true;
+		remove_filter( 'clean_post_cache', 'bbp_clean_post_cache', 10, 2 );
+	}
+
+	// Update the replies' 'menu_order' with the reply position.
+	$wpdb->update( $wpdb->posts, array( 'menu_order' => $reply_position ), array( 'ID' => $reply_id ) );
+	clean_post_cache( $reply_id );
+
+	// Toggle revisions back on.
+	if ( true === $removed ) {
+		$removed = false;
+		add_filter( 'clean_post_cache', 'bbp_clean_post_cache', 10, 2 );
+	}
 
 	return (int) $reply_position;
 }
