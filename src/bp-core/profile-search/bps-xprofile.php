@@ -26,12 +26,12 @@ function bp_ps_xprofile_setup( $fields ) {
 		while ( bp_profile_groups() ) {
 			bp_the_profile_group();
 			$group_name = str_replace( '&amp;', '&', stripslashes( $group->name ) );
-
 			while ( bp_profile_fields() ) {
 				bp_the_profile_field();
 				$f = new stdClass();
 
 				$f->group       = $group_name;
+				$f->group_id	= $group->id;
 				$f->id          = $field->id;
 				$f->code        = 'field_' . $field->id;
 				$f->name        = str_replace( '&amp;', '&', stripslashes( $field->name ) );
@@ -39,7 +39,6 @@ function bp_ps_xprofile_setup( $fields ) {
 				$f->description = str_replace( '&amp;', '&', stripslashes( $field->description ) );
 				$f->description = $f->description;
 				$f->type        = $field->type;
-
 				$f->format         = bp_ps_xprofile_format( $field->type, $field->id );
 				$f->search         = 'bp_ps_xprofile_search';
 				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
@@ -87,7 +86,8 @@ function bp_ps_xprofile_search( $f ) {
 		'where'  => array(),
 	);
 	$sql['select']            = "SELECT user_id FROM {$bp->profile->table_name_data}";
-	$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+
+	$sql['where']['field_id'] = $wpdb->prepare( "field_id IN (SELECT id FROM {$bp->profile->table_name_fields} where 1=1 and group_id = %d)", $f->group_id );
 
 	switch ( $filter ) {
 		case 'integer_range':
