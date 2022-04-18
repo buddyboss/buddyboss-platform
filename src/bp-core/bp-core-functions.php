@@ -2949,7 +2949,11 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
 					if ( class_exists( 'LearnDash_Custom_Label' ) ) {
-						$sub_name = sprintf( __( 'My %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+						$sub_name = sprintf(
+							/* translators: LearnDash courses custom label. */
+							__( 'My %s', 'buddyboss' ),
+							LearnDash_Custom_Label::get_label( 'courses' )
+						);
 					} else {
 						$sub_name = esc_html__( 'My Courses', 'buddyboss' );
 					}
