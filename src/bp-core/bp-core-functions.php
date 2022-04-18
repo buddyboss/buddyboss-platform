@@ -2907,6 +2907,8 @@ function bp_nav_menu_get_loggedin_pages() {
 		}
 
 		if ( ! empty( $nav_sub ) ) {
+
+
 			foreach ( $nav_sub as $s_nav ) {
 
 				$sub_name          = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
@@ -2946,7 +2948,11 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+					if ( class_exists( 'LearnDash_Custom_Label' ) ) {
+						$sub_name = sprintf( __( 'My %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+					} else {
+						$sub_name = esc_html__( 'My Courses', 'buddyboss' );
+					}
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
