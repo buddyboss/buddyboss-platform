@@ -2236,7 +2236,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				// Update activity data.
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					// Make the activity document own.
-					$activity->hide_sitewide     = 0;
+					$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+					$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
 					$activity->save();
@@ -2307,7 +2308,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						if ( bp_activity_user_can_delete( $activity ) ) {
 
 							// Make the activity document own.
-							$activity->hide_sitewide     = 0;
+							$status                      = bp_get_group_status( groups_get_group( $activity->item_id ) );
+							$activity->hide_sitewide     = ( 'groups' === $activity->component && bp_is_active( 'groups' ) && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
 							$activity->save();
@@ -4807,7 +4809,7 @@ function bb_document_delete_older_symlinks() {
 
 	// Get documents previews symlink directory path.
 	$dir     = bp_document_symlink_path();
-	$max_age = 3600 * 24 * 1; // Delete the file older then 1 day.
+	$max_age = apply_filters( 'bb_document_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$list    = array();
 	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
@@ -4837,11 +4839,13 @@ function bb_document_delete_older_symlinks() {
 	}
 	closedir( $dh );
 
-	do_action( 'bb_document_delete_older_symlinks' );
+	if ( ! empty ( $list ) ) {
+		do_action( 'bb_document_delete_older_symlinks' );
+	}
 
 	return $list;
 }
-bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks' );
+bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks', 'bb_schedule_15days' );
 
 
 /**
