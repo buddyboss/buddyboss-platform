@@ -3638,6 +3638,7 @@ window.bp = window.bp || {};
 						}
 
 						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
+						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-add-more' ).show();
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
@@ -3666,12 +3667,15 @@ window.bp = window.bp || {};
 							$( '#bp-media-add-more, #bp-media-photo-next' ).hide();
 							$( '.bb-field-steps-1' ).removeClass( 'controls-added' );
 							$( '#bp-media-submit' ).hide();
+							$( '.modal-container' ).removeClass( 'modal-container--alert' );
 						} else {
 							$( '#bp-media-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length ) ).show();
 						}
 					}
 				);
 			}
+
+			console.log('qqqqqqq');
 		},
 
 		openDocumentUploader: function ( event ) {
@@ -3917,6 +3921,7 @@ window.bp = window.bp || {};
 						}
 
 						$( '.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit' ).show();
+						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
 						$( '#bp-media-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length ) ).show();
@@ -3942,6 +3947,7 @@ window.bp = window.bp || {};
 						if ( !self.dropzone_obj.getAcceptedFiles().length ) {
 							$( '#bp-media-uploader-modal-status-text' ).text( '' );
 							$( '#bp-media-document-submit' ).hide();
+							$( '.modal-container' ).removeClass( 'modal-container--alert' );
 						} else {
 							$( '#bp-media-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length ) ).show();
 						}

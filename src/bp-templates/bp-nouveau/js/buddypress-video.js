@@ -756,6 +756,7 @@ window.bp = window.bp || {};
 							this.removeFile( file );
 						}
 						$( '.bb-field-steps-1 #bp-video-next, #bp-video-submit' ).show();
+						$( '.modal-container' ).addClass( 'modal-container--alert' );
 						$( '.bb-field-steps-1' ).addClass( 'controls-added' );
 						$( '#bp-video-submit' ).show();
 						$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.uploading + '...' );
@@ -786,6 +787,7 @@ window.bp = window.bp || {};
 							$( '#bp-video-next' ).hide();
 							$( '.bb-field-steps-1' ).removeClass( 'controls-added' );
 							$( '#bp-video-submit' ).hide();
+							$( '.modal-container' ).removeClass( 'modal-container--alert' );
 						} else {
 							$( '#bp-video-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.video.i18n_strings.upload_status, self.dropzone_video.length, self.video_dropzone_obj.getAcceptedFiles().length ) ).show();
 						}
