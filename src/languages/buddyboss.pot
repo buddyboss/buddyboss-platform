@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-18 07:03:25+00:00\n"
+"POT-Creation-Date: 2022-04-18 09:21:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8114,7 +8114,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-recently-active-widget.php:158
 #: bp-members/classes/class-bp-core-whos-online-widget.php:238
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:189
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:225
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:148
 msgid "Title:"
 msgstr ""
@@ -27452,15 +27452,15 @@ msgid "(BB) Latest Activities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:62
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:172
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:208
 msgid "Latest updates"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:194
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:230
 msgid "Maximum amount to display:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:198
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:234
 msgid "Activity Type:"
 msgstr ""
 
