@@ -4712,6 +4712,7 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url
 		);
+		
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty
