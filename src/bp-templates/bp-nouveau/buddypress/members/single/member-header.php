@@ -108,7 +108,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 										<?php
 									endif;
 
-									<?php bp_nouveau_member_hook( 'before', 'in_header_meta' ); ?>
+									bp_nouveau_member_hook( 'before', 'in_header_meta' );
 
 									if ( bp_get_last_activity() && $is_enabled_last_active ) :
 										echo wp_kses_post( bp_get_last_activity() );
