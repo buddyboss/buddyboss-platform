@@ -36,37 +36,6 @@ $folder_link = bp_get_folder_folder_link();
 				</div>
 			</div>
 
-			<?php
-			if ( bp_is_active( 'groups' ) ) {
-				$group_id = bp_get_document_group_id();
-				if ( $group_id > 0 ) {
-				?>
-				<div class="media-folder_group">
-					<div class="media-folder_details__bottom">
-						<?php
-							// Get the group from the database.
-							$group = groups_get_group( $group_id );
-
-							$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
-							$group_link   = sprintf(
-								'<a href="%s" class="bp-group-home-link %s-home-link">%s</a>',
-								esc_url( trailingslashit( bp_get_group_permalink( $group ) . bp_get_document_slug() ) ),
-								esc_attr( bp_get_group_slug( $group ) ),
-								esc_html( bp_get_group_name( $group ) )
-							);
-							$group_status = bp_get_group_status( $group );
-							?>
-							<span class="middot">·</span>
-							<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
-							<span class="middot">·</span>
-							<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
-					</div>
-				</div>
-				<?php
-				}
-			}
-			?>
-
 			<div class="media-folder_visibility">
 				<div class="media-folder_details__bottom">
 					<?php
@@ -75,7 +44,7 @@ $folder_link = bp_get_folder_folder_link();
 						if ( $group_id > 0 ) {
 							?>
 							<span class="middot">·</span>
-							<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+							<span>
 									<?php bp_document_folder_privacy(); ?>
 								</span>
 							<?php

@@ -3650,16 +3650,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 
 			a {
 				color: #9b9c9f;
-
-				&:hover {
-					color: $text-link-hover;
-				}
-			}
-
-			.media-folder_status {
-				display: block;
-				font-size: 13px;
-				color: #939597;
 			}
 		}
 	}

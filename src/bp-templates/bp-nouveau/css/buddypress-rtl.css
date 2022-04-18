@@ -19489,16 +19489,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   color: #9b9c9f;
 }
 
-.search-document-list .media-folder_items .media-folder_group a:hover {
-  color: #5087e5;
-}
-
-.search-document-list .media-folder_items .media-folder_group .media-folder_status {
-  display: block;
-  font-size: 13px;
-  color: #939597;
-}
-
 body.search-results .search_results .search-video-list .media-album_thumb img,
 body.search-results .search_results .search-media-list .media-album_thumb img {
   border-radius: 3px !important;
