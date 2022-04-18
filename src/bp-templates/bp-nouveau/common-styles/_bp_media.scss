@@ -3067,19 +3067,13 @@ div.dropzone .dz-preview {
 	}
 
 	.media-folder_icon {
-		margin-right: 15px;
+		width: 52px;
+		padding-left: 10px;
 
 		> a i {
-			align-items: center;
-			background-color: #f2f4f5;
-			border-radius: 50%;
-			color: #9b9c9f;
-			display: flex;
-			font-size: 24px;
-			font-weight: 300;
-			justify-content: center;
-			height: 48px;
-			width: 48px;
+			font-size: 30px;
+			color: #9ca8b4;
+			margin-top: 5px;
 		}
 	}
 
@@ -3436,6 +3430,33 @@ div.dropzone .dz-preview {
 
 	.media-folder_icon {
 		float: left;
+		margin-right: 15px;
+		padding-left: 0;
+		width: auto;
+
+		> a i {
+			align-items: center;
+			background-color: #f2f4f5;
+			border-radius: 50%;
+			color: #9b9c9f;
+			display: flex;
+			font-size: 24px;
+			font-weight: 300;
+			justify-content: center;
+			height: 48px;
+			width: 48px;
+		}
+
+	}
+
+	.media-folder_details {
+
+		.media-folder_name {
+			font-size: 14px;
+			font-weight: 500;
+			letter-spacing: -0.24px;
+		}
+
 	}
 
 	.media-folder_visibility,
@@ -3458,6 +3479,15 @@ div.dropzone .dz-preview {
 			a {
 				display: inline-block;
 			}
+		}
+
+		.media-folder_date {
+			color: #9b9c9f;
+			background-color: transparent;
+			font-size: 0.8125rem;
+			font-weight: 400;
+			letter-spacing: -0.15px;
+			line-height: 1.1875;
 		}
 
 	}
