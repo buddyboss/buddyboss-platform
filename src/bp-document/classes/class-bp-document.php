@@ -309,11 +309,20 @@ class BP_Document {
 			case 'menu_order':
 				break;
 
+			case 'in':
+				$r['order_by'] = 'in';
+				break;
+
 			default:
 				$r['order_by'] = 'date_created';
 				break;
 		}
 		$order_by = 'd.' . $r['order_by'];
+		// Support order by fields for generally.
+		if ( ! empty( $r['in'] ) && 'in' === $r['order_by'] ) {
+			$order_by = 'FIELD(d.id, ' . implode( ',', wp_parse_id_list( $r['in'] ) ) . ')';
+			$sort     = '';
+		}
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
@@ -347,7 +356,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "d.group_id = {$r['group_id']}";
+			$where_conditions['group'] = "d.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -703,27 +712,6 @@ class BP_Document {
 			$documents[] = $document;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $documents, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with document items.
-		foreach ( $documents as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$documents[ $a_index ]->user_email    = $a_user->user_email;
-				$documents[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$documents[ $a_index ]->user_login    = $a_user->user_login;
-				$documents[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $documents;
 	}
 
@@ -937,8 +925,8 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
-			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
+			$where_conditions_document['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions_folder['group']   = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -1405,27 +1393,6 @@ class BP_Document {
 			$documents[] = $document;
 		}
 
-		// Then fetch user data.
-		$user_query = new BP_User_Query(
-			array(
-				'user_ids'        => wp_list_pluck( $documents, 'user_id' ),
-				'populate_extras' => false,
-			)
-		);
-
-		// Associated located user data with document items.
-		foreach ( $documents as $a_index => $a_item ) {
-			$a_user_id = intval( $a_item->user_id );
-			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
-
-			if ( ! empty( $a_user ) ) {
-				$documents[ $a_index ]->user_email    = $a_user->user_email;
-				$documents[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$documents[ $a_index ]->user_login    = $a_user->user_login;
-				$documents[ $a_index ]->display_name  = $a_user->display_name;
-			}
-		}
-
 		return $documents;
 	}
 
@@ -1847,7 +1814,12 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = false;
+		$cache_key            = 'bp_document_activity_id_' . $activity_id;
+		$activity_document_id = wp_cache_get( $cache_key, 'bp_document' );
+
+		if ( ! empty( $activity_document_id ) ) {
+			return $activity_document_id;
+		}
 
 		// Check activity component enabled or not.
 		if ( bp_is_active( 'activity' ) ) {
@@ -1864,6 +1836,8 @@ class BP_Document {
 				}
 			}
 		}
+
+		wp_cache_set( $cache_key, $activity_document_id, 'bp_document' );
 
 		return $activity_document_id;
 	}
@@ -2068,6 +2042,17 @@ class BP_Document {
 			return false;
 		}
 
-		return (int) $wpdb->get_var( "SELECT DISTINCT d.attachment_id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" );
+		$cache_key              = 'bp_document_attachment_id_' . $activity_id;
+		$document_attachment_id = wp_cache_get( $cache_key, 'bp_document' );
+
+		if ( ! empty( $document_attachment_id ) ) {
+			return $document_attachment_id;
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$document_attachment_id = (int) $wpdb->get_var( "SELECT DISTINCT attachment_id FROM {$bp->document->table_name} WHERE activity_id = {$activity_id}" );
+		wp_cache_set( $cache_key, $document_attachment_id, 'bp_document' );
+
+		return $document_attachment_id;
 	}
 }

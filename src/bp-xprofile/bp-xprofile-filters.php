@@ -72,6 +72,10 @@ add_filter( 'xprofile_field_field_order_before_save', 'absint' );
 add_filter( 'xprofile_field_option_order_before_save', 'absint' );
 add_filter( 'xprofile_field_can_delete_before_save', 'absint' );
 
+// Un slash field value.
+add_filter( 'xprofile_field_name_before_save', 'wp_unslash', 99 );
+add_filter( 'xprofile_field_description_before_save', 'wp_unslash', 99 );
+
 // Save field options.
 add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_options' );
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
@@ -106,12 +110,13 @@ add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_core_xprofile_update_profile_
 
 // Profile Completion Admin Actions.
 add_action( 'xprofile_fields_saved_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field added/updated in wp-admin > Profile
+add_action( 'xprofile_groups_saved_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group added/updated in wp-admin > Profile
 add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field deleted in wp-admin > profile.
 add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group deleted in wp-admin.
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-//Display Name setting support
+// Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 
 // Repair repeater field repeated in admin side.
@@ -119,6 +124,10 @@ add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
 
 // Repair user nicknames.
 add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
+
+// Validate user_nickname when user created from the backend
+add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 3 );
+add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_update', 10, 3 );
 
 /**
  * Sanitize each field option name for saving to the database.
@@ -159,14 +168,15 @@ function bp_xprofile_sanitize_field_default( $field_default = '' ) {
  *
  * @param string      $content  Content to filter.
  * @param object|null $data_obj The BP_XProfile_ProfileData object.
- * @param int|null                     $field_id Optional. The ID of the profile field.
+ * @param int|null    $field_id Optional. The ID of the profile field.
  * @return string $content
  */
-function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
+function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	global $allowedtags;
 
-	$xprofile_allowedtags             = $allowedtags;
-	$xprofile_allowedtags['a']['rel'] = array();
+	$xprofile_allowedtags                = $allowedtags;
+	$xprofile_allowedtags['a']['rel']    = array();
+	$xprofile_allowedtags['a']['target'] = array();
 
 	if ( null === $field_id && $data_obj instanceof BP_XProfile_ProfileData ) {
 		$field_id = $data_obj->field_id;
@@ -176,27 +186,31 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
 	if ( $field_id && bp_xprofile_is_richtext_enabled_for_field( $field_id ) ) {
 		$richtext_tags = array(
 			'img'  => array(
-				'id'     => 1,
-				'class'  => 1,
-				'src'    => 1,
-				'alt'    => 1,
-				'width'  => 1,
-				'height' => 1,
+				'id'      => 1,
+				'class'   => 1,
+				'src'     => 1,
+				'alt'     => 1,
+				'width'   => 1,
+				'height'  => 1,
 			),
 			'ul'   => array(
-				'id'    => 1,
-				'class' => 1,
+				'id'     => 1,
+				'class'  => 1,
 			),
 			'ol'   => array(
-				'id'    => 1,
-				'class' => 1,
+				'id'     => 1,
+				'class'  => 1,
 			),
 			'li'   => array(
-				'id'    => 1,
-				'class' => 1,
+				'id'     => 1,
+				'class'  => 1,
 			),
 			'span' => array(),
 			'p'    => array(),
+			'a'    => array(
+				'href'   => 1,
+				'target' => 1
+			)
 		);
 
 		// Allow style attributes on certain elements for capable users
@@ -723,20 +737,24 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * @global \BP_XProfile_Field_Type $field
  *
  * @param  string $full_name
- * @param  int $user_id
+ * @param  int    $user_id
  * @return string
  */
 function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
-
+	static $cache;
 	if ( empty( $user_id ) ) {
 		return $full_name;
 	}
+	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
 
-	if ( !empty( $user_id ) ) {
+	if ( ! empty( $user_id ) ) {
 
 		$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-		if ( !empty( $display_name ) ) {
+		if ( ! empty( $display_name ) ) {
 			$full_name = $display_name;
 		}
 
@@ -746,10 +764,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
 
 			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
+		$cache[ $cache_key ] = $full_name;
 	}
 
 	return $full_name;
@@ -934,7 +953,7 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 /**
  * Change display_name for admin areas.
  *
- * @param array $email_content Email Content array.
+ * @param array       $email_content Email Content array.
  * @param object|null $user User Object
  *
  * @since BuddyBoss 1.0.0
@@ -1038,28 +1057,28 @@ function bp_social_network_search_key( $id, $array ) {
  *
  * @since BuddyBoss 1.5.1
  */
-function bp_xprofile_exclude_display_name_profile_fields( $args ){
+function bp_xprofile_exclude_display_name_profile_fields( $args ) {
 
 	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 	$current_value = bp_get_option( 'bp-display-name-format' );
 
 	$fields_id = array();
 
-	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
 		$fields_id[] = bp_xprofile_lastname_field_id();
 	}
 
-	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
 		$fields_id[] = bp_xprofile_lastname_field_id();
 	}
 
-	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
 		$fields_id[] = bp_xprofile_firstname_field_id();
 	}
 
 	if ( ! empty( $fields_id ) ) {
 		if ( empty( $args['exclude_fields'] ) ) {
-			$args['exclude_fields'] = [];
+			$args['exclude_fields'] = array();
 		}
 		$args['exclude_fields'] = array_merge( wp_parse_id_list( $args['exclude_fields'] ), $fields_id );
 	}
@@ -1079,7 +1098,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
 		'bp-xprofile-repeater-field-repair',
-		__( 'Repair xProfile repeater fieldset.', 'buddyboss' ),
+		esc_html__( 'Repair BuddyBoss profile repeater field sets', 'buddyboss' ),
 		'bb_xprofile_repeater_field_repair_callback',
 	);
 	return $repair_list;
@@ -1177,7 +1196,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 		return array(
 			'status'  => 1,
-			'message' => __( 'Field update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing BuddyBoss profile repeater field sets &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1194,7 +1213,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 function bb_xprofile_repair_user_nicknames( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-repair-user-nicknames',
-		__( 'Repair user nicknames.', 'buddyboss' ),
+		__( 'Repair user nicknames', 'buddyboss' ),
 		'bb_xprofile_repair_user_nicknames_callback',
 	);
 	return $repair_list;
@@ -1249,6 +1268,53 @@ function bb_xprofile_repair_user_nicknames_callback() {
 	return array(
 		'status'  => 1,
 		'records' => $records_updated,
-		'message' => __( 'User nickname update complete!', 'buddyboss' ),
+		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss' ),
 	);
+}
+
+/**
+ * The user_nickname make compatible with BuddyBoss when user created from the backend.
+ *
+ * @since BuddyBoss 1.8.7
+ *
+ * @param array   $meta Default meta values and keys for the user.
+ * @param WP_User $user User object.
+ * @param bool    $update Whether the user is being updated rather than created.
+ *
+ * @return array
+ */
+function bb_validate_user_nickname_on_user_register( array $meta, WP_User $user, bool $update ) {
+
+	if ( ! $update ) {
+		if ( isset( $meta['nickname'] ) && ! empty( $meta['nickname'] ) ) {
+			$meta['nickname'] = sanitize_title( $meta['nickname'] );
+		} elseif ( isset( $user->user_nicename ) && ! empty( $user->user_nicename ) ) {
+			$meta['nickname'] = sanitize_title( $user->user_nicename );
+		} elseif ( isset( $user->user_login ) && ! empty( $user->user_login ) ) {
+			$meta['nickname'] = sanitize_title( $user->user_login );
+		}
+	}
+
+	return $meta;
+}
+
+/**
+ * Validate user_nickname when user updated from the backend.
+ *
+ * @since BuddyBoss 1.8.7
+ *
+ * @param WP_Error $errors WP_Error object (passed by reference).
+ * @param bool     $update Whether this is a user update.
+ * @param stdClass $user   User object (passed by reference).
+ */
+function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $update, stdClass $user ) {
+
+	if ( $update && isset( $user->nickname ) && ! empty( $user->nickname ) ) {
+		$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $user->nickname, $user->ID );
+
+		// or use the user_nickname.
+		if ( $invalid ) {
+			$errors->add( 'nickname', esc_html( $invalid ) );
+		}
+	}
 }
