@@ -19267,8 +19267,9 @@ div.dropzone .dz-preview .dz-filename {
   display: flex;
   font-size: 24px;
   font-weight: 300;
-  justify-content: center;
   height: 48px;
+  justify-content: center;
+  margin-top: 0;
   width: 48px;
 }
 
