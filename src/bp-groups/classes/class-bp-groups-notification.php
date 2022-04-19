@@ -362,7 +362,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups',
 			'bb_groups_new_message',
 			'bb_groups_new_message',
-			'bb-icon-comment'
+			'bb-icon-f bb-icon-comment'
 		);
 	}
 
