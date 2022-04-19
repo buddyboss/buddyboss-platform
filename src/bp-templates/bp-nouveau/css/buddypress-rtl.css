@@ -20900,20 +20900,14 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   top: 7px;
 }
 
-.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
-.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
-.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search,
-.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
-.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
-.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search,
-.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
-.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
-.directory.video .video-options .subnav-filters .subnav-search .bp-dir-search-form #dir-video-search {
+.directory.media .media-options #dir-media-search,
+.directory.document .document-options #dir-document-search,
+.directory.video .video-options #dir-video-search {
   border: 0;
   background-color: transparent;
   padding-right: 32px;
   font-size: 14px;
-  height: 40px;
+  height: 39px;
 }
 
 .directory.media .bp-subnavs li.selected a:hover span,

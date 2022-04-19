@@ -4930,18 +4930,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			top: 7px;
 		}
 
-		#dir-media-search,
-		#dir-document-search,
-		#dir-video-search {
-			border: 0;
-			background-color: transparent;
-			padding-left: 32px;
-			font-size: 14px;
-			height: 40px;
-		}
-
 	}
 
+}
+
+.directory.media .media-options #dir-media-search,
+.directory.document .document-options #dir-document-search,
+.directory.video .video-options #dir-video-search {
+	border: 0;
+	background-color: transparent;
+	padding-left: 32px;
+	font-size: 14px;
+	height: 39px;
 }
 
 .directory.media,
