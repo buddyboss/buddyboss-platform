@@ -947,7 +947,7 @@ add_action( 'bb_init_notifications_background_updater', 'bb_notifications_handle
 /**
  * Add only notifications which are user selected.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $querystring Query String.
  * @param string $object      Object.
@@ -960,9 +960,21 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$querystring            = wp_parse_args( $querystring );
-	$querystring['is_new']  = 1;
-	$querystring['user_id'] = get_current_user_id();
+	$querystring               = wp_parse_args( $querystring );
+	$querystring['is_new']     = 1;
+	$querystring['user_id']    = get_current_user_id();
+
+//	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+//	$global_pulse       = 30;
+//	if ( ! empty( $heartbeat_settings['interval'] ) ) {
+//		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
+//	}
+//	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
+//	$querystring['date_query'] = array(
+//		array(
+//			'after' => $date_limit,
+//		),
+//	);
 
 	if ( bb_enabled_legacy_email_preference() ) {
 		return http_build_query( $querystring );
@@ -980,7 +992,7 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 /**
  * Excluded disabled notification actions by user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int    $user_id Current user id.
  * @param string $type    Type of notification preference. email, web or app.
@@ -1054,7 +1066,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
 			}
 			if ( isset( $types[ $type ] ) ) {
-				$default_by_admin[ $key . '_' . $type ] = $types[ $type ];
+				$default_by_admin[ $key . '_' . $type ] = 'yes';
 			}
 		}
 	}
@@ -1095,7 +1107,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 /**
  * Exclude the messages notifications.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param array $component_names Component names.
  *
@@ -1123,7 +1135,7 @@ add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclu
 /**
  * Check the notification is legacy or modern.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int $notification_id Notification ID.
  *
@@ -1134,7 +1146,7 @@ function bb_notifications_is_legacy_notification( $notification_id = 0 ) {
 	/**
 	 * Filters the notification is legacy or modern.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param bool $is_legacy_notification The notification is legacy or modern.
 	 * @param int  $notification_id        Notification ID.
@@ -1283,7 +1295,8 @@ function bb_get_notification_avatar_url( $size = 'full' ) {
 /**
  * Get the small icon for the notification which will print beside the avatar.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
+ *
  * @param string $component_action Component Action.
  * @param bool   $html             Whether to get only class or with i tag.
  *

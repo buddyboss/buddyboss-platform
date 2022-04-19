@@ -98,7 +98,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			/**
 			 * Filters plugin-added activity-related custom component_actions.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 1.9.3
 			 *
 			 * @param string $notification      Null value.
 			 * @param int    $item_id           The primary item ID.
@@ -210,7 +210,9 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 		$component_action = 'bb_new_mention';
 	}
 
-	$notification_id = bp_notifications_add_notification(
+	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
+	bp_notifications_add_notification(
 		array(
 			'user_id'           => $receiver_user_id,
 			'item_id'           => $activity->id,
@@ -222,15 +224,8 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 		)
 	);
 
-	/**
-	 * Fires right after creating notifications for the activity.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int    $notification_id Notification ID.
-	 * @param object $activity        Activity object.
-	 */
-	do_action( 'bb_activity_add_notification', $notification_id, $activity );
+	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
 }
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
@@ -251,7 +246,9 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		$component_action = 'bb_activity_comment';
 	}
 
-	$notification_id = bp_notifications_add_notification(
+	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
+	bp_notifications_add_notification(
 		array(
 			'user_id'           => $activity->user_id,
 			'item_id'           => $comment_id,
@@ -263,15 +260,8 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		)
 	);
 
-	/**
-	 * Fires right after creating notifications for the activity.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int    $notification_id Notification ID.
-	 * @param object $activity        Activity object.
-	 */
-	do_action( 'bb_activity_add_notification', $notification_id, $activity );
+	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
 }
 add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 3 );
 
@@ -292,7 +282,9 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 		$component_action = 'bb_activity_comment';
 	}
 
-	$notification_id = bp_notifications_add_notification(
+	add_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
+	bp_notifications_add_notification(
 		array(
 			'user_id'           => $activity_comment->user_id,
 			'item_id'           => $comment_id,
@@ -304,15 +296,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 		)
 	);
 
-	/**
-	 * Fires right after creating notifications for the activity.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int    $notification_id Notification ID.
-	 * @param object $activity        Activity object.
-	 */
-	do_action( 'bb_activity_add_notification', $notification_id, $activity_comment );
+	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
 
@@ -542,37 +526,45 @@ add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_single
 /**
  * Create notification meta based on activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
- * @param int    $notification_id Notification ID.
- * @param object $activity        Activity object.
+ * @param object $notification Notification object.
  */
-function bb_activity_add_notification_metas( $notification_id, $activity ) {
+function bb_activity_add_notification_metas( $notification ) {
 
-	if ( bb_enabled_legacy_email_preference() ) {
+	if (
+		bb_enabled_legacy_email_preference() ||
+		empty( $notification->id ) ||
+		empty( $notification->item_id ) ||
+		empty( $notification->component_action ) ||
+		! in_array( $notification->component_action, array( 'bb_new_mention', 'bb_activity_comment' ), true )
+	) {
 		return;
 	}
 
-	$notification_id = (int) $notification_id;
+	$activity_id = $notification->item_id;
+	$activity    = new BP_Activity_Activity( $activity_id );
 
-	if ( $notification_id ) {
-		if ( 'activity_comment' === $activity->type ) {
-			if ( ! empty( $activity->item_id ) ) {
-				$parent_activity = new BP_Activity_Activity( $activity->item_id );
-				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
-					bp_notifications_update_meta( $notification_id, 'type', 'post_comment' );
-				} else {
-					bp_notifications_update_meta( $notification_id, 'type', 'activity_comment' );
-				}
+	if ( empty( $activity->id ) ) {
+		return;
+	}
+
+	if ( 'activity_comment' === $activity->type ) {
+		if ( ! empty( $activity->item_id ) ) {
+			$parent_activity = new BP_Activity_Activity( $activity->item_id );
+			if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
+				bp_notifications_update_meta( $notification->id, 'type', 'post_comment' );
 			} else {
-				bp_notifications_update_meta( $notification_id, 'type', 'activity_comment' );
+				bp_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
 			}
-		} elseif ( 'blogs' === $activity->component ) {
-			bp_notifications_update_meta( $notification_id, 'type', 'post_comment' );
 		} else {
-			bp_notifications_update_meta( $notification_id, 'type', 'activity_post' );
+			bp_notifications_update_meta( $notification->id, 'type', 'activity_comment' );
 		}
+	} elseif ( 'blogs' === $activity->component ) {
+		bp_notifications_update_meta( $notification->id, 'type', 'post_comment' );
+	} else {
+		bp_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 	}
 }
-add_action( 'bb_activity_add_notification', 'bb_activity_add_notification_metas', 10, 2 );
+
 

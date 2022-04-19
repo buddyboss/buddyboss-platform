@@ -2829,7 +2829,7 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 /**
  * Register the labs settings section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array
  */
@@ -2850,7 +2850,7 @@ function bb_labs_get_settings_sections() {
 /**
  * Get settings fields by section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param string $section_id Section id.
  *
@@ -2872,7 +2872,7 @@ function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Get all the settings fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @return array
  */
@@ -2896,7 +2896,7 @@ function bb_labs_get_settings_fields() {
 /**
  * Setting > Media > Profile support.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_labs_settings_callback_notification_preferences_enabled() {
 
@@ -2962,7 +2962,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 0,
+							'article' => 125369,
 						),
 						'admin.php'
 					)
@@ -2981,8 +2981,8 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 			/* translators: Tutorial link. */
 			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
 			sprintf(
-				'<a href="%s">' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
-				esc_url( '#' )
+				'<a href="%s" target="_blank" >' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
+				'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
 			)
 		)
 		?>
@@ -2995,7 +2995,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
 /**
  * BuddyBoss Labs settings section callback.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 function bb_labs_notification_preferences_info_section_callback() {
 	?>

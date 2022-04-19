@@ -1331,7 +1331,9 @@ function bb_messages_recipients_per_page() {
 function bb_send_group_message_background( $post_data, $members = array(), $current_user_id = 0, $content = '', $is_background = false ) {
 
 	// setup post data into $_POST.
-	$_POST        = $post_data;
+	if ( is_array( $post_data ) ) {
+		$_POST = $post_data;
+	}
 	$message_args = array();
 	$message      = '';
 

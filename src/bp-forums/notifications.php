@@ -155,7 +155,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		/**
 		 * Format notification.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.3
 		 */
 		do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
 
@@ -229,7 +229,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 		/**
 		 * Filters plugin-added forum-related custom component_actions.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.3
 		 *
 		 * @param string $notification      Null value.
 		 * @param int    $item_id           The primary item id.
@@ -360,10 +360,11 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 				continue;
 			}
 
-			$n_id = bp_notifications_add_notification( $args );
-			if ( $n_id ) {
-				bp_notifications_update_meta( $n_id, 'type', 'forum_reply' );
-			}
+			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+
+			bp_notifications_add_notification( $args );
+
+			remove_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
@@ -489,10 +490,11 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 				continue;
 			}
 
-			$n_id = bp_notifications_add_notification( $args );
-			if ( $n_id ) {
-				bp_notifications_update_meta( $n_id, 'type', 'forum_topic' );
-			}
+			add_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
+
+			bp_notifications_add_notification( $args );
+
+			remove_action( 'bp_notification_after_save', 'bb_forums_add_notification_metas', 5 );
 
 			// User Mentions email.
 			if ( ! bb_enabled_legacy_email_preference() && true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
@@ -626,7 +628,7 @@ add_action( 'bbp_get_request', 'bbp_buddypress_mark_notifications', 1 );
 /**
  * Add notifications for the forum subscribers for creating a new discussion.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int   $topic_id Topic id.
  * @param int   $forum_id Forum id.
@@ -692,7 +694,7 @@ add_action( 'bbp_pre_notify_forum_subscribers', 'bb_pre_notify_forum_subscribers
 /**
  * Add notifications for the forum subscribers for creating a new discussion.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param int   $reply_id Topic id.
  * @param int   $topic_id Forum id.
@@ -771,7 +773,7 @@ add_action( 'bbp_pre_notify_subscribers', 'bb_pre_notify_reply_subscribers', 10,
 /**
  * Mark notifications as read when reading a topic or reply subscribed notification.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  *
  * @param bool $success  any sucess ready performed or not.
  * @param int  $user_id  Current user ID.
@@ -796,3 +798,30 @@ function bb_mark_modern_notifications( $success, $user_id, $topic_id ) {
 
 add_action( 'bbp_notifications_handler', 'bb_mark_modern_notifications', 10, 3 );
 
+/**
+ * Create notification meta based on forums.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param object $notification Notification object.
+ */
+function bb_forums_add_notification_metas( $notification ) {
+	if (
+		bb_enabled_legacy_email_preference() ||
+		empty( $notification->id ) ||
+		empty( $notification->item_id ) ||
+		empty( $notification->component_action ) ||
+		'bb_new_mention' !== $notification->component_action
+	) {
+		return;
+	}
+
+	$reply_id = bbp_get_reply_id( $notification->item_id );
+	$topic_id = bbp_get_topic_id( $notification->item_id );
+
+	if ( bbp_is_reply( $reply_id ) ) {
+		bp_notifications_update_meta( $notification->id, 'type', 'forum_reply' );
+	} elseif ( bbp_is_topic( $topic_id ) ) {
+		bp_notifications_update_meta( $notification->id, 'type', 'forum_topic' );
+	}
+}

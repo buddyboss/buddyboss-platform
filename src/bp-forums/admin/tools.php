@@ -571,7 +571,7 @@ function bbp_admin_repair_group_forum_relationship() {
 function bbp_admin_repair_forum_topic_count() {
 	global $wpdb;
 
-	$statement = __( ' Counting the number of discussions in each forum &hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of discussions in each forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN ( '_bbp_topic_count', '_bbp_total_topic_count' );";

@@ -1635,6 +1635,7 @@ body.post-type-bp-email .categorydiv label {
 	img {
 		max-width: 100%;
 		width: auto;
+		height: auto;
 		border: 1px solid #ddd;
 		border-radius: 5px;
 		box-shadow: 0 3px 20px -1px rgba(7, 10, 25, 0.1);
@@ -3365,6 +3366,21 @@ table tbody td .bb-description {
 					margin-left: 15px;
 					min-width: 58px;
 					text-align: center;
+
+					&.disabled {
+						pointer-events: none;
+
+						input[type="checkbox"] {
+							opacity: 0.7;
+							background: rgba(255, 255, 255, 0.5);
+							border-color: rgba(220, 220, 222, 0.75);
+							color: rgba(44, 51, 56, 0.5);
+
+							&::before {
+								opacity: 0.7;
+							}
+						}
+					}
 				}
 			}
 

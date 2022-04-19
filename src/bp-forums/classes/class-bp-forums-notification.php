@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Forums
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BP_Forums_Notification class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var object
 	 */
@@ -28,7 +28,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return null|BP_Forums_Notification|Controller|object
 	 */
@@ -43,7 +43,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function __construct() {
 		// Initialize.
@@ -53,15 +53,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return mixed|void
 	 */
 	public function load() {
 		$this->register_notification_group(
 			'forums',
-			esc_html__( 'Forums', 'buddyboss' ),
-			esc_html__( 'Forums Notifications', 'buddyboss' ),
+			esc_html__( 'Discussion Forums', 'buddyboss' ),
+			esc_html__( 'Discussion Forums', 'buddyboss' ),
 			15
 		);
 
@@ -81,12 +81,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for replies to a discussion you are subscribed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$this->register_notification_type(
 			'bb_forums_subscribed_reply',
-			esc_html__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
+			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 			'forums'
 		);
@@ -117,12 +117,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for creates discussion in a forum you are subscribed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$this->register_notification_type(
 			'bb_forums_subscribed_discussion',
-			esc_html__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
+			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 			'forums'
 		);
@@ -152,7 +152,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -189,11 +189,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					(int) $total_items
 				);
 			} else {
-				$except = bbp_get_reply_excerpt( $item_id, 50 );
+				$except = '"' . bbp_get_reply_excerpt( $item_id, 50 ) . '"';
+				$except = str_replace( '&hellip;"', '&hellip;', $except );
 				if ( ! empty( $except ) && ! empty( $secondary_item_id ) ) {
 					$text = sprintf(
 						/* translators: 1. Member display name. 2. excerpt. */
-						esc_html__( '%1$s replied to a discussion: "%2$s"', 'buddyboss' ),
+						esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
 						bp_core_get_user_displayname( $secondary_item_id ),
 						$except
 					);
@@ -220,8 +221,17 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_discussion' === $component_action_name ) {
 			$topic_id    = bbp_get_topic_id( $item_id );
-			$topic_title = bbp_get_topic_title( $topic_id );
-			$topic_link  = wp_nonce_url(
+			$topic_title = '"' . bp_create_excerpt(
+				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+				50,
+				array(
+					'ending' => __( '&hellip;', 'buddyboss' ),
+				)
+			) . '"';
+
+			$topic_title = str_replace( '&hellip;"', '&hellip;', $topic_title );
+
+			$topic_link = wp_nonce_url(
 				add_query_arg(
 					array(
 						'action'   => 'bbp_mark_read',
@@ -240,14 +250,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $secondary_item_id ) ) {
 					$text = sprintf(
 						/* translators: 1.Member display name 2. discussions title. */
-						esc_html__( '%1$s started a discussion: "%2$s"', 'buddyboss' ),
+						esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
 						bp_core_get_user_displayname( $secondary_item_id ),
 						$topic_title
 					);
 				} else {
 					$text = sprintf(
 						/* translators: discussions title. */
-						esc_html__( 'You have a new discussion: "%s"', 'buddyboss' ),
+						esc_html__( 'You have a new discussion: %s', 'buddyboss' ),
 						$topic_title
 					);
 				}

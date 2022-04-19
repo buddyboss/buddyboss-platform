@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Messages
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the BP_Messages_Notification class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.3
  */
 class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @var object
 	 */
@@ -28,7 +28,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return null|BP_Messages_Notification|Controller|object
 	 */
@@ -43,7 +43,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function __construct() {
 		// Initialize.
@@ -53,15 +53,15 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Initialize all methods inside it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @return mixed|void
 	 */
 	public function load() {
 		$this->register_notification_group(
 			'messages',
-			esc_html__( 'Messages', 'buddyboss' ),
-			esc_html__( 'Private Messaging', 'buddyboss' ),
+			esc_html__( 'Private Messages', 'buddyboss' ),
+			esc_html__( 'Private Messages', 'buddyboss' ),
 			18
 		);
 
@@ -71,7 +71,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Register notification for user new message.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 */
 	public function register_notification_for_new_message() {
 		$this->register_notification_type(
@@ -123,7 +123,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format the notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -143,7 +143,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 	/**
 	 * Format Messages notifications.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 1.9.3
 	 *
 	 * @param string $content               Notification content.
 	 * @param int    $item_id               Notification item ID.
@@ -191,16 +191,20 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
 				$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
 
-				$excerpt = bp_create_excerpt(
-					wp_strip_all_tags( $message->message ),
-					50,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				);
+				$excerpt = wp_strip_all_tags( $message->message );
 
 				if ( '&nbsp;' === $excerpt ) {
 					$excerpt = '';
+				} else {
+					$excerpt = '"' . bp_create_excerpt(
+						$excerpt,
+						50,
+						array(
+							'ending' => __( '&hellip;', 'buddyboss' ),
+						)
+					) . '"';
+
+					$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
 				}
 
 				if ( ! empty( $secondary_item_id ) ) {
@@ -215,7 +219,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 								/* translators: 1. user display name 2. exceprt */
-									esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+									esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$excerpt
 								);
@@ -288,7 +292,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 									/* translators: 1. user display name 2. group name 3. excerpt */
-									esc_html__( '%1$s sent a message to %2$s: "%3$s"', 'buddyboss' ),
+									esc_html__( '%1$s sent a message to %2$s: %3$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$group_name,
 									$excerpt
@@ -370,7 +374,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 							if ( ! empty( $excerpt ) ) {
 								$text = sprintf(
 									/* translators: 1. user display name 2. exceprt */
-									esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+									esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 									bp_core_get_user_displayname( $secondary_item_id ),
 									$excerpt
 								);
@@ -445,7 +449,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 						if ( ! empty( $excerpt ) ) {
 							$text = sprintf(
 								/* translators: 1. user display name 2. except text */
-								esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+								esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 								bp_core_get_user_displayname( $secondary_item_id ),
 								$excerpt
 							);
@@ -520,7 +524,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $excerpt ) ) {
 						$text = sprintf(
 							/* translators: 1. user display name 2. gif text */
-							esc_html__( '%1$s sent you a message: "%2$s"', 'buddyboss' ),
+							esc_html__( '%1$s sent you a message: %2$s', 'buddyboss' ),
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$excerpt
 						);
