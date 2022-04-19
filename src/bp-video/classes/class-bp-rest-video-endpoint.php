@@ -266,7 +266,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
 	 * @apiParam {String=asc,desc} [order=desc] Order sort attribute ascending or descending.
-	 * @apiParam {String=date_created,menu_order} [orderby=date_created] Order by a specific parameter.
+	 * @apiParam {String=date_created,menu_order,id,include} [orderby=date_created] Order by a specific parameter.
 	 * @apiParam {Number} [user_id] Limit result set to items created by a specific user (ID).
 	 * @apiParam {Number} [max] Maximum number of results to return.
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Album.
@@ -326,6 +326,12 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['include'] ) ) {
 			$args['video_ids'] = $request['include'];
+			if (
+				! empty( $args['order_by'] )
+				&& 'include' === $args['order_by']
+			) {
+				$args['order_by'] = 'in';
+			}
 		}
 
 		$args['scope'] = $this->bp_rest_video_default_scope( $args['scope'], $args );
@@ -1225,81 +1231,87 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_video',
 			'type'       => 'object',
 			'properties' => array(
-				'id'               => array(
+				'id'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'blog_id'          => array(
+				'blog_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current Site ID.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'attachment_id'    => array(
+				'attachment_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Unique identifier for the video object.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'user_id'          => array(
+				'user_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID for the author of the video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'title'            => array(
+				'title'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Video title.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'description'      => array(
+				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The Video description.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'album_id'         => array(
+				'album_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Album.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'group_id'         => array(
+				'group_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'activity_id'      => array(
+				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'privacy'          => array(
+				'hide_activity_actions' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'boolean',
+				),
+				'privacy'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Privacy of the video.', 'buddyboss' ),
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'menu_order'       => array(
+				'menu_order'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Order of the item.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'date_created'     => array(
+				'date_created'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The date the video was created, in the site\'s timezone.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'attachment_data'  => array(
+				'attachment_data'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Wordpress Video Data.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1331,55 +1343,55 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'group_name'       => array(
+				'group_name'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Group name associate with the video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'visibility'       => array(
+				'visibility'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Visibility of the video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'user_nicename'    => array(
+				'user_nicename'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The User\'s nice name to create a video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'user_login'       => array(
+				'user_login'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The User\'s login name to create a video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'display_name'     => array(
+				'display_name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The User\'s display name to create a video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'url'              => array(
+				'url'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Video file URL.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'download_url'     => array(
+				'download_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Download Video file URL.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
-				'user_permissions' => array(
+				'user_permissions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current user\'s permission with the Video.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
-				'type'             => array(
+				'type'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Current media type video.', 'buddyboss' ),
 					'readonly'    => true,
@@ -1418,7 +1430,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
-			'enum'              => array( 'date_created', 'menu_order' ),
+			'enum'              => array( 'date_created', 'menu_order', 'id', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
@@ -1788,7 +1800,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2022,7 +2034,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
@@ -2191,7 +2203,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids ) );
+		$videos = $this->assemble_response_data( array( 'video_ids' => $video_ids, 'sort' => 'ASC' ) );
 
 		if ( empty( $videos['videos'] ) ) {
 			return;
