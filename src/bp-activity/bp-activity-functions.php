@@ -5767,3 +5767,21 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 function bb_activity_post_form_groups_per_page() {
 	return apply_filters( 'bb_activity_post_form_groups_per_page', 10 );
 }
+
+/**
+ * Replace the livestamp attribute for the Latest Activity widget.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $new_content Activity content.
+ *
+ * @return string
+ */
+function bb_activity_remove_livestamp_attribute( $new_content = '' ) {
+
+	if ( empty( $new_content ) ) {
+		return $new_content;
+	}
+
+	return str_replace( 'data-livestamp', 'data-activity-datestamp', $new_content );
+}
