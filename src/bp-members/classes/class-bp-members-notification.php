@@ -101,6 +101,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_account_password',
 			'bb_account_password',
+			'key'
 		);
 
 		$this->register_notification_filter(
