@@ -960,21 +960,21 @@ function bb_notifications_on_screen_notifications_add( $querystring, $object ) {
 		return $querystring;
 	}
 
-	$querystring               = wp_parse_args( $querystring );
-	$querystring['is_new']     = 1;
-	$querystring['user_id']    = get_current_user_id();
+	$querystring            = wp_parse_args( $querystring );
+	$querystring['is_new']  = 1;
+	$querystring['user_id'] = get_current_user_id();
 
-//	$heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
-//	$global_pulse       = 30;
-//	if ( ! empty( $heartbeat_settings['interval'] ) ) {
-//		$global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
-//	}
-//	$date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
-//	$querystring['date_query'] = array(
-//		array(
-//			'after' => $date_limit,
-//		),
-//	);
+	// $heartbeat_settings = apply_filters( 'heartbeat_settings', array() );
+	// $global_pulse       = 30;
+	// if ( ! empty( $heartbeat_settings['interval'] ) ) {
+	// $global_pulse = is_numeric( $heartbeat_settings['interval'] ) ? absint( $heartbeat_settings['interval'] ) : 30;
+	// }
+	// $date_limit                = gmdate( 'Y-m-d H:i:s', strtotime( "-$global_pulse seconds" ) );
+	// $querystring['date_query'] = array(
+	// array(
+	// 'after' => $date_limit,
+	// ),
+	// );
 
 	if ( bb_enabled_legacy_email_preference() ) {
 		return http_build_query( $querystring );
@@ -1230,7 +1230,7 @@ function bb_notification_avatar() {
 				);
 
 				// Get the small icon for the notification which will print beside the avatar.
-				echo wp_kses_post( bb_notification_small_icon( $component_action ) );
+				echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
 				?>
 				<?php ( isset( $user ) ? bb_current_user_status( $user->ID ) : '' ); ?>
 			</a>
@@ -1302,7 +1302,7 @@ function bb_get_notification_avatar_url( $size = 'full' ) {
  *
  * @return mixed|string|void
  */
-function bb_notification_small_icon( $component_action, $html = true ) {
+function bb_notification_small_icon( $component_action, $html = true, $notification = false ) {
 
 	$all_registered_notifications = bb_register_notifications();
 
@@ -1313,13 +1313,96 @@ function bb_notification_small_icon( $component_action, $html = true ) {
 	$icons = array_column( $all_registered_notifications, 'icon_class', 'component_action' );
 
 	if ( isset( $icons[ $component_action ] ) && ! empty( $icons[ $component_action ] ) ) {
+		$icon_class = bb_get_notification_conditonal_icon( $notification );
+		if ( empty( $icon_class ) ) {
+			$icon_class = $icons[ $component_action ];
+		}
 		if ( $html ) {
-			return '<i class=" ' . esc_attr( $icons[ $component_action ] ) . '"></i>';
+			return '<i class=" ' . esc_attr( $icon_class ) . '"></i>';
 		} else {
-			return $icons[ $component_action ];
+			return $icon_class;
 		}
 	}
 
 	return;
+
+}
+
+/**
+ * Get the small icon for the notification which will print beside the avatar.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $notification Notification object.
+ *
+ * @return string $icon_class Icon class.
+ */
+function bb_get_notification_conditional_icon( $notification ) {
+
+	$icon_class = '';
+
+	if ( empty( $notification ) || empty( $notification->component_action ) ) {
+		return $icon_class;
+	}
+
+	switch ( $notification->component_action ) {
+		case 'bb_new_mention':
+			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
+			if ( 'activity_comment' === $notification_type ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-activity';
+			} elseif ( 'activity_post' === $notification_type ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+			} elseif ( 'forum_reply' === $notification_type ) {
+				$icon_class = 'bb-icon-f bb-icon-reply';
+			} elseif ( 'post_comment' === $notification_type ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square-dots';
+			} elseif ( 'forum_topic' === $notification_type ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square';
+			}
+			break;
+		case 'bb_groups_new_message':
+		case 'bb_messages_new':
+			$item_id = $notification->item_id;
+			// Get message thread ID.
+			$message      = new BP_Messages_Message( $item_id );
+			$media_ids    = bp_messages_get_meta( $item_id, 'bp_media_ids', true );
+			$document_ids = bp_messages_get_meta( $item_id, 'bp_document_ids', true );
+			$video_ids    = bp_messages_get_meta( $item_id, 'bp_video_ids', true );
+			$gif_data     = bp_messages_get_meta( $item_id, '_gif_data', true );
+			$excerpt      = wp_strip_all_tags( $message->message );
+
+			if ( '&nbsp;' === $excerpt ) {
+				$excerpt = '';
+			} else {
+				$excerpt = '"' . bp_create_excerpt(
+					$excerpt,
+					50,
+					array(
+						'ending' => __( '&hellip;', 'buddyboss' ),
+					)
+				) . '"';
+
+				$excerpt = str_replace( '&hellip;"', '&hellip;', $excerpt );
+			}
+
+			if ( ! empty( $excerpt ) ) {
+				$icon_class = 'bb-icon-f bb-icon-comment';
+			} elseif ( $media_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-image';
+			} elseif ( $document_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-file-doc';
+			} elseif ( $video_ids ) {
+				$icon_class = 'bb-icon-f bb-icon-film';
+			} elseif ( ! empty( $gif_data ) ) {
+				$icon_class = 'bb-icon-f bb-icon-gif';
+			} else {
+				$icon_class = 'bb-icon-f bb-icon-comment';
+			}
+
+			break;
+
+	}
+
+	return apply_filters( 'bb_get_notification_conditional_icon', $icon_class, $notification );
 
 }
