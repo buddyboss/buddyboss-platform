@@ -1210,6 +1210,8 @@ function bb_notification_avatar() {
 
 		if ( 'notification' === $object ) {
 			bb_get_default_notification_avatar( 'thumb', $notification );
+			// Get the small icon for the notification which will print beside the avatar.
+			echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
 		} else {
 			if ( 'group' === $object ) {
 				$group = new BP_Groups_Group( $item_id );
@@ -1313,7 +1315,7 @@ function bb_notification_small_icon( $component_action, $html = true, $notificat
 	$icons = array_column( $all_registered_notifications, 'icon_class', 'component_action' );
 
 	if ( isset( $icons[ $component_action ] ) && ! empty( $icons[ $component_action ] ) ) {
-		$icon_class = bb_get_notification_conditonal_icon( $notification );
+		$icon_class = bb_get_notification_conditional_icon( $notification );
 		if ( empty( $icon_class ) ) {
 			$icon_class = $icons[ $component_action ];
 		}
