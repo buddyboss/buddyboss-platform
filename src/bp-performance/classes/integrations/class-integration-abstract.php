@@ -668,7 +668,7 @@ abstract class Integration_Abstract {
 			'request_method' => 'GET',
 		);
 
-		$args               = bp_parse_args( $args, $defaults );
+		$args               = wp_parse_args( $args, $defaults );
 		$args['expire']     = $expire;
 		$args['deep_cache'] = $deep_cache;
 		$args['user_cache'] = $user_cache;
