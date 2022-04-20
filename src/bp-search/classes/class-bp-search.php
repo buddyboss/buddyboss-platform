@@ -514,7 +514,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
 					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
-					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
+					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
 				}
 
 				if ( empty( $sql_queries ) ) {
@@ -743,7 +743,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					if ( ! isset( $total[ $search_type ] ) ) {
 						$obj               = $this->search_helpers[ $search_type ];
-						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'], $search_type );
+						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'] );
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total_match_count;
 					} else {
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total[ $search_type ];
