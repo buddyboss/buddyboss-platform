@@ -242,7 +242,7 @@ function bp_helper_plugins_loaded_callback() {
 				     true === (bool) defined( 'DOING_AJAX' ) &&
 				     true === (bool) DOING_AJAX &&
 				     isset( $_REQUEST['action'] ) &&
-				     $_REQUEST['action'] === 'bp_search_ajax'
+				     'bp_search_ajax' === $_REQUEST['action']
 			     )
 			) {
 				$query->set( 'tribe_suppress_query_filters', true );
