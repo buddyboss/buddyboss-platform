@@ -16394,6 +16394,7 @@ body.login .login-popup .mfp-close:hover {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   font-size: 18px;
+  font-weight: 400;
   line-height: 1;
   margin-right: 10px;
   text-align: center;

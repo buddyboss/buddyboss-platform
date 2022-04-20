@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-18 14:17:11+00:00\n"
+"POT-Creation-Date: 2022-04-20 19:42:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26262,7 +26262,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:99
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:107
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:89
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:97
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:73
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos-ajax.php:91
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos.php:96
 msgid "Based on group privacy"
