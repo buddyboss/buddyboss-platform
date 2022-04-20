@@ -4037,11 +4037,11 @@ window.bp = window.bp || {};
 							}
 
 							if ( false === response.data.create_album ) {
-								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).removeClass( 'create-album' );
-								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).hide();
+								$( currentTarget + '.open-popup'  ).find( '.bp-media-open-create-popup-folder' ).removeClass( 'create-album' );
+								$( currentTarget + '.open-popup' ).find( '.bp-media-open-create-popup-folder' ).hide();
 							} else {
-								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).addClass( 'create-album' );
-								$( document ).find( '.open-popup .bp-media-open-create-popup-folder' ).show();
+								$( currentTarget + '.open-popup' ).find( '.bp-media-open-create-popup-folder' ).addClass( 'create-album' );
+								$( currentTarget + '.open-popup' ).find( '.bp-media-open-create-popup-folder' ).show();
 							}
 
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
