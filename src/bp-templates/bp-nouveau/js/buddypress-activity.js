@@ -100,6 +100,8 @@ window.bp = window.bp || {};
 			this.dropzone_video     = [];
 
 			this.models = [];
+
+			this.InitiatedCommentForms = [];
 		},
 
 		/**
@@ -1018,11 +1020,15 @@ window.bp = window.bp || {};
 				var ce = form.find( '.ac-input[contenteditable]' );
 				if ( ce.length > 0 ) {
 					var div_editor = ce.get( 0 );
-					div_editor.addEventListener( 'paste', function ( e ) {
-						e.preventDefault();
-						var text = e.clipboardData.getData( 'text/plain' );
-						document.execCommand( 'insertText', false, text );
-					} );
+
+					if ( $.inArray( $(div_editor).attr( 'id' ), self.InitiatedCommentForms ) == -1 ) {//Check if Comment form has already paste event initiated
+						div_editor.addEventListener( 'paste', function ( e ) {
+							e.preventDefault();
+							var text = e.clipboardData.getData( 'text/plain' );
+							document.execCommand( 'insertText', false, text );
+						} );
+						self.InitiatedCommentForms.push( $(div_editor).attr( 'id' ) );//Add this Comment form in initiated comment form list
+					}
 				}
 
 				// change the aria state from false to true.
@@ -1665,6 +1671,15 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj = new Dropzone( '#ac-reply-post-document-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_document_obj.on(
+						'addedfile',
+						function ( file ) {
+							var filename = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file').removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
+					);
+
+					self.dropzone_document_obj.on(
 						'sending',
 						function(file, xhr, formData) {
 							formData.append( 'action', 'document_document_upload' );
@@ -1899,21 +1914,20 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'uploadprogress',
-						function( element, file ) {
-
-							$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-
+						function( element ) {
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
 							var radius        = circle.r.baseVal.value;
 							var circumference = radius * 2 * Math.PI;
 
 							circle.style.strokeDasharray  = circumference + ' ' + circumference;
-							circle.style.strokeDashoffset = circumference;
 							var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-							circle.style.strokeDashoffset = offset;
 
-							if ( element.upload.progress === 100 ) {
-								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+							if ( element.upload.progress <= 99 ) {
+								$( element.previewElement ).find( '.dz-progress-count' ).text( element.upload.progress.toFixed( 0 ) + '% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+								circle.style.strokeDashoffset = offset;
+							} else if ( element.upload.progress === 100 ) {
+								circle.style.strokeDashoffset = circumference - 0.99 * circumference;
+								$( element.previewElement ).find( '.dz-progress-count' ).text( '99% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
 							}
 						}
 					);
@@ -1921,6 +1935,13 @@ window.bp = window.bp || {};
 					self.dropzone_video_obj.on(
 						'success',
 						function(file, response) {
+
+							if ( file.upload.progress === 100 ) {
+								$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
+								$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+							}
+
 							if ( response.data.id ) {
 								file.id                  = response.id;
 								response.data.uuid       = file.upload.uuid;

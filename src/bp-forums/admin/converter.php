@@ -123,7 +123,7 @@ class BBP_Converter {
 	private function setup_actions() {
 
 		// Attach to the admin head with our ajax requests cycle and css.
-		add_action( 'bbp_admin_head', array( $this, 'admin_head' ) );
+		add_action( 'admin_head-buddyboss_page_bbp-converter', array( $this, 'admin_head' ) );
 
 		// Attach the bbConverter admin settings action to the WordPress admin init action.
 		add_action( 'bbp_register_admin_settings', array( $this, 'register_admin_settings' ) );
