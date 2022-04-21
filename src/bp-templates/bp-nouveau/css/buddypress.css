@@ -13931,6 +13931,10 @@ td.bbp-topic-counts {
   clear: left;
 }
 
+#bbpress-forums fieldset.bbp-form .select2-container {
+  z-index: auto;
+}
+
 #bbpress-forums fieldset.bbp-form {
   border: 1px solid #eee;
   padding: 10px 20px;
