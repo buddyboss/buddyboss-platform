@@ -560,8 +560,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$unread_query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, $message_object->sender_id ); // phpcs:ignore
 		$wpdb->query( $unread_query ); // phpcs:ignore
 
-		$cache_key = "{$thread_id}99999999";
-		wp_cache_delete( $cache_key, 'bp_messages_threads' );
+		// Delete thread cache.
+		if ( function_exists( 'bp_messages_delete_thread_paginated_messages_cache' ) ) {
+			bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+		} else {
+			$cache_key = "{$thread_id}99999999";
+			wp_cache_delete( $cache_key, 'bp_messages_threads' );
+		}
 
 		// Make sure to get the newest message to update REST Additional fields.
 		$thread        = $this->get_thread_object( $thread_id, $request );
