@@ -3626,41 +3626,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 		line-height: 0;
 	}
 
-	@media screen and (max-width: 540px) {
-
-		.media-album_items {
-			flex-flow: column;
-		}
-
-		.media-album_thumb {
-			margin-bottom: 15px;
-			padding: 0;
-
-			img {
-				width: 100%;
-				height: auto;
-				max-height: 220px;
-				object-fit: cover;
-			}
-		}
-
-		.media-album_thumb,
-		.media-album_details,
-		.media-album_modified,
-		.media-album_group,
-		.media-album_visibility {
-			-ms-flex-preferred-size: 100% !important;
-			flex-basis: 100% !important;
-			width: 100% !important;
-			line-height: inherit;
-		}
-
-		.media-album_details .media-photo_count {
-			margin-top: 0;
-			margin-bottom: 10px;
-		}
-	}
-
 }
 
 //Document Search result ajax and page
@@ -3740,6 +3705,25 @@ body.search-results .search_results {
 			line-height: 0;
 		}
 	}
+}
+
+@media screen and (max-width: 540px) {
+
+	.bp-search-ac {
+
+		.search-document-list .media-folder_items {
+
+			.media-folder_details {
+				width: calc(100% - 64px) !important;
+			}
+
+			.media-folder_visibility {
+				flex-basis: initial !important;
+				width: auto !important;
+			}
+		}
+	}
+
 }
 
 body.search-results.bb-template-v2 .search_results {
