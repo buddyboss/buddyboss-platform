@@ -11469,7 +11469,6 @@ button[data-bp-tooltip] {
 
 [data-bp-tooltip]:hover:before, [data-bp-tooltip]:hover:after, [data-bp-tooltip][data-bp-tooltip-visible]:before, [data-bp-tooltip][data-bp-tooltip-visible]:after {
   opacity: 1;
-  z-index: 999999999;
   pointer-events: auto;
 }
 
@@ -12708,6 +12707,10 @@ td.bbp-topic-counts {
 -------------------------------------------------------------- */
 #bbpress-forums fieldset.bbp-form {
   clear: right;
+}
+
+#bbpress-forums fieldset.bbp-form .select2-container {
+  z-index: auto;
 }
 
 #bbpress-forums fieldset.bbp-form {

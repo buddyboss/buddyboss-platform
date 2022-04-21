@@ -646,6 +646,10 @@ td.bbp-topic-counts {
 
 #bbpress-forums fieldset.bbp-form {
 	clear: left;
+
+	.select2-container {
+		z-index: auto;
+	}
 }
 
 #bbpress-forums fieldset.bbp-form {
