@@ -909,13 +909,15 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 * Now that the activity id exists and the post comment was created, we don't need to update
 	 * the content of the comment as there are no chances it has evolved.
 	 */
+	remove_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
-	$resave_activity->content = '';
+	//$resave_activity->content = '';
 	$resave_activity->save();
 
 	// Add the edit activity comment hook back.
 	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
+	add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 
 	// Multisite again!
 	restore_current_blog();
