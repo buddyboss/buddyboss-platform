@@ -25,7 +25,7 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 					<?php
 				} else {
 					?>
-					<i class=" <?php echo esc_attr( $result['post_thumbnail'] ); ?>"></i>
+					<i class="bb-icon-f <?php echo esc_attr( $result['post_thumbnail'] ); ?>"></i>
 					<?php
 				}
 				?>

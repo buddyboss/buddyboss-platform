@@ -19,7 +19,7 @@ $folder_link = bp_get_folder_folder_link();
 			<div class="media-folder_items ac-folder-list">
 				<div class="media-folder_icon">
 					<a href="<?php echo esc_url( $folder_link ); ?>">
-						<i class="bb-icon-l bb-icon-folder-alt"></i>
+						<i class="bb-icon-f bb-icon-folder-alt"></i>
 					</a>
 				</div>
 

@@ -523,7 +523,7 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 		'sfwd-courses'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'bb-icon-course',
 		'sfwd-lessons'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-book',
 		'sfwd-topic'          => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
-		'sfwd-quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
+		'sfwd-quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-f bb-icon-quiz',
 		'post'                => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
 		'forum'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
 		'topic'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
@@ -548,7 +548,7 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 		return $default[ $post_type ];
 	}
 
-	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-file-doc';
+	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
 
 }
 
