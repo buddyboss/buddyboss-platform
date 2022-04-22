@@ -167,6 +167,11 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				if ( ! BP_Uploader.settings.multi_selection ) {
+					// Called when files are added to queue
+					$('.bp-uploader-window').hide();
+				}
+
 				_.each(
 					files,
 					function( file ) {
@@ -174,10 +179,22 @@ window.bp = window.bp || {};
 
 						// Ignore failed uploads.
 						if ( plupload.FAILED === file.status ) {
+
+							if ( ! BP_Uploader.settings.multi_selection ) {
+								// Called when files are added to queue
+								$('.bp-uploader-window').show();
+							}
+
 							return;
 						}
 
 						if ( max > hundredmb && file.size > hundredmb && uploader.runtime !== 'html5' ) {
+
+							if ( ! BP_Uploader.settings.multi_selection ) {
+								// Called when files are added to queue
+								$('.bp-uploader-window').show();
+							}
+
 							_this.uploadSizeError( uploader, file, true );
 						} else {
 							attributes = _.extend(
@@ -259,6 +276,11 @@ window.bp = window.bp || {};
 				// Add the file to the Uploaded ones
 				bp.Uploader.filesUploaded.add( file.item );
 
+				if ( ! BP_Uploader.settings.multi_selection ) {
+					// Called when files are added to queue
+					$('.bp-uploader-window').show();
+				}
+
 			}
 		);
 
@@ -330,6 +352,11 @@ window.bp = window.bp || {};
 						message = errors[ key ];
 						break;
 					}
+				}
+
+				if ( ! BP_Uploader.settings.multi_selection ) {
+					// Called when files are added to queue
+					$('.bp-uploader-window').show();
 				}
 
 				$( self ).trigger( 'bp-uploader-warning', message );
@@ -468,6 +495,12 @@ window.bp = window.bp || {};
 			},
 
 			feedback: function( model ) {
+
+				if ( ! BP_Uploader.settings.multi_selection && ! _.isUndefined( model.get( 'message' ) ) && ! _.isUndefined( model.get( 'file' ) )) {
+					// Called when files are added to queue
+					$('.bp-uploader-window').show();
+				}
+
 				if ( ! _.isUndefined( model.get( 'message' ) ) && ! _.isUndefined( model.get( 'file' ) ) ) {
 					$( '#' + model.get( 'file' ).id ).html( model.get( 'message' ) ).addClass( 'error' );
 				}
