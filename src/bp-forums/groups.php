@@ -99,9 +99,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Adds a hidden input value to the "Group Settings" page
 			add_action( 'bp_before_group_settings_admin', array( $this, 'group_settings_hidden_field' ) );
 
-			// Added notification settings for forums.
-			add_action( 'bp_notification_settings', array( $this, 'forums_notification_settings' ), 11 );
-
 			// Possibly redirect.
 			add_action( 'bbp_template_redirect', array( $this, 'forum_redirect_canonical' ), 11 );
 		}
@@ -144,6 +141,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				// Allow group member to view private/hidden forums
 				add_filter( 'bbp_map_meta_caps', array( $this, 'map_group_forum_meta_caps' ), 10, 4 );
+
+				// Fix issue - Group organizers and moderators can not add topic tags
+				add_filter( 'bbp_map_topic_tag_meta_caps', array( $this, 'bbp_map_assign_topic_tags_caps' ), 10, 4 );
 
 				// Group member permissions to view the topic and reply forms
 				add_filter( 'bbp_current_user_can_access_create_topic_form', array( $this, 'form_permissions' ) );
@@ -248,6 +248,31 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			return apply_filters( 'bbp_map_group_forum_topic_meta_caps', $caps, $cap, $user_id, $args );
+		}
+
+		/**
+		 * Fix issue - Group organizers and moderators can not add topic tags.
+		 *
+		 * @since BuddyBoss 1.7.9
+		 *
+		 * @param array  $caps    List of capabilities.
+		 * @param string $cap     Capability name.
+		 * @param int    $user_id User ID.
+		 * @param array  $args    List of Arguments.
+		 *
+		 * @return array
+		 */
+		public function bbp_map_assign_topic_tags_caps( $caps, $cap, $user_id, $args ) {
+
+			if ( 'assign_topic_tags' !== $cap ) {
+				return $caps;
+			}
+
+			if ( bbp_group_is_mod() || bbp_group_is_admin() ) {
+				return array( 'participate' );
+			}
+
+			return $caps;
 		}
 
 		/**
@@ -1503,98 +1528,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			groups_update_last_activity( $group->id );
 
 			return $args;
-		}
-
-		/**
-		 * Add Forum/Topic Subscribe email settings to the Settings > Notifications page.
-		 *
-		 * @since BuddyBoss 1.5.9
-		 */
-		public function forums_notification_settings() {
-			if ( bp_action_variables() ) {
-				bp_do_404();
-
-				return;
-			}
-
-			$notification_forums_following_reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_reply', true );
-			$notification_forums_following_topic = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_topic', true );
-			if ( ! $notification_forums_following_reply ) {
-				$notification_forums_following_reply = 'yes';
-			}
-
-			if ( ! $notification_forums_following_topic ) {
-				$notification_forums_following_topic = 'yes';
-			}
-			?>
-
-			<table class="notification-settings" id="forums-notification-settings">
-				<thead>
-				<tr>
-					<th class="icon"></th>
-					<th class="title"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
-					<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-					<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
-				</tr>
-				</thead>
-				<tbody>
-					<tr id="forums-notification-settings-new-message">
-						<td></td>
-						<td><?php esc_html_e( 'A member replies to a discussion you are subscribed', 'buddyboss' ); ?></td>
-						<td class="yes">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_reply]"
-									   id="notification-forums-reply-new-messages-yes" class="bs-styled-radio"
-									   value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
-								<label for="notification-forums-reply-new-messages-yes"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-						<td class="no">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_reply]"
-									   id="notification-forums-reply-new-messages-no" class="bs-styled-radio"
-									   value="no" <?php checked( $notification_forums_following_reply, 'no', true ); ?> />
-								<label for="notification-forums-reply-new-messages-no"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-					</tr>
-					<tr id="forums-notification-settings-new-message">
-						<td></td>
-						<td><?php esc_html_e( 'A member creates discussion in a forum you are subscribed', 'buddyboss' ); ?></td>
-						<td class="yes">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_topic]"
-									   id="notification-forums-topic-new-messages-yes" class="bs-styled-radio"
-									   value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />
-								<label for="notification-forums-topic-new-messages-yes"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-						<td class="no">
-							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_forums_following_topic]"
-									   id="notification-forums-topic-new-messages-no" class="bs-styled-radio"
-									   value="no" <?php checked( $notification_forums_following_topic, 'no', true ); ?> />
-								<label for="notification-forums-topic-new-messages-no"><span
-											class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-							</div>
-						</td>
-					</tr>
-					<?php
-
-					/**
-					 * Fires inside the closing </tbody> tag for forums screen notification settings.
-					 *
-					 * @since BuddyBoss 1.5.9
-					 */
-					do_action( 'forums_screen_notification_settings' );
-					?>
-				</tbody>
-			</table>
-
-			<?php
 		}
 
 		/**
