@@ -2,9 +2,14 @@
 /**
  * BuddyBoss - Activity Video
  *
+ * This template is used to render activity video.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/activity/video/activity-entry.php.
+ *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.7.0
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_template;
@@ -44,7 +49,7 @@ if ( $is_comment_vid ) {
 }
 ?>
 
-<div class="bb-activity-video-elem
+<div class="bb-activity-video-elem 
 <?php
 echo esc_attr( bp_get_video_id() ) . ' ';
 echo $video_template->current_video > 2 ? esc_attr( 'hide ' ) : '';
