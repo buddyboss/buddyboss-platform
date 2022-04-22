@@ -2386,7 +2386,7 @@ function bbp_check_reply_edit() {
  * @return mixed
  */
 function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
-    global $wpdb;
+	global $wpdb;
 
 	// Bail if reply_id is empty.
 	$reply_id = bbp_get_reply_id( $reply_id );
@@ -2498,6 +2498,11 @@ function bbp_list_replies( $args = array() ) {
 		),
 		'list_replies'
 	);
+
+	// Added condition to fix the user profile page My Replies' page issue.
+	if ( bp_is_user() ) {
+		$r['per_page'] = -1;
+	}
 
 	// Get replies to loop through in $_replies.
 	$walker = new BBP_Walker_Reply();
