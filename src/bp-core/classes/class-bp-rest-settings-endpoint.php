@@ -258,16 +258,23 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-display-name-format'                   => bp_core_display_name_format(),
 			'bp-hide-nickname-first-name'              => bp_hide_nickname_first_name(),
 			'bp-hide-nickname-last-name'               => bp_hide_nickname_last_name(),
+			'bp-profile-avatar-type'                   => function_exists( 'bb_get_profile_avatar_type' ) ? bb_get_profile_avatar_type() : '',
 			'bp-disable-avatar-uploads'                => bp_disable_avatar_uploads(),
+			'bp-default-profile-avatar-type'           => function_exists( 'bb_get_default_profile_avatar_type' ) ? bb_get_default_profile_avatar_type() : '',
+			'bp-default-custom-profile-avatar'         => function_exists( 'bb_get_default_custom_upload_profile_avatar' ) ? bb_get_default_custom_upload_profile_avatar() : '',
 			'bp-enable-profile-gravatar'               => bp_enable_profile_gravatar(),
 			'bp-disable-cover-image-uploads'           => bp_disable_cover_image_uploads(),
+			'bp-default-profile-cover-type'            => function_exists( 'bb_get_default_profile_cover_type' ) ? bb_get_default_profile_cover_type() : '',
+			'bp-default-custom-profile-cover'          => function_exists( 'bb_get_default_custom_upload_profile_cover' ) ? bb_get_default_custom_upload_profile_cover() : '',
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
 			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
 			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
-
+			'bb-web-notification-enabled'              => function_exists( 'bb_web_notification_enabled' ) && bb_web_notification_enabled(),
+			'bb-app-notification-enabled'              => function_exists( 'bb_app_notification_enabled' ) && bb_app_notification_enabled(),
+			'bb_enabled_legacy_email_preference'       => function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference(),
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
@@ -318,7 +325,11 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			// Group Settings.
 			$results['bp_restrict_group_creation']           = ! bp_user_can_create_groups();
 			$results['bp-disable-group-avatar-uploads']      = bp_disable_group_avatar_uploads();
+			$results['bp-default-group-avatar-type']         = function_exists( 'bb_get_default_group_avatar_type' ) ? bb_get_default_group_avatar_type() : '';
+			$results['bp-default-custom-group-avatar']       = function_exists( 'bb_get_default_custom_upload_group_avatar' ) ? bb_get_default_custom_upload_group_avatar() : '';
 			$results['bp-disable-group-cover-image-uploads'] = bp_disable_group_cover_image_uploads();
+			$results['bp-default-group-cover-type']          = function_exists( 'bb_get_default_group_cover_type' ) ? bb_get_default_group_cover_type() : '';
+			$results['bp-default-custom-group-cover']        = function_exists( 'bb_get_default_custom_upload_group_cover' ) ? bb_get_default_custom_upload_group_cover() : '';
 
 			// Group Types.
 			$results['bp-disable-group-type-creation'] = bp_disable_group_type_creation();
@@ -539,6 +550,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				'title' => ( 0 !== $id ? get_the_title( $id ) : '' ),
 			);
 		}
+
+		$results['bp-active-components'] = array_keys( apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) ) );
 
 		return $results;
 	}
