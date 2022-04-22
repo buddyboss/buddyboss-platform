@@ -3595,6 +3595,7 @@ function bp_groups_get_group_type_post_type_labels() {
 			'not_found_in_trash' => __( 'No Group Types found in trash', 'buddyboss' ),
 			'search_items'       => __( 'Search Group Types', 'buddyboss' ),
 			'singular_name'      => __( 'Group Type', 'buddyboss' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
 		)
 	);
 }
@@ -4642,3 +4643,31 @@ function bb_get_group_cover_image_height( $default = 'small' ) {
 	return bp_get_option( 'bb-pro-cover-group-height', $default );
 }
 
+add_filter( 'gettext', 'bb_group_drop_down_order_metabox_translate_order_text', 10, 3 );
+
+/**
+ * Translate the order text in the Group Drop Down Order metabox.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $translated_text   Translated text.
+ * @param string $untranslated_text Untranslated text.
+ * @param string $domain            Domain.
+ *
+ * @return mixed|string|void
+ */
+function bb_group_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+
+	$current_screen = get_current_screen();
+
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_groups_get_group_type_post_type' ) || bp_groups_get_group_type_post_type() !== $current_screen->id ) {
+		return $translated_text;
+	}
+
+	if ( 'Order' === $untranslated_text ) {
+		return __( 'Number', 'buddyboss' );
+	}
+
+	return $translated_text;
+
+}
