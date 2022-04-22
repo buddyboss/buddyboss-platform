@@ -708,3 +708,21 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
 }
+
+// Load Account Settings Notifications.
+add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+
+/**
+ * Register the Account Settings notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_members_account_settings_notifications() {
+	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
+		BP_Members_Mentions_Notification::instance();
+	}
+
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
+	}
+}

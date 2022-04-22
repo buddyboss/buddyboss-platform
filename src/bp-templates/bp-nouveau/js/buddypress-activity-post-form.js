@@ -3974,9 +3974,8 @@ window.bp = window.bp || {};
 				// Wrap Toolbar and submit Wrapper into footer.
 				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) ) {
 					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
-					$('#whats-new-toolbar').appendTo('.whats-new-form-footer');
-					$('#activity-form-submit-wrapper').appendTo('.whats-new-form-footer');
-					$('#whats-new-form > #whats-new-toolbar').remove();
+					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
+					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
 				}
 				
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
