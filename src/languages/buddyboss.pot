@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.9.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-20 19:42:44+00:00\n"
+"POT-Creation-Date: 2022-04-22 20:22:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14135,7 +14135,7 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2602
+#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2607
 #: bp-groups/bp-groups-admin.php:1482 bp-groups/bp-groups-functions.php:1360
 #: bp-groups/bp-groups-functions.php:4135
 #: bp-groups/bp-groups-functions.php:4154
@@ -14931,7 +14931,7 @@ msgstr ""
 msgid "Replies: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2568 bp-forums/users/template.php:517
+#: bp-forums/replies/functions.php:2573 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1483 bp-groups/bp-groups-functions.php:1368
 #: bp-groups/bp-groups-functions.php:4137
 #: bp-groups/bp-groups-functions.php:4156
@@ -14943,18 +14943,18 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2589 bp-forums/users/template.php:503
+#: bp-forums/replies/functions.php:2594 bp-forums/users/template.php:503
 msgid "Guest"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2593 bp-members/bp-members-functions.php:554
+#: bp-forums/replies/functions.php:2598 bp-members/bp-members-functions.php:554
 #: bp-messages/bp-messages-template.php:1825
 #: bp-messages/bp-messages-template.php:2090
 #: bp-messages/classes/class-bp-messages-thread.php:1524
 msgid "Deleted User"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2598
+#: bp-forums/replies/functions.php:2603
 msgid "Administrator"
 msgstr ""
 
@@ -26257,11 +26257,11 @@ msgid "by "
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:203
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:80
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:110
-#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:99
-#: bp-templates/bp-nouveau/buddypress/search/loop/document.php:107
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:89
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:57
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:85
+#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:78
+#: bp-templates/bp-nouveau/buddypress/search/loop/document.php:84
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:66
 #: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:73
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos-ajax.php:91
 #: bp-templates/bp-nouveau/buddypress/search/loop/videos.php:96
