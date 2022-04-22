@@ -169,17 +169,17 @@ function bp_helper_plugins_loaded_callback() {
 	}
 
 	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
-		
+
 		/**
 		 * Function to deregister some scripts and styles from bp component pages
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
 		 */
 		function bp_exclude_geodirectory_scripts() {
 			$bp_current_component = bp_current_component();
-			
+
 			// deregister geodirectory select2 script and styles from all component pages
 			if ( $bp_current_component ) {
 				add_action( 'wp_enqueue_scripts', 'bp_deregister_geodirectory_script_select2' );
@@ -191,7 +191,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Deregister and dequeue select2 script from all component pages.
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
@@ -205,7 +205,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Deregister and dequeue styles from all component pages.
-		 * 
+		 *
 		 * @since 1.8.0
 		 *
 		 * @return void
@@ -237,7 +237,7 @@ function bb_wp_offload_media_compatibility_helper() {
 	}
 
 }
-add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 999 );
+add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
 
 /**
  * Fix the media, video & document display compatibility issue.
@@ -751,6 +751,8 @@ function bb_get_elementor_maintenance_mode_template() {
 		return;
 	}
 
+	static $user = null;
+
 	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
 		return;
 	}
@@ -761,7 +763,10 @@ function bb_get_elementor_maintenance_mode_template() {
 		return;
 	}
 
-	$user         = wp_get_current_user();
+	if ( null === $user ) {
+		$user = wp_get_current_user();
+	}
+
 	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
 
 	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {

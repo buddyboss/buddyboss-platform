@@ -102,6 +102,9 @@ function bp_core_install( $active_components = false ) {
 
 	do_action( 'bp_core_install', $active_components );
 
+	// Needs to flush all cache when component activate/deactivate.
+	wp_cache_flush();
+
 	// Reset the permalink to fix the 404 on some pages.
 	flush_rewrite_rules();
 }

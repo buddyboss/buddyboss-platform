@@ -1013,9 +1013,9 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'media'         => $medias,
 			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
 			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
-			'user_nicename' => $album->user_nicename,
-			'user_login'    => $album->user_login,
-			'display_name'  => $album->display_name,
+			'user_nicename' => get_the_author_meta( 'user_nicename', $album->user_id ),
+			'user_login'    => get_the_author_meta( 'user_login', $album->user_id ),
+			'display_name'  => bp_core_get_user_displayname( $album->user_id ),
 		);
 
 		$response = rest_ensure_response( $data );

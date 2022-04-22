@@ -1,9 +1,12 @@
 <?php
 /**
- * BuddyBoss - Activity Document Audio Preview
+ * The template for activity document audio preview
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/document/audio-preview.php.
  *
  * @since   BuddyBoss 1.7.0
  * @package BuddyBoss\Core
+ * @version 1.7.0
  */
 
 $audio_url                 = '';
