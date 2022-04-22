@@ -187,7 +187,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type, true ) ) {
+		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
 			return false;
 		}
 
