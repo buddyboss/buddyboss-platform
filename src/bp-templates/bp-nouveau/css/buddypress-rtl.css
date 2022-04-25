@@ -4236,17 +4236,15 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list {
   position: relative;
   float: left;
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .activity-item {
   padding-bottom: 50px;
   max-height: 90vh;
   min-height: 90vh;
@@ -4257,12 +4255,10 @@ span.dashicons.dashicons-admin-file:before {
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .download-video,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
-#buddypress .bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
-#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video {
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
+.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-video,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-media,
+.bb-media-model-wrapper.video-theatre .activity-list.bp-list .download-video {
   position: absolute;
   bottom: 0;
   z-index: 999999;
