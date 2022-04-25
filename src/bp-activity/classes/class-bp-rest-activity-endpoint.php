@@ -1139,6 +1139,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function render_item( $activity ) {
+		global $bp;
 		$rendered = '';
 
 		// Do not truncate activities.
@@ -1167,6 +1168,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			// Removed lazyload from link preview.
 			add_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
+			// Removed Iframe embedded from content.
+			if (
+				function_exists( 'bp_use_embed_in_activity' ) &&
+				bp_use_embed_in_activity() &&
+				method_exists( $bp->embed, 'autoembed' ) &&
+				method_exists( $bp->embed, 'run_shortcode' )
+			) {
+				remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'autoembed' ), 8, 2 );
+				remove_filter( 'bp_get_activity_content_body', array( $bp->embed, 'run_shortcode' ), 7, 2 );
+			}
 
 			$rendered = apply_filters_ref_array(
 				'bp_get_activity_content_body',
@@ -1204,7 +1215,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $activity, $request ) {
 		$top_level_parent_id = 'activity_comment' === $activity->type ? $activity->item_id : 0;
-		global $activities_template;
+		global $activities_template, $bp;
 		$activities_template                            = new \stdClass();
 		$activities_template->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 		$activities_template->activity                  = $activity;
@@ -1260,11 +1271,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
 			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity ),
 			'feature_media'     => '',
+			'preview_data'      => '',
 		);
 
 		// Add feature image as separate object which added last in the content.
 		if ( ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
 			$data['feature_media'] = wp_get_attachment_image_url( get_post_thumbnail_id( $blog_id ), 'full' );
+		}
+
+		// Add iframe embedded data in separate object.
+		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
+		if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
+			$data['preview_data'] = $bp->embed->autoembed( $link_embed, '' );
 		}
 
 		// remove comment options from media/document/video activity.
@@ -1845,6 +1863,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'description' => __( 'Feature media image which added last in the content for blog post as well as custom post type.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
+				),
+				'preview_data'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'WordPress Embed data with activity.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
 				),
 			),
 		);
