@@ -2871,29 +2871,6 @@ add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
 add_action( 'edit_comment', 'bp_activity_post_type_comment', 10 );
 
 /**
- * Create an activity item for a newly posted post type comment from REST API.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param WP_Comment $comment WP_Comment class object.
- *
- * @return void
- */
-function bb_rest_activity_post_type_comment( $comment ) {
-	// Bail if not a comment.
-	if (
-		empty( $comment )
-		|| ! $comment instanceof WP_Comment
-	) {
-		return;
-	}
-
-	bp_activity_post_type_comment( $comment->comment_ID, $comment->comment_approved );
-}
-
-add_action( 'rest_after_insert_comment', 'bb_rest_activity_post_type_comment', 10, 1 );
-
-/**
  * Remove an activity item when a comment about a post type is deleted.
  *
  * @since BuddyPress 2.5.0
