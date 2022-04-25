@@ -718,7 +718,7 @@ function messages_screen_notification_settings() {
  * @param int    $group_id          Group id.
  * @param string $type              Type of message.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_add_message_group_thread( $user_id, $group_thread, $messages_template, $group_id, $type ) {
 

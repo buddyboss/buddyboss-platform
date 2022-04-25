@@ -2267,7 +2267,7 @@ function bb_get_default_custom_upload_group_cover() {
 /**
  * Allow sending joined message in group thread?
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -2278,7 +2278,7 @@ function bp_disable_group_messages_joined_message( $default = true ) {
 	/**
 	 * Filters whether allow sending joined message in group thread or not.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value whether allow sending joined message in group thread or not.
 	 */
@@ -2288,7 +2288,7 @@ function bp_disable_group_messages_joined_message( $default = true ) {
 /**
  * Allow sending left message in group thread?
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -2299,7 +2299,7 @@ function bp_disable_group_messages_left_message( $default = true ) {
 	/**
 	 * Filters whether allow sending left message in group thread or not.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value whether allow sending left message in group thread or not.
 	 */
@@ -2309,7 +2309,7 @@ function bp_disable_group_messages_left_message( $default = true ) {
 /**
  * Allow sending ban message in group thread?
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -2320,7 +2320,7 @@ function bp_disable_group_messages_ban_message( $default = true ) {
 	/**
 	 * Filters whether allow sending ban message in group thread or not.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value whether allow sending ban message in group thread or not.
 	 */
@@ -2330,7 +2330,7 @@ function bp_disable_group_messages_ban_message( $default = true ) {
 /**
  * Allow sending un ban message in group thread?
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -2341,7 +2341,7 @@ function bp_disable_group_messages_un_ban_message( $default = true ) {
 	/**
 	 * Filters whether allow sending un ban message in group thread or not.
 	 *
-	 * @since BuddyBoss X.X.X
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value whether allow sending un ban message in group thread or not.
 	 */

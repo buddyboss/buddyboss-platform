@@ -3585,7 +3585,7 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  * @param int    $attachment_id Media|Document|Video attachment id.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 

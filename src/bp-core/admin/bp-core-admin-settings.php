@@ -3024,7 +3024,7 @@ function bb_labs_notification_preferences_info_section_callback() {
 /**
  * Allow sending joined message in group thread field markup.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_settings_callback_joined_message() {
 	?>
@@ -3036,7 +3036,7 @@ function bp_admin_settings_callback_joined_message() {
 /**
  * Allow sending left message in group thread field markup.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_settings_callback_left_message() {
 	?>
@@ -3048,7 +3048,7 @@ function bp_admin_settings_callback_left_message() {
 /**
  * Allow sending ban message in group thread field markup.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_settings_callback_ban_message() {
 	?>
@@ -3060,7 +3060,7 @@ function bp_admin_settings_callback_ban_message() {
 /**
  * Allow sending un ban message in group thread field markup.
  *
- * @since BuddyBoss X.X.X
+ * @since BuddyBoss [BBVERSION]
  */
 function bp_admin_settings_callback_un_ban_message() {
 	?>
