@@ -148,12 +148,12 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
 			$this->add_field( 'bp-disable-group-messages', __( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 
-			$args          = array();
-			$args['class'] = 'child-no-padding ';
-			$this->add_field( 'bp-disable-group-messages-joined-message', '', 'bp_admin_settings_callback_joined_message', 'intval', $args );
-			$this->add_field( 'bp-disable-group-messages-left-message', '', 'bp_admin_settings_callback_left_message', 'intval', $args );
-			$this->add_field( 'bp-disable-group-messages-ban-message', '', 'bp_admin_settings_callback_ban_message', 'intval', $args );
-			$this->add_field( 'bp-disable-group-messages-un-ban-message', '', 'bp_admin_settings_callback_un_ban_message', 'intval', $args );
+			// $args          = array();
+			// $args['class'] = 'child-no-padding ';
+			// $this->add_field( 'bp-disable-group-messages-joined-message', '', 'bp_admin_settings_callback_joined_message', 'intval', $args );
+			// $this->add_field( 'bp-disable-group-messages-left-message', '', 'bp_admin_settings_callback_left_message', 'intval', $args );
+			// $this->add_field( 'bp-disable-group-messages-ban-message', '', 'bp_admin_settings_callback_ban_message', 'intval', $args );
+			// $this->add_field( 'bp-disable-group-messages-un-ban-message', '', 'bp_admin_settings_callback_un_ban_message', 'intval', $args );
 
 		}
 		// Group Headers.
