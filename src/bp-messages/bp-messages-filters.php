@@ -753,6 +753,6 @@ function bb_add_message_group_thread( $user_id, $group_thread, $messages_templat
 	if ( isset( $last_message ) && ! empty( $last_message->id ) ) {
 		bp_messages_update_meta( $last_message->id, $key, 'yes' );
 		bp_messages_update_meta( $last_message->id, 'group_id', (int) $group_id );
-}
+	}
 
 }
