@@ -83,18 +83,17 @@ add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_de
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
 add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 2 );
 
-// Saving field value
-add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_firstname_value', 10, 4 );
-add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_lastname_value', 10, 4 );
+// Saving field value.
+add_filter( 'xprofile_validate_field', 'bb_xprofile_validate_character_limit_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
 
-// Display name adjustment
+// Display name adjustment.
 add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
 add_filter( 'get_user_metadata', 'bp_xprofile_adjust_display_name', 10, 3 );
 
-// Email Username
+// Email Username.
 add_filter( 'new_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'delete_site_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'new_network_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
@@ -118,7 +117,7 @@ add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
 
-// Display Name setting support
+// Display Name setting support.
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 
 // Repair repeater field repeated in admin side.
@@ -777,82 +776,44 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 }
 
 /**
- * Validate First Name with Maximum Length.
+ * Validate First Name and Last Name with Maximum Length.
  *
- * @since BuddyBoss 1.0.0
+ * @since  BuddyBoss [BBVERSION]
  *
- * @global $wpdb
+ * @param string $retval   Return value of the field.
+ * @param int    $field_id Field id.
+ * @param string $value    Field value.
+ * @param int    $user_id  User ID.
  *
- * @param $retval
- * @param string $field_name
- * @param string $value
- * @param string $user_id
- * @return $retval
+ * @return mixed|string
  */
-function bp_xprofile_validate_firstname_value( $retval, $field_id, $value, $user_id = null ) {
+function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value, $user_id = null ) {
 	global $wpdb;
 
-	if ( $field_id != bp_xprofile_firstname_field_id() ) {
-		return $retval;
-	}
-
-	if ( $retval ) {
+	if ( ! in_array( $field_id, array( bp_xprofile_firstname_field_id(), bp_xprofile_lastname_field_id() ), true ) ) {
 		return $retval;
 	}
 
 	$value      = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
-	// Empty Firstname
 	if ( '' === trim( $value ) ) {
-		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+		return sprintf(
+			/* translators: Field Name. */
+			__( '%s is required and not allowed to be empty.', 'buddyboss' ),
+			$field_name
+		);
 	}
 
-	// must be shorter then 32 characters
-	$firstname_length = apply_filters( 'xprofile_firstname_max_length', 32 );
-	if ( strlen( $value ) > $firstname_length ) {
-		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $firstname_length );
-	}
-
-	return $retval;
-}
-
-/**
- * Validate Last Name with Maximum Length.
- *
- * @since BuddyBoss 1.0.0
- *
- * @global $wpdb
- *
- * @param $retval
- * @param string $field_name
- * @param string $value
- * @param string $user_id
- * @return $retval
- */
-function bp_xprofile_validate_lastname_value( $retval, $field_id, $value, $user_id = null ) {
-	global $wpdb;
-
-	if ( $field_id != bp_xprofile_lastname_field_id() ) {
-		return $retval;
-	}
-
-	if ( $retval ) {
-		return $retval;
-	}
-
-	$value      = strtolower( $value );
-	$last_name = xprofile_get_field( $field_id )->name;
-
-	// Empty Firstname
-	if ( '' === trim( $value ) ) {
-		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $last_name );
-	}
-
-	// must be shorter then 32 characters
-	$lastname_length = apply_filters( 'xprofile_lastanme_max_length', 32 );
-	if ( strlen( $value ) > $lastname_length ) {
-		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $last_name, $lastname_length );
+	// must be shorter then 32 characters.
+	$field_length = apply_filters( 'bb_xprofile_field_character_max_length', 32 );
+	if ( strlen( $value ) > $field_length ) {
+		return sprintf(
+			/* translators: 1. Field Name, 2. character length. */
+			__( '%1$s must be shorter than %2$d characters.', 'buddyboss' ),
+			$field_name,
+			$field_length
+		);
 	}
 
 	return $retval;
