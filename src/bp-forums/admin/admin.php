@@ -462,7 +462,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						'parent' => 'wp-logo',
 						'id'     => 'bbp-about',
 						'title'  => esc_html__( 'About BuddyBoss', 'buddyboss' ),
-						'href'   => add_query_arg( array( 'hello' => 'buddyboss' ), admin_url( 'index.php' ) ),
+						'href'   => esc_url( bp_get_admin_url( '?hello=buddyboss' ) ),
 					)
 				);
 			}
