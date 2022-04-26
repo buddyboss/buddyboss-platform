@@ -45,7 +45,7 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 				</span>
 				<span class="middot">&middot;</span>
 				<span class="published">
-						<?php echo get_the_date(); ?>
+					<?php echo get_the_date(); ?>
 				</span>
 			</div>
 
