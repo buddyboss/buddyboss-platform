@@ -68,7 +68,7 @@ $link = bp_get_document_link( bp_get_document_id() );
 							<?php
 						}
 						?>
-						<span class="middot">·</span>
+						<span class="middot">&middot;</span>
 						<span class="media-folder_date"><?php bp_document_date(); ?></span>
 					</div>
 				</div>
@@ -80,14 +80,14 @@ $link = bp_get_document_link( bp_get_document_id() );
 							$group_id = bp_get_document_group_id();
 							if ( $group_id > 0 ) {
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_document_privacy(); ?>
 								</span>
 								<?php
 							} else {
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_document_id() ); ?>">
 									<?php bp_document_privacy(); ?>
 								</span>
@@ -95,7 +95,7 @@ $link = bp_get_document_link( bp_get_document_id() );
 							}
 						} else {
 							?>
-							<span class="middot">·</span>
+							<span class="middot">&middot;</span>
 							<span>
 								<?php bp_document_privacy(); ?>
 							</span>

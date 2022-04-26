@@ -3670,7 +3670,10 @@ body.search-results .search_results {
 				border-radius: 3px !important;
 				width: 90px;
 				height: 90px;
+				max-width: 90px;
+				max-height: 90px;
 				object-fit: cover;
+				overflow: hidden;
 			}
 		}
 
