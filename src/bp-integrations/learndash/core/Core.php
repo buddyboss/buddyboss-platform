@@ -95,7 +95,7 @@ class Core {
 					if ( $this->certificates_enables ) {
 						?>
 						<li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->certificates_tab_slug ); ?>">
-							<a class="ab-item" href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_certificates_tab_name ); ?></a>
+							<a class="ab-item" href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_html( $this->my_certificates_tab_name ); ?></a>
 						</li>
 						<?php
 					}
