@@ -19483,6 +19483,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 body.search-results .search_results .search-video-list .media-album_thumb img,
 body.search-results .search_results .search-media-list .media-album_thumb img {
   border-radius: 3px !important;
+  display: inline-block;
   width: 90px;
   height: 90px;
   max-width: 90px;
