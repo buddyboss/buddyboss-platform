@@ -68,6 +68,8 @@ class Core {
 			 * Load third
 			 */
 			add_action( 'buddyboss_theme_after_bb_groups_menu', array( $this, 'setup_user_profile_bar' ), 10 );
+
+            add_filter( 'nav_menu_css_class', array( $this, 'bb_ld_active_class' ), PHP_INT_MAX, 2 );
 		}
 	}
 
@@ -187,6 +189,31 @@ class Core {
 			bp_core_new_subnav_item( $all_subnav_item );
 		}
 
+	}
+
+	/**
+	 * Remove the active class on course & my course page when user is on certificate page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $item    Menu item array.
+	 * @param array $classes List of classes.
+	 *
+	 * @return array List of classes.
+	 */
+	public function bb_ld_active_class( $classes, $item ) {
+
+		if ( bp_current_action() === $this->certificates_tab_slug && in_array( $item->post_name, array( $this->course_slug, $this->my_courses_slug ), true ) ) {
+			if ( ( $key = array_search( 'current_page_item', $classes ) ) !== false ) {
+				unset( $classes[ $key ] );
+			}
+
+			if ( ( $key = array_search( 'current-menu-item', $classes ) ) !== false ) {
+				unset( $classes[ $key ] );
+			}
+		}
+
+		return $classes;
 	}
 
 	/**

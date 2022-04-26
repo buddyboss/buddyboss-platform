@@ -225,9 +225,8 @@ function bp_has_media( $args = '' ) {
 	/*
 	 * Query
 	 */
-	error_log( print_r( $r, true));
 	$media_template = new BP_Media_Template( $r );
-	error_log( print_r( $media_template->has_media(), true));
+
 	/**
 	 * Filters whether or not there are media items to display.
 	 *
@@ -1625,7 +1624,7 @@ function bp_album_user_can_delete( $album = false ) {
 		if ( ! empty( $album->group_id ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
 			$can_delete = true;
 
-		// Users are allowed to delete their own album.
+			// Users are allowed to delete their own album.
 		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
 			$can_delete = true;
 		}
@@ -1860,7 +1859,6 @@ function bp_media_user_can_edit( $media = false ) {
  *
  * @return bool True if can edit, false otherwise.
  * @since BuddyBoss 1.5.6
- *
  */
 function bp_album_user_can_edit( $album = false ) {
 
