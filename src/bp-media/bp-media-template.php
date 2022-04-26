@@ -1620,7 +1620,7 @@ function bp_album_user_can_delete( $album = false ) {
 	// Only logged in users can delete album.
 	if ( is_user_logged_in() ) {
 
-		// Groups albums have their own access
+		// Groups albums have their own access.
 		if ( ! empty( $album->group_id ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
 			$can_delete = true;
 
