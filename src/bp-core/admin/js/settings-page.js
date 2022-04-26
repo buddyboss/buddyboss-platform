@@ -2224,9 +2224,10 @@ window.bp = window.bp || {};
 			);
 
 			// Run only post_type is member type and group type.
-			if ( 'undefined' !== typeof BP_ADMIN.post_type &&
-			     'object' === typeof jQuery.wp &&
-			     'function' === typeof jQuery.wp.wpColorPicker
+			if (
+				'undefined' !== typeof BP_ADMIN.post_type &&
+				'object' === typeof jQuery.wp &&
+				'function' === typeof jQuery.wp.wpColorPicker
 			) {
 				var type = BP_ADMIN.post_type;
 				if ( type ) {
@@ -2250,7 +2251,7 @@ window.bp = window.bp || {};
 							}
 						);
 					}
-					
+
 					$( '.wp-picker-input-wrap .wp-picker-clear' ).click( function ( e ) {
 						e.preventDefault();
 						var colorPickerId = $( this ).closest( 'span' ).find( '.wp-color-picker' ).attr( 'id' );
