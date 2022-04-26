@@ -188,7 +188,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
  *
  * @return bool Yes if the topic appears as a lead, otherwise false
  */
-function bbp_show_lead_topic( $show_lead = false ) {
+function bbp_show_lead_topic( $show_lead = true ) {
 
 	// Never separate the lead topic in feeds.
 	if ( is_feed() ) {
@@ -4411,4 +4411,31 @@ function bbp_get_form_topic_edit_reason() {
 	}
 
 	return apply_filters( 'bbp_get_form_topic_edit_reason', esc_attr( $topic_edit_reason ) );
+}
+
+/**
+ * Return the topics created date/time
+ *
+ * @param int $topic_id Optional. Topic id
+ *
+ * @return string Topic freshness
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @uses                  bbp_get_topic_id() To get topic id
+ * @uses                  get_post_meta() To get the topic lst active meta
+ * @uses                  bbp_get_topic_last_reply_id() To get topic last reply id
+ * @uses                  get_post_field() To get the post date of topic/reply
+ * @uses                  bbp_convert_date() To convert date
+ * @uses                  bbp_get_time_since() To get time in since format
+ * @uses                  apply_filters() Calls 'bbp_get_topic_last_active' with topic
+ *                        freshness and topic id
+ */
+function bbp_get_topic_created_time( $topic_id = 0 ) {
+
+	$topic_id    = bbp_get_topic_id( $topic_id );
+	$last_active = get_post_field( 'post_date', $topic_id );
+	$last_active = ! empty( $last_active ) ? bbp_get_time_since( bbp_convert_date( $last_active ) ) : '';
+
+	// Return the time since.
+	return apply_filters( 'bbp_get_topic_created_time', $last_active, $topic_id );
 }

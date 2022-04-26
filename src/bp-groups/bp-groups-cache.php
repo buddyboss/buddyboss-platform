@@ -432,3 +432,66 @@ add_action( 'groups_membership_requested', 'bp_core_clear_cache' );
 add_action( 'groups_create_group_step_complete', 'bp_core_clear_cache' );
 add_action( 'groups_created_group', 'bp_core_clear_cache' );
 add_action( 'groups_group_avatar_updated', 'bp_core_clear_cache' );
+
+/**
+ * Clear the group_type cache when group type post is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id post ID.
+ */
+function bb_groups_clear_group_type_cache_on_update( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	$post = get_post( $post_id );
+
+	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['_bp-group-type-nonce'] ) ) {
+		return;
+	}
+
+	// verify nonce.
+	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+		return;
+	}
+
+	// clear cache when updated.
+	wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
+	$bp_group_type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
+	if ( ! empty( $bp_group_type_key ) ) {
+		wp_cache_delete( 'bb-group-type-label-color-' . $bp_group_type_key, 'bp_groups_group_type' );
+	}
+}
+add_action( 'save_post', 'bb_groups_clear_group_type_cache_on_update' );
+
+/**
+ * Clear the group_type cache when group type post is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id post ID.
+ */
+function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
+	global $wpdb;
+
+	$post = get_post( $post_id );
+
+	// Return if post is not 'bp-group-type' type.
+	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+		return;
+	}
+
+	// clear cache when updated.
+	wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
+	$bp_group_type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
+	if ( ! empty( $bp_group_type_key ) ) {
+		wp_cache_delete( 'bb-group-type-label-color-' . $bp_group_type_key, 'bp_groups_group_type' );
+	}
+}
+
+add_action( 'before_delete_post', 'bb_groups_clear_group_type_cache_before_delete' );

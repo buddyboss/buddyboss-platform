@@ -371,8 +371,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
 			),
-			'bp-nouveau-icons' => array(
-				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+			'bp-nouveau-icons-map' => array(
+				'file' => 'icons/css/icons-map.css', 'dependencies' => array(), 'version' => $this->version,
+			),
+			'bp-nouveau-bb-icons' => array(
+				'file' => 'icons/css/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
 			)
 		) );
 
@@ -466,7 +469,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$scripts['bp-nouveau-magnific-popup'] = array(
 			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 			'dependencies' => array(),
-			'footer'       => true,
+			'footer'       => false,
 		);
 
 		if ( bp_is_active( 'media' ) ) {
