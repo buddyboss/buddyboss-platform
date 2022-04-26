@@ -19281,6 +19281,7 @@ div.dropzone .dz-preview .dz-filename {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.24px;
+  line-height: 1.4;
 }
 
 .search-document-list .media-folder_items .media-folder_visibility,
@@ -19506,8 +19507,9 @@ body.search-results .search_results .search-document-list .media-folder_items .m
 }
 
 body.search-results .search_results .search-document-list .media-folder_items .media-folder_details {
-  margin-top: 12px;
+  margin-top: 20px;
   width: calc(100% - 106px);
+  line-height: 1;
 }
 
 body.search-results .search_results .search-video-list .media-album_thumb .middot,
