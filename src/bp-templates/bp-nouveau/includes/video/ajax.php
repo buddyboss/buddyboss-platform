@@ -1216,7 +1216,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 				if ( $can_edit_btn ) {
 					?>
 					<a class="bp-add-video-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-						<span class="bb-icon-edit-thin"></span>
+						<span class="bb-icon-l bb-icon-edit"></span>
 						<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 						<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
@@ -1444,7 +1444,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 					<div class="">
 						<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
 						<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>">
-							<span class="bb-icon bb-icon-check"></span>
+							<span class="bb-icon-l bb-icon-check"></span>
 						</label>
 						<a class="" href="#">
 							<img src="<?php echo esc_url( $attachment_url ); ?>" class=""/>

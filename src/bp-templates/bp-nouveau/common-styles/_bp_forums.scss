@@ -611,7 +611,6 @@ td.bbp-topic-counts {
 .bbp-pagination-links span.current {
 	background: $bp-border-color;
 	opacity: 0.8;
-	border: 1px solid #ddd;
 }
 
 .bbp-pagination-links span.dots {
@@ -894,8 +893,7 @@ p.form-allowed-tags {
 	margin: 0 $marg-med 0 0;
 }
 
-.bbp-logged-in h4 {
-	font-weight: 700;
+.bbp-logged-in h5 {
 	font-size: 1.3em;
 	clear: none;
 	margin-bottom: 10px;
@@ -1499,7 +1497,7 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 }
 
 .bb-select-container span.select2-selection__choice__remove:before {
-	content: "\E828";
+	content: "\e828";
 	font-family: bb-icons;
 	font-size: 13px;
 	line-height: 1;

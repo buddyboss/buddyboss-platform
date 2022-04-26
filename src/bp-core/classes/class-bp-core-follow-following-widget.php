@@ -122,15 +122,9 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 					</div>
 				<?php endwhile; ?>
 			</div>
-
-			<?php
-			if ( $following_count_number > $instance['max_users'] ) {
-				if ( bp_is_my_profile() || ! bp_is_user() ) { ?>
-                    <div class="more-block more-following"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
-				<?php } else { ?>
-                    <div class="more-block"><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . 'following' ) ); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
-				<?php }
-			} ?>
+			<?php if ( $following_count_number > $instance['max_users'] && $show_more ) { ?>
+				<div class="more-block more-following"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<?php } ?>
 
 			<?php echo $args['after_widget']; ?>
 

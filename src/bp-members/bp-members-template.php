@@ -3014,3 +3014,56 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 		return $buttons['secondary'];
 	}
 }
+
+/**
+ * Get the member last activity time.
+ *
+ * @param array $args Array of arguments.
+ *
+ * @return mixed|string|void
+ */
+function bp_get_member_last_activity_time( $args = array() ) {
+	global $members_template;
+
+	// Parse the activity format.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'active_format' => true,
+			'relative'      => true,
+		)
+	);
+
+	// Backwards compatibility for anyone forcing a 'true' active_format.
+	if ( true === $r['active_format'] ) {
+		$r['active_format'] = __( '%s', 'buddyboss' );
+	}
+
+	// Member has logged in at least one time.
+	if ( isset( $members_template->member->last_activity ) ) {
+		// We do not want relative time, so return now.
+		// @todo Should the 'bp_member_last_active' filter be applied here?
+		if ( ! $r['relative'] ) {
+			return esc_attr( $members_template->member->last_activity );
+		}
+
+		// Backwards compatibility for pre 1.5 'ago' strings.
+		$last_activity = ! empty( $r['active_format'] )
+			? bp_core_get_last_activity( $members_template->member->last_activity, $r['active_format'] )
+			: bp_core_time_since( $members_template->member->last_activity );
+
+		// Member has never logged in or been active.
+	} else {
+		$last_activity = __( 'Never active', 'buddyboss' );
+	}
+
+	/**
+	 * Filters the current members last active time.
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param string $last_activity Formatted time since last activity.
+	 * @param array  $r             Array of parsed arguments for query.
+	 */
+	return apply_filters( 'bp_member_last_active', $last_activity, $r );
+}

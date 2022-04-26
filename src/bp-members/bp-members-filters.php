@@ -754,6 +754,24 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
 }
 
+// Load Account Settings Notifications.
+add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+
+/**
+ * Register the Account Settings notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_members_account_settings_notifications() {
+	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
+		BP_Members_Mentions_Notification::instance();
+	}
+
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
+	}
+}
+
 /**
  * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
  *
@@ -774,7 +792,7 @@ function bb_load_member_type_label_custom_css() {
 				) {
 					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
 					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
-					$class_name             = 'body .bp-member-type.bb-current-member-' . $type; //! empty( $parent_class_name ) ? $parent_class_name . '.bb-current-member-' . $type : '.bp-member-type.bb-current-member-' . $type;
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
 					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
 					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
 				}
@@ -785,21 +803,3 @@ function bb_load_member_type_label_custom_css() {
 	}
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
-
-// Load Account Settings Notifications.
-add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
-
-/**
- * Register the Account Settings notifications.
- *
- * @since BuddyBoss 1.9.3
- */
-function bb_load_members_account_settings_notifications() {
-	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
-		BP_Members_Mentions_Notification::instance();
-	}
-
-	if ( class_exists( 'BP_Members_Notification' ) ) {
-		BP_Members_Notification::instance();
-	}
-}

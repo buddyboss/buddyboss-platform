@@ -8,7 +8,7 @@
  * @package BuddyBoss\Widgets
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -60,20 +60,21 @@ class BBP_Login_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2827)
 	 *
-	 * @param mixed $args Arguments
-	 * @param array $instance Instance
-	 * @uses apply_filters() Calls 'bbp_login_widget_title' with the title
-	 * @uses get_template_part() To get the login/logged in form
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
+	 *
+	 * @uses  apply_filters() Calls 'bbp_login_widget_title' with the title
+	 * @uses  get_template_part() To get the login/logged in form
 	 */
 	public function widget( $args = array(), $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums filters
+		// Forums filters.
 		$settings['title']    = apply_filters( 'bbp_login_widget_title', $settings['title'], $instance, $this->id_base );
 		$settings['register'] = apply_filters( 'bbp_login_widget_register', $settings['register'], $instance, $this->id_base );
 		$settings['lostpass'] = apply_filters( 'bbp_login_widget_lostpass', $settings['lostpass'], $instance, $this->id_base );
@@ -142,7 +143,7 @@ class BBP_Login_Widget extends WP_Widget {
 
 			<div class="bbp-logged-in">
 				<a href="<?php bbp_user_profile_url( bbp_get_current_user_id() ); ?>" class="submit user-submit"><?php echo get_avatar( bbp_get_current_user_id(), '40' ); ?></a>
-				<h4><?php bbp_user_profile_link( bbp_get_current_user_id() ); ?></h4>
+				<h5><?php bbp_user_profile_link( bbp_get_current_user_id() ); ?></h5>
 
 				<?php bbp_logout_link(); ?>
 			</div>
@@ -158,8 +159,8 @@ class BBP_Login_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2827)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance             = $old_instance;
@@ -175,13 +176,14 @@ class BBP_Login_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2827)
 	 *
-	 * @param $instance Instance
-	 * @uses BBP_Login_Widget::get_field_id() To output the field id
-	 * @uses BBP_Login_Widget::get_field_name() To output the field name
+	 * @param array $instance Instance.
+	 *
+	 * @uses  BBP_Login_Widget::get_field_id() To output the field id.
+	 * @uses  BBP_Login_Widget::get_field_name() To output the field name.
 	 */
 	public function form( $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -208,8 +210,9 @@ class BBP_Login_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget settings into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget settings into defaults
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -273,27 +276,28 @@ class BBP_Views_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r3020)
 	 *
-	 * @param mixed $args Arguments
-	 * @param array $instance Instance
-	 * @uses apply_filters() Calls 'bbp_view_widget_title' with the title
-	 * @uses bbp_get_views() To get the views
-	 * @uses bbp_view_url() To output the view url
-	 * @uses bbp_view_title() To output the view title
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
+	 *
+	 * @uses  apply_filters() Calls 'bbp_view_widget_title' with the title
+	 * @uses  bbp_get_views() To get the views
+	 * @uses  bbp_view_url() To output the view url
+	 * @uses  bbp_view_title() To output the view title
 	 */
 	public function widget( $args = array(), $instance = array() ) {
 
-		// Only output widget contents if views exist
+		// Only output widget contents if views exist.
 		if ( ! bbp_get_views() ) {
 			return;
 		}
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums filter
+		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_view_widget_title', $settings['title'], $instance, $this->id_base );
 
 		echo $args['before_widget'];
@@ -322,8 +326,8 @@ class BBP_Views_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r3020)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance          = $old_instance;
@@ -333,17 +337,18 @@ class BBP_Views_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Output the view widget options form
+	 * Output the view widget options form.
 	 *
 	 * @since bbPress (r3020)
 	 *
-	 * @param $instance Instance
-	 * @uses BBP_Views_Widget::get_field_id() To output the field id
-	 * @uses BBP_Views_Widget::get_field_name() To output the field name
+	 * @param array $instance Instance.
+	 *
+	 * @uses  BBP_Views_Widget::get_field_id() To output the field id.
+	 * @uses  BBP_Views_Widget::get_field_name() To output the field name.
 	 */
 	public function form( $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -361,8 +366,9 @@ class BBP_Views_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget settings into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget settings into defaults.
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -424,23 +430,26 @@ class BBP_Search_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4579)
 	 *
-	 * @uses apply_filters() Calls 'bbp_search_widget_title' with the title
-	 * @uses get_template_part() To get the search form
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
+	 *
+	 * @uses  apply_filters() Calls 'bbp_search_widget_title' with the title
+	 * @uses  get_template_part() To get the search form
 	 */
 	public function widget( $args, $instance ) {
 
-		// Bail if search is disabled
+		// Bail if search is disabled.
 		if ( ! bbp_allow_search() ) {
 			return;
 		}
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums filter
+		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_search_widget_title', $settings['title'], $instance, $this->id_base );
 
 		echo $args['before_widget'];
@@ -459,8 +468,8 @@ class BBP_Search_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4579)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
@@ -474,13 +483,14 @@ class BBP_Search_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4579)
 	 *
-	 * @param $instance Instance
-	 * @uses BBP_Search_Widget::get_field_id() To output the field id
-	 * @uses BBP_Search_Widget::get_field_name() To output the field name
+	 * @param array $instance Instance.
+	 *
+	 * @uses  BBP_Search_Widget::get_field_id() To output the field id
+	 * @uses  BBP_Search_Widget::get_field_name() To output the field name
 	 */
 	public function form( $instance ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -498,8 +508,9 @@ class BBP_Search_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget settings into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget settings into defaults
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -561,28 +572,29 @@ class BBP_Forums_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param mixed $args Arguments
-	 * @param array $instance Instance
-	 * @uses apply_filters() Calls 'bbp_forum_widget_title' with the title
-	 * @uses get_option() To get the forums per page option
-	 * @uses current_user_can() To check if the current user can read
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
+	 *
+	 * @uses  apply_filters() Calls 'bbp_forum_widget_title' with the title
+	 * @uses  get_option() To get the forums per page option
+	 * @uses  current_user_can() To check if the current user can read
 	 *                           private() To resety name
-	 * @uses bbp_has_forums() The main forum loop
-	 * @uses bbp_forums() To check whether there are more forums available
+	 * @uses  bbp_has_forums() The main forum loop
+	 * @uses  bbp_forums() To check whether there are more forums available
 	 *                     in the loop
-	 * @uses bbp_the_forum() Loads up the current forum in the loop
-	 * @uses bbp_forum_permalink() To display the forum permalink
-	 * @uses bbp_forum_title() To display the forum title
+	 * @uses  bbp_the_forum() Loads up the current forum in the loop
+	 * @uses  bbp_forum_permalink() To display the forum permalink
+	 * @uses  bbp_forum_title() To display the forum title
 	 */
 	public function widget( $args, $instance ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums filter
+		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_forum_widget_title', $settings['title'], $instance, $this->id_base );
 
 		// Note: private and hidden forums will be excluded via the
@@ -601,7 +613,7 @@ class BBP_Forums_Widget extends WP_Widget {
 			)
 		);
 
-		// Bail if no posts
+		// Bail if no posts.
 		if ( ! $widget_query->have_posts() ) {
 			return;
 		}
@@ -624,8 +636,7 @@ class BBP_Forums_Widget extends WP_Widget {
 					<a class="bbp-forum-title" href="<?php bbp_forum_permalink( $widget_query->post->ID ); ?>"><?php bbp_forum_title( $widget_query->post->ID ); ?></a>
 					<span class="topics-count">
 						<?php
-						$topics_count = bbp_get_forum_topic_count( $widget_query->post->ID );
-						echo $topics_count;
+						echo (int) bbp_get_forum_topic_count( $widget_query->post->ID );
 						?>
 					</span>
 					<?php
@@ -654,7 +665,7 @@ class BBP_Forums_Widget extends WP_Widget {
 		<?php
 		echo $args['after_widget'];
 
-		// Reset the $post global
+		// Reset the $post global.
 		wp_reset_postdata();
 	}
 
@@ -663,15 +674,15 @@ class BBP_Forums_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                 = $old_instance;
 		$instance['title']        = strip_tags( $new_instance['title'] );
 		$instance['parent_forum'] = sanitize_text_field( $new_instance['parent_forum'] );
 
-		// Force to any
+		// Force to any.
 		if ( ! empty( $instance['parent_forum'] ) && ! is_numeric( $instance['parent_forum'] ) ) {
 			$instance['parent_forum'] = 'any';
 		}
@@ -684,13 +695,14 @@ class BBP_Forums_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param $instance Instance
-	 * @uses BBP_Forums_Widget::get_field_id() To output the field id
-	 * @uses BBP_Forums_Widget::get_field_name() To output the field name
+	 * @param array $instance Instance.
+	 *
+	 * @uses  BBP_Forums_Widget::get_field_id() To output the field id
+	 * @uses  BBP_Forums_Widget::get_field_name() To output the field name
 	 */
 	public function form( $instance ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -718,8 +730,9 @@ class BBP_Forums_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget settings into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget settings into defaults
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -782,30 +795,31 @@ class BBP_Topics_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param mixed $args
-	 * @param array $instance
-	 * @uses apply_filters() Calls 'bbp_topic_widget_title' with the title
-	 * @uses bbp_topic_permalink() To display the topic permalink
-	 * @uses bbp_topic_title() To display the topic title
-	 * @uses bbp_get_topic_last_active_time() To get the topic last active
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
+	 *
+	 * @uses  apply_filters() Calls 'bbp_topic_widget_title' with the title
+	 * @uses  bbp_topic_permalink() To display the topic permalink
+	 * @uses  bbp_topic_title() To display the topic title
+	 * @uses  bbp_get_topic_last_active_time() To get the topic last active
 	 *                                         time
-	 * @uses bbp_get_topic_id() To get the topic id
+	 * @uses  bbp_get_topic_id() To get the topic id
 	 */
 	public function widget( $args = array(), $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums filter
+		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_topic_widget_title', $settings['title'], $instance, $this->id_base );
 
 		// How do we want to order our results?
 		switch ( $settings['order_by'] ) {
 
-			// Order by most recent replies
+			// Order by most recent replies.
 			case 'freshness':
 				$topics_query = array(
 					'post_type'           => bbp_get_topic_post_type(),
@@ -820,7 +834,7 @@ class BBP_Topics_Widget extends WP_Widget {
 				);
 				break;
 
-			// Order by total number of replies
+			// Order by total number of replies.
 			case 'popular':
 				$topics_query = array(
 					'post_type'           => bbp_get_topic_post_type(),
@@ -835,7 +849,7 @@ class BBP_Topics_Widget extends WP_Widget {
 				);
 				break;
 
-			// Order by which topic was created most recently
+			// Order by which topic was created most recently.
 			case 'newness':
 			default:
 				$topics_query = array(
@@ -854,7 +868,7 @@ class BBP_Topics_Widget extends WP_Widget {
 		// bbp_pre_get_posts_normalize_forum_visibility action and function.
 		$widget_query = new WP_Query( $topics_query );
 
-		// Bail if no topics are found
+		// Bail if no topics are found.
 		if ( ! $widget_query->have_posts() ) {
 			return;
 		}
@@ -875,7 +889,7 @@ class BBP_Topics_Widget extends WP_Widget {
 				$topic_id    = bbp_get_topic_id( $widget_query->post->ID );
 				$author_link = '';
 
-				// Maybe get the topic author
+				// Maybe get the topic author.
 				if ( ! empty( $settings['show_user'] ) ) :
 					$author_link = bbp_get_topic_author_link(
 						array(
@@ -885,16 +899,23 @@ class BBP_Topics_Widget extends WP_Widget {
 						)
 					);
 				endif;
+
+				$author_url = bbp_get_reply_author_url( $topic_id );
 				?>
 
 				<li>
+					<span class="bbp-topic-author-wrapper">
+						<?php if ( ! empty( $author_link ) ) : ?>
+							<a href="<?php echo esc_url( $author_url ); ?>"><?php echo bbp_get_reply_author_avatar( $topic_id ); ?></a>
+						<?php endif; ?>
+					</span>
 					<a class="bbp-forum-title" href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 
-					<?php if ( ! empty( $author_link ) ) : ?>
-
-						<?php printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author">' . $author_link . '</span>' ); ?>
-
-					<?php endif; ?>
+					<?php
+					if ( ! empty( $author_link ) ) :
+						printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_reply_author_display_name( $topic_id ) . '</a></span>' );
+					endif;
+					?>
 
 					<?php if ( ! empty( $settings['show_date'] ) ) : ?>
 
@@ -911,7 +932,7 @@ class BBP_Topics_Widget extends WP_Widget {
 		<?php
 		echo $args['after_widget'];
 
-		// Reset the $post global
+		// Reset the $post global.
 		wp_reset_postdata();
 	}
 
@@ -920,8 +941,8 @@ class BBP_Topics_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance                 = $old_instance;
@@ -930,17 +951,17 @@ class BBP_Topics_Widget extends WP_Widget {
 		$instance['parent_forum'] = sanitize_text_field( $new_instance['parent_forum'] );
 		$instance['max_shown']    = (int) $new_instance['max_shown'];
 
-		// Date
+		// Date.
 		$instance['show_date'] = isset( $new_instance['show_date'] )
 			? (bool) $new_instance['show_date']
 			: false;
 
-		// Author
+		// Author.
 		$instance['show_user'] = isset( $new_instance['show_user'] )
 			? (bool) $new_instance['show_user']
 			: false;
 
-		// Force to any
+		// Force to any.
 		if ( ! empty( $instance['parent_forum'] ) && ! is_numeric( $instance['parent_forum'] ) ) {
 			$instance['parent_forum'] = 'any';
 		}
@@ -953,13 +974,14 @@ class BBP_Topics_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param $instance Instance
-	 * @uses BBP_Topics_Widget::get_field_id() To output the field id
-	 * @uses BBP_Topics_Widget::get_field_name() To output the field name
+	 * @param array $instance Instance.
+	 *
+	 * @uses  BBP_Topics_Widget::get_field_id() To output the field id
+	 * @uses  BBP_Topics_Widget::get_field_name() To output the field name
 	 */
 	public function form( $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -996,8 +1018,9 @@ class BBP_Topics_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget options into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget options into defaults
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -1064,21 +1087,21 @@ class BBP_Stats_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4509)
 	 *
-	 * @param mixed $args     Arguments
-	 * @param array $instance Instance
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
 	 *
-	 * @uses apply_filters() Calls 'bbp_stats_widget_title' with the title
-	 * @uses bbp_get_template_part() To get the content-forum-statistics template
+	 * @uses  apply_filters() Calls 'bbp_stats_widget_title' with the title
+	 * @uses  bbp_get_template_part() To get the content-forum-statistics template
 	 */
 	public function widget( $args = array(), $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums widget title filter
+		// Forums widget title filter.
 		$settings['title'] = apply_filters( 'bbp_stats_widget_title', $settings['title'], $instance, $this->id_base );
 
 		echo $args['before_widget'];
@@ -1097,8 +1120,8 @@ class BBP_Stats_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4509)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 *
 	 * @return array
 	 */
@@ -1114,13 +1137,13 @@ class BBP_Stats_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4509)
 	 *
-	 * @param $instance
+	 * @param array $instance Instance.
 	 *
 	 * @return string|void
 	 */
 	public function form( $instance ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -1138,8 +1161,9 @@ class BBP_Stats_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget settings into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget settings into defaults
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -1201,26 +1225,27 @@ class BBP_Replies_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param mixed $args
-	 * @param array $instance
-	 * @uses apply_filters() Calls 'bbp_reply_widget_title' with the title
-	 * @uses bbp_get_reply_author_link() To get the reply author link
-	 * @uses bbp_get_reply_id() To get the reply id
-	 * @uses bbp_get_reply_url() To get the reply url
-	 * @uses bbp_get_reply_excerpt() To get the reply excerpt
-	 * @uses bbp_get_reply_topic_title() To get the reply topic title
-	 * @uses get_the_date() To get the date of the reply
-	 * @uses get_the_time() To get the time of the reply
+	 * @param mixed $args     Arguments.
+	 * @param array $instance Instance.
+	 *
+	 * @uses  apply_filters() Calls 'bbp_reply_widget_title' with the title
+	 * @uses  bbp_get_reply_author_link() To get the reply author link
+	 * @uses  bbp_get_reply_id() To get the reply id
+	 * @uses  bbp_get_reply_url() To get the reply url
+	 * @uses  bbp_get_reply_excerpt() To get the reply excerpt
+	 * @uses  bbp_get_reply_topic_title() To get the reply topic title
+	 * @uses  get_the_date() To get the date of the reply
+	 * @uses  get_the_time() To get the time of the reply
 	 */
 	public function widget( $args, $instance ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
-		// Typical WordPress filter
+		// Typical WordPress filter.
 		$settings['title'] = apply_filters( 'widget_title', $settings['title'], $instance, $this->id_base );
 
-		// Forums filter
+		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_replies_widget_title', $settings['title'], $instance, $this->id_base );
 
 		// Note: private and hidden forums will be excluded via the
@@ -1235,7 +1260,7 @@ class BBP_Replies_Widget extends WP_Widget {
 			)
 		);
 
-		// Bail if no replies
+		// Bail if no replies.
 		if ( ! $widget_query->have_posts() ) {
 			return;
 		}
@@ -1258,45 +1283,47 @@ class BBP_Replies_Widget extends WP_Widget {
 
 					<?php
 
-					// Verify the reply ID
+					// Verify the reply ID.
 					$reply_id   = bbp_get_reply_id( $widget_query->post->ID );
 					$reply_link = '<a class="bbp-reply-topic-title" href="' . esc_url( bbp_get_reply_url( $reply_id ) ) . '" title="' . esc_attr( bbp_get_reply_excerpt( $reply_id, 50 ) ) . '">' . bbp_get_reply_topic_title( $reply_id ) . '</a>';
 
-					// Only query user if showing them
+					// Only query user if showing them.
 					if ( ! empty( $settings['show_user'] ) ) :
-						$author_link = bbp_get_reply_author_link(
+						$author_link          = bbp_get_reply_author_link(
 							array(
 								'post_id' => $reply_id,
 								'type'    => 'both',
 								'size'    => 14,
 							)
 						);
+						$author_related_class = 'bbp-reply-topic-has-avatar';
 					else :
-						$author_link = false;
+						$author_link          = false;
+						$author_related_class = 'bbp-reply-topic-no-avatar';
 					endif;
 
-					// Reply author, link, and timestamp
+					// Reply author, link, and timestamp.
 					if ( ! empty( $settings['show_date'] ) && ! empty( $author_link ) ) :
 
-						// translators: 1: reply author, 2: reply link, 3: reply timestamp
-						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
+						// translators: 1: reply author, 2: reply link, 3: reply timestamp.
+						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div class="' . esc_attr( $author_related_class ) . '">' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
-						// Reply link and timestamp
+						// Reply link and timestamp.
 					elseif ( ! empty( $settings['show_date'] ) ) :
 
-						// translators: 1: reply link, 2: reply timestamp
+						// translators: 1: reply link, 2: reply timestamp.
 						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U', $reply_id ) ) . '</div>' );
 
-						// Reply author and title
+						// Reply author and title.
 					elseif ( ! empty( $author_link ) ) :
 
-						// translators: 1: reply author, 2: reply link
+						// translators: 1: reply author, 2: reply link.
 						printf( __( '%1$s on %2$s', 'buddyboss' ), $author_link, $reply_link );
 
-						// Only the reply title
+						// Only the reply title.
 					else :
 
-						// translators: 1: reply link
+						// translators: 1: reply link.
 						printf( __( '%1$s', 'buddyboss' ), $reply_link );
 
 					endif;
@@ -1312,7 +1339,7 @@ class BBP_Replies_Widget extends WP_Widget {
 		<?php
 		echo $args['after_widget'];
 
-		// Reset the $post global
+		// Reset the $post global.
 		wp_reset_postdata();
 	}
 
@@ -1321,20 +1348,20 @@ class BBP_Replies_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param array $new_instance The new instance options
-	 * @param array $old_instance The old instance options
+	 * @param array $new_instance The new instance options.
+	 * @param array $old_instance The old instance options.
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance              = $old_instance;
 		$instance['title']     = strip_tags( $new_instance['title'] );
 		$instance['max_shown'] = (int) $new_instance['max_shown'];
 
-		// Date
+		// Date.
 		$instance['show_date'] = isset( $new_instance['show_date'] )
 			? (bool) $new_instance['show_date']
 			: false;
 
-		// Author
+		// Author.
 		$instance['show_user'] = isset( $new_instance['show_user'] )
 			? (bool) $new_instance['show_user']
 			: false;
@@ -1347,13 +1374,14 @@ class BBP_Replies_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r2653)
 	 *
-	 * @param $instance Instance
-	 * @uses BBP_Replies_Widget::get_field_id() To output the field id
-	 * @uses BBP_Replies_Widget::get_field_name() To output the field name
+	 * @param array $instance Instance.
+	 *
+	 * @uses  BBP_Replies_Widget::get_field_id() To output the field id
+	 * @uses  BBP_Replies_Widget::get_field_name() To output the field name
 	 */
 	public function form( $instance = array() ) {
 
-		// Get widget settings
+		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 		?>
 
@@ -1370,8 +1398,9 @@ class BBP_Replies_Widget extends WP_Widget {
 	 *
 	 * @since bbPress (r4802)
 	 *
-	 * @param $instance Instance
-	 * @uses bbp_parse_args() To merge widget settings into defaults
+	 * @param array $instance Instance.
+	 *
+	 * @uses  bbp_parse_args() To merge widget settings into defaults
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(

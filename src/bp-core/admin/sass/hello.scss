@@ -108,37 +108,14 @@ TABLE OF CONTENTS:
  */
 .bp-hello-social {
 
-	li a {
-
-		&:before {
-			color: #23282d; /* wp toolbar */
-			display: inline-block;
-			content: " ";
-			background-size: 20px 20px;
-			background-repeat: no-repeat;
-			background-position: center;
-			background-color: #f6f6f6;
-			height: 38px;
-			width: 38px;
-			border-radius: 50px;
-			vertical-align: middle;
-		}
-
-		&:hover:before {
-			background-color: #eee;
-		}
-
-		&.youtube:before {
-			background-image: url(../../images/admin/icons/fontawesome/brands/youtube.svg);
-		}
-
-		&.twitter:before {
-			background-image: url(../../images/admin/icons/fontawesome/brands/twitter.svg);
-		}
-
-		&.facebook:before {
-			background-image: url(../../images/admin/icons/fontawesome/brands/facebook-square.svg);
-		}
+	li a i:before {
+		font-size: 23px;
+		vertical-align: middle;
+		margin: 0;
+		background-color: #f6f6f6;
+		color: #333;
+		border-radius: 50px;
+		padding: 7px;
 	}
 }
 

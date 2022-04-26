@@ -1810,8 +1810,8 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 				<?php
 				printf(
 				/* translators: %s: comment post type */
-					esc_html__( 'Comments are not supported for %s', 'buddyboss' ),
-					esc_html( $post_type )
+					esc_html__( 'Comments are not supported for %s.', 'buddyboss' ),
+					esc_html( $post_type_obj->labels->name )
 				);
 				?>
 			</p>
@@ -1908,7 +1908,7 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 
 	if ( true === $args['description'] ) {
 		?>
-		<p class="description"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
