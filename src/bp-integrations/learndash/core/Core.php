@@ -69,7 +69,7 @@ class Core {
 			 */
 			add_action( 'buddyboss_theme_after_bb_groups_menu', array( $this, 'setup_user_profile_bar' ), 10 );
 
-            add_filter( 'nav_menu_css_class', array( $this, 'bb_ld_active_class' ), PHP_INT_MAX, 2 );
+			add_filter( 'nav_menu_css_class', array( $this, 'bb_ld_active_class' ), PHP_INT_MAX, 2 );
 		}
 	}
 
@@ -196,19 +196,24 @@ class Core {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $item    Menu item array.
 	 * @param array $classes List of classes.
+	 * @param array $item    Menu item array.
 	 *
 	 * @return array List of classes.
 	 */
 	public function bb_ld_active_class( $classes, $item ) {
 
-		if ( bp_current_action() === $this->certificates_tab_slug && in_array( $item->post_name, array( $this->course_slug, $this->my_courses_slug ), true ) ) {
-			if ( ( $key = array_search( 'current_page_item', $classes ) ) !== false ) {
+		if (
+			bp_current_action() === $this->certificates_tab_slug &&
+			in_array( $item->post_name, array( $this->course_slug, $this->my_courses_slug ), true )
+		) {
+			$key = array_search( 'current_page_item', $classes, true );
+			if ( false !== $key ) {
 				unset( $classes[ $key ] );
 			}
 
-			if ( ( $key = array_search( 'current-menu-item', $classes ) ) !== false ) {
+			$key = array_search( 'current-menu-item', $classes, true );
+			if ( false !== $key ) {
 				unset( $classes[ $key ] );
 			}
 		}
@@ -427,12 +432,12 @@ class Core {
 		spl_autoload_register(
 			function ( $class ) {
 				$psr4 = array(
-					'Buddyboss\LearndashIntegration\Core' => 'core',
-					'Buddyboss\LearndashIntegration\Library' => 'library',
-					'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
+					'Buddyboss\LearndashIntegration\Core'                  => 'core',
+					'Buddyboss\LearndashIntegration\Library'               => 'library',
+					'Buddyboss\LearndashIntegration\Buddypress'            => 'buddypress',
 					'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
 					'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
-					'Buddyboss\LearndashIntegration\Learndash' => 'learndash',
+					'Buddyboss\LearndashIntegration\Learndash'             => 'learndash',
 				);
 
 				$segments  = explode( '\\', $class );
