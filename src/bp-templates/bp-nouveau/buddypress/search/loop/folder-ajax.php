@@ -45,23 +45,23 @@ $folder_link = bp_get_folder_folder_link();
 							?>
 							<span class="middot">·</span>
 							<span>
-									<?php bp_document_folder_privacy(); ?>
-								</span>
+								<?php bp_document_folder_privacy(); ?>
+							</span>
 							<?php
 						} else {
 							?>
 							<span class="middot">·</span>
 							<span id="privacy-<?php echo esc_attr( bp_get_folder_folder_id() ); ?>">
-									<?php bp_document_folder_privacy(); ?>
-								</span>
+								<?php bp_document_folder_privacy(); ?>
+							</span>
 							<?php
 						}
 					} else {
 						?>
 						<span class="middot">·</span>
 						<span>
-								<?php bp_document_folder_privacy(); ?>
-							</span>
+							<?php bp_document_folder_privacy(); ?>
+						</span>
 						<?php
 					}
 					?>
