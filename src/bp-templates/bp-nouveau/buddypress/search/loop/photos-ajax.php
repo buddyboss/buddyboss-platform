@@ -50,7 +50,7 @@ $media_created = bp_get_media_date_created();
 						<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
 							<a href="<?php echo esc_url( $media_link ); ?>"><?php esc_html( bp_media_author() ); ?></a>
 						</span>
-						<span class="middot">·</span>
+						<span class="middot">&middot;</span>
 						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_created ) ); ?></span>
 					</div>
 				</div>
@@ -62,14 +62,14 @@ $media_created = bp_get_media_date_created();
 							$group_id = bp_get_media_group_id();
 							if ( $group_id > 0 ) {
 								?>
-									<span class="middot">·</span>
+									<span class="middot">&middot;</span>
 									<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_media_visibility(); ?>
 									</span>
 								<?php
 							} else {
 								?>
-									<span class="middot">·</span>
+									<span class="middot">&middot;</span>
 									<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
 									<?php bp_media_visibility(); ?>
 									</span>
@@ -77,7 +77,7 @@ $media_created = bp_get_media_date_created();
 							}
 						} else {
 							?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span>
 								<?php bp_media_visibility(); ?>
 								</span>
