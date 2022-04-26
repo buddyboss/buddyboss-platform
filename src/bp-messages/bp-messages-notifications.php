@@ -94,6 +94,13 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
+					} elseif ( ! empty( $group ) && 'open' === $message_type && 'all' === $message_users ) {
+						$text = sprintf(
+						/* translators: %1$s and %2$s is replaced with the username and group name */
+							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ),
+							bp_core_get_user_displayname( $secondary_item_id ),
+							$group_name
+						);
 					} else {
 						$text = sprintf(
 							/* translators: %s user name */
