@@ -3463,6 +3463,7 @@ div.dropzone .dz-preview {
 			font-size: 14px;
 			font-weight: 500;
 			letter-spacing: -0.24px;
+			line-height: 1.4;
 		}
 
 	}
@@ -3470,6 +3471,7 @@ div.dropzone .dz-preview {
 	.media-folder_visibility,
 	.media-folder_modified {
 		display: inline-block;
+		vertical-align: middle;
 		width: auto;
 	}
 
@@ -3626,6 +3628,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 		margin: 0 6px;
 		font-size: 17px;
 		line-height: 0;
+		vertical-align: middle;
 	}
 
 }
@@ -3695,8 +3698,9 @@ body.search-results .search_results {
 		}
 
 		.media-folder_details {
-			margin-top: 12px;
+			margin-top: 20px;
 			width: calc(100% - 106px);
+			line-height: 1;
 		}
 	}
 
@@ -3709,6 +3713,7 @@ body.search-results .search_results {
 			margin: 0 6px;
 			font-size: 17px;
 			line-height: 0;
+			vertical-align: middle;
 		}
 	}
 }

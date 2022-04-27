@@ -7454,7 +7454,7 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
 }
 
 /**
- * Function will return icon based on section..
+ * Function will return icon based on section.
  *
  * @since BuddyBoss [BBVERSION]
  *

@@ -16,7 +16,7 @@ $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
 			<?php
 			if ( get_the_post_thumbnail_url() ) {
 				?>
-					<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
+					<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php echo esc_attr( get_the_title() ); ?>" />
 				<?php
 			} else {
 				?>
