@@ -4418,7 +4418,7 @@ function bbp_get_form_topic_edit_reason() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $topic_id Optional. Topic id
+ * @param int $topic_id Optional. Topic id.
  *
  * @uses  bbp_get_topic_id() To get topic id
  * @uses  get_post_meta() To get the topic lst active meta
