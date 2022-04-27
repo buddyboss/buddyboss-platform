@@ -64,7 +64,14 @@ if ( bp_is_my_profile() ) {
 			<?php
 			if ( ! empty( $cover_image_url ) ) {
 				?>
-				<img class="header-cover-img" src="<?php echo esc_url( $cover_image_url ); ?>" <?php echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : ''; ?><?php echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : ''; ?>alt=""/>
+				<img class="header-cover-img"
+					  src="<?php echo esc_url( $cover_image_url ); ?>"
+					 <?php
+						echo ( '' !== $cover_image_position ) ? ' data-top="' . esc_attr( $cover_image_position ) . '"' : '';
+						echo ( '' !== $cover_image_position ) ? ' style="top: ' . esc_attr( $cover_image_position ) . 'px"' : '';
+						?>
+					  alt=""
+				/>
 				<?php
 			}
 			if ( bp_is_my_profile() ) {

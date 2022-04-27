@@ -574,12 +574,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<p class="status">
 							<?php
 							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
-								?>
-								<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
-								<?php
+								esc_html_e( 'The invite has not been sent.', 'buddyboss' );
 							} else {
-								?>
-								<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?><?php } ?>
+								esc_html_e( 'The invite has been sent.', 'buddyboss' );
+                            }
+                            ?>
 						</p>
 					</div>
 				<?php } ?>
@@ -591,24 +590,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
-						 selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="
-						<?php
-						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							?>
-												<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>
-							<?php
-						} else {
-							?>
-							<?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
+                            selected<?php } ?>" data-bp-tooltip-pos="left"
+                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss' ) : esc_attr__( 'Invite', 'buddyboss' ); ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 						<?php
 						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							?>
-							<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
-							<?php
+							esc_html_e( 'Cancel invitation', 'buddyboss' );
 						} else {
-							?>
-							<?php esc_html_e( 'Invite', 'buddyboss' ); ?><?php } ?>
+							esc_html_e( 'Invite', 'buddyboss' );
+						}
+						?>
 					</span>
 					</button>
 				<?php } ?>

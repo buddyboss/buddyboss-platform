@@ -278,28 +278,30 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								} ?> value="<?php echo $key; ?>"><?php echo $label; ?></option>
 							<?php } ?>
 						</select>                        <?php
-					break;
+                    break;
 
-					case 'radio': ?><?php foreach ( $f->options as $key => $label ) { ?>
-						<div class="bp-radio-wrap">
-							<input class="bs-styled-radio" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="radio" <?php if ( $key == $value ) {
-									echo 'checked="checked"';
-							} ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
-							<label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
-						</div><?php
-					}
+					case 'radio':
+                        foreach ( $f->options as $key => $label ) { ?>
+                            <div class="bp-radio-wrap">
+                                <input class="bs-styled-radio" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="radio" <?php if ( $key == $value ) {
+                                        echo 'checked="checked"';
+                                } ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
+                                <label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
+                            </div><?php
+                        }
 
-					break;
+                    break;
 
-					case 'checkbox': ?><?php foreach ( $f->options as $key => $label ) { ?>
-						<div class="bp-checkbox-wrap">
-							<input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
-								echo 'checked="checked"';
-							} ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>" />
-							<label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
-						</div><?php
-					}
-					break;
+					case 'checkbox':
+                        foreach ( $f->options as $key => $label ) { ?>
+                            <div class="bp-checkbox-wrap">
+                                <input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
+                                    echo 'checked="checked"';
+                                } ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>" />
+                                <label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
+                            </div><?php
+                        }
+                    break;
 
 					default: ?>
 						<p class="bps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>

@@ -26,7 +26,12 @@
 					<?php bp_group_type(); ?>
 				</span>
 				<span class="middot">&middot;</span>
-				<span class="item-meta group-details"><?php esc_html_e( 'Last active ', 'buddyboss' ); ?><?php bp_group_last_active(); ?></span>
+				<span class="item-meta group-details">
+					<?php
+					esc_html_e( 'Last active ', 'buddyboss' );
+					bp_group_last_active();
+					?>
+				</span>
 			</span>
 		</div>
 	</div>
