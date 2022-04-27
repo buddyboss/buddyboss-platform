@@ -3594,6 +3594,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 
 			.media-album_author {
 				display: inline-block;
+				vertical-align: middle;
 
 				a {
 					display: inline-block;
@@ -3606,6 +3607,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 	.media-album_visibility {
 		color: #9b9c9f;
 		display: inline-block;
+		vertical-align: middle;
 		font-size: 0.8125rem;
 		font-weight: 400;
 		letter-spacing: -0.15px;
