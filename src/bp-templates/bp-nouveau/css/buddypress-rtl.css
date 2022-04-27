@@ -2865,7 +2865,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 .bb-document-privacy-wrap .privacy.loggedin:before,
 .bb-media-privacy-wrap .privacy.loggedin:before {
-  content: "\ef5a";
+  content: "\e95d";
 }
 
 .bb-document-privacy-wrap .privacy.friends:before,
