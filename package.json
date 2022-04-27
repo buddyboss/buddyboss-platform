@@ -3,7 +3,7 @@
 	"devDependencies": {
 		"@wordpress/stylelint-config": "^19.1.0",
 		"apidoc": "^0.22.0",
-		"grunt": "^1.4.1",
+		"grunt": "^1.5.2",
 		"grunt-apidoc": "^0.11.0",
 		"grunt-check-dependencies": "~1.0.0",
 		"grunt-checktextdomain": "~1.0.1",
