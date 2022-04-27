@@ -569,6 +569,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
+add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 
 /**
  * Return the user link for the user based on user email address.
