@@ -577,8 +577,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 								esc_html_e( 'The invite has not been sent.', 'buddyboss' );
 							} else {
 								esc_html_e( 'The invite has been sent.', 'buddyboss' );
-                            }
-                            ?>
+							}
+							?>
 						</p>
 					</div>
 				<?php } ?>
@@ -901,11 +901,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		);
 	}
 
-	$group_members   = groups_get_group_members( $args );
-	$html            = '';
-	$paginate        = '';
-	$result          = array();
-	$total_page      = 0;
+	$group_members = groups_get_group_members( $args );
+	$html          = '';
+	$paginate      = '';
+	$result        = array();
+	$total_page    = 0;
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( array( 'results' => 'no_member' ) );
@@ -929,13 +929,18 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			$is_friends_connection  = true;
-            if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
-                    $is_friends_connection  = false;
-                }
-            }
+			if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
+					$is_friends_connection = false;
+				}
+			}
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg'; ?>">
+			<li class="group-message-member-li 
+			<?php
+			echo $member->ID;
+			echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
+			?>
+			">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -1018,10 +1023,10 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 		}
 
-		$html        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
-		$total_page  = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
-		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
-		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
+		$html       = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
+		$total_page = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
+		$page       = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
+		$paginate   = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 
 		wp_send_json_success(
 			array(
