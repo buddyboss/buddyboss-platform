@@ -15124,6 +15124,27 @@ AJAX SEARCH
   letter-spacing: -0.18px;
 }
 
+.bbls-pages-type .bp-search-ajax-item,
+.bbls-posts-type .bp-search-ajax-item,
+.bbls-cpt-sfwd-quiz-type .bp-search-ajax-item,
+.bbls-cpt-sfwd-certificates-type .bp-search-ajax-item {
+  display: flex;
+}
+
+.bbls-pages-type .bp-search-ajax-item .item > a:not(.x),
+.bbls-posts-type .bp-search-ajax-item .item > a:not(.x),
+.bbls-cpt-sfwd-quiz-type .bp-search-ajax-item .item > a:not(.x),
+.bbls-cpt-sfwd-certificates-type .bp-search-ajax-item .item > a:not(.x) {
+  display: block;
+}
+
+.bbls-pages-type .bp-search-ajax-item .item > .entry-meta a .author,
+.bbls-posts-type .bp-search-ajax-item .item > .entry-meta a .author,
+.bbls-cpt-sfwd-quiz-type .bp-search-ajax-item .item > .entry-meta a .author,
+.bbls-cpt-sfwd-certificates-type .bp-search-ajax-item .item > .entry-meta a .author {
+  margin-left: 5px;
+}
+
 .ui-menu .ui-menu-item a,
 .ui-menu .ui-menu-item a:hover,
 .ui-menu .ui-menu-item a:active {
