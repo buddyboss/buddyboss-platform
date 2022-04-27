@@ -23,7 +23,12 @@
 				<?php bp_group_type(); ?>
 			</span>
 			<span class="middot">&middot;</span>
-			<p class="item-meta last-active"><?php esc_html_e( 'Last active ', 'buddyboss' ); ?><?php bp_group_last_active(); ?></p>
+			<p class="item-meta last-active">
+				<?php
+				esc_html_e( 'Last active ', 'buddyboss' );
+				bp_group_last_active();
+				?>
+			</p>
 		</div>
 	</a>
 </div>
