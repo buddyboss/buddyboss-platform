@@ -3471,6 +3471,7 @@ div.dropzone .dz-preview {
 	.media-folder_visibility,
 	.media-folder_modified {
 		display: inline-block;
+		vertical-align: middle;
 		width: auto;
 	}
 
@@ -3627,6 +3628,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 		margin: 0 6px;
 		font-size: 17px;
 		line-height: 0;
+		vertical-align: middle;
 	}
 
 }
@@ -3711,6 +3713,7 @@ body.search-results .search_results {
 			margin: 0 6px;
 			font-size: 17px;
 			line-height: 0;
+			vertical-align: middle;
 		}
 	}
 }

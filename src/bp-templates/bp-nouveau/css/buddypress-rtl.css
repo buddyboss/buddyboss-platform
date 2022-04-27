@@ -19308,6 +19308,7 @@ div.dropzone .dz-preview .dz-filename {
 .search-document-list .media-folder_items .media-folder_visibility,
 .search-document-list .media-folder_items .media-folder_modified {
   display: inline-block;
+  vertical-align: middle;
   width: auto;
 }
 
@@ -19476,6 +19477,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   margin: 0 6px;
   font-size: 17px;
   line-height: 0;
+  vertical-align: middle;
 }
 
 .search-document-list .item {
@@ -19540,6 +19542,7 @@ body.search-results .search_results .search-document-list .media-folder_items .m
   margin: 0 6px;
   font-size: 17px;
   line-height: 0;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 540px) {
