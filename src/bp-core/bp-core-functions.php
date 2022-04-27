@@ -7468,3 +7468,14 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
 
 	return 'data:image/' . $type . ';base64,' . base64_encode( $data ); // phpcs:ignore
 }
+
+/**
+ * Return to check its working with WP CLI or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_wp_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}
