@@ -264,7 +264,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 	</style>
 </head>
 
-<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
+<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
 	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
 		<tbody>
 			<tr>
