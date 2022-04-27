@@ -3056,7 +3056,7 @@ function bb_get_member_last_activity_time( $args = array() ) {
 
 		// Member has never logged in or been active.
 	} else {
-		$last_activity = __( 'Never active', 'buddyboss' );
+		$last_activity = esc_html__( 'Never active', 'buddyboss' );
 	}
 
 	/**

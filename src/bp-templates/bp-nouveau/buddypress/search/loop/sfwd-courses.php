@@ -65,7 +65,7 @@ $course_price      = @$meta['sfwd-courses_course_price'];
 
 			<?php
 			// format the Course price to be proper XXX.YY no leading dollar signs or other values.
-			if ( ( $course_price_type == 'paynow' ) || ( $course_price_type == 'subscribe' ) ) {
+			if ( ( 'paynow' === $course_price_type ) || ( 'subscribe' === $course_price_type ) ) {
 				if ( $course_price != '' ) {
 					$course_price = preg_replace( '/[^0-9.]/', '', $course_price );
 					?>

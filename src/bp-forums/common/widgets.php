@@ -970,14 +970,14 @@ class BBP_Topics_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Output the topic widget options form
+	 * Output the topic widget options form.
 	 *
 	 * @since bbPress (r2653)
 	 *
 	 * @param array $instance Instance.
 	 *
-	 * @uses  BBP_Topics_Widget::get_field_id() To output the field id
-	 * @uses  BBP_Topics_Widget::get_field_name() To output the field name
+	 * @uses  BBP_Topics_Widget::get_field_id() To output the field id.
+	 * @uses  BBP_Topics_Widget::get_field_name() To output the field name.
 	 */
 	public function form( $instance = array() ) {
 
@@ -1020,7 +1020,9 @@ class BBP_Topics_Widget extends WP_Widget {
 	 *
 	 * @param array $instance Instance.
 	 *
-	 * @uses  bbp_parse_args() To merge widget options into defaults
+	 * @uses  bbp_parse_args() To merge widget options into defaults.
+	 *
+	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -1163,7 +1165,9 @@ class BBP_Stats_Widget extends WP_Widget {
 	 *
 	 * @param array $instance Instance.
 	 *
-	 * @uses  bbp_parse_args() To merge widget settings into defaults
+	 * @uses  bbp_parse_args() To merge widget settings into defaults.
+	 *
+	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(
@@ -1188,14 +1192,14 @@ class BBP_Stats_Widget extends WP_Widget {
 class BBP_Replies_Widget extends WP_Widget {
 
 	/**
-	 * Forums Replies Widget
+	 * Forums Replies Widget.
 	 *
-	 * Registers the replies widget
+	 * Registers the replies widget.
 	 *
 	 * @since bbPress (r2653)
 	 *
 	 * @uses apply_filters() Calls 'bbp_replies_widget_options' with the
-	 *                        widget options
+	 *                        widget options.
 	 */
 	public function __construct() {
 		$widget_ops = apply_filters(
@@ -1210,7 +1214,7 @@ class BBP_Replies_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Register the widget
+	 * Register the widget.
 	 *
 	 * @since bbPress (r3389)
 	 *
@@ -1221,21 +1225,21 @@ class BBP_Replies_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Displays the output, the replies list
+	 * Displays the output, the replies list.
 	 *
 	 * @since bbPress (r2653)
 	 *
 	 * @param mixed $args     Arguments.
 	 * @param array $instance Instance.
 	 *
-	 * @uses  apply_filters() Calls 'bbp_reply_widget_title' with the title
-	 * @uses  bbp_get_reply_author_link() To get the reply author link
-	 * @uses  bbp_get_reply_id() To get the reply id
-	 * @uses  bbp_get_reply_url() To get the reply url
-	 * @uses  bbp_get_reply_excerpt() To get the reply excerpt
-	 * @uses  bbp_get_reply_topic_title() To get the reply topic title
-	 * @uses  get_the_date() To get the date of the reply
-	 * @uses  get_the_time() To get the time of the reply
+	 * @uses  apply_filters() Calls 'bbp_reply_widget_title' with the title.
+	 * @uses  bbp_get_reply_author_link() To get the reply author link.
+	 * @uses  bbp_get_reply_id() To get the reply id.
+	 * @uses  bbp_get_reply_url() To get the reply url.
+	 * @uses  bbp_get_reply_excerpt() To get the reply excerpt.
+	 * @uses  bbp_get_reply_topic_title() To get the reply topic title.
+	 * @uses  get_the_date() To get the date of the reply.
+	 * @uses  get_the_time() To get the time of the reply.
 	 */
 	public function widget( $args, $instance ) {
 
@@ -1344,12 +1348,14 @@ class BBP_Replies_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Update the reply widget options
+	 * Update the reply widget options.
 	 *
 	 * @since bbPress (r2653)
 	 *
 	 * @param array $new_instance The new instance options.
 	 * @param array $old_instance The old instance options.
+	 *
+	 * @return array
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance              = $old_instance;
@@ -1370,14 +1376,14 @@ class BBP_Replies_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Output the reply widget options form
+	 * Output the reply widget options form.
 	 *
 	 * @since bbPress (r2653)
 	 *
 	 * @param array $instance Instance.
 	 *
-	 * @uses  BBP_Replies_Widget::get_field_id() To output the field id
-	 * @uses  BBP_Replies_Widget::get_field_name() To output the field name
+	 * @uses  BBP_Replies_Widget::get_field_id() To output the field id.
+	 * @uses  BBP_Replies_Widget::get_field_name() To output the field name.
 	 */
 	public function form( $instance = array() ) {
 
@@ -1401,6 +1407,8 @@ class BBP_Replies_Widget extends WP_Widget {
 	 * @param array $instance Instance.
 	 *
 	 * @uses  bbp_parse_args() To merge widget settings into defaults
+	 *
+	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bbp_parse_args(

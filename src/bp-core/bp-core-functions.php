@@ -7416,7 +7416,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 }
 
 /**
- * Function will return icon based on section..
+ * Function will return icon based on section.
  *
  * @since BuddyBoss [BBVERSION]
  *
