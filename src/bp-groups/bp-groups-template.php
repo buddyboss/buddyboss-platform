@@ -1899,7 +1899,8 @@ function bp_group_list_admins( $group = false ) {
 						<?php
 						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
 						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
-						?>">
+						?>
+						">
 						<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 					</a>
 				</li>
@@ -5616,29 +5617,31 @@ function bp_group_creation_tabs() {
 		$is_enabled = bp_are_previous_group_creation_steps_complete( $slug );
 		?>
 
-		<li
-		<?php
-		if ( bp_get_groups_current_create_step() == $slug ) :
-			?>
-			 class="current"<?php endif; ?>>
+		<li <?php echo ( ( bp_get_groups_current_create_step() == $slug ) ? 'class="current"' : '' ); ?>>
 			<?php
-			if ( $is_enabled ) :
+			if ( $is_enabled ) {
 				?>
-			<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
-															<?php
-else :
-	?>
-	<span><?php endif; ?><?php echo $counter; ?>. <?php echo $step['name']; ?>
-					 <?php
-						if ( $is_enabled ) :
-							?>
-	</a>
-							<?php
-else :
-	?>
-	</span><?php endif ?></li>
-					<?php
-					$counter++;
+				<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
+				<?php
+			} else {
+				?>
+				<span>
+				<?php
+			}
+
+				echo $counter . '. ' . $step['name'];
+
+			if ( $is_enabled ) {
+				?>
+				</a>
+				<?php
+			} else {
+				?>
+				</span>
+			<?php } ?>
+		</li>
+		<?php
+		$counter++;
 	}
 
 	unset( $is_enabled );

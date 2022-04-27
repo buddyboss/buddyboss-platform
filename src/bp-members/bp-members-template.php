@@ -3018,11 +3018,13 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 /**
  * Get the member last activity time.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param array $args Array of arguments.
  *
  * @return mixed|string|void
  */
-function bp_get_member_last_activity_time( $args = array() ) {
+function bb_get_member_last_activity_time( $args = array() ) {
 	global $members_template;
 
 	// Parse the activity format.
@@ -3054,16 +3056,16 @@ function bp_get_member_last_activity_time( $args = array() ) {
 
 		// Member has never logged in or been active.
 	} else {
-		$last_activity = __( 'Never active', 'buddyboss' );
+		$last_activity = esc_html__( 'Never active', 'buddyboss' );
 	}
 
 	/**
 	 * Filters the current members last active time.
 	 *
-	 * @since BuddyPress 1.2.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $last_activity Formatted time since last activity.
 	 * @param array  $r             Array of parsed arguments for query.
 	 */
-	return apply_filters( 'bp_member_last_active', $last_activity, $r );
+	return apply_filters( 'bb_get_member_last_activity_time', $last_activity, $r );
 }

@@ -42,12 +42,12 @@ $albums_link = bp_get_album_link();
 							<?php esc_html_e( 'By ', 'buddyboss' ); ?>
 							<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a>
 						</span>
-						<span class="middot">·</span>
+						<span class="middot">&middot;</span>
 						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
 					</div>
 				</div>
 
-				<span class="middot">·</span>
+				<span class="middot">&middot;</span>
 				<span class="media-photo_count">
 					<?php
 					printf(
@@ -60,7 +60,7 @@ $albums_link = bp_get_album_link();
 				<?php
 				if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
 					?>
-					<span class="middot">·</span>
+					<span class="middot">&middot;</span>
 					<span class="media-photo_count">
 						<?php
 						printf(
@@ -81,14 +81,14 @@ $albums_link = bp_get_album_link();
 							$group_id = bp_get_album_group_id();
 							if ( $group_id > 0 ) {
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_album_visibility(); ?>
 								</span>
 								<?php
 							} else {
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_album_id() ); ?>">
 									<?php bp_album_visibility(); ?>
 								</span>
@@ -96,7 +96,7 @@ $albums_link = bp_get_album_link();
 							}
 						} else {
 							?>
-							<span class="middot">·</span>
+							<span class="middot">&middot;</span>
 							<span>
 								<?php bp_album_visibility(); ?>
 							</span>

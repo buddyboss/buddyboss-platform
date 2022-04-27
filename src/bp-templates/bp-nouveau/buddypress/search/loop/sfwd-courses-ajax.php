@@ -17,12 +17,12 @@ $course_id = get_the_ID();  ?>
 			<?php
 			if ( get_the_post_thumbnail_url() ) {
 				?>
-				<img src="<?php echo get_the_post_thumbnail_url(); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
-			<?php
+				<img src="<?php echo esc_url( get_the_post_thumbnail_url() ); ?>" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="<?php the_title(); ?>" />
+				<?php
 			} else {
 				?>
 				<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
-			<?php
+				<?php
 			}
 			?>
 		</div>
@@ -44,7 +44,7 @@ $course_id = get_the_ID();  ?>
 						<?php echo learndash_course_status( $course_id, null, false ); ?>
 					</span>
 				<?php endif; ?>
-				
+
 				<span class="middot">&middot;</span>
 
 				<?php

@@ -1000,28 +1000,28 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
  * @param bool   $refresh          If set to true, unsets all the previous parameters..
  *                                 Defaults to true.
  *
- * @uses  bbp_get_reply_id() To get the reply id
- * @uses  bbp_get_reply_topic_id() To get the reply topic id
- * @uses  bbp_get_reply_forum_id() To get the reply forum id
- * @uses  get_post_ancestors() To get the ancestors of the reply
- * @uses  bbp_is_reply() To check if the ancestor is a reply
- * @uses  bbp_is_topic() To check if the ancestor is a topic
- * @uses  bbp_update_topic_last_reply_id() To update the topic last reply id
- * @uses  bbp_update_topic_last_active_id() To update the topic last active id
- * @uses  bbp_get_topic_last_active_id() To get the topic last active id
- * @uses  get_post_field() To get the post date of the last active id
- * @uses  bbp_update_topic_last_active_time() To update the last active topic meta
- * @uses  bbp_update_topic_voice_count() To update the topic voice count
- * @uses  bbp_update_topic_reply_count() To update the topic reply count
+ * @uses  bbp_get_reply_id() To get the reply id.
+ * @uses  bbp_get_reply_topic_id() To get the reply topic id.
+ * @uses  bbp_get_reply_forum_id() To get the reply forum id.
+ * @uses  get_post_ancestors() To get the ancestors of the reply.
+ * @uses  bbp_is_reply() To check if the ancestor is a reply.
+ * @uses  bbp_is_topic() To check if the ancestor is a topic.
+ * @uses  bbp_update_topic_last_reply_id() To update the topic last reply id.
+ * @uses  bbp_update_topic_last_active_id() To update the topic last active id.
+ * @uses  bbp_get_topic_last_active_id() To get the topic last active id.
+ * @uses  get_post_field() To get the post date of the last active id.
+ * @uses  bbp_update_topic_last_active_time() To update the last active topic meta.
+ * @uses  bbp_update_topic_voice_count() To update the topic voice count.
+ * @uses  bbp_update_topic_reply_count() To update the topic reply count.
  * @uses  bbp_update_topic_reply_count_hidden() To update the topic hidden reply
- *                                              count
- * @uses  bbp_is_forum() To check if the ancestor is a forum
- * @uses  bbp_update_forum_last_topic_id() To update the last topic id forum meta
- * @uses  bbp_update_forum_last_reply_id() To update the last reply id forum meta
- * @uses  bbp_update_forum_last_active_id() To update the forum last active id
- * @uses  bbp_get_forum_last_active_id() To get the forum last active id
- * @uses  bbp_update_forum_last_active_time() To update the forum last active time
- * @uses  bbp_update_forum_reply_count() To update the forum reply count
+ *                                              count.
+ * @uses  bbp_is_forum() To check if the ancestor is a forum.
+ * @uses  bbp_update_forum_last_topic_id() To update the last topic id forum meta.
+ * @uses  bbp_update_forum_last_reply_id() To update the last reply id forum meta.
+ * @uses  bbp_update_forum_last_active_id() To update the forum last active id.
+ * @uses  bbp_get_forum_last_active_id() To get the forum last active id.
+ * @uses  bbp_update_forum_last_active_time() To update the forum last active time.
+ * @uses  bbp_update_forum_reply_count() To update the forum reply count.
  */
 function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id = 0, $topic_id = 0, $refresh = true ) {
 
@@ -1122,15 +1122,15 @@ function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id =
  * @param int $reply_id Optional. Reply id to update.
  * @param int $forum_id Optional. Forum id.
  *
- * @uses  bbp_get_reply_id() To get the reply id
- * @uses  bbp_get_forum_id() To get the forum id
- * @uses  get_post_ancestors() To get the reply's forum
- * @uses  get_post_field() To get the post type of the post
- * @uses  update_post_meta() To update the reply forum id meta
+ * @uses  bbp_get_reply_id() To get the reply id.
+ * @uses  bbp_get_forum_id() To get the forum id.
+ * @uses  get_post_ancestors() To get the reply's forum.
+ * @uses  get_post_field() To get the post type of the post.
+ * @uses  update_post_meta() To update the reply forum id meta.
  * @uses  apply_filters() Calls 'bbp_update_reply_forum_id' with the forum id
- *                        and reply id
+ *                        and reply id.
  *
- * @return bool Reply's forum id
+ * @return bool Reply's forum id.
  */
 function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
 
@@ -1173,15 +1173,15 @@ function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
  * @param int $reply_id Optional. Reply id to update.
  * @param int $topic_id Optional. Topic id.
  *
- * @uses  bbp_get_reply_id() To get the reply id
- * @uses  bbp_get_topic_id() To get the topic id
- * @uses  get_post_ancestors() To get the reply's topic
- * @uses  get_post_field() To get the post type of the post
- * @uses  update_post_meta() To update the reply topic id meta
+ * @uses  bbp_get_reply_id() To get the reply id.
+ * @uses  bbp_get_topic_id() To get the topic id.
+ * @uses  get_post_ancestors() To get the reply's topic.
+ * @uses  get_post_field() To get the post type of the post.
+ * @uses  update_post_meta() To update the reply topic id meta.
  * @uses  apply_filters() Calls 'bbp_update_reply_topic_id' with the topic id
- *                        and reply id
+ *                        and reply id.
  *
- * @return bool Reply's topic id
+ * @return bool Reply's topic id.
  */
 function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
 
@@ -1224,11 +1224,11 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
  * @param int $reply_id Reply id to update.
  * @param int $reply_to Optional. Reply to id.
  *
- * @uses  bbp_get_reply_id() To get the reply id
- * @uses  update_post_meta() To update the reply to meta
+ * @uses  bbp_get_reply_id() To get the reply id.
+ * @uses  update_post_meta() To update the reply to meta.
  * @uses  apply_filters() Calls 'bbp_update_reply_to' with the reply id and
- *                        and reply to id
- * @return bool Reply's parent reply id
+ *                        and reply to id.
+ * @return bool Reply's parent reply id.
  */
 function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
 
@@ -1579,14 +1579,14 @@ function bbp_move_reply_handler( $action = '' ) {
  * @param int $source_topic_id      Source topic id.
  * @param int $destination_topic_id Destination topic id.
  *
- * @uses  bbp_update_forum_topic_count() To update the forum topic counts
- * @uses  bbp_update_forum_reply_count() To update the forum reply counts
- * @uses  bbp_update_topic_reply_count() To update the topic reply counts
- * @uses  bbp_update_topic_voice_count() To update the topic voice counts
+ * @uses  bbp_update_forum_topic_count() To update the forum topic counts.
+ * @uses  bbp_update_forum_reply_count() To update the forum reply counts.
+ * @uses  bbp_update_topic_reply_count() To update the topic reply counts.
+ * @uses  bbp_update_topic_voice_count() To update the topic voice counts.
  * @uses  bbp_update_topic_reply_count_hidden() To update the topic hidden reply
- *                                              count
+ *                                              count.
  * @uses  do_action() Calls 'bbp_move_reply_count' with the move reply id,
- *                    source topic id & destination topic id
+ *                    source topic id & destination topic id.
  */
 function bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id ) {
 
@@ -1767,11 +1767,11 @@ function bbp_toggle_reply_handler( $action = '' ) {
  *
  * @param int $reply_id Reply id.
  *
- * @uses  bbp_get_reply() To get the reply
- * @uses  do_action() Calls 'bbp_spam_reply' with the reply ID
- * @uses  add_post_meta() To add the previous status to a meta
- * @uses  wp_update_post() To insert the updated post
- * @uses  do_action() Calls 'bbp_spammed_reply' with the reply ID
+ * @uses  bbp_get_reply() To get the reply.
+ * @uses  do_action() Calls 'bbp_spam_reply' with the reply ID.
+ * @uses  add_post_meta() To add the previous status to a meta.
+ * @uses  wp_update_post() To insert the updated post.
+ * @uses  do_action() Calls 'bbp_spammed_reply' with the reply ID.
  * @return mixed False or {@link WP_Error} on failure, reply id on success
  */
 function bbp_spam_reply( $reply_id = 0 ) {
@@ -1816,12 +1816,12 @@ function bbp_spam_reply( $reply_id = 0 ) {
  *
  * @param int $reply_id Reply id.
  *
- * @uses  bbp_get_reply() To get the reply
- * @uses  do_action() Calls 'bbp_unspam_reply' with the reply ID
- * @uses  get_post_meta() To get the previous status meta
- * @uses  delete_post_meta() To delete the previous status meta
- * @uses  wp_update_post() To insert the updated post
- * @uses  do_action() Calls 'bbp_unspammed_reply' with the reply ID
+ * @uses  bbp_get_reply() To get the reply.
+ * @uses  do_action() Calls 'bbp_unspam_reply' with the reply ID.
+ * @uses  get_post_meta() To get the previous status meta.
+ * @uses  delete_post_meta() To delete the previous status meta.
+ * @uses  wp_update_post() To insert the updated post.
+ * @uses  do_action() Calls 'bbp_unspammed_reply' with the reply ID.
  *
  * @return mixed False or {@link WP_Error} on failure, reply id on success
  */
@@ -1997,8 +1997,8 @@ function bbp_untrashed_reply( $reply_id = 0, $previous_status ) {
  *
  * @param int $default Default replies per page (15).
  *
- * @uses  get_option() To get the setting
- * @uses  apply_filters() To allow the return value to be manipulated
+ * @uses  get_option() To get the setting.
+ * @uses  apply_filters() To allow the return value to be manipulated.
  * @return int
  */
 function bbp_get_replies_per_page( $default = 15 ) {
@@ -2022,8 +2022,8 @@ function bbp_get_replies_per_page( $default = 15 ) {
  *
  * @param int $default Default replies per page (25).
  *
- * @uses  get_option() To get the setting
- * @uses  apply_filters() To allow the return value to be manipulated
+ * @uses  get_option() To get the setting.
+ * @uses  apply_filters() To allow the return value to be manipulated.
  * @return int
  */
 function bbp_get_replies_per_rss_page( $default = 25 ) {

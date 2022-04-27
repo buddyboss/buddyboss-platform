@@ -61,11 +61,11 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 						?>
 						<span class="middot">&middot;</span>
 						<span class="freshness">
-									<?php
-									esc_html_e( 'Last active ', 'buddyboss' );
-									echo wp_kses_post( $last_active );
-									?>
-							</span>
+							<?php
+							esc_html_e( 'Last active ', 'buddyboss' );
+							echo wp_kses_post( $last_active );
+							?>
+						</span>
 						<?php
 					}
 					?>

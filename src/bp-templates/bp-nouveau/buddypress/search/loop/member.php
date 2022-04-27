@@ -24,7 +24,7 @@
 				<p class="item-meta last-activity">
 					<span class="middot">&middot;</span>
 					<?php esc_html_e( 'Last active', 'buddyboss' ); ?>
-					<?php echo wp_kses_post( bp_get_member_last_activity_time() ); ?>
+					<?php echo wp_kses_post( bb_get_member_last_activity_time() ); ?>
 				</p>
 			<?php endif; ?>
 		</div>

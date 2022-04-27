@@ -15148,6 +15148,27 @@ AJAX SEARCH
   letter-spacing: -0.18px;
 }
 
+.bbls-pages-type .bp-search-ajax-item,
+.bbls-posts-type .bp-search-ajax-item,
+.bbls-cpt-sfwd-quiz-type .bp-search-ajax-item,
+.bbls-cpt-sfwd-certificates-type .bp-search-ajax-item {
+  display: flex;
+}
+
+.bbls-pages-type .bp-search-ajax-item .item > a:not(.x),
+.bbls-posts-type .bp-search-ajax-item .item > a:not(.x),
+.bbls-cpt-sfwd-quiz-type .bp-search-ajax-item .item > a:not(.x),
+.bbls-cpt-sfwd-certificates-type .bp-search-ajax-item .item > a:not(.x) {
+  display: block;
+}
+
+.bbls-pages-type .bp-search-ajax-item .item > .entry-meta a .author,
+.bbls-posts-type .bp-search-ajax-item .item > .entry-meta a .author,
+.bbls-cpt-sfwd-quiz-type .bp-search-ajax-item .item > .entry-meta a .author,
+.bbls-cpt-sfwd-certificates-type .bp-search-ajax-item .item > .entry-meta a .author {
+  margin-left: 5px;
+}
+
 .ui-menu .ui-menu-item a,
 .ui-menu .ui-menu-item a:hover,
 .ui-menu .ui-menu-item a:active {
@@ -19317,11 +19338,13 @@ div.dropzone .dz-preview .dz-filename {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.24px;
+  line-height: 1.4;
 }
 
 .search-document-list .media-folder_items .media-folder_visibility,
 .search-document-list .media-folder_items .media-folder_modified {
   display: inline-block;
+  vertical-align: middle;
   width: auto;
 }
 
@@ -19490,6 +19513,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
   margin: 0 6px;
   font-size: 17px;
   line-height: 0;
+  vertical-align: middle;
 }
 
 .search-document-list .item {
@@ -19519,9 +19543,13 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 body.search-results .search_results .search-video-list .media-album_thumb img,
 body.search-results .search_results .search-media-list .media-album_thumb img {
   border-radius: 3px !important;
+  display: inline-block;
   width: 90px;
   height: 90px;
+  max-width: 90px;
+  max-height: 90px;
   object-fit: cover;
+  overflow: hidden;
 }
 
 body.search-results .search_results .search-video-list .media-album_details,
@@ -19538,8 +19566,9 @@ body.search-results .search_results .search-document-list .media-folder_items .m
 }
 
 body.search-results .search_results .search-document-list .media-folder_items .media-folder_details {
-  margin-top: 12px;
+  margin-top: 20px;
   width: calc(100% - 106px);
+  line-height: 1;
 }
 
 body.search-results .search_results .search-video-list .media-album_thumb .middot,
@@ -19549,6 +19578,7 @@ body.search-results .search_results .search-document-list .media-folder_items .m
   margin: 0 6px;
   font-size: 17px;
   line-height: 0;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 540px) {

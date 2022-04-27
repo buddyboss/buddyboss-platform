@@ -171,11 +171,11 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
                 <a title="<?php the_title_attribute(); ?>" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
             </h2>
 
-			<?php if ( buddyboss_theme_get_option( 'learndash_course_author' ) ) { ?><?php SFWD_LMS::get_template( 'course_list_course_author',
-				compact( 'post' ),
-				true ); ?><?php } ?>
-
 			<?php
+			if ( buddyboss_theme_get_option( 'learndash_course_author' ) ) {
+				SFWD_LMS::get_template( 'course_list_course_author', compact( 'post' ), true );
+			}
+
 			if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) { ?>
 
                 <div class="course-progress-wrap">
@@ -204,7 +204,8 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
                         if ( $course_pricing['type'] !== 'closed' ):
 	                        echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span> ' );
                         endif;
-                        ?><?php echo wp_kses_post( $course_pricing['price'] ); ?>
+
+                        echo wp_kses_post( $course_pricing['price'] ); ?>
                     </span>
                 </div><?php
 			}

@@ -52,7 +52,7 @@ $video_created = bp_get_video_date_created();
 								<?php esc_html( bp_video_author() ); ?>
 							</a>
 						</span>
-						<span class="middot">·</span>
+						<span class="middot">&middot;</span>
 						<span class="media-album_date"><?php echo esc_html( bp_core_format_date( $video_created ) ); ?></span>
 					</div>
 				</div>
@@ -70,9 +70,9 @@ $video_created = bp_get_video_date_created();
 									$group_link   = sprintf( '<a href="%s" class="bp-group-home-link %s-home-link">%s</a>', esc_url( $video_link ), esc_attr( bp_get_group_slug( $group ) ), esc_html( bp_get_group_name( $group ) ) );
 									$group_status = bp_get_group_status( $group );
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span class="media-album_status"><?php echo esc_html( ucfirst( $group_status ) ); ?></span>
 							</div>
 						</div>
@@ -87,14 +87,14 @@ $video_created = bp_get_video_date_created();
 							$group_id = bp_get_video_group_id();
 							if ( $group_id > 0 ) {
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_video_visibility(); ?>
 								</span>
 								<?php
 							} else {
 								?>
-								<span class="middot">·</span>
+								<span class="middot">&middot;</span>
 								<span id="privacy-<?php echo esc_attr( bp_get_video_id() ); ?>">
 									<?php bp_video_visibility(); ?>
 								</span>
@@ -102,7 +102,7 @@ $video_created = bp_get_video_date_created();
 							}
 						} else {
 							?>
-							<span class="middot">·</span>
+							<span class="middot">&middot;</span>
 							<span>
 								<?php bp_video_visibility(); ?>
 							</span>

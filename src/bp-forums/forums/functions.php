@@ -1775,7 +1775,7 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 			);
 
 			if ( ! empty( $group_cover_image ) ) {
-				return '<img src="' . esc_url( $group_cover_image ) . '" alt="' . bbp_get_forum_title( $forum_id ) . '" />';
+				return '<img src="' . esc_url( $group_cover_image ) . '" alt="' . esc_attr( bbp_get_forum_title( $forum_id ) ) . '" />';
 			}
 		}
 
