@@ -19439,6 +19439,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 .search-video-list .media-album_modified .media-album_details__bottom .media-album_author,
 .search-media-list .media-album_modified .media-album_details__bottom .media-album_author {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .search-video-list .media-album_modified .media-album_details__bottom .media-album_author a,
@@ -19452,6 +19453,7 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 .search-media-list .media-album_visibility {
   color: #9b9c9f;
   display: inline-block;
+  vertical-align: middle;
   font-size: 0.8125rem;
   font-weight: 400;
   letter-spacing: -0.15px;
