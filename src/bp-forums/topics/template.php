@@ -4414,22 +4414,22 @@ function bbp_get_form_topic_edit_reason() {
 }
 
 /**
- * Return the topics created date/time
+ * Return the topics created date/time.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $topic_id Optional. Topic id
+ * @param int $topic_id Optional. Topic id.
  *
- * @uses  bbp_get_topic_id() To get topic id
- * @uses  get_post_meta() To get the topic lst active meta
- * @uses  bbp_get_topic_last_reply_id() To get topic last reply id
- * @uses  get_post_field() To get the post date of topic/reply
- * @uses  bbp_convert_date() To convert date
- * @uses  bbp_get_time_since() To get time in since format
+ * @uses  bbp_get_topic_id() To get topic id.
+ * @uses  get_post_meta() To get the topic lst active meta.
+ * @uses  bbp_get_topic_last_reply_id() To get topic last reply id.
+ * @uses  get_post_field() To get the post date of topic/reply.
+ * @uses  bbp_convert_date() To convert date.
+ * @uses  bbp_get_time_since() To get time in since format.
  * @uses  apply_filters() Calls 'bbp_get_topic_last_active' with topic
- *       freshness and topic id
+ *       freshness and topic id.
  *
- * @return string Topic freshness
+ * @return string Topic freshness.
  */
 function bbp_get_topic_created_time( $topic_id = 0 ) {
 
