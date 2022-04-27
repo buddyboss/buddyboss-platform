@@ -19359,6 +19359,7 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_details__bottom .media-folder_author {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .search-document-list .media-folder_items .media-folder_details__bottom .media-folder_author a {
