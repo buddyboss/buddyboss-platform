@@ -1575,8 +1575,12 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
+	// Set some arguments for filters.
+	$item_id   = (int) $bp_params['item_id'];
+	$component = $object_data['component'];
+
 	/**
-	 * Filters BuddyPress image attachment sub directory.
+	 * Filters BuddyPress image attachment subdirectory.
 	 *
 	 * @since BuddyBoss 1.8.6
 	 *
@@ -1586,7 +1590,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image', $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_subdir = apply_filters( 'bb_attachments_get_attachment_sub_dir', $object_data['dir'] . '/' . $item_id . '/cover-image', $object_data['dir'], $item_id, 'cover-image' );
 
 	$cover_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] ) . $cover_subdir;
 
@@ -1601,7 +1605,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * @param string $type       The type of the attachment which is also the subdir where files are saved.
 	 *                           Defaults to 'cover-image'
 	 */
-	$cover_dir = apply_filters( 'bb_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $bp_params['item_id'], 'cover-image' );
+	$cover_dir = apply_filters( 'bb_attachments_get_attachment_dir', $cover_dir, $object_data['dir'], $item_id, 'cover-image' );
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
@@ -1625,7 +1629,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	$cover = bp_attachments_cover_image_generate_file(
 		array(
 			'file'            => $uploaded['file'],
-			'component'       => $object_data['component'],
+			'component'       => $component,
 			'cover_image_dir' => $cover_dir,
 		),
 		$cover_image_attachment
@@ -1642,7 +1646,21 @@ function bp_attachments_cover_image_ajax_upload() {
 		);
 	}
 
+	$component = ( 'xprofile' === $component ? 'members' : $component );
+
 	$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
+
+	/**
+	 * Filters groups/members cover image attachment URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $cover_url URL to the image.
+	 * @param array  $cover     Cover array.
+	 * @param string $component Component either groups or members.
+	 * @param int    $item_id   Inform about the item id the cover image was set for either group id or member id.
+	 */
+	$cover_url = apply_filters( 'bp_' . $component . '_attachments_cover_image_url', $cover_url, $cover, $component, $item_id );
 
 	// 1 is success.
 	$feedback_code = 1;
@@ -1681,13 +1699,27 @@ function bp_attachments_cover_image_ajax_upload() {
 		$feedback_code
 	);
 
-	// Finally return the cover photo url to the UI.
+	// Give 3rd party plugins a chance to calculate the URL based on the id. I.e. if
+	// the image is offloaded to external storage.
+	$return_url = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => $component,
+			'item_id'    => $item_id,
+		)
+	);
+
+	if ( '' === $return_url ) {
+		$return_url = $cover_url;
+	}
+
+	// Finally, return the cover photo url to the UI.
 	bp_attachments_json_response(
 		true,
 		$is_html4,
 		array(
 			'name'          => $name,
-			'url'           => $cover_url,
+			'url'           => $return_url,
 			'feedback_code' => $feedback_code,
 		)
 	);
