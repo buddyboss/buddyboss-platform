@@ -62,6 +62,8 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		body {
 			margin: 0 !important;
 			padding: 0 !important;
+			direction: <?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;
+			unicode-bidi: embed;
 			<?php echo wp_is_mobile() ? "width:{$width} !important" : ""; ?>;
 		}
 
