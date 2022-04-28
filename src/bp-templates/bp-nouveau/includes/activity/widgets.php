@@ -58,13 +58,13 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @param array $instance Widget settings, as saved by the user.
 	 */
 	public function widget( $args, $instance ) {
-		// Default values
+		// Default values.
 		$title      = __( 'Latest updates', 'buddyboss' );
 		$type       = array( 'activity_update' );
 		$max        = 5;
 		$bp_nouveau = bp_nouveau();
 
-		// Check instance for a custom title
+		// Check instance for a custom title.
 		if ( ! empty( $instance['title'] ) ) {
 			$title = $instance['title'];
 		}
@@ -80,12 +80,12 @@ class BP_Latest_Activities extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		// Check instance for custom max number of activities to display
+		// Check instance for custom max number of activities to display.
 		if ( ! empty( $instance['max'] ) ) {
 			$max = (int) $instance['max'];
 		}
 
-		// Check instance for custom activity types
+		// Check instance for custom activity types.
 		if ( ! empty( $instance['type'] ) ) {
 			$type    = maybe_unserialize( $instance['type'] );
 			if ( ! is_array( $type ) ) {
@@ -93,7 +93,7 @@ class BP_Latest_Activities extends WP_Widget {
 			}
 			$classes = array_map( 'sanitize_html_class', array_merge( $type, array( 'bp-latest-activities' ) ) );
 
-			// Add classes to the container
+			// Add classes to the container.
 			$args['before_widget'] = str_replace( 'bp-latest-activities', join( ' ', $classes ), $args['before_widget'] );
 		}
 
@@ -112,7 +112,7 @@ class BP_Latest_Activities extends WP_Widget {
 
 		if ( bp_loggedin_user_id() ) {
 
-			$scope[] = 'just-me';				
+			$scope[] = 'just-me';
 
 			if ( bp_activity_do_mentions() ) {
 				$scope[] = 'mentions';
@@ -132,21 +132,21 @@ class BP_Latest_Activities extends WP_Widget {
 
 			if ( bp_is_active( 'forums' ) ) {
 				$scope[] = 'forums';
-			}			
+			}
 		}
-	
+
 		if ( bp_loggedin_user_id() && bp_is_relevant_feed_enabled() ) {
 			$key = array_search( 'public', $scope, true );
 			if ( is_array( $scope ) && false !== $key ) {
-				unset( $scope[ $key ] );				
+				unset( $scope[ $key ] );
 			}
 		}
 
 		$scope = implode( ',', $scope );
-		
+
 		/**
 		 * Globalize the activity widget arguments.
-		 * @see bp_nouveau_activity_widget_query() to override
+		 * @see bp_nouveau_activity_widget_query() to override.
 		 */
 		$bp_nouveau->activity->widget_args = array(
 			'max'          => $max,
@@ -160,7 +160,7 @@ class BP_Latest_Activities extends WP_Widget {
 
 		bp_get_template_part( 'activity/widget' );
 
-		// Reset the globals
+		// Reset the globals.
 		$GLOBALS['activities_template']    = $reset_activities_template;
 		$bp_nouveau->activity->widget_args = array();
 

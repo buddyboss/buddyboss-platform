@@ -1122,15 +1122,15 @@ function bp_blogs_new_blog_comment_query_backpat( $args ) {
 		return $args;
 	}
 
-	// Get the associated post type
+	// Get the associated post type.
 	$post_type = bp_activity_post_type_get_tracking_arg( $args['action'], 'post_type' );
 
-	// Bail if this is not an activity associated with a post type
+	// Bail if this is not an activity associated with a post type.
 	if ( empty( $post_type ) ) {
 		return $args;
 	}
 
-	// Bail if this is an activity about posts and not comments
+	// Bail if this is an activity about posts and not comments.
 	if ( bp_activity_post_type_get_tracking_arg( $args['action'], 'comment_action_id' ) ) {
 		return $args;
 	}

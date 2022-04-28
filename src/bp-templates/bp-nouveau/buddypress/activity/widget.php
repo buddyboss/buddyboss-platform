@@ -8,6 +8,10 @@
  * @version 1.0.0
  */
 
+if ( function_exists( 'bp_blogs_new_blog_comment_query_backpat' ) ) {
+	// Remove this filter as we are passing scope and activity type `comments` not working.
+	remove_filter( 'bp_after_has_activities_parse_args', 'bp_blogs_new_blog_comment_query_backpat' );
+}
 ?>
 
 <?php if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
@@ -17,7 +21,7 @@
 		<?php
 		while ( bp_activities() ) :
 			bp_the_activity();
-		?>
+			?>
 
 		<div class="activity-update">
 
@@ -54,4 +58,10 @@
 		<?php bp_nouveau_user_feedback( 'activity-loop-none' ); ?>
 	</div>
 
-<?php endif; ?>
+<?php endif;
+
+if ( function_exists( 'bp_blogs_new_blog_comment_query_backpat' ) ) {
+	add_filter( 'bp_after_has_activities_parse_args', 'bp_blogs_new_blog_comment_query_backpat' );
+}
+
+?>
