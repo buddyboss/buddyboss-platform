@@ -733,7 +733,7 @@ function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post
 /**
  * Generates keywords based on passed search terms.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param string $search_term Search string.
  * @param string $post_type   Post type.
@@ -777,7 +777,7 @@ function bb_search_get_search_keywords_by_term( $search_term = '', $post_type = 
 /**
  * Filter the generated keywords based on passed search terms.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param array $terms Search keywords.
  *
@@ -819,7 +819,7 @@ function bb_search_parse_search_terms( $terms = array() ) {
 /**
  * Retrieve stopwords used when parsing search terms.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @return array Stopwords.
  */

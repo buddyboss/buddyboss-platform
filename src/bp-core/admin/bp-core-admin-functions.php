@@ -3412,7 +3412,7 @@ function bb_disable_multiple_select_situation() {
 /**
  * Added new meta box as text and background color for member types label.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param $post Post data object.
  */

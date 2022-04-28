@@ -7437,7 +7437,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 /**
  * Convert Media to base64 from attachment id.
  *
- * @since buddyboss [BBVERSION]
+ * @since buddyboss 2.0.0
  *
  * @param int    $attachment_id Attachment id.
  * @param string $size          Image size.
@@ -7473,7 +7473,7 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
 /**
  * Function will return icon based on section.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param $id Id of the section.
  *

@@ -775,7 +775,7 @@ function bb_load_members_account_settings_notifications() {
 /**
  * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  */
 function bb_load_member_type_label_custom_css() {
 	if ( true === bp_member_type_enable_disable() ) {

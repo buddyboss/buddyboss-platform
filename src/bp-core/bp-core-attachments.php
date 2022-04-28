@@ -1653,7 +1653,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	/**
 	 * Filters groups/members cover image attachment URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $cover_url URL to the image.
 	 * @param array  $cover     Cover array.
