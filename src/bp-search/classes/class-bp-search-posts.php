@@ -240,7 +240,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		/**
 		 * Generates SQL for the WHERE clause based on passed search terms.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $search_terms Search string.
 		 *
@@ -268,7 +268,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		/**
 		 * Generates meta query based on passed search terms.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $search_terms Search string.
 		 *
@@ -301,7 +301,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 		/**
 		 * Get total result count.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $search_term Search string.
 		 *
