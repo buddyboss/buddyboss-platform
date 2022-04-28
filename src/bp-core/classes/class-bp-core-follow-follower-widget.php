@@ -128,7 +128,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 				if ( bp_is_my_profile() || ! bp_is_user() ) { ?>
                     <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>#followers" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
                 <?php } else { ?>
-                    <div class="more-block"><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . 'followers' ) ); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+                    <div class="more-block"><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . 'followers' ) ); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
                 <?php }
             }
             ?>

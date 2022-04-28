@@ -2471,7 +2471,16 @@ function bp_member_type_import_submenu_page() {
 			<div class="boss-import-area">
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
-						<h2><?php esc_html_e( 'Import Profile Types', 'buddyboss' ); ?></h2>
+						<h2>
+							<?php
+							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
+							if ( ! empty( $meta_icon ) ) {
+								?>
+								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+								<?php
+							}
+							esc_html_e( 'Import Profile Types', 'buddyboss' ); ?>
+						</h2>
 						<p>
 							<?php
 							printf(
@@ -3403,7 +3412,7 @@ function bb_disable_multiple_select_situation() {
 /**
  * Added new meta box as text and background color for member types label.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param $post Post data object.
  */
@@ -3444,3 +3453,4 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	</div>
 	<?php
 }
+

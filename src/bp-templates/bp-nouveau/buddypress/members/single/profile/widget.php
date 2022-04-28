@@ -16,7 +16,7 @@ if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {
 }
 
 $user_progress        = $bp_nouveau->xprofile->profile_completion_widget_para;
-$progress_label       = ( $user_progress['completion_percentage'] == 100 ) ? __( 'Completed', 'buddyboss' ) : __( 'Complete', 'buddyboss' );
+$progress_label       = ( $user_progress['completion_percentage'] == 100 ) ? esc_html__( 'Completed', 'buddyboss' ) : esc_html__( 'Complete', 'buddyboss' );
 $user_progress_offset = 100 - $user_progress['completion_percentage'];
 
 ?>
@@ -52,7 +52,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 					echo esc_attr( $user_progress_status );
 					?>
 					">
-						<span class="section_ico"><i class="bb-icon-check-small"></i></span>
+						<span class="section_ico"><i class="bb-icon-l bb-icon-check"></i></span>
 						<span class="section_number">
 							<?php echo esc_html( $single_section_details['number'] ); ?>
 						</span>

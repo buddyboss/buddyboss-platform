@@ -1163,8 +1163,12 @@ function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 		// Get the author ID.
 		$author_id = bbp_get_reply_author_id( $reply_id );
 
-		// Try to get a display name.
-		$author_name = bp_core_get_user_displayname( $author_id );
+		// Get the author display name.
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
+
+		if ( empty( $author_name ) ) {
+			$author_name = get_the_author_meta( 'display_name', $author_id );
+		}
 
 		// Fall back to user login.
 		if ( empty( $author_name ) ) {
@@ -1280,7 +1284,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 			'link_title' => '',
 			'type'       => 'both',
 			'size'       => 80,
-			'sep'        => '&nbsp;',
+			'sep'        => '<span class="bbp-author-link-sep"></span>',
 			'show_role'  => false,
 		),
 		'get_reply_author_link'
@@ -1804,7 +1808,7 @@ function bbp_get_reply_to_link( $args = array() ) {
 
 	// Add $uri to the array, to be passed through the filter
 	$r['uri'] = $uri;
-	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
+	$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link" data-balloon=" ' . esc_html__( 'Reply', 'buddyboss' ) . ' " data-balloon-pos="up" ' . $onclick . '><i class="bb-icon-l bb-icon-reply"></i><span class="bb-forum-reply-text">' . esc_html( $r['reply_text'] ) . '</span></a>' . $r['link_after'];
 
 	return apply_filters( 'bbp_get_reply_to_link', $retval, $r, $args );
 }

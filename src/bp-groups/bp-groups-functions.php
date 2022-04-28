@@ -4606,7 +4606,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			?>
 			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
-					<span class="bb-icon bb-icon-menu-dots-h"></span>
+					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
 			<?php
@@ -4649,7 +4649,7 @@ function bb_get_group_cover_image_height( $default = 'small' ) {
 /**
  * Function will return label background and text color's for specific group type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param $type Type of the group
  *

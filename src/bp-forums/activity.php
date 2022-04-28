@@ -459,7 +459,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => bbp_get_topic_permalink( $topic_id ),
 					),
@@ -502,7 +502,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 						__( 'Join Discussion', 'buddyboss' )
 					),
 					'button_attr'       => array(
-						'class'         => 'button bb-icon-discussion bp-secondary-action',
+						'class'         => 'button bb-icon-l bb-icon-comments-square bp-secondary-action',
 						'aria-expanded' => 'false',
 						'href'          => $reply_url,
 					),

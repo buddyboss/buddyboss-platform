@@ -242,21 +242,21 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
 
-			$localize_arg = array(
+			$localize_arg     = array(
 				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'select_document'     => esc_js( esc_html__( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+				'select_document'     => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
 				'tools'               => array(
 					'default_data'  => array(
-						'submit_button_message' => esc_js( esc_html__( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
-						'clear_button_message'  => esc_js( esc_html__( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
+						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
+						'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
 					),
 					'repair_forums' => array(
 						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 					),
 				),
 				'moderation'          => array(
-					'suspend_confirm_message'   => esc_js( esc_html__( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-					'unsuspend_confirm_message' => esc_js( esc_html__( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
 				),
 				'cover_size_alert'    => array(
 					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
@@ -504,11 +504,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			if ( ! empty( $tutorial_callback ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['tutorial_callback'] = $tutorial_callback;
 			}
-
 			if ( ! empty( $notice ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
 			}
-
+			if ( function_exists( 'bb_admin_icons' ) ) {
+				$meta_icon = bb_admin_icons( $id );
+				if ( ! empty( $meta_icon ) ) {
+					$wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
+				}
+			}
 			return $this;
 		}
 
@@ -706,8 +710,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
+				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . esc_attr( $section['icon'] ) . '"></i>' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' .
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
 						wp_kses(
 							$section['title'],
 							array(
