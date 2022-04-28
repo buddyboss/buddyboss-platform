@@ -488,7 +488,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_restricate_rest_api_callback', 
  * @since BuddyBoss 1.9.1
  */
 function bb_plugin_upgrade_function_callback( $upgrader_object, $options ) {
-	$show_display_popup = false;
+	$show_display_popup = true;
 	// The path to our plugin's main file
 	$our_plugin = 'buddyboss-platform/bp-loader.php';
 	if ( ! empty( $options ) && 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
