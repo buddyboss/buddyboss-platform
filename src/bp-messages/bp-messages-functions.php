@@ -623,6 +623,38 @@ function messages_get_unread_count( $user_id = 0 ) {
 }
 
 /**
+ * Get the thread unread messages count for a user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Thread ID of the message.
+ * @param int $user_id   Optional. ID of the user. Default: ID of the logged-in user.
+ *
+ * @return int
+ */
+function bb_get_thread_messages_unread_count( $thread_id, $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( empty( $user_id ) || empty( $thread_id ) ) {
+		return;
+	}
+
+	$cache_key    = 'bb_thread_message_unread_count_' . $user_id . '_' . $thread_id;
+	$unread_count = wp_cache_get( $cache_key, 'bp_messages_unread_count' );
+
+	if ( false === $unread_count ) {
+		global $wpdb;
+		$bp           = buddypress();
+		$unread_count = (int) $wpdb->get_col( $wpdb->prepare( "SELECT unread_count from {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d AND unread_count > 0", $user_id, $thread_id ) );
+		wp_cache_set( $cache_key, $unread_count, 'bp_messages_unread_count' );
+	}
+	return $unread_count;
+}
+
+/**
  * Check whether a user is the sender of a message.
  *
  * @param int $user_id    ID of the user.
