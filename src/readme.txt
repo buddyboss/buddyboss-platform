@@ -57,6 +57,33 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.0.0 =
+* BuddyBoss Theme - Provided Theme 2.0 style new options support
+* BuddyBoss Theme - Provided Theme 2.0 overall styling support
+* BuddyBoss Theme - Provided Theme 2.0 with new color support
+* BuddyBoss Theme - Provided Theme 2.0 new icons pack support
+* BuddyBoss Theme - Provided Theme 2.0 new header style support
+* Profiles - Provided option to select a custom color for Profile type label
+* Profiles - Restructured the profile data in multiple sections for each profile fieldsets
+* Groups - Provided option to select a custom color for Group type label
+* Forums - Provided 'BuddyBoss Theme' 2.0 style support
+* Forums - Provided support for the featured image in the forum header
+* Forums - Converted Forum discussion and reply post forms into modals
+* Forums - Improved cover image logic for Forums directory screen
+* Forums - Handled discussion reply count issue
+* Activity - Handled embed link preview issue when privacy changed
+* Activity - Handled 'Latest Activities' widget privacy issue
+* Messages - Handled multiple recipients message performance issue
+* Messages - Handled wrong message count issue for Group messages
+* Network Search - Provided template and markup support for the search results screen
+* Network Search - Improved search logic for Blog posts
+* Widgets - Provided template and markup support for widgets
+* Coding Standards - Code refactoring to handle warnings and notices
+* REST API - Provided Profile type custom color API support
+* REST API - Handled media rendering issue when file not directly accessible
+* REST API - Handled API issue to post activity with just video
+* Compatibility - Fixed 'WP Offload Media' plugin compatibility issues
+
 = 1.9.3 =
 * Notifications - Provided notification updates as a Lab feature
 * Notifications - Provided options for members to manage all Notification Preferences for all devices in one place
