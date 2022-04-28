@@ -82,8 +82,8 @@ function bp_nouveau_notifications_sort_order_links() {
 	?>
 
 	<span class="notifications-order-actions">
-		<a href="<?php echo esc_url( $desc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" data-bp-notifications-order="DESC"><span class="bb-icon-chevron-down bb-icon" aria-hidden="true"></span></a>
-		<a href="<?php echo esc_url( $asc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" data-bp-notifications-order="ASC"><span class="bb-icon-chevron-up bb-icon" aria-hidden="true"></span></a>
+		<a href="<?php echo esc_url( $desc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" data-bp-notifications-order="DESC"><span class="bb-icon-angle-down bb-icon-l" aria-hidden="true"></span></a>
+		<a href="<?php echo esc_url( $asc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" data-bp-notifications-order="ASC"><span class="bb-icon-angle-up bb-icon-l" aria-hidden="true"></span></a>
 	</span>
 
 	<?php
