@@ -77,9 +77,7 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 			true
 		);
 
-		if ( class_exists( 'QueryMonitor' ) ) {
-			add_action( 'wp_footer', 'bb_hide_querymonitor_dispatchers' );
-		}
+		do_action( 'bb_email_customize_preview' );
 
 		// Include the preview loading style.
 		add_action( 'wp_footer', array( $wp_customize, 'customize_preview_loading_style' ) );
@@ -601,20 +599,3 @@ function bb_email_customizer_default_avatar( $avatar = '' ) {
 
 add_filter( 'bp_email_customizer_default_avatar', 'bb_email_customizer_default_avatar', 10 );
 add_filter( 'bp_email_default_avatar', 'bb_email_customizer_default_avatar', 10 );
-
-/**
- * Removed Query monitor code from email customizer page.
- *
- * @return void
- */
-function bb_hide_querymonitor_dispatchers() {
-	ob_start(); ?>
-	<style>
-		#wp-admin-bar-query-monitor,
-		#query-monitor-main {
-			display: none !important;
-		}
-	</style>
-	<?php
-	echo ob_get_clean();
-}

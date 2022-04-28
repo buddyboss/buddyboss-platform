@@ -223,6 +223,13 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'WooCommerce' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-woocommerce-helpers.php';
 	}
+
+	/**
+	 * Include Query Monitor compatibility.
+	 */
+	if ( class_exists( 'QueryMonitor' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-qm-helpers.php';
+	}
 }
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 
