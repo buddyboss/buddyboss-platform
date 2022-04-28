@@ -2337,7 +2337,7 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @return string
  * @since BuddyBoss 1.4.4
  */
-function bp_media_default_scope( $scope ) {
+function bp_media_default_scope( $scope = 'all' ) {
 
 	$new_scope = array();
 
@@ -2370,6 +2370,8 @@ function bp_media_default_scope( $scope ) {
 		}
 	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
 	}
 
 	if ( empty( $new_scope ) ) {
