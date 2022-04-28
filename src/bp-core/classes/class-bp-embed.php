@@ -372,8 +372,8 @@ class BP_Embed extends WP_Embed {
 		$embed_urls = array();
 		$flag       = true;
 
-		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
-			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+		if ( preg_match( '/<a.*?<\/a>(*SKIP)(*F)|(https?:\/\/[^\s<>"]+)/i', $content ) ) {
+			preg_match_all( '/<a.*?<\/a>(*SKIP)(*F)|(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 		}
 
 		if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
