@@ -256,7 +256,7 @@ function bp_moderation_block_member() {
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['moderation'] = $moderation;
 
-			$friend_status = bp_is_friend( $item_id );
+			$friend_status = function_exists( 'bp_is_friend' ) ? bp_is_friend( $item_id ) : array();
 			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
