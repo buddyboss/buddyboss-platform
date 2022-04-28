@@ -2541,7 +2541,7 @@ window.bp = window.bp || {};
 				).render();
 
 				this.$el.html( autocomplete.$el );
-				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icon-close-circle"></i></span>' );
+				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icon-rl bb-icon-times"></i></span>' );
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
