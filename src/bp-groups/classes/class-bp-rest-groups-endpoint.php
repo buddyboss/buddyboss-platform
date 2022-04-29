@@ -829,6 +829,19 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			$data['types'] = array();
 		}
 
+		if ( ! empty( $data['types'] ) ) {
+			$group_type_data                     = array();
+			$group_type_data['group_type_label'] = isset( $data['group_type_label'] ) && ! empty( $data['group_type_label'] ) ? $data['group_type_label'] : '';
+			$group_type_data['types']            = bp_groups_get_group_type( $item->id, false );
+			// Group type's label background and text color.
+			$group_type       = isset( $data['types'][0] ) ? $data['types'][0] : '';
+			$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $group_type ) : '';
+			if ( ! empty( $label_color_data ) ) {
+				$group_type_data['label_colors'] = $label_color_data;
+			}
+			$data['group_type'] = $group_type_data;
+		}
+
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
 		// If this is the 'edit' context, fill in more details--similar to "populate_extras".
@@ -1441,6 +1454,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload document to the group or not.', 'buddyboss' ),
 					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'group_type'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the group type details will pass.', 'buddyboss' ),
+					'type'        => 'array',
 					'readonly'    => true,
 				),
 			),
