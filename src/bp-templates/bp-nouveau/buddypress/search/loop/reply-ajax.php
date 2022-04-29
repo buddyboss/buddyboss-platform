@@ -10,21 +10,36 @@
  */
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_reply">
-	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bbp_get_reply_url(get_the_ID()) )); ?>">
+	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_reply_url( get_the_ID() ) ) ); ?>">
 		<div class="item-avatar">
-			<img
-				src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( get_the_ID() ) ) ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
-				class="avatar forum-avatar"
-				height="150"
-				width="150"
-				alt=""
-			/>
+			<?php
+			$args   = array(
+				'type'    => 'avatar',
+				'post_id' => get_the_ID(),
+			);
+			$avatar = bbp_get_reply_author_link( $args );
+
+			if ( $avatar ) {
+				echo wp_kses_post( $avatar );
+			} else {
+				?>
+				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+				<?php
+			}
+			?>
 		</div>
 		<div class="item">
-            <div class="item-title">
-                <?php echo stripslashes( wp_strip_all_tags( bbp_forum_title( get_the_ID() ) ) );?>
-            </div>
-            <div class="item-desc"><?php echo bp_search_reply_intro( 30 ); ?></div>
+			<div class="entry-title item-title">
+				<a href="<?php bbp_reply_url( get_the_ID() ); ?>"><?php bbp_reply_author_display_name( get_the_ID() ); ?></a>
+				<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
+			</div>
+			<div class="item-desc">				
+				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( get_the_ID() ), 30, '...' ) ); ?>
+			</div>
+
+			<div class="entry-meta">
+				<?php bbp_reply_post_date( get_the_ID(), true ); ?>
+			</div>
 		</div>
 	</a>
 </div>
