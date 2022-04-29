@@ -855,6 +855,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	if ( ! empty( $video_id ) ) {
 		$args = array(
 			'include' => $video_id,
+			'user_id' => false,
 		);
 		ob_start();
 		if ( bp_has_video( $args ) ) {
