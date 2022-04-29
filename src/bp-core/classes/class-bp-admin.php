@@ -389,7 +389,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					$this->capability,
 					$this->settings_page,
 					'bp_core_admin_backpat_menu',
-					buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
+					'none',
 					3
 				);
 			}
@@ -427,7 +427,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$this->capability,
 				$this->settings_page,
 				'bp_core_admin_backpat_menu',
-				buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
+				'none',
 				3
 			);
 
@@ -712,6 +712,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
+			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
 			// @todo: used for bp-performance will enable in feature.
 			// require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		}
@@ -813,6 +814,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Hello BuddyBoss.
 			wp_enqueue_style( 'bp-hello-css' );
 			wp_enqueue_script( 'bp-hello-js' );
+
+			// Enqueue only post_type is member type and group type.
+			if (
+				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
+				0 === strpos( get_current_screen()->id, 'bp-member-type' )
+			) {
+				wp_enqueue_style( 'wp-color-picker' );
+				wp_enqueue_script( 'wp-color-picker' );
+			}
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -1106,7 +1116,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Display plugin information after plugin successfully updated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 1.9.1
 		 */
 		public function bb_display_update_plugin_information() {
 			// Check the transient to see if we've just updated the plugin.

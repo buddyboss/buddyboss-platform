@@ -1683,7 +1683,9 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	global $wpdb;
 	global $bp;
 
-	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_id    = $social_networks_field->id;
+	$social_networks_text  = $social_networks_field->name;
 
 	$html = '';
 
@@ -1697,12 +1699,41 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
 		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
+			$i            = 0;
+			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
 
-					$html .= '<span class="social ' . $providers[ $key ]->value . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . $providers[ $key ]->name . '" href="' . esc_url( $original_option_value ) . '">' . $providers[ $key ]->svg . '</a></span>';
+					if ( $is_more_link && 2 === $i ) {
+						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_html__( 'See all', 'buddyboss' ) . '" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
+						break;
+					}
+					$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
 				}
+				$i++;
+			}
+			if ( $is_more_link ) {
+				$html .= '<div style="display: none" class="bb-action-popup" id="social-networks-popup">
+							<div class="modal-mask bb-white bbm-model-wrap">
+								<div class="action-popup-overlay"></div>
+								<div class="modal-wrapper">
+									<div class="modal-container">
+										<header class="bb-model-header">
+											<h4><span class="target_name">' . esc_attr( $social_networks_text ) . '</span></h4>
+											<a class="bb-close-action-popup bb-model-close-button" href="#">
+												<span class="bb-icon-l bb-icon-times"></span>
+											</a>
+										</header>
+										<div class="bb-action-popup-content">';
+				foreach ( $original_option_values as $key => $original_option_value ) {
+					if ( '' !== $original_option_value ) {
+						$key   = bp_social_network_search_key( $key, $providers );
+						$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
+					}
+					$i++;
+				}
+				$html .= '</div></div></div></div></div>';
 			}
 		}
 	}
@@ -2366,7 +2397,7 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 /**
  * Enabled the social networks for members or not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return bool True if enabled the social networks otherwise false.
  */
@@ -2385,7 +2416,7 @@ function bb_enabled_member_social_networks() {
 /**
  * Get social networks field values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int|null $user_id ID of the user or null. Default current displayed user profile ID.
  *

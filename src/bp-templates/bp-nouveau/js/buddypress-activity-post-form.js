@@ -705,6 +705,7 @@ window.bp = window.bp || {};
 				privacy: 'public',
 				privacy_modal: 'general',
 				edit_activity: false,
+				group_image: '',
 			}
 		}
 	);
@@ -2540,7 +2541,7 @@ window.bp = window.bp || {};
 				).render();
 
 				this.$el.html( autocomplete.$el );
-				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icon-close-circle"></i></span>' );
+				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icon-rl bb-icon-times"></i></span>' );
 				this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 				this.on( 'ready', this.setFocus, this );
@@ -2883,7 +2884,9 @@ window.bp = window.bp || {};
 				this.model.set( 'privacy', this.$el.find( '.bp-activity-privacy__input:checked' ).val() );
 				this.model.set( 'privacy_modal', 'general' );
 
-				bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
+					bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
+				}
 
 				var whats_new_form = $( '#whats-new-form' );
 				whats_new_form.removeClass( 'focus-in--privacy focus-in--group' );
@@ -2895,15 +2898,16 @@ window.bp = window.bp || {};
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
 					//display image of the group.
-					if ( this.model.attributes.link_images && false === this.model.attributes.link_images.includes( 'mystery-group' ) ) {
+					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
-						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).html( '<img src="' + this.model.attributes.link_images + '" alt=""/>' );
+						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).html( '<img src="' + this.model.attributes.group_image + '" alt=""/>' );
 					} else {
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon img' ).remove();
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).removeClass( 'group-privacy-point-icon' ).addClass( 'privacy-point-icon' );
 					}
-
-					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
+					if ( ! _.isUndefined( BP_Nouveau.media ) ) {
+						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
+					}
 				}
 			},
 
@@ -3121,7 +3125,7 @@ window.bp = window.bp || {};
 					);
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
-					this.model.set( 'link_images', model.get( 'avatar_url' ) );
+					this.model.set( 'group_image', model.get( 'avatar_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
@@ -3971,9 +3975,8 @@ window.bp = window.bp || {};
 				// Wrap Toolbar and submit Wrapper into footer.
 				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) ) {
 					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
-					$('#whats-new-toolbar').appendTo('.whats-new-form-footer');
-					$('#activity-form-submit-wrapper').appendTo('.whats-new-form-footer');
-					$('#whats-new-form > #whats-new-toolbar').remove();
+					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
+					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
 				}
 				
 				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {

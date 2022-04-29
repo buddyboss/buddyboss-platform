@@ -643,7 +643,7 @@ add_action( 'bbp_forums_mentions_prime_results', 'bb_core_prime_mentions_results
  * @param string $last_activity Formatted 'active [x days ago]' string.
  * @param int    $user_id ID of the user. Default: displayed user ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @return string Return string if time difference within minutes otherwise $last_activity.
  */
@@ -676,22 +676,15 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 /**
  * Allow HTML for member xprofile data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
- * @param array $allow_html The array allow custom tags and attributes. Default: null.
+ * @param array $bbp_allow_tags The array allow custom tags and attributes. Default: null.
  *
  * @return array Associative array of allowed tags and attributes.
  */
-function bb_members_allow_html_tags( $allow_html = array() ) {
-	$bbp_allow_tags = bbp_kses_allowed_tags();
-
-	if ( ! empty( $allow_html ) ) {
-		$bbp_allow_tags = array_merge( $bbp_allow_tags, $allow_html );
-	}
-
+function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 	// Allow tag attributes for xprofile datas.
-	$allowed_post_tags = wp_kses_allowed_html( 'post' );
-	$bbp_allow_tags    = array_merge( $bbp_allow_tags, $allowed_post_tags );
+	$bbp_allow_tags = array_merge( $bbp_allow_tags, wp_kses_allowed_html( 'post' ) );
 
 	// Allow "svg" for social networks.
 	$bbp_allow_tags['svg']  = array(
@@ -715,3 +708,54 @@ function bb_members_allow_html_tags( $allow_html = array() ) {
 
 	return apply_filters( 'bb_members_allow_html_tags', $bbp_allow_tags );
 }
+
+// Load Account Settings Notifications.
+add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+
+/**
+ * Register the Account Settings notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_members_account_settings_notifications() {
+	if ( class_exists( 'BP_Members_Mentions_Notification' ) ) {
+		BP_Members_Mentions_Notification::instance();
+	}
+
+	if ( class_exists( 'BP_Members_Notification' ) ) {
+		BP_Members_Notification::instance();
+	}
+}
+
+/**
+ * Function will add custom css for all member type's label. ( i.e - Background color, Text color)
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bb_load_member_type_label_custom_css() {
+	if ( true === bp_member_type_enable_disable() ) {
+		$registered_member_types = bp_get_member_types();
+		$cache_key               = 'bb-member-type-label-css';
+		$member_type_custom_css  = wp_cache_get( $cache_key, 'bp_member_member_type' );
+		if ( false === $member_type_custom_css && ! empty( $registered_member_types ) ) {
+			foreach ( $registered_member_types as $type ) {
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $type ) : '';
+				if (
+					isset( $label_color_data ) &&
+					isset( $label_color_data['color_type'] ) &&
+					'custom' === $label_color_data['color_type']
+				) {
+					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+				}
+			}
+			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
+		}
+		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
+	}
+}
+add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
+

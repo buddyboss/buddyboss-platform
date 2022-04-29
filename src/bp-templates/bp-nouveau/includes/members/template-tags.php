@@ -217,7 +217,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 		);
 	}
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-menu-dots-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -1181,7 +1181,7 @@ function bp_nouveau_get_wp_profile_field_data() {
 /**
  * Get the user registered date meta.
  *
- * @since BuddyPress [BBVERSION]
+ * @since BuddyPress 1.9.1
  *
  * @param int $user_id User ID.
  *
@@ -1203,7 +1203,7 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	/**
 	 * Filters the user registered date meta.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 1.9.1
 	 *
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.

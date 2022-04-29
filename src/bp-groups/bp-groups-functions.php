@@ -319,6 +319,10 @@ function groups_edit_base_group_details( $args = array() ) {
 		groups_notification_group_updated( $group->id, $old_group );
 	}
 
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		bb_groups_notification_groups_updated( $group->id );
+	}
+
 	/**
 	 * Fired after a group's details are updated.
 	 *
@@ -1089,6 +1093,11 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 	);
 
 	$user_id = intval( $user_id );
+
+	// Do not process if no user_id.
+	if ( 0 === $user_id ) {
+		return array();
+	}
 
 	$membership_ids = wp_cache_get( $user_id, 'bp_groups_memberships_for_user' );
 	if ( false === $membership_ids ) {
@@ -4528,7 +4537,7 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 /**
  * Get members list for group directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param int   $group_id ID of the group.
  * @param array $role roles of the group.
@@ -4593,7 +4602,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			?>
 			">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
-					<span class="bb-icon bb-icon-menu-dots-h"></span>
+					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
 			<?php
@@ -4608,7 +4617,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 /**
  * Get group cover image width.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'default'.
@@ -4622,7 +4631,7 @@ function bb_get_group_cover_image_width( $default = 'default' ) {
 /**
  * Get group cover image height.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string|null $default Optional. Fallback value if not found in the database.
  *                             Default: 'small'.
@@ -4633,3 +4642,41 @@ function bb_get_group_cover_image_height( $default = 'small' ) {
 	return bp_get_option( 'bb-pro-cover-group-height', $default );
 }
 
+/**
+ * Function will return label background and text color's for specific group type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $type Type of the group
+ *
+ * @return array Return array of label color data
+ */
+function bb_get_group_type_label_colors( $type ) {
+	if ( empty( $type ) ) {
+		return false;
+	}
+	$post_id                   = bp_group_get_group_type_id( $type );
+	$cache_key                 = 'bb-group-type-label-color-' . $type;
+	$bp_group_type_label_color = wp_cache_get( $cache_key, 'bp_groups_group_type' );
+	if ( false === $bp_group_type_label_color && ! empty( $post_id ) ) {
+		$label_colors_meta = get_post_meta( $post_id, '_bp_group_type_label_color', true );
+		$label_color_data  = ! empty( $label_colors_meta ) ? maybe_unserialize( $label_colors_meta ) : array();
+		$color_type        = isset( $label_color_data['type'] ) ? $label_color_data['type'] : 'default';
+		if ( function_exists( 'buddyboss_theme_get_option' ) && 'default' === $color_type ) {
+			$background_color = buddyboss_theme_get_option( 'label_background_color' );
+			$text_color       = buddyboss_theme_get_option( 'label_text_color' );
+		} else {
+			$background_color = isset( $label_color_data['background_color'] ) ? $label_color_data['background_color'] : '';
+			$text_color       = isset( $label_color_data['text_color'] ) ? $label_color_data['text_color'] : '';
+		}
+		// Array of label's text and background color data.
+		$bp_group_type_label_color = array(
+			'color_type'       => $color_type,
+			'background-color' => $background_color,
+			'color'            => $text_color,
+		);
+		wp_cache_set( $cache_key, $bp_group_type_label_color, 'bp_groups_group_type' );
+	}
+
+	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
+}

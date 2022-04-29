@@ -67,6 +67,9 @@ window.bp = window.bp || {};
 			// Legal agreement enable/disabled submit button.
 			this.enableSubmitOnLegalAgreement();
 
+			// Profile Notification setting
+			this.profileNotificationSetting();
+
 			// Check for lazy images and load them also register scroll event to load on scroll.
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -705,7 +708,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
-			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
+			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -3081,11 +3084,123 @@ window.bp = window.bp || {};
 		showActionPopup: function( event ) {
 			event.preventDefault();
 			$( $( event.currentTarget ).attr( 'href' ) ).show();
+		},
+
+		/**
+		 *  handle profile notification setting events
+		 */
+		profileNotificationSetting: function () {
+			var self = this;
+			self.profileNotificationSettingInputs(['.email', '.web', '.app'] );
+
+			//Learn More section hide/show for mobile
+			$( '.notification_info .notification_learn_more' ).click( function( e ) {
+				e.preventDefault();
+
+				$( this ).find( 'a span' ).toggleClass( function() {
+					if ( $( this ).hasClass( 'bb-icon-chevron-down' ) ) {
+						return 'bb-icon-chevron-up';
+					} else {
+						return 'bb-icon-chevron-down';
+					}
+				});
+				$( this ).toggleClass( 'show' ).parent().find( '.notification_type' ).toggleClass( 'show' );
+
+			});
+
+			//Notification settings Mobile UI
+			$( '.main-notification-settings' ).each( function() {
+				self.NotificationMobileDropdown( $( this ).find( 'tr:not( .notification_heading )' ) );
+			});
+
+			$( document ).on( 'click', '.bb-mobile-setting ul li', function( e ) {
+				e.preventDefault();
+				if( $( this ).find( 'input' ).is( ':checked' ) ) {
+					$( this ).find( 'input' ).prop( 'checked', false );
+					$( $( 'input#' + $( this ).find( 'label' ).attr( 'data-for' ) ) ).trigger( 'click' );
+				} else {
+					$( this ).find( 'input' ).prop( 'checked', true );
+					$( $( 'input#' + $( this ).find( 'label' ).attr( 'data-for' ) ) ).trigger( 'click' );
+				}
+				self.NotificationMobileDropdown( $( this ).closest( 'tr' ) );
+			});
+
+			$( document ).on( 'click', '.bb-mobile-setting .bb-mobile-setting-anchor', function() {
+				$( this ).parent().toggleClass( 'active');
+				$( '.bb-mobile-setting' ).not( $( this ).parent() ).removeClass( 'active' );
+			});
+
+			$( document ).on( 'click', function( e ) {
+				if( !$( e.target ).hasClass( 'bb-mobile-setting-anchor') ) {
+					$( '.bb-mobile-setting' ).removeClass( 'active' );
+				}
+			});
+
+		},
+
+		/**
+		 *  Enable Disable profile notification setting inputs
+		 */
+		profileNotificationSettingInputs: function ( node ) {
+			for(var i = 0; i < node.length; i++){
+				/* jshint ignore:start */
+				(function (_i) {
+					$( document ).on( 'click', '.main-notification-settings th' + node[_i] + ' input[type="checkbox"]', function() {
+						if( $( this ).is( ':checked' ) ) {
+							$( '.main-notification-settings' ).find( 'td' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
+							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
+						} else {
+							$( '.main-notification-settings' ).find( 'td' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+							$( '.main-notification-settings' ).find( '.bb-mobile-setting li' + node[_i] ).addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+						}
+					});
+				})(i);
+				/* jshint ignore:end */
+			}
+		},
+
+		/**
+		 *  Notification Mobile UI
+		 */
+		NotificationMobileDropdown: function ( node ) {
+			var textAll = $( '.main-notification-settings' ).data( 'text-all' );
+			var textNone = $( '.main-notification-settings' ).data( 'text-none' );
+			node.each( function() {
+				var selected_text = '';
+				var available_option = '';
+				var nodeSelector = $( this ).find( 'td' ).length ? 'td' : 'th';
+				var allInputsChecked = 0;
+				$( this ).find( nodeSelector + ':not(:first-child)' ).each( function() {
+					if( $( this ).find( 'input[type="checkbox"]').length ) {
+						var inputText = $( this ).find( 'label' ).text();
+						var inputChecked = $( this ).find( 'input' ).is( ':checked' ) ? 'checked' : '';
+						var inputDisabled = $( this ).hasClass( 'disabled' ) ? ' disabled' : '';
+						available_option += '<li class="'+ inputText.toLowerCase() + inputDisabled +'"><input type="checkbox" class="bs-styled-checkbox" '+ inputChecked +' /><label data-for="'+ $( this ).find( 'input[type="checkbox"]' ).attr( 'id' ) +'">'+ inputText +'</label></li>';
+					}
+					if( !$( this ).find( 'input:checked' ).length ) {
+						return;
+					}
+					selected_text += selected_text === '' ? $( this ).find( 'input[type="checkbox"] + label' ).text().trim() : ', ' + $( this ).find( 'input[type="checkbox"] + label' ).text().trim();
+					allInputsChecked++;
+				});
+				if( allInputsChecked === $( this ).find( nodeSelector + ':not(:first-child) input[type="checkbox"]' ).length ) {
+					selected_text = textAll;
+				} else {
+					selected_text = selected_text === '' ? textNone : selected_text;
+				}
+				if( $( this ).find( nodeSelector + ':first-child .bb-mobile-setting' ).length === 0 ) {
+					$( this ).find( nodeSelector + ':first-child' ).append( '<div class="bb-mobile-setting"><span class="bb-mobile-setting-anchor">' + selected_text + '</span><ul></ul></div>' );
+				} else {
+					$( this ).find( nodeSelector + ':first-child .bb-mobile-setting .bb-mobile-setting-anchor' ).text( selected_text );
+				}
+				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).html( '' );
+				$( this ).find( nodeSelector + ':first-child .bb-mobile-setting ul' ).append( available_option );
+			});
 		}
 
 	};
 
-	// Launch BP Nouveau.
-	bp.Nouveau.start();
+   // Launch BP Nouveau.
+   bp.Nouveau.start();
 
 } )( bp, jQuery );

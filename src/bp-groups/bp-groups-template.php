@@ -734,24 +734,24 @@ function bp_get_group_type( $group = false ) {
 
 	if ( true === bp_disable_group_type_creation() ) {
 
-		$group_type = bp_groups_get_group_type( $group->id );
-		$group_type = bp_groups_get_group_type_object( $group_type );
+		$type_slug  = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $type_slug );
 		$group_type = $group_type->labels['singular_name'] ?? '';
 
 		if ( 'public' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Public', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Hidden', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Private', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
 			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
@@ -1448,7 +1448,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
 /**
  * Get an excerpt of a group description with view more link.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 1.9.1
  *
  * @param string      $excerpt  The group being referenced.
  * @param object|bool $group    The group being referenced.
@@ -1899,8 +1899,9 @@ function bp_group_list_admins( $group = false ) {
 						<?php
 						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
 						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
-						?>">
-						<span class="bb-icon bb-icon-menu-dots-h"></span>
+						?>
+						">
+						<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 					</a>
 				</li>
 			<?php } ?>
@@ -5616,29 +5617,31 @@ function bp_group_creation_tabs() {
 		$is_enabled = bp_are_previous_group_creation_steps_complete( $slug );
 		?>
 
-		<li
-		<?php
-		if ( bp_get_groups_current_create_step() == $slug ) :
-			?>
-			 class="current"<?php endif; ?>>
+		<li <?php echo ( ( bp_get_groups_current_create_step() == $slug ) ? 'class="current"' : '' ); ?>>
 			<?php
-			if ( $is_enabled ) :
+			if ( $is_enabled ) {
 				?>
-			<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
-															<?php
-else :
-	?>
-	<span><?php endif; ?><?php echo $counter; ?>. <?php echo $step['name']; ?>
-					 <?php
-						if ( $is_enabled ) :
-							?>
-	</a>
-							<?php
-else :
-	?>
-	</span><?php endif ?></li>
-					<?php
-					$counter++;
+				<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
+				<?php
+			} else {
+				?>
+				<span>
+				<?php
+			}
+
+				echo $counter . '. ' . $step['name'];
+
+			if ( $is_enabled ) {
+				?>
+				</a>
+				<?php
+			} else {
+				?>
+				</span>
+			<?php } ?>
+		</li>
+		<?php
+		$counter++;
 	}
 
 	unset( $is_enabled );
@@ -7864,7 +7867,7 @@ function bp_group_get_video_album_status( $group_id = false ) {
 /**
  * Checks if default platform group element is enabled.
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param string $element Group element.
  * @return bool Is group element enabled or not
@@ -7881,7 +7884,7 @@ function bb_platform_group_headers_element_enable( $element ) {
 /**
  * Get group grid style setting
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: left.
@@ -7900,7 +7903,7 @@ function bb_platform_group_header_style( $default = 'left' ) {
 /**
  * Checks if default platform group element is enabled.
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param string $element Group element.
  * @return bool Is group element enabled or not
@@ -7917,7 +7920,7 @@ function bb_platform_group_element_enable( $element ) {
 /**
  * Get group grid style setting
  *
- * @since [BBVERSION]
+ * @since 1.9.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: left.
