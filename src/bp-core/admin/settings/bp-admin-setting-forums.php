@@ -71,7 +71,11 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 			}
 
 			// Add the section
-			$this->add_section( $section_id, $section['title'], $section['callback'] );
+			$this->add_section(
+				$section_id,
+				isset( $section['title'] ) ? $section['title'] : '',
+				isset( $section['callback'] ) ? $section['callback'] : ''
+			);
 
 			// Loop through fields for this section
 			foreach ( (array) $fields as $field_id => $field ) {

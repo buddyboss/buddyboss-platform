@@ -44,13 +44,13 @@
 
 				if ( ( bp_is_profile_video_support_enabled() && bb_user_can_create_video() ) ) {
 					?>
-					<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+					<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
 					<?php
 				}
 
 				if ( ( bp_is_profile_albums_support_enabled() ) ) {
 					?>
-					<a href="#" id="bb-create-video-album" class="bb-create-video-album button small"><i class="bb-icon-media"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+					<a href="#" id="bb-create-video-album" class="bb-create-video-album button small"><i class="bb-icon-l bb-icon-image-video"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
 					<?php
 				}
 

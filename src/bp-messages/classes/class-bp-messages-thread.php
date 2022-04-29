@@ -203,9 +203,7 @@ class BP_Messages_Thread {
 		$this->recipients = $this->get_pagination_recipients( $this->thread_id, $args );
 
 		// Get the unread count for the logged in user.
-		if ( isset( $this->recipients[ $r['user_id'] ] ) ) {
-			$this->unread_count = $this->recipients[ $r['user_id'] ]->unread_count;
-		}
+		$this->unread_count = bb_get_thread_messages_unread_count( $this->thread_id, $r['user_id'] );
 
 		// Grab all message meta.
 		if ( true === (bool) $r['update_meta_cache'] ) {
@@ -930,6 +928,10 @@ class BP_Messages_Thread {
 			}
 		}
 
+		if ( ! empty( $r['having_sql'] ) ) {
+			$additional_where[] = 'r.user_id in (' . implode( ',', $r['having_sql'] ) . ')';
+		}
+
 		$group_thread_in = array();
 		if ( ! empty( $r['search_terms'] ) ) {
 
@@ -1096,14 +1098,14 @@ class BP_Messages_Thread {
 		$sql = array();
 
 		if ( ! empty( $r['having_sql'] ) ) {
-			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
+			$sql['select'] = 'SELECT r.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
 		} else {
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
 		}
 
 		$sql['from']  = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
 		$sql['where'] = "WHERE {$where_sql} {$meta_query_sql['where']}";
-		$sql['misc']  = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
+		$sql['misc'] = "GROUP BY m.thread_id ORDER BY date_sent DESC";
 
 		/**
 		 * Filters the Where SQL statement.
@@ -1125,7 +1127,15 @@ class BP_Messages_Thread {
 		 */
 		$sql['from'] = apply_filters( 'bp_messages_recipient_get_join_sql', $sql['from'], $r );
 
-		$qq                = implode( ' ', $sql );
+		$qq = implode( ' ', $sql );
+
+		if ( ! empty( $r['having_sql'] ) ) {
+			$having_sql = $wpdb->prepare( 'recipient_list = %s', implode( ',', $r['having_sql'] ) );
+			$qq         = "SELECT * from ({$qq}) as miq WHERE miq.{$having_sql}";
+		}
+
+		$qq .= " {$pag_sql}";
+
 		$thread_ids_cached = bp_core_get_incremented_cache( $qq, 'bp_messages' );
 
 		if ( false === $thread_ids_cached ) {
@@ -1259,6 +1269,7 @@ class BP_Messages_Thread {
 			// phpcs:ignore
 			$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
+			wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 			wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 			wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 
@@ -1295,6 +1306,7 @@ class BP_Messages_Thread {
 		$bp     = buddypress();
 		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
+		wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 
