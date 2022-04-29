@@ -356,13 +356,13 @@ function bp_nouveau_ajax_document_get_document_description() {
 
 	$document     = new BP_Document( $document_id );
 	if ( bp_is_active( 'activity' ) && ! empty( $document->activity_id ) ) {
-		
+
 		remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
-		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_document_activity_description' );
 		add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
-		
+
 		$remove_comment_btn = false;
-		
+
 		$activity = new BP_Activity_Activity( $document->activity_id );
 		if ( ! empty( $activity->id ) ) {
 			$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
@@ -376,21 +376,21 @@ function bp_nouveau_ajax_document_get_document_description() {
 				$remove_comment_btn = true;
 			}
 		}
-		
+
 		if ( true === $remove_comment_btn ) {
 			add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 			add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 			add_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 			add_filter( 'bp_nouveau_get_activity_comment_buttons_activity_state', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 		}
-		
+
 		$args = array(
 			'include'     => $document->activity_id,
 			'privacy'     => false,
 			'scope'       => false,
 			'show_hidden' => true,
 		);
-		
+
 		ob_start();
 		if ( bp_has_activities( $args ) ) {
 			while ( bp_activities() ) {
@@ -400,19 +400,19 @@ function bp_nouveau_ajax_document_get_document_description() {
 		}
 		$document_description = ob_get_contents();
 		ob_end_clean();
-		
+
 		if ( true === $remove_comment_btn ) {
 			remove_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 			remove_filter( 'bp_nouveau_get_activity_entry_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 			remove_filter( 'bb_nouveau_get_activity_entry_bubble_buttons', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 			remove_filter( 'bp_nouveau_get_activity_comment_buttons_activity_state', 'bb_nouveau_get_activity_entry_buttons_callback', 99, 2 );
 		}
-		
+
 		remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
-		remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+		remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_document_activity_description' );
 		add_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 	}
-	
+
 	if ( empty( trim( $document_description ) ) ) {
 		$content          = get_post_field( 'post_content', $attachment_id );
 		$document_privacy = bb_media_user_can_access( $document_id, 'document' );
@@ -429,7 +429,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 				'type'    => 'full',
 			)
 		);
-		
+
 		ob_start();
 		if ( $can_view ) {
 			?>
@@ -440,7 +440,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 					</div>
 
 					<div class="activity-header">
-						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php echo esc_html_e( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 					</div>
 				</div>
@@ -450,7 +450,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 					if ( $can_edit_btn ) {
 						?>
 						<a class="bp-add-media-activity-description <?php echo ( ! empty( $content ) ? esc_attr( 'show-edit' ) : esc_attr( 'show-add' ) ); ?>" href="#">
-							<span class="bb-icon-edit-thin"></span>
+							<span class="bb-icon-l bb-icon-edit"></span>
 							<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 							<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						</a>
@@ -905,21 +905,21 @@ function bp_nouveau_ajax_document_move() {
 					<div class="data-head data-head-name">
 				<span>
 					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-modified">
 				<span>
 					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-visibility">
 				<span>
 					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 					</div>
 				</div><!-- .document-data-table-head -->
@@ -1230,21 +1230,21 @@ function bp_nouveau_ajax_document_delete() {
 				<div class="data-head data-head-name">
 				<span>
 					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
 					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
 					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 				</div>
 			</div><!-- .document-data-table-head -->
@@ -1388,21 +1388,21 @@ function bp_nouveau_ajax_document_folder_move() {
 				<div class="data-head data-head-name">
 				<span>
 					<?php esc_attr_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-modified">
 				<span>
 					<?php esc_attr_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 
 				</div>
 				<div class="data-head data-head-visibility">
 				<span>
 					<?php esc_attr_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
+					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 				</div>
 			</div><!-- .document-data-table-head -->
