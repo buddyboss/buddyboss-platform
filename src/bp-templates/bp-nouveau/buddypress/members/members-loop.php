@@ -205,7 +205,7 @@ endif;
 					<header class="bb-model-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-model-close-button" href="#">
-							<span class="bb-icon bb-icon-close"></span>
+							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-remove-connection-content bb-action-popup-content">
