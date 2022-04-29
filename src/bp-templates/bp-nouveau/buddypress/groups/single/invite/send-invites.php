@@ -9,12 +9,12 @@
  */
 
 ?>
+<?php
+if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
+	bp_get_template_part( 'groups/single/parts/invite-subnav' );
+}
+?>
 <div id="group-invites-container">
-	<?php
-	if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
-		bp_get_template_part( 'groups/single/parts/invite-subnav' );
-	}
-	?>
 	<div class="bb-groups-invites-left">
 		<div class="bb-groups-invites-left-inner">
 			<div class="bb-panel-head">
@@ -22,7 +22,7 @@
 					<h4 class="total-members-text"><?php _e( 'Members', 'buddyboss' ); ?></h4>
 					<?php if ( bp_is_active( 'friends' ) ) { ?>
 					<div id="bp-invites-dropdown-options-loader" class="bp-invites-dropdown-options-loader-hide">
-						<i class="bb-icons bb-icon-loader animate-spin"></i>
+						<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 					</div>
 					<div class="bp-group-message-wrap">
 						<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox" />
@@ -38,7 +38,7 @@
 						<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
 						<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 						<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit">
-							<span class="bb-icons bb-icon-search" aria-hidden="true"></span>
+							<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
 							<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
 						</button>
 					</form>
@@ -65,7 +65,7 @@
 			<div class="bb-groups-invites-right-top">
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php _e( 'Send Invites', 'buddyboss' ); ?></h2>
-					<div class="bb-more-invites-wrap"><a class="bb-add-invites" href="#"><span class="bb-icons bb-icon-plus-circle"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
+					<div class="bb-more-invites-wrap"><a class="bb-add-invites" href="#"><span class="bb-icon-rl bb-icon-plus"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-invites-feedback">
 					<div class="bp-feedback info">
@@ -82,7 +82,7 @@
 					<div id="whats-new-toolbar">
 						<div id="group-invites-new-submit" class="submit">
 							<div id="bp-invites-submit-loader" class="bp-invites-submit-loader-hide">
-								<i class="bb-icons bb-icon-loader animate-spin"></i>
+								<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 							</div>
 							<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>" id="send_group_invite_button" class="small">
 							<input type="submit" name="bp_invites_reset" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>" id="bp_invites_reset" class="small">
