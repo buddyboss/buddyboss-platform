@@ -100,6 +100,7 @@ add_filter( 'bp_activity_new_at_mention_permalink', 'bp_activity_new_at_mention_
 add_filter( 'pre_comment_content', 'bp_activity_at_name_filter' );
 add_filter( 'the_content', 'bp_activity_at_name_filter' );
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_at_name_filter' );
+add_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 
 add_filter( 'bp_get_activity_parent_content', 'bp_create_excerpt' );
 
