@@ -129,6 +129,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
 			$( document ).on( 'click', '.video-action_list .video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$( document ).on( 'click', '.bp-video-thumbnail-uploader.opened-edit-thumbnail .video-thumbnail-custom .close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
+			$( '#buddypress [data-bp-list="video"]' ).on( 'bp_ajax_request', this.bp_ajax_video_request );
 
 			// Video Album, Video Directory.
 			bpNouveau.on( 'click', '#bb-create-video-album', this.openCreateVideoAlbumModal.bind( this ) );
@@ -1610,6 +1611,16 @@ window.bp = window.bp || {};
 				}
 			);
 
+		},
+
+		bp_ajax_video_request: function ( event, data ) {
+			if ( BP_Nouveau.video.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups === 0 ) {
+				$( '.bb-videos-actions' ).hide();
+			} else if ( BP_Nouveau.video.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups !== 0 ) {
+				$( '.bb-videos-actions' ).show();
+			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0 ) {
+				$( '.bb-videos-actions' ).hide();
+			}
 		},
 
 		deleteVideoThumb: function ( event ) {
