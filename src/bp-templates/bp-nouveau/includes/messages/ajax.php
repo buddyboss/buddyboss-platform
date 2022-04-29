@@ -851,6 +851,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) :
 		bp_message_thread();
 
+		$bp_get_message_thread_id = bp_get_message_thread_id();
+
 		$last_message_id           = (int) $messages_template->thread->last_message_id;
 		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		$group_name                = '';
