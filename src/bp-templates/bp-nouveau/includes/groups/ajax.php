@@ -574,12 +574,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<p class="status">
 							<?php
 							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
-								?>
-								<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
-								<?php
+								esc_html_e( 'The invite has not been sent.', 'buddyboss' );
 							} else {
-								?>
-								<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?><?php } ?>
+								esc_html_e( 'The invite has been sent.', 'buddyboss' );
+							}
+							?>
 						</p>
 					</div>
 				<?php } ?>
@@ -591,24 +590,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
-						 selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="
-						<?php
-						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							?>
-												<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>
-							<?php
-						} else {
-							?>
-							<?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
+                            selected<?php } ?>" data-bp-tooltip-pos="left"
+                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss' ) : esc_attr__( 'Invite', 'buddyboss' ); ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 						<?php
 						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							?>
-							<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
-							<?php
+							esc_html_e( 'Cancel invitation', 'buddyboss' );
 						} else {
-							?>
-							<?php esc_html_e( 'Invite', 'buddyboss' ); ?><?php } ?>
+							esc_html_e( 'Invite', 'buddyboss' );
+						}
+						?>
 					</span>
 					</button>
 				<?php } ?>
@@ -649,7 +640,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="load-more">
 			<div class="center">
-				<i class="bb-icons bb-icon-loader animate-spin"></i>
+				<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 			</div>
 		</li>
 		<?php
@@ -910,11 +901,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		);
 	}
 
-	$group_members   = groups_get_group_members( $args );
-	$html            = '';
-	$paginate        = '';
-	$result          = array();
-	$total_page      = 0;
+	$group_members = groups_get_group_members( $args );
+	$html          = '';
+	$paginate      = '';
+	$result        = array();
+	$total_page    = 0;
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( array( 'results' => 'no_member' ) );
@@ -938,13 +929,18 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			$is_friends_connection  = true;
-            if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-                if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
-                    $is_friends_connection  = false;
-                }
-            }
+			if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
+					$is_friends_connection = false;
+				}
+			}
 			?>
-			<li class="group-message-member-li <?php echo $member->ID; echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg'; ?>">
+			<li class="group-message-member-li 
+			<?php
+			echo $member->ID;
+			echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
+			?>
+			">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
@@ -974,7 +970,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 					} else {
 						?>
 						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss' ); ?>">
-							<i class="bb-icon-slash" aria-hidden="true"></i>
+							<i class="bb-icon-l bb-icon-cancel" aria-hidden="true"></i>
 						</span>
 						<?php
 					}
@@ -988,7 +984,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="bb-icon-loader animate-spin"></i>
+					<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 				</div>
 			</li>
 			<?php
@@ -1027,10 +1023,10 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 		}
 
-		$html        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
-		$total_page  = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
-		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
-		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
+		$html       = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
+		$total_page = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
+		$page       = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
+		$paginate   = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 
 		wp_send_json_success(
 			array(

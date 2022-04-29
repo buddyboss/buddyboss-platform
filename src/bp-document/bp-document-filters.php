@@ -529,7 +529,7 @@ function bp_document_update_document_privacy( $folder ) {
 			}
 		}
 
-		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids ) ) {
+		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids )  ) {
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
@@ -844,6 +844,8 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @param array|object $post              Request object.
  *
  * @return bool
+ *
+ * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
 	// check if media is enabled in messages or not and empty media in object request or not.
@@ -1507,7 +1509,7 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 /**
  * Add document repair list item.
  *
- * @param $repair_list
+ * @param array $repair_list Repair list.
  *
  * @since BuddyBoss 1.4.4
  * @return array Repair list items.
@@ -1516,10 +1518,11 @@ function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-document',
-			__( 'Repair document on the site.', 'buddyboss' ),
+			esc_html__( 'Repair documents', 'buddyboss' ),
 			'bp_document_admin_repair_document',
 		);
 	}
+
 	return $repair_list;
 }
 
@@ -1576,7 +1579,7 @@ function bp_document_admin_repair_document() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1585,8 +1588,8 @@ function bp_document_admin_repair_document() {
 		);
 	} else {
 		return array(
-			'status'  => 1,
-			'message' => __( 'document update complete!', 'buddyboss' ),
+				'status'  => 1,
+				'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1657,14 +1660,14 @@ function bp_members_filter_document_public_scope( $retval = array(), $filter = a
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy,
+			'value'   => $privacy
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders,
+		$folders
 	);
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
@@ -1747,14 +1750,14 @@ function bp_members_filter_folder_public_scope( $retval = array(), $filter = arr
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy,
+			'value'   => $privacy
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders,
+		$folders
 	);
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
@@ -1796,11 +1799,10 @@ function bp_document_activity_after_email_content( $activity ) {
 	}
 }
 
-
 /**
  * Adds activity document data for the edit activity
  *
- * @param $activity
+ * @param array $activity Activity data.
  *
  * @return array $activity Returns the activity with document if document saved otherwise no documents.
  *
@@ -1812,11 +1814,20 @@ function bp_document_get_edit_activity_data( $activity ) {
 
 		// Fetch document ids of activity.
 		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+		$document_id  = bp_activity_get_meta( $activity['id'], 'bp_document_id', true );
+
+		if ( ! empty( $document_id ) && ! empty( $document_ids ) ) {
+			$document_ids = $document_ids . ',' . $document_id;
+		} elseif ( ! empty( $document_id ) && empty( $document_ids ) ) {
+			$document_ids = $document_id;
+		}
 
 		if ( ! empty( $document_ids ) ) {
 			$activity['document'] = array();
 
 			$document_ids = explode( ',', $document_ids );
+			$document_ids = array_unique( $document_ids );
+			$folder_id    = 0;
 
 			foreach ( $document_ids as $document_id ) {
 				if ( bp_is_active( 'moderation' ) && bp_moderation_is_content_hidden( $document_id, BP_Moderation_Document::$moderation_type ) ) {
@@ -1843,6 +1854,12 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
 				);
+
+				if ( 0 === $folder_id && $document->folder_id > 0 ) {
+					$folder_id                    = $document->folder_id;
+					$activity['can_edit_privacy'] = false;
+				}
+
 			}
 		}
 
