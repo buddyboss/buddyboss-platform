@@ -1212,5 +1212,5 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	 * @param string The user registered date meta.
 	 * @param string The user registered date.
 	 */
-	return apply_filters( 'bp_nouveau_get_member_meta', $user_registered_date, $register_date );
+	return apply_filters( 'bb_get_member_joined_date', $user_registered_date, $register_date );
 }
