@@ -44,7 +44,7 @@ add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 
 add_action( 'messages_message_sent', 'bp_video_attach_video_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_video_messages_delete_attached_video', 10, 2 ); // Delete thread videos.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_video_user_messages_delete_attached_video', 10, 4 ); // Delete messages videos.
-add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_video_message_validated_content', 20, 3 );
 
 // Core tools.
 add_filter( 'bp_repair_list', 'bp_video_add_admin_repair_items' );
@@ -787,12 +787,11 @@ function bp_video_user_messages_delete_attached_video( $thread_id, $message_ids,
  * @return bool
  */
 function bp_video_message_validated_content( $validated_content, $content, $post ) {
-	// check if video is enabled in messages or not and empty video in object request or not.
-	if ( bp_is_messages_video_support_enabled() && ! empty( $post['video'] ) ) {
-		return true;
+	if ( ! bp_is_messages_video_support_enabled() || ! isset( $post['video'] ) ) {
+		return (bool) $validated_content;
 	}
 
-	return (bool) $validated_content;
+	return (bool) ! empty( $post['video'] );
 }
 
 /**

@@ -38,7 +38,7 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
-add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 20, 3 );
 
 // Download Document.
 add_action( 'init', 'bp_document_download_url_file' );
@@ -848,12 +848,11 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
-	// check if media is enabled in messages or not and empty media in object request or not.
-	if ( bp_is_messages_document_support_enabled() && ! empty( $post['document'] ) ) {
-		return true;
+	if ( ! bp_is_messages_document_support_enabled() || ! isset( $post['document'] ) ) {
+		return (bool) $validated_content;
 	}
 
-	return (bool) $validated_content;
+	return (bool) ! empty( $post['document'] );
 }
 
 /**
