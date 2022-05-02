@@ -856,38 +856,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		$bp_get_message_thread_id = bp_get_message_thread_id();
 
-		if ( '' === trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
-			foreach ( $messages_template->thread->messages as $message ) {
-				$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
-				if ( '' !== $content ) {
-
-					$messages_template->thread->last_message_id      = $message->id;
-					$messages_template->thread->thread_id            = $message->thread_id;
-					$messages_template->thread->last_message_subject = $message->subject;
-					$messages_template->thread->last_message_content = $message->message;
-					$messages_template->thread->last_sender_id       = $message->sender_id;
-					$messages_template->thread->last_message_date    = $message->date_sent;
-
-					break;
-				}
-			}
-			if ( '' === $content ) {
-				$thread_messages = BP_Messages_Thread::get_messages( $bp_get_message_thread_id, null, 99999999 );
-				foreach ( $thread_messages as $thread_message ) {
-					$content = trim( wp_strip_all_tags( do_shortcode( $thread_message->message ) ) );
-					if ( '' !== $content ) {
-						$messages_template->thread->last_message_id      = $thread_message->id;
-						$messages_template->thread->thread_id            = $thread_message->thread_id;
-						$messages_template->thread->last_message_subject = $thread_message->subject;
-						$messages_template->thread->last_message_content = $thread_message->message;
-						$messages_template->thread->last_sender_id       = $thread_message->sender_id;
-						$messages_template->thread->last_message_date    = $thread_message->date_sent;
-						break;
-					}
-				}
-			}
-		}
-
 		$last_message_id           = (int) $messages_template->thread->last_message_id;
 		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		$group_name                = '';

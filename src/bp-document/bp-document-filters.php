@@ -38,13 +38,13 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
-add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 20, 3 );
 
 // Download Document.
 add_action( 'init', 'bp_document_download_url_file' );
 
 // Sync Attachment data.
-//add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
+// add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
 
 add_filter( 'bp_get_document_name', 'convert_chars' );
 add_filter( 'bp_get_document_name', 'wptexturize' );
@@ -756,8 +756,8 @@ function bp_document_attach_document_to_message( &$message ) {
 		$document_list = $_POST['document'];
 
 		if ( ! empty( $document_list ) ) {
-			foreach( $document_list as $k => $document ) {
-				if( array_key_exists( 'group_id', $document ) ) {
+			foreach ( $document_list as $k => $document ) {
+				if ( array_key_exists( 'group_id', $document ) ) {
 					unset( $document_list[ $k ]['group_id'] );
 				}
 			}
@@ -766,10 +766,10 @@ function bp_document_attach_document_to_message( &$message ) {
 		$document_ids = bp_document_add_handler( $document_list, 'message' );
 
 		if ( ! empty( $document_ids ) ) {
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
 			}
-        }
+		}
 
 		$document_ids = implode( ',', $document_ids );
 
@@ -845,11 +845,11 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
-	// check if media is enabled in messages or not and empty media in object request or not.
-	if ( bp_is_messages_document_support_enabled() && ! empty( $post['document'] ) ) {
-		$validated_content = true;
+	if ( ! bp_is_messages_document_support_enabled() || ! isset( $post['document'] ) ) {
+		return (bool) $validated_content;
 	}
-	return $validated_content;
+
+	return (bool) ! empty( $post['document'] );
 }
 
 /**
@@ -913,7 +913,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE attachment_id = %d", $attachment_id ) ); // db call ok; no-cache ok;
 	if ( $document ) {
 		$document_post = get_post( $attachment_id );
-		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, true );
+		$document      = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, true );
 	}
 }
 
@@ -970,17 +970,17 @@ add_filter( 'mod_rewrite_rules', 'bp_document_protect_download_rewite_rules' );
 
 function bp_document_check_download_folder_protection() {
 
-	$upload_dir     = wp_get_upload_dir();
-	$files = array(
-			array(
-					'base'    => $upload_dir['basedir'] . '/bb_documents',
-					'file'    => 'index.html',
-					'content' => '',
-			),
-			array(
-					'base'    => $upload_dir['basedir'] . '/bb_documents',
-					'file'    => '.htaccess',
-					'content' => '# Apache 2.2
+	$upload_dir = wp_get_upload_dir();
+	$files      = array(
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb_documents',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb_documents',
+			'file'    => '.htaccess',
+			'content' => '# Apache 2.2
 <IfModule !mod_authz_core.c>
 	Order Deny,Allow
 	Deny from all
@@ -1004,7 +1004,7 @@ php_flag engine 0
 AddHandler cgi-script .php .phtml .php3 .pl .py .jsp .asp .htm .shtml .sh .cgi
 Options -ExecCGI
 # END BuddyBoss code execution protection',
-			),
+		),
 	);
 
 	foreach ( $files as $file ) {
@@ -1028,9 +1028,9 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  */
 function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) {
 	if ( isset( $response['url'] ) && strstr( $response['url'], 'bb_documents/' ) ) {
-		$response['icon'] 	= includes_url() . 'images/media/default.png';
-		$response['type'] 	= 'text';
-		$response['sizes'] 	= array();
+		$response['icon']  = includes_url() . 'images/media/default.png';
+		$response['type']  = 'text';
+		$response['sizes'] = array();
 	}
 
 	return $response;
@@ -1192,7 +1192,7 @@ function bp_document_download_headers( $file_path, $filename, $download_range = 
  * @since BuddyBoss 1.4.1
  */
 function bp_document_download_file_force( $file_path, $filename ) {
-	$parsed_file_path  = bp_document_parse_file_path( $file_path );
+	$parsed_file_path = bp_document_parse_file_path( $file_path );
 	$download_range   = bp_document_get_download_range( @filesize( $parsed_file_path['file_path'] ) ); // @codingStandardsIgnoreLine.
 
 	bp_document_download_headers( $parsed_file_path['file_path'], $filename, $download_range );
