@@ -38,13 +38,13 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
-add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 20, 3 );
 
 // Download Document.
 add_action( 'init', 'bp_document_download_url_file' );
 
 // Sync Attachment data.
-//add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
+// add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
 
 add_filter( 'bp_get_document_name', 'convert_chars' );
 add_filter( 'bp_get_document_name', 'wptexturize' );
@@ -756,8 +756,8 @@ function bp_document_attach_document_to_message( &$message ) {
 		$document_list = $_POST['document'];
 
 		if ( ! empty( $document_list ) ) {
-			foreach( $document_list as $k => $document ) {
-				if( array_key_exists( 'group_id', $document ) ) {
+			foreach ( $document_list as $k => $document ) {
+				if ( array_key_exists( 'group_id', $document ) ) {
 					unset( $document_list[ $k ]['group_id'] );
 				}
 			}
@@ -766,10 +766,10 @@ function bp_document_attach_document_to_message( &$message ) {
 		$document_ids = bp_document_add_handler( $document_list, 'message' );
 
 		if ( ! empty( $document_ids ) ) {
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
 			}
-        }
+		}
 
 		$document_ids = implode( ',', $document_ids );
 
@@ -836,7 +836,9 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
 /**
  * Validate message if document is not empty.
  *
- * @param bool         $validated_content Boolean from filter.
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool         $validated_content True if message is valid, false otherwise.
  * @param string       $content           Message content.
  * @param array|object $post              Request object.
  *
@@ -845,11 +847,11 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
-	// check if media is enabled in messages or not and empty media in object request or not.
-	if ( bp_is_messages_document_support_enabled() && ! empty( $post['document'] ) ) {
-		$validated_content = true;
+	if ( ! bp_is_messages_document_support_enabled() || ! isset( $post['document'] ) ) {
+		return (bool) $validated_content;
 	}
-	return $validated_content;
+
+	return (bool) ! empty( $post['document'] );
 }
 
 /**
