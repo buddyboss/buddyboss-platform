@@ -1252,7 +1252,7 @@ function bb_notification_avatar() {
  * @return void
  */
 function bb_get_default_notification_avatar( $size = 'full', $notification ) {
-	if ( ! in_array( $size, array( 'thumb', 'full' ) ) ) {
+	if ( ! in_array( $size, array( 'thumb', 'full' ), true ) ) {
 		$size = 'full';
 	}
 
@@ -1301,6 +1301,7 @@ function bb_get_notification_avatar_url( $size = 'full' ) {
  *
  * @param string $component_action Component Action.
  * @param bool   $html             Whether to get only class or with i tag.
+ * @param object $notification     Notification object.
  *
  * @return mixed|string|void
  */
