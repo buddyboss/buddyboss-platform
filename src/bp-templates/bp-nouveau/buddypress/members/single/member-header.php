@@ -20,7 +20,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	$is_enabled_last_active      = bb_enabled_profile_header_layout_element( 'last-active' );
 	$is_enabled_followers        = bb_enabled_profile_header_layout_element( 'followers' );
 	$is_enabled_following        = bb_enabled_profile_header_layout_element( 'following' );
-	$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && bp_member_type_enable_disable() && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+	$is_enabled_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
 	$my_profile                     = '';
 	$user_social_networks_urls      = '';
