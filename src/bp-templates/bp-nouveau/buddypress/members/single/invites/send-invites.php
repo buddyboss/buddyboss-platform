@@ -1,4 +1,13 @@
 <?php
+/**
+ * The template for send invites
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/invites/send-invites.php.
+ *
+ * @since   BuddyBoss 1.0.0
+ * @version 1.0.0
+ */
+
 bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
@@ -73,7 +82,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				}
 				?>
 				<td class="field-actions">
-					<span class="field-actions-remove"><i class="bb-icon bb-icon-close"></i></span>
+					<span class="field-actions-remove"><i class="bb-icon-l bb-icon-times"></i></span>
 				</td>
 			</tr>
 
@@ -82,7 +91,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				<td class="field-name" colspan="<?php if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) { echo 3; } else { echo 2; }?>">
 				</td>
 				<td class="field-actions-last" colspan="">
-					<span class="field-actions-add"><i class="bb-icon bb-icon-plus"></i></span>
+					<span class="field-actions-add"><i class="bb-icon-l bb-icon-plus"></i></span>
 				</td>
 			</tr>
 

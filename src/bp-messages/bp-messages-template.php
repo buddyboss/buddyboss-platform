@@ -645,8 +645,8 @@ function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
 	return sprintf(
 		/* translators: 1: total number, 2: accessibility text: number of unread messages */
 		'<span class="thread-count">(%1$s)</span> <span class="bp-screen-reader-text">%2$s</span>',
-		number_format_i18n( $total ),
-		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), number_format_i18n( $unread ) )
+		bp_core_number_format( $total ),
+		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), bp_core_number_format( $unread ) )
 	);
 }
 
@@ -1420,34 +1420,48 @@ function bp_send_private_message_button() {
 function bp_send_message_button( $args = '' ) {
 	echo bp_get_send_message_button( $args );
 }
-	/**
-	 * Generate the 'Message' button for member profile headers.
-	 *
-	 * @since BuddyPress 1.2.0
-	 * @since BuddyPress 3.0.0 Added `$args` parameter.
-	 *
-	 * @param array|string $args {
-	 *     All arguments are optional. See {@link BP_Button} for complete
-	 *     descriptions.
-	 *     @type string $id                Default: 'private_message'.
-	 *     @type string $component         Default: 'messages'.
-	 *     @type bool   $must_be_logged_in Default: true.
-	 *     @type bool   $block_self        Default: true.
-	 *     @type int   $message_receiver_user_id        Default: message receiver user id.
-	 *     @type string $wrapper_id        Default: 'send-private-message'.
-	 *     @type string $link_href         Default: the private message link for
-	 *                                     the current member in the loop.
-	 *     @type string $link_text         Default: 'Message'.
-	 *     @type string $link_class        Default: 'send-message'.
-	 * }
-	 * @return string
-	 */
+
+/**
+ * Generate the 'Message' button for member profile headers.
+ *
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 3.0.0 Added `$args` parameter.
+ *
+ * @param array|string $args {
+ *     All arguments are optional. See {@link BP_Button} for complete
+ *     descriptions.
+ *     @type string $id                Default: 'private_message'.
+ *     @type string $component         Default: 'messages'.
+ *     @type bool   $must_be_logged_in Default: true.
+ *     @type bool   $block_self        Default: true.
+ *     @type int    $message_receiver_user_id        Default: message receiver user id.
+ *     @type string $wrapper_id        Default: 'send-private-message'.
+ *     @type string $link_href         Default: the private message link for
+ *                                     the current member in the loop.
+ *     @type string $link_text         Default: 'Message'.
+ *     @type string $link_class        Default: 'send-message'.
+ *     @type bool   $is_tooltips       Is enabled tooltips? Default: false.
+ *     @type string $data-balloon      The tooltips content. Default: null.
+ *     @type string $data-balloon-pos  The position of tooltips. Default: null.
+ *     @type string $prefix_link_text  Prefix of the button/link title. Default: null.
+ *     @type string $postfix_link_text Postfix of the button/link title. Default: null.
+ *     @type array  $button_attr {
+ *          Button attributes to make it hover.
+ *          @type string|bool $hover_type             The type of hover. There three options 'hover', 'static', 'false'. Default: false.
+ *          @type string|null $data-title             The button hover title. Default: null.
+ *          @type string|null $data-title-displayed   The button hover out title. Default: null.
+ *          @type bool        $add_pre_post_text      Add prefix and postfix to the button title. Default: false.
+ *     }
+ * }
+ * @return string
+ */
 function bp_get_send_message_button( $args = '' ) {
 
 	if ( bp_displayed_user_id() > 0 ) {
 		$receiver_user_id = bp_displayed_user_id();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) {
-		$receiver_user_id = absint( $_GET['user'] );
+		$receiver_user_id = absint( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	} else {
 		$receiver_user_id = ( $GLOBALS['members_template']->member->ID ) ? $GLOBALS['members_template']->member->ID : 0;
 	}
@@ -1462,8 +1476,18 @@ function bp_get_send_message_button( $args = '' ) {
 			'message_receiver_user_id' => $receiver_user_id,
 			'wrapper_id'               => 'send-private-message',
 			'link_href'                => bp_get_send_private_message_link(),
-			'link_text'                => __( 'Message', 'buddyboss' ),
+			'link_text'                => esc_html__( 'Send Message', 'buddyboss' ),
 			'link_class'               => 'send-message',
+			'is_tooltips'              => false,
+			'data-balloon-pos'         => '',
+			'data-balloon'             => esc_html__( 'Send Message', 'buddyboss' ),
+			'prefix_link_text'         => '',
+			'postfix_link_text'        => '',
+			'button_attr'              => array(
+				'hover_type'           => false,
+				'data-title'           => '',
+				'data-title-displayed' => '',
+			),
 		)
 	);
 
@@ -1728,7 +1752,7 @@ function bp_get_the_thread_subject() {
  */
 function bp_get_the_thread_recipients() {
 	if ( 5 <= bp_get_thread_recipients_count() ) {
-		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), number_format_i18n( bp_get_thread_recipients_count() ) );
+		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), bp_core_number_format( bp_get_thread_recipients_count() ) );
 	} else {
 		$recipients = bp_get_thread_recipients_list();
 	}
@@ -2241,4 +2265,23 @@ function bp_embed_message_cache( $cache, $id, $cachekey ) {
  */
 function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
 	bp_messages_update_meta( $id, $cachekey, $cache );
+}
+
+/**
+ * Get the total number of recipients in the current thread.
+ *
+ * @since BuddyBoss 1.7.6
+ *
+ * @return int Return total recipients count.
+ */
+function bb_get_thread_total_recipients_count() {
+	global $thread_template;
+	/**
+	 * Filters the total number of recipients in a thread.
+	 *
+	 * @since 1.7.6
+	 *
+	 * @param int $count Total recipients number.
+	 */
+	return (int) apply_filters( 'bb_get_thread_total_recipients_count', $thread_template->thread->total_recipients_count );
 }

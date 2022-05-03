@@ -1491,7 +1491,7 @@ function bbp_dropdown( $args = '' ) {
 	 * @return string The dropdown
 	 */
 function bbp_get_dropdown( $args = '' ) {
-
+	static $bbp_get_dropdown_cache = array();
 	/** Arguments */
 
 	// Parse arguments against default values
@@ -1516,6 +1516,7 @@ function bbp_get_dropdown( $args = '' ) {
 			'show_none_default_val' => '',
 			'disable_categories'    => true,
 			'disabled'              => '',
+			'disabled_walker'       => true,
 		),
 		'get_dropdown'
 	);
@@ -1536,24 +1537,30 @@ function bbp_get_dropdown( $args = '' ) {
 	}
 
 	/** Setup variables */
-
-	$retval = '';
-	$posts  = get_posts(
-		array(
-			'post_type'              => $r['post_type'],
-			'post_status'            => $r['post_status'],
-			'exclude'                => $r['exclude'],
-			'post_parent'            => $r['post_parent'],
-			'numberposts'            => $r['numberposts'],
-			'orderby'                => $r['orderby'],
-			'order'                  => $r['order'],
-			'walker'                 => $r['walker'],
-			'disable_categories'     => $r['disable_categories'],
-			'suppress_filters'       => false,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		)
+	$retval    = '';
+	$post_args = array(
+		'post_type'              => $r['post_type'],
+		'post_status'            => $r['post_status'],
+		'exclude'                => $r['exclude'],
+		'post_parent'            => $r['post_parent'],
+		'numberposts'            => $r['numberposts'],
+		'orderby'                => $r['orderby'],
+		'order'                  => $r['order'],
+		'walker'                 => $r['walker'],
+		'disable_categories'     => $r['disable_categories'],
+		'suppress_filters'       => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 	);
+
+	$cache_key = 'bbp_get_dropdown_' . md5( maybe_serialize( $post_args ) );
+	if ( ! isset( $bbp_get_dropdown_cache[ $cache_key ] ) ) {
+		$posts = get_posts( $post_args );
+
+		$bbp_get_dropdown_cache[ $cache_key ] = $posts;
+	} else {
+		$posts = $bbp_get_dropdown_cache[ $cache_key ];
+	}
 
 	/** Drop Down */
 
@@ -1561,7 +1568,7 @@ function bbp_get_dropdown( $args = '' ) {
 	if ( empty( $r['options_only'] ) ) {
 
 		// Should this select appear disabled?
-		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ), true, false );
+		$disabled = disabled( isset( bbpress()->options[ $r['disabled'] ] ) ? bbpress()->options[ $r['disabled'] ] : $r['disabled'], true, false );
 
 		// Setup the tab index attribute
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . intval( $r['tab'] ) . '"' : '';
@@ -1617,7 +1624,11 @@ function bbp_get_dropdown( $args = '' ) {
 	// Items found so walk the tree
 	if ( ! empty( $posts ) ) {
 		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
-		unset( $r['walker'] );
+
+		if ( ! empty( $r['disabled_walker'] ) && true === $r['disabled_walker'] ) {
+			unset( $r['walker'] );
+		}
+
 		$retval .= walk_page_dropdown_tree( $posts, 0, $r );
 		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
 	}
@@ -1776,7 +1787,7 @@ function bbp_reply_form_fields() {
 		<input type="hidden" name="bbp_reply_to"    id="bbp_reply_to"    value="<?php bbp_form_reply_to(); ?>" />
 		<input type="hidden" name="action"          id="bbp_post_action" value="bbp-edit-reply" />
 		<input type="hidden" name="bbp_redirect_page_to" id="bbp_redirect_page_to" value="<?php echo intval( $forum_redirect_to ); ?>" />
-	
+
 		<?php
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			wp_nonce_field( 'bbp-unfiltered-html-reply_' . bbp_get_reply_id(), '_bbp_unfiltered_html_reply', false );}
@@ -1963,9 +1974,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>>
-			<?php echo $post_content; ?>
-			</div>
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo wp_kses_post( $post_content ); ?></div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
 			<?php
 
@@ -1998,7 +2007,7 @@ function bbp_get_the_content( $args = array() ) {
 		else :
 			?>
 
-			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo $post_content; ?></textarea>
+			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo esc_textarea( $post_content ); ?></textarea>
 
 			<?php
 		endif;
