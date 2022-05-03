@@ -2324,7 +2324,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2333,7 +2338,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, array( 'support' => 'activity', 'context' => 'view' ) )
+				$this->prepare_item_for_response(
+					$document,
+					array(
+						'support' => 'activity',
+						'context' => 'view',
+					)
+				)
 			);
 		}
 
@@ -2600,7 +2611,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
@@ -2759,7 +2775,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$documents = $this->assemble_response_data( array( 'document_ids' => $document_ids, 'sort' => 'ASC' ) );
+		$documents = $this->assemble_response_data(
+			array(
+				'document_ids' => $document_ids,
+				'sort'         => 'ASC',
+			)
+		);
 
 		if ( empty( $documents['documents'] ) ) {
 			return;
