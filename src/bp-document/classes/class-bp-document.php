@@ -805,6 +805,9 @@ class BP_Document {
 				'count_total'         => false,           // Whether or not to use count_total.
 				'user_directory'      => true,
 				'folder_id'           => 0,
+				'activity_id'         => false,
+				'group_id'            => false,
+				'user_id'             => false,
 				'meta_query_document' => false,
 				'meta_query_folder'   => false,
 			)
