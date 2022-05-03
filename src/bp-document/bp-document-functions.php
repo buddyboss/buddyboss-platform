@@ -320,17 +320,17 @@ function bp_document_format_size_units( $bytes, $post_string = false, $type = 'b
 
 /**
  * Retrieve an document or documents.
- * The bp_document_get() function shares all arguments with BP_Document::get().
+ * The bp_document_get() function shares all arguments with BP_Document::documents().
  * The following is a list of bp_document_get() parameters that have different
- * default values from BP_Document::get() (value in parentheses is
+ * default values from BP_Document::documents() (value in parentheses is
  * the default for the bp_document_get()).
  *   - 'per_page' (false)
  *
- * @param array|string $args See BP_Document::get() for description.
+ * @param array|string $args See BP_Document::documents() for description.
  *
- * @return array $document See BP_Document::get() for description.
+ * @return array $document See BP_Document::documents() for description.
  * @since BuddyBoss 1.4.0
- * @see   BP_Document::get() For more information on accepted arguments
+ * @see   BP_Document::documents() For more information on accepted arguments
  *        and the format of the returned value.
  */
 function bp_document_get( $args = '' ) {
@@ -353,6 +353,7 @@ function bp_document_get( $args = '' ) {
 			'group_id'            => false,
 			'search_terms'        => false,        // Pass search terms as a string.
 			'privacy'             => false,        // privacy of document.
+			'in'                  => false,
 			'exclude'             => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'         => false,
 			'user_directory'      => true,
