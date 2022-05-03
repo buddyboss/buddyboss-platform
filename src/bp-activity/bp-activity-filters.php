@@ -3322,3 +3322,27 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published from Rest API.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Comment $comment WP_Comment class object.
+ *
+ * @return void
+ */
+function bb_rest_mention_post_type_comment( $comment ) {
+	// Bail if not a comment.
+	if (
+		empty( $comment )
+		|| ! $comment instanceof WP_Comment
+	) {
+		return;
+	}
+
+	bb_mention_post_type_comment( $comment->comment_ID, $comment->comment_approved );
+
+}
+
+add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );
