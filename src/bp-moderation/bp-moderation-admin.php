@@ -577,3 +577,4 @@ function bp_moderation_admin_category_listing_add_tab() {
 }
 
 add_action( 'admin_notices', 'bp_moderation_admin_category_listing_add_tab' );
+

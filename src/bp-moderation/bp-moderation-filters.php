@@ -121,7 +121,7 @@ function bp_moderation_content_report() {
 		wp_send_json_error( $response );
 	}
 
-	$reports_terms   = get_terms(
+	$reports_terms = get_terms(
 		'bpm_category',
 		array(
 			'hide_empty' => false,
@@ -450,7 +450,7 @@ function bp_moderation_user_actions_request() {
 
 	// Check the current has access to report the item ot not.
 	$user_can = bp_moderation_can_report( $item_id, $item_type );
-	if (  ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
+	if ( ! current_user_can( 'manage_options' ) || false === (bool) $user_can ) {
 		$response['message'] = new WP_Error( 'bp_moderation_invalid_access', esc_html__( 'Sorry, you are not allowed to report this content.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
@@ -491,7 +491,7 @@ function bb_moderation_content_report_popup() {
 		include buddypress()->core->path . 'bp-moderation/screens/content-report-form.php';
 	}
 	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/block-member-form.php' ) ) {
-		include buddypress()->core->path . "bp-moderation/screens/block-member-form.php";
+		include buddypress()->core->path . 'bp-moderation/screens/block-member-form.php';
 	}
 	if ( file_exists( buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php' ) ) {
 		include buddypress()->core->path . 'bp-moderation/screens/reported-content-popup.php';
@@ -549,14 +549,23 @@ function bb_moderation_clear_suspend_cache( $moderation_data ) {
 	if ( empty( $moderation_data['item_type'] ) || empty( $moderation_data['item_id'] ) ) {
 		return;
 	}
-	wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
-	wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bb' );
+
+	// Needs to flush all cache with other component as well.
+	wp_cache_flush();
+
+	// wp_cache_delete( 'bb_check_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_hidden_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_suspended_content_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_user_suspend_user_' . $moderation_data['item_type'] . '_' . md5( serialize( $moderation_data['item_id'] ) ), 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_recode_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_specific_moderation_' . $moderation_data['item_type'] . '_' . $moderation_data['item_id'], 'bp_moderation' );
 }
 
 add_action( 'bb_suspend_before_add_suspend', 'bb_moderation_clear_suspend_cache' );
 add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cache' );
+
+add_action( 'bb_suspend_before_add_suspend', 'bp_core_clear_cache' );
+add_action( 'bb_suspend_before_remove_suspend', 'bp_core_clear_cache' );
 
 /**
  * Function to clear cache on suspend item delete.
@@ -566,19 +575,34 @@ add_action( 'bb_suspend_before_remove_suspend', 'bb_moderation_clear_suspend_cac
  * @param object $suspend_record suspend item record.
  */
 function bb_moderation_clear_delete_cache( $suspend_record ) {
+
+	if ( ! empty( $suspend_record->id ) ) {
+		wp_cache_delete( 'bb_suspend_' . $suspend_record->id, 'bp_moderation' );
+	}
+
 	if ( empty( $suspend_record->item_type ) || empty( $suspend_record->item_id ) ) {
 		return;
 	}
-	wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-	wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-	wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
-	wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bb' );
+
+	// Needs to flush all cache with other component as well.
+	wp_cache_flush();
+
+	// wp_cache_delete( 'bb_check_moderation_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_hidden_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_suspended_content_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_user_suspend_user_' . $suspend_record->item_type . '_' . md5( serialize( $suspend_record->user_id ) ), 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_recode_' . $suspend_record->item_type . '_' . $suspend_record->item_id, 'bp_moderation' );
 }
 
 add_action( 'bp_moderation_after_save', 'bb_moderation_clear_delete_cache' );
 add_action( 'suspend_after_delete', 'bb_moderation_clear_delete_cache' );
 add_action( 'bp_moderation_after_hide', 'bb_moderation_clear_delete_cache' );
 add_action( 'bp_moderation_after_unhide', 'bb_moderation_clear_delete_cache' );
+
+add_action( 'bp_moderation_after_save', 'bp_core_clear_cache' );
+add_action( 'suspend_after_delete', 'bp_core_clear_cache' );
+add_action( 'bp_moderation_after_hide', 'bp_core_clear_cache' );
+add_action( 'bp_moderation_after_unhide', 'bp_core_clear_cache' );
 
 /**
  * Function to clear cache when item hide/unhide
@@ -594,25 +618,32 @@ function bb_moderation_clear_status_change_cache( $content_type, $content_id, $a
 		return;
 	}
 
-	wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bb' );
-	wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bb' );
-	wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bb' );
-	wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . $content_id, 'bb' );
+	// Needs to flush all cache with other component as well.
+	wp_cache_flush();
 
-	$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
-	if ( ! empty( $blocked_user ) ) {
-		wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bb' );
-	}
-
+	// wp_cache_delete( 'bb_check_moderation_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_hidden_content_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_suspended_content_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_get_recode_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// wp_cache_delete( 'bb_check_user_suspend_user_' . $content_type . '_' . md5( serialize( $content_id ) ), 'bp_moderation' );
+	// wp_cache_delete( 'bb_is_content_reported_hidden_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	//
+	// $blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+	// if ( ! empty( $blocked_user ) ) {
+	// wp_cache_delete( 'bb_check_blocked_user_content_' . $blocked_user . '_' . $content_type . '_' . $content_id, 'bp_moderation' );
+	// }
 }
 
 add_action( 'bb_suspend_hide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache', 10, 3 );
 
+add_action( 'bb_suspend_hide_before', 'bp_core_clear_cache' );
+add_action( 'bb_suspend_unhide_before', 'bp_core_clear_cache' );
+
 /**
  * Add moderation repair list.
  *
- * @param array $repair_list
+ * @param array $repair_list Repair list.
  *
  * @since BuddyBoss 1.7.5
  *
@@ -621,7 +652,7 @@ add_action( 'bb_suspend_unhide_before', 'bb_moderation_clear_status_change_cache
 function bb_moderation_migrate_old_data( $repair_list ) {
 	$repair_list[] = array(
 		'bp-repair-moderation-data',
-		__( 'Repair moderation data.', 'buddyboss' ),
+		esc_html__( 'Repair moderation data', 'buddyboss' ),
 		'bb_moderation_admin_repair_old_moderation_data',
 	);
 
@@ -657,7 +688,24 @@ function bb_moderation_admin_repair_old_moderation_data() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Moderation update complete!', 'buddyboss' ),
+			'message' => __( 'Repairing moderation data &hellip; Complete!', 'buddyboss' ),
 		);
 	}
 }
+
+/**
+ * Added magnific popup as dependencies.
+ *
+ * @param array $js_handles Array of handles.
+ *
+ * @return array|mixed
+ */
+function bp_moderation_get_js_dependencies( $js_handles = array() ) {
+	if ( bp_is_active( 'forums' ) && bbp_is_single_topic() ) { // Topic detail page.
+		$js_handles[] = 'bp-nouveau-magnific-popup';
+	}
+
+	return $js_handles;
+}
+
+add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 10, 1 );
