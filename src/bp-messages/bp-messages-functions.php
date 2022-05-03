@@ -894,6 +894,11 @@ function messages_notification_new_message( $raw_args = array() ) {
 			continue;
 		}
 
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, get_current_user_id() ) ) {
+			continue;
+		}
+
 		// User data and links.
 		$ud = get_userdata( $recipient->user_id );
 		if ( empty( $ud ) ) {

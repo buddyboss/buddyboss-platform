@@ -709,3 +709,25 @@ function bp_moderation_get_js_dependencies( $js_handles = array() ) {
 }
 
 add_filter( 'bp_core_get_js_dependencies', 'bp_moderation_get_js_dependencies', 10, 1 );
+
+/**
+ * Check the user blocked/suspended or not?
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $retval  Default false.
+ * @param int  $item_id Blocking User ID.
+ * @param int  $user_id Blocked User ID.
+ *
+ * @return bool True if the user blocked/suspended otherwise false.
+ */
+function bb_moderation_is_recipient_moderated( $retval, $item_id, $user_id ) {
+	if ( bp_moderation_is_user_blocked( $user_id, $item_id ) ) {
+		return true;
+	} else if( bp_moderation_is_user_suspended( $item_id ) ) {
+		return true;
+	}
+
+	return (bool) $retval;
+}
+add_filter( 'bb_is_recipient_moderated', 'bb_moderation_is_recipient_moderated', 10, 3 );
