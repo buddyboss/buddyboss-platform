@@ -17,7 +17,7 @@
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
             <div class="dz-progress-ring-wrap">
-				<i class="bb-icon bb-icon-video-fill"></i>
+				<i class="bb-icon-f bb-icon-video"></i>
                 <svg class="dz-progress-ring" width="54" height="54">
                     <circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
                 </svg>
