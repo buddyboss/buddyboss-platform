@@ -87,7 +87,11 @@ function bp_ps_xprofile_search( $f ) {
 	);
 	$sql['select']            = "SELECT user_id FROM {$bp->profile->table_name_data}";
 
-	$sql['where']['field_id'] = $wpdb->prepare( "field_id IN (SELECT id FROM {$bp->profile->table_name_fields} where 1=1 and group_id = %d)", $f->group_id );
+	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
+	} else {
+		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	}
 
 	switch ( $filter ) {
 		case 'integer_range':
