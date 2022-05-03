@@ -379,6 +379,7 @@ function bp_document_get( $args = '' ) {
 			'search_terms'        => $r['search_terms'],
 			'scope'               => $r['scope'],
 			'privacy'             => $r['privacy'],
+			'in'                  => $r['in'],
 			'exclude'             => $r['exclude'],
 			'count_total'         => $r['count_total'],
 			'fields'              => $r['fields'],
