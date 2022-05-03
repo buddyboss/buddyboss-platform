@@ -247,7 +247,9 @@ if ( bp_is_my_profile() ) {
 	</div><!-- #cover-image-container -->
 
 	<?php
-	add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+	if ( function_exists( 'buddyboss_theme_bp_get_add_follow_button' ) ) {
+		add_filter( 'bp_get_add_follow_button', 'buddyboss_theme_bp_get_add_follow_button' );
+	}
 
 endif;
 ?>
