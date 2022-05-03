@@ -94,12 +94,14 @@
 					}
 
 					a > i {
+						align-items: center;
 						background-color: #9b9c9f;
 						border-radius: 50%;
 						bottom: -10px;
 						color: #fff;
-						display: block;
+						display: flex;
 						font-size: 18px;
+						justify-content: center;
 						height: 25px;
 						position: absolute;
 						right: -10px;

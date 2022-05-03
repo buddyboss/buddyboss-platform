@@ -25596,12 +25596,14 @@ span.icons:before {
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i {
+  align-items: center;
   background-color: #9b9c9f;
   border-radius: 50%;
   bottom: -10px;
   color: #fff;
-  display: block;
+  display: flex;
   font-size: 18px;
+  justify-content: center;
   height: 25px;
   position: absolute;
   left: -10px;
