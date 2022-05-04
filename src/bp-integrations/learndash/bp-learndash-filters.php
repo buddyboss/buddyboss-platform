@@ -36,11 +36,7 @@ add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
  */
 function bp_ld_popup_register_redirect( $bool ) {
 
-	if (
-		isset( $_POST )
-		&& isset( $_POST['learndash-registration-form'] )
-		&& 'true' === $_POST['learndash-registration-form']
-	) {
+	if ( isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) ) {
 		return false;
 	}
 
@@ -315,10 +311,10 @@ function bb_group_wp_admin_bar_updates_menu() {
  * Filter to fix conflict between Learndash Plugin groups archive page and Platform Groups page.
  *
  * @since BuddyBoss 1.4.7
- * 
+ *
  * @param array  $post_options An array of post options.
  * @param string $post_type    Post type slug.
- * 
+ *
  * @return array $post_options
  */
 function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
@@ -336,10 +332,10 @@ function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
  * Show the proper archive page link on LD domain.com/wp-admin/admin.php?page=groups-options page.
  *
  * @since BuddyBoss 1.4.7
- * 
+ *
  * @param array  $setting_option_fields Associative array of Setting field details like name,type,label,value.
  * @param string $settings_section_key Used within the Settings API to uniquely identify this section.
- * 
+ *
  * @return array $setting_option_fields
  */
 function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settings_section_key) {
