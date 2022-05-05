@@ -255,8 +255,9 @@ class BP_Media_Component extends BP_Component {
 				return;
 			}
 
-			$slug       = bp_get_media_slug();
-			$media_link = trailingslashit( $user_domain . $slug );
+			$slug        = bp_get_media_slug();
+			$user_domain = bp_loggedin_user_domain();
+			$media_link  = trailingslashit( $user_domain . $slug );
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
