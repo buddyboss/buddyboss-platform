@@ -167,6 +167,7 @@ class BP_Friends_Component extends BP_Component {
 
 		$access       = bp_core_can_edit_settings();
 		$slug         = bp_get_friends_slug();
+		$user_domain  = bp_loggedin_user_domain();
 		$friends_link = trailingslashit( $user_domain . $slug );
 
 		// Add 'Connections' to the main navigation.
