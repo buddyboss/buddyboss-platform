@@ -975,7 +975,7 @@ function bbp_repair_forum_visibility() {
 	// Reset the $post global
 	wp_reset_postdata();
 
-	$hidden_forums  = new WP_Query(
+	$hidden_forums = new WP_Query(
 		array(
 			'suppress_filters' => true,
 			'nopaging'         => true,
@@ -1715,27 +1715,35 @@ function bbp_has_forum_thumbnail( $forum_id = null ) {
  * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = null ) {
-	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+	$thumbnail_id = get_post_thumbnail_id( $forum_id );
+	if ( $thumbnail_id ) {
 		return wp_get_attachment_image_url( $thumbnail_id, $size );
 	}
 
-	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	if ( $group_ids ) {
 		$group_id = $group_ids[0];
 
-		$group_avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id'       => $group_id,
-				'object'        => 'group',
-				'type'          => $type,
-				'html'          => false,
-				'force_default' => false,
-			)
-		);
+		if ( bp_is_active( 'groups' ) && ! bp_disable_group_cover_image_uploads() && bp_attachments_get_group_has_cover_image( $group_id ) ) {
+			return bp_attachments_get_attachment(
+				'url',
+				array(
+					'object_dir' => 'groups',
+					'item_id'    => $group_id,
+				)
+			);
+		}
 
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
-
-		if ( $group_avatar_url != $group_default_avatar ) {
-			return $group_avatar_url;
+		if ( bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() && bp_get_group_has_avatar( $group_id ) ) {
+			return bp_core_fetch_avatar(
+				array(
+					'item_id'       => $group_id,
+					'object'        => 'group',
+					'type'          => $type,
+					'html'          => false,
+					'force_default' => false,
+				)
+			);
 		}
 	}
 
@@ -1748,26 +1756,30 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
  * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = null ) {
-	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+	$thumbnail_id = get_post_thumbnail_id( $forum_id );
+	if ( $thumbnail_id ) {
 		return wp_get_attachment_image( $thumbnail_id, $size );
 	}
 
-	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	if ( $group_ids ) {
 		$group_id = $group_ids[0];
 
-		$group_avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id'       => $group_id,
-				'object'        => 'group',
-				'type'          => $type,
-				'html'          => false,
-				'force_default' => false,
-			)
-		);
+		if ( bp_is_active( 'groups' ) && ! bp_disable_group_cover_image_uploads() && bp_attachments_get_group_has_cover_image( $group_id ) ) {
+			$group_cover_image = bp_attachments_get_attachment(
+				'url',
+				array(
+					'object_dir' => 'groups',
+					'item_id'    => $group_id,
+				)
+			);
 
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
+			if ( ! empty( $group_cover_image ) ) {
+				return '<img src="' . esc_url( $group_cover_image ) . '" alt="' . esc_attr( bbp_get_forum_title( $forum_id ) ) . '" />';
+			}
+		}
 
-		if ( $group_avatar_url != $group_default_avatar ) {
+		if ( bp_is_active( 'groups' ) && ! bp_disable_group_avatar_uploads() && bp_get_group_has_avatar( $group_id ) ) {
 			return bp_core_fetch_avatar(
 				array(
 					'item_id'       => $group_id,
@@ -1874,7 +1886,7 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 			// check the user is the member of group or not while rendering the shortcode with group.
 			if ( bp_is_active( 'groups' ) ) {
 				foreach ( $forum_ids as $k => $forum_id ) {
-					$group_id  = bbp_forum_recursive_group_id( $forum_id );
+					$group_id = bbp_forum_recursive_group_id( $forum_id );
 					if ( ! empty( $group_id ) ) {
 						$is_member = groups_is_user_member( bbp_get_current_user_id(), $group_id );
 						if ( ! empty( $is_member ) ) {

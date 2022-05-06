@@ -149,7 +149,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
-	 * @apiParam {String=active,newest,alphabetical,random,online,popular} [type=newest] Shorthand for certain orderby/order combinations.
+	 * @apiParam {String=active,newest,alphabetical,random,online,popular,include} [type=newest] Shorthand for certain orderby/order combinations.
 	 * @apiParam {Number} [user_id] Limit results to friends of a user.
 	 * @apiParam {Arrays} [user_ids] Pass IDs of users to limit result set.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
@@ -241,6 +241,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$users           = apply_filters( 'bp_ps_search_results', $users );
 				$args['include'] = implode( ',', $users );
 			}
+		} else if ( ! empty( $args['include'] ) ) {
+			$args['type'] = 'in';
 		}
 
 		if (
@@ -785,7 +787,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		// Cover Image.
-		$data['cover_url'] = (
+		$data['cover_url']        = (
 			empty( bp_disable_cover_image_uploads() )
 			? bp_attachments_get_attachment(
 				'url',
@@ -796,6 +798,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			)
 			: false
 		);
+		$data['cover_is_default'] = ! bp_attachments_get_user_has_cover_image( $user->ID );
 
 		// Fallback.
 		if ( false === $data['member_types'] ) {
@@ -810,6 +813,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$member_types = array();
 			foreach ( $data['member_types'] as $name ) {
 				$member_types[ $name ] = bp_get_member_type_object( $name );
+
+				// Member type's label background and text color.
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $name ) : '';
+				if ( ! empty( $label_color_data ) ) {
+					$member_types[ $name ]->label_colors = $label_color_data;
+				}
 			}
 			$data['member_types'] = $member_types;
 		}
@@ -1224,6 +1233,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'readonly'    => true,
 		);
 
+		$schema['properties']['cover_is_default'] = array(
+			'description' => __( 'Whether to check member has default cover image or not.', 'buddyboss' ),
+			'type'        => 'boolean',
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'readonly'    => true,
+		);
+
 		/**
 		 * Filters the members schema.
 		 *
@@ -1253,7 +1269,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
 			'default'           => 'newest',
 			'type'              => 'string',
-			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular' ),
+			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular', 'include' ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
