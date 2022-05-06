@@ -3018,7 +3018,7 @@ function bb_member_directories_get_profile_actions( $user_id, $button_type = fal
 /**
  * Get the member last activity time.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param array $args Array of arguments.
  *
@@ -3062,7 +3062,7 @@ function bb_get_member_last_activity_time( $args = array() ) {
 	/**
 	 * Filters the current members last active time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $last_activity Formatted time since last activity.
 	 * @param array  $r             Array of parsed arguments for query.

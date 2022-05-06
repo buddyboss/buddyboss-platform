@@ -436,7 +436,7 @@ add_action( 'groups_group_avatar_updated', 'bp_core_clear_cache' );
 /**
  * Clear the group_type cache when group type post is updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param int $post_id post ID.
  */
@@ -472,7 +472,7 @@ add_action( 'save_post', 'bb_groups_clear_group_type_cache_on_update' );
 /**
  * Clear the group_type cache when group type post is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.0
  *
  * @param int $post_id post ID.
  */
