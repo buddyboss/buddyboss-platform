@@ -776,7 +776,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 	uksort(
 		$return,
 		function ( $key1, $key2 ) use ( $order ) {
-			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+			return ( array_search( $key1, $order ) <=> array_search( $key2, $order ) );
 		}
 	);
 
