@@ -300,7 +300,7 @@ window.bp = window.bp || {};
 			if ( isGroupPrivateThreadPageSelector.length ) {
 
 				var membersDiv = document.getElementById( 'members-list' );
-				$( '.bb-icon-loader' ).hide();
+				$( '.bb-icon-spinner' ).hide();
 				var scroll_xhr;
 				if ( $( membersDiv ).length ) {
 					membersDiv.addEventListener(
@@ -318,7 +318,7 @@ window.bp = window.bp || {};
 
 								page = page + 1;
 
-								$( '.bb-icon-loader' ).show();
+								$( '.bb-icon-spinner' ).show();
 
 								var type = '';
 								if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
@@ -366,7 +366,7 @@ window.bp = window.bp || {};
 												$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
 												feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 											}
-											$( '.bb-icon-loader' ).hide();
+											$( '.bb-icon-spinner' ).hide();
 										}
 									}
 								);

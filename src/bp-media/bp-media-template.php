@@ -150,7 +150,14 @@ function bp_has_media( $args = '' ) {
 
 	$group_id = false;
 	$privacy  = false;
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	if (
+		bp_is_active( 'groups' ) &&
+		bp_is_group() &&
+		(
+			! isset( $_GET['action'] ) ||
+			'bp_search_ajax' !== $_GET['action']
+		)
+	) {
 		$group_id = bp_get_current_group_id();
 		$privacy  = array( 'grouponly' );
 		if ( bp_is_active( 'forums' ) && ( bbp_is_forum_edit() || bbp_is_topic_edit() || bbp_is_reply_edit() ) ) {
@@ -218,7 +225,6 @@ function bp_has_media( $args = '' ) {
 	/*
 	 * Query
 	 */
-
 	$media_template = new BP_Media_Template( $r );
 
 	/**
@@ -1614,11 +1620,11 @@ function bp_album_user_can_delete( $album = false ) {
 	// Only logged in users can delete album.
 	if ( is_user_logged_in() ) {
 
-		// Groups albums have their own access
+		// Groups albums have their own access.
 		if ( ! empty( $album->group_id ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
 			$can_delete = true;
 
-		// Users are allowed to delete their own album.
+			// Users are allowed to delete their own album.
 		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
 			$can_delete = true;
 		}
@@ -1853,7 +1859,6 @@ function bp_media_user_can_edit( $media = false ) {
  *
  * @return bool True if can edit, false otherwise.
  * @since BuddyBoss 1.5.6
- *
  */
 function bp_album_user_can_edit( $album = false ) {
 

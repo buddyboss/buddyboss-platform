@@ -657,14 +657,14 @@
 
 		}
 
-		.bb-icon {
+		[class*=" bb-icon-"] {
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
 			color: #fff;
 			z-index: 11;
-			font-size: 18px;
+			font-size: 20px;
 		}
 
 	}
@@ -680,7 +680,7 @@
 			.dz-progress-ring-wrap {
 				background-color: rgba(0, 0, 0, 0.05);
 
-				.bb-icon {
+				[class*=" bb-icon-"] {
 					color: rgba(18, 43, 70, 0.5);
 				}
 			}
@@ -694,7 +694,7 @@
 		.dz-progress-ring-wrap {
 			background-color: rgba(0, 0, 0, 0.05);
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				color: rgba(18, 43, 70, 0.5);
 			}
 		}
@@ -729,7 +729,7 @@
 				position: relative;
 
 				&:before {
-					content: "\e98e";
+					content: "\ee6e";
 					font-size: 28px;
 					color: #92949d;
 					font-family: "bb-icons";/* stylelint-disable-line */
@@ -741,7 +741,7 @@
 					transform: translateX(-50%);
 				}
 
-				[class*="bb-icon"] {
+				[class*="bb-icons"] {
 					font-size: 28px;
 					color: rgba(18, 43, 70, 0.5);
 					left: 50%;
