@@ -51,7 +51,7 @@ class BB_Messages extends Integration_Abstract {
 		$purge_single_events = array(
 			'messages_message_sent'                 => 1, // when new message created.
 			'bp_messages_thread_after_delete'       => 2, // when message deleted.
-			'messages_delete_thread'                => 2, // when message thread deleted.
+			'messages_delete_thread'                => 1, // when message thread deleted.
 			'wp_ajax_messages_hide_thread'          => 1, // when message thread hide.
 			'messages_thread_mark_as_read'          => 1, // when messages mark as read.
 			'messages_thread_mark_as_unread'        => 1, // when messages mark as unread.
@@ -122,9 +122,8 @@ class BB_Messages extends Integration_Abstract {
 	 * When message thread deleted
 	 *
 	 * @param int|array $thread_ids Thread ID or array of thread IDs that were deleted.
-	 * @param int       $user_id ID of the user that the threads were deleted for.
 	 */
-	public function event_messages_delete_thread( $thread_ids, $user_id ) {
+	public function event_messages_delete_thread( $thread_ids ) {
 		if ( ! empty( $thread_ids ) ) {
 			if ( is_array( $thread_ids ) || is_object( $thread_ids ) ) {
 				foreach ( (array) $thread_ids as $thread_id ) {

@@ -407,7 +407,7 @@ class BP_Messages_Message {
 		if ( ! empty( $thread_ids ) ) {
 			$thread_ids = implode( ',', $thread_ids );
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids}) AND user_id = {$user_id}" );
+			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
 		}
 
 		// Delete the thread of user.
