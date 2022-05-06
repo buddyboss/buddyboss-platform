@@ -21,7 +21,7 @@
 				box-shadow: none;
 			}
 
-			.bb-icon {
+			[class*=" bb-icon-"] {
 				font-size: 24px;
 				pointer-events: none;
 			}
