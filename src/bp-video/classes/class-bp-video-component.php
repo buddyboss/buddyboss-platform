@@ -213,8 +213,9 @@ class BP_Video_Component extends BP_Component {
 				return;
 			}
 
-			$slug       = bp_get_video_slug();
-			$video_link = trailingslashit( $user_domain . $slug );
+			$slug        = bp_get_video_slug();
+			$user_domain = bp_loggedin_user_domain();
+			$video_link  = trailingslashit( $user_domain . $slug );
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
