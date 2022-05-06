@@ -194,7 +194,7 @@ class Core {
 	/**
 	 * Remove the active class on course & my course page when user is on certificate page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $classes List of classes.
 	 * @param array $item    Menu item array.
