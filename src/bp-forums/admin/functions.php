@@ -169,7 +169,6 @@ function bbp_sanitize_slug( $slug = '' ) {
 
 	// Filter the result and return.
 	return apply_filters( 'bbp_sanitize_slug', $value, $slug );
-
 }
 
 /**
