@@ -5767,3 +5767,26 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 function bb_activity_post_form_groups_per_page() {
 	return apply_filters( 'bb_activity_post_form_groups_per_page', 10 );
 }
+
+/**
+ * Follow button.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $button HTML markup for follow button.
+ *
+ * @return array Array of button element.
+ */
+function bb_bp_get_add_follow_button( $button ) {
+
+	if ( 'follow-button following' === $button['wrapper_class'] ) {
+		$button['link_class'] .= ' small';
+	} else {
+		$button['link_class'] .= ' small outline';
+	}
+
+	$button['parent_element'] = 'div';
+	$button['button_element'] = 'button';
+
+	return $button;
+}
