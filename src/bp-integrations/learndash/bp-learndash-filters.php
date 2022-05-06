@@ -39,6 +39,10 @@ add_action( 'ld_removed_group_access', 'bb_ld_removed_group_access', 99, 2 );
  * @return void
  */
 function bb_ld_removed_group_access( $user_id, $group_id ) {
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
 	bb_add_or_remove_user_in_social_group( $group_id, $user_id, 'leave' );
 }
 
@@ -56,6 +60,10 @@ add_action( 'ld_added_group_access', 'bb_ld_added_group_access', 99, 2 );
  * @return void
  */
 function bb_ld_added_group_access( $user_id, $group_id ) {
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
 	bb_add_or_remove_user_in_social_group( (int) $group_id, (int) $user_id, 'join' );
 }
 
@@ -414,9 +422,9 @@ function bb_support_learndash_course_permalink( $bp, $bp_uri ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $group_id  learndash group id.
- * @param int $user_id user id.
- * @param int $type 'join' or 'leave' group
+ * @param int $group_id learndash group id.
+ * @param int $user_id  user id.
+ * @param int $type     'join' or 'leave' group
  */
 function bb_add_or_remove_user_in_social_group( $group_id, $user_id, $type = 'join' ) {
 
