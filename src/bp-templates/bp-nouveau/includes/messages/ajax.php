@@ -194,7 +194,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	$send = messages_new_message(
 		array(
 			'recipients'   => $recipients,
-			'subject'      => wp_trim_words( $_POST['message_content'], messages_get_default_subject_length() ),
+			'subject'      => wp_trim_words( $_POST['subject'], messages_get_default_subject_length() ),
 			'content'      => $_POST['message_content'],
 			'error_type'   => 'wp_error',
 			'mark_visible' => true,
