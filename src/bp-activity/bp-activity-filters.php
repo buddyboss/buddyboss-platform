@@ -270,7 +270,6 @@ function bp_activity_save_link_data( $activity ) {
 	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
 	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
 	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
-	$link_image_index = ! empty( $_POST['link_image_index'] ) ? filter_var( $_POST['link_image_index'] ) : 0;
 
 	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
@@ -290,7 +289,7 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
-	$preview_data['link_image_index'] = ! empty( $link_image_index ) ? $link_image_index : 0;
+	$preview_data['link_image_index'] = ! empty( $_POST['link_image_index'] ) ? filter_var( $_POST['link_image_index'] ) : 0;
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
