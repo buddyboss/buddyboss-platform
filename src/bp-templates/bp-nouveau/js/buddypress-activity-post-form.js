@@ -161,7 +161,7 @@ window.bp = window.bp || {};
 					}
 					
 					self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
-					self.postForm.$el.find( '#link_image_index' ).val( activity_data.link_image_index );
+					self.postForm.model.set( 'link_image_index', activity_data.link_image_index );
 
 					var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
@@ -2078,19 +2078,7 @@ window.bp = window.bp || {};
 				if ( _.isUndefined( activity ) ) {
 					return;
 				}
-				var WhatsNew = this;
-				WhatsNew.$el.html( activity.get( 'content' ) );
-				setTimeout(function(){
-					var link_image_index = 0;
-					if( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ){
-						link_image_index = parseInt( $( '#whats-new-content' ).find( '#link_image_index' ).val() );
-					}
-					WhatsNew.options.activity.set(
-						{
-							link_image_index: link_image_index
-						}
-					);
-				},300);
+				this.$el.html( activity.get( 'content' ) );
 			},
 
 			handlePaste: function ( event ) {
@@ -2302,6 +2290,7 @@ window.bp = window.bp || {};
 							link_title: response.title,
 							link_description: response.description,
 							link_images: response.images,
+							link_image_index: parseInt( '' !== self.options.activity.get('link_image_index') ? self.options.activity.get('link_image_index') : 0 ),
 							link_embed: ! _.isUndefined( response.wp_embed ) && response.wp_embed
 						}
 					);
@@ -3023,7 +3012,6 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 				this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
-				this.$el.append( '<input type="hidden" name="_link_image_index" id="link_image_index" value="0"/>' );
 				this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 			},
 

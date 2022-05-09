@@ -290,10 +290,7 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
-	$preview_data['link_image_index'] = 0;
-	if ( ! empty( $link_image_index ) ) {
-		$preview_data['link_image_index'] = $link_image_index;
-	}
+	$preview_data['link_image_index'] = ! empty( $link_image_index ) ? $link_image_index : 0;
 
 	if ( ! empty( $link_title ) ) {
 		$preview_data['title'] = $link_title;
