@@ -174,7 +174,7 @@ class BB_AS3CF_Plugin_Compatibility {
 				$attachment_url = wp_get_attachment_image_url( $attachment_id, 'full' );
 			}
 
-			$image_array = ( $attachment_url !== false ? @getimagesize( $attachment_url ) : array() );
+			$image_array = ( false !== $attachment_url ? @getimagesize( $attachment_url ) : array() );
 
 			if ( ! $attachment_url || empty( $image_array ) ) {
 
