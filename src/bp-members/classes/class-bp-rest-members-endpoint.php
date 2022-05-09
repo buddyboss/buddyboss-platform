@@ -813,6 +813,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$member_types = array();
 			foreach ( $data['member_types'] as $name ) {
 				$member_types[ $name ] = bp_get_member_type_object( $name );
+
+				// Member type's label background and text color.
+				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $name ) : '';
+				if ( ! empty( $label_color_data ) ) {
+					$member_types[ $name ]->label_colors = $label_color_data;
+				}
 			}
 			$data['member_types'] = $member_types;
 		}
