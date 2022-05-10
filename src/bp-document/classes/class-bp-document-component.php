@@ -253,7 +253,6 @@ class BP_Document_Component extends BP_Component {
 			}
 
 			$slug          = bp_get_document_slug();
-			$user_domain   = bp_loggedin_user_domain();
 			$document_link = trailingslashit( $user_domain . $slug );
 
 			// Only grab count if we're on a user page and current user has access.

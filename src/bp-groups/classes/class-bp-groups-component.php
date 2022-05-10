@@ -590,7 +590,6 @@ class BP_Groups_Component extends BP_Component {
 
 		if ( ! empty( $user_domain ) ) {
 			$access      = bp_core_can_edit_settings();
-			$user_domain = bp_loggedin_user_domain();
 			$groups_link = trailingslashit( $user_domain . $slug );
 
 			// Add the My Groups nav item.
