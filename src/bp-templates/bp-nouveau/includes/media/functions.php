@@ -148,6 +148,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
+		'displayed_user_id'                  => bp_displayed_user_id(),
 	);
 
 	if ( bp_is_single_album() ) {
