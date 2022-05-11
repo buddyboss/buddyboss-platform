@@ -1423,23 +1423,23 @@ function bb_send_group_message_background( $post_data, $members = array(), $curr
 							( 'all' === $message_user && 'open' !== $message_type )
 						)
 					) {
-						// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+						// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$existing_thread = (int) $thread->thread_id;
 					}
 				}
 			}
 
 			if ( $existing_thread > 0 ) {
-				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
 				$_POST['message_thread_type'] = 'reply';
 
 				$member_thread_id = $existing_thread;
 			} else {
-				// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+				// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
 				$_POST['message_thread_type'] = 'new';
 			}
 		} else {
-			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+			// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
 			$_POST['message_thread_type'] = 'new';
 		}
 
