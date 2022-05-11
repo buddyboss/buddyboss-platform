@@ -193,8 +193,8 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			</ul>
 			<?php if ( $members_template->total_member_count > absint( $instance['max_friends'] ) ) : ?>
 				<div class="more-block">
-					<a href="<?php echo esc_url( $link ); ?>" class="count-more more-connection"><?php _e( 'More', 'buddyboss' ); ?>
-						 <i class="bb-icon-angle-right"></i>
+					<a href="<?php echo esc_url( $link ); ?>" class="count-more more-connection"><?php esc_html_e( 'See all', 'buddyboss' ); ?>
+						 <i class="bb-icon-l bb-icon-angle-right"></i>
 					</a>
 				</div>
 			<?php endif; ?>

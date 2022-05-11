@@ -443,11 +443,11 @@ class BP_Messages_Message {
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+//		$having_sql = $wpdb->prepare( 'recipient_list = %s', implode( ',', $recipient_ids ) );
+		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'ids',
-				'having_sql' => $having_sql,
+				'having_sql' => $recipient_ids,
 				'limit'      => 1,
 				'page'       => 1,
 			)
@@ -484,11 +484,11 @@ class BP_Messages_Message {
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
+//		$having_sql = $wpdb->prepare( 'recipient_list = %s', implode( ',', $recipient_ids ) );
 		$results    = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'select',
-				'having_sql' => $having_sql,
+				'having_sql' => $recipient_ids,
 			)
 		);
 
@@ -714,7 +714,14 @@ class BP_Messages_Message {
 		 */
 		$paged_messages_sql = apply_filters( 'bp_messages_message_get_paged_sql', $paged_messages_sql, $sql, $r );
 
-		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$cached = bp_core_get_incremented_cache( $paged_messages_sql, 'bp_messages' );
+
+		if ( false === $cached ) {
+			$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			bp_core_set_incremented_cache( $paged_messages_sql, 'bp_messages', $paged_message_ids );
+		} else {
+			$paged_message_ids = $cached;
+		}
 
 		$paged_messages = array();
 
@@ -722,8 +729,17 @@ class BP_Messages_Message {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} elseif ( ! empty( $paged_message_ids ) ) {
-			$message_ids_sql      = implode( ',', array_map( 'intval', $paged_message_ids ) );
-			$message_data_objects = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$message_ids_sql             = implode( ',', array_map( 'intval', $paged_message_ids ) );
+			$message_data_objects_sql    = "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})";
+			$message_data_objects_cached = bp_core_get_incremented_cache( $message_data_objects_sql, 'bp_messages' );
+
+			if ( false === $message_data_objects_cached ) {
+				$message_data_objects = $wpdb->get_results( $message_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				bp_core_set_incremented_cache( $message_data_objects_sql, 'bp_messages', $message_data_objects );
+			} else {
+				$message_data_objects = $message_data_objects_cached;
+			}
+
 			foreach ( (array) $message_data_objects as $mdata ) {
 				$message_data_objects[ $mdata->id ] = $mdata;
 			}
@@ -752,7 +768,15 @@ class BP_Messages_Message {
 			 */
 			$total_messages_sql = apply_filters( 'bp_messages_message_get_total_sql', $total_messages_sql, $sql, $r );
 
-			$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$total_messages_sql_cached = bp_core_get_incremented_cache( $total_messages_sql, 'bp_messages' );
+
+			if ( false === $total_messages_sql_cached ) {
+				$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				bp_core_set_incremented_cache( $total_messages_sql, 'bp_messages', $total_messages );
+			} else {
+				$total_messages = $total_messages_sql_cached;
+			}
+
 			$retval['total'] = $total_messages;
 		}
 
