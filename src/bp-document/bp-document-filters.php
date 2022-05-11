@@ -80,6 +80,9 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
 add_action( 'template_include', 'bb_setup_template_for_document_preview', PHP_INT_MAX );
 
+// For WP Comments.
+add_filter( 'comment_text', 'bb_document_comment_append_document', 10, 2 );
+
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
@@ -2000,4 +2003,36 @@ function bb_setup_template_for_document_preview( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * This will add the document attached to comment text if comment added via activity comment.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $comment_text Comment text.
+ * @param object $comment      Comment object.
+ *
+ * @return false|string|void
+ */
+function bb_document_comment_append_document( $comment_text, $comment = null ) {
+
+	if ( ! bp_is_active( 'activity' ) ) {
+		return $comment_text;
+	}
+
+	$comment_meta = get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true );
+
+	if ( empty( $comment_meta ) ) {
+		return $comment_text;
+	}
+
+	$activity         = new BP_Activity_Activity( $comment_meta );
+	$document_content = bp_document_activity_append_document( $comment_text, $activity );
+
+	if ( ! empty( $document_content ) ) {
+		$comment_text = $document_content;
+	}
+
+	return $comment_text;
 }
