@@ -71,6 +71,9 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_video_preview' );
 add_filter( 'query_vars', 'bb_setup_query_video_preview' );
 add_action( 'template_include', 'bb_setup_template_for_video_preview', PHP_INT_MAX );
 
+// For WP Comments.
+add_filter( 'comment_text', 'bb_video_comment_append_video', 10, 2 );
+
 /**
  * Add video theatre template for activity pages.
  *
@@ -181,7 +184,8 @@ function bp_video_activity_append_video( $content, $activity ) {
 		return $content;
 	}
 
-	$video_ids = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+	$video_ids       = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+	$is_blog_comment = bp_activity_get_meta( $activity->id, 'bp_blogs_post_comment_id', true );
 
 	if ( ! empty( $video_ids ) ) {
 
@@ -219,6 +223,10 @@ function bp_video_activity_append_video( $content, $activity ) {
 		) {
 			$is_forum_activity = true;
 			$args['privacy'][] = 'forums';
+		}
+
+		if ( ! empty( $is_blog_comment ) ) {
+			$args['privacy'][] = 'comment';
 		}
 
 		if ( bp_has_video( $args ) ) {
@@ -1812,4 +1820,36 @@ function bb_setup_template_for_video_preview( $template ) {
 	}
 
 	return $template;
+}
+
+/**
+ * This will add the video attached to comment text if comment added via activity comment.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $comment_text Comment text.
+ * @param object $comment      Comment object.
+ *
+ * @return false|string|void
+ */
+function bb_video_comment_append_video( $comment_text, $comment = null ) {
+
+	if ( ! bp_is_active( 'activity' ) ) {
+		return $comment_text;
+	}
+
+	$comment_meta = get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true );
+
+	if ( empty( $comment_meta ) ) {
+		return $comment_text;
+	}
+
+	$activity      = new BP_Activity_Activity( $comment_meta );
+	$video_content = bp_video_activity_append_video( $comment_text, $activity );
+
+	if ( ! empty( $video_content ) ) {
+		$comment_text = $video_content;
+	}
+
+	return $comment_text;
 }
