@@ -57,6 +57,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.0.1 =
+* Profiles - Small code refactoring to stop triggering multiple hooks
+* Profiles - Handled profile header social network links issue when Profile type not enabled
+* Forums - Fixed PHBB import issues
+* Moderation - Handled single forum report modal not working issue
+* REST API - Handled blog comments count issue in the API
+* REST API - Handled newly created Group caching issue
+* REST API - Provided is_admin user parameter in the API
+
 = 2.0.0 =
 * BuddyBoss Theme - Provided Theme 2.0 style new options support
 * BuddyBoss Theme - Provided Theme 2.0 overall styling support
