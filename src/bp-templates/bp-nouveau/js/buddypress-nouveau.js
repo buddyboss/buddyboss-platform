@@ -731,7 +731,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
-			$( document ).on( 'click', '.bb-close-action-popup', this.closeActionPopup );
+			$( document ).on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
