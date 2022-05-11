@@ -1018,6 +1018,27 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
+
+							var image = $( file.previewElement ).find( '.dz-image img' )[0];
+							var isLoaded = image.complete;
+							if (!isLoaded) {
+								var node, _i, _len, _ref, _results;
+								var message = BP_Nouveau.media.invalid_media_type;
+								file.previewElement.classList.add( 'dz-error' );
+								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+								_results = [];
+								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+									node = _ref[_i];
+									_results.push( node.textContent = message );
+								}
+
+								// Unset media if all uploaded media has error
+								response.data.menu_order_error_count = $( file.previewElement ).closest( '.dropzone' ).find( '.dz-preview.dz-error' ).length;
+								if ( self.media.length === response.data.menu_order_error_count ) {
+									self.model.unset( 'media' );	
+								}
+								return _results;
+							}
 							
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + response.data.feedback + '</div>' ) );
