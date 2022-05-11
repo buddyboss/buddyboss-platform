@@ -928,3 +928,61 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	);
 }
 
+/**
+ * Email queue get record
+ *
+ * @since BuddyBoss 1.7.8
+ *
+ * @param array $terms terms name.
+ * @param int $topic_id topic id.
+ * @param string $taxonomy taxonomy name.
+ * @param string $existing_terms comma separated existing terms name.
+ *
+ * @return array|false|WP_Error Array of term taxonomy IDs of affected terms. WP_Error or false on failure.
+ */
+function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' ) {
+	if ( ! empty( $existing_terms ) ) {
+		$existing_terms = explode( ',', $existing_terms );
+		$existing_terms = array_map( function ( $single ) {
+			return trim( $single );
+		}, $existing_terms );
+
+		$deleted_terms = array_diff( $existing_terms, $terms );
+
+		if ( ! empty( $deleted_terms ) ) {
+			$deleted_terms = array_map( function ( $single ) use ( $taxonomy ) {
+				$get_term = get_term_by( 'name', $single, $taxonomy );
+				if ( ! empty( $get_term->slug ) ) {
+					return $get_term->slug;
+				}
+			}, $deleted_terms );
+			wp_remove_object_terms( $topic_id, $deleted_terms, $taxonomy );
+		}
+	}
+
+	// update tags.
+	if ( ! empty ( $terms ) ) {
+		$term_ids = array();
+
+		foreach ( $terms as $term_name ) {
+			$args['name']     = $term_name;
+			$args['slug']     = $term_name;
+			$args['taxonomy'] = $taxonomy;
+
+			$term_info = get_term_by( 'name', $term_name, $taxonomy, ARRAY_A );
+			if ( ! $term_info ) {
+				$term_info = wp_insert_term( $term_name, $taxonomy, $args );
+			}
+			if ( ! empty( $term_info ) && ! is_wp_error( $term_info ) ) {
+				$term_ids[] = $term_info['term_id'];
+			}
+		}
+
+		if ( ! empty( $term_ids ) ) {
+			$terms = wp_set_post_terms( $topic_id, $term_ids, $taxonomy, true );
+		}
+	}
+
+	return $terms;
+}
+

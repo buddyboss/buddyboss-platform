@@ -1,9 +1,11 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Delete Account )
+ * The template for members settings ( Delete Account )
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/settings/delete-account.php.
+ *
+ * @since   BuddyPress 3.0.0
+ * @version 1.0.0
  */
 
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>

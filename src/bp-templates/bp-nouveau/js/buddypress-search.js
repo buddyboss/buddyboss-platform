@@ -23,11 +23,11 @@ jQuery(document).ready(function($) {
 						distance_from_bottom = document_height - input_offset_plus;
 
 					//assuming 400px is good enough to display autocomplete ui
-					if( distance_from_bottom < 400 ){
+					if( distance_from_bottom < 400 && input_offset.top > distance_from_bottom ){
 						//but if space available on top is even less!
-						if( input_offset.top > distance_from_bottom ){
-							ac_position_prop = { collision: 'flip flip' };
-						}
+						ac_position_prop = { collision: 'flip flip' };
+					} else {
+						ac_position_prop = { my: 'left top', at: 'left bottom', collision: 'none' };
 					}
 
 					autoCompleteObjects.push( $search_field );
@@ -130,11 +130,11 @@ jQuery(document).ready(function($) {
 							distance_from_bottom = document_height - input_offset_plus;
 
 						//assuming 400px is good enough to display autocomplete ui
-						if ( distance_from_bottom < 400 ) {
+						if ( distance_from_bottom < 400 && input_offset.top > distance_from_bottom ) {
 							//but if space available on top is even less!
-							if ( input_offset.top > distance_from_bottom ) {
-								ac_position_prop = { collision: 'flip flip' };
-							}
+							ac_position_prop = { collision: 'flip flip' };
+						} else {
+							ac_position_prop = { my: 'left top', at: 'left bottom', collision: 'none' };
 						}
 
 						$( $search_field ).autocomplete( {
@@ -207,16 +207,6 @@ jQuery(document).ready(function($) {
 					}
 				} );
 			}
-
-			/**
-			 * Close the suggestion box when the page scrolls
-			 */
-			window.addEventListener( 'scroll', function () {
-				var arrayLength = autoCompleteObjects.length;
-				for ( var i = 0; i < arrayLength; i ++ ) {
-					autoCompleteObjects[i].autocomplete( 'close' );
-				}
-			} );
 		}
 	}
 	initAutoComplete();
