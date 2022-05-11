@@ -86,7 +86,7 @@ add_filter( 'query_vars', 'bb_setup_query_media_preview' );
 add_action( 'template_include', 'bb_setup_template_for_media_preview', PHP_INT_MAX );
 
 // For WP Comments.
-add_filter( 'comment_text', 'bp_media_comment_append_media', 10, 2 );
+add_filter( 'comment_text', 'bb_media_comment_append_media', 10, 2 );
 
 /**
  * Add Media items for search
@@ -217,7 +217,8 @@ function bp_media_activity_append_media( $content, $activity ) {
 		return $content;
 	}
 
-	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+	$media_ids       = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+	$is_blog_comment = bp_activity_get_meta( $activity->id, 'bp_blogs_post_comment_id', true );
 
 	if ( ! empty( $media_ids ) ) {
 
@@ -263,6 +264,10 @@ function bp_media_activity_append_media( $content, $activity ) {
 		) {
 			$is_forum_activity = true;
 			$args['privacy'][] = 'forums';
+		}
+
+		if ( ! empty( $is_blog_comment ) ) {
+			$args['privacy'][] = 'comment';
 		}
 
 		if ( bp_has_media( $args ) ) {
@@ -2652,12 +2657,14 @@ function bb_setup_template_for_media_preview( $template ) {
 /**
  * This will add the Gif/Media attached to comment text if comment added via activity comment.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param string $comment_text Comment text.
- * @param object $comment Comment object.
+ * @param object $comment      Comment object.
  *
  * @return false|string|void
  */
-function bp_media_comment_append_media( $comment_text, $comment = null ) {
+function bb_media_comment_append_media( $comment_text, $comment = null ) {
 
 	if ( ! bp_is_active( 'activity' ) ) {
 		return $comment_text;
