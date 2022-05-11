@@ -334,18 +334,27 @@ window.bp = window.bp || {};
 				{
 					'page'         : 1,
 					'total_page'   : 0,
-					'search_terms' : '',
+					'search_terms' : ( collection.options && collection.options.search_terms ) ? collection.options.search_terms : '',
 					'box'          : this.box
 				}
 			);
 
 			if ( collection.length ) {
 				// Use it in the filters viex.
-				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
+				filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
 
-				this.views.add( {id: 'filters', view: filters_view} );
+				this.views.add( { id: 'filters', view: filters_view } );
 
 				filters_view.inject( '.bp-messages-filters' );
+
+				if (
+					collection.options &&
+					collection.options.search_terms &&
+					collection.options.search_terms != '' &&
+					filters_view.$el
+				) {
+					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
+				}
 			}
 		},
 
@@ -490,7 +499,7 @@ window.bp = window.bp || {};
 			} );
 			return false;
 		},
-		
+
 		messageBlockMember: function ( e ) {
 			e.preventDefault();
 			var contentId    = $( this ).data( 'bp-content-id' );
@@ -515,7 +524,7 @@ window.bp = window.bp || {};
 				).magnificPopup( 'open' );
 			}
 		},
-		
+
 		messageModeratorMemberList: function ( e ) {
 			e.preventDefault();
 			var postData = {
@@ -555,7 +564,7 @@ window.bp = window.bp || {};
 				}
 			);
 		},
-		
+
 		clearModeratedMessageList: function () {
 			if ( $( '#moderated_user_list' ).length > 0 ) {
 				$( '#moderated_user_list' ).html( '' ).removeClass( 'is_not_empty' );
@@ -669,7 +678,7 @@ window.bp = window.bp || {};
 						options.data,
 						{
 							action: 'messages_get_user_message_threads'
-							}
+						}
 					);
 
 					return bp.ajax.send( options );
@@ -2558,7 +2567,7 @@ window.bp = window.bp || {};
 						data    : _.pick( this.options, 'box' ),
 						success : _.bind( this.threadsFetched, this ),
 						error   : _.bind( this.threadsFetchError, this )
-						}
+					}
 				);
 			},
 
@@ -2620,7 +2629,7 @@ window.bp = window.bp || {};
 							data    : _.pick( this.collection.options, ['box', 'search_terms', 'page'] ),
 							success : _.bind( this.threadsFetched, this ),
 							error   : _.bind( this.threadsFetchError, this )
-							}
+						}
 					);
 				}
 			},
@@ -2889,7 +2898,7 @@ window.bp = window.bp || {};
 						data    : _.pick( this.model.attributes, ['box', 'search_terms', 'page'] ),
 						success : this.threadsFiltered,
 						error   : this.threadsFilterError
-						}
+					}
 				);
 			},
 
@@ -2913,12 +2922,11 @@ window.bp = window.bp || {};
 
 			setSearchTerms: function( event ) {
 				event.preventDefault();
-
 				this.model.set(
 					{
 						'search_terms': $( event.target ).find( 'input[type=search]' ).val() || '',
 						page: 1
-						}
+					}
 				);
 			},
 
@@ -2965,7 +2973,7 @@ window.bp = window.bp || {};
 						data: data,
 						success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 						error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
-						}
+					}
 				);
 
 			}
@@ -3213,7 +3221,7 @@ window.bp = window.bp || {};
 							collection: this.collection,
 							thread: this.options.thread,
 							userMessage: this
-							}
+						}
 					)
 				);
 			},
@@ -3244,7 +3252,7 @@ window.bp = window.bp || {};
 						data: data,
 						success : _.bind( this.messagesFetched, this ),
 						error: _.bind( this.messagesFetchError, this )
-						}
+					}
 				);
 			},
 
@@ -3443,7 +3451,7 @@ window.bp = window.bp || {};
 					{
 						success : _.bind( this.replySent, this ),
 						error   : _.bind( this.replyError, this )
-						}
+					}
 				);
 			},
 
