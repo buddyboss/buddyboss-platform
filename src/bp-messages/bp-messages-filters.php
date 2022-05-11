@@ -775,6 +775,7 @@ function bb_messages_save_group_data( &$message ) {
 			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 		}
 	}
+}
 
 /**
  * Register the messages notifications.
