@@ -704,10 +704,13 @@ function bp_core_get_js_strings_callback( $params ) {
  *
  * @param $message Passed by reference.
  */
-function bb_messages_save_group_data( &$message ) {	
+function bb_messages_save_group_data( &$message ) {
 	if ( false === bp_disable_group_messages() ) {
 		return;
 	}
+
+	static $cache               = array();
+	static $cache_first_message = array();
 
 	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
 	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual.
@@ -716,16 +719,19 @@ function bb_messages_save_group_data( &$message ) {
 	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply.
 
 	if ( '' === $message_meta_users_list && isset( $group ) && '' !== $group ) {
-		$args = array(
-			'per_page'            => 99999999999999,
-			'group'               => $group,
-			'exclude'             => array( bp_loggedin_user_id() ),
-			'exclude_admins_mods' => false,
-		);
+		if ( isset( $cache[ $group ] ) ) {
+			$message_meta_users_list = $cache[ $group ];
+		} else {
+			// Fetch all the group members.
+			$members = BP_Groups_Member::get_group_member_ids( (int) $group );
 
-		$group_members           = groups_get_group_members( $args );
-		$members                 = wp_list_pluck( $group_members['members'], 'ID' );
-		$message_meta_users_list = implode( ',', $members );
+			// Exclude logged-in user ids from the members list.
+			if ( in_array( bp_loggedin_user_id(), $members, true ) ) {
+				$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+			}
+			$message_meta_users_list = implode( ',', $members );
+			$cache[ $group ]         = $message_meta_users_list;
+		}
 	}
 
 	if ( isset( $group ) && '' !== $group ) {
@@ -742,25 +748,19 @@ function bb_messages_save_group_data( &$message ) {
 		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 	} else {
 
-		$args = array(
-			'thread_id' => $message->thread_id,
-			'per_page'  => 99999999999999,
-		);
+		if ( isset( $cache_first_message[ $message->thread_id ] ) ) {
+			$message_id = $cache_first_message[ $message->thread_id ];
+		} else {
+			$first_message                              = BP_Messages_Thread::get_first_message( (int) $message->thread_id );
+			$message_id                                 = (int) $first_message->id;
+			$cache_first_message[ $message->thread_id ] = $message_id;
+		}
 
-		if ( bp_thread_has_messages( $args ) ) {
-			while ( bp_thread_messages() ) :
-				bp_thread_the_message();
-
-				$message_id    = bp_get_the_thread_message_id();
-				$group         = bp_messages_get_meta( $message_id, 'group_id', true );
-				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
-				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
-				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
-
-				if ( $group ) {
-					break;
-				}
-			endwhile;
+		if ( $message_id > 0 ) {
+			$group         = bp_messages_get_meta( $message_id, 'group_id', true );
+			$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
+			$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
+			$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
 		}
 
 		if ( $group ) {
