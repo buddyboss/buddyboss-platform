@@ -649,7 +649,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$this->topic_create( $topic_id, $forum_id, array(), $topic_author_id );
 			} else if( bbp_get_spam_status_id() === $post->post_status ){
 				
-				//Mark related activity as spam if topic marked as spam				
+				// Mark related activity as spam if topic marked as spam.
 				if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
 					
 					$activity = new BP_Activity_Activity( $activity_id );
@@ -823,7 +823,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
 			} else if( bbp_get_spam_status_id() === $post->post_status ){
 				
-				//Mark related activity as spam if reply marked as spam				
+				// Mark related activity as spam if reply marked as spam.
 				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
 					
 					$activity = new BP_Activity_Activity( $activity_id );
