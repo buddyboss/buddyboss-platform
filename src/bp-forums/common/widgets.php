@@ -614,7 +614,7 @@ class BBP_Forums_Widget extends WP_Widget {
 		$widget_query = new WP_Query(
 			array(
 				'post_type'           => bbp_get_forum_post_type(),
-				'post_parent'         => $settings['parent_forum'],
+				'post_parent'         => ( ! empty( $settings['parent_forum'] ) ? $settings['parent_forum'] : 0 ),
 				'post_status'         => bbp_get_public_status_id(),
 				'posts_per_page'      => bbp_get_forums_per_page(),
 				'ignore_sticky_posts' => true,
