@@ -1236,26 +1236,6 @@ function bp_nouveau_ajax_groups_send_message() {
 					if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
 						$_POST['message_thread_type'] = 'new';
 					}
-
-					if ( empty( $_POST['message_thread_type'] ) ) {
-						$total_threads = BP_Messages_Thread::get(
-							array(
-								'include_threads' => array( $group_thread ),
-								'per_page'        => 1,
-								'count_total'     => true,
-								'is_deleted'      => 1,
-							)
-						);
-
-						$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
-
-						if ( $is_deleted ) {
-							// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
-							$_POST['message_thread_type'] = 'new';
-						}
-					}
-				} else {
-					$_POST['message_thread_type'] = 'new';
 				}
 
 				if ( empty( $_POST['message_thread_type'] ) ) {
