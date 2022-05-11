@@ -3376,7 +3376,7 @@ add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
 /**
  * Fire an email when someone mentioned users into the blog post comment and post published from Rest API.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.1
  *
  * @param WP_Comment $comment WP_Comment class object.
  *
