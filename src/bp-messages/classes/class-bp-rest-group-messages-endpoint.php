@@ -320,7 +320,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 						$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
 
 						if ( $is_deleted ) {
-							// This post variable will using in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
 						}
 					}
@@ -329,7 +329,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				}
 
 				if ( '' !== $group_thread && ! $is_deleted && isset( $_POST['message_thread_type'] ) && empty( $_POST['message_thread_type'] ) ) {
-					// This post variable will using in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
+					// This post variable will use in "bb_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'reply';
 					$group_thread_id              = $group_thread;
 				} else {
