@@ -225,7 +225,7 @@ function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = 
  */
 function bp_document_folder_update_meta( $folder_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = update_metadata( 'folder', $folder_id, $meta_key, $meta_value, $prev_value );
+	$retval = update_metadata( 'document_folder', $folder_id, $meta_key, $meta_value, $prev_value );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
