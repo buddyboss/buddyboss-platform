@@ -80,14 +80,16 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_params = array(
-		'user_id'          => bp_loggedin_user_id(),
-		'object'           => 'user',
-		'backcompat'       => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'       => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'excluded_hosts'   => array(),
-		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'errors'           => array(
+		'user_id'           => bp_loggedin_user_id(),
+		'object'            => 'user',
+		'backcompat'        => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'        => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'post_draft_nonce'  => wp_create_nonce( 'post_draft_activity' ),
+		'excluded_hosts'    => array(),
+		'user_can_post'     => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit'  => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'displayed_user_id' => bp_displayed_user_id(),
+		'errors'            => array(
 			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),

@@ -79,6 +79,12 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
+			array(
+				'post_draft_activity' => array(
+					'function' => 'bp_nouveau_ajax_post_draft_activity',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -391,11 +397,11 @@ function bp_nouveau_ajax_new_activity_comment() {
 	if ( ! is_user_logged_in() ) {
 		wp_send_json_error( $response );
 	}
-	
+
 	// Check content empty or not for the media, document and gif.
 	// If content will empty then return true and allow empty content in DB for the media, document and gif.
 	$content = apply_filters( 'bb_is_activity_content_empty', $_POST );
-	
+
 	if ( false === $content ) { // Check if $content will false then content would be empty.
 		wp_send_json_error(
 			array(
@@ -754,6 +760,49 @@ function bp_nouveau_ajax_post_update() {
 			'is_directory'            => bp_is_activity_directory(),
 			'is_user_activity'        => bp_is_user_activity(),
 			'is_active_activity_tabs' => bp_is_activity_tabs_active(),
+		)
+	);
+}
+
+function bp_nouveau_ajax_post_draft_activity() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity_data_key = $_REQUEST['draft_activity_data_key'] ?? '';
+	$draft_activity_data     = $_REQUEST['draft_activity_data'] ?? '';
+	$draft_activity_type     = $_REQUEST['draft_activity_type'] ?? '';
+
+	// check activity toolbar options if one of them is set, activity can be empty.
+	$validate_request = false;
+	if ( ! empty( $draft_activity_data_key ) ) {
+		$validate_request = true;
+	} elseif ( ! empty( $draft_activity_data ) ) {
+		$validate_request = true;
+	} elseif ( ! empty( $draft_activity_type ) ) {
+		$validate_request = true;
+	}
+
+	if ( ! $validate_request ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Please enter some content.', 'buddyboss' ),
+			)
+		);
+	}
+
+	$activity_draft = array(
+		'draft_activity_data_key' => $draft_activity_data_key,
+		'draft_activity_data'     => $draft_activity_data,
+		'draft_activity_type'     => $draft_activity_type,
+	);
+
+	update_user_meta( bp_loggedin_user_id(), $draft_activity_data_key, $activity_draft );
+
+	wp_send_json_success(
+		array(
+			'message'        => esc_html__( 'Update posted.', 'buddyboss' ),
+			'draft_activity' => $activity_draft,
 		)
 	);
 }
