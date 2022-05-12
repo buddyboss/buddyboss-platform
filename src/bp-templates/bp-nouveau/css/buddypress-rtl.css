@@ -25610,6 +25610,10 @@ span.icons:before {
   width: 25px;
 }
 
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i.bb-icon-calendar {
+  font-size: 17px;
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content {
   align-self: center;
 }
