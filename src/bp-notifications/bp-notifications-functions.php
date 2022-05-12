@@ -1389,17 +1389,17 @@ function bb_get_notification_conditional_icon( $notification ) {
 			}
 
 			if ( ! empty( $excerpt ) ) {
-				$icon_class = 'bb-icon-f bb-icon-comment';
+				$icon_class = 'bb-icon-f bb-icon-comment-square';
 			} elseif ( $media_ids ) {
 				$icon_class = 'bb-icon-f bb-icon-image';
 			} elseif ( $document_ids ) {
 				$icon_class = 'bb-icon-f bb-icon-file-doc';
 			} elseif ( $video_ids ) {
-				$icon_class = 'bb-icon-f bb-icon-film';
+				$icon_class = 'bb-icon-f bb-icon-video';
 			} elseif ( ! empty( $gif_data ) ) {
 				$icon_class = 'bb-icon-f bb-icon-gif';
 			} else {
-				$icon_class = 'bb-icon-f bb-icon-comment';
+				$icon_class = 'bb-icon-f bb-icon-comment-square';
 			}
 
 			break;
