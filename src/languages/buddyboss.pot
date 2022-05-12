@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.0.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-28 12:14:27+00:00\n"
+"POT-Creation-Date: 2022-05-11 12:25:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -565,7 +565,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:37
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:223
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:90
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:279
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:278
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:220
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:36
 #: bp-templates/bp-nouveau/buddypress/video/video-create-album.php:27
@@ -768,7 +768,7 @@ msgid "comment"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:3223
-#: bp-activity/bp-activity-functions.php:4125
+#: bp-activity/bp-activity-functions.php:4148
 msgid "View Comment"
 msgstr ""
 
@@ -926,39 +926,39 @@ msgid ""
 "now."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2993
+#: bp-activity/bp-activity-functions.php:3016
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:377
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3025
+#: bp-activity/bp-activity-functions.php:3048
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3717
+#: bp-activity/bp-activity-functions.php:3740
 msgid "Thumbnail"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4116
-#: bp-activity/bp-activity-functions.php:4120
-#: bp-activity/bp-activity-functions.php:4123
-#: bp-activity/bp-activity-functions.php:4127
-#: bp-activity/bp-activity-functions.php:4132
+#: bp-activity/bp-activity-functions.php:4139
+#: bp-activity/bp-activity-functions.php:4143
+#: bp-activity/bp-activity-functions.php:4146
+#: bp-activity/bp-activity-functions.php:4150
+#: bp-activity/bp-activity-functions.php:4155
 #: bp-activity/classes/class-bp-activity-notification.php:180
 #: bp-members/classes/class-bp-members-mentions-notification.php:193
 msgid "post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4128
-#: bp-activity/bp-activity-functions.php:4133
+#: bp-activity/bp-activity-functions.php:4151
+#: bp-activity/bp-activity-functions.php:4156
 msgid "View Post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5201
+#: bp-activity/bp-activity-functions.php:5224
 msgid "URL is not valid."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5209
+#: bp-activity/bp-activity-functions.php:5232
 #: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:101
 msgid "There was a problem generating a link preview."
 msgstr ""
@@ -2015,7 +2015,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:479
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1474
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:298
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1200
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1214
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2173
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1011
 #. translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels
@@ -2030,7 +2030,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:487
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1482
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:306
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1208
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1222
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2180
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1019
 #. translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in
@@ -2052,7 +2052,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1924
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:599
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1211
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1304
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1318
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:824
 msgid "Ensure result set excludes specific IDs."
 msgstr ""
@@ -2061,7 +2061,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:531
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1202
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1795
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1295
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1309
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:1492
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:833
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1497
@@ -2105,7 +2105,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1983
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1122
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1648
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1336
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1350
 msgid "Limit result set to items with a specific scope."
 msgstr ""
 
@@ -2264,14 +2264,14 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-invite-template.php:282
 #: bp-groups/classes/class-bp-groups-widget.php:159
 #: bp-members/bp-members-template.php:1016
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1483
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1497
 #. translators: last active format.
 msgid "active %s"
 msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:659 bp-members/bp-members-template.php:1034
 #: bp-members/bp-members-template.php:3059
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1501
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1515
 msgid "Never active"
 msgstr ""
 
@@ -6291,7 +6291,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-core/bp-core-functions.php:1641
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1491
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1505
 msgid "Not recently active"
 msgstr ""
 
@@ -8387,7 +8387,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-attachments-member-avatar-endpoint.php:70
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:225
 #: bp-members/classes/class-bp-rest-members-endpoint.php:85
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1057
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1065
 msgid "A unique numeric ID for the Member."
 msgstr ""
 
@@ -9899,9 +9899,9 @@ msgid "Sorry, you need to be logged in to delete this document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1115
-#: bp-document/classes/class-bp-rest-document-endpoint.php:2951
-#: bp-document/classes/class-bp-rest-document-endpoint.php:2971
-#: bp-document/classes/class-bp-rest-document-endpoint.php:2991
+#: bp-document/classes/class-bp-rest-document-endpoint.php:2972
+#: bp-document/classes/class-bp-rest-document-endpoint.php:2992
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3012
 msgid "Document specific IDs."
 msgstr ""
 
@@ -10473,227 +10473,227 @@ msgstr ""
 msgid "Next in %s seconds..."
 msgstr ""
 
-#: bp-forums/admin/converter.php:595
+#: bp-forums/admin/converter.php:593
 msgid "Readying sync-table"
 msgstr ""
 
-#: bp-forums/admin/converter.php:596
+#: bp-forums/admin/converter.php:594
 msgid "Sync-table ready"
 msgstr ""
 
-#: bp-forums/admin/converter.php:599
+#: bp-forums/admin/converter.php:597
 msgid "Deleting previously converted data (%1$s through %2$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:606
+#: bp-forums/admin/converter.php:604
 msgid "Skipping sync-table clean-up"
 msgstr ""
 
-#: bp-forums/admin/converter.php:621
+#: bp-forums/admin/converter.php:619
 msgid "No users to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:622
+#: bp-forums/admin/converter.php:620
 msgid "All users imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:625
+#: bp-forums/admin/converter.php:623
 msgid "Converting users (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:629
+#: bp-forums/admin/converter.php:627
 msgid "Skipping user clean-up"
 msgstr ""
 
-#: bp-forums/admin/converter.php:644
+#: bp-forums/admin/converter.php:642
 msgid "No passwords to clear"
 msgstr ""
 
-#: bp-forums/admin/converter.php:645
+#: bp-forums/admin/converter.php:643
 msgid "All passwords cleared"
 msgstr ""
 
-#: bp-forums/admin/converter.php:648
+#: bp-forums/admin/converter.php:646
 msgid "Delete default WordPress user passwords (%1$s through %2$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:652
+#: bp-forums/admin/converter.php:650
 msgid "Skipping password clean-up"
 msgstr ""
 
-#: bp-forums/admin/converter.php:666
+#: bp-forums/admin/converter.php:664
 msgid "No forums to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:667
+#: bp-forums/admin/converter.php:665
 msgid "All forums imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:670
+#: bp-forums/admin/converter.php:668
 msgid "Converting forums (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:684
+#: bp-forums/admin/converter.php:682
 msgid "No forum parents to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:685
+#: bp-forums/admin/converter.php:683
 msgid "All forum parents imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:688
+#: bp-forums/admin/converter.php:686
 msgid "Calculating forum hierarchy (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:702
+#: bp-forums/admin/converter.php:700
 msgid "No forum subscriptions to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:703
+#: bp-forums/admin/converter.php:701
 msgid "All forum subscriptions imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:706
+#: bp-forums/admin/converter.php:704
 msgid "Converting forum subscriptions (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:721
+#: bp-forums/admin/converter.php:719
 msgid "No topics to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:722
+#: bp-forums/admin/converter.php:720
 msgid "All topics imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:725
+#: bp-forums/admin/converter.php:723
 msgid "Converting topics (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:739
+#: bp-forums/admin/converter.php:737
 msgid "No anonymous topic authors to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:740
+#: bp-forums/admin/converter.php:738
 msgid "All anonymous topic authors imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:743
+#: bp-forums/admin/converter.php:741
 msgid "Converting anonymous topic authors (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:757
+#: bp-forums/admin/converter.php:755
 msgid "No stickies to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:758
+#: bp-forums/admin/converter.php:756
 msgid "All stickies imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:761
+#: bp-forums/admin/converter.php:759
 msgid "Calculating topic stickies (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:775
+#: bp-forums/admin/converter.php:773
 msgid "No super stickies to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:776
+#: bp-forums/admin/converter.php:774
 msgid "All super stickies imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:779
+#: bp-forums/admin/converter.php:777
 msgid "Calculating topic super stickies (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:793
+#: bp-forums/admin/converter.php:791
 msgid "No closed topics to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:794
+#: bp-forums/admin/converter.php:792
 msgid "All closed topics imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:797
+#: bp-forums/admin/converter.php:795
 msgid "Calculating closed topics (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:811
+#: bp-forums/admin/converter.php:809
 msgid "No topic tags to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:812
+#: bp-forums/admin/converter.php:810
 msgid "All topic tags imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:815
+#: bp-forums/admin/converter.php:813
 msgid "Converting topic tags (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:829
+#: bp-forums/admin/converter.php:827
 msgid "No topic subscriptions to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:830
+#: bp-forums/admin/converter.php:828
 msgid "All topic subscriptions imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:833
+#: bp-forums/admin/converter.php:831
 msgid "Converting topic subscriptions (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:847
+#: bp-forums/admin/converter.php:845
 msgid "No favorites to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:848
+#: bp-forums/admin/converter.php:846
 msgid "All favorites imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:851
+#: bp-forums/admin/converter.php:849
 msgid "Converting favorites (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:865
+#: bp-forums/admin/converter.php:863
 msgid "No replies to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:866
+#: bp-forums/admin/converter.php:864
 msgid "All replies imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:869
+#: bp-forums/admin/converter.php:867
 msgid "Converting replies (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:883
+#: bp-forums/admin/converter.php:881
 msgid "No anonymous reply authors to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:884
+#: bp-forums/admin/converter.php:882
 msgid "All anonymous reply authors imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:887
+#: bp-forums/admin/converter.php:885
 msgid "Converting anonymous reply authors (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:901
+#: bp-forums/admin/converter.php:899
 msgid "No threaded replies to import"
 msgstr ""
 
-#: bp-forums/admin/converter.php:902
+#: bp-forums/admin/converter.php:900
 msgid "All threaded replies imported"
 msgstr ""
 
-#: bp-forums/admin/converter.php:905
+#: bp-forums/admin/converter.php:903
 msgid "Calculating threaded replies parents (%1$s through %2$s of %3$s)"
 msgstr ""
 
-#: bp-forums/admin/converter.php:916
+#: bp-forums/admin/converter.php:914
 msgid "Import Finished"
 msgstr ""
 
-#: bp-forums/admin/converter.php:1116
+#: bp-forums/admin/converter.php:1114
 msgid "Database connection failed."
 msgstr ""
 
@@ -16336,7 +16336,7 @@ msgstr ""
 #: bp-friends/bp-friends-template.php:458
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:201
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:206
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:262
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:261
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:203
 msgid "Remove Connection"
 msgstr ""
@@ -16596,7 +16596,7 @@ msgid "Whether to force friendship acceptance."
 msgstr ""
 
 #: bp-friends/classes/class-bp-rest-friends-endpoint.php:868
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1174
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1182
 msgid "A unique numeric ID for the friendship."
 msgstr ""
 
@@ -19075,7 +19075,7 @@ msgid "Whether to check the default cover image or not."
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1540
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1269
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1283
 msgid "Shorthand for certain orderby/order combinations."
 msgstr ""
 
@@ -21181,7 +21181,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1178
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1737
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1278
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1292
 msgid "Limit results to friends of a user."
 msgstr ""
 
@@ -22154,7 +22154,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:151
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:219
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:224
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:280
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:279
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:221
 msgid "Confirm"
 msgstr ""
@@ -22411,52 +22411,52 @@ msgid "Object of member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:231
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1063
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1071
 msgid "Display name for the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:239
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1071
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1079
 msgid "The name used for that user in @-mentions."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:247
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1079
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1087
 msgid "Profile URL of the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:254
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1086
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1094
 msgid "An alphanumeric identifier for the Member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:263
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1095
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1103
 msgid "Member types associated with the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:269
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1149
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1157
 msgid "Member XProfile groups and its fields."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:275
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1167
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1175
 msgid "Friendship relation with, current, logged in user."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:282
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1186
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1194
 msgid "Check if a user is following or not."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:313
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1221
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1235
 msgid "Avatar URLs for the member."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:322
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1230
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1244
 msgid "Cover images URL for the member."
 msgstr ""
 
@@ -22574,83 +22574,87 @@ msgstr ""
 msgid "'%s' Transport method not implemented."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:927
+#: bp-members/classes/class-bp-rest-members-endpoint.php:935
 msgid "No extended profile data available as the component is inactive"
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:968
+#: bp-members/classes/class-bp-rest-members-endpoint.php:976
 msgid "The data for the user was not found."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:992
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1000
 msgid "Set type(s) for a member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1011
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1019
 msgid "The email address for the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1101
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1109
 msgid "Registration date for the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1108
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1116
 msgid "Password for the member (never included)."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1117
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1125
 msgid "Roles assigned to the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1125
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1133
 msgid "All capabilities assigned to the user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1131
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1139
 msgid "Any extra capabilities assigned to the user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1137
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1145
 msgid "Display name for the member based on the privacy setting."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1143
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1151
 msgid "Last Active time for the member."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1155
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1163
 msgid "Followers counts for the current user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1161
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1169
 msgid "Followings counts for the current user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1180
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1188
 msgid "Logged in user can create friendship with current user."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1215
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1200
+msgid "Whether the member is an administrator."
+msgstr ""
+
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1229
 msgid "Whether the member has a default avatar or not."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1237
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1251
 msgid "Whether to check member has default cover image or not."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1286
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1300
 msgid "Pass IDs of users to limit result set."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1313
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1327
 msgid "Limit results set to certain type(s)."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1322
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1336
 msgid "Limit results set to a certain xProfile field."
 msgstr ""
 
-#: bp-members/classes/class-bp-rest-members-endpoint.php:1330
+#: bp-members/classes/class-bp-rest-members-endpoint.php:1344
 msgid "Profile Search form field data(s)."
 msgstr ""
 
@@ -26547,7 +26551,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:211
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:216
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:272
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:271
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:213
 #. translators: %s: The member name with HTML tags
 #. translators: %s: The member name with HTML tags

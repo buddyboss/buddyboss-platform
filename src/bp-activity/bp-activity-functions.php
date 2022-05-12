@@ -2873,7 +2873,7 @@ add_action( 'edit_comment', 'bp_activity_post_type_comment', 10 );
 /**
  * Create an activity item for a newly posted post type comment from REST API.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.0.1
  *
  * @param WP_Comment $comment WP_Comment class object.
  *
