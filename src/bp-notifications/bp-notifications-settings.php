@@ -237,13 +237,6 @@ function bb_notification_get_settings_fields() {
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header' ),
 		);
-	} else {
-		$fields['bp_web_push_notification_settings']['fields'] = array(
-			'title'             => esc_html__( 'Enable Web Push Notifications', 'buddyboss' ),
-			'callback'          => 'bb_admin_setting_callback_push_notification_fields',
-			'sanitize_callback' => 'intval',
-			'args'              => array(),
-		);
 	}
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
