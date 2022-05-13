@@ -1375,11 +1375,24 @@ function bp_document_upload() {
 
 	do_action( 'bb_document_upload', $attachment );
 
+	// Generate document attachment preview link.
+	$attachment_id  = 'forbidden_' . $attachment->ID;
+	$attachment_url = home_url( '/' ) . 'bb-attachment-document-preview/' . base64_encode( $attachment_id );
+
+	if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
+	}
+
+	$file_system_direct = new WP_Filesystem_Direct( false );
+	$attachment_size    = $file_system_direct->size( get_attached_file( $attachment->ID ) );
+
 	$result = array(
 		'id'   => (int) $attachment->ID,
-		'url'  => esc_url( $attachment->guid ),
+		'url'  => esc_url( $attachment_url ),
 		'name' => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
 		'type' => esc_attr( 'document' ),
+		'size' => $attachment_size,
 	);
 
 	return $result;

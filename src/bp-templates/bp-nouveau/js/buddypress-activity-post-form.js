@@ -854,16 +854,15 @@ window.bp = window.bp || {};
 									dataURL: activity_data.media[i].url,
 									id: activity_data.media[i].attachment_id,
 									media_edit_data: {
-										'id': activity_data.media[i].attachment_id,
-										'media_id': activity_data.media[i].id,
+										'id': activity_data.media[i].id,
 										'name': activity_data.media[i].name,
 										'thumb': activity_data.media[i].thumb,
 										'url': activity_data.media[i].url,
-										'uuid': activity_data.media[i].attachment_id,
+										'uuid': activity_data.media[i].id,
 										'menu_order': activity_data.media[i].menu_order,
 										'album_id': activity_data.media[i].album_id,
 										'group_id': activity_data.media[i].group_id,
-										'saved': true,
+										'saved': false,
 									},
 								};
 
@@ -914,17 +913,16 @@ window.bp = window.bp || {};
 									dataURL: activity_data.document[doci].url,
 									id: activity_data.document[doci].doc_id,
 									document_edit_data: {
-										'id': activity_data.document[doci].doc_id,
+										'id': activity_data.document[doci].id,
 										'name': activity_data.document[doci].name,
 										'type': 'document',
 										'url': activity_data.document[doci].url,
 										'size': activity_data.document[doci].size,
-										'uuid': activity_data.document[doci].doc_id,
-										'document_id': activity_data.document[doci].id,
+										'uuid': activity_data.document[doci].id,
 										'menu_order': activity_data.document[doci].menu_order,
 										'folder_id': activity_data.document[doci].folder_id,
 										'group_id': activity_data.document[doci].group_id,
-										'saved': true,
+										'saved': false,
 									},
 								};
 
@@ -974,18 +972,17 @@ window.bp = window.bp || {};
 									dataURL: activity_data.video[vidi].url,
 									id: activity_data.video[vidi].vid_id,
 									video_edit_data: {
-										'id': activity_data.video[vidi].vid_id,
+										'id': activity_data.video[vidi].id,
 										'name': activity_data.video[vidi].name,
 										'type': 'video',
 										'thumb': activity_data.video[vidi].thumb,
 										'url': activity_data.video[vidi].url,
 										'size': activity_data.video[vidi].size,
-										'uuid': activity_data.video[vidi].vid_id,
-										'video_id': activity_data.video[vidi].id,
+										'uuid': activity_data.video[vidi].id,
 										'menu_order': activity_data.video[vidi].menu_order,
 										'album_id': activity_data.video[vidi].album_id,
 										'group_id': activity_data.video[vidi].group_id,
-										'saved': true,
+										'saved': false,
 									},
 								};
 
@@ -1195,26 +1192,7 @@ window.bp = window.bp || {};
 					}
 
 					// validation for content editor.
-					if (
-						$( $.parseHTML( content ) ).text().trim() === '' &&
-						(
-						(
-							( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) )
-						)
-						&&
-						(
-							( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) )
-						)
-						&&
-						(
-							( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) )
-						)
-						&&
-						(
-							( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) )
-						)
-						)
-					) {
+					if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
 						return false;
 					}
 
@@ -1265,10 +1243,11 @@ window.bp = window.bp || {};
 					localStorage.setItem( bp.draft_activity.draft_activity_data_key, JSON.stringify( bp.draft_activity ) );
 
 					if ( 5 === loop_count ) {
+						loop_count = 0;
 						bp.Nouveau.Activity.postForm.postDraftActivity();
 					}
 				},
-				4000,
+				4000
 			);
 
 		},
@@ -1283,10 +1262,15 @@ window.bp = window.bp || {};
 			}
 
 			bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', bp.draft_activity ).done(
-				function( response ) {
-				},
+				function() {
+				}
 			).fail();
 		},
+
+		resetDraftActivity: function() {
+			bp.draft_activity.draft_activity_data = false;
+			localStorage.removeItem( bp.draft_activity.draft_activity_data_key );
+		}
 
 	};
 
@@ -5068,6 +5052,9 @@ window.bp = window.bp || {};
 								}
 							}
 						}
+
+						// Reset draft activity.
+						bp.Nouveau.Activity.postForm.resetDraftActivity();
 					}
 				).fail(
 					function ( response ) {

@@ -595,10 +595,11 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$activity_id = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$item_id     = 0;
-	$object      = '';
-	$is_private  = false;
+	$activity_id             = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$item_id                 = 0;
+	$object                  = '';
+	$is_private              = false;
+	$draft_activity_meta_key = 'draft_' . $object;
 
 	// Try to get the item id from posted variables.
 	if ( ! empty( $_POST['item_id'] ) ) {
@@ -680,6 +681,9 @@ function bp_nouveau_ajax_post_update() {
 
 		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
 			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
+
+			// Draft activity meta key.
+			$draft_activity_meta_key .= $object . '_' . bp_get_displayed_user()->id;
 		}
 
 		$activity_id = bp_activity_post_update(
@@ -714,6 +718,9 @@ function bp_nouveau_ajax_post_update() {
 
 				$is_private = 'public' !== $status;
 			}
+
+			// Draft activity meta key.
+			$draft_activity_meta_key .= $object . '_' . $item_id;
 		}
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
@@ -727,6 +734,9 @@ function bp_nouveau_ajax_post_update() {
 			)
 		);
 	}
+
+	// Delete draft activity.
+	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
 
 	ob_start();
 	if ( bp_has_activities(

@@ -59,10 +59,14 @@ function bp_video_upload() {
 
 	$name = $attachment->post_title;
 
+	// Generate video attachment preview link.
+	$attachment_id  = 'forbidden_' . $attachment->ID;
+	$attachment_url = home_url( '/' ) . 'bb-attachment-video-preview/' . base64_encode( $attachment_id );
+
 	$result = array(
 		'id'    => (int) $attachment->ID,
 		'thumb' => '',
-		'url'   => '',
+		'url'   => esc_url( $attachment_url ),
 		'name'  => esc_attr( $name ),
 	);
 

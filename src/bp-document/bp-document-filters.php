@@ -80,6 +80,11 @@ add_action( 'bp_add_rewrite_rules', 'bb_setup_document_preview' );
 add_filter( 'query_vars', 'bb_setup_query_document_preview' );
 add_action( 'template_include', 'bb_setup_template_for_document_preview', PHP_INT_MAX );
 
+// Setup rewrite rule to access attachment document.
+add_action( 'bp_add_rewrite_rules', 'bb_setup_attachment_document_preview' );
+add_filter( 'query_vars', 'bb_setup_attachment_document_preview_query' );
+add_action( 'template_include', 'bb_setup_attachment_document_preview_template', PHP_INT_MAX );
+
 /**
  * Clear a user's symlinks document when attachment document delete.
  *
@@ -1997,6 +2002,56 @@ function bb_setup_template_for_document_preview( $template ) {
 		do_action( 'bb_setup_template_for_document_player' );
 
 		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/player.php';
+	}
+
+	return $template;
+}
+
+/**
+ * Add rewrite rule to setup attachment document preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_setup_attachment_document_preview() {
+	add_rewrite_rule( 'bb-attachment-document-preview/([^/]+)/?$', 'index.php?attachment-id=$matches[1]', 'top' );
+}
+
+/**
+ * Setup query variable for attachment document preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $query_vars Array of query variables.
+ *
+ * @return array
+ */
+function bb_setup_attachment_document_preview_query( $query_vars ) {
+	$query_vars[] = 'attachment-id';
+
+	return $query_vars;
+}
+
+/**
+ * Setup template for the attachment document preview.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $template Template path to include.
+ *
+ * @return string
+ */
+function bb_setup_attachment_document_preview_template( $template ) {
+
+	if ( ! empty( get_query_var( 'attachment-id' ) ) ) {
+
+		/**
+		 * Hooks to perform any action before the template load.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_setup_attachment_document_preview_template' );
+
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/includes/document/attachment.php';
 	}
 
 	return $template;
