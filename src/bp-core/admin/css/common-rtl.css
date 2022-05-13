@@ -3214,12 +3214,3 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 #bp_web_push_notification_settings table.form-table .no-padding {
   padding: 0;
 }
-
-#bp_web_push_notification_settings table.form-table tbody tr {
-  margin-bottom: 20px;
-}
-
-#bp_web_push_notification_settings table.form-table tbody tr th {
-  margin-bottom: 15px;
-  width: 100%;
-}

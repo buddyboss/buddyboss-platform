@@ -237,7 +237,9 @@ function bb_notification_get_settings_fields() {
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header' ),
 		);
-	}
+	} else {
+		$fields['bp_web_push_notification_settings'] = apply_filters( 'bb_notification_web_push_notification_settings', $fields['bp_web_push_notification_settings'] );
+    }
 
 	return (array) apply_filters( 'bb_notification_get_settings_fields', $fields );
 }
