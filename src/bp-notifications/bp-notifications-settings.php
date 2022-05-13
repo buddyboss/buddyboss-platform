@@ -227,8 +227,8 @@ function bb_notification_get_settings_fields() {
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
 		(
-			! function_exists( 'bp_is_labs_notification_preferences_support_enabled' ) ||
-			! bp_is_labs_notification_preferences_support_enabled()
+			function_exists( 'bb_enabled_legacy_email_preference' ) &&
+			bb_enabled_legacy_email_preference()
 		)
 	) {
 		$fields['bp_web_push_notification_settings']['infos'] = array(
@@ -491,7 +491,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
 				/* translators: BuddyBoss Pro purchase link */
 				__( 'Please update %1$s to version 1.1.9.2 to use web push notifications on your site.', 'buddyboss' )
 			),
-			'<a href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+			'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/pro' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 		) .
 	'</p>';
 }
