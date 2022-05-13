@@ -779,40 +779,15 @@ function bp_nouveau_ajax_post_draft_activity() {
 		wp_send_json_error();
 	}
 
-	$draft_activity_data_key = $_REQUEST['draft_activity_data_key'] ?? '';
-	$draft_activity_data     = $_REQUEST['draft_activity_data'] ?? '';
-	$draft_activity_type     = $_REQUEST['draft_activity_type'] ?? '';
+	$draft_activity = $_REQUEST['draft_activity'] ?? '';
 
-	// check activity toolbar options if one of them is set, activity can be empty.
-	$validate_request = false;
-	if ( ! empty( $draft_activity_data_key ) ) {
-		$validate_request = true;
-	} elseif ( ! empty( $draft_activity_data ) ) {
-		$validate_request = true;
-	} elseif ( ! empty( $draft_activity_type ) ) {
-		$validate_request = true;
+	if ( isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+		update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 	}
-
-	if ( ! $validate_request ) {
-		wp_send_json_error(
-			array(
-				'message' => __( 'Please enter some content.', 'buddyboss' ),
-			)
-		);
-	}
-
-	$activity_draft = array(
-		'draft_activity_data_key' => $draft_activity_data_key,
-		'draft_activity_data'     => $draft_activity_data,
-		'draft_activity_type'     => $draft_activity_type,
-	);
-
-	update_user_meta( bp_loggedin_user_id(), $draft_activity_data_key, $activity_draft );
 
 	wp_send_json_success(
 		array(
-			'message'        => esc_html__( 'Update posted.', 'buddyboss' ),
-			'draft_activity' => $activity_draft,
+			'draft_activity' => $draft_activity,
 		)
 	);
 }

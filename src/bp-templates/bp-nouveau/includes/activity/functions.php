@@ -79,6 +79,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
+	// Draft activity meta key.
+	$draft_activity_meta_key = 'draft_user';
+
+	if ( 0 < bp_displayed_user_id() ) {
+		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
+	}
+
 	$activity_params = array(
 		'user_id'           => bp_loggedin_user_id(),
 		'object'            => 'user',
@@ -244,7 +251,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'group_avatar' => bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
+
+		$draft_activity_meta_key = 'draft_group_' . bp_get_current_group_id();
 	}
+
+	// Get draft activity.
+	$draft_activity = get_user_meta( bbp_get_current_user_id(), $draft_activity_meta_key, true );
+	$activity_params['draft_activity'] = $draft_activity;
 
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),

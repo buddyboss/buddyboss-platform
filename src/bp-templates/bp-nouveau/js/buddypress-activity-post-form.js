@@ -26,10 +26,10 @@ window.bp = window.bp || {};
 	bp.privacy            = 'public';
 	bp.draft_ajax_request = null;
 	bp.draft_activity     = {
-		draft_activity_type:     false,
-		draft_activity_data_key: false,
-		draft_activity_data:     false,
-		_wpnonce_post_draft:     BP_Nouveau.activity.params.post_draft_nonce
+		object: false,
+		data_key: false,
+		data: false,
+		is_sync_with_db: false
 	};
 
 	/**
@@ -54,9 +54,8 @@ window.bp = window.bp || {};
 			// Get current draft activity.
 			this.getCurrentDraftActivity();
 			this.syncDraftActivity();
-
-			// Activity draft.
-			// this.displayDraftActivity();
+			this.storeDraftActivity();
+			this.reloadWindow();
 		},
 
 		postFormView: function () {
@@ -664,22 +663,22 @@ window.bp = window.bp || {};
 
 		getCurrentDraftActivity: function () {
 			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
-				bp.draft_activity.draft_activity_type = BP_Nouveau.activity.params.object;
+				bp.draft_activity.object = BP_Nouveau.activity.params.object;
 
 				// Draft activity data.
-				bp.draft_activity.draft_activity_data_key = 'draft_' + BP_Nouveau.activity.params.object;
+				bp.draft_activity.data_key = 'draft_' + BP_Nouveau.activity.params.object;
 				if ( 'group' === BP_Nouveau.activity.params.object ) {
-					bp.draft_activity.draft_activity_data_key = 'draft_' + BP_Nouveau.activity.params.object + '_' + BP_Nouveau.activity.params.item_id;
+					bp.draft_activity.data_key = 'draft_' + BP_Nouveau.activity.params.object + '_' + BP_Nouveau.activity.params.item_id;
 				} else if ( 0 < BP_Nouveau.activity.params.displayed_user_id ) {
-					bp.draft_activity.draft_activity_data_key = 'draft_' + BP_Nouveau.activity.params.object + '_' + BP_Nouveau.activity.params.displayed_user_id;
+					bp.draft_activity.data_key = 'draft_' + BP_Nouveau.activity.params.object + '_' + BP_Nouveau.activity.params.displayed_user_id;
 				}
 
-				var draft_data = localStorage.getItem( bp.draft_activity.draft_activity_data_key );
+				var draft_data = localStorage.getItem( bp.draft_activity.data_key );
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
 
 					// Parse data with JSON.
 					var draft_activity_local_data         = JSON.parse( draft_data );
-					bp.draft_activity.draft_activity_data = draft_activity_local_data.draft_activity_data;
+					bp.draft_activity.data = draft_activity_local_data.data;
 				}
 			}
 
@@ -695,7 +694,7 @@ window.bp = window.bp || {};
 		},
 
 		displayDraftActivity: function () {
-			var activity_data = bp.draft_activity.draft_activity_data,
+			var activity_data = bp.draft_activity.data,
 				$this         = this,
 				self_postform = bp.Nouveau.Activity.postForm;
 
@@ -1127,6 +1126,13 @@ window.bp = window.bp || {};
 		},
 
 		syncDraftActivity: function() {
+			if ( ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) && ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
+				bp.draft_activity = BP_Nouveau.activity.params.draft_activity;
+				localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+			}
+		},
+
+		storeDraftActivity: function() {
 			var self       = this,
 				loop_count = 0;
 
@@ -1239,8 +1245,9 @@ window.bp = window.bp || {};
 					}
 
 					// Set Draft activity data.
-					bp.draft_activity.draft_activity_data = data;
-					localStorage.setItem( bp.draft_activity.draft_activity_data_key, JSON.stringify( bp.draft_activity ) );
+					bp.draft_activity.data            = data;
+					bp.draft_activity.is_sync_with_db = false;
+					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 
 					if ( 5 === loop_count ) {
 						loop_count = 0;
@@ -1261,15 +1268,60 @@ window.bp = window.bp || {};
 				bp.draft_ajax_request.abort();
 			}
 
-			bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', bp.draft_activity ).done(
-				function() {
-				}
-			).fail();
+			var draft_data = {
+				_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
+				draft_activity: bp.draft_activity,
+				action: 'post_draft_activity'
+			};
+
+			options       = {};
+			options.async = false;
+			options.data  = draft_data;
+
+			// Send data to server.
+			bp.draft_ajax_request = bp.ajax.send( options );
 		},
 
 		resetDraftActivity: function() {
-			bp.draft_activity.draft_activity_data = false;
-			localStorage.removeItem( bp.draft_activity.draft_activity_data_key );
+			bp.draft_activity.data = false;
+			localStorage.removeItem( bp.draft_activity.data_key );
+		},
+
+		discardDraftActivity: function() {
+			// Delete the activity from the database.
+			bp.draft_activity.is_sync_with_db = false;
+			this.postDraftActivity();
+			this.resetDraftActivity();
+		},
+
+		reloadWindow: function() {
+			var draft_data = {
+				_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
+				draft_activity: bp.draft_activity,
+				action: 'post_draft_activity'
+			};
+
+			const formData = new FormData();
+			formData.append( '_wpnonce_post_draft', BP_Nouveau.activity.params.post_draft_nonce );
+			formData.append( 'draft_activity', bp.draft_activity );
+			formData.append( 'action', 'post_draft_activity' );
+
+			// This will work only for Chrome.
+			window.onbeforeunload = function (event) {
+
+				if ( 'undefined' !== typeof event ) {
+					navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
+					//bp.Nouveau.Activity.postForm.postDraftActivity();
+				}
+			};
+
+			// This will work only for other browsers.
+			window.unload = function (event) {
+				if ( 'undefined' !== typeof event ) {
+					// bp.Nouveau.Activity.postForm.postDraftActivity();
+					navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
+				}
+			};
 		}
 
 	};
