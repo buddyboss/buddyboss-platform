@@ -525,16 +525,3 @@ function bb_admin_setting_callback_push_notification_lab_notification_preference
 		) .
 	'</p>';
 }
-
-/**
- * Callback fields for the push notification fields options.
- *
- * @since [BBVERSION]
- */
-function bb_admin_setting_callback_push_notification_fields() {
-	?>
-    <input id="enable_web_push_notifications" name="enable_web_push_notifications" type="checkbox" value="1" <?php checked( bp_get_option( 'enable_web_push_notifications', 0 ) ); ?> />
-    <label for="enable_web_push_notifications"><?php esc_html_e( 'Allow members to subscribe to notifications through their browser', 'buddyboss' ); ?></label>
-    <p class="description"><?php esc_html_e( 'Once enabled, members will be able to opt-in through to receive all BuddyBoss Notifications as push notifications through their web browser. Safari notifications are not currently supported.', 'buddyboss' ); ?></p>
-	<?php
-}
