@@ -309,6 +309,14 @@
 
 				&.open {
 					display: block;
+
+					@media screen and (max-width: 980px) {
+						position: fixed;
+						top: 50%;
+						left: 50%;
+						max-width: 220px;
+						transform: translate(-50%, -50%);
+					}
 				}
 
 				ul {

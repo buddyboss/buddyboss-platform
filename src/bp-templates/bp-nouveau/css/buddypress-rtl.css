@@ -9293,6 +9293,16 @@ div.profile_completion_wrap .progress_text_wrap {
   display: block;
 }
 
+@media screen and (max-width: 980px) {
+  .bp-messages-content .actions .message_actions .message_action__list.open {
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    max-width: 220px;
+    transform: translate(50%, -50%);
+  }
+}
+
 .bp-messages-content .actions .message_actions .message_action__list ul {
   margin: 0;
   padding: 0;
