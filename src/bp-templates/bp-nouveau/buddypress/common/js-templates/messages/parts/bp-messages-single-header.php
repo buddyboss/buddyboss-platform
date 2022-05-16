@@ -96,6 +96,7 @@
 							</li>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 				</div>
 				<?php
 			} else {
@@ -148,6 +149,7 @@
 							?>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 				</div>
 				<?php
 			}

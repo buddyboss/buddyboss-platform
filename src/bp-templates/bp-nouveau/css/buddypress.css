@@ -9302,7 +9302,7 @@ div.profile_completion_wrap .progress_text_wrap {
     max-width: 220px;
     padding: 0;
     transform: translate(-50%, -50%);
-    z-index: 991;
+    z-index: 992;
   }
   .bp-messages-content .actions .message_actions .message_action__list.open:before {
     display: none;
@@ -21312,11 +21312,25 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   top: 8px;
 }
 
+.bb_more_dropdown + .bb_more_dropdown_overlay {
+  display: none;
+}
+
 @media screen and (max-width: 980px) {
   .bb_more_dropdown.open .bb_more_dropdown__title {
     display: block;
     border-bottom: 1px solid #e1e3e5;
     border-radius: 4px 4px 0 0;
+  }
+  .bb_more_dropdown.open + .bb_more_dropdown_overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    bottom: 0;
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 991;
   }
 }
 
