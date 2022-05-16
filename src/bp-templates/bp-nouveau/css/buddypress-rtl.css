@@ -21306,6 +21306,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   color: #1e2132;
   cursor: pointer;
   font-size: 24px;
+  opacity: 0.4;
   position: absolute;
   left: 15px;
   top: 8px;
