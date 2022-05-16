@@ -13216,7 +13216,7 @@ button[data-bp-tooltip] {
     color: #333;
   }
   .bp-single-vert-nav .subnav li:last-child a {
-    border: none;
+    border-right: none;
   }
   .bb-single-main-nav--vertical {
     border-right: 1px solid #d6d6d6;
