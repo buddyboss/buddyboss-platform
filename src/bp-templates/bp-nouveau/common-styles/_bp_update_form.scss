@@ -242,6 +242,20 @@
 	}
 }
 
+#whats-new-form.activity-form {
+
+	#discard-draft-activity {
+		display: none;
+	}
+}
+
+#whats-new-form.activity-form.has-draft {
+
+	#discard-draft-activity {
+		display: block;
+	}
+}
+
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
 	display: none !important;
 }

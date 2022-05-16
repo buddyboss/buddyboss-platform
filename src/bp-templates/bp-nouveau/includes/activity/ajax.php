@@ -781,8 +781,17 @@ function bp_nouveau_ajax_post_draft_activity() {
 
 	$draft_activity = $_REQUEST['draft_activity'] ?? '';
 
-	if ( isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
-		update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
+	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
+		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+	}
+
+	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+
+		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+			update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
+		} else {
+			delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
+		}
 	}
 
 	wp_send_json_success(

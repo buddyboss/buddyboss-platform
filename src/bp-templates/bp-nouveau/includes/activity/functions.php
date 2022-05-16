@@ -233,6 +233,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

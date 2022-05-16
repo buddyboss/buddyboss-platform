@@ -29,7 +29,8 @@ window.bp = window.bp || {};
 		object: false,
 		data_key: false,
 		data: false,
-		is_sync_with_db: false
+		is_sync_with_db: false,
+		post_action: 'update'
 	};
 
 	/**
@@ -677,8 +678,8 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
 
 					// Parse data with JSON.
-					var draft_activity_local_data         = JSON.parse( draft_data );
-					bp.draft_activity.data = draft_activity_local_data.data;
+					var draft_activity_local_data = JSON.parse( draft_data );
+					bp.draft_activity.data        = draft_activity_local_data.data;
 				}
 			}
 
@@ -762,7 +763,7 @@ window.bp = window.bp || {};
 					if ( $( 'body' ).hasClass( 'activity-modal-open' ) ) {
 
 						// Add loader.
-						$this.postForm.$el.addClass( 'bp-activity-edit' ).addClass( 'loading' );
+						$this.postForm.$el.addClass( 'loading' ).addClass( 'has-draft' );
 
 						// Inject content.
 						$this.postForm.$el.find( '#whats-new' ).html( activity_data.content );
@@ -1097,14 +1098,15 @@ window.bp = window.bp || {};
 						}
 
 						// set object of activity and item id when group activity.
-						if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+						if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'group' === activity_data.object ) {
 							self_postform.postForm.model.set( 'object', 'group' );
 							self_postform.postForm.model.set( 'group_name', activity_data.group_name );
 
 							$this.postForm.$el.find( 'input#group' ).prop( 'checked', true );
-							$this.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-edit-group' );
+							$this.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
 							$this.postForm.$el.find( '#bp-activity-privacy-point' ).find( 'i.bb-icon-angle-down' ).remove();
 							$this.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
+
 							// display group avatar when edit any feed.
 							if ( activity_data.group_avatar && false === activity_data.group_avatar.includes( 'mystery-group' ) ) {
 								$this.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' ).html( '<img src="' + activity_data.group_avatar + '" alt=""/>' );
@@ -1112,7 +1114,7 @@ window.bp = window.bp || {};
 						}
 
 						// Do not allow the edit privacy if activity is belongs to any folder/album.
-						if ( ! bp.privacyEditable && 'groups' !== activity_data.object ) {
+						if ( ! bp.privacyEditable && 'group' !== activity_data.object ) {
 							$this.postForm.$el.addClass( 'bp-activity-edit--privacy-idle' );
 						} else {
 							$this.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
@@ -1139,7 +1141,7 @@ window.bp = window.bp || {};
 			setInterval(
 				function() {
 
-					if ( ! $( 'body' ).hasClass( 'activity-modal-open' ) ) {
+					if ( ! $( 'body' ).hasClass( 'activity-modal-open' ) || self.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 						return;
 					}
 
@@ -1244,42 +1246,64 @@ window.bp = window.bp || {};
 						);
 					}
 
+					// Set Item name when privacy is Group.
+					data.item_name    = self.postForm.model.get( 'item_name' );
+					data.group_name   = self.postForm.model.get( 'item_name' );
+					data.group_avatar = self.postForm.model.get( 'group_avatar' );
+
 					// Set Draft activity data.
 					bp.draft_activity.data            = data;
 					bp.draft_activity.is_sync_with_db = false;
 					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 
-					if ( 5 === loop_count ) {
+					if ( 6 === loop_count ) {
 						loop_count = 0;
-						bp.Nouveau.Activity.postForm.postDraftActivity();
+						bp.Nouveau.Activity.postForm.postDraftActivity( false );
+						bp.draft_activity.is_sync_with_db = true;
 					}
 				},
-				4000
+				3000
 			);
 
 		},
 
-		postDraftActivity: function() {
+		postDraftActivity: function( is_reload_window ) {
 			if ( _.isUndefined( bp.draft_activity ) ) {
 				return;
 			}
 
-			if ( bp.draft_ajax_request ) {
-				bp.draft_ajax_request.abort();
+			if ( ! is_reload_window ) {
+				if ( bp.draft_ajax_request ) {
+					bp.draft_ajax_request.abort();
+				}
+
+				var draft_data = {
+					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
+					draft_activity: bp.draft_activity,
+					action: 'post_draft_activity'
+				};
+
+				var options = {};
+
+				options.async = false;
+				options.data  = draft_data;
+
+				// Send data to server.
+				bp.draft_ajax_request = bp.ajax.send( options );
+			} else {
+				// Store latest changes in the local storage.
+				bp.Nouveau.Activity.postForm.storeDraftActivity();
+
+				const formData = new FormData();
+				formData.append( '_wpnonce_post_draft', BP_Nouveau.activity.params.post_draft_nonce );
+				formData.append( 'action', 'post_draft_activity' );
+				formData.append( 'draft_activity', JSON.stringify( bp.draft_activity ) );
+
+				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
+
+				// Clear local storage after update the draft activity.
+				bp.Nouveau.Activity.postForm.resetDraftActivity();
 			}
-
-			var draft_data = {
-				_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
-				draft_activity: bp.draft_activity,
-				action: 'post_draft_activity'
-			};
-
-			options       = {};
-			options.async = false;
-			options.data  = draft_data;
-
-			// Send data to server.
-			bp.draft_ajax_request = bp.ajax.send( options );
 		},
 
 		resetDraftActivity: function() {
@@ -1287,39 +1311,20 @@ window.bp = window.bp || {};
 			localStorage.removeItem( bp.draft_activity.data_key );
 		},
 
-		discardDraftActivity: function() {
-			// Delete the activity from the database.
-			bp.draft_activity.is_sync_with_db = false;
-			this.postDraftActivity();
-			this.resetDraftActivity();
-		},
-
 		reloadWindow: function() {
-			var draft_data = {
-				_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
-				draft_activity: bp.draft_activity,
-				action: 'post_draft_activity'
-			};
-
-			const formData = new FormData();
-			formData.append( '_wpnonce_post_draft', BP_Nouveau.activity.params.post_draft_nonce );
-			formData.append( 'draft_activity', bp.draft_activity );
-			formData.append( 'action', 'post_draft_activity' );
 
 			// This will work only for Chrome.
 			window.onbeforeunload = function (event) {
 
 				if ( 'undefined' !== typeof event ) {
-					navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
-					//bp.Nouveau.Activity.postForm.postDraftActivity();
+					bp.Nouveau.Activity.postForm.postDraftActivity( true );
 				}
 			};
 
 			// This will work only for other browsers.
 			window.unload = function (event) {
 				if ( 'undefined' !== typeof event ) {
-					// bp.Nouveau.Activity.postForm.postDraftActivity();
-					navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
+					bp.Nouveau.Activity.postForm.postDraftActivity( true );
 				}
 			};
 		}
@@ -3573,6 +3578,8 @@ window.bp = window.bp || {};
 				if ( this.model.attributes.privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+					this.model.set( 'item_name', group_name );
+					this.model.set( 'group_avatar', this.model.attributes.group_image );
 					//display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
@@ -4395,7 +4402,18 @@ window.bp = window.bp || {};
 					}
 				);
 
-				this.views.set( [ this.submit, this.reset ] );
+				this.discard = new bp.Views.ActivityInput(
+					{
+						model: this.model,
+						type: 'button',
+						id: 'discard-draft-activity',
+						className: 'button',
+						name: 'discard-draft-activity',
+						value: BP_Nouveau.activity.strings.discardButton
+					}
+				);
+
+				this.views.set( [ this.submit, this.reset, this.discard ] );
 
 				this.model.on( 'change:object', this.updateDisplay, this );
 				this.model.on( 'change:posting', this.updateStatus, this );
@@ -4479,7 +4497,8 @@ window.bp = window.bp || {};
 				'submit': 'postUpdate',
 				'keydown': 'postUpdate',
 				'click #whats-new-toolbar': 'triggerDisplayFull',
-				'change .medium-editor-toolbar-input': 'mediumLink'
+				'change .medium-editor-toolbar-input': 'mediumLink',
+				'click #discard-draft-activity': 'discardDraftActivity',
 			},
 
 			initialize: function () {
@@ -5287,7 +5306,118 @@ window.bp = window.bp || {};
 						value: error
 					}
 				);
-			}
+			},
+
+			discardDraftActivity: function() {
+
+				// Reset view data.
+				_.each(
+					this.views._views[ '' ],
+					function ( view, index ) {
+						if ( index > 4 ) {
+							view.close();
+						}
+					}
+				);
+
+				$( '#whats-new' ).css(
+					{
+						resize: 'none',
+						height: '50px'
+					}
+				);
+
+				// Hide placeholder form.
+				$( '#bp-nouveau-activity-form-placeholder' ).hide();
+
+				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
+				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' );
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
+					// enable back group visibility level.
+					bp.Nouveau.Activity.postForm.postForm.$el.find( '.bp-activity-privacy__label-group' ).show().find( 'input#group' ).attr( 'disabled', false );
+				}
+
+				this.model.set( 'edit_activity', false );
+				bp.Nouveau.Activity.postForm.editActivityData = false;
+
+				if ( 'user' === BP_Nouveau.activity.params.object ) {
+					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
+						this.$el.addClass( 'bp-hide' );
+					} else {
+						this.$el.removeClass( 'bp-hide' );
+					}
+				}
+
+				// Reset the model.
+				this.model.clear();
+				this.model.set( this.resetModel.attributes );
+
+				// Remove footer wrapper.
+				this.$el.find( '.whats-new-form-footer' ).remove();
+
+				// Reset view.
+				var whats_new_form = $( '#whats-new-form' );
+
+				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
+
+				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
+				$( '#show-toolbar-button' ).removeClass( 'active' );
+				$( 'medium-editor-action' ).removeClass( 'medium-editor-button-active' );
+				$( '.medium-editor-toolbar-actions' ).show();
+				$( '.medium-editor-toolbar-form' ).removeClass( 'medium-editor-toolbar-form-active' );
+				$( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip', $( '#show-toolbar-button' ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
+
+				// Add Toolbar to show in default view.
+				bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
+				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+
+				// Wrap Toolbar and submit Wrapper into footer.
+				if ( $( 'body' ).hasClass( 'focusin-post-form-open' ) ) {
+					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
+					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
+					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
+				}
+
+				if ( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
+				} else {
+					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
+					$( '.whats-new-scroll-view' ).on(
+						'scroll',
+						function() {
+							if ( ! (
+								/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )
+							) ) {
+								$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+							}
+						}
+					);
+
+					// Hide mention dropdown while window resized.
+					$( window ).on(
+						'resize',
+						function() {
+							$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+						}
+					);
+				}
+
+				this.updateMultiMediaOptions();
+
+				// Delete the activity from the database.
+				bp.draft_activity.is_sync_with_db = false;
+				bp.draft_activity.post_action     = 'delete';
+				bp.draft_activity.data            = false;
+				bp.Nouveau.Activity.postForm.postDraftActivity( false );
+				bp.Nouveau.Activity.postForm.resetDraftActivity();
+				// Add loader.
+				this.$el.removeClass( 'has-draft' );
+				bp.draft_activity.post_action = 'update';
+			},
 		}
 	);
 
