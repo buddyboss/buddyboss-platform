@@ -6668,10 +6668,6 @@ body.register .registration-popup .mfp-close:hover {
   background: transparent;
 }
 
-#buddypress #signup-form input:focus {
-  border-color: #aaa;
-}
-
 #buddypress #signup-form input.error {
   border-color: #b71717;
   border-width: 2px;
