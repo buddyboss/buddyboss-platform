@@ -1168,6 +1168,8 @@ window.bp = window.bp || {};
 					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
 				}
 
+				comment_data.content = comment_data.content.replace( /&nbsp;/g, ' ' );
+
 				parent.ajax( comment_data, 'activity' ).done(
 					function( response ) {
 						target.removeClass( 'loading' );
