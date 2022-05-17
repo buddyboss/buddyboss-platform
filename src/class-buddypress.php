@@ -639,7 +639,7 @@ class BuddyPress {
 			'BP_Email_Background_Updater'                  => 'core',
 			'BP_Attachment_Avatar'                         => 'core',
 			'BP_Attachment_Cover_Image'                    => 'core',
-			'BP_Attachment_Notification_Icon'              => 'core',
+			'BP_Attachment_Notification'                   => 'core',
 			'BP_Attachment'                                => 'core',
 			'BP_Button'                                    => 'core',
 			'BP_Component'                                 => 'core',
