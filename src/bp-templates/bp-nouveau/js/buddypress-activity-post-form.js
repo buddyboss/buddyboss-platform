@@ -781,6 +781,7 @@ window.bp = window.bp || {};
 				self_postform.postForm.model.set( 'item_name', activity_data.group_name );
 				self_postform.postForm.model.set( 'group_avatar', activity_data.group_image );
 				self_postform.postForm.model.set( 'group_privacy', 'bp-item-opt-' + activity_data.item_id );
+				self_postform.postForm.model.set( 'item_id', activity_data.item_id );
 			}
 
 			setTimeout(
