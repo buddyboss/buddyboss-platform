@@ -5969,6 +5969,7 @@ window.bp = window.bp || {};
 			$( '.bb-item-thumb.is-visible' ).removeClass( 'is-visible' );
 			$( '.bb-activity-video-elem.is-visible' ).removeClass( 'is-visible' );
 			$( '.video-action-wrap.item-action-wrap.is-visible' ).removeClass( 'is-visible' );
+			$( '.video-action-wrap .bb_more_dropdown' ).removeClass( 'open' );
 
 		},
 

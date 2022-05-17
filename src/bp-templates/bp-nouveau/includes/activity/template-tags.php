@@ -1561,7 +1561,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb-activity-more-options bb_more_dropdown"><div class="message_action__list_popup bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">Options</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%s</div><div class="bb_more_dropdown_overlay"></div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb-activity-more-options bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">Options</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%s</div><div class="bb_more_dropdown_overlay"></div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
