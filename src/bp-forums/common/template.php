@@ -1643,7 +1643,7 @@ function bbp_get_dropdown( $args = '' ) {
 function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 
 	if ( bbp_get_topic_post_type() === get_post_type( $post->ID ) || bbp_get_reply_post_type() === get_post_type( $post->ID ) ) {
-		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( apply_filters('bbp_reply_attributes_meta_box_discussion_reply_title_filter' , $post->post_content, $post) ), 8, '...' ), 'buddyboss' );
+		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_title ), 8, '...' ), 'buddyboss' );
 	}
 	return $title;
 	}
