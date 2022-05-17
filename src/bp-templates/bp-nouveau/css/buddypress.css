@@ -3620,6 +3620,21 @@ input.search-query-input {
   display: block;
 }
 
+@media screen and (max-width: 980px) {
+  .activity-list .bb-activity-more-options-wrap .bb-activity-more-options.is_visible {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    max-width: 220px;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    z-index: 992;
+  }
+  .activity-list .bb-activity-more-options-wrap .bb-activity-more-options.is_visible:after {
+    display: none;
+  }
+}
+
 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options:after {
   content: "";
   position: absolute;
@@ -21306,6 +21321,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   color: #1e2132;
   cursor: pointer;
   font-size: 24px;
+  line-height: 1;
   opacity: 0.4;
   position: absolute;
   right: 15px;
@@ -21317,12 +21333,13 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 @media screen and (max-width: 980px) {
-  .bb_more_dropdown.open .bb_more_dropdown__title {
+  .bb_more_dropdown.is_visible .bb_more_dropdown__title, .bb_more_dropdown.open .bb_more_dropdown__title {
     display: block;
     border-bottom: 1px solid #e1e3e5;
     border-radius: 4px 4px 0 0;
+    text-align: left;
   }
-  .bb_more_dropdown.open + .bb_more_dropdown_overlay {
+  .bb_more_dropdown.is_visible + .bb_more_dropdown_overlay, .bb_more_dropdown.open + .bb_more_dropdown_overlay {
     background-color: rgba(0, 0, 0, 0.1);
     bottom: 0;
     display: block;

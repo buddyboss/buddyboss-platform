@@ -5339,6 +5339,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		color: #1e2132;
 		cursor: pointer;
 		font-size: 24px;
+		line-height: 1;
 		opacity: 0.4;
 		position: absolute;
 		right: 15px;
@@ -5351,12 +5352,14 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	@media screen and (max-width: 980px) {
 
+		&.is_visible,
 		&.open {
 
 			.bb_more_dropdown__title {
 				display: block;
 				border-bottom: 1px solid #e1e3e5;
 				border-radius: 4px 4px 0 0;
+				text-align: left;
 			}
 
 			+ .bb_more_dropdown_overlay {
