@@ -405,9 +405,18 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $moderation->id ) ) {
 
-			$friend_status = bp_is_friend( $item_id );
-			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
-				friends_remove_friend( bp_loggedin_user_id(), $item_id );
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_status = bp_is_friend( $item_id );
+				if (
+					! empty( $friend_status ) &&
+					in_array(
+						$friend_status,
+						array( 'is_friend', 'pending', 'awaiting_response' ),
+						true
+					)
+				) {
+					friends_remove_friend( bp_loggedin_user_id(), $item_id );
+				}
 			}
 
 			if ( function_exists( 'bp_is_following' ) && bp_is_following(
