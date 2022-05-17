@@ -20749,7 +20749,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {
@@ -21321,6 +21321,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   top: 0;
   bottom: 0;
   cursor: pointer;
+  height: 155px;
+  margin-left: 0;
 }
 
 .video-thumbnail-content .video-thumbnail-custom .close-thumbnail-custom {
@@ -21356,6 +21358,8 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: block;
   min-height: 120px;
   border-radius: 4px;
+  max-width: inherit;
+  cursor: pointer;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap {
@@ -21370,7 +21374,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .video-thumbnail-content .bb-dropzone-wrap .video-thumbnail-custom {
   border: 3px solid transparent;
   border-radius: 5px;
-  margin-left: 10px;
 }
 
 .video-thumbnail-content .bb-dropzone-wrap .bb-custom-check[name="bb-video-thumbnail-select"] + label {

@@ -923,6 +923,8 @@
 		top: 0;
 		bottom: 0;
 		cursor: pointer;
+		height: 155px;
+		margin-right: 0;
 
 		.close-thumbnail-custom {
 			position: absolute;
@@ -957,8 +959,9 @@
 			display: block;
 			min-height: 120px;
 			border-radius: 4px;
+			max-width: inherit;
+			cursor: pointer;
 		}
-
 	}
 
 	.bb-dropzone-wrap {
@@ -972,7 +975,6 @@
 		.video-thumbnail-custom {
 			border: 3px solid transparent;
 			border-radius: 5px;
-			margin-right: 10px;
 		}
 
 		.bb-custom-check[name="bb-video-thumbnail-select"] + label {
