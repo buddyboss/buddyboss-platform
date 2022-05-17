@@ -29,7 +29,6 @@ window.bp = window.bp || {};
 		object: false,
 		data_key: false,
 		data: false,
-		is_sync_with_db: false,
 		post_action: 'update'
 	};
 
@@ -83,19 +82,35 @@ window.bp = window.bp || {};
 			// Wrap Avatar and Content section into header.
 			$( '.activity-update-form #user-status-huddle, .activity-update-form #whats-new-content, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-form-header"></div>' );
 
-			$( document ).on( 'click', '.activity-update-form.modal-popup:not(.bp-activity-edit) .activity-update-form-overlay', function() {
-				setTimeout( function() {
-					$( '.activity-update-form.modal-popup #whats-new' ).blur();
-					$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
-					// Post activity hide modal
-					var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
-					if ( $singleActivityFormWrap.length ) {
-						$singleActivityFormWrap.hide();
-					}
-				},0);
-			});
+			var $this = this;
 
-			Backbone.trigger('mediaprivacy');
+			$( document ).on(
+				'click',
+				'.activity-update-form.modal-popup:not(.bp-activity-edit) .activity-update-form-overlay',
+				function() {
+
+					// Store data forcefully.
+					if ( $this.postForm.$el.hasClass( 'has-draft' ) ) {
+						bp.Nouveau.Activity.postForm.collectDraftActivity();
+						bp.Nouveau.Activity.postForm.postDraftActivity( false );
+					}
+
+					setTimeout(
+						function() {
+							$( '.activity-update-form.modal-popup #whats-new' ).blur();
+							$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
+							// Post activity hide modal.
+							var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+							if ( $singleActivityFormWrap.length ) {
+								$singleActivityFormWrap.hide();
+							}
+						},
+						0,
+					);
+				}
+			);
+
+			Backbone.trigger( 'mediaprivacy' );
 		},
 
 		postFormPlaceholderView: function () {
@@ -663,6 +678,8 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
+			var self = this;
+
 			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
 				bp.draft_activity.object = BP_Nouveau.activity.params.object;
 
@@ -680,6 +697,8 @@ window.bp = window.bp || {};
 					// Parse data with JSON.
 					var draft_activity_local_data = JSON.parse( draft_data );
 					bp.draft_activity.data        = draft_activity_local_data.data;
+
+					this.postDraftActivity( false );
 				}
 			}
 
@@ -733,7 +752,7 @@ window.bp = window.bp || {};
 				delete activity_data.video;
 			}
 
-			// check media is enable in profile or not.
+			// check media is enabled in profile or not.
 			if ( BP_Nouveau.media.profile_media === false ) {
 				$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 				Backbone.trigger( 'activity_media_close' );
@@ -755,6 +774,13 @@ window.bp = window.bp || {};
 				Backbone.trigger( 'activity_video_close' );
 			} else {
 				$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'video-support-hide' );
+			}
+
+			// Sync the group privacy.
+			if ( 0 < activity_data.item_id ) {
+				self_postform.postForm.model.set( 'item_name', activity_data.group_name );
+				self_postform.postForm.model.set( 'group_avatar', activity_data.group_image );
+				self_postform.postForm.model.set( 'group_privacy', 'bp-item-opt-' + activity_data.item_id );
 			}
 
 			setTimeout(
@@ -1017,7 +1043,7 @@ window.bp = window.bp || {};
 						}
 
 						if ( ! _.isUndefined( activity_data ) ) {
-							if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+							if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'group' === activity_data.object ) {
 
 								// check media is enable in groups or not.
 								if ( ! _.isUndefined( activity_data.group_media ) && activity_data.group_media === false ) {
@@ -1102,10 +1128,11 @@ window.bp = window.bp || {};
 							self_postform.postForm.model.set( 'object', 'group' );
 							self_postform.postForm.model.set( 'group_name', activity_data.group_name );
 
-							$this.postForm.$el.find( 'input#group' ).prop( 'checked', true );
-							$this.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
-							$this.postForm.$el.find( '#bp-activity-privacy-point' ).find( 'i.bb-icon-angle-down' ).remove();
-							$this.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
+							self_postform.postForm.$el.find( 'input#group' ).prop( 'checked', true );
+							self_postform.postForm.$el.find( '#bp-item-opt-' + activity_data.item_id ).prop( 'checked', true );
+							self_postform.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
+							self_postform.postForm.$el.find( '#bp-activity-privacy-point' ).find( 'i.bb-icon-angle-down' ).remove();
+							self_postform.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
 
 							// display group avatar when edit any feed.
 							if ( activity_data.group_avatar && false === activity_data.group_avatar.includes( 'mystery-group' ) ) {
@@ -1134,6 +1161,113 @@ window.bp = window.bp || {};
 			}
 		},
 
+		collectDraftActivity: function() {
+			var self = this,
+				meta = {};
+
+			// Set the content and meta.
+			_.each(
+				self.postForm.$el.serializeArray(),
+				function( pair ) {
+					pair.name = pair.name.replace( '[]', '' );
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+						if ( _.isUndefined( meta[ pair.name ] ) ) {
+							meta[ pair.name ] = pair.value;
+						} else {
+							if ( ! _.isArray( meta[ pair.name ] ) ) {
+								meta[ pair.name ] = [meta[ pair.name ]];
+							}
+
+							meta[ pair.name ].push( pair.value );
+						}
+					}
+				},
+			);
+
+			// Add valid line breaks.
+			var content = $.trim( self.postForm.$el.find( '#whats-new' )[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+			content = content.replace( /&nbsp;/g, ' ' );
+
+			self.postForm.model.set( 'content', content, {silent: true} );
+
+			// Silently add meta.
+			self.postForm.model.set( meta, {silent: true} );
+
+			var medias = self.postForm.model.get( 'media' );
+			if ( 'group' === self.postForm.model.get( 'object' ) && ! _.isUndefined( medias ) && medias.length ) {
+				for ( var k = 0; k < medias.length; k ++ ) {
+					medias[ k ].group_id = self.postForm.model.get( 'item_id' );
+				}
+				self.postForm.model.set( 'media', medias );
+			}
+
+			var document = self.postForm.model.get( 'document' );
+			if ( 'group' === self.postForm.model.get( 'object' ) && ! _.isUndefined( document ) && document.length ) {
+				for ( var d = 0; d < document.length; d ++ ) {
+					document[ d ].group_id = self.postForm.model.get( 'item_id' );
+				}
+				self.postForm.model.set( 'document', document );
+			}
+
+			var video = self.postForm.model.get( 'video' );
+			if ( 'group' === self.postForm.model.get( 'object' ) && ! _.isUndefined( video ) && video.length ) {
+				for ( var v = 0; v < video.length; v ++ ) {
+					video[ v ].group_id = self.postForm.model.get( 'item_id' );
+				}
+				self.postForm.model.set( 'video', video );
+			}
+
+			// validation for content editor.
+			if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
+				return false;
+			}
+
+			var data = {};
+
+			// Remove all unused model attribute.
+			data = _.omit(
+				_.extend( data, self.postForm.model.attributes ),
+				[
+					'link_images',
+					'link_image_index',
+					'link_success',
+					'link_error',
+					'link_error_msg',
+					'link_scrapping',
+					'link_loading',
+					'posting',
+				],
+			);
+
+			// Form link preview data to pass in request if available.
+			if ( self.postForm.model.get( 'link_success' ) ) {
+				var images = self.postForm.model.get( 'link_images' ),
+					index = self.postForm.model.get( 'link_image_index' );
+				if ( images && images.length ) {
+					data = _.extend(
+						data,
+						{
+							'link_image': images[ index ],
+						},
+					);
+				}
+
+			} else {
+				data = _.omit(
+					data,
+					[
+						'link_title',
+						'link_description',
+						'link_url',
+					],
+				);
+			}
+
+			// Set Draft activity data.
+			bp.draft_activity.data = data;
+			localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+		},
+
 		storeDraftActivity: function() {
 			var self       = this,
 				loop_count = 0;
@@ -1145,122 +1279,28 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					var meta = {};
+					bp.Nouveau.Activity.postForm.collectDraftActivity();
 
-					// Set the content and meta.
-					_.each(
-						self.postForm.$el.serializeArray(),
-						function ( pair ) {
-							pair.name = pair.name.replace( '[]', '' );
-							if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in' ], pair.name ) ) {
-								if ( _.isUndefined( meta[ pair.name ] ) ) {
-									meta[ pair.name ] = pair.value;
-								} else {
-									if ( ! _.isArray( meta[pair.name] ) ) {
-										meta[pair.name] = [ meta[pair.name] ];
-									}
-
-									meta[ pair.name ].push( pair.value );
-								}
-							}
-						}
-					);
-
-					// Add valid line breaks.
-					var content = $.trim( self.postForm.$el.find( '#whats-new' )[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-					content     = content.replace( /&nbsp;/g, ' ' );
-
-					self.postForm.model.set( 'content', content, { silent: true } );
-
-					// Silently add meta.
-					self.postForm.model.set( meta, { silent: true } );
-
-					var medias = self.postForm.model.get( 'media' );
-					if ( 'group' === self.postForm.model.get( 'object' ) && ! _.isUndefined( medias ) && medias.length ) {
-						for ( var k = 0; k < medias.length; k++ ) {
-							medias[ k ].group_id = self.postForm.model.get( 'item_id' );
-						}
-						self.postForm.model.set( 'media', medias );
-					}
-
-					var document = self.postForm.model.get( 'document' );
-					if ( 'group' === self.postForm.model.get( 'object' ) && ! _.isUndefined( document ) && document.length ) {
-						for ( var d = 0; d < document.length; d++ ) {
-							document[ d ].group_id = self.postForm.model.get( 'item_id' );
-						}
-						self.postForm.model.set( 'document', document );
-					}
-
-					var video = self.postForm.model.get( 'video' );
-					if ( 'group' === self.postForm.model.get( 'object' ) && ! _.isUndefined( video ) && video.length ) {
-						for ( var v = 0; v < video.length; v++ ) {
-							video[ v ].group_id = self.postForm.model.get( 'item_id' );
-						}
-						self.postForm.model.set( 'video', video );
-					}
-
-					// validation for content editor.
-					if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
-						return false;
-					}
-
-					var data = {};
 					loop_count++;
 
-					// Remove all unused model attribute.
-					data = _.omit(
-						_.extend( data, self.postForm.model.attributes ),
-						[
-							'link_images',
-							'link_image_index',
-							'link_success',
-							'link_error',
-							'link_error_msg',
-							'link_scrapping',
-							'link_loading',
-							'posting'
-						]
-					);
-
-					// Form link preview data to pass in request if available.
-					if ( self.postForm.model.get( 'link_success' ) ) {
-						var images = self.postForm.model.get( 'link_images' ),
-							index  = self.postForm.model.get( 'link_image_index' );
-						if ( images && images.length ) {
-							data = _.extend(
-								data,
-								{
-									'link_image': images[ index ]
-								}
-							);
-						}
-
-					} else {
-						data = _.omit(
-							data,
-							[
-								'link_title',
-								'link_description',
-								'link_url'
-							]
-						);
-					}
-
-					// Set Item name when privacy is Group.
-					data.item_name    = self.postForm.model.get( 'item_name' );
-					data.group_name   = self.postForm.model.get( 'item_name' );
-					data.group_avatar = self.postForm.model.get( 'group_avatar' );
-
-					// Set Draft activity data.
-					bp.draft_activity.data            = data;
-					bp.draft_activity.is_sync_with_db = false;
-					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
-
-					if ( 6 === loop_count ) {
-						loop_count = 0;
+					if ( 0 === ( loop_count % 6 ) ) {
 						bp.Nouveau.Activity.postForm.postDraftActivity( false );
-						bp.draft_activity.is_sync_with_db = true;
 					}
+
+
+					/*if ( 0 === loop_count && 0 < bp.draft_activity.data.item_id ) {
+						// self.postForm.model.set( 'item_id', bp.draft_activity.data.item_id );
+						// self.postForm.model.set( 'item_name', bp.draft_activity.data.item_name );
+						// self.postForm.model.set( 'privacy', bp.draft_activity.data.privacy );
+						// self.postForm.model.set( 'privacy_modal', bp.draft_activity.data.privacy_modal );
+						self.postForm.model.attributes.item_id = bp.draft_activity.data.item_id;
+						self.postForm.model.attributes.item_name = bp.draft_activity.data.item_name;
+						//self.postForm.model.attributes.group-privacy = "opt-value-6" + bp.draft_activity.data.item_id;
+
+						self.postForm.model.set( {'group-privacy': 'opt-value-6' + bp.draft_activity.data.item_id} );
+					}*/
+
+
 				},
 				3000
 			);
@@ -1268,7 +1308,7 @@ window.bp = window.bp || {};
 		},
 
 		postDraftActivity: function( is_reload_window ) {
-			if ( _.isUndefined( bp.draft_activity ) ) {
+			if ( _.isUndefined( bp.draft_activity ) || ( ! _.isUndefined( bp.draft_activity ) && ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) ) ) {
 				return;
 			}
 
@@ -1279,30 +1319,24 @@ window.bp = window.bp || {};
 
 				var draft_data = {
 					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
-					draft_activity: bp.draft_activity,
-					action: 'post_draft_activity'
+					draft_activity: bp.draft_activity
 				};
 
-				var options = {};
-
-				options.async = false;
-				options.data  = draft_data;
-
 				// Send data to server.
-				bp.draft_ajax_request = bp.ajax.send( options );
-			} else {
-				// Store latest changes in the local storage.
-				bp.Nouveau.Activity.postForm.storeDraftActivity();
+				// bp.draft_ajax_request = bp.ajax.send( options );
+				bp.ajax.post( 'post_draft_activity', draft_data ).done(
+					function () {}
+				).fail(
+					function () {}
+				);
 
+			} else {
 				const formData = new FormData();
 				formData.append( '_wpnonce_post_draft', BP_Nouveau.activity.params.post_draft_nonce );
 				formData.append( 'action', 'post_draft_activity' );
 				formData.append( 'draft_activity', JSON.stringify( bp.draft_activity ) );
 
 				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
-
-				// Clear local storage after update the draft activity.
-				bp.Nouveau.Activity.postForm.resetDraftActivity();
 			}
 		},
 
@@ -1500,6 +1534,12 @@ window.bp = window.bp || {};
 			},
 
 			close: function ( e ) {
+				// Store data forcefully.
+				if ( this.$el.parent().hasClass( 'has-draft' ) ) {
+					bp.Nouveau.Activity.postForm.collectDraftActivity();
+					bp.Nouveau.Activity.postForm.postDraftActivity( false );
+				}
+
 				// Reset Global variable after edit activity.
 				bp.privacyEditable = true;
 				bp.album_id        = 0;
@@ -1508,6 +1548,7 @@ window.bp = window.bp || {};
 				bp.privacy         = 'public';
 
 				e.preventDefault();
+
 				$( 'body' ).removeClass( 'initial-post-form-open' );
 				this.$el.parent().find( '#aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 				this.model.set( 'privacy_modal', 'general' );
@@ -3572,15 +3613,13 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 				whats_new_form.removeClass( 'focus-in--privacy focus-in--group' );
 
-				Backbone.trigger('privacy:updatestatus');
+				Backbone.trigger( 'privacy:updatestatus' );
 
 				var group_item_id = this.model.attributes.item_id;
 				if ( this.model.attributes.privacy === 'group' ) {
-					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data('title');
+					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'title' );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
-					this.model.set( 'item_name', group_name );
-					this.model.set( 'group_avatar', this.model.attributes.group_image );
-					//display image of the group.
+					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
 						whats_new_form.find( '#bp-activity-privacy-point span.group-privacy-point-icon' ).html( '<img src="' + this.model.attributes.group_image + '" alt=""/>' );
@@ -4764,7 +4803,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$( '#whats-new-form' ).removeClass( 'focus-in focus-in--privacy focus-in--group focus-in--scroll' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
+				$( '#whats-new-form' ).removeClass( 'focus-in focus-in--privacy focus-in--group focus-in--scroll has-draft' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
 
 				//Hide placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
@@ -5409,9 +5448,8 @@ window.bp = window.bp || {};
 				this.updateMultiMediaOptions();
 
 				// Delete the activity from the database.
-				bp.draft_activity.is_sync_with_db = false;
-				bp.draft_activity.post_action     = 'delete';
-				bp.draft_activity.data            = false;
+				bp.draft_activity.post_action = 'delete';
+				bp.draft_activity.data        = false;
 				bp.Nouveau.Activity.postForm.postDraftActivity( false );
 				bp.Nouveau.Activity.postForm.resetDraftActivity();
 				// Add loader.
