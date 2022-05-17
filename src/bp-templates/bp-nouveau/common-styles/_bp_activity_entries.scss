@@ -1773,6 +1773,12 @@ span.dashicons.dashicons-admin-file:before {
 				pointer-events: none;
 			}
 		}
+
+		@media screen and (max-width: 980px) {
+
+			z-index: 999;
+
+		}
 	}
 
 	&.no_more_option {
