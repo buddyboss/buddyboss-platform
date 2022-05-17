@@ -21323,6 +21323,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   cursor: pointer;
   height: 155px;
   margin-left: 0;
+  overflow: hidden;
 }
 
 .video-thumbnail-content .video-thumbnail-custom .close-thumbnail-custom {
