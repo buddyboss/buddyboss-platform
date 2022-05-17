@@ -5206,14 +5206,6 @@ span.dashicons.dashicons-admin-file:before {
   pointer-events: none;
 }
 
-@media screen and (max-width: 980px) {
-  #video-stream.video .bb-item-thumb .item-action-wrap,
-  #media-stream.media .bb-video-thumb .item-action-wrap,
-  .bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap {
-    z-index: 999;
-  }
-}
-
 #video-stream.video .bb-item-thumb.no_more_option .item-action-wrap,
 #video-stream.video .bb-item-thumb.no_more_option .bb-item-cover-wrap:before,
 #video-stream.video .bb-item-thumb.no_more_option .bb-video-duration,
@@ -5230,6 +5222,14 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-video-thumb.is-visible .bb-item-cover-wrap:before,
 .bb-activity-video-wrap .bb-activity-video-elem.is-visible .bb-item-cover-wrap:before {
   display: none;
+}
+
+@media screen and (max-width: 980px) {
+  #video-stream.video .bb-item-thumb.is-visible .item-action-wrap,
+  #media-stream.media .bb-video-thumb.is-visible .item-action-wrap,
+  .bb-activity-video-wrap .bb-activity-video-elem.is-visible .item-action-wrap {
+    z-index: 999;
+  }
 }
 
 @media (hover: none) and (pointer: coarse) {
