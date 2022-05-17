@@ -5319,7 +5319,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 /*More option popup General styles*/
-#content .bb_more_dropdown {
+#buddypress .bb_more_dropdown,
+#bbpress-forums .bb_more_dropdown {
 
 	.bb_more_dropdown__title {
 		display: none;
@@ -5388,5 +5389,14 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 				z-index: 991;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 980px) {
+
+	#bbpress-forums .bb_more_dropdown.open {
+		position: fixed !important;
+		top: 50% !important;
+		z-index: 992 !important;
 	}
 }
