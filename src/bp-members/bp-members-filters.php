@@ -590,10 +590,6 @@ function bb_core_prime_mentions_results() {
 		return;
 	}
 
-	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
-		return;
-	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
