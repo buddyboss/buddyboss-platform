@@ -5354,6 +5354,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 		&.open {
 			border: 1px solid #e1e3e5;
+			bottom: inherit;
 			position: fixed;
 			top: 50%;
 			left: 50%;
