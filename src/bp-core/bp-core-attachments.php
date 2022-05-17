@@ -1242,7 +1242,17 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	$settings = bp_attachments_get_cover_image_settings( $component );
 
 	if ( empty( $settings ) ) {
-		return false;
+
+		/**
+		 * Filter here to edit the cover photo dimensions if needed.
+		 *
+		 * @since BuddyPress 2.4.0
+		 *
+		 * @param bool  false      Setting not found for the given component.
+		 * @param array  $settings An associative array containing all the feature settings.
+		 * @param string $compnent The requested component.
+		 */
+		return apply_filters( 'bp_attachments_get_cover_image_dimensions', false, $settings, $component );
 	}
 
 	// Get width and height.
