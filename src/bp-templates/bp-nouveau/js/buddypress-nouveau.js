@@ -2853,16 +2853,16 @@ window.bp = window.bp || {};
 
 				if ( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
-					$( 'body' ).removeClass( 'more_option_open' );
+					$( 'body' ).removeClass( 'user_more_option_open' );
 				} else {
 					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
 					$( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible open' );
-					$( 'body' ).addClass( 'more_option_open' );
+					$( 'body' ).addClass( 'user_more_option_open' );
 				}
 
 			} else {
 				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
-				$( 'body' ).removeClass( 'more_option_open' );
+				$( 'body' ).removeClass( 'user_more_option_open' );
 			}
 		},
 
