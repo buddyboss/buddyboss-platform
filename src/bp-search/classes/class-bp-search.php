@@ -374,11 +374,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// @todo give a settings screen for this field
 				$search_results[] = array(
 					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
-						sprintf(
-							/* translators: %s: search term */
-							__( "Nothing found for '%s'", 'buddyboss' ),
-							stripslashes( $this->search_args['search_term'] )
-						) .
+						esc_html__( 'No results found.', 'buddyboss' ) .
 					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
