@@ -1080,7 +1080,9 @@ window.bp = window.bp || {};
 
 		clearDraftInterval: function() {
 			clearInterval( bp.draft_local_interval );
+			bp.draft_local_interval = false;
 			clearInterval( bp.draft_ajax_interval );
+			bp.draft_ajax_interval = false;
 		}
 
 	};
@@ -4470,19 +4472,24 @@ window.bp = window.bp || {};
 				this.activityHideModalEvent();
 
 				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) && ! $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
-					bp.draft_local_interval = setInterval(
-						function() {
-							bp.Nouveau.Activity.postForm.storeDraftActivity();
-						},
-						3000
-					);
 
-					bp.draft_ajax_interval = setInterval(
-						function() {
-							bp.Nouveau.Activity.postForm.postDraftActivity( false, false );
-						},
-						20000
-					);
+					if ( ! bp.draft_local_interval ) {
+						bp.draft_local_interval = setInterval(
+							function() {
+								bp.Nouveau.Activity.postForm.storeDraftActivity();
+							},
+							3000
+						);
+					}
+
+					if ( ! bp.draft_ajax_interval ) {
+						bp.draft_ajax_interval = setInterval(
+							function() {
+								bp.Nouveau.Activity.postForm.postDraftActivity( false, false );
+							},
+							20000
+						);
+					}
 
 					// Display draft activity.
 					bp.Nouveau.Activity.postForm.displayDraftActivity();
