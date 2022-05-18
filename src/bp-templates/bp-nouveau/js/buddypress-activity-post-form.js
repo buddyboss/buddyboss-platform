@@ -1213,7 +1213,8 @@ window.bp = window.bp || {};
 
 			// validation for content editor.
 			if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
-				bp.Nouveau.Activity.postForm.resetDraftActivity();
+				bp.draft_activity.data = false;
+				localStorage.removeItem( bp.draft_activity.data_key );
 				return false;
 			}
 
