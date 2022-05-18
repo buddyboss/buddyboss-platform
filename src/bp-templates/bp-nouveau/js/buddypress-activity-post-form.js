@@ -19,18 +19,20 @@ window.bp = window.bp || {};
 	bp.Views       = bp.Views || {};
 
 	// Set the global variable for the edit activity privacy/album_id/folder_id/group_id maintain.
-	bp.privacyEditable    = true;
-	bp.album_id           = 0;
-	bp.folder_id          = 0;
-	bp.group_id           = 0;
-	bp.privacy            = 'public';
-	bp.draft_ajax_request = null;
-	bp.draft_activity     = {
+	bp.privacyEditable      = true;
+	bp.album_id             = 0;
+	bp.folder_id            = 0;
+	bp.group_id             = 0;
+	bp.privacy              = 'public';
+	bp.draft_ajax_request   = null;
+	bp.draft_activity       = {
 		object: false,
 		data_key: false,
 		data: false,
 		post_action: 'update'
 	};
+	bp.draft_local_interval = false;
+	bp.draft_ajax_interval  = false;
 
 	/**
 	 * [Activity description]
@@ -54,7 +56,6 @@ window.bp = window.bp || {};
 			// Get current draft activity.
 			this.getCurrentDraftActivity();
 			this.syncDraftActivity();
-			this.storeDraftActivity();
 			this.reloadWindow();
 		},
 
@@ -91,8 +92,9 @@ window.bp = window.bp || {};
 
 					// Store data forcefully.
 					if ( $this.postForm.$el.hasClass( 'has-draft' ) ) {
+						bp.Nouveau.Activity.postForm.clearDraftInterval();
 						bp.Nouveau.Activity.postForm.collectDraftActivity();
-						bp.Nouveau.Activity.postForm.postDraftActivity( false );
+						bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
 					}
 
 					setTimeout(
@@ -105,7 +107,7 @@ window.bp = window.bp || {};
 								$singleActivityFormWrap.hide();
 							}
 						},
-						0,
+						0
 					);
 				}
 			);
@@ -678,8 +680,6 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
-			var self = this;
-
 			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
 				bp.draft_activity.object = BP_Nouveau.activity.params.object;
 
@@ -698,7 +698,7 @@ window.bp = window.bp || {};
 					var draft_activity_local_data = JSON.parse( draft_data );
 					bp.draft_activity.data        = draft_activity_local_data.data;
 
-					this.postDraftActivity( false );
+					this.postDraftActivity( false, false );
 				}
 			}
 
@@ -774,14 +774,6 @@ window.bp = window.bp || {};
 				Backbone.trigger( 'activity_video_close' );
 			} else {
 				$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'video-support-hide' );
-			}
-
-			// Sync the group privacy.
-			if ( 0 < activity_data.item_id ) {
-				self_postform.postForm.model.set( 'item_name', activity_data.group_name );
-				self_postform.postForm.model.set( 'group_avatar', activity_data.group_image );
-				self_postform.postForm.model.set( 'group_privacy', 'bp-item-opt-' + activity_data.item_id );
-				self_postform.postForm.model.set( 'item_id', activity_data.item_id );
 			}
 
 			setTimeout(
@@ -1024,7 +1016,6 @@ window.bp = window.bp || {};
 						}
 
 						$this.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
-						$this.postForm.$el.removeClass( 'loading' );
 
 						// Update privacy status label.
 						var privacy_label = $this.postForm.$el.find( '#' + activity_data.privacy ).data( 'title' );
@@ -1127,17 +1118,17 @@ window.bp = window.bp || {};
 						// set object of activity and item id when group activity.
 						if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'group' === activity_data.object ) {
 							self_postform.postForm.model.set( 'object', 'group' );
-							self_postform.postForm.model.set( 'group_name', activity_data.group_name );
+							self_postform.postForm.model.set( 'group_name', activity_data.item_name );
 
 							self_postform.postForm.$el.find( 'input#group' ).prop( 'checked', true );
 							self_postform.postForm.$el.find( '#bp-item-opt-' + activity_data.item_id ).prop( 'checked', true );
 							self_postform.postForm.$el.find( '#bp-activity-privacy-point' ).removeClass().addClass( 'group' );
 							self_postform.postForm.$el.find( '#bp-activity-privacy-point' ).find( 'i.bb-icon-angle-down' ).remove();
-							self_postform.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.group_name );
+							self_postform.postForm.$el.find( '.bp-activity-privacy-status' ).text( activity_data.item_name );
 
 							// display group avatar when edit any feed.
-							if ( activity_data.group_avatar && false === activity_data.group_avatar.includes( 'mystery-group' ) ) {
-								$this.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' ).html( '<img src="' + activity_data.group_avatar + '" alt=""/>' );
+							if ( activity_data.group_image && false === activity_data.group_image.includes( 'mystery-group' ) ) {
+								$this.postForm.$el.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' ).html( '<img src="' + activity_data.group_image + '" alt=""/>' );
 							}
 						}
 
@@ -1148,6 +1139,8 @@ window.bp = window.bp || {};
 							$this.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
 						}
 
+						// Enabled the "Post" button.
+						$this.postForm.$el.removeClass( 'focus-in--empty loading' );
 					}
 
 				},
@@ -1182,12 +1175,12 @@ window.bp = window.bp || {};
 							meta[ pair.name ].push( pair.value );
 						}
 					}
-				},
+				}
 			);
 
 			// Add valid line breaks.
 			var content = $.trim( self.postForm.$el.find( '#whats-new' )[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-			content = content.replace( /&nbsp;/g, ' ' );
+			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
 
@@ -1220,6 +1213,7 @@ window.bp = window.bp || {};
 
 			// validation for content editor.
 			if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
+				bp.Nouveau.Activity.postForm.resetDraftActivity();
 				return false;
 			}
 
@@ -1237,19 +1231,31 @@ window.bp = window.bp || {};
 					'link_scrapping',
 					'link_loading',
 					'posting',
-				],
+				]
 			);
+
+			if ( 0 < bp.draft_activity.data.item_id && 'group' === data.privacy && 0 === parseInt( data.item_id ) ) {
+				data.item_id          = parseInt( bp.draft_activity.data.item_id );
+				data.item_name        = bp.draft_activity.data.item_name;
+				data.group_image      = bp.draft_activity.data.group_image;
+				data['group-privacy'] = 'bp-item-opt-' + bp.draft_activity.data.item_id;
+
+				self.postForm.model.set( 'item_id', parseInt( bp.draft_activity.data.item_id ) );
+				self.postForm.model.set( 'item_name', bp.draft_activity.data.item_name );
+				self.postForm.model.set( 'group_image', bp.draft_activity.data.group_image );
+				self.postForm.model.set( 'group-privacy', 'bp-item-opt-' + bp.draft_activity.data.item_id );
+			}
 
 			// Form link preview data to pass in request if available.
 			if ( self.postForm.model.get( 'link_success' ) ) {
 				var images = self.postForm.model.get( 'link_images' ),
-					index = self.postForm.model.get( 'link_image_index' );
+					index  = self.postForm.model.get( 'link_image_index' );
 				if ( images && images.length ) {
 					data = _.extend(
 						data,
 						{
 							'link_image': images[ index ],
-						},
+						}
 					);
 				}
 
@@ -1260,7 +1266,7 @@ window.bp = window.bp || {};
 						'link_title',
 						'link_description',
 						'link_url',
-					],
+					]
 				);
 			}
 
@@ -1270,46 +1276,17 @@ window.bp = window.bp || {};
 		},
 
 		storeDraftActivity: function() {
-			var self       = this,
-				loop_count = 0;
+			var self = this;
 
-			setInterval(
-				function() {
+			if ( ! $( 'body' ).hasClass( 'activity-modal-open' ) || self.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+				return;
+			}
 
-					if ( ! $( 'body' ).hasClass( 'activity-modal-open' ) || self.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
-						return;
-					}
-
-					bp.Nouveau.Activity.postForm.collectDraftActivity();
-
-					loop_count++;
-
-					if ( 0 === ( loop_count % 6 ) ) {
-						bp.Nouveau.Activity.postForm.postDraftActivity( false );
-					}
-
-
-					/*if ( 0 === loop_count && 0 < bp.draft_activity.data.item_id ) {
-						// self.postForm.model.set( 'item_id', bp.draft_activity.data.item_id );
-						// self.postForm.model.set( 'item_name', bp.draft_activity.data.item_name );
-						// self.postForm.model.set( 'privacy', bp.draft_activity.data.privacy );
-						// self.postForm.model.set( 'privacy_modal', bp.draft_activity.data.privacy_modal );
-						self.postForm.model.attributes.item_id = bp.draft_activity.data.item_id;
-						self.postForm.model.attributes.item_name = bp.draft_activity.data.item_name;
-						//self.postForm.model.attributes.group-privacy = "opt-value-6" + bp.draft_activity.data.item_id;
-
-						self.postForm.model.set( {'group-privacy': 'opt-value-6' + bp.draft_activity.data.item_id} );
-					}*/
-
-
-				},
-				3000
-			);
-
+			bp.Nouveau.Activity.postForm.collectDraftActivity();
 		},
 
-		postDraftActivity: function( is_reload_window ) {
-			if ( _.isUndefined( bp.draft_activity ) || ( ! _.isUndefined( bp.draft_activity ) && ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) ) ) {
+		postDraftActivity: function( is_force_saved, is_reload_window ) {
+			if ( ! is_force_saved && ( _.isUndefined( bp.draft_activity ) || ( ! _.isUndefined( bp.draft_activity ) && ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) ) ) ) {
 				return;
 			}
 
@@ -1324,8 +1301,7 @@ window.bp = window.bp || {};
 				};
 
 				// Send data to server.
-				// bp.draft_ajax_request = bp.ajax.send( options );
-				bp.ajax.post( 'post_draft_activity', draft_data ).done(
+				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
 					function () {}
 				).fail(
 					function () {}
@@ -1342,8 +1318,16 @@ window.bp = window.bp || {};
 		},
 
 		resetDraftActivity: function() {
+			var self = this;
+
+			// Delete the activity from the database.
+			bp.draft_activity.post_action = 'delete';
+			bp.draft_activity.data        = false;
+			bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
 			bp.draft_activity.data = false;
 			localStorage.removeItem( bp.draft_activity.data_key );
+			self.postForm.$el.removeClass( 'has-draft' );
+			bp.draft_activity.post_action = 'update';
 		},
 
 		reloadWindow: function() {
@@ -1352,16 +1336,23 @@ window.bp = window.bp || {};
 			window.onbeforeunload = function (event) {
 
 				if ( 'undefined' !== typeof event ) {
-					bp.Nouveau.Activity.postForm.postDraftActivity( true );
+					bp.Nouveau.Activity.postForm.collectDraftActivity();
+					bp.Nouveau.Activity.postForm.postDraftActivity( false, true );
 				}
 			};
 
 			// This will work only for other browsers.
 			window.unload = function (event) {
 				if ( 'undefined' !== typeof event ) {
-					bp.Nouveau.Activity.postForm.postDraftActivity( true );
+					bp.Nouveau.Activity.postForm.collectDraftActivity();
+					bp.Nouveau.Activity.postForm.postDraftActivity( false, true );
 				}
 			};
+		},
+
+		clearDraftInterval: function() {
+			clearInterval( bp.draft_local_interval );
+			clearInterval( bp.draft_ajax_interval );
 		}
 
 	};
@@ -1537,8 +1528,9 @@ window.bp = window.bp || {};
 			close: function ( e ) {
 				// Store data forcefully.
 				if ( this.$el.parent().hasClass( 'has-draft' ) ) {
+					bp.Nouveau.Activity.postForm.clearDraftInterval();
 					bp.Nouveau.Activity.postForm.collectDraftActivity();
-					bp.Nouveau.Activity.postForm.postDraftActivity( false );
+					bp.Nouveau.Activity.postForm.postDraftActivity( false, false );
 				}
 
 				// Reset Global variable after edit activity.
@@ -3620,6 +3612,7 @@ window.bp = window.bp || {};
 				if ( this.model.attributes.privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'title' );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+					this.model.set( 'item_name', group_name );
 					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
@@ -4651,14 +4644,14 @@ window.bp = window.bp || {};
 				if ( 'focusin' === event.type ) {
 					$( '#whats-new-form' ).closest( 'body' ).removeClass( 'initial-post-form-open' ).addClass( event.type + '-post-form-open' );
 				}
-				this.model.on('change:video change:document change:media change:gif_data change:privacy', this.postValidate, this);
+				this.model.on( 'change:video change:document change:media change:gif_data change:privacy', this.postValidate, this );
 
 				// Remove feedback.
 				var self = this;
 				_.each(
 					this.views._views[ '' ],
 					function ( view ) {
-						if ( 'message-feedabck' === view.$el.prop( 'id' ) && !view.$el.hasClass( 'noMediaError' )) { //Do not remove Media error message
+						if ( 'message-feedabck' === view.$el.prop( 'id' ) && ! view.$el.hasClass( 'noMediaError' ) ) { // Do not remove Media error message.
 							self.cleanFeedback();
 							self.$el.removeClass( 'has-feedback' );
 						}
@@ -4667,9 +4660,9 @@ window.bp = window.bp || {};
 
 				_.each(
 					this.views._views[ '' ],
-					function ( view, index ) {
+					function( view, index ) {
 						if ( index > 4 ) {
-							view.close(); //Remove Toolbar shown in default view
+							view.close(); // Remove Toolbar shown in default view.
 						}
 					}
 				);
@@ -4714,34 +4707,58 @@ window.bp = window.bp || {};
 					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
 				}
 
-				if( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
+				if ( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
 					$( '.activity-update-form  #whats-new-attachments' ).appendTo( '.activity-update-form .whats-new-scroll-view' );
 				} else {
 					$( '.activity-update-form .whats-new-form-header, .activity-update-form  #whats-new-attachments' ).wrapAll( '<div class="whats-new-scroll-view"></div>' );
-					$( '.whats-new-scroll-view' ).on( 'scroll', function() {
-						if( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ) {
-							$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+					$( '.whats-new-scroll-view' ).on(
+						'scroll',
+						function() {
+							if ( ! ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent ) ) ) {
+								$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+							}
 						}
-					});
-					//Hide mention dropdown while window resized
-					$( window ).on( 'resize', function() {
-						$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
-					});
+					);
+
+					// Hide mention dropdown while window resized.
+					$( window ).on(
+						'resize',
+						function() {
+							$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
+						}
+					);
 				}
 				this.updateMultiMediaOptions();
-				//Trigger Media click
+
+				// Trigger Media click.
 				if ( window.activityMediaAction !== null ) {
 					$( '.activity-update-form.modal-popup' ).find( '#' + window.activityMediaAction ).trigger( 'click' );
 					window.activityMediaAction = null;
 				}
-				//Add Overlay
-				if( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
-					$( '.activity-update-form.modal-popup' ).prepend('<div class="activity-update-form-overlay"></div>');
+				// Add Overlay.
+				if ( $( '.activity-update-form .activity-update-form-overlay' ).length === 0 ) {
+					$( '.activity-update-form.modal-popup' ).prepend( '<div class="activity-update-form-overlay"></div>' );
 				}
 				this.activityHideModalEvent();
 
-				// Display draft activity.
-				bp.Nouveau.Activity.postForm.displayDraftActivity();
+				if ( $( 'body' ).hasClass( event.type + '-post-form-open' ) && ! $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					bp.draft_local_interval = setInterval(
+						function() {
+							bp.Nouveau.Activity.postForm.storeDraftActivity();
+						},
+						3000
+					);
+
+					bp.draft_ajax_interval = setInterval(
+						function() {
+							bp.Nouveau.Activity.postForm.postDraftActivity( false, false );
+						},
+						20000
+					);
+
+					// Display draft activity.
+					bp.Nouveau.Activity.postForm.displayDraftActivity();
+				}
 			},
 
 			activityHideModalEvent: function () {
@@ -5449,13 +5466,7 @@ window.bp = window.bp || {};
 				this.updateMultiMediaOptions();
 
 				// Delete the activity from the database.
-				bp.draft_activity.post_action = 'delete';
-				bp.draft_activity.data        = false;
-				bp.Nouveau.Activity.postForm.postDraftActivity( false );
 				bp.Nouveau.Activity.postForm.resetDraftActivity();
-				// Add loader.
-				this.$el.removeClass( 'has-draft' );
-				bp.draft_activity.post_action = 'update';
 			},
 		}
 	);
