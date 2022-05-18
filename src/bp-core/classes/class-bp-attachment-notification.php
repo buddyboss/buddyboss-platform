@@ -2,9 +2,9 @@
 /**
  * Core Notification attachment class.
  *
- * @package BuddyPress
+ * @since      BuddyBoss [BBVERSION]
  * @subpackage Core
- * @since BuddyBoss [BBVERSION]
+ * @package    BuddyPress
  */
 
 // Exit if accessed directly.
@@ -24,26 +24,28 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @see  BP_Attachment::__construct() for list of parameters
+	 * @see   BP_Attachment::__construct() for list of parameters
 	 */
 	public function __construct() {
 		// Allowed avatar types.
 		$allowed_types = bp_core_get_allowed_avatar_types();
 
-		parent::__construct( array(
-			'action'                => 'bp_avatar_upload',
-			'file_input'            => 'file',
-			'original_max_filesize' => bp_core_avatar_original_max_filesize(),
+		parent::__construct(
+			array(
+				'action'                => 'bp_avatar_upload',
+				'file_input'            => 'file',
+				'original_max_filesize' => bp_core_avatar_original_max_filesize(),
 
-			// Specific errors for avatars.
-			'upload_error_strings'  => array(
-				/* translators: %s: Max file size for the profile photo */
-				9  => sprintf( _x( 'That photo is too big. Please upload one smaller than %s', 'profile photo upload error', 'buddypress' ), size_format( bp_core_avatar_original_max_filesize() ) ),
+				// Specific errors for avatars.
+				'upload_error_strings'  => array(
+					/* translators: %s: Max file size for the profile photo */
+					9  => sprintf( _x( 'That photo is too big. Please upload one smaller than %s', 'profile photo upload error', 'buddypress' ), size_format( bp_core_avatar_original_max_filesize() ) ),
 
-				/* translators: %s: comma separated list of file types allowed for the profile photo */
-				10 => sprintf( _nx( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'profile photo upload error', 'buddypress' ), self::get_avatar_types( $allowed_types ) ),
-			),
-		) );
+					/* translators: %s: comma separated list of file types allowed for the profile photo */
+					10 => sprintf( _nx( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'profile photo upload error', 'buddypress' ), self::get_avatar_types( $allowed_types ) ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -52,11 +54,13 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $allowed_types Array of allowed avatar types.
+	 *
 	 * @return string comma separated list of allowed avatar types.
 	 */
 	public static function get_avatar_types( $allowed_types = array() ) {
 		$types = array_map( 'strtoupper', $allowed_types );
 		$comma = _x( ',', 'avatar types separator', 'buddypress' );
+
 		return join( $comma . ' ', $types );
 	}
 
@@ -84,6 +88,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $file the temporary file attributes (before it has been moved).
+	 *
 	 * @return array the file with extra errors if needed.
 	 */
 	public function validate_upload( $file = array() ) {
@@ -113,6 +118,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 *
 	 * @param string $file               The absolute path to the file.
 	 * @param int    $ui_available_width Available width for the UI.
+	 *
 	 * @return false|string|WP_Image_Editor|WP_Error
 	 */
 	public static function shrink( $file = '', $ui_available_width = 0 ) {
@@ -150,8 +156,8 @@ class BP_Attachment_Notification extends BP_Attachment {
 		// Do we need to rotate the image?
 		$angles = array(
 			3 => 180,
-			6 => -90,
-			8 =>  90,
+			6 => - 90,
+			8 => 90,
 		);
 
 		if ( isset( $avatar_data['meta']['orientation'] ) && isset( $angles[ $avatar_data['meta']['orientation'] ] ) ) {
@@ -175,8 +181,8 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 *
 	 * @param string $file the absolute path to the file.
+	 *
 	 * @return bool
 	 */
 	public static function is_too_small( $file = '' ) {
@@ -196,10 +202,10 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @see  BP_Attachment::crop for the list of parameters
-	 *
 	 * @param array $args Array of arguments for the cropping.
+	 *
 	 * @return array The cropped avatars (full, thumb and the timestamp).
+	 * @see   BP_Attachment::crop for the list of parameters
 	 */
 	public function crop( $args = array() ) {
 		// Bail if the original file is missing.
@@ -227,7 +233,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 		$absolute_path = $this->upload_path . $relative_path;
 
 		// Bail if the avatar is not available.
-		if ( ! file_exists( $absolute_path ) )  {
+		if ( ! file_exists( $absolute_path ) ) {
 			return false;
 		}
 
@@ -279,8 +285,8 @@ class BP_Attachment_Notification extends BP_Attachment {
 							continue;
 						}
 
-						$is_full  = preg_match( "/-bpfull/", $avatar_file->name );
-						$is_thumb = preg_match( "/-bpthumb/", $avatar_file->name );
+						$is_full  = preg_match( '/-bpfull/', $avatar_file->name );
+						$is_thumb = preg_match( '/-bpthumb/', $avatar_file->name );
 
 						if ( $is_full || $is_thumb ) {
 							$revision = $this->add_revision(
@@ -311,7 +317,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 
 		// Get the file extension.
 		$data = @getimagesize( $absolute_path );
-		$ext  = $data['mime'] === 'image/png' ? 'png' : 'jpg';
+		$ext  = 'image/png' === $data['mime'] ? 'png' : 'jpg';
 
 		$args['original_file'] = $absolute_path;
 		$args['src_abs']       = false;
@@ -320,7 +326,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 			'full'  => '',
 			'thumb' => '',
 		);
-		$timestamp   = bp_core_current_time( true, 'timestamp' );
+		$timestamp    = bp_core_current_time( true, 'timestamp' );
 
 		foreach ( $avatar_types as $key_type => $type ) {
 			if ( 'thumb' === $key_type ) {
@@ -357,7 +363,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 	 * @return integer The user ID.
 	 */
 	private function get_user_id() {
-		$bp = buddypress();
+		$bp      = buddypress();
 		$user_id = 0;
 
 		if ( bp_is_user() ) {
@@ -419,7 +425,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 				'object'     => 'user',
 				'item_id'    => $user_id,
 				'has_avatar' => bp_get_user_has_avatar( $user_id ),
-				'nonces'  => array(
+				'nonces'     => array(
 					'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 					'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
 				),
@@ -451,7 +457,7 @@ class BP_Attachment_Notification extends BP_Attachment {
 		$script_data['extra_css'] = array( 'bp-avatar' );
 
 		// Include the specific css.
-		$script_data['extra_js']  = $js_scripts;
+		$script_data['extra_js'] = $js_scripts;
 
 		// Set the object to contextualize the filter.
 		if ( isset( $script_data['bp_params']['object'] ) ) {
