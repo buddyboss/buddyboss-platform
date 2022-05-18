@@ -1506,6 +1506,8 @@ function bp_avatar_ajax_set() {
 		$avatar_dir = sanitize_key( $avatar_data['object'] ) . '-avatars';
 	}
 
+	$avatar_dir = apply_filters( 'bb_avatar_ajax_set_avatar_dir', $avatar_dir, $avatar_data );
+
 	// Crop args.
 	$r = array(
 		'item_id'       => $avatar_data['item_id'],
