@@ -1825,7 +1825,7 @@ function bb_setup_template_for_video_preview( $template ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_setup_attachment_video_preview() {
-	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?attachment-id=$matches[1]', 'top' );
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
 }
 
 /**
@@ -1838,7 +1838,7 @@ function bb_setup_attachment_video_preview() {
  * @return array
  */
 function bb_setup_attachment_video_preview_query( $query_vars ) {
-	$query_vars[] = 'attachment-id';
+	$query_vars[] = 'video-attachment-id';
 
 	return $query_vars;
 }
@@ -1854,7 +1854,7 @@ function bb_setup_attachment_video_preview_query( $query_vars ) {
  */
 function bb_setup_attachment_video_preview_template( $template ) {
 
-	if ( ! empty( get_query_var( 'attachment-id' ) ) ) {
+	if ( ! empty( get_query_var( 'video-attachment-id' ) ) ) {
 
 		/**
 		 * Hooks to perform any action before the template load.
