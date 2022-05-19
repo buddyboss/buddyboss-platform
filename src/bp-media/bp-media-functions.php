@@ -50,10 +50,15 @@ function bp_media_upload() {
 
 	$name = $attachment->post_title;
 
+	// Generate document attachment preview link.
+	$attachment_id        = 'forbidden_' . $attachment->ID;
+	$attachment_url       = home_url( '/' ) . 'bb-attachment-media-preview/' . base64_encode( $attachment_id );
+	$attachment_thumb_url = home_url( '/' ) . 'bb-attachment-media-preview/' . base64_encode( $attachment_id ) . '/thumbnail';
+
 	$result = array(
 		'id'    => (int) $attachment->ID,
-		'thumb' => bb_core_get_encoded_image( $attachment->ID, 'thumbnail' ),
-		'url'   => bb_core_get_encoded_image( $attachment->ID ),
+		'thumb' => $attachment_thumb_url,
+		'url'   => $attachment_url,
 		'name'  => esc_attr( $name ),
 	);
 

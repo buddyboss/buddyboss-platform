@@ -2013,7 +2013,7 @@ function bb_setup_template_for_document_preview( $template ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_setup_attachment_document_preview() {
-	add_rewrite_rule( 'bb-attachment-document-preview/([^/]+)/?$', 'index.php?attachment-id=$matches[1]', 'top' );
+	add_rewrite_rule( 'bb-attachment-document-preview/([^/]+)/?$', 'index.php?document-attachment-id=$matches[1]', 'top' );
 }
 
 /**
@@ -2026,7 +2026,7 @@ function bb_setup_attachment_document_preview() {
  * @return array
  */
 function bb_setup_attachment_document_preview_query( $query_vars ) {
-	$query_vars[] = 'attachment-id';
+	$query_vars[] = 'document-attachment-id';
 
 	return $query_vars;
 }
@@ -2042,7 +2042,7 @@ function bb_setup_attachment_document_preview_query( $query_vars ) {
  */
 function bb_setup_attachment_document_preview_template( $template ) {
 
-	if ( ! empty( get_query_var( 'attachment-id' ) ) ) {
+	if ( ! empty( get_query_var( 'document-attachment-id' ) ) ) {
 
 		/**
 		 * Hooks to perform any action before the template load.

@@ -1,11 +1,11 @@
 <?php
 
-if ( empty( get_query_var( 'attachment-id' ) ) ) {
+if ( empty( get_query_var( 'video-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
 }
 
-$encode_id   = base64_decode( get_query_var( 'attachment-id' ) );
+$encode_id   = base64_decode( get_query_var( 'video-attachment-id' ) );
 $explode_arr = explode( 'forbidden_', $encode_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
