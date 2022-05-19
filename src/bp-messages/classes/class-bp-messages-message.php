@@ -443,7 +443,7 @@ class BP_Messages_Message {
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$having_sql = $wpdb->prepare( 'recipient_list = %s', implode( ',', $recipient_ids ) );
+		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
 		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'ids',
@@ -484,7 +484,7 @@ class BP_Messages_Message {
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$having_sql = $wpdb->prepare( 'recipient_list = %s', implode( ',', $recipient_ids ) );
+		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
 		$results    = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'select',
