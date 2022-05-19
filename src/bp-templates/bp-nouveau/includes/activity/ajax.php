@@ -791,6 +791,44 @@ function bp_nouveau_ajax_post_draft_activity() {
 			update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 		} else {
 			delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
+
+			// Delete media when discard the activity.
+			if ( 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
+
+				$medias    = $draft_activity['data']['media'] ?? array();
+				$documents = $draft_activity['data']['document'] ?? array();
+				$videos    = $draft_activity['data']['video'] ?? array();
+
+				// Delete the medias.
+				if ( ! empty( $medias ) ) {
+					foreach ( $medias as $media ) {
+						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
+							wp_delete_attachment( $media['id'], true );
+						}
+					}
+				}
+
+				// Delete the documents.
+				if ( ! empty( $documents ) ) {
+					foreach ( $documents as $document ) {
+						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
+							wp_delete_attachment( $document['id'], true );
+						}
+					}
+				}
+
+				// Delete the videos.
+				if ( ! empty( $videos ) ) {
+					foreach ( $videos as $video ) {
+						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
+							wp_delete_attachment( $video['id'], true );
+						}
+					}
+				}
+
+			}
+
+			$draft_activity['data'] = false;
 		}
 	}
 
