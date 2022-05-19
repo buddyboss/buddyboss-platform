@@ -91,7 +91,7 @@ window.bp = window.bp || {};
 				function() {
 
 					// Store data forcefully.
-					if ( $this.postForm.$el.hasClass( 'has-draft' ) ) {
+					if ( ! $this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 						bp.Nouveau.Activity.postForm.clearDraftInterval();
 						bp.Nouveau.Activity.postForm.collectDraftActivity();
 						bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
