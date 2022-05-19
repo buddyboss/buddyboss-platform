@@ -4879,6 +4879,11 @@ window.bp = window.bp || {};
 							self.model.set( 'video', videos );
 						}
 
+						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
+							// Reset draft activity.
+							bp.Nouveau.Activity.postForm.resetDraftActivity();
+						}
+
 						// Reset the form.
 						self.resetForm();
 
@@ -4921,8 +4926,6 @@ window.bp = window.bp || {};
 							}
 						}
 
-						// Reset draft activity.
-						bp.Nouveau.Activity.postForm.resetDraftActivity();
 					}
 				).fail(
 					function ( response ) {
