@@ -29,7 +29,8 @@ window.bp = window.bp || {};
 		object: false,
 		data_key: false,
 		data: false,
-		post_action: 'update'
+		post_action: 'update',
+		discard_draft: false
 	};
 	bp.draft_local_interval = false;
 	bp.draft_ajax_interval  = false;
@@ -162,6 +163,7 @@ window.bp = window.bp || {};
 		},
 
 		displayEditActivity: function ( activity_data ) {
+			bp.draft_activity.discard_draft = true;
 			var self = this;
 
 			// reset post form before editing.
@@ -1056,6 +1058,7 @@ window.bp = window.bp || {};
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
 			bp.draft_activity.post_action = 'update';
+			bp.draft_activity.discard_draft = false;
 		},
 
 		reloadWindow: function() {
@@ -1510,42 +1513,44 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( self.media.length ) {
-							for ( var i in self.media ) {
-								if ( file.id === self.media[ i ].id ) {
-									if ( ! _.isUndefined( self.media[ i ].saved ) && ! self.media[ i ].saved ) {
-										bp.Nouveau.Media.removeAttachment( file.id );
+						if ( true === bp.draft_activity.discard_draft ) {
+							if ( self.media.length ) {
+								for ( var i in self.media ) {
+									if ( file.id === self.media[i].id ) {
+										if ( !_.isUndefined( self.media[i].saved ) && !self.media[i].saved ) {
+											bp.Nouveau.Media.removeAttachment( file.id );
+										}
+										self.media.splice( i, 1 );
+										self.model.set( 'media', self.media );
 									}
-									self.media.splice( i, 1 );
-									self.model.set( 'media', self.media );
+								}
+								
+								// Unset media if all uploaded media has error
+								var media_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
+								if ( self.media.length === media_error_count ) {
+									self.model.unset( 'media' );
 								}
 							}
-
-							// Unset media if all uploaded media has error
-							var media_error_count = self.$el.find( '.dz-preview.dz-error' ).length;
-							if ( self.media.length === media_error_count ) {
+							
+							if ( !_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+								var tool_box = self.$el.parents( '#whats-new-form' );
+								if ( tool_box.find( '#activity-document-button' ) ) {
+									tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+								}
+								if ( tool_box.find( '#activity-video-button' ) ) {
+									tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+								}
+								if ( tool_box.find( '#activity-gif-button' ) ) {
+									tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+								}
+								if ( tool_box.find( '#activity-media-button' ) ) {
+									tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								}
+								
 								self.model.unset( 'media' );
-							}
-						}
-
-						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
-							var tool_box = self.$el.parents( '#whats-new-form' );
-							if ( tool_box.find( '#activity-document-button' ) ) {
-								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-							}
-							if ( tool_box.find( '#activity-video-button' ) ) {
-								tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-							}
-							if ( tool_box.find( '#activity-gif-button' ) ) {
-								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
-							}
-							if ( tool_box.find( '#activity-media-button' ) ) {
-								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
-							}
-
-							self.model.unset( 'media' );
-							if( $( '#message-feedabck' ).hasClass( 'noMediaError') ) {
-								self.model.unset( 'errors' );
+								if ( $( '#message-feedabck' ).hasClass( 'noMediaError' ) ) {
+									self.model.unset( 'errors' );
+								}
 							}
 						}
 					}
