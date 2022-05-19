@@ -2947,7 +2947,8 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
 					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
-					$sub_name     = sprintf( __( 'My  %s', 'buddyboss' ), $course_label );
+					/* translators: My Course, e.g. "My Course". */
+					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), $course_label );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
