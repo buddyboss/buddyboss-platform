@@ -5331,6 +5331,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	.bb_more_dropdown__title__text {
 		color: #1e2132;
+		display: inline-block;
 		font-size: 16px;
 		font-weight: 600;
 		line-height: 24px;
@@ -5344,7 +5345,11 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		opacity: 0.4;
 		position: absolute;
 		right: 15px;
-		top: 8px;
+		top: 11px;
+
+		> i {
+			font-size: 24px;
+		}
 	}
 
 	+ .bb_more_dropdown_overlay {

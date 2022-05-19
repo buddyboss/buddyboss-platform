@@ -21530,6 +21530,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 #buddypress .bb_more_dropdown .bb_more_dropdown__title__text,
 #bbpress-forums .bb_more_dropdown .bb_more_dropdown__title__text {
   color: #1e2132;
+  display: inline-block;
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
@@ -21544,7 +21545,12 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   opacity: 0.4;
   position: absolute;
   left: 15px;
-  top: 8px;
+  top: 11px;
+}
+
+#buddypress .bb_more_dropdown .bb_more_dropdown__close_button > i,
+#bbpress-forums .bb_more_dropdown .bb_more_dropdown__close_button > i {
+  font-size: 24px;
 }
 
 #buddypress .bb_more_dropdown + .bb_more_dropdown_overlay,
