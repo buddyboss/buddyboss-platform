@@ -96,7 +96,7 @@ window.bp = window.bp || {};
 					if ( ! $this.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
 						bp.Nouveau.Activity.postForm.clearDraftInterval();
 						bp.Nouveau.Activity.postForm.collectDraftActivity();
-						bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
+						bp.Nouveau.Activity.postForm.postDraftActivity( false, false );
 					}
 
 					setTimeout(
