@@ -30,7 +30,8 @@ window.bp = window.bp || {};
 		data_key: false,
 		data: false,
 		post_action: 'update',
-		discard_draft: false
+		allow_delete_media: false,
+		display_post: ''
 	};
 	bp.draft_local_interval = false;
 	bp.draft_ajax_interval  = false;
@@ -163,7 +164,8 @@ window.bp = window.bp || {};
 		},
 
 		displayEditActivity: function ( activity_data ) {
-			bp.draft_activity.discard_draft = true;
+			bp.draft_activity.allow_delete_media = true;
+			bp.draft_activity.display_post = 'edit';
 			var self = this;
 
 			// reset post form before editing.
@@ -876,6 +878,8 @@ window.bp = window.bp || {};
 				},
 				0
 			);
+			
+			bp.draft_activity.allow_delete_media = true;
 		},
 
 		syncDraftActivity: function() {
@@ -1058,7 +1062,8 @@ window.bp = window.bp || {};
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
 			bp.draft_activity.post_action = 'update';
-			bp.draft_activity.discard_draft = false;
+			bp.draft_activity.allow_delete_media = false;
+			bp.draft_activity.display_post  = '';
 		},
 
 		reloadWindow: function() {
@@ -1513,7 +1518,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( true === bp.draft_activity.discard_draft ) {
+						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.media.length ) {
 								for ( var i in self.media ) {
 									if ( file.id === self.media[i].id ) {
@@ -1522,6 +1527,14 @@ window.bp = window.bp || {};
 										}
 										self.media.splice( i, 1 );
 										self.model.set( 'media', self.media );
+									} else {
+										if ( 'edit' !== bp.draft_activity.display_post && file.media_edit_data ) {
+											var attachment_id = file.media_edit_data.id;
+											if ( attachment_id === self.media[i].id ) {
+												self.media.splice( i, 1 );
+												self.model.set( 'media', self.media );
+											}
+										}
 									}
 								}
 								
@@ -4022,6 +4035,10 @@ window.bp = window.bp || {};
 				this.views.add( this.activityAttachedGifPreview );
 			},
 			onClose: function () {
+				if ( bp.draft_activity.data ) {
+					bp.draft_activity.allow_delete_media = false;
+					bp.draft_activity.display_post = '';
+				}
 				if ( ! _.isNull( this.activityLinkPreview ) ) {
 					this.activityLinkPreview.destroy();
 				}
