@@ -21519,6 +21519,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 }
 
 /*More option popup General styles*/
+#comments .bb_more_dropdown .bb_more_dropdown__title,
 #buddypress .bb_more_dropdown .bb_more_dropdown__title,
 #bbpress-forums .bb_more_dropdown .bb_more_dropdown__title {
   display: none;
@@ -21527,6 +21528,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   position: relative;
 }
 
+#comments .bb_more_dropdown .bb_more_dropdown__title__text,
 #buddypress .bb_more_dropdown .bb_more_dropdown__title__text,
 #bbpress-forums .bb_more_dropdown .bb_more_dropdown__title__text {
   color: #1e2132;
@@ -21536,6 +21538,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   line-height: 24px;
 }
 
+#comments .bb_more_dropdown .bb_more_dropdown__close_button,
 #buddypress .bb_more_dropdown .bb_more_dropdown__close_button,
 #bbpress-forums .bb_more_dropdown .bb_more_dropdown__close_button {
   color: #1e2132;
@@ -21548,17 +21551,20 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   top: 11px;
 }
 
+#comments .bb_more_dropdown .bb_more_dropdown__close_button > i,
 #buddypress .bb_more_dropdown .bb_more_dropdown__close_button > i,
 #bbpress-forums .bb_more_dropdown .bb_more_dropdown__close_button > i {
   font-size: 24px;
 }
 
+#comments .bb_more_dropdown + .bb_more_dropdown_overlay,
 #buddypress .bb_more_dropdown + .bb_more_dropdown_overlay,
 #bbpress-forums .bb_more_dropdown + .bb_more_dropdown_overlay {
   display: none;
 }
 
 @media screen and (max-width: 980px) {
+  #comments .bb_more_dropdown.open,
   #buddypress .bb_more_dropdown.open,
   #bbpress-forums .bb_more_dropdown.open {
     border: 1px solid #e1e3e5;
@@ -21573,11 +21579,14 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
     transform: translate(-50%, -50%);
     z-index: 992;
   }
-  #buddypress .bb_more_dropdown.open:before, #buddypress .bb_more_dropdown.open:after,
+  #comments .bb_more_dropdown.open:before, #comments .bb_more_dropdown.open:after,
+  #buddypress .bb_more_dropdown.open:before,
+  #buddypress .bb_more_dropdown.open:after,
   #bbpress-forums .bb_more_dropdown.open:before,
   #bbpress-forums .bb_more_dropdown.open:after {
     display: none;
   }
+  #comments .bb_more_dropdown.open .bb_more_dropdown__title,
   #buddypress .bb_more_dropdown.open .bb_more_dropdown__title,
   #bbpress-forums .bb_more_dropdown.open .bb_more_dropdown__title {
     display: block;
@@ -21585,6 +21594,7 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
     border-radius: 4px 4px 0 0;
     text-align: left;
   }
+  #comments .bb_more_dropdown.open + .bb_more_dropdown_overlay,
   #buddypress .bb_more_dropdown.open + .bb_more_dropdown_overlay,
   #bbpress-forums .bb_more_dropdown.open + .bb_more_dropdown_overlay {
     background-color: rgba(0, 0, 0, 0.1);
@@ -21603,6 +21613,9 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
     position: fixed !important;
     top: 50% !important;
     z-index: 992 !important;
+  }
+  #comments .bb_more_dropdown .report-content {
+    margin-right: 0;
   }
 }
 

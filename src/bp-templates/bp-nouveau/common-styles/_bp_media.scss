@@ -5319,6 +5319,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 /*More option popup General styles*/
+#comments .bb_more_dropdown,
 #buddypress .bb_more_dropdown,
 #bbpress-forums .bb_more_dropdown {
 
@@ -5403,5 +5404,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		position: fixed !important;
 		top: 50% !important;
 		z-index: 992 !important;
+	}
+
+	#comments .bb_more_dropdown .report-content {
+		margin-right: 0;
 	}
 }
