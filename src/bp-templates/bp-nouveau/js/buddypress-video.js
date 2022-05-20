@@ -254,11 +254,11 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).closest( '.bb-activity-video-elem' ).length < 1 ) {
 				$( event.currentTarget ).closest( '.bb-video-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-video-thumb' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-video-thumb' ).find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-video-thumb' ).parent().siblings().find( '.bb_more_dropdown' ).removeClass( 'open' );
 			}
 
 			if ( $( event.currentTarget ).closest( '.bb-media-model-container' ).length ) {
 				$( event.currentTarget ).closest( '.video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_more_dropdown' ).toggleClass( 'open' );
-				
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( ! $( event.currentTarget ).hasClass( 'video-action_more' ) ) ) {
