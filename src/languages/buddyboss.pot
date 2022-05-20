@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-05-19 13:42:14+00:00\n"
+"POT-Creation-Date: 2022-05-20 14:20:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6548,8 +6548,11 @@ msgid "Course"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2951
+#: bp-integrations/learndash/core/Core.php:116
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1136
 #. translators: My Course, e.g. "My Course".
-msgid "My  %s"
+#. translators: My Courses
+msgid "My %s"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2980 bp-members/bp-members-adminbar.php:185
@@ -20051,12 +20054,6 @@ msgstr ""
 
 #: bp-integrations/learndash/core/Core.php:44
 msgid "BuddyBoss LearnDash"
-msgstr ""
-
-#: bp-integrations/learndash/core/Core.php:116
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1136
-#. translators: My Courses
-msgid "My %s"
 msgstr ""
 
 #: bp-integrations/learndash/core/Core.php:117
