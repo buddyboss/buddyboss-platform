@@ -5427,4 +5427,15 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	#comments .bb_more_dropdown .report-content {
 		margin-right: 0;
 	}
+
+	/*More option popup General styles*/
+	body[class*="more_option_open"] {
+
+		[data-bp-tooltip]:before,
+		[data-bp-tooltip]:after,
+		[data-balloon]:before,
+		[data-balloon]:after {
+			display: none;
+		}
+	}
 }

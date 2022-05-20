@@ -21675,6 +21675,13 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   #comments .bb_more_dropdown .report-content {
     margin-left: 0;
   }
+  /*More option popup General styles*/
+  body[class*="more_option_open"] [data-bp-tooltip]:before,
+  body[class*="more_option_open"] [data-bp-tooltip]:after,
+  body[class*="more_option_open"] [data-balloon]:before,
+  body[class*="more_option_open"] [data-balloon]:after {
+    display: none;
+  }
 }
 
 /* BASICS */
