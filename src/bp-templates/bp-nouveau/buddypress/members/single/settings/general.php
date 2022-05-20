@@ -26,7 +26,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 			<label for="pwd"><?php _e( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ); ?></label>
 			<div class="bb-password-wrap">
 				<a href="#" class="bb-toggle-password"  data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Show Password', 'buddyboss' ); ?>" data-password-show="<?php esc_html_e( 'Show Password', 'buddyboss' ); ?>" data-password-hide="<?php esc_html_e( 'Hide Password', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
-				<input type="password" name="pwd" id="pwd" size="16" value="" class="settings-input small" <?php bp_form_field_attributes( 'password' ); ?> />
+				<input type="password" name="pwd" id="pwd" size="16" value="" placeholder="<?php esc_html_e( 'Enter your password', 'buddyboss' ); ?>" class="settings-input small" <?php bp_form_field_attributes( 'password' ); ?> />
 			</div>
 			<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Lost your password?', 'buddyboss' ); ?></a>
 		</div>
@@ -43,18 +43,17 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 	</div>
 
 	<div clas="bb-field-wrap">
-		<label for="pass1"><?php esc_html_e( 'Add Your New Password', 'buddyboss' ); ?></label>
+		<label for="pass1"><?php esc_html_e( 'Password', 'buddyboss' ); ?></label>
 		<div class="bb-password-wrap">
 			<a href="#" class="bb-toggle-password" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Show Password', 'buddyboss' ); ?>" data-password-show="<?php esc_html_e( 'Show Password', 'buddyboss' ); ?>" data-password-hide="<?php esc_html_e( 'Hide Password', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
-			<input type="password" name="pass1" id="pass1" size="16" value="" class="settings-input small password-entry" <?php bp_form_field_attributes( 'password' ); ?> />
+			<input type="password" name="pass1" id="pass1" size="16" value="" placeholder="<?php esc_html_e( 'Enter your new password', 'buddyboss' ); ?>" class="settings-input small password-entry" <?php bp_form_field_attributes( 'password' ); ?> />
 		</div>
 	</div>
 
 	<div clas="bb-field-wrap">
-		<label for="pass2" class="repeated-pwd"><?php esc_html_e( 'Repeat Your New Password', 'buddyboss' ); ?></label>
 		<div class="bb-password-wrap">
 			<a href="#" class="bb-toggle-password" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Show Password', 'buddyboss' ); ?>" data-password-show="<?php esc_html_e( 'Show Password', 'buddyboss' ); ?>" data-password-hide="<?php esc_html_e( 'Hide Password', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
-			<input type="password" name="pass2" id="pass2" size="16" value="" class="settings-input small password-entry-confirm" <?php bp_form_field_attributes( 'password' ); ?> />
+			<input type="password" name="pass2" id="pass2" size="16" value="" placeholder="<?php esc_html_e( 'Confirm your new password', 'buddyboss' ); ?>" class="settings-input small password-entry-confirm" <?php bp_form_field_attributes( 'password' ); ?> />
 		</div>
 	</div>
 
