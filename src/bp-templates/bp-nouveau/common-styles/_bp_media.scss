@@ -3242,6 +3242,7 @@ div.dropzone .dz-preview {
 				&.bb_more_dropdown.open {
 					position: fixed;
 					top: 50%;
+					bottom: inherit;
 					right: inherit;
 					width: auto;
 					z-index: 999;

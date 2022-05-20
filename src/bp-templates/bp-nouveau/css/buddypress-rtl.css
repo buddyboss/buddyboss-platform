@@ -19354,6 +19354,7 @@ div.dropzone .dz-preview .dz-filename {
   #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list.bb_more_dropdown.open {
     position: fixed;
     top: 50%;
+    bottom: inherit;
     left: inherit;
     width: auto;
     z-index: 999;
