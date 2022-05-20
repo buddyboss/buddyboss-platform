@@ -16,22 +16,23 @@
 		}
 
 		strength = wp.passwordStrength.meter( pass1, wp.passwordStrength.userInputBlacklist(), pass2 );
+		strength_grid = '<div class="pass-str-scale"><span class="ps-cl1"></span><span class="ps-cl2"></span><span class="ps-cl3"></span><span class="ps-cl4"></span></div>';
 
 		switch ( strength ) {
 			case 2:
-				$( '#pass-strength-result' ).addClass( 'show bad' ).html( pwsL10n.bad );
+				$( '#pass-strength-result' ).addClass( 'show bad' ).html( strength_grid + '<div class="pass-str-label">' + pwsL10n.bad + '</div>' );
 				break;
 			case 3:
-				$( '#pass-strength-result' ).addClass( 'show good' ).html( pwsL10n.good );
+				$( '#pass-strength-result' ).addClass( 'show good' ).html( strength_grid + '<div class="pass-str-label">' + pwsL10n.good + '</div>' );
 				break;
 			case 4:
-				$( '#pass-strength-result' ).addClass( 'show strong' ).html( pwsL10n.strong );
+				$( '#pass-strength-result' ).addClass( 'show strong' ).html( strength_grid + '<div class="pass-str-label">' + pwsL10n.strong + '</div>' );
 				break;
 			case 5:
-				$( '#pass-strength-result' ).addClass( 'show mismatch' ).html( pwsL10n.mismatch );
+				$( '#pass-strength-result' ).addClass( 'show mismatch' ).html( strength_grid + '<div class="pass-str-label">' + pwsL10n.mismatch + '</div>' );
 				break;
 			default:
-				$( '#pass-strength-result' ).addClass( 'show short' ).html( pwsL10n.short );
+				$( '#pass-strength-result' ).addClass( 'show short' ).html( strength_grid + '<div class="pass-str-label">' + pwsL10n.short + '</div>' );
 				break;
 		}
 	}

@@ -2671,11 +2671,15 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					var $this  = $( this );
 					var $input = $this.next( 'input' );
+					var $show_pass = $this.data( 'password-show' );
+					var $hide_pass = $this.data( 'password-hide' );
 					$this.toggleClass( 'bb-show-pass' );
 					if ( $this.hasClass( 'bb-show-pass' ) ) {
 						$input.attr( 'type', 'text' );
+						$this.attr( 'data-balloon', $hide_pass );
 					} else {
 						$input.attr( 'type', 'password' );
+						$this.attr( 'data-balloon', $show_pass );
 					}
 				}
 			);
