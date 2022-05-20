@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array|string
  */
-function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id, $screen = 'web' ) {
+function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $notification_id, $format = 'string', $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'friendship_accepted':
