@@ -1378,6 +1378,17 @@ span.dashicons.dashicons-admin-file:before {
 			width: 198px;
 			z-index: 1;
 
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					width: auto;
+					z-index: 999;
+				}
+			}
+
 			ul {
 				list-style: none;
 				margin: 5px 0;

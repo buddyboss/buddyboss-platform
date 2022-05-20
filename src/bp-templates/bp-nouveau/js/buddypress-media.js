@@ -5931,11 +5931,12 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).closest( '.bb-activity-media-elem' ).length < 1 ) {
 				$( event.currentTarget ).closest( '.bb-photo-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-photo-thumb' ).removeClass( 'is-visible' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-photo-thumb' ).find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-photo-thumb' ).parent().siblings().find( '.bb-photo-thumb .bb_more_dropdown' ).removeClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( !$( event.currentTarget ).hasClass( 'document-action_more' ) && !$( event.currentTarget ).hasClass( 'media-action_more' ) ) ) {
-				$( event.currentTarget ).closest( '.bb-activity-media-elem' ).removeClass( 'is-visible' );
-				$( event.currentTarget ).closest( '.bb-photo-thumb' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-activity-media-elem' ).removeClass( 'is-visible' ).find( '.bb_more_dropdown' ).removeClass( 'open' );
+				$( event.currentTarget ).closest( '.bb-photo-thumb' ).removeClass( 'is-visible' ).find( '.bb_more_dropdown' ).removeClass( 'open' );
 			}
 		},
 
@@ -5973,6 +5974,7 @@ window.bp = window.bp || {};
 			$( '.video-action-wrap.item-action-wrap.is-visible' ).removeClass( 'is-visible' );
 			$( '.video-action-wrap .bb_more_dropdown' ).removeClass( 'open' );
 			$( '.bb-activity-media-elem .bb_more_dropdown' ).removeClass( 'open' );
+			$( '.bb-photo-thumb .bb_more_dropdown' ).removeClass( 'open' );
 			$( 'body' ).removeClass( 'document_more_option_open video_more_option_open item_more_option_open' );
 
 		},
