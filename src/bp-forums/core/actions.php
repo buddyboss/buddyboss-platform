@@ -302,6 +302,8 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 // Maybe convert the users password.
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
+add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+
 /**
  * Register the forum notifications.
  *
@@ -400,3 +402,84 @@ function forums_notification_settings() {
 	<?php
 }
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
+
+
+function bb_post_topic_reply_draft() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity = $_REQUEST['draft_activity'] ?? '';
+	$usermeta_key   = 'bb_user_topic_reply_draft';
+	$user_id        = bp_loggedin_user_id();
+
+	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
+		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+	}
+
+	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+
+		$existing_draft = get_user_meta( $user_id, $usermeta_key, true );
+
+		if ( isset( $existing_draft[ $draft_activity['data_key'] ] ) ) {
+			unset( $existing_draft[ $draft_activity['data_key'] ] );
+		}
+
+		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+			$existing_draft = array();
+		}
+
+		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+			$existing_draft[ $draft_activity['data_key'] ] = $draft_activity;
+		} else {
+
+			// Delete media when discard the activity.
+			/*
+			if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
+
+				$medias    = $draft_activity['data']['media'] ?? array();
+				$documents = $draft_activity['data']['document'] ?? array();
+				$videos    = $draft_activity['data']['video'] ?? array();
+
+				// Delete the medias.
+				if ( ! empty( $medias ) ) {
+					foreach ( $medias as $media ) {
+						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
+							wp_delete_attachment( $media['id'], true );
+						}
+					}
+				}
+
+				// Delete the documents.
+				if ( ! empty( $documents ) ) {
+					foreach ( $documents as $document ) {
+						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
+							wp_delete_attachment( $document['id'], true );
+						}
+					}
+				}
+
+				// Delete the videos.
+				if ( ! empty( $videos ) ) {
+					foreach ( $videos as $video ) {
+						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
+							wp_delete_attachment( $video['id'], true );
+						}
+					}
+				}
+
+			}
+
+			$draft_activity['data'] = false;
+			*/
+		}
+
+		update_user_meta( $user_id, $usermeta_key, $existing_draft );
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => $draft_activity,
+		)
+	);
+}

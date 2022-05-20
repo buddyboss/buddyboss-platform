@@ -81,7 +81,7 @@ jQuery( document ).ready(
 								anchor: {
 									linkValidation: true,
 								},
-							},
+							}
 						);
 
 						window.forums_medium_forum_editor[ key ].subscribe(
@@ -94,7 +94,7 @@ jQuery( document ).ready(
 								jQuery( dummy_element ).find( 'span.atwho-query' ).replaceWith(
 									function() {
 										return this.innerText;
-									},
+									}
 								);
 
 								// transform other emoji into emojionearea emoji.
@@ -111,10 +111,10 @@ jQuery( document ).ready(
 								jQuery( dummy_element ).find( 'img.emojioneemoji' ).replaceWith(
 									function() {
 										return this.dataset.emojiChar;
-									},
+									}
 								);
 								bbp_forum_content.val( jQuery( dummy_element ).html() );
-							},
+							}
 						);
 
 						element.addEventListener(
@@ -225,7 +225,7 @@ jQuery( document ).ready(
 								anchor: {
 									linkValidation: true,
 								},
-							},
+							}
 						);
 
 						window.forums_medium_reply_editor[ key ].subscribe(
@@ -238,7 +238,7 @@ jQuery( document ).ready(
 								jQuery( dummy_element ).find( 'span.atwho-query' ).replaceWith(
 									function() {
 										return this.innerText;
-									},
+									}
 								);
 
 								// transform other emoji into emojionearea emoji.
@@ -255,10 +255,10 @@ jQuery( document ).ready(
 								jQuery( dummy_element ).find( 'img.emojioneemoji' ).replaceWith(
 									function() {
 										return this.dataset.emojiChar;
-									},
+									}
 								);
 								bbp_reply_content.val( jQuery( dummy_element ).html() );
-							},
+							}
 						);
 
 						element.addEventListener(
@@ -370,8 +370,8 @@ jQuery( document ).ready(
 								imageDragging: false,
 								anchor: {
 									linkValidation: true,
-								},
-							},
+								}
+							}
 						);
 
 						window.forums_medium_topic_editor[ key ].subscribe(
@@ -386,7 +386,7 @@ jQuery( document ).ready(
 								jQuery( dummy_element ).find( 'span.atwho-query' ).replaceWith(
 									function() {
 										return this.innerText;
-									},
+									}
 								);
 
 								// transform other emoji into emojionearea emoji.
@@ -403,10 +403,10 @@ jQuery( document ).ready(
 								jQuery( dummy_element ).find( 'img.emojioneemoji' ).replaceWith(
 									function() {
 										return this.dataset.emojiChar;
-									},
+									}
 								);
 								bbp_topic_content.val( jQuery( dummy_element ).html() );
-							},
+							}
 						);
 
 						element.addEventListener(
@@ -504,7 +504,7 @@ jQuery( document ).ready(
 
 					e.preventDefault();
 				}
-			},
+			}
 		);
 
 		/* Shift + tab from topic tags */
@@ -531,7 +531,7 @@ jQuery( document ).ready(
 
 					e.preventDefault();
 				}
-			},
+			}
 		);
 
 		if ( window.elementorFrontend ) {
@@ -610,8 +610,8 @@ jQuery( document ).ready(
 											imageDragging: false,
 											anchor: {
 												linkValidation: true,
-											},
-										},
+											}
+										}
 									);
 
 									window.forums_medium_forum_editor[ key ].subscribe(
@@ -623,7 +623,7 @@ jQuery( document ).ready(
 											for ( var i = 0; i < atwho_query.length; i ++ ) {
 												jQuery( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
 											}
-										},
+										}
 									);
 								}
 							);
@@ -693,8 +693,8 @@ jQuery( document ).ready(
 											imageDragging: false,
 											anchor: {
 												linkValidation: true,
-											},
-										},
+											}
+										}
 									);
 
 									window.forums_medium_reply_editor[ key ].subscribe(
@@ -706,7 +706,7 @@ jQuery( document ).ready(
 											for ( var i = 0; i < atwho_query.length; i ++ ) {
 												jQuery( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
 											}
-										},
+										}
 									);
 								}
 							);
@@ -776,8 +776,8 @@ jQuery( document ).ready(
 											imageDragging: false,
 											anchor: {
 												linkValidation: true,
-											},
-										},
+											}
+										}
 									);
 
 									window.forums_medium_topic_editor[ key ].subscribe(
@@ -790,7 +790,7 @@ jQuery( document ).ready(
 											for ( var i = 0; i < atwho_query.length; i ++ ) {
 												jQuery( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
 											}
-										},
+										}
 									);
 								}
 							);
@@ -799,5 +799,5 @@ jQuery( document ).ready(
 				}
 			);
 		}
-	},
+	}
 );

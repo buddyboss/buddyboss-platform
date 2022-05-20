@@ -986,3 +986,30 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
 	return $terms;
 }
 
+/**
+ * Localize the strings needed for the Forum/Topic UI
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param  array $params Associative array containing the JS Strings needed by scripts
+ * @return array         The same array with specific strings for the Forum/Topic UI if needed.
+ */
+function bb_nouveau_forum_localize_scripts( $params = array() ) {
+
+	if ( function_exists( 'bp_is_active') && ! bp_is_active( 'forums' ) ) {
+		return $params;
+	}
+
+	$params['forums'] = array(
+		'nonces' => array(
+			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' )
+		),
+		'strings' => array(
+			'discardButton'  => esc_html__( 'Discard Draft', 'buddyboss' ),
+		)
+	);
+
+	return $params;
+}
+add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1 );
+

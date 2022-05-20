@@ -81,7 +81,7 @@ add_action(
 			),
 			array(
 				'post_draft_activity' => array(
-					'function' => 'bp_nouveau_ajax_post_draft_activity',
+					'function' => 'bb_nouveau_ajax_post_draft_activity',
 					'nopriv'   => false,
 				),
 			),
@@ -774,7 +774,7 @@ function bp_nouveau_ajax_post_update() {
 	);
 }
 
-function bp_nouveau_ajax_post_draft_activity() {
+function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
 		wp_send_json_error();
 	}
