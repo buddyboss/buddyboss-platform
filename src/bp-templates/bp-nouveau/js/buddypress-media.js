@@ -5892,6 +5892,8 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.media-folder_items' ).toggleClass( 'is-visible' ).siblings( '.media-folder_items' ).removeClass( 'is-visible' );
+			$( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_action__list.bb_more_dropdown').toggleClass( 'open' ).closest( '.media-folder_items' ).siblings( '.media-folder_items' ).find( '.media-folder_action__list.bb_more_dropdown').removeClass( 'open' );
+			$( 'body' ).addClass( 'document_more_option_open' );
 		},
 
 		/**
@@ -5975,6 +5977,7 @@ window.bp = window.bp || {};
 			$( '.video-action-wrap .bb_more_dropdown' ).removeClass( 'open' );
 			$( '.bb-activity-media-elem .bb_more_dropdown' ).removeClass( 'open' );
 			$( '.bb-photo-thumb .bb_more_dropdown' ).removeClass( 'open' );
+			$( '.media-folder_items .bb_more_dropdown' ).removeClass( 'open' );
 			$( 'body' ).removeClass( 'document_more_option_open video_more_option_open item_more_option_open' );
 
 		},

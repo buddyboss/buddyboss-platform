@@ -3067,6 +3067,13 @@ div.dropzone .dz-preview {
 	&.is-visible {
 		z-index: 1;
 
+		@media screen and (max-width: 980px) {
+
+			.document_more_option_open & {
+				z-index: 9;
+			}
+		}
+
 		.media-folder_actions .media-folder_action__list {
 			display: block;
 			z-index: 1122;
@@ -3229,6 +3236,17 @@ div.dropzone .dz-preview {
 			border-radius: 4px;
 			width: 198px;
 			display: none;
+
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					width: auto;
+					z-index: 999;
+				}
+			}
 
 			&:after {
 				content: " ";
