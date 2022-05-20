@@ -793,7 +793,7 @@ function bp_nouveau_ajax_post_draft_activity() {
 			delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
 
 			// Delete media when discard the activity.
-			if ( 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
+			if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
 
 				$medias    = $draft_activity['data']['media'] ?? array();
 				$documents = $draft_activity['data']['document'] ?? array();
