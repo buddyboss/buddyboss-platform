@@ -5369,6 +5369,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 		> i {
 			font-size: 24px;
+			margin: 0;
+			line-height: 1;
 		}
 	}
 
@@ -5431,6 +5433,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	/*More option popup General styles*/
 	body[class*="more_option_open"] {
+
+		.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
+			display: none;
+		}
 
 		[data-bp-tooltip]:before,
 		[data-bp-tooltip]:after,

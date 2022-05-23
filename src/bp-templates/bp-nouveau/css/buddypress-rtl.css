@@ -21614,6 +21614,8 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
 #buddypress .bb_more_dropdown .bb_more_dropdown__close_button > i,
 #bbpress-forums .bb_more_dropdown .bb_more_dropdown__close_button > i {
   font-size: 24px;
+  margin: 0;
+  line-height: 1;
 }
 
 #comments .bb_more_dropdown + .bb_more_dropdown_overlay,
@@ -21677,6 +21679,9 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
     margin-left: 0;
   }
   /*More option popup General styles*/
+  body[class*="more_option_open"] .bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
+    display: none;
+  }
   body[class*="more_option_open"] [data-bp-tooltip]:before,
   body[class*="more_option_open"] [data-bp-tooltip]:after,
   body[class*="more_option_open"] [data-balloon]:before,
