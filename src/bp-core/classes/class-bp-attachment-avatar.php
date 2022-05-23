@@ -214,6 +214,8 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$avatar_dir = sanitize_key( $args['object'] ) . '-avatars';
 		}
 
+		$avatar_dir = apply_filters( 'bb_avatar_crop_set_avatar_dir', $avatar_dir, $args );
+
 		$args['item_id'] = (int) $args['item_id'];
 		$item_type       = isset( $args['item_type'] ) ? $args['item_type'] : null;
 

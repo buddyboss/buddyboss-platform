@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.0.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-05-20 14:25:29+00:00\n"
+"POT-Creation-Date: 2022-05-23 09:27:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -432,7 +432,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:860
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1321
-#: bp-xprofile/classes/class-bp-xprofile-group.php:861
+#: bp-xprofile/classes/class-bp-xprofile-group.php:878
 msgid "Update"
 msgstr ""
 
@@ -578,7 +578,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1208
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1232
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1518
-#: bp-xprofile/classes/class-bp-xprofile-group.php:968
+#: bp-xprofile/classes/class-bp-xprofile-group.php:985
 msgid "Cancel"
 msgstr ""
 
@@ -1084,7 +1084,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2792
-#: bp-core/bp-core-attachments.php:926
+#: bp-core/bp-core-attachments.php:928
 #: bp-forums/classes/class-bp-forums-component.php:546
 #: bp-forums/replies/template.php:2228
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
@@ -3274,6 +3274,8 @@ msgid "Install"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3348
+#: bp-notifications/bp-notifications-settings.php:479
+#: bp-notifications/bp-notifications-settings.php:496
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
@@ -3436,7 +3438,8 @@ msgstr ""
 #: bp-integrations/learndash/bp-learndash-functions.php:477
 #: bp-media/bp-media-settings.php:658 bp-media/bp-media-settings.php:685
 #: bp-media/bp-media-settings.php:856 bp-media/bp-media-settings.php:1070
-#: bp-notifications/bp-notifications-settings.php:75
+#: bp-notifications/bp-notifications-settings.php:81
+#: bp-notifications/bp-notifications-settings.php:111
 #: bp-search/bp-search-settings.php:471 bp-video/bp-video-settings.php:218
 msgid "View Tutorial"
 msgstr ""
@@ -3672,7 +3675,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:626
 #: bp-core/admin/bp-core-admin-settings.php:920
 #: bp-core/admin/bp-core-admin-settings.php:1010
-#: bp-core/bp-core-attachments.php:919
+#: bp-core/bp-core-attachments.php:921
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:20
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:19
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:18
@@ -4231,13 +4234,15 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2841
-#: bp-notifications/bp-notifications-settings.php:371
+#: bp-notifications/bp-notifications-settings.php:443
+#: bp-notifications/bp-notifications-settings.php:525
 msgid "BuddyBoss Labs"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:2886
 #: bp-core/bp-core-functions.php:7109 bp-core/bp-core-functions.php:7110
-#: bp-notifications/bp-notifications-settings.php:360
+#: bp-notifications/bp-notifications-settings.php:432
+#: bp-notifications/bp-notifications-settings.php:513
 msgid "Notification Preferences"
 msgstr ""
 
@@ -5720,148 +5725,148 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:780
+#: bp-core/bp-core-attachments.php:782
 msgid "You have attempted to queue too many files."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:781
+#: bp-core/bp-core-attachments.php:783
 msgid "%1$s exceeds the maximum upload size of %2$s for this site."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:782
+#: bp-core/bp-core-attachments.php:784
 msgid "This file is empty. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:783
+#: bp-core/bp-core-attachments.php:785
 msgid "This file type is not allowed. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:784
+#: bp-core/bp-core-attachments.php:786
 msgid "This file is not an image. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:785
+#: bp-core/bp-core-attachments.php:787
 msgid "Memory exceeded. Please try another smaller file."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:786
+#: bp-core/bp-core-attachments.php:788
 msgid "This is larger than the maximum size. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:787
+#: bp-core/bp-core-attachments.php:789
 msgid "An error occurred. Please try again later."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:788
+#: bp-core/bp-core-attachments.php:790
 msgid "There was a configuration error. Please contact the server administrator."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:789
+#: bp-core/bp-core-attachments.php:791
 msgid "You may only upload 1 file."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:790
+#: bp-core/bp-core-attachments.php:792
 msgid "HTTP error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:791 bp-core/bp-core-avatars.php:1219
+#: bp-core/bp-core-attachments.php:793 bp-core/bp-core-avatars.php:1219
 msgid "Upload failed."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:792
+#: bp-core/bp-core-attachments.php:794
 msgid "Please try uploading this file with the %1$sbrowser uploader%2$s."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:793
+#: bp-core/bp-core-attachments.php:795
 msgid ""
 "%s exceeds the maximum upload size for the multi-file uploader when used in "
 "your browser."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:794
+#: bp-core/bp-core-attachments.php:796
 msgid "IO error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:795
+#: bp-core/bp-core-attachments.php:797
 msgid "Security error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:796
+#: bp-core/bp-core-attachments.php:798
 msgid "File canceled."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:797
+#: bp-core/bp-core-attachments.php:799
 msgid "Upload stopped."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:798
+#: bp-core/bp-core-attachments.php:800
 msgid "Dismiss"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:799
+#: bp-core/bp-core-attachments.php:801
 msgid "Crunching&hellip;"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:800
+#: bp-core/bp-core-attachments.php:802
 msgid "Make sure to upload a unique file"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:801
+#: bp-core/bp-core-attachments.php:803
 msgid "\"%s\" has failed to upload."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:802
+#: bp-core/bp-core-attachments.php:804
 msgid ""
 "If you'd like to delete the existing profile photo but not upload a new "
 "one, please use the delete tab."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:804 bp-core/bp-core-attachments.php:998
+#: bp-core/bp-core-attachments.php:806 bp-core/bp-core-attachments.php:1000
 #: bp-core/bp-core-avatars.php:1089
 msgid "For best results, upload an image that is %1$spx by %2$spx or larger."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:936
+#: bp-core/bp-core-attachments.php:938
 msgid "Take Photo"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:942
+#: bp-core/bp-core-attachments.php:944
 msgid "Please allow application access to your camera."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:943
+#: bp-core/bp-core-attachments.php:945
 msgid "Please wait while your camera connects."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:944
+#: bp-core/bp-core-attachments.php:946
 msgid "Camera loaded. Click \"Capture\" to take a photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:945
+#: bp-core/bp-core-attachments.php:947
 msgid "Webcam not found or permission was denied. Please upload a photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:946
+#: bp-core/bp-core-attachments.php:948
 msgid "Your browser is not supported. Please upload a photo instead."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:947
+#: bp-core/bp-core-attachments.php:949
 msgid "Video error. Please upload a photo instead."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:948
+#: bp-core/bp-core-attachments.php:950
 msgid "Your profile photo is ready. Click \"Save\" to use this photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:949
+#: bp-core/bp-core-attachments.php:951
 msgid "No photo captured. Click \"Capture\" to take your photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1557 bp-core/bp-core-avatars.php:1083
+#: bp-core/bp-core-attachments.php:1569 bp-core/bp-core-avatars.php:1083
 msgid "Upload Error: %s"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1562
+#: bp-core/bp-core-attachments.php:1574
 #: bp-core/classes/class-bp-admin-tab.php:280
 msgid "There was a problem uploading the cover photo."
 msgstr ""
@@ -6320,7 +6325,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:1086
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1338
-#: bp-xprofile/classes/class-bp-xprofile-group.php:877
+#: bp-xprofile/classes/class-bp-xprofile-group.php:894
 msgid "Profile Fields"
 msgstr ""
 
@@ -6611,7 +6616,7 @@ msgid "Email list navigation"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3290
-#: bp-notifications/bp-notifications-settings.php:255
+#: bp-notifications/bp-notifications-settings.php:327
 msgid "Email Templates"
 msgstr ""
 
@@ -7861,42 +7866,42 @@ msgid_plural "Please upload only these file types: %s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:392
+#: bp-core/classes/class-bp-attachment-avatar.php:394
 #: bp-xprofile/screens/change-avatar.php:65
 msgid "There was a problem cropping your profile photo."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:393
+#: bp-core/classes/class-bp-attachment-avatar.php:395
 #: bp-xprofile/screens/change-avatar.php:79
 msgid "Your new profile photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:394
+#: bp-core/classes/class-bp-attachment-avatar.php:396
 #: bp-xprofile/actions/delete-avatar.php:33
 msgid "There was a problem deleting your profile photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:395
+#: bp-core/classes/class-bp-attachment-avatar.php:397
 #: bp-xprofile/actions/delete-avatar.php:31
 msgid "Your profile photo was deleted successfully!"
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:410
+#: bp-core/classes/class-bp-attachment-avatar.php:412
 #: bp-groups/screens/single/admin/group-avatar.php:83
 msgid "There was a problem cropping the group profile photo."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:411
+#: bp-core/classes/class-bp-attachment-avatar.php:413
 #: bp-groups/actions/create.php:389
 msgid "The group profile photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:412
+#: bp-core/classes/class-bp-attachment-avatar.php:414
 #: bp-groups/screens/single/admin/group-avatar.php:41
 msgid "There was a problem deleting the group profile photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:413
+#: bp-core/classes/class-bp-attachment-avatar.php:415
 #: bp-groups/screens/single/admin/group-avatar.php:39
 msgid "The group profile photo was deleted successfully!"
 msgstr ""
@@ -8691,13 +8696,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -15275,7 +15280,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:105
 #: bp-forums/templates/default/bbpress/form-topic-split.php:112
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1487
-#: bp-xprofile/classes/class-bp-xprofile-group.php:943
+#: bp-xprofile/classes/class-bp-xprofile-group.php:960
 msgid "Submit"
 msgstr ""
 
@@ -16826,7 +16831,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1486
 #: bp-templates/bp-nouveau/includes/functions.php:1538
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1296
-#: bp-xprofile/classes/class-bp-xprofile-group.php:849
+#: bp-xprofile/classes/class-bp-xprofile-group.php:866
 msgid "Save"
 msgstr ""
 
@@ -25015,36 +25020,43 @@ msgstr ""
 msgid "this tutorial"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:116
+#: bp-notifications/bp-notifications-settings.php:49
+msgid "Web Push Notifications"
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:152
 msgid "On-screen notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:122
+#: bp-notifications/bp-notifications-settings.php:158
 msgid "Position on Screen"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:128
+#: bp-notifications/bp-notifications-settings.php:164
 msgid "Mobile Support"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:134
+#: bp-notifications/bp-notifications-settings.php:170
 msgid "Automatically Hide"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:140
+#: bp-notifications/bp-notifications-settings.php:176
 msgid "Show in Browser Tab"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:151
-#: bp-notifications/bp-notifications-settings.php:165
+#: bp-notifications/bp-notifications-settings.php:187
+#: bp-notifications/bp-notifications-settings.php:201
+#: bp-notifications/bp-notifications-settings.php:212
+#: bp-notifications/bp-notifications-settings.php:222
+#: bp-notifications/bp-notifications-settings.php:235
 msgid "Notes"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:158
+#: bp-notifications/bp-notifications-settings.php:194
 msgid "Notification Fields"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:182
+#: bp-notifications/bp-notifications-settings.php:254
 msgid ""
 "Select which types of notifications are sent to members when specific "
 "actions happen on your site. When a notification is disabled, it will not "
@@ -25052,31 +25064,31 @@ msgid ""
 "receive via email, web or app in their Notification Preferences."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:243
+#: bp-notifications/bp-notifications-settings.php:315
 msgid "Missing Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:246
+#: bp-notifications/bp-notifications-settings.php:318
 msgid "Missing Email Templates"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:253
+#: bp-notifications/bp-notifications-settings.php:325
 msgid "Email Template"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:290
+#: bp-notifications/bp-notifications-settings.php:362
 msgid "Manage Defaults"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:334
+#: bp-notifications/bp-notifications-settings.php:406
 msgid "Hide Messaging Notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:338
+#: bp-notifications/bp-notifications-settings.php:410
 msgid "Hide group and private messages from notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:339
+#: bp-notifications/bp-notifications-settings.php:411
 msgid ""
 "When enabled, notifications for group messages and private messages will "
 "not show in a member's list of notifications or be included in the count of "
@@ -25085,11 +25097,28 @@ msgid ""
 "well as the count of unread messages."
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:358
+#: bp-notifications/bp-notifications-settings.php:430
 #. translators: 1. Notification Preferences label. 2. BuddyBoss labs.
 msgid ""
 "Enable the %1$s feature in %2$s to manage the notification types used on "
 "your site."
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:477
+#. translators: BuddyBoss Pro purchase link
+msgid "Please install %1$s to use web push notification on your site."
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:494
+#. translators: BuddyBoss Pro purchase link
+msgid ""
+"Please update %1$s to version 1.1.9.2 to use web push notifications on your "
+"site."
+msgstr ""
+
+#: bp-notifications/bp-notifications-settings.php:511
+#. translators: 1. Notification Preferences label. 2. BuddyBoss labs.
+msgid "Enable the %1$s feature in %2$s to use web push notifications on your site."
 msgstr ""
 
 #: bp-notifications/bp-notifications-template.php:477
@@ -29650,7 +29679,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:170 bp-xprofile/bp-xprofile-admin.php:178
 #: bp-xprofile/bp-xprofile-admin.php:376
-#: bp-xprofile/classes/class-bp-xprofile-group.php:848
+#: bp-xprofile/classes/class-bp-xprofile-group.php:865
 msgid "New Field Set"
 msgstr ""
 
@@ -29666,7 +29695,7 @@ msgid "Add New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:280
-#: bp-xprofile/classes/class-bp-xprofile-group.php:860
+#: bp-xprofile/classes/class-bp-xprofile-group.php:877
 msgid "Edit Field Set"
 msgstr ""
 
@@ -29766,64 +29795,64 @@ msgid ""
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:806
-#: bp-xprofile/bp-xprofile-filters.php:901
-#: bp-xprofile/bp-xprofile-filters.php:1014
+#: bp-xprofile/bp-xprofile-filters.php:809
+#: bp-xprofile/bp-xprofile-filters.php:904
+#: bp-xprofile/bp-xprofile-filters.php:1017
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:532
 #: bp-xprofile/screens/edit.php:149
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:811
+#: bp-xprofile/bp-xprofile-filters.php:814
 msgid ""
 "Invalid %s. Only \"a-z\", \"0-9\", \"'\", \"-\", \"_\" and \".\" are "
 "allowed."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:817
+#: bp-xprofile/bp-xprofile-filters.php:820
 msgid "%1$s must be shorter than %2$d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:822
+#: bp-xprofile/bp-xprofile-filters.php:825
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:831
-#: bp-xprofile/bp-xprofile-filters.php:851
+#: bp-xprofile/bp-xprofile-filters.php:834
+#: bp-xprofile/bp-xprofile-filters.php:854
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:910
-#: bp-xprofile/bp-xprofile-filters.php:920
+#: bp-xprofile/bp-xprofile-filters.php:913
+#: bp-xprofile/bp-xprofile-filters.php:923
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1025
+#: bp-xprofile/bp-xprofile-filters.php:1028
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1101
+#: bp-xprofile/bp-xprofile-filters.php:1104
 msgid "Repair BuddyBoss profile repeater field sets"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1179
+#: bp-xprofile/bp-xprofile-filters.php:1182
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1199
+#: bp-xprofile/bp-xprofile-filters.php:1202
 msgid "Repairing BuddyBoss profile repeater field sets &hellip; Complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1216
+#: bp-xprofile/bp-xprofile-filters.php:1219
 msgid "Repair user nicknames"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1266
+#: bp-xprofile/bp-xprofile-filters.php:1269
 msgid "%s user nicknames updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1271
+#: bp-xprofile/bp-xprofile-filters.php:1274
 msgid "Repairing user nicknames &hellip; Complete!"
 msgstr ""
 
@@ -30732,38 +30761,38 @@ msgstr ""
 msgid "Optional"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:680
+#: bp-xprofile/classes/class-bp-xprofile-group.php:697
 msgid "Please make sure you give the group a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:897
+#: bp-xprofile/classes/class-bp-xprofile-group.php:914
 msgid "Field Set Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:902
+#: bp-xprofile/classes/class-bp-xprofile-group.php:919
 msgid "Field Set Description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:907
+#: bp-xprofile/classes/class-bp-xprofile-group.php:924
 #. translators: accessibility text
 msgid "Add description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:999
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1016
 msgid "Repeater Set"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1001
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1018
 msgid ""
 "Allow the profile fields within this set to be repeated again and again, so "
 "the user can add multiple instances of their data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1003
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1020
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:1004
+#: bp-xprofile/classes/class-bp-xprofile-group.php:1021
 msgid "Enabled"
 msgstr ""
 
@@ -31107,14 +31136,15 @@ msgstr ""
 msgctxt "extension notification"
 msgid ""
 "Your server needs %1$s installed to automatically create thumbnails after "
-"uploading videos (optional). Ask your web host.\n"
+"uploading videos (optional). Ask your web host.\r\n"
 "\t\t\t\t\t<br/><br/>If FFmpeg is already installed on your server and you "
 "still see the above warning, this means BuddyBoss Platform is unable to "
 "auto-detect the binary file path for FFmpeg. You will need to add the below "
 "FFmpeg absolute path constants into your %2$s file, replacing "
 "PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. "
-"Ask your web host to provide the absolute path for the FFmpeg binary file.\n"
-"\t\t\t\t\t<br /><br />%3$s\n"
+"Ask your web host to provide the absolute path for the FFmpeg binary "
+"file.\r\n"
+"\t\t\t\t\t<br /><br />%3$s\r\n"
 "\t\t\t\t\t<br />%4$s"
 msgstr ""
 
