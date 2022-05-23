@@ -1009,7 +1009,19 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		)
 	);
 
+	$user_id    = bp_loggedin_user_id();
+	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	$params['forums']['draft'] = array();
+	if ( ! empty( $draft_data ) ) {
+		foreach ( $draft_data as $data ) {
+
+			if ( isset( $data['data_key'] ) ) {
+				$params['forums']['draft'][ $data['data_key'] ] = $data;
+			}
+		}
+	}
+
 	return $params;
 }
 add_filter( 'bp_core_get_js_strings', 'bb_nouveau_forum_localize_scripts', 10, 1 );
-
