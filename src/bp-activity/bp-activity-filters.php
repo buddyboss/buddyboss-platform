@@ -160,6 +160,9 @@ add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_com
 // Filter check content empty or not for the media, document and GIF data.
 add_filter( 'bb_is_activity_content_empty', 'bb_check_is_activity_content_empty' );
 
+// Load Activity Notifications.
+add_action( 'bp_activity_includes', 'bb_load_activity_notifications' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -1992,14 +1995,22 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 
 	$activity_obj = new BP_Activity_Activity( $item_id );
 
-	if ( 'activity_comment' == $activity_obj->type ) {
+	if ( 'activity_comment' === $activity_obj->type ) {
+
+		$component_action = 'new_at_mention';
+		$component_name   = 'activity';
+
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$component_action = 'bb_new_mention';
+		}
+
 		$notification = BP_Notifications_Notification::get(
 			array(
 				'user_id'           => bp_loggedin_user_id(),
 				'item_id'           => $item_id,
 				'secondary_item_id' => $secondary_item_id,
-				'component_name'    => 'activity',
-				'component_action'  => 'new_at_mention',
+				'component_name'    => $component_name,
+				'component_action'  => $component_action,
 			)
 		);
 
@@ -2997,3 +3008,251 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 		}
 	}
 }
+
+/**
+ * Register the activity notifications.
+ *
+ * @since BuddyBoss 1.9.3
+ */
+function bb_load_activity_notifications() {
+	if ( class_exists( 'BP_Activity_Notification' ) ) {
+		BP_Activity_Notification::instance();
+	}
+}
+
+/**
+ * Add activity notifications settings to the notifications settings page.
+ *
+ * @since BuddyPress 1.2.0
+ */
+function bp_activity_screen_notification_settings() {
+
+	// Bail out if legacy method not enabled.
+	if ( false === bb_enabled_legacy_email_preference() ) {
+		return;
+	}
+
+	if ( bp_activity_do_mentions() ) {
+		if ( ! $mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true ) ) {
+			$mention = 'yes';
+		}
+	}
+
+	if ( ! $reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true ) ) {
+		$reply = 'yes';
+	}
+
+	?>
+
+	<table class="notification-settings" id="activity-notification-settings">
+		<thead>
+		<tr>
+			<th class="icon">&nbsp;</th>
+			<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<?php
+		if ( bp_activity_do_mentions() ) :
+			$current_user = wp_get_current_user();
+			?>
+			<tr id="activity-notification-settings-mentions">
+				<td>&nbsp;</td>
+				<td><?php printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"
+							   value="yes" <?php checked( $mention, 'yes', true ); ?> />
+						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio"
+							   value="no" <?php checked( $mention, 'no', true ); ?> />
+						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+			</tr>
+		<?php endif; ?>
+
+		<tr id="activity-notification-settings-replies">
+			<td>&nbsp;</td>
+			<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
+			<td class="yes">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio"
+						   value="yes" <?php checked( $reply, 'yes', true ); ?> />
+					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+			<td class="no">
+				<div class="bp-radio-wrap">
+					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio"
+						   value="no" <?php checked( $reply, 'no', true ); ?> />
+					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+				</div>
+			</td>
+		</tr>
+
+		<?php
+
+		/**
+		 * Fires inside the closing </tbody> tag for activity screen notification settings.
+		 *
+		 * @since BuddyPress 1.2.0
+		 */
+		do_action( 'bp_activity_screen_notification_settings' )
+		?>
+		</tbody>
+	</table>
+
+	<?php
+
+}
+add_action( 'bp_notification_settings', 'bp_activity_screen_notification_settings', 1 );
+
+/**
+ * Fire an email when some one mentioned users into the blog post comment and post published.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param int  $comment_id  ID of the comment.
+ * @param bool $is_approved Whether the comment is approved or not.
+ */
+function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
+	// Are mentions disabled?
+	if ( ! bp_activity_do_mentions() ) {
+		return;
+	}
+
+	// Get the users comment.
+	$post_type_comment = get_comment( $comment_id );
+
+	// Don't record activity if the comment hasn't been approved.
+	if ( empty( $is_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if no email address has been included.
+	if ( empty( $post_type_comment->comment_author_email ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $is_approved ) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$user = get_user_by( 'email', $post_type_comment->comment_author_email );
+
+	// If user isn't registered, don't record activity.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	// Get the user_id.
+	$comment_user_id = (int) $user->ID;
+
+	// Get the post.
+	$post = get_post( $post_type_comment->comment_post_ID );
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return false;
+	}
+
+	// Try to find mentions.
+	$usernames = bp_activity_find_mentions( $post_type_comment->comment_content );
+
+	if ( empty( $usernames ) ) {
+		return;
+	}
+
+	// Replace @mention text with userlinks.
+	foreach ( (array) $usernames as $user_id => $username ) {
+		$post_type_comment->comment_content = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $post_type_comment->comment_content );
+	}
+
+	// Send @mentions and setup BP notifications.
+	foreach ( (array) $usernames as $user_id => $username ) {
+
+		// User Mentions email.
+		if (
+			(
+				! bb_enabled_legacy_email_preference() &&
+				true === bb_is_notification_enabled( $user_id, 'bb_new_mention' )
+			) ||
+			(
+				bb_enabled_legacy_email_preference() &&
+				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+			)
+		) {
+			// Poster name.
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
+			$author_id         = $comment_user_id;
+
+			/** Mail */
+			// Strip tags from text and setup mail data.
+			$reply_content = apply_filters( 'comment_text', $post_type_comment->comment_content, $post_type_comment, array() );
+			$reply_url     = get_comment_link( $post_type_comment );
+			$title_text    = get_the_title( $post );
+
+			$email_type = 'new-mention';
+
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => $email_type,
+			);
+
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+
+			$args = array(
+				'tokens' => array(
+					'usermessage'       => wp_strip_all_tags( $reply_content ),
+					'mentioned.url'     => $reply_url,
+					'poster.name'       => $reply_author_name,
+					'receiver-user.id'  => $user_id,
+					'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					'mentioned.type'    => $notification_type_html,
+					'mentioned.content' => $reply_content,
+					'author_id'         => $author_id,
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'title_text'        => $title_text,
+				),
+			);
+
+			bp_send_email( $email_type, $user_id, $args );
+		}
+	}
+
+}
+
+add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published from Rest API.
+ *
+ * @since BuddyBoss 2.0.1
+ *
+ * @param WP_Comment $comment WP_Comment class object.
+ *
+ * @return void
+ */
+function bb_rest_mention_post_type_comment( $comment ) {
+	// Bail if not a comment.
+	if (
+		empty( $comment )
+		|| ! $comment instanceof WP_Comment
+	) {
+		return;
+	}
+
+	bb_mention_post_type_comment( $comment->comment_ID, $comment->comment_approved );
+
+}
+
+add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );

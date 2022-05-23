@@ -219,6 +219,7 @@
 
 					.activity-state-likes {
 						display: inline-block;
+						background-color: transparent;
 					}
 				}
 
@@ -304,41 +305,42 @@
 			.button:before,
 			.icons:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 18px;
+				font-size: 20px;
 				vertical-align: middle;
 			}
 
 			.acomment-reply.button:before {
-				content: "\e80b";
+				content: "\ee33";
 			}
 
 			.view:before {
-				content: "\e80b";
+				content: "\ee33";
 			}
 
 			.fav:before {
-				content: "\e815";
+				content: "\ef41";
 			}
 
 			.unfav:before {
-				content: "\e815";
+				content: "\ef41";
 				color: #0061ac;
+				font-weight: 300;
 			}
 
 			.edit-activity:before {
-				content: "\e80c";
-				font-size: 17px !important;
+				content: "\ee5a";
+				font-size: 20px;
 			}
 
 			.delete-activity:before {
-				content: "\eaea";
+				content: "\ef48";
 			}
 
 			.reported-content:before,
 			.report-content:before {
-				content: "\e972";
+				content: "\ee9c";
 				position: relative;
-				font-size: 19px;
+				font-size: 20px;
 				width: 22px;
 				display: inline-block;
 				line-height: 1;
@@ -350,7 +352,7 @@
 			}
 
 			.spam-activity:before {
-				content: "\e8c9";
+				content: "\ee08";
 			}
 
 			.delete-activity:hover {
@@ -405,7 +407,7 @@
 	.bb-activity-more-options-wrap {
 		position: absolute;
 		right: 15px;
-		top: 20px;
+		top: 8px;
 
 		.bb-activity-more-options-action {
 			padding: 5px;
@@ -459,8 +461,8 @@
 
 		.bb-activity-more-options {
 			position: absolute;
-			top: 20px;
-			right: 4px;
+			top: 30px;
+			right: 10px;
 			background: #fff;
 			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 			border-radius: 4px;
@@ -519,7 +521,6 @@
 						border-radius: 0;
 						padding: 10px 14px;
 						color: #7f868f;
-						line-height: 1.1;
 						border: 0;
 						background-color: transparent;
 						box-shadow: none;
@@ -531,7 +532,7 @@
 
 						&:before {
 							font-family: "bb-icons";/* stylelint-disable-line */
-							font-size: 18px;
+							font-size: 20px;
 							display: inline-block;
 							margin-right: 10px;
 							vertical-align: middle;
@@ -541,28 +542,22 @@
 
 						&.reported-content:before,
 						&.report-content:before {
-							content: "\e8ea";
-							font-size: 15px;
+							content: "\ee9c";
 						}
 
 						&.delete:before,
 						&.delete-activity:before {
-							content: "\e937";
-							font-size: 15px;
+							content: "\ef48";
+							font-size: 20px;
 						}
 
 						&.ac-video-thumbnail-edit:before {
-							content: "\e9cb";
-							font-size: 20px;
-							display: inline-block;
-							vertical-align: middle;
-							max-height: 15px;
-							margin-top: -6px;
+							content: "\eeb4";
 						}
 
 						&.edit-activity:before {
-							content: "\e80c";
-							font-size: 17px !important;
+							content: "\ee5a";
+							font-size: 20px;
 						}
 
 						span:not(.bp-screen-reader-text) {
@@ -606,7 +601,7 @@
 		.bb-activity-more-options-wrap {
 			position: absolute;
 			right: 0;
-			top: 0;
+			top: -7px;
 		}
 
 	}
@@ -689,7 +684,7 @@
 ul.medium-editor-toolbar-actions {
 
 	.medium-editor-action b {
-		font-family: bb-icons;
+		font-family: "bb-icons";/* stylelint-disable-line */
 		text-align: center;
 		width: 24px;
 
@@ -707,31 +702,34 @@ ul.medium-editor-toolbar-actions {
 	}
 
 	.medium-editor-action-italic b:before {
-		content: "\e949";
+		content: "\eebe";
 	}
 
 	.medium-editor-action-unorderedlist b:before {
-		content: "\e9c9";
+		content: "\eec9";
 	}
 
 	.medium-editor-action-orderedlist b:before {
-		content: "\e9ca";
+		content: "\eeca";
 	}
 
 	.medium-editor-action-quote b:before {
-		content: "\e961";
+		content: "\ef02";
+		font-family: "bb-icons";/* stylelint-disable-line */
 	}
 
 	.medium-editor-action-anchor b:before {
-		content: "\e9a2";
+		content: "\eec8";
 	}
 
 	.medium-editor-action-pre b:before {
-		content: "\e9c7";
+		content: "\ee25";
 	}
 
 	.medium-editor-action-close b:before {
-		content: "\e80a";
+		content: "\e828";
+		font-family: "bb-icons";/* stylelint-disable-line */
+		font-weight: 100;
 	}
 
 }
@@ -740,23 +738,18 @@ ul.medium-editor-toolbar-actions {
 #whats-new-toolbar,
 #whats-new-messages-toolbar {
 
-	.bb-icon {
+	.bb-icon,
+	[class*=" bb-icon-"] {
 		color: rgba(18, 43, 70, 0.5);
 		transition: all linear 0.2s;
 		font-size: 24px;
 		width: auto;
 		height: auto;
-
-		&.bb-icon-video-alt {
-			font-size: 22px;
-			min-width: 24px;
-			text-align: center;
-		}
 	}
 
 	.emojionearea .emojionearea-button:before {
-		content: "\E821";
-		font: normal 400 normal 24px/1 bb-icons;
+		content: "\ee5f";
+		font: normal 400 normal 24px/1 "bb-icons";/* stylelint-disable-line */
 		speak: none;
 		display: inline-block;
 		text-decoration: inherit;
@@ -861,6 +854,33 @@ ul.medium-editor-toolbar-actions {
 			max-width: 100%;
 		}
 
+	}
+}
+
+.activity-video-preview {
+
+	.activity-link-preview-container {
+		border: 0;
+
+		.activity-link-preview-title {
+			margin: 0;
+		}
+	}
+
+	.activity-link-preview-excerpt {
+		width: 100%;
+
+		> p {
+			margin-bottom: 0;
+		}
+
+		.bb-video-wrapper {
+			margin-bottom: 0;
+		}
+
+		iframe {
+			width: 100%;
+		}
 	}
 }
 
@@ -1084,7 +1104,8 @@ blockquote.wp-embedded-content {
 
 
 span.dashicons.dashicons-admin-file:before {
-	content: "\e96a";
+	content: "\ee7a";
+	font-family: 'bb-icons'; /* stylelint-disable-line */
 }
 
 .activity-list .activity-item .activity-content.video-activity-wrap,
@@ -1285,11 +1306,15 @@ span.dashicons.dashicons-admin-file:before {
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 14px;
-				padding: 4px;
-				border: 1px solid #fff;
+				font-size: 25px;
+				padding: 0;
 				background-color: transparent;
 				color: #fff;
+				display: inline-block;
+				width: 25px;
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
 			}
 
 			&:hover {
@@ -1314,7 +1339,8 @@ span.dashicons.dashicons-admin-file:before {
 					border-radius: 50%;
 
 					&:before {
-						content: "\e81a";
+						content: "\ee5c";
+						font-family: 'bb-icons'; /* stylelint-disable-line */
 					}
 
 				}
@@ -1347,28 +1373,28 @@ span.dashicons.dashicons-admin-file:before {
 
 			ul {
 				list-style: none;
-				margin: 5px 0 !important;
-				padding: 0 !important;
+				margin: 5px 0;
+				padding: 0;
 
 				li {
 					margin: 0;
 					padding: 0;
-					list-style-type: none !important;
+					list-style-type: none;
 
 					a {
-						padding: 10px 14px !important;
-						display: block !important;
+						padding: 10px 14px;
+						display: block;
 						font-size: 14px;
 						line-height: 1;
 						color: #7f868f;
 
 						&:hover {
-							background-color: #f5f5f5 !important;
+							background-color: #f5f5f5;
 							color: $blue;
 						}
 
 						&:before {
-							font-family: 'bb-icons';/* stylelint-disable-line */
+							font-family: "bb-icons";/* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -1392,18 +1418,18 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\e959";
+							content: "\ee9f";
 							font-size: 13px;
 						}
 					}
 
 					&.delete_file a:before {
-						content: "\e937";
-						font-size: 15px;
+						content: "\ef48";
+						font-size: 20px;
 					}
 
 					&.edit_thumbnail_video a:before {
-						content: "\e9cb";
+						content: "\eeb4";
 						font-size: 20px;
 						display: inline-block;
 						vertical-align: middle;
@@ -1420,7 +1446,7 @@ span.dashicons.dashicons-admin-file:before {
 						min-height: auto;
 
 						&:before {
-							content: "\e8ea";
+							content: "\ee9c";
 							font-size: 15px;
 							vertical-align: middle;
 						}
@@ -1443,12 +1469,12 @@ span.dashicons.dashicons-admin-file:before {
 					}
 
 					&.privacy_file a:before {
-						content: "\e90d";
+						content: "\eecc";
 						font-size: 15px;
 					}
 
 					&.copy_download_file_url a:before {
-						content: "\e8ac";
+						content: "\ee3b";
 					}
 				}
 			}
@@ -1556,11 +1582,15 @@ span.dashicons.dashicons-admin-file:before {
 			transition: all 0.3s ease;
 
 			i {
-				font-size: 14px;
-				padding: 4px;
-				border: 1px solid #fff;
+				font-size: 25px;
+				padding: 0;
 				background-color: transparent;
 				color: #fff;
+				display: inline-block;
+				width: 25px;
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
 			}
 
 			&:hover {
@@ -1585,7 +1615,8 @@ span.dashicons.dashicons-admin-file:before {
 					filter: drop-shadow(2px 2px 5px #000);
 
 					&:before {
-						content: "\e81a";
+						content: "\ee5c";
+						font-family: 'bb-icons'; /* stylelint-disable-line */
 					}
 
 				}
@@ -1608,28 +1639,28 @@ span.dashicons.dashicons-admin-file:before {
 
 			ul {
 				list-style: none;
-				margin: 5px 0 !important;
-				padding: 0 !important;
+				margin: 5px 0;
+				padding: 0;
 
 				li {
 					margin: 0;
 					padding: 0;
-					list-style-type: none !important;
+					list-style-type: none;
 
 					a {
-						padding: 10px 14px !important;
-						display: block !important;
+						padding: 10px 14px;
+						display: block;
 						font-size: 14px;
 						line-height: 1;
 						color: #7f868f;
 
 						&:hover {
-							background-color: #f5f5f5 !important;
+							background-color: #f5f5f5;
 							color: $blue;
 						}
 
 						&:before {
-							font-family: 'bb-icons';/* stylelint-disable-line */
+							font-family: "bb-icons";/* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -1653,7 +1684,7 @@ span.dashicons.dashicons-admin-file:before {
 						}
 
 						a:before {
-							content: "\e9cc";
+							content: "\eeb8";
 							vertical-align: middle;
 							font-size: 20px;
 							max-height: 15px;
@@ -1663,7 +1694,7 @@ span.dashicons.dashicons-admin-file:before {
 					}
 
 					&.edit_thumbnail_video a:before {
-						content: "\e9cb";
+						content: "\eeb4";
 						font-size: 20px;
 						display: inline-block;
 						vertical-align: middle;
@@ -1680,7 +1711,7 @@ span.dashicons.dashicons-admin-file:before {
 						min-height: auto;
 
 						&:before {
-							content: "\e8ea";
+							content: "\ee9c";
 							font-size: 15px;
 							vertical-align: middle;
 						}
@@ -1703,12 +1734,12 @@ span.dashicons.dashicons-admin-file:before {
 					}
 
 					&.delete_file a:before {
-						content: "\e937";
-						font-size: 15px;
+						content: "\ef48";
+						font-size: 20px;
 					}
 
 					&.edit_video a:before {
-						content: "\e80c";
+						content: "\ee5a";
 					}
 
 				}
@@ -1776,8 +1807,9 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before,
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
-	content: "\e963";
-	font-size: 14px;
+	content: "\eeb8";
+	font-family: 'bb-icons'; /* stylelint-disable-line */
+	font-size: 20px;
 }
 
 @media screen and ( max-width: 799px ) {
@@ -1821,8 +1853,8 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		.document-text:not(.loaded):after {
-			content: "\e838";
-			font-family: bb-icons;
+			content: "\ef30";
+			font-family: "bb-icons";/* stylelint-disable-line */
 			display: inline-block;
 			text-align: center;
 			margin: 10px 0;
@@ -1847,13 +1879,13 @@ span.dashicons.dashicons-admin-file:before {
 				flex-basis: 30px;
 				width: 30px;
 				text-align: center;
-				padding: 15px 0 !important;
+				padding: 5px 0 !important;
 				display: inline-block;
 				vertical-align: middle;
 				position: relative;
 
 				> i {
-					font-size: 30px;
+					font-size: 35px;
 					color: #9ca8b4;
 					margin-top: 3px;
 				}
@@ -2006,8 +2038,8 @@ span.dashicons.dashicons-admin-file:before {
 							}
 
 							&:before {
-								font-family: 'bb-icons';/* stylelint-disable-line */
-								font-size: 16px;
+								font-family: "bb-icons";/* stylelint-disable-line */
+								font-size: 18px;
 								display: inline-block;
 								margin-right: 10px;
 								width: 20px;
@@ -2030,23 +2062,20 @@ span.dashicons.dashicons-admin-file:before {
 							}
 
 							a:before {
-								content: "\e959";
-								font-size: 13px;
+								content: "\ee9f";
 							}
 						}
 
 						&.delete_file a:before {
-							content: "\e937";
-							font-size: 15px;
+							content: "\ef48";
 						}
 
 						&.privacy_file a:before {
-							content: "\e90d";
-							font-size: 15px;
+							content: "\eecc";
 						}
 
 						&.copy_download_file_url a:before {
-							content: "\e8ac";
+							content: "\ee3b";
 						}
 					}
 				}
@@ -2138,12 +2167,12 @@ span.dashicons.dashicons-admin-file:before {
 				margin-top: 0;
 
 				i.document-icon-plus {
-					font-family: dashicons;
+					//font-family: dashicons;
 					vertical-align: middle;
 
-					&:before {
+					/*&:before {
 						content: "\f132";
-					}
+					}*/
 				}
 			}
 		}

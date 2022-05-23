@@ -1002,9 +1002,9 @@ function bp_nouveau_activity_privacy() {
 		}
 
 		$privacy                   = bp_get_activity_privacy();
-		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
-		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
-		$video_activity            = ( 'video' === $privacy || ( isset( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) );
+		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && ( 'media_get_activity' === $_REQUEST['action'] || 'media_get_media_description' === $_REQUEST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && ( 'document_get_activity' === $_REQUEST['action'] || 'document_get_document_description' === $_REQUEST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$video_activity            = ( 'video' === $privacy || ( isset( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$parent_activity_id        = false;
 		$parent_activity_permalink = false;
 		$group_id                  = false;
@@ -1170,71 +1170,67 @@ function bp_nouveau_activity_privacy() {
 		if ( ( $media_activity || $video_activity ) && ( ( $parent_activity_id && $parent_activity_permalink && bb_user_can_create_activity() ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 			?>
 			<div class="bb-media-privacy-wrap">
-			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
-				  data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span
-						class="privacy selected <?php echo $privacy; ?>"></span></span>
-			<ul class="activity-privacy">
-				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
-					<li class="bb-edit-privacy" data-value="<?php echo $album_url; ?>">
-						<a href="<?php echo $album_url; ?>"
-						   data-value="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a>
-					</li>
-				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-					<li class="bb-edit-privacy" data-value="<?php echo $parent_activity_permalink; ?>">
-						<a href="<?php echo $parent_activity_permalink; ?>"
-						   data-value="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
-					</li>
-				<?php endif; ?>
-			</ul>
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? esc_attr( $privacy_items[ $privacy ] ) : esc_attr( $privacy ); ?>">
+					<span class="privacy selected <?php echo esc_attr( $privacy ); ?>"></span>
+				</span>
+				<ul class="activity-privacy">
+					<?php if ( $album_id && ! empty( $album_url ) ) : ?>
+						<li class="bb-edit-privacy" data-value="<?php echo esc_url( $album_url ); ?>">
+							<a href="<?php echo esc_url( $album_url ); ?>" data-value="<?php echo esc_url( $album_url ); ?>"><?php esc_html_e( 'Edit Album Privacy', 'buddyboss' ); ?></a>
+						</li>
+					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+						<li class="bb-edit-privacy" data-value="<?php echo esc_url( $parent_activity_permalink ); ?>">
+							<a href="<?php echo esc_url( $parent_activity_permalink ); ?>" data-value="<?php echo esc_url( $parent_activity_permalink ); ?>"><?php esc_html_e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+						</li>
+					<?php endif; ?>
+				</ul>
 			</div>
 			<?php
 		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink && bb_user_can_create_activity() ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
 			?>
 			<div class="bb-media-privacy-wrap">
-			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
-				  data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span
-						class="privacy selected <?php echo $privacy; ?>"></span></span>
-			<ul class="activity-privacy">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? esc_attr( $privacy_items[ $privacy ] ) : esc_attr( $privacy ); ?>">
+					<span class="privacy selected <?php echo esc_attr( $privacy ); ?>"></span>
+				</span>
+				<ul class="activity-privacy">
 					<?php
 					if ( $folder_id && ! empty( $folder_url ) ) :
 						$folder_url = $folder_url . '#openEditFolder';
 						?>
-						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
-						<a data-value="<?php echo $folder_url; ?>"
-						   href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
-				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-					<li data-value="<?php echo $parent_activity_permalink; ?>"
-						class="bb-edit-privacy <?php echo $privacy; ?>">
-						<a data-value="<?php echo $parent_activity_permalink; ?>"
-						   href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
-					</li>
-				<?php endif; ?>
-			</ul>
+						<li data-value="<?php echo esc_url( $folder_url ); ?>" class="bb-edit-privacy <?php echo esc_attr( $privacy ); ?>">
+							<a data-value="<?php echo esc_url( $folder_url ); ?>" href="<?php echo esc_url( $folder_url ); ?>"><?php esc_html_e( 'Edit Folder Privacy', 'buddyboss' ); ?></a>
+						</li>
+					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+						<li data-value="<?php echo esc_url( $parent_activity_permalink ); ?>" class="bb-edit-privacy <?php echo esc_attr( $privacy ); ?>">
+							<a data-value="<?php echo esc_url( $parent_activity_permalink ); ?>" href="<?php echo esc_url( $parent_activity_permalink ); ?>"><?php esc_html_e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+						</li>
+					<?php endif; ?>
+				</ul>
 			</div>
 			<?php
 		} elseif ( bb_user_can_create_activity() ) {
 			?>
 			<div class="bb-media-privacy-wrap">
-			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up"
-				  data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span
-						class="privacy selected <?php echo $privacy; ?>"></span></span>
-			<?php
-			$class = 'activity-privacy';
-			if ( $media_activity ) {
-				$class = 'media-privacy';
-			} elseif ( $document_activity ) {
-				$class = 'document-privacy';
-			}
-			?>
-			<ul class="<?php echo esc_attr( $class ); ?>">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? esc_attr( $privacy_items[ $privacy ] ) : esc_attr( $privacy ); ?>">
+					<span class="privacy selected <?php echo esc_attr( $privacy ); ?>"></span>
+				</span>
 				<?php
-				foreach ( $privacy_items as $item_key => $privacy_item ) {
-					?>
-					<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li>
-					<?php
+				$class = 'activity-privacy';
+				if ( $media_activity ) {
+					$class = 'media-privacy';
+				} elseif ( $document_activity ) {
+					$class = 'document-privacy';
 				}
 				?>
-			</ul>
+				<ul class="<?php echo esc_attr( $class ); ?>">
+					<?php
+					foreach ( $privacy_items as $item_key => $privacy_item ) {
+						?>
+						<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo esc_html( $privacy_item ); ?></li>
+						<?php
+					}
+					?>
+				</ul>
 			</div>
 			<?php
 		}
@@ -1311,13 +1307,13 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-			<span class="bb-icon-edit-thin"></span>
+			<span class="bb-icon-l bb-icon-edit "></span>
 			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 
 		<?php
-    }
+	}
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
@@ -1383,7 +1379,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
-			<span class="bb-icon-edit-thin"></span>
+			<span class="bb-icon-l bb-icon-edit"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1457,7 +1453,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
 		   href="#">
-			   <span class="bb-icon-edit-thin"></span>
+			   <span class="bb-icon-l bb-icon-edit"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1565,7 +1561,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -1855,7 +1851,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
-	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon bb-icon-menu-dots-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
+	$output = sprintf( '<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb-activity-more-options">%s</div>', esc_html__( 'More Options', 'buddyboss' ), $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }

@@ -1989,6 +1989,7 @@ function bp_activity_get( $args = '' ) {
 			'page'              => 1,            // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,        // results per page
 			'sort'              => 'DESC',       // sort ASC or DESC
+			'order_by'          => false,         // order by.
 			'display_comments'  => false,        // False for no comments. 'stream' for within stream display, 'threaded' for below each activity item.
 
 			'privacy'           => false,        // Privacy of activity
@@ -2026,6 +2027,7 @@ function bp_activity_get( $args = '' ) {
 			'per_page'          => $r['per_page'],
 			'max'               => $r['max'],
 			'sort'              => $r['sort'],
+			'order_by'          => $r['order_by'],
 			'privacy'           => $r['privacy'],
 			'search_terms'      => $r['search_terms'],
 			'meta_query'        => $r['meta_query'],
@@ -2217,6 +2219,7 @@ function bp_activity_add( $args = '' ) {
 	if ( 'activity_comment' === $activity->type ) {
 		// Also clear the comment cache for the parent activity ID.
 		wp_cache_delete( $activity->item_id, 'bp_activity_comments' );
+		wp_cache_delete( 'bp_get_child_comments_' . $activity->item_id, 'bp_activity_comments' );
 
 		BP_Activity_Activity::rebuild_activity_comment_tree( $activity->item_id );
 	}
@@ -2868,6 +2871,29 @@ add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
 add_action( 'edit_comment', 'bp_activity_post_type_comment', 10 );
 
 /**
+ * Create an activity item for a newly posted post type comment from REST API.
+ *
+ * @since BuddyBoss 2.0.1
+ *
+ * @param WP_Comment $comment WP_Comment class object.
+ *
+ * @return void
+ */
+function bb_rest_activity_post_type_comment( $comment ) {
+	// Bail if not a comment.
+	if (
+		empty( $comment )
+		|| ! $comment instanceof WP_Comment
+	) {
+		return;
+	}
+
+	bp_activity_post_type_comment( $comment->comment_ID, $comment->comment_approved );
+}
+
+add_action( 'rest_after_insert_comment', 'bb_rest_activity_post_type_comment', 10, 1 );
+
+/**
  * Remove an activity item when a comment about a post type is deleted.
  *
  * @since BuddyPress 2.5.0
@@ -3076,6 +3102,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Comment caches are stored only with the top-level item.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
@@ -3473,6 +3500,7 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 
 	// Purge comment cache for the root activity update.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
@@ -3964,6 +3992,7 @@ function bp_activity_mark_as_spam( &$activity, $source = 'by_a_person' ) {
 
 	// Clear the activity comment cache for this activity item.
 	wp_cache_delete( $activity->id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity->id, 'bp_activity_comments' );
 
 	// If Akismet is active, and this was a manual spam/ham request, stop Akismet checking the activity.
 	if ( 'by_a_person' == $source && ! empty( $bp->activity->akismet ) ) {
@@ -4011,6 +4040,7 @@ function bp_activity_mark_as_ham( &$activity, $source = 'by_a_person' ) {
 
 	// Clear the activity comment cache for this activity item.
 	wp_cache_delete( $activity->id, 'bp_activity_comments' );
+	wp_cache_delete( 'bp_get_child_comments_' . $activity->id, 'bp_activity_comments' );
 
 	// If Akismet is active, and this was a manual spam/ham request, stop Akismet checking the activity.
 	if ( 'by_a_person' == $source && ! empty( $bp->activity->akismet ) ) {
@@ -4075,11 +4105,22 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	add_filter( 'bp_get_activity_content_body', 'wpautop' );
 	add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
+	$type_key = 'notification_activity_new_mention';
+
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$email_type = 'new-mention';
+		$type_key   = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	// Now email the user with the contents of the message (if they have enabled email notifications).
-	if ( 'no' != bp_get_user_meta( $receiver_user_id, 'notification_activity_new_mention', true ) ) {
+	if ( true === bb_is_notification_enabled( $receiver_user_id, $type_key ) ) {
 		if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 			$email_type = 'groups-at-message';
 			$group_name = bp_get_current_group_name();
+
+			if ( ! bb_enabled_legacy_email_preference() ) {
+				$email_type = 'new-mention-group';
+			}
 		}
 
 		$unsubscribe_args = array(
@@ -4087,15 +4128,47 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 			'notification_type' => $email_type,
 		);
 
+		$notification_type_html = '';
+		$reply_text             = '';
+		$title_text             = '';
+
+		if ( 'activity_comment' === $activity->type ) {
+			if ( ! empty( $activity->item_id ) ) {
+				$parent_activity = new BP_Activity_Activity( $activity->item_id );
+				if ( ! empty( $parent_activity ) && 'blogs' === $parent_activity->component ) {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+					$title_text             = get_the_title( $parent_activity->secondary_item_id );
+					$message_link           = get_permalink( $activity->secondary_item_id );
+				} else {
+					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+				}
+			} else {
+				$notification_type_html = esc_html__( 'post', 'buddyboss' );
+			}
+			$reply_text = esc_html__( 'View Comment', 'buddyboss' );
+		} elseif ( 'blogs' === $activity->component ) {
+			$notification_type_html = esc_html__( 'post', 'buddyboss' );
+			$reply_text             = esc_html__( 'View Post', 'buddyboss' );
+			$title_text             = get_the_title( $activity->secondary_item_id );
+			$message_link           = get_permalink( $activity->secondary_item_id );
+		} else {
+			$notification_type_html = esc_html__( 'post', 'buddyboss' );
+			$reply_text             = esc_html__( 'View Post', 'buddyboss' );
+		}
+
 		$args = array(
 			'tokens' => array(
-				'activity'         => $activity,
-				'usermessage'      => wp_strip_all_tags( $content ),
-				'group.name'       => $group_name,
-				'mentioned.url'    => $message_link,
-				'poster.name'      => $poster_name,
-				'receiver-user.id' => $receiver_user_id,
-				'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				'activity'          => $activity,
+				'usermessage'       => wp_strip_all_tags( $content ),
+				'group.name'        => $group_name,
+				'mentioned.url'     => $message_link,
+				'poster.name'       => $poster_name,
+				'receiver-user.id'  => $receiver_user_id,
+				'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				'mentioned.type'    => $notification_type_html,
+				'mentioned.content' => '',
+				'reply_text'        => $reply_text,
+				'title_text'        => $title_text,
 			),
 		);
 
@@ -4143,10 +4216,15 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	add_filter( 'bp_get_activity_content_body', 'wpautop' );
 	add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
+	$type_key = 'notification_activity_new_reply';
+	if ( ! bb_enabled_legacy_email_preference() ) {
+		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	}
+
 	if ( $original_activity->user_id != $commenter_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( 'no' != bp_get_user_meta( $original_activity->user_id, 'notification_activity_new_reply', true ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4194,7 +4272,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( 'no' != bp_get_user_meta( $parent_comment->user_id, 'notification_activity_new_reply', true ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,
@@ -5026,7 +5104,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 	}
 
 }
-//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+// add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5130,7 +5208,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 	}
 
 }
-//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+// add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
@@ -5559,10 +5637,16 @@ function bb_get_activity_hierarchy( $activity_id ) {
 
 	$activity_table = $bp->activity->table_name;
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$activity_query = $wpdb->prepare( "SELECT c.id FROM ( SELECT @r AS _id, (SELECT @r := secondary_item_id FROM {$activity_table} WHERE id = _id) AS secondary_item_id, @l := @l + 1 AS level FROM (SELECT @r := %d, @l := 0) vars, {$activity_table} m WHERE @r <> 0) d JOIN {$activity_table} c ON d._id = c.id ORDER BY d.level ASC", $activity_id );
+	$cache_key = 'bb_activity_hierarchy_' . $activity_id;
+	$data      = wp_cache_get( $cache_key, 'bp_activity' );
 
-	$data = $wpdb->get_results( $activity_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+	if ( false === $data ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$activity_query = $wpdb->prepare( "SELECT c.id FROM ( SELECT @r AS _id, (SELECT @r := secondary_item_id FROM {$activity_table} WHERE id = _id) AS secondary_item_id, @l := @l + 1 AS level FROM (SELECT @r := %d, @l := 0) vars, {$activity_table} m WHERE @r <> 0) d JOIN {$activity_table} c ON d._id = c.id ORDER BY d.level ASC", $activity_id );
+
+		$data = $wpdb->get_results( $activity_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		wp_cache_set( $cache_key, $data, 'bp_activity' );
+	}
 
 	return array_filter( $data );
 }
