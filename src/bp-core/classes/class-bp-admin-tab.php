@@ -713,15 +713,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . esc_attr( $section['icon'] ) . '"></i>' : '';
 				if ( $section['title'] ) {
 					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
-						wp_kses(
-							$section['title'],
-							array(
-								'a' => array(
-									'href' => array(),
-									'rel'  => array(),
-								),
-							)
-						);
+						wp_kses_post( $section['title'] );
 
 						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
 						?><div class="bbapp-tutorial-btn">
