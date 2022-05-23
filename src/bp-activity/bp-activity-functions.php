@@ -4230,7 +4230,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $original_activity->user_id != $commenter_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) ) {
+		if ( true === bb_is_notification_enabled( $original_activity->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $original_activity->user_id, $commenter_id ) ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $original_activity->user_id,
@@ -4278,7 +4278,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	if ( $parent_comment->user_id != $commenter_id && $original_activity->user_id != $parent_comment->user_id ) {
 
 		// Send an email if the user hasn't opted-out.
-		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) ) {
+		if ( true === bb_is_notification_enabled( $parent_comment->user_id, $type_key ) && false === (bool) apply_filters( 'bb_is_recipient_moderated', false, $parent_comment->user_id, $commenter_id )  ) {
 
 			$unsubscribe_args = array(
 				'user_id'           => $parent_comment->user_id,

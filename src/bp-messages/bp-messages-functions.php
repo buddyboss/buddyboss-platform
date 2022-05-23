@@ -1016,6 +1016,12 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 		$chunk_recipients = array_chunk( $recipients, 10 );
 		if ( ! empty( $chunk_recipients ) ) {
 			foreach ( $chunk_recipients as $key => $data_recipients ) {
+
+				// Check the sender is blocked by recipient or not.
+				if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $data_recipients->user_id, $sender_id ) ) {
+					continue;
+				}
+
 				$bb_email_background_updater->data(
 					array(
 						array(
@@ -1062,6 +1068,11 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 			// User data and links.
 			$ud = get_userdata( $recipient->user_id );
 			if ( empty( $ud ) ) {
+				continue;
+			}
+
+			// Check the sender is blocked by recipient or not.
+			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $recipient->user_id, $sender_id ) ) {
 				continue;
 			}
 
