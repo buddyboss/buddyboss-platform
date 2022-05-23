@@ -3244,7 +3244,7 @@ div.dropzone .dz-preview {
 					top: 50%;
 					bottom: inherit;
 					right: inherit;
-					width: auto;
+					width: 220px;
 					z-index: 999;
 				}
 			}
@@ -5437,11 +5437,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
 			display: none;
 		}
+	}
 
-		[data-bp-tooltip]:before,
-		[data-bp-tooltip]:after,
-		[data-balloon]:before,
-		[data-balloon]:after {
+	.item-action_more[data-balloon],
+	.media-action_more[data-balloon],
+	.document-action_more[data-balloon],
+	.bb_more_options_action[data-bp-tooltip],
+	.bb-activity-more-options-action[data-balloon],
+	.bb-reply-actions-button.active[data-balloon],
+	.bb-activity-more-options-action[data-balloon] {
+
+		&:before,
+		&:after {
 			display: none;
 		}
 	}

@@ -19356,7 +19356,7 @@ div.dropzone .dz-preview .dz-filename {
     top: 50%;
     bottom: inherit;
     left: inherit;
-    width: auto;
+    width: 220px;
     z-index: 999;
   }
 }
@@ -21682,10 +21682,19 @@ body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp
   body[class*="more_option_open"] .bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
     display: none;
   }
-  body[class*="more_option_open"] [data-bp-tooltip]:before,
-  body[class*="more_option_open"] [data-bp-tooltip]:after,
-  body[class*="more_option_open"] [data-balloon]:before,
-  body[class*="more_option_open"] [data-balloon]:after {
+  .item-action_more[data-balloon]:before, .item-action_more[data-balloon]:after,
+  .media-action_more[data-balloon]:before,
+  .media-action_more[data-balloon]:after,
+  .document-action_more[data-balloon]:before,
+  .document-action_more[data-balloon]:after,
+  .bb_more_options_action[data-bp-tooltip]:before,
+  .bb_more_options_action[data-bp-tooltip]:after,
+  .bb-activity-more-options-action[data-balloon]:before,
+  .bb-activity-more-options-action[data-balloon]:after,
+  .bb-reply-actions-button.active[data-balloon]:before,
+  .bb-reply-actions-button.active[data-balloon]:after,
+  .bb-activity-more-options-action[data-balloon]:before,
+  .bb-activity-more-options-action[data-balloon]:after {
     display: none;
   }
 }
