@@ -115,6 +115,9 @@ add_action( 'xprofile_fields_deleted_field', 'bp_core_xprofile_clear_all_user_pr
 add_action( 'xprofile_groups_deleted_group', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On profile group deleted in wp-admin.
 add_action( 'update_option_bp-disable-avatar-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When avatar photo setting updated in wp-admin > Settings > profile.
 add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_core_xprofile_clear_all_user_progress_cache' ); // When cover photo setting updated in wp-admin > Settings > profile.
+add_action( 'xprofile_groups_saved_group', 'bb_core_xprofile_clear_group_cache' );
+add_action( 'xprofile_groups_deleted_group', 'bb_core_xprofile_clear_group_cache' );
+add_action( 'xprofile_fields_deleted_field', 'bb_core_xprofile_clear_group_cache' );
 
 // Display Name setting support
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
@@ -1317,4 +1320,13 @@ function bb_validate_user_nickname_on_user_update( WP_Error $errors, bool $updat
 			$errors->add( 'nickname', esc_html( $invalid ) );
 		}
 	}
+}
+
+/**
+ * Function trigger when fieldset is added or deleted or field deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_xprofile_clear_group_cache() {
+	BP_XProfile_Group::$bp_xprofile_group_ids = array();
 }

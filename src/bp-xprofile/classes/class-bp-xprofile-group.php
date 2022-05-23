@@ -65,6 +65,15 @@ class BP_XProfile_Group {
 	public $fields;
 
 	/**
+	 * Static cache key for the groups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array Fields of cache.
+	 */
+	public static $bp_xprofile_group_ids = array();
+
+	/**
 	 * Initialize and/or populate profile field group.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -270,8 +279,6 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
-		static $bp_xprofile_group_ids = array();
-		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
 		// Parse arguments.
@@ -294,6 +301,12 @@ class BP_XProfile_Group {
 				'fetch_social_network_fields'    => false,
 			)
 		);
+
+		$cache_key = 'groups_' . md5( maybe_serialize( $r ) );
+
+		if ( isset( self::$bp_xprofile_group_ids[ $cache_key ] ) ) {
+			return self::$bp_xprofile_group_ids[ $cache_key ];
+		}
 
 		// Keep track of object IDs for cache-priming.
 		$object_ids = array(
@@ -332,6 +345,7 @@ class BP_XProfile_Group {
 
 		// Bail if not also getting fields.
 		if ( empty( $r['fetch_fields'] ) ) {
+			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -343,6 +357,7 @@ class BP_XProfile_Group {
 
 		// Bail if no groups found.
 		if ( empty( $group_ids ) ) {
+			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -440,6 +455,7 @@ class BP_XProfile_Group {
 
 		// Bail if no fields.
 		if ( empty( $field_ids ) ) {
+			self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 			return $groups;
 		}
 
@@ -576,6 +592,7 @@ class BP_XProfile_Group {
 			$groups = array_values( $groups );
 		}
 
+		self::$bp_xprofile_group_ids[ $cache_key ] = $groups;
 		return $groups;
 	}
 
