@@ -218,21 +218,21 @@ jQuery( document ).ready( function() {
 		jQuery( '.register-page .error' ).remove();
 
 		if ( jQuery( document ).find( signup_email_confirm ).length && jQuery( document ).find( signup_email_confirm ).val() == '' ) {
-			jQuery( document ).find( signup_email_confirm ).before( html_error );
+			jQuery( document ).find( signup_email_confirm ).after( html_error );
 			jQuery( document ).find( signup_email_confirm ).addClass( 'invalid' );
 			return_val = false;
 		} else {
 			jQuery( document ).find( signup_email_confirm ).removeClass( 'invalid' );
 		}
 		if ( jQuery( document ).find( signup_password ).length && jQuery( document ).find( signup_password ).val() == '' ) {
-			jQuery( document ).find( signup_password ).before( html_error );
+			jQuery( document ).find( signup_password ).after( html_error );
 			jQuery( document ).find( signup_password ).addClass( 'invalid' );
 			return_val = false;
 		} else {
 			jQuery( document ).find( signup_password ).removeClass( 'invalid' );
 		}
 		if ( jQuery( document ).find( signup_password_confirm ).length && jQuery( document ).find( signup_password_confirm ).val() == '' ) {
-			jQuery( document ).find( signup_password_confirm ).before( html_error );
+			jQuery( document ).find( signup_password_confirm ).after( html_error );
 			jQuery( document ).find( signup_password_confirm ).addClass( 'invalid' );
 			return_val = false;
 		} else {
@@ -241,28 +241,28 @@ jQuery( document ).ready( function() {
 		jQuery( '.required-field' ).each( function() {
 
 			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
-				jQuery( this ).find( 'input[type="text"]' ).before( html_error );
+				jQuery( this ).find( 'input[type="text"]' ).after( html_error );
 				jQuery( this ).find( 'input[type="text"]' ).addClass( 'invalid' );
 				return_val = false;
 			} else {
 				jQuery( this ).find( 'input[type="text"]' ).removeClass( 'invalid' );
 			}
 			if ( jQuery( this ).find( 'input[type="number"]' ).length && jQuery( this ).find( 'input[type="number"] ').val() == '' ) {
-				jQuery( this ).find( 'input[type="number"]' ).before( html_error );
+				jQuery( this ).find( 'input[type="number"]' ).after( html_error );
 				jQuery( this ).find( 'input[type="number"]' ).addClass( 'invalid' );
 				return_val = false;
 			} else {
 				jQuery( this ).find( 'input[type="number"]' ).removeClass( 'invalid' );
 			}
 			if ( jQuery( this ).find( 'textarea' ).length && jQuery( this ).find( 'textarea' ).val() == '' || undefined === typeof jQuery( this ).find( 'textarea' ).val() ) {
-				jQuery( this ).find( 'textarea' ).before( html_error );
+				jQuery( this ).find( 'textarea' ).after( html_error );
 				jQuery( this ).find( 'textarea' ).addClass( 'invalid' );
 				return_val = false;
 			} else {
 				jQuery( this ).find( 'textarea' ).removeClass( 'invalid' );
 			}
 			if ( jQuery( this ).find( 'select' ).length && jQuery( this ).find( 'select' ).val() == '' ) {
-				jQuery( this ).find( 'select' ).before( html_error );
+				jQuery( this ).find( 'select' ).after( html_error );
 				jQuery( this ).find( 'select' ).addClass( 'invalid' );
 				return_val = false;
 			} else {
@@ -282,7 +282,7 @@ jQuery( document ).ready( function() {
 			}
 		});
 		if ( jQuery( document ).find( signup_email ).length && jQuery( document ).find( signup_email ).val() == '' ) {
-			jQuery( document ).find( signup_email ).before( html_error );
+			jQuery( document ).find( signup_email ).after( html_error );
 			jQuery( document ).find( signup_email ).addClass( 'invalid' );
 			return_val = false;
 		}else{
@@ -301,7 +301,7 @@ jQuery( document ).ready( function() {
 					    html_serror += '<p>' + response.signup_email + '</p>';
 					    html_serror += '</div>';
 					
-					    jQuery( document ).find( signup_email ).before( html_serror );
+					    jQuery( document ).find( signup_email ).after( html_serror );
 					    jQuery( document ).find( signup_email ).addClass( 'invalid' );
 					    return_val = false;
 				    } else {
@@ -313,7 +313,7 @@ jQuery( document ).ready( function() {
 					    html_uerror += '<span class="bp-icon" aria-hidden="true"></span>';
 					    html_uerror += '<p>' + response.signup_username + '</p>';
 					    html_uerror += '</div>';
-					    jQuery( document ).find( '#' + nickname ).before( html_uerror );
+					    jQuery( document ).find( '#' + nickname ).after( html_uerror );
 					    jQuery( document ).find( '#' + nickname ).addClass( 'invalid' );
 					    return_val = false;
 				    } else {
