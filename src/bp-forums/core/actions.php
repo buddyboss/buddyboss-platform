@@ -412,9 +412,14 @@ function bb_post_topic_reply_draft() {
 	$draft_activity = $_REQUEST['draft_activity'] ?? '';
 	$usermeta_key   = 'bb_user_topic_reply_draft';
 	$user_id        = bp_loggedin_user_id();
+	$all_data       = array();
 
 	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
 		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+	}
+
+	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
+		$all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
 	}
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
@@ -431,47 +436,24 @@ function bb_post_topic_reply_draft() {
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
 			$existing_draft[ $draft_activity['data_key'] ] = $draft_activity;
-		} else {
 
-			// Delete media when discard the activity.
-			/*
-			if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
+			if ( ! empty( $all_data ) ) {
 
-				$medias    = $draft_activity['data']['media'] ?? array();
-				$documents = $draft_activity['data']['document'] ?? array();
-				$videos    = $draft_activity['data']['video'] ?? array();
+				foreach ( $all_data as $data_key => $d_data ) {
 
-				// Delete the medias.
-				if ( ! empty( $medias ) ) {
-					foreach ( $medias as $media ) {
-						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
-							wp_delete_attachment( $media['id'], true );
-						}
+					// Avoid conflict with current data.
+					if ( $draft_activity['data_key'] === $data_key ) {
+						continue;
 					}
-				}
 
-				// Delete the documents.
-				if ( ! empty( $documents ) ) {
-					foreach ( $documents as $document ) {
-						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
-							wp_delete_attachment( $document['id'], true );
-						}
+					// Update the all data.
+					if ( isset( $existing_draft[ $data_key ] ) ) {
+						$existing_draft[ $data_key ]['data'] = $d_data;
 					}
-				}
 
-				// Delete the videos.
-				if ( ! empty( $videos ) ) {
-					foreach ( $videos as $video ) {
-						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
-							wp_delete_attachment( $video['id'], true );
-						}
-					}
 				}
-
 			}
 
-			$draft_activity['data'] = false;
-			*/
 		}
 
 		update_user_meta( $user_id, $usermeta_key, $existing_draft );

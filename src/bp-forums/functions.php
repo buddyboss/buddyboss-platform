@@ -996,16 +996,16 @@ function bb_add_topic_tags( $terms, $topic_id, $taxonomy, $existing_terms = '' )
  */
 function bb_nouveau_forum_localize_scripts( $params = array() ) {
 
-	if ( function_exists( 'bp_is_active') && ! bp_is_active( 'forums' ) ) {
+	if ( function_exists( 'bp_is_active' ) && ! bp_is_active( 'forums' ) ) {
 		return $params;
 	}
 
 	$params['forums'] = array(
-		'nonces' => array(
+		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' )
 		),
 		'strings' => array(
-			'discardButton'  => esc_html__( 'Discard Draft', 'buddyboss' ),
+			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
 		)
 	);
 

@@ -448,6 +448,22 @@ function bbp_new_topic_handler( $action = '' ) {
 			}
 		}
 
+		// Delete draft data from the database.
+		$draft_data_key = 'draft_discussion_' . $forum_id;
+		$usermeta_key   = 'bb_user_topic_reply_draft';
+		$user_id        = bp_loggedin_user_id();
+		$existing_draft = get_user_meta( $user_id, $usermeta_key, true );
+
+		if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
+			unset( $existing_draft[ $draft_data_key ] );
+		}
+
+		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
+			$existing_draft = array();
+		}
+
+		update_user_meta( $user_id, $usermeta_key, $existing_draft );
+
 		/** Additional Actions (After Save) */
 
 		do_action( 'bbp_new_topic_post_extras', $topic_id );
