@@ -14,6 +14,7 @@ jQuery( document ).ready(
 				}
 
 				jQuery( element ).select2( {
+					dropdownParent: jQuery('.bbp-topic-form.bb-modal'),
 					placeholder: jQuery( element ).attr( 'placeholder' ),
 					minimumInputLength: 1,
 					closeOnSelect: true,
