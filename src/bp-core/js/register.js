@@ -367,7 +367,12 @@ jQuery( document ).ready( function() {
 			}
 			if ( ( email2 !== '' ) && ( email1 !== email2 ) && confirmEmailSelector.length ) {
 				errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
+				jQuery( document ).find( emailSelector ).addClass( 'invalid' );
+				jQuery( document ).find( confirmEmailSelector ).addClass( 'invalid' );
 				return;
+			} else {
+				jQuery( document ).find( emailSelector ).removeClass( 'invalid' );
+				jQuery( document ).find( confirmEmailSelector ).removeClass( 'invalid' );
 			}
 		}
 	}
@@ -390,8 +395,13 @@ jQuery( document ).ready( function() {
 			return;
 		}
 		if ( email1 !== email2 && confirmEmailSelector.length ) {
+			jQuery( document ).find( emailSelector ).addClass( 'invalid' );
+			jQuery( document ).find( confirmEmailSelector ).addClass( 'invalid' );
 			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 			return;
+		} else {
+			jQuery( document ).find( emailSelector ).removeClass( 'invalid' );
+			jQuery( document ).find( confirmEmailSelector ).removeClass( 'invalid' );
 		}
 	}
 
