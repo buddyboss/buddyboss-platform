@@ -531,6 +531,12 @@ abstract class BP_XProfile_Field_Type {
 			// if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 				// $r[] = 'required';
 			// }
+			if (
+				isset( $_POST['profile-group-edit-submit'] ) &&
+				empty( $_POST[ bp_get_the_profile_field_input_name() ] )
+			) {
+				$r['class'] = 'invalid';
+			}
 		}
 
 		/**

@@ -126,6 +126,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 						'name'  => $field_name . '[' . $option->name . ']',
 						'id'    => $field_name . '[' . $option->name . ']',
 						'value' => $social_value,
+						'class' => isset( $_POST['profile-group-edit-submit'] ) && empty( $social_value ) ? 'invalid' : '',
 					),
 					$raw_properties
 				)
