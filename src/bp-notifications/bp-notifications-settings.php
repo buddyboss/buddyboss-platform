@@ -57,7 +57,7 @@ function bb_notification_get_settings_sections() {
 /**
  * Link to Web Push Notification tutorial
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_web_push_notifications_tutorial() {
 	?>
@@ -467,7 +467,7 @@ function bb_activate_notification( $field, $checked ) {
 /**
  * Callback fields for the push notification platform pro not installed warning.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_push_notification_bbp_pro_not_installed() {
 	echo '<p class="description notification-information bb-lab-notice">' .
@@ -484,7 +484,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_not_installed() {
 /**
  * Callback fields for the push notification platform pro older version installed warning.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_push_notification_bbp_pro_older_version_installed() {
 	echo '<p class="description notification-information bb-lab-notice">' .
@@ -501,7 +501,7 @@ function bb_admin_setting_callback_push_notification_bbp_pro_older_version_insta
 /**
  * Callback fields for the push notification lab preference warning.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_admin_setting_callback_push_notification_lab_notification_preferences() {
 	echo '<p class="description notification-information bb-lab-notice">' .
