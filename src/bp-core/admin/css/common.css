@@ -2273,18 +2273,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   padding: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback,
 #bp_privacy .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon,
 #bp_privacy .bp-feedback .bp-icon {
   border-radius: 4px 0 0 4px;
   margin: 0;
 }
 
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p,
 #bp_privacy .bp-feedback > p {
   color: #666 !important;
@@ -2297,18 +2300,21 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
 }
 
 .admin-notice .bp-feedback,
+#bp_web_push_notification_settings .bp-feedback,
 #bp_media_settings_symlinks .bp-feedback {
   box-shadow: none;
   padding-top: 0;
 }
 
 .admin-notice .bp-feedback .bp-icon,
+#bp_web_push_notification_settings .bp-feedback .bp-icon,
 #bp_media_settings_symlinks .bp-feedback .bp-icon {
   border-radius: 4px 0 0 4px;
   margin: 0;
 }
 
 .admin-notice .bp-feedback > p,
+#bp_web_push_notification_settings .bp-feedback > p,
 #bp_media_settings_symlinks .bp-feedback > p {
   color: #666 !important;
   margin-top: 0 !important;
@@ -3200,4 +3206,17 @@ html[dir="rtl"] .bb-grid-style-outer .bb-header-style .option.opt-left:after {
 
 #wpadminbar #wp-admin-bar-bp-notifications-default .notification-content .posted {
   line-height: 1.4;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th {
+  display: none;
+}
+
+#bp_web_push_notification_settings table.form-table .notes-hidden-header > th + td {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#bp_web_push_notification_settings table.form-table .no-padding {
+  padding: 0;
 }

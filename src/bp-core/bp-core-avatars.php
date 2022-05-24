@@ -1506,6 +1506,8 @@ function bp_avatar_ajax_set() {
 		$avatar_dir = sanitize_key( $avatar_data['object'] ) . '-avatars';
 	}
 
+	$avatar_dir = apply_filters( 'bb_avatar_ajax_set_avatar_dir', $avatar_dir, $avatar_data );
+
 	// Crop args.
 	$r = array(
 		'item_id'       => $avatar_data['item_id'],
@@ -1545,6 +1547,9 @@ function bp_avatar_ajax_set() {
 		} elseif ( 'group' === $avatar_data['object'] ) {
 			/** This action is documented in bp-groups/bp-groups-screens.php */
 			do_action( 'groups_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
+		} else {
+			/** action to used for other component. **/
+			do_action( sanitize_title( $avatar_data['object'] ) . '_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
 		}
 
 		wp_send_json_success( $return );
