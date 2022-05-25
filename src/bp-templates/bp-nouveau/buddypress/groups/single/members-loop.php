@@ -165,9 +165,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						<a href="#" class="bb_more_options_action">
 							<i class="bb-icon-menu-dots-h"></i>
 						</a>
-						<div class="bb_more_options_list">
+						<div class="bb_more_options_list bb_more_dropdown">
+							<div class="bb_more_dropdown__title"> 
+								<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+								<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+							</div>
 							<?php echo wp_kses_post( bp_get_add_switch_button( bp_get_member_user_id() ) ); ?>
 						</div>
+						<div class="bb_more_dropdown_overlay"></div>
 					</div><!-- .bb_more_options -->
 					<?php } ?>
 				</div>
