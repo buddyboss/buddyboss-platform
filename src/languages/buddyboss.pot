@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.0.1\n"
+"Project-Id-Version: BuddyBoss Platform 2.0.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-05-16 05:23:31+00:00\n"
+"POT-Creation-Date: 2022-05-25 05:40:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1083,7 +1083,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2792
-#: bp-core/bp-core-attachments.php:926
+#: bp-core/bp-core-attachments.php:928
 #: bp-forums/classes/class-bp-forums-component.php:546
 #: bp-forums/replies/template.php:2228
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
@@ -3666,7 +3666,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:626
 #: bp-core/admin/bp-core-admin-settings.php:920
 #: bp-core/admin/bp-core-admin-settings.php:1010
-#: bp-core/bp-core-attachments.php:919
+#: bp-core/bp-core-attachments.php:921
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:20
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:19
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:18
@@ -5716,148 +5716,148 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:780
+#: bp-core/bp-core-attachments.php:782
 msgid "You have attempted to queue too many files."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:781
+#: bp-core/bp-core-attachments.php:783
 msgid "%1$s exceeds the maximum upload size of %2$s for this site."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:782
+#: bp-core/bp-core-attachments.php:784
 msgid "This file is empty. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:783
+#: bp-core/bp-core-attachments.php:785
 msgid "This file type is not allowed. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:784
+#: bp-core/bp-core-attachments.php:786
 msgid "This file is not an image. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:785
+#: bp-core/bp-core-attachments.php:787
 msgid "Memory exceeded. Please try another smaller file."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:786
+#: bp-core/bp-core-attachments.php:788
 msgid "This is larger than the maximum size. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:787
+#: bp-core/bp-core-attachments.php:789
 msgid "An error occurred. Please try again later."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:788
+#: bp-core/bp-core-attachments.php:790
 msgid "There was a configuration error. Please contact the server administrator."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:789
+#: bp-core/bp-core-attachments.php:791
 msgid "You may only upload 1 file."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:790
+#: bp-core/bp-core-attachments.php:792
 msgid "HTTP error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:791 bp-core/bp-core-avatars.php:1219
+#: bp-core/bp-core-attachments.php:793 bp-core/bp-core-avatars.php:1219
 msgid "Upload failed."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:792
+#: bp-core/bp-core-attachments.php:794
 msgid "Please try uploading this file with the %1$sbrowser uploader%2$s."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:793
+#: bp-core/bp-core-attachments.php:795
 msgid ""
 "%s exceeds the maximum upload size for the multi-file uploader when used in "
 "your browser."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:794
+#: bp-core/bp-core-attachments.php:796
 msgid "IO error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:795
+#: bp-core/bp-core-attachments.php:797
 msgid "Security error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:796
+#: bp-core/bp-core-attachments.php:798
 msgid "File canceled."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:797
+#: bp-core/bp-core-attachments.php:799
 msgid "Upload stopped."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:798
+#: bp-core/bp-core-attachments.php:800
 msgid "Dismiss"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:799
+#: bp-core/bp-core-attachments.php:801
 msgid "Crunching&hellip;"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:800
+#: bp-core/bp-core-attachments.php:802
 msgid "Make sure to upload a unique file"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:801
+#: bp-core/bp-core-attachments.php:803
 msgid "\"%s\" has failed to upload."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:802
+#: bp-core/bp-core-attachments.php:804
 msgid ""
 "If you'd like to delete the existing profile photo but not upload a new "
 "one, please use the delete tab."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:804 bp-core/bp-core-attachments.php:998
+#: bp-core/bp-core-attachments.php:806 bp-core/bp-core-attachments.php:1000
 #: bp-core/bp-core-avatars.php:1089
 msgid "For best results, upload an image that is %1$spx by %2$spx or larger."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:936
+#: bp-core/bp-core-attachments.php:938
 msgid "Take Photo"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:942
+#: bp-core/bp-core-attachments.php:944
 msgid "Please allow application access to your camera."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:943
+#: bp-core/bp-core-attachments.php:945
 msgid "Please wait while your camera connects."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:944
+#: bp-core/bp-core-attachments.php:946
 msgid "Camera loaded. Click \"Capture\" to take a photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:945
+#: bp-core/bp-core-attachments.php:947
 msgid "Webcam not found or permission was denied. Please upload a photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:946
+#: bp-core/bp-core-attachments.php:948
 msgid "Your browser is not supported. Please upload a photo instead."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:947
+#: bp-core/bp-core-attachments.php:949
 msgid "Video error. Please upload a photo instead."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:948
+#: bp-core/bp-core-attachments.php:950
 msgid "Your profile photo is ready. Click \"Save\" to use this photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:949
+#: bp-core/bp-core-attachments.php:951
 msgid "No photo captured. Click \"Capture\" to take your photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1557 bp-core/bp-core-avatars.php:1083
+#: bp-core/bp-core-attachments.php:1569 bp-core/bp-core-avatars.php:1083
 msgid "Upload Error: %s"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1562
+#: bp-core/bp-core-attachments.php:1574
 #: bp-core/classes/class-bp-admin-tab.php:280
 msgid "There was a problem uploading the cover photo."
 msgstr ""
@@ -7847,42 +7847,42 @@ msgid_plural "Please upload only these file types: %s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:392
+#: bp-core/classes/class-bp-attachment-avatar.php:394
 #: bp-xprofile/screens/change-avatar.php:65
 msgid "There was a problem cropping your profile photo."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:393
+#: bp-core/classes/class-bp-attachment-avatar.php:395
 #: bp-xprofile/screens/change-avatar.php:79
 msgid "Your new profile photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:394
+#: bp-core/classes/class-bp-attachment-avatar.php:396
 #: bp-xprofile/actions/delete-avatar.php:33
 msgid "There was a problem deleting your profile photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:395
+#: bp-core/classes/class-bp-attachment-avatar.php:397
 #: bp-xprofile/actions/delete-avatar.php:31
 msgid "Your profile photo was deleted successfully!"
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:410
+#: bp-core/classes/class-bp-attachment-avatar.php:412
 #: bp-groups/screens/single/admin/group-avatar.php:83
 msgid "There was a problem cropping the group profile photo."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:411
+#: bp-core/classes/class-bp-attachment-avatar.php:413
 #: bp-groups/actions/create.php:389
 msgid "The group profile photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:412
+#: bp-core/classes/class-bp-attachment-avatar.php:414
 #: bp-groups/screens/single/admin/group-avatar.php:41
 msgid "There was a problem deleting the group profile photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-avatar.php:413
+#: bp-core/classes/class-bp-attachment-avatar.php:415
 #: bp-groups/screens/single/admin/group-avatar.php:39
 msgid "The group profile photo was deleted successfully!"
 msgstr ""
@@ -14934,7 +14934,7 @@ msgstr ""
 #: bp-forums/replies/functions.php:2598 bp-members/bp-members-functions.php:554
 #: bp-messages/bp-messages-template.php:1825
 #: bp-messages/bp-messages-template.php:2090
-#: bp-messages/classes/class-bp-messages-thread.php:1536
+#: bp-messages/classes/class-bp-messages-thread.php:1525
 msgid "Deleted User"
 msgstr ""
 
@@ -23539,7 +23539,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1527
+#: bp-messages/classes/class-bp-messages-thread.php:1516
 msgid "%s Recipients"
 msgstr ""
 
