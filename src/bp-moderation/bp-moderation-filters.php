@@ -49,6 +49,15 @@ function bb_moderation_load() {
 	if ( bp_is_active( 'messages' ) ) {
 		new BP_Moderation_Message();
 	}
+
+	/**
+	 * Handle notification.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	if ( bp_is_active( 'notifications' ) ) {
+		new BP_Moderation_Notification();
+	}
 }
 
 add_action( 'bp_init', 'bb_moderation_load', 1 );

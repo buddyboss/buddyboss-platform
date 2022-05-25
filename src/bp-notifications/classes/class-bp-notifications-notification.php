@@ -754,6 +754,17 @@ class BP_Notifications_Notification {
 			$meta_query_sql
 		);
 
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $where_sql Where SQL statement.
+		 * @param string $tbl_alias Table alias.
+		 * @param array  $r         Array of parsed arguments for the get method.
+		 */
+		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
+
 		// ORDER BY.
 		$order_sql = self::get_order_by_sql(
 			array(
