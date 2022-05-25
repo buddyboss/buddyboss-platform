@@ -471,6 +471,10 @@
 			display: none;
 			z-index: 11;
 
+			.generic-button {
+				margin-right: 0 !important;
+			}
+
 			&.is_visible {
 				display: block;
 			}
@@ -518,6 +522,7 @@
 						text-transform: none;
 						font-weight: 400;
 						min-height: auto;
+						line-height: 1.2;
 						border-radius: 0;
 						padding: 10px 14px;
 						color: #7f868f;
@@ -1258,7 +1263,9 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity,
-.bb-activity-media-wrap .bb-activity-video-elem {
+.bb-activity-media-wrap .bb-activity-video-elem,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity {
 	position: relative;
 
 	&.is-visible,
@@ -1370,6 +1377,17 @@ span.dashicons.dashicons-admin-file:before {
 			border-radius: 4px;
 			width: 198px;
 			z-index: 1;
+
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					width: auto;
+					z-index: 999;
+				}
+			}
 
 			ul {
 				list-style: none;
@@ -1637,6 +1655,16 @@ span.dashicons.dashicons-admin-file:before {
 			width: 198px;
 			z-index: 1;
 
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					z-index: 999;
+				}
+			}
+
 			ul {
 				list-style: none;
 				margin: 5px 0;
@@ -1787,6 +1815,12 @@ span.dashicons.dashicons-admin-file:before {
 			display: none;
 		}
 
+		@media screen and (max-width: 980px) {
+
+			.item-action-wrap {
+				z-index: 999;
+			}
+		}
 	}
 
 	/* smartphones, touchscreens */

@@ -2995,6 +2995,7 @@ window.bp = window.bp || {};
 							return event;
 						} else {
 							$( '.message_action__list.open' ).removeClass( 'open' );
+							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
 					}
@@ -3013,6 +3014,7 @@ window.bp = window.bp || {};
 				feedback   = BP_Nouveau.messages.doingAction;
 
 				$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' );
+				$( 'body' ).removeClass( 'message_more_option_open' );
 
 				if ( ! action ) {
 					return event;
@@ -3132,6 +3134,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
 				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' );
+				$( 'body' ).addClass( 'message_more_option_open' );
 			},
 
 		}
